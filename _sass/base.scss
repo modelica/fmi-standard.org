@@ -148,25 +148,33 @@ pre {
  * Wrapper
  */
 .wrapper {
-    max-width: -webkit-calc(800px - (#{$spacing-unit} * 2));
-    max-width:         calc(800px - (#{$spacing-unit} * 2));
+    max-width: 100%;
     margin-right: auto;
     margin-left: auto;
     padding-right: $spacing-unit;
     padding-left: $spacing-unit;
     @extend %clearfix;
 
-    @include media-query($on-laptop) {
-        max-width: -webkit-calc(800px - (#{$spacing-unit}));
-        max-width:         calc(800px - (#{$spacing-unit}));
-        padding-right: $spacing-unit / 2;
-        padding-left: $spacing-unit / 2;
+    @media (min-width: $on-tablet) {
+        max-width: $on-tablet - 2 * $spacing-unit;
+    }
+
+    @media (min-width: $on-laptop) {
+        max-width: $on-laptop - 2 * $spacing-unit;
+    }
+
+    @media (min-width: $on-desktop) {
+        max-width: $on-desktop - 2 * $spacing-unit;
     }
 }
 
 .row {
     &-twocolumn {
-        column-count: 2;
+        column-count: 1;
+
+        @media (min-width: $on-tablet) {
+            column-count: 2;
+        }
     }
 }
 
