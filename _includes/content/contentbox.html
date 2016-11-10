@@ -1,23 +1,28 @@
-<article class="contentbox contentbox-{{ include.width }}">
+<article class="contentbox{% if include.width == 'half' %} contentbox-half{% endif %}">
 
-    {% if include.title != '' And include.title != nil %}
-    <h3 class="title title-two contentbox-title">{{ include.title }}</h3>
+    {% if include.data.title != '' And include.data.title != nil %}
+    <h3 class="title title-two contentbox-title">{{ include.data.title }}</h3>
     {% endif %}
 
-    {% if include.content != '' And include.content != nil %}
-    <p class="contentbox-content">{{ include.content }}</p>
+    {% if include.data.content != '' And include.data.content != nil %}
+        {% capture contentType %}{{ include.data.content | type }}{% endcapture %}
+        {% if contentType == 'array' %}
+            {% include content/twocolumn.html data=include.data.content %}
+        {% else %}
+            <p class="contentbox-content one">{{ include.data.content }}</p>
+        {% endif %}
     {% endif %}
 
-    {% if include.version != '' And include.version != nil %}
-    <p class="contentbox-version"><strong>{{ include.version }}</strong></p>
+    {% if include.data.version != '' And include.data.version != nil %}
+    <p class="contentbox-version"><strong>{{ include.data.version }}</strong></p>
     {% endif %}
 
-    {% if include.packageLink %}
-    <a class="button contentbox-button" href="{{ include.packageLink }}">Complete Package</a>
+    {% if include.data.packageLink %}
+    <a class="button contentbox-button" href="{{ include.data.packageLink }}">Complete Package</a>
     {% endif %}
 
-    {% if include.specificationLink %}
-    <a class="button contentbox-button" href="{{ include.specificationLink }}">Specification Only</a>
+    {% if include.data.specificationLink %}
+    <a class="button contentbox-button" href="{{ include.data.specificationLink }}">Specification Only</a>
     {% endif %}
 
 </article>
