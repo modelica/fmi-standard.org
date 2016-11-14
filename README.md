@@ -100,3 +100,10 @@ Just push to `master` branch:
 `git push origin master`
 
 Beta is on https://mangoweb.github.io/fmi-standard.org/
+
+#Resources
+[Github Pages](https://pages.github.com)
+
+[Jekylle](https://jekyllrb.com/)
+
+[Markdown](https://daringfireball.net/projects/markdown/syntax)
