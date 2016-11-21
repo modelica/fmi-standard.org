@@ -1,0 +1,61 @@
+---
+layout: default
+title: Tools
+permalink: /tools/
+---
+
+<section class="section">
+
+    {% assign table = site.data.tools.fmi-support-in-tools.table %}
+
+    <p>{{ table[2].versions[0] }}</p>
+
+    <table>
+        <thead>
+
+        </thead>
+        <tbody>
+        {% for tool in table %}
+            {% assign i = forloop.index %}
+            {% for version in tool.versions %}
+                <tr>
+                    <td rowspan="{{ forloop.length }}">
+                        {% if forloop.first %}
+                            {{ tool.name }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ version.name }}
+                    </td>
+                    <td>
+                        {% if version.export.input == 'button'  %}
+                            <a class="button buttons-{{ version.export.type }}" href="{{ version.export.link }}" target="_blank">{{ version.export.type }}</a>
+                        {% elseif version.export.input == 'dropdown'  %}
+                            <input id="{{ i }}{{ forloop.index }}" class="button-hidden" type="checkbox">
+                            <label for="{{ i }}{{ forloop.index }}" class="button buttons-{{ version.export.type }}">
+                                <a class="buttons-option" href="{{ version.export.link }}" target="_blank">{{ version.export.type }}</a>
+                            </label>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for links in version.export.link  %}
+                        {{ version.import.link }}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for links in version.export.link  %}
+                        {{ version.slave.link }}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for links in version.export.link  %}
+                        {{ version.master.link }}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+</section>
