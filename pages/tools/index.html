@@ -10,50 +10,63 @@ permalink: /tools/
 
     <p>{{ table[2].versions[0] }}</p>
 
-    <table>
+    <table class="tools-table">
         <thead>
-
+            <tr>
+                <td>
+                    <span class="button button-light">Total numbers</span>
+                </td>
+                <td>
+                    <select class="button button-dark button-dropdown" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                        <option value="" disabled="" selected="">Filter</option>
+                        <option value="">FMI_1.0</option>
+                        <option value="">FMI_2.0</option>
+                        <option value="">All versions</option>
+                    </select>
+                </td>
+                <td colspan="2">ModelExchange</td>
+                <td colspan="2">CoSimulation</td>
+            </tr>
+            <tr>
+                <td>Tools supporting FMI</td>
+                <td>FMI Version</td>
+                <td>Export</td>
+                <td>Import</td>
+                <td>Slave</td>
+                <td>Master</td>
+                <td>Notes</td>
+            </tr>
         </thead>
         <tbody>
         {% for tool in table %}
-            {% assign i = forloop.index %}
-            {% for version in tool.versions %}
-                <tr>
-                    <td rowspan="{{ forloop.length }}">
-                        {% if forloop.first %}
-                            {{ tool.name }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {{ version.name }}
-                    </td>
-                    <td>
-                        {% if version.export.input == 'button'  %}
-                            <a class="button buttons-{{ version.export.type }}" href="{{ version.export.link }}" target="_blank">{{ version.export.type }}</a>
-                        {% elseif version.export.input == 'dropdown'  %}
-                            <input id="{{ i }}{{ forloop.index }}" class="button-hidden" type="checkbox">
-                            <label for="{{ i }}{{ forloop.index }}" class="button buttons-{{ version.export.type }}">
-                                <a class="buttons-option" href="{{ version.export.link }}" target="_blank">{{ version.export.type }}</a>
-                            </label>
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {% for links in version.export.link  %}
-                        {{ version.import.link }}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {% for links in version.export.link  %}
-                        {{ version.slave.link }}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {% for links in version.export.link  %}
-                        {{ version.master.link }}
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endfor %}
+        {% assign i = forloop.index %}
+        {% for version in tool.versions %}
+        <tr>
+            {% if forloop.first %}
+            <td rowspan="{{ forloop.length }}">
+                {{ tool.name }}
+            </td>
+            {% endif %}
+            <td>
+                {{ version.name }}
+            </td>
+            <td>
+                {% include content/table-button.html data=version.export %}
+            </td>
+            <td>
+                {% include content/table-button.html data=version.import %}
+            </td>
+            <td>
+                {% include content/table-button.html data=version.slave %}
+            </td>
+            <td>
+                {% include content/table-button.html data=version.master %}
+            </td>
+            <td>
+                {{ version.notes}}
+            </td>
+        </tr>
+        {% endfor %}
         {% endfor %}
         </tbody>
     </table>
