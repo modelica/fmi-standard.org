@@ -1,11 +1,11 @@
 {% if include.data.input %}
 {% if include.data.input == 'button'  %}
-<a class="button buttons-{{ include.data.type }}" href="{{ include.data.link }}" target="_blank">{{ include.data.type }}</a>
+<a class="button button-flat button-{{ include.data.type }}" href="{{ include.data.link }}" target="_blank">{{ include.data.type }}</a>
 {% else if include.data.input == 'dropdown'  %}
-<select class="button button-{{ version.export.type }} button-dropdown" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+<select class="button button-flat button-{{ version.export.type }}{% if include.data.num %}-num{% endif %} button-dropdown" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+    <option value="" disabled="" selected="">{{ include.data.type }}<span></span></option>
     {% for option in include.data.link %}
-    <option value="" disabled="" selected="">{{ include.data.type }}</option>
-    <option value="{{ option.link }}">{{ option.dist }}{% if option.num %}<span>{{ option.num }}</span>{% endif %}</option>
+    <option value="{{ option.link }}">{{ option.dist }}{% if option.num %} <span>{{ option.num }}</span>{% endif %}</option>
     {% endfor %}
 </select>
 {% endif %}
