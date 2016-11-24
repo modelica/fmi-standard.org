@@ -15,11 +15,11 @@ permalink: /tools/
             <tr>
                 <th><span class="button button-flat button-light">Total numbers</span></th>
                 <th>
-                    <select class="button button-flat button-dark button-dropdown" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                    <select id="searchInput" class="button button-flat button-dark button-dropdown">
                         <option value="" disabled="" selected="">Filter</option>
-                        <option value="">FMI_1.0</option>
-                        <option value="">FMI_2.0</option>
-                        <option value="">All versions</option>
+                        <option value="FMI_1.0">FMI_1.0</option>
+                        <option value="FMI_2.0">FMI_2.0</option>
+                        <option value="all">All versions</option>
                     </select>
                 </th>
                 <th colspan="2">ModelExchange</th>
@@ -35,17 +35,15 @@ permalink: /tools/
                 <th>Notes</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="fbody">
         {% for tool in table %}
         {% assign i = forloop.index %}
         {% for version in tool.versions %}
         <tr>
-            {% if forloop.first %}
-            <td rowspan="{{ forloop.length }}">
+            <td rowspan="{{ forloop.length }}" data-rowspan="{{ forloop.length }}" class="rowspan {% unless !forloop.first %}tools-table-hidden{% endunless %}">
                 <a href="{{ tool.link}}" target="_blank">{{ tool.name }}</a>
             </td>
-            {% endif %}
-            <td>
+            <td class="fcell">
                 {{ version.name }}
             </td>
             <td>
