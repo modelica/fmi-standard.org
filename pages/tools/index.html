@@ -4,6 +4,43 @@ title: Tools
 permalink: /tools/
 ---
 
+<section class="section">
+
+    {% assign section = site.data.tools.fmi-support-in-tools %}
+
+    <div class="row row-twocolumn">
+
+        <article class="contentbox">
+            <h2 class="title title-one">{{ section.section.title }}</h2>
+
+            {% include content/contentbox.html data=section.compatibility-table %}
+        </article>
+
+        <aside class="contentbox sidebar">
+            <h3 class="title title-highlighted">Legend</h3>
+            <ul>
+                <li><span class="button button-planned button-flat button-legend">Planned</span><i
+                        class="fa fa-long-arrow-right" aria-hidden="true"></i> Not available yet
+                </li>
+                <li><span class="button button-avallable button-flat button-legend">Avallable</span><i
+                        class="fa fa-long-arrow-right" aria-hidden="true"></i> No CrossCheck results submitted
+                </li>
+                <li><span class="button button-dropdown button-flat button-legend">Avallable</span><i
+                        class="fa fa-long-arrow-right" aria-hidden="true"></i> passed CrossCheck, 12 FMUs exported ot
+                    imported, click for results
+                </li>
+            </ul>
+            <p>More information about the generation of the CrossCheck results can be found in the
+                <a href="https://svn.fmi-standard.org/fmi/branches/public/CrossCheck_Results/FMI_Cross_Check_Rules_v3.1_2015_07.pdf">Rules
+                    document</a> and the
+                <a href="https://svn.fmi-standard.org/fmi/branches/public/CrossCheck_Results/FMI_Cross_Check_Implementation_Notes_v3.1_2015_07.pdf">Implementation
+                    notes</a>.</p>
+        </aside>
+
+    </div>
+
+</section>
+
 <section class="section section-overflow">
 
     {% assign table = site.data.tools.fmi-support-in-tools.table %}
@@ -12,35 +49,36 @@ permalink: /tools/
 
     <table class="tools-table">
         <thead>
-            <tr>
-                <th><span class="button button-flat button-light">Total numbers</span></th>
-                <th>
-                    <select id="searchInput" class="button button-flat button-dark button-dropdown">
-                        <option value="" disabled="" selected="">Filter</option>
-                        <option value="FMI_1.0">FMI_1.0</option>
-                        <option value="FMI_2.0">FMI_2.0</option>
-                        <option value="all">All versions</option>
-                    </select>
-                </th>
-                <th colspan="2">ModelExchange</th>
-                <th colspan="2">CoSimulation</th>
-            </tr>
-            <tr>
-                <th>Tools supporting FMI</th>
-                <th>FMI Version</th>
-                <th>Export</th>
-                <th>Import</th>
-                <th>Slave</th>
-                <th>Master</th>
-                <th>Notes</th>
-            </tr>
+        <tr>
+            <th><span class="button button-flat button-light">Total numbers</span></th>
+            <th>
+                <select id="searchInput" class="button button-flat button-dark button-dropdown">
+                    <option value="" disabled="" selected="">Filter</option>
+                    <option value="FMI_1.0">FMI_1.0</option>
+                    <option value="FMI_2.0">FMI_2.0</option>
+                    <option value="all">All versions</option>
+                </select>
+            </th>
+            <th colspan="2">ModelExchange</th>
+            <th colspan="2">CoSimulation</th>
+        </tr>
+        <tr>
+            <th>Tools supporting FMI</th>
+            <th>FMI Version</th>
+            <th>Export</th>
+            <th>Import</th>
+            <th>Slave</th>
+            <th>Master</th>
+            <th>Notes</th>
+        </tr>
         </thead>
         <tbody id="fbody">
         {% for tool in table %}
         {% assign i = forloop.index %}
         {% for version in tool.versions %}
         <tr>
-            <td rowspan="{{ forloop.length }}" data-rowspan="{{ forloop.length }}" class="rowspan {% unless !forloop.first %}tools-table-hidden{% endunless %}">
+            <td rowspan="{{ forloop.length }}" data-rowspan="{{ forloop.length }}"
+                class="rowspan {% unless !forloop.first %}tools-table-hidden{% endunless %}">
                 <a href="{{ tool.link}}" target="_blank">{{ tool.name }}</a>
             </td>
             <td class="fcell">
