@@ -43,7 +43,7 @@ permalink: /tools/
 
 <section class="section section-overflow">
 
-    {% assign table = site.data.tools.fmi-support-in-tools.table %}
+    {% assign table = site.data.tools.fmi-support-in-tools.table.body %}
 
     <p>{{ table[2].versions[0] }}</p>
 
@@ -102,22 +102,22 @@ permalink: /tools/
         </tr>
         {% endfor %}
         {% endfor %}
+        {% assign table = site.data.tools.fmi-support-in-tools.table.footer %}
+        {% for row in table.versions %}
         <tr class="tools-table-footer">
-            <td rowspan="2">Total number of tools and broken down by the FMI variants and directions.</td>
-            <td>FMI_1.0 84(30)</td>
-            <td><span class="button button-light button-flat">27 (12)</span> </td>
-            <td><span class="button button-light button-flat">35 (20)</span> </td>
-            <td><span class="button button-light button-flat">39 (13)</span> </td>
-            <td><span class="button button-light button-flat">50 (23)</span> </td>
-            <td rowspan="2">We add green and orange available to compute these numbers (number proven with CrossCheck in parentheses).</td>
+            {% if forloop.first %}
+            <td rowspan="{{ forloop.length }}">{{ table.text }}</td>
+            {% endif %}
+            <td>{{ row.name }}</td>
+            <td><span class="button button-light button-flat">{{ row.export }}</span></td>
+            <td><span class="button button-light button-flat">{{ row.import }}</span></td>
+            <td><span class="button button-light button-flat">{{ row.slave }}</span></td>
+            <td><span class="button button-light button-flat">{{ row.master }}</span></td>
+            {% if forloop.first %}
+            <td rowspan="{{ forloop.length }}">{{ table.note }}</td>
+            {% endif %}
         </tr>
-        <tr class="tools-table-footer">
-            <td>FMI_1.0</td>
-            <td><span class="button button-light button-flat">11 (8)</span> </td>
-            <td><span class="button button-light button-flat">18 (14)</span> </td>
-            <td><span class="button button-light button-flat">25 (13)</span> </td>
-            <td><span class="button button-light button-flat">30 (18)</span> </td>
-        </tr>
+        {% endfor %}
         </tbody>
     </table>
 
