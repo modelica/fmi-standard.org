@@ -4,21 +4,27 @@ title: Contact
 permalink: /contact/
 ---
 
+{% assign content = site.data.contact %}
+
+{% for section in content.sections %}
 <section class="section section-third">
 
-    {% assign section = site.data.contact.contact%}
 
-    <h2 class="title title-one">{{ section.section.title }}</h2>
+    <h2 class="title title-one">{{ section.title }}</h2>
 
-    {% include content/contentbox.html data=section.who-we-are%}
+    {% for article in section.article %}
 
-    {% include content/contentbox.html data=section.imprint %}
+    {% include content/contentbox.html data=article %}
+
+    {% endfor %}
+
 
 </section>
+{% endfor %}
 
 <aside class="sidebar">
 
-    <h4 class="title title-highlighted">{{ section.info-service.title }}</h4>
-    <p>{{ section.info-service.content }}</p>
+    <h4 class="title title-highlighted">{{ content.sidebar.title }}</h4>
+    <p>{{ content.sidebar.content }}</p>
 
 </aside>

@@ -4,48 +4,21 @@ title: Downloads
 permalink: /downloads/
 ---
 
+{% assign content = site.data.downloads %}
+
+{% for section in content.sections %}
 <section class="section">
 
-    {% assign section = site.data.downloads.version20 %}
+    <h2 class="title title-one">{{ section.title }}</h2>
 
-    <h2 class="title title-one">{{ section.section.title }}</h2>
-
-    {% include content/contentbox.html data=section.model-exchange-and-co-simulation %}
-
-</section>
-
-<section class="section">
-
-    {% assign section = site.data.downloads.version10 %}
-
-    <h2 class="title title-one">{{ section.section.title }}</h2>
-
-    <div class="row row-twocolumn">
-
-        {% include content/contentbox.html data=section.model-exchange %}
-
-        {% include content/contentbox.html data=section.plm %}
-
-        {% include content/contentbox.html data=section.co-simulation %}
-
-
-    </div>
-</section>
-
-<section class="section">
-
-    {% assign section = site.data.downloads.tools %}
-
-    <h2 class="title title-one">{{ section.section.title }}</h2>
-
-    <div class="row row-twocolumn">
-        {% include content/contentbox.html data=section.software-development-kit %}
-
-        {% include content/contentbox.html data=section.test-fmus %}
-
-        {% include content/contentbox.html data=section.fmu-compliance-checker %}
-
-        {% include content/contentbox.html data=section.fmi-library %}
-    </div>
+    {% if  section.twocolumn %}
+        {% include content/tworow.html data=section.articles %}
+    {% else %}
+        {% for article in section.articles %}
+            {% include content/contentbox.html data=article %}
+        {% endfor %}
+    {% endif %}
 
 </section>
+{% endfor %}
+

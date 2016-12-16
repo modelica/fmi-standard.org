@@ -6,14 +6,20 @@ permalink: /tools/
 
 <section class="section">
 
-    {% assign section = site.data.tools.fmi-support-in-tools %}
+    {% assign section = site.data.tools %}
 
     <div class="row row-twocolumn">
 
         <article class="contentbox">
-            <h2 class="title title-one">{{ section.section.title }}</h2>
+            <h2 class="title title-one">{{ section.title }}</h2>
 
-            {% include content/contentbox.html data=section.compatibility-table %}
+            <article class="contentbox">
+
+                <h3 class="title title-two contentbox-title">{{ section.article.title }}</h3>
+
+                <p class="contentbox-content">{{ section.article.content | markdownify }}</p>
+
+            </article>
         </article>
 
         <aside class="contentbox sidebar">
@@ -43,7 +49,7 @@ permalink: /tools/
 
 <section class="section section-overflow">
 
-    {% assign table = site.data.tools.fmi-support-in-tools.table.body %}
+    {% assign table = site.data.table.body %}
 
     <p>{{ table[2].versions[0] }}</p>
 
@@ -102,7 +108,7 @@ permalink: /tools/
         </tr>
         {% endfor %}
         {% endfor %}
-        {% assign table = site.data.tools.fmi-support-in-tools.table.footer %}
+        {% assign table = site.data.table.footer %}
         {% for row in table.versions %}
         <tr class="tools-table-footer" id="footer">
             {% if forloop.first %}
@@ -121,6 +127,6 @@ permalink: /tools/
         </tbody>
     </table>
 
-    <p>{{ section.footer.content }}</p>
+    <p>{{ section.footer }}</p>
 
 </section>

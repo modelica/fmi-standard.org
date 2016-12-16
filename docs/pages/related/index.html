@@ -4,18 +4,21 @@ title: Related
 permalink: /related/
 ---
 
+{% assign content = site.data.related %}
+
+{% for section in content.sections %}
 <section class="section">
 
-    {% assign section = site.data.related.standardization%}
+    <h2 class="title title-one">{{ section.title }}</h2>
 
-    <h2 class="title title-one">{{ section.section.title }}</h2>
-
-    {% for content in section.content %}
-
-    {% assign currentcontent = content[01] %}
-    {% include content/contentbox.html data=currentcontent %}
-
+    {% if  section.twocolumn %}
+    {% include content/tworow.html data=section.articles %}
+    {% else %}
+    {% for article in section.articles %}
+    {% include content/contentbox.html data=article %}
     {% endfor %}
-
+    {% endif %}
 
 </section>
+{% endfor %}
+

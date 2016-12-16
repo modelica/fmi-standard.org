@@ -4,19 +4,21 @@ title: FAQ
 permalink: /faq/
 ---
 
-{% for section in site.data.faq %}
+{% assign content = site.data.faq %}
+
+{% for section in content.sections %}
 <section class="section">
 
+    <h2 class="title title-one">{{ section.title }}</h2>
 
-    {% assign currentsection = section[01] %}
-    <h2 class="title title-one">{{ section[01].section.title }}</h2>
-
-    {% for question in currentsection.questions %}
-
-        {% assign currentquestion = question[01] %}
-        {% include content/contentbox.html data=currentquestion %}
-
+    {% if  section.twocolumn %}
+    {% include content/tworow.html data=section.articles %}
+    {% else %}
+    {% for article in section.articles %}
+    {% include content/contentbox.html data=article %}
     {% endfor %}
+    {% endif %}
 
 </section>
 {% endfor %}
+

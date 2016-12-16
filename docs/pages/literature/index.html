@@ -4,12 +4,21 @@ title: Literature
 permalink: /literature/
 ---
 
+{% assign content = site.data.literature %}
+
+{% for section in content.sections %}
 <section class="section">
 
-    {% assign section = site.data.literature.literature-and-presentation %}
+    <h2 class="title title-one">{{ section.title }}</h2>
 
-    <h2 class="title title-one">{{ section.section.title }}</h2>
-
-    {% include content/contentbox.html data=section.list-of-fmi-related-publications %}
+    {% if  section.twocolumn %}
+    {% include content/tworow.html data=section.articles %}
+    {% else %}
+    {% for article in section.articles %}
+    {% include content/contentbox.html data=article %}
+    {% endfor %}
+    {% endif %}
 
 </section>
+{% endfor %}
+

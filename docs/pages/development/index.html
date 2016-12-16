@@ -4,18 +4,20 @@ title: Development
 permalink: /development/
 ---
 
+{% assign content = site.data.contact %}
+
+{% for section in content.sections %}
 <section class="section">
 
-    {% assign section = site.data.development.development %}
 
-    <h2 class="title title-one">{{ section.section.title }}</h2>
+    <h2 class="title title-one">{{ section.title }}</h2>
 
-    {% include content/contentbox.html data=section.organization %}
+    {% for article in section.article %}
 
-    {% include content/contentbox.html data=section.license-of-project-results %}
+    {% include content/contentbox.html data=article %}
 
-    {% include content/contentbox.html data=section.project-rules %}
+    {% endfor %}
 
-    {% include content/contentbox.html data=section.collaboration %}
 
 </section>
+{% endfor %}
