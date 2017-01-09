@@ -1,0 +1,107 @@
+---
+layout: default
+title: Resutls
+permalink: /results_FMI_1.0_ModelExchange_win64/
+---
+
+<section>
+    <fieldset class="select">
+        <label for="version" class="select-label">
+            Version:
+        </label>
+        <select id="version" class="select-input button button-large button-flat button-dark button-dropdown" onchange="this.options[this.selectedIndex].value &amp;&amp; (window.location = this.options[this.selectedIndex].value);">
+            <option value="../results_FMI_1.0_ModelExchange_win64">FMI_1.0</option>
+            <option value="../results_FMI_2.0_ModelExchange_win64">FMI_2.0</option>
+        </select>
+    </fieldset>
+    <fieldset class="select large">
+        <label for="variant" class="select-label">
+            Variant:
+        </label>
+        <select id="variant" class="select-input button button-large button-flat button-dark button-dropdown" onchange="this.options[this.selectedIndex].value &amp;&amp; (window.location = this.options[this.selectedIndex].value);">
+            <option selected="selected" value="../results_FMI_1.0_CoSimulation_win64"><i class="fa fa-link" aria-hidden="true"></i>CoSimulation</option>
+            <option value="../results_FMI_1.0_ModelExchange_win64"><i class="fa fa-exchange" aria-hidden="true"></i>ModelExchange</option>
+        </select>
+    </fieldset>
+    <fieldset class="select small">
+        <label for="platform" class="select-label">
+            Platform:
+        </label>
+        <select id="platform" class="select-input button button-flat button-light" onchange="this.options[this.selectedIndex].value &amp;&amp; (window.location = this.options[this.selectedIndex].value);">
+            <option value="../results_FMI_1.0_ModelExchange_win32"><i class="fa fa-linux" aria-hidden="true"></i>linux32</option>
+            <option selected="selected" value="../results_FMI_1.0_ModelExchange_win64"><i class="fa fa-linux" aria-hidden="true"></i>linux64</option>
+            <option value="../results_FMI_1.0_ModelExchange_linux32"><i class="fa fa-link" aria-hidden="true"></i>windows32</option>
+            <option value="../results_FMI_1.0_ModelExchange_linux64"><i class="fa fa-link" aria-hidden="true"></i>windows64</option>
+        </select>
+    </fieldset>
+</section>
+<section>
+    <p>Legend FMI Support:</p>
+    <div>
+        <span class="tools-table-field successfully preview">3</span>
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        3 FMUs imported successfully
+        <span class="tools-table-field rejected preview">3</span>
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        1 FMU rejected
+        <span class="tools-table-field failed preview">3</span>
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        2 FMU failed test
+    </div>
+</section>
+<section class="section section-overflow">
+
+    {% assign table = site.data.results.resultsFMI10ModelExchangewin64 %}
+
+
+    <table class="tools-table">
+        <thead>
+        <tr>
+            <th>{{ table.title }}<br>{{ table.version }}</th>
+            <th>Slaves <i class="fa fa-arrow-right" aria-hidden="true"></i></th>
+            {% for slave in table.head %}
+            <th colspan="{{ slave.versions.size }}">{{slave.name}}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>Masters <i class="fa fa-arrow-down" aria-hidden="true"></i></th>
+            <th></th>
+            {% for slave in table.head %}
+            {% for version in slave.versions %}
+            <th>{{ version }}</th>
+            {% endfor %}
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody id="fbody">
+        {% for tool in table.body %}
+        {% assign i = forloop.index %}
+        {% for version in tool.versions %}
+        <tr>
+            {% if forloop.first %}
+            <td rowspan="{{ forloop.length }}" class="rowspan">
+                <a href="{{ tool.link}}" target="_blank">{{ tool.name }}</a>
+            </td>
+            {% endif %}
+            <td>{{ version.name }}</td>
+            {% assign c = 0 %}
+            {% for slave in table.head %}
+            {% for headVersion in slave.versions %}
+            {% assign c = c | plus: 1 %}
+            <td class="fcell">
+                <a href="{{ version.versions[c].url }}" target="_blank" class="tools-table-fields">
+                    {% for field in version.versions[c].fields %}
+                    <span class="tools-table-field {{ field.state }}">{{ field.value }}</span>
+                    {% endfor %}
+                </a>
+                <p class="tools-table-date">{{ version.versions[c].date }}</p>
+            </td>
+            {% endfor %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+</section>
