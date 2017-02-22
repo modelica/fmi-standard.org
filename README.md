@@ -18,7 +18,7 @@
 
 ##Install
 ```
-git clone git@github.com:manGoweb/fmi-standard.org.git
+git clone git@github.com:modelica/fmi-standard.org.git
 bundle exec jekyll serve
 ```
 You should get:
