@@ -99,7 +99,7 @@ Just push to `master` branch:
 
 `git push origin master`
 
-Beta is on https://mangoweb.github.io/fmi-standard.org/
+Updates appear on https://modelica.github.io/fmi-standard.org/
 
 #Resources
 [Github Pages](https://pages.github.com)
