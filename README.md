@@ -33,7 +33,7 @@ Configuration file: /www/sites/fmi-standard/public/_config.yml
     Server address: http://0.0.0.0:4000/fmi-standard.org/
   Server running... press ctrl-c to stop.
 ```
-Webpage is on URL `http://localhost:4000/fmi-standard.org`
+Webpage is on URL `http://localhost:4000/fmi-standard.org/`
 
 # Project structure
 * `_data` - text content
