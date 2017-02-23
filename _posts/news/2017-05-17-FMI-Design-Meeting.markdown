@@ -1,0 +1,8 @@
+---
+title:  "FMI Design Meeting at Modelica Conference 2017 in Prague (Czech Republic)."
+date:   2016-05-17
+categories: news
+---
+
+You are invited to join us for the next FMI Design Meeting at the Modelica Conference 2017 in Prague.
+
