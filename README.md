@@ -1,5 +1,5 @@
-#Run project localy
-##Requirements
+# Run project localy
+## Requirements
 1. Open Terminal.
 2. Check whether you have Ruby 2.1.0 or higher installed:
   
@@ -16,7 +16,7 @@
   # Installs the Bundler gem
   ```
 
-##Install
+## Install
 ```
 git clone git@github.com:modelica/fmi-standard.org.git
 bundle exec jekyll serve
@@ -55,7 +55,7 @@ Webpage is on URL `http://localhost:4000/fmi-standard.org/`
 * `Gemfile` - gem config
 * `Gemfile.lock`
 
-#Write content
+# Write content
 Text content is in in [yml](http://www.yaml.org/spec/1.2/spec.html) files.
 
 You can use this fields:
@@ -94,14 +94,14 @@ You can use this fields:
     link: 
     ```
     
-#Deployment
+# Deployment
 Just push to `master` branch:
 
 `git push origin master`
 
 Updates appear on https://modelica.github.io/fmi-standard.org/
 
-#Resources
+# Resources
 [Github Pages](https://pages.github.com)
 
 [Jekylle](https://jekyllrb.com/)
