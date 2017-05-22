@@ -16,6 +16,12 @@
   # Installs the Bundler gem
   ```
 
+5. Run Bundler:
+
+  ```
+  bundle
+  ```
+
 ## Install
 ```
 git clone git@github.com:modelica/fmi-standard.org.git
