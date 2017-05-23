@@ -69,7 +69,7 @@ You can use this fields:
 * `content:` or use `content: >` when you can't write content inline, content must be indented
   
   You can use [markdown](https://daringfireball.net/projects/markdown/syntax) and [html](http://www.w3schools.com/html)
-  If you need two coulmun with subtitles use array:
+  If you need two column with subtitles use array:
   ```
   content:
     #first column

@@ -1,24 +1,147 @@
 ---
-layout: default
 title: FAQ
-permalink: /faq/
+permalink: "/faq/"
+layout: default
 ---
 
-{% assign content = site.data.faq %}
-
-{% for section in content.sections %}
 <section class="section">
+    <h2 class="title title-one">General questions about FMI</h2>
 
-    <h2 class="title title-one">{{ section.title }}</h2>
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">What are the license and usage conditions for the FMI standard?</h3>
+        <p class="contentbox-content">
+            <p>Access and use of the FMI standard is free of charge. However, vendors may charge for their tools to support
+                the FMI standard, either by exporting FMUs or by importing FMUs.</p>
 
-    {% if  section.twocolumn %}
-    {% include content/tworow.html data=section.articles %}
-    {% else %}
-    {% for article in section.articles %}
-    {% include content/contentbox.html data=article %}
-    {% endfor %}
-    {% endif %}
+            <p><strong>To be clear: While the FMI standard is open and free, commercial implementations might not be.</strong></p>
+        </p>
+    </article>
 
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">How can I join the FMI Mailing Lists?</h3>
+        <p class="contentbox-content">
+            <ul>
+                <li>The “FMI-Info-Mailing list” is used for public announcements. You can find a registration link on our contact
+                    page.</li>
+                <li>The “FMI design” Mailing list is used by active developers of FMI (typically members of the FMI Advisory
+                    or Steering Committee). If you are interested please contact <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#099;&#111;&#110;&#116;&#097;&#099;&#116;&#064;&#102;&#109;&#105;&#045;&#115;&#116;&#097;&#110;&#100;&#097;&#114;&#100;&#046;&#111;&#114;&#103;">&#099;&#111;&#110;&#116;&#097;&#099;&#116;&#064;&#102;&#109;&#105;&#045;&#115;&#116;&#097;&#110;&#100;&#097;&#114;&#100;&#046;&#111;&#114;&#103;</a></li>
+                <li>The “FMI Steering” Mailing list is used by members of the FMI Steering Committee. To join you need to be
+                    a member of the FMI Steering Committee.</li>
+            </ul>
+        </p>
+    </article>
+
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">How is FMI related to Modelica?</h3>
+        <p class="contentbox-content">
+            <ul>
+                <li>Technically FMI is not related to Modelica, and can be seen as a complementary technology.</li>
+                <li>The intention of the FMI project is to be neutral with respect to tools, technologies (e.g. solvers, OS,
+                    files, systems…) and languages (including Modelica).</li>
+                <li>The FMI standard is developed as a Modelica Association Project within the Modelica Association, an organization
+                    focused on the “coordinated standardization and development of software technology and methods in the
+                    area of cyber physical- systems and systems engineering”, see the Modelica Association Bylaws and the
+                    History page</li>
+            </ul>
+        </p>
+    </article>
 </section>
-{% endfor %}
 
+<section class="section">
+    <h2 class="title title-one">I'm a modeler and want to use FMI in my simulation tool</h2>
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">How can I get a first overview on FMI?</h3>
+        <p class="contentbox-content">
+            <p>Please have a look at the literature page, especially on the overview talks/slides from the 8th, 9th and 10th
+                Modelica Conference</p>
+
+            <ul>
+                <li>FMI 1.0: “The Functional Mock-up Interface for Tool independent Exchange of Simulation Models” <a href="https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface.pdf">PDF</a></li>
+                <li>FMI 2.0: “Functional Mock-up Interface 2.0: The Standard for Tool independent Exchange of Simulation Models”
+                    <a href="https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076173_BlochwitzOtter.pdf">PDF</a></li>
+                <li>FMI 2.0: Presentations about new features and applications <a href="https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2014/FMI_Tutorial_ModelicaConference2014.zip">ZIP</a></li>
+            </ul>
+        </p>
+    </article>
+
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">Does my simulation tool support FMI?</h3>
+        <p class="contentbox-content">
+            <p>Please see the <a href="http://fmi-standard.org/tools">FMI tools page</a> for a list of tools for that tool vendors
+                have announced their support of FMI.</p>
+
+            <p><strong>While the FMI project defines cross check rules, the tool vendors carry sole responsibility for their stated FMI support and the provided compatibility results.</strong></p>
+        </p>
+    </article>
+
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">Where can I get help when I have problems related to FMI in my simulation tool?</h3>
+        <p class="contentbox-content">
+            <ul>
+                <li>Typically an exporting and an importing tool are involved in FMI-based simulation. So if problems occur and
+                    if it is not obvious which tool causes the problem, you should communicate the problem to the support
+                    team of both involved tools</li>
+                <li>As a general discussion forum about FMI, you may use the FMI forum on <a href="http://stackoverflow.com/tags/fmi">Stack Overflow</a></li>
+            </ul>
+        </p>
+    </article>
+
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">Is there a tool vendor independent way to access model information during simulation?</h3>
+        <p class="contentbox-content">
+            <p>ASAM XIL-MA is a standardized API that allows the access of model parameters, stimulations and simulation results
+                and to control simulation experiments as well. Please see the related <a href="http://fmi-standard.org/related#standards">ASAM XIL-MA section</a>.</p>
+        </p>
+    </article>
+</section>
+
+<section class="section">
+    <h2 class="title title-one">I'm a developer and want to support FMI with my tool</h2>
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">What and in which order should I read/do to get started with FMI technology?</h3>
+        <p class="contentbox-content">
+            <p>That depends mostly on your background knowledge. We assume here you already have fundamental knowledge of simulation
+                technology (ODE vs. DAE, zero-crossing, state/time events, derivatives etc.):</p>
+
+            <ul>
+                <li>First make a quick pass trough the <a href="https://svn.modelica.org/fmi/branches/public/specifications/v2.0/FMI_for_ModelExchange_and_CoSimulation_v2.0.pdf">standard document</a>.</li>
+                <li>Then browse and play with the <a href="http://fmi-standard.org/downloads#3rdparty">available 3rd party development toolkits</a>.</li>
+                <li>Read the implementation hints contained in <a href="https://svn.modelica.org/fmi/branches/public/specifications/v1.0/FMI_for_ModelExchange_v1.0.zip">FMI_for_ModelExchange_v1.0.zip</a>                    - not yet available for FMI 2.0.</li>
+                <li>Re-read the standard document in detail.</li>
+            </ul>
+        </p>
+    </article>
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">Does FMI 2.0 support Partial Differential Equations (PDEs)?</h3>
+        <p class="contentbox-content">
+            <p>There are two kinds of FMI variants: Model Exchange and Co-Simulation.</p>
+
+            <p>Model-Exchange FMUs encode ODEs. PDE-support is not planned yet, but the demand for it is increasing.</p>
+
+            <p>The second kind, Co-Simulation FMUs, can contain any kind of simulation component because it does not expose
+                states. So as long as you want to simply encapsulate PDEs, this could be done.</p>
+
+            <p>But explicitly exposing a PDE to a solver using FMUs is currently not supported.</p>
+        </p>
+    </article>
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">I added my test FMUs/Cross-Check results but the tools page does not show "green". Why?</h3>
+        <p class="contentbox-content">
+            <p>The Cross-Check Rules list a number of conditions before turning an entry “green”. In short:</p>
+
+            <ul>
+                <li>Exporting tools must provide at least 3 FMUs and at least one importer must report successful import.</li>
+                <li>Importing tools must report (and prove) successful import of at least 3 FMUs of at least 3 exporting tools.</li>
+            </ul>
+
+            <p>Please refer to the complete set of <a href="https://svn.fmi-standard.org/fmi/branches/public/CrossCheck_Results/FMI_Cross_Check_Rules_v3_2014_07_31.pdf">rules</a>                and <a href="https://svn.fmi-standard.org/fmi/branches/public/CrossCheck_Results/FMI_Cross_Check_Implementation_Notes_v3_2014_07_31.pdf">notes</a>.</p>
+        </p>
+    </article>
+    <article class="contentbox">
+        <h3 class="title title-two contentbox-title">Why are the badge-numbers of the platform-drop-down not adding up to the badge-number in the overview?</h3>
+        <p class="contentbox-content">
+            <p>The platform-drop-down list contains only platforms the tool has passed the Cross-Check Rules. But the overview
+                lists all FMUs or Cross-Check Results submitted.</p>
+        </p>
+    </article>
+</section>

@@ -1,7 +1,8 @@
 ---
-title:  "Eight tool vendors"
-date:   2015-01-18 15:17:13
-categories: news
+title: Eight tool vendors
+date: 2015-01-18 15:17:13 Z
+categories:
+- news
 ---
 
 Eight tool vendors (Dassault (Dynasim), dSPACE, IFPEN, ITI,
