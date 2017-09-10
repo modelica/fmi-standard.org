@@ -1,6 +1,6 @@
 ---
 title: FMI homepage banner now available as download.
-date: 2017-11-28 00:00:00 Z
+date: 2017-09-05 00:00:00 Z
 categories:
 - news
 ---
