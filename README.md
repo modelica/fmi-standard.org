@@ -110,6 +110,6 @@ Updates appear on https://modelica.github.io/fmi-standard.org/
 # Resources
 [Github Pages](https://pages.github.com)
 
-[Jekylle](https://jekyllrb.com/)
+[Jekyll](https://jekyllrb.com/)
 
 [Markdown](https://daringfireball.net/projects/markdown/syntax)
