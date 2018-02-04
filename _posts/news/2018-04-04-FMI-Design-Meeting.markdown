@@ -1,5 +1,5 @@
 ---
-title: FMI Design Meeting at ITK in Munich (Germany).
+title: FMI Design Meeting at ESI-ITI in Dresden (Germany).
 date: 2018-04-04 00:00:00 Z
 categories:
 - news
