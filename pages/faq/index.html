@@ -5,7 +5,39 @@ layout: default
 ---
 
 <section class="section">
-    <h2 class="title title-one">General questions about FMI</h2>
+    <h2 class="title title-one">General questions about FMI</h2>	
+	
+	<article class="contentbox">
+        <h3 class="title title-two contentbox-title">How are the FMI version numbers defined and what does backwards compatibility of a minor version mean?</h3>
+        <p class="contentbox-content">
+            <p>According to the FMI development process (<a href="https://svn.fmi-standard.org/fmi/branches/public/docs/DevProcess/FMI_DevelopmentProcess_1.0.pdf">link</a>), the version number of an FMI release is defined in the following way:
+			</p>
+			<ul>
+                <li>Version number: MajorVersion.MinorVersion.MaintnanceVersion</li>
+                <li>Changes introduced by Major versions don't have to be backward nor forward compatible.</li>
+				<li>Minor versions within the same Major version have to be backward compatible.</li>
+				<li>Maintenance versions must not introduce new features and have to be forward and backward compatible.</li>
+				<li>All versions will have semantic version numbers.
+            </ul>
+			<p>Note that <b>backward and forward compatibility</b>  is with respect to the FMI specification, not with respect to a
+			   tool. For example, if FMI 2.1 is backward compatible to FMI 2.0, then every 2.0 FMU must be also a valid 2.1 FMU.
+			   As a consequence, a minor version implies restrictions with respect to the previous minor
+			   version, especially, but not limited to: (a) new XML elements and attributes, as well as new C API functions 
+			   must be optional, (b) the argument lists of existing C API functions cannot change (only the meaning of 
+			   existing arguments can be enhanced, if this is signaled in the modelDescription.xml file with new, optional, 
+			   XML elements or attributes).</p>
+			<p>A change to the previous FMI version is called <b> backwards compatible</b>  if every FMU compliant with the previous version 
+			   is also a valid component of the new FMI version. In more detail this means:</p>
+		<ul>
+                <li> XML elements can be added in the new version, but existing XML elements cannot be removed.</li>
+				<li> An existing XML enumeration can be extended, but only in a way that the mapping of the enumeration to Integer does not change for the enumeration values of the previous version. </li>
+				<li> New function prototypes can be added in the new version, but existing function prototypes cannot be changed and cannot be removed.</li>
+				<li> New struct prototypes can be added in the new version, but existing struct prototypes cannot be changed and cannot be removed.</li>
+           </ul>
+        </p>
+    </article>
+	
+	
 
     <article class="contentbox">
         <h3 class="title title-two contentbox-title">What are the license and usage conditions for the FMI standard?</h3>
@@ -142,35 +174,6 @@ layout: default
         <p class="contentbox-content">
             <p>The platform-drop-down list contains only platforms the tool has passed the Cross-Check Rules. But the overview
                 lists all FMUs or Cross-Check Results submitted.</p>
-        </p>
-    </article>
-	<article class="contentbox">
-        <h3 class="title title-two contentbox-title">How are the FMI version numbers defined and what does backwards compatibility of a minor version mean?</h3>
-        <p class="contentbox-content">
-            <p>According to the FMI development process (<a href="https://svn.fmi-standard.org/fmi/branches/public/docs/DevProcess/FMI_DevelopmentProcess_1.0.pdf">link</a>), the version number of an FMI release is defined in the following way:
-			</p>
-			<ul>
-                <li>Version number: MajorVersion.MinorVersion.MaintnanceVersion</li>
-                <li>Changes introduced by Major versions don't have to be backward nor forward compatible.</li>
-				<li>Minor versions within the same Major version have to be backward compatible.</li>
-				<li>Maintenance versions must not introduce new features and have to be forward and backward compatible.</li>
-				<li>All versions will have semantic version numbers.
-            </ul>
-			<p>Note that <b>backward and forward compatibility</b>  is with respect to the FMI specification, not with respect to a
-			   tool. For example, if FMI 2.1 is backward compatible to FMI 2.0, then every 2.0 FMU must be also a valid 2.1 FMU.
-			   As a consequence, a minor version implies restrictions with respect to the previous minor
-			   version, especially, but not limited to: (a) new XML elements and attributes, as well as new C API functions 
-			   must be optional, (b) the argument lists of existing C API functions cannot change (only the meaning of 
-			   existing arguments can be enhanced, if this is signaled in the modelDescription.xml file with new, optional, 
-			   XML elements or attributes).</p>
-			<p>A change to the previous FMI version is called <b> backwards compatible</b>  if every FMU compliant with the previous version 
-			   is also a valid component of the new FMI version. In more detail this means:</p>
-		<ul>
-                <li> XML elements can be added in the new version, but existing XML elements cannot be removed.</li>
-				<li> An existing XML enumeration can be extended, but only in a way that the mapping of the enumeration to Integer does not change for the enumeration values of the previous version. </li>
-				<li> New function prototypes can be added in the new version, but existing function prototypes cannot be changed and cannot be removed.</li>
-				<li> New struct prototypes can be added in the new version, but existing struct prototypes cannot be changed and cannot be removed.</li>
-           </ul>
         </p>
     </article>
 	
