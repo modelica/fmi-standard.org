@@ -8,7 +8,22 @@ layout: default
 
 ## How to contribute to the development of the FMI standard
 
-Please read: [FMI Contact page](http://fmi-standard.org/contact/).
+All contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://svn.fmi-standard.org/fmi/branches/public/FMI_CCLA_v1.0_2016_06_21.pdf).
+Therefore, the first step is getting your company to agree and sign the CCLA.
+The CCLA ensures that all IP contributed to the FMI standard will be licensed to the Modelica Association (MA) which in turn will sublicense the FMI standard to tool vendors implementing it and end users using it, free of charge.
+
+With the CCLA signed by your company, we will grant you access to our IT infrastructure.
+We will add you to the [FMI design mailing list](&#100;&#101;&#115;&#105;&#103;&#110;&#064;&#102;&#109;&#105;&#045;&#115;&#116;&#097;&#110;&#100;&#097;&#114;&#100;&#046;&#111;&#114;&#103;).
+There you will be invited to our regular FMI design meetings.
+You will get access to the FMI SVN repository and wiki Both are the central information hubs for the Modelica Association Project (MAP) FMI.
+Here you can also find which working groups are currently working on FMI Change Proposals (FCPs) and you can decide which one of them to join (email the respective working group leader shown in a wiki table), or, if you have other ideas, you may propose to start and lead a new working group addressing your improvement to the FMI standard by searching for collaborators on the FMI design mailing list and/or presenting your ideas at a face-to-face design meeting.
+
+Companies that have shown continued commitment and valuable contributions will be invited to join the FMI Advisory Committee.
+This membership is mostly ceremonial and its most important function is to recognize publicly who is actively helping to develop the FMI standard.
+
+The next level of involvement is membership in the FMI Steering Committee which is the governing body of the MAP FMI.
+You have to formally apply, explaining your past, current and future involvement and plans with the FMI standard.
+The FMI Steering Committee will vote on your applications.
 
 ## Organization
 
@@ -62,9 +77,7 @@ New FMI releases are developed according to the process defined in the [FMI Deve
 
 The FMI group has a mailing list for email based discussions and holds frequent teleconferences to discuss the technical evolution of the standard. In addition, there are often FMI tracks at other FMI related events like conferences and design meetings. Development of the FMI standard is centrally managed at the FMI Trac Site. This site is used to keep track of open issues with the current specification and proposals for future versions. If you believe you could benefit from the standard or if you would like to contribute to the improvement or distribution of it, please contact us at: contact@fmi-standard.org.
 
-The FMI group has a mailing list for email based discussions and holds frequent teleconferences to discuss the
-    technical evolution of the standard. In addition, there are often FMI tracks at other FMI related events
-    like conferences and design meetings. Development of the FMI standard is centrally managed at the [FMI Trac Site](https://trac.fmi-standard.org).
-    This site is used to keep track of open issues with the current specification and proposals for future versions.
-    If you believe you could benefit from the standard or if you would like to contribute to the improvement
-    or distribution of it, please contact us at: [&#099;&#111;&#110;&#116;&#097;&#099;&#116;&#064;&#102;&#109;&#105;&#045;&#115;&#116;&#097;&#110;&#100;&#097;&#114;&#100;&#046;&#111;&#114;&#103;](&#109;&#097;&#105;&#108;&#116;&#111;:&#099;&#111;&#110;&#116;&#097;&#099;&#116;&#064;&#102;&#109;&#105;&#045;&#115;&#116;&#097;&#110;&#100;&#097;&#114;&#100;&#046;&#111;&#114;&#103;).
+The FMI group has a mailing list for email based discussions and holds frequent teleconferences to discuss the technical evolution of the standard.
+In addition, there are often FMI tracks at other FMI related events like conferences and design meetings. Development of the FMI standard is centrally managed at the [FMI Trac Site](https://trac.fmi-standard.org).
+This site is used to keep track of open issues with the current specification and proposals for future versions.
+If you believe you could benefit from the standard or if you would like to contribute to the improvement or distribution of it, please contact us at: [&#099;&#111;&#110;&#116;&#097;&#099;&#116;&#064;&#102;&#109;&#105;&#045;&#115;&#116;&#097;&#110;&#100;&#097;&#114;&#100;&#046;&#111;&#114;&#103;](&#109;&#097;&#105;&#108;&#116;&#111;:&#099;&#111;&#110;&#116;&#097;&#099;&#116;&#064;&#102;&#109;&#105;&#045;&#115;&#116;&#097;&#110;&#100;&#097;&#114;&#100;&#046;&#111;&#114;&#103;).

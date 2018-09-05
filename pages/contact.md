@@ -1,10 +1,7 @@
 ---
-title: Imprint
-permalink: /imprint/
-layout: default
+title: Contact
+permalink: "/contact/"
 ---
-
-# Imprint
 
 The Modelica Association is a non-profit organization with seat in Linköping, Sweden. It is registered as:
 
