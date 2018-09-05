@@ -1,22 +1,65 @@
 <!DOCTYPE html>
 <html>
 
-{% include head.html %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>{% unless page.url == "/" %}{{ page.title }} | {% endunless %}Functional Mock-up Interface</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+  <!-- Bootstrap core CSS -->
+  <link href="{{ "/assets/css/main.css" | relative_url }}" rel="stylesheet">
+  <link href="{{ "/assets/css/album.css" | relative_url }}" rel="stylesheet">
+
+  <link rel="shortcut icon" href="{{ "/favicon.ico" | relative_url }}">
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
 
 <body>
 
-<div class="wrapper">
-    {% include header.html %}
+<header>
+  <nav class="navbar navbar-expand-md navbar-dark fmi-navbar">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          {% for item in site.data.pages %}
+          <li class="nav-item {% if item.url == page.url %}active{% endif %}">
+            <a class="nav-link" href="{{ item.url | relative_url }}" alt="{{ item.title }}">{{ item.title }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
 
-    {{ content }}
+<main>
 
-    {% if page.url != '/' %}
-        <hr class="line">
-    {% endif %}
-</div>
+  <div class="container my-5">
+  {% if page.toc %}
+  {% include toc.html html=content %}
+  {% endif %}
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" defer></script>
-<script src="{{ '/scripts/main.js' | prepend: site.baseurl }}" defer></script>
+  {{ content }}
+  </div>
+</main>
+
+<script>
+$(document).ready(function(){
+$('[data-toggle="popover"]').popover();
+});
+</script>
+
 </body>
-
 </html>

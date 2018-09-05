@@ -1,115 +1,74 @@
-# Run project localy
-## Requirements
-1. Open Terminal.
-2. Check whether you have Ruby 2.1.0 or higher installed:
-  
-  ```
-  ruby --version
-  ruby 2.X.X
-  ```
-3. If you don't have Ruby installed, install Ruby 2.0.0 or higher.
+# FMI Website
 
-4. Install Bundler:
-  
-  ```
-  gem install bundler
-  # Installs the Bundler gem
-  ```
+Sources of the new fmi-standard.org website
 
-5. Run Bundler:
+## Tools list
 
-  ```
-  bundle
-  ```
+The [tools page](https://fmi-standard.org/tools/) is generated from [_data/tools.csv](_data/tools.csv). To add, edit or remove a tool from the table update the respective line and push your changes.
 
-## Install
+## News
+
+To create a post, add a file to the `_posts` directory with the following format:
+
 ```
-git clone git@github.com:modelica/fmi-standard.org.git
-bundle exec jekyll serve
+YEAR-MONTH-DAY-title.MARKUP
 ```
-You should get:
+
+Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file.
+For example, the following are examples of valid post filenames:
+
 ```
-Configuration file: /www/sites/fmi-standard/public/_config.yml
-            Source: /www/sites/fmi-standard/public
-       Destination: /www/sites/fmi-standard/public/_site
-      Generating... 
-                    done.
- Auto-regeneration: enabled for '/www/sites/fmi-standard/public'
-Configuration file: /www/sites/fmi-standard/public/_config.yml
-    Server address: http://0.0.0.0:4000/fmi-standard.org/
-  Server running... press ctrl-c to stop.
+2018-05-22-fmi-forum-japan.md
+2018-09-04-modelica-conference-2019.md
 ```
-Webpage is on URL `http://localhost:4000/fmi-standard.org/`
 
-# Project structure
-* `_data` - text content
- * `[page_name]`
-   * `[section_name]`
-     * `section.yml` - contain title of section
-      * `[box_name].yml` - text content, more is [below](#write-content)
-* `_includes` - parts templates
-* `_layout` - layout templates
-* `_posts`
- * `news` - news
-   * `YYYY-MM-DD-title.md` - write news in [markdown](https://daringfireball.net/projects/markdown/syntax)
-* `_sass` - styles soures
-* `_site` - compiled webpage
-* `assets` - assets files
-* `css`- stylesheet prepared to compilation 
-* `pages` - webpage structure
-* `_congfig.yml` - site settings
-* `Gemfile` - gem config
-* `Gemfile.lock`
+You typically write posts in [Markdown](https://daringfireball.net/projects/markdown/) (`.md`), however HTML (`.html`) is also supported.  
+All blog post files must begin with a front matter that sets the title:
 
-# Write content
-Text content is in in [yml](http://www.yaml.org/spec/1.2/spec.html) files.
+```markdown
+---
+title: FMI at the 13th Modelica Conference 2019
+---
 
-You can use this fields:
-* `title:` - main box title
-* `content:` or use `content: >` when you can't write content inline, content must be indented
-  
-  You can use [markdown](https://daringfireball.net/projects/markdown/syntax) and [html](http://www.w3schools.com/html)
-  If you need two column with subtitles use array:
-  ```
-  content:
-    #first column
-    -  
-      - title: 
-        content: 
-      - title: Voting
-        content: 
-    # second column
-    -
-      - title: 
-        content: 
-      - title: 
-        content: 
-  ```
-* `version:` - highlighted information about last release
-* `packageLink:` - link for package download, when is filled download button is displayed
-* `specificationLink` - link for specification download, when is filled download button is displayed
-* `downloads:` - next items to download
+The [13th International Modelica Conference](https://modelica.org/events/modelica2019) will be held at [OTH Regensburg](https://www.oth-regensburg.de/en.html), Germany, March 4–6, 2019.
 
-  ```
-  downloads:
-  - text: 
-    link: 
-  - text: 
-    link: 
-  - text: 
-    link: 
-    ```
-    
-# Deployment
-Just push to `master` branch:
+The scope of the conference includes FMI in Modelica and non-Modelica applications and tools.
+```
 
-`git push origin master`
+To include images, downloads or other files along with a post place them in the `assets` directory and reference them using the following markdown syntax:
 
-Updates appear on https://modelica.github.io/fmi-standard.org/
+```markdown
+... which is shown in the screenshot below:
+![My helpful screenshot]("/assets/screenshot.jpg")
+```
 
-# Resources
-[Github Pages](https://pages.github.com)
+Linking to a PDF for readers to download:
 
-[Jekyll](https://jekyllrb.com/)
+```markdown
+... you can [get the PDF]("/assets/mydoc.pdf") directly.
+```
 
-[Markdown](https://daringfireball.net/projects/markdown/syntax)
+## Build the website locally
+
+1. Install a full [Ruby development environment](https://www.ruby-lang.org/en/downloads/)
+
+2. Install Jekyll and [bundler](https://jekyllrb.com/docs/ruby-101/#bundler) [gems](https://jekyllrb.com/docs/ruby-101/#gems)
+   ```
+   gem install jekyll bundler
+   ```
+
+3. [Download](https://github.com/modelica/fmi-standard.org/archive/master.zip) and extract the sources  
+   *or*  
+   clone the repository, change into the directory and pull the changes
+   ```
+   git clone https://github.com/modelica/fmi-standard.org.git
+   cd fmi-website
+   git pull
+   ```
+
+4. Build the site and make it available on a local server
+   ```
+   jekyll serve --livereload
+   ```
+
+5. Now browse to [http://localhost:4000](http://localhost:4000)

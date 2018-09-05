@@ -1,0 +1,203 @@
+---
+title: Tools
+permalink: /tools/
+layout: default
+---
+
+<style>
+.table-tools td {
+  padding: 0.2rem;
+}
+
+.table-tools th {
+  font-weight: normal;
+}
+
+.table-tools .btn {
+  line-height: 1;
+}
+
+.table-tools td.first {
+    max-width: 177px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-tools td.first a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}
+</style>
+
+<div class="alert alert-warning" role="alert">
+  <i class="fas fa-exclamation-triangle mr-3"></i>We're currently updating the cross-check infrastructure. Some results might not be up-to-date.
+</div>
+
+<div class="row">
+  <div class="col-lg-auto mb-4">
+    <form class="form-inline" id="filters">
+      <div class="btn-toolbar" role="toolbar">
+        <div class="btn-group" role="group">
+          <button id="btn-ccode" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="C-code"><i class="fas fa-copyright"></i></button>
+          <button id="btn-macos" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="macOS"><i class="fab fa-apple"></i></button>
+          <button id="btn-linux" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Linux"><i class="fab fa-linux"></i></button>
+          <button id="btn-windows" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Windows"><i class="fab fa-windows"></i></button>
+        </div>
+      </div>
+      <div class="btn-toolbar" role="toolbar">
+        <div class="btn-group ml-3" role="group">
+          <button id="btn-commercial" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Commercial"><i class="fas fa-dollar-sign"></i></button>
+          <button id="btn-opensource" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Open Source"><i class="fab fa-osi"></i></button>
+        </div>
+      </div>
+      <input id="inp-filter" type="text" class="form-control ml-3" value="" placeholder="Filter">
+    </form>
+  </div>
+  <div class="col-lg mb-4">
+      <span class="text-muted ml-4">Legend:</span>
+      <button type="button" class="btn btn-sm btn-outline-primary ml-2" disabled>planned</button>
+      <button type="button" class="btn btn-sm btn-primary ml-2" disabled>supported</button>
+      <button type="button" class="btn btn-sm btn-success ml-2" disabled>cross-check passed</button>
+  </div>
+</div>
+
+<table class="table table-tools" id="tbl-results">
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th colspan="2" class="text-center">FMU Export</th>
+      <th colspan="2" class="text-center">FMU Import</th>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <th></th>
+      <th class="text-center">License</th>
+      <th class="text-center">Platforms</th>
+      <th class="text-center">Co-Simulation</th>
+      <th class="text-center">Model Exchange</th>
+      <th class="text-center">Co-Simulation</th>
+      <th class="text-center">Model Exchange</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for tool in site.data.tools %}
+    <tr>
+      <td class="first" data-platforms="{{ tool.platforms | join: ',' }}"><a href="{{ tool.homepage }}" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="{{ tool.description }}">{{ tool.name }}</a></td>
+      <td>{{ tool.vendor }}</td>
+      <td class="text-center">{% if tool.license == "osi" %}<i class="fab fa-osi"></i>{% else %}<i class="fas fa-dollar-sign"></i>{% endif %}</td>
+      <td class="text-center">
+        <i class="fas fa-copyright{% unless tool.platforms contains "c-code" %} fa-blank{% endunless %}"></i>
+        <i class="fab fa-apple{% unless tool.platforms contains "darwin64" %} fa-blank{% endunless %}"></i>
+        <i class="fab fa-linux{% unless tool.platforms contains "linux32" or tool.platforms contains "linux64" %} fa-blank{% endunless %}"></i>
+        <i class="fab fa-windows{% unless tool.platforms contains "win32" or tool.platforms contains "win64" %} fa-blank{% endunless %}"></i>
+      </td>
+      <td class="text-center">
+        <div class="btn-group" role="group">
+          <a class="btn btn-sm {% if tool.export_cs_fmi1 == "available" %}btn-primary{% elsif tool.export_cs_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi1-cs-win64/" | relative_url }}" role="button">1.0</a>
+          <a class="btn btn-sm {% if tool.export_cs_fmi2 == "available" %}btn-primary{% elsif tool.export_cs_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi2-cs-win64/" | relative_url }}" role="button">2.0</a>
+        </div>
+      </td>
+      <td class="text-center">
+        <div class="btn-group" role="group">
+          <a class="btn btn-sm {% if tool.export_me_fmi1 == "available" %}btn-primary{% elsif tool.export_me_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi1-me-win64/" | relative_url }}" role="button">1.0</a>
+          <a class="btn btn-sm {% if tool.export_me_fmi2 == "available" %}btn-primary{% elsif tool.export_me_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi2-me-win64/" | relative_url }}" role="button">2.0</a>
+        </div>
+      </td>
+      <td class="text-center">
+        <div class="btn-group" role="group">
+          <a class="btn btn-sm {% if tool.import_cs_fmi1 == "available" %}btn-primary{% elsif tool.import_cs_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi1-cs-win64/" | relative_url }}" role="button">1.0</a>
+          <a class="btn btn-sm {% if tool.import_cs_fmi2 == "available" %}btn-primary{% elsif tool.import_cs_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi2-cs-win64/" | relative_url }}" role="button">2.0</a>
+        </div>
+      </td>
+      <td class="text-center">
+        <div class="btn-group" role="group">
+          <a class="btn btn-sm {% if tool.import_me_fmi1 == "available" %}btn-primary{% elsif tool.import_me_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi1-me-win64/" | relative_url }}" role="button">1.0</a>
+          <a class="btn btn-sm {% if tool.import_me_fmi2 == "available" %}btn-primary{% elsif tool.import_me_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi2-me-win64/" | relative_url }}" role="button">2.0</a>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</div>
+
+<script>
+// see https://github.com/twbs/bootstrap/issues/2380
+$('body').on('click','#filters button', function() {
+
+    var button = $(this);
+
+    // commercial & open source are mutually exclusive
+    if (button.attr('id') === 'btn-commercial') {
+      $('#btn-opensource').removeClass('active');
+    } else if (button.attr('id') === 'btn-opensource') {
+      $('#btn-commercial').removeClass('active');
+    }
+
+    button.toggleClass('active');
+
+    filterRows();
+});
+
+$("#inp-filter").keyup(function() {
+  filterRows();
+});
+
+function filterRows() {
+
+  var table = document.getElementById("tbl-results");
+  var tr = table.getElementsByTagName("tr");
+
+  var showCCode   = $("#btn-ccode").hasClass('active');
+  var showMacOS   = $("#btn-macos").hasClass('active');
+  var showLinux   = $("#btn-linux").hasClass('active');
+  var showWindows = $("#btn-windows").hasClass('active');
+
+  var showCommercial = $("#btn-commercial").hasClass('active');
+  var showOpenSource = $("#btn-opensource").hasClass('active');
+
+  var filter = $("#inp-filter").val().trim().toLowerCase();
+
+  for (var i = 0; i < tr.length; i++) {
+
+    var td0 = tr[i].getElementsByTagName("td")[0];
+    var td1 = tr[i].getElementsByTagName("td")[1];
+    var td2 = tr[i].getElementsByTagName("td")[2];
+
+    var commercial = $(td2).find("i").hasClass("fa-dollar-sign");
+
+    if (td0) {
+
+      var tool = $(td0).find("a").text().toLowerCase();
+      var vendor = $(td1).text().toLowerCase();
+      var platforms = $(td0).attr("data-platforms");
+
+      if (
+        (showCCode   && !platforms.includes("c-code"))   ||
+        (showMacOS   && !platforms.includes("darwin64")) ||
+        (showLinux   && !platforms.includes("linux64"))  ||
+        (showWindows && !platforms.includes("win64"))    ||
+        (showCommercial && !commercial) ||
+        (showOpenSource && commercial)  ||
+        (filter != "" && !tool.includes(filter) && !vendor.includes(filter))
+      ) {
+        tr[i].style.display = "none";
+        continue;
+      }
+
+      tr[i].style.display = "";
+    }
+
+  }
+}
+
+filterRows();
+
+</script>
