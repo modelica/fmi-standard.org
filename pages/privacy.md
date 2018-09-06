@@ -14,20 +14,23 @@ The following privacy policy is intended to inform you in particular about the t
 
 Our privacy policy is structured as follows:
 
-I. Information about us as controllers of your data
-II. The rights of users and data subjects
-III. Information about the data processing
+I. Information about us as controllers of your data  
+II. The rights of users and data subjects  
+III. Information about the data processing  
 
-I. Information about us as controllers of your data
+## I. Information about us as controllers of your data
+
 The party responsible for this website (the "controller") for purposes of data protection law is:
 
 Modelica Association
 c/o PELAB, IDA, Linköpings Universitet
 S-58183 Linköping
 Sweden
+
 board@modelica.org
 
-II. The rights of users and data subjects
+## II. The rights of users and data subjects
+
 With regard to the data processing to be described in more detail below, users and data subjects have the right
 
 to confirmation of whether data concerning them is being processed, information about the data being processed, further information about the nature of the data processing, and copies of the data (cf. also Art. 15 GDPR);
@@ -39,10 +42,12 @@ In addition, the controller is obliged to inform all recipients to whom it discl
 
 Likewise, under Art. 21 GDPR, users and data subjects have the right to object to the controller's future processing of their data pursuant to Art. 6 Para. 1 lit. f) GDPR. In particular, an objection to data processing for the purpose of direct advertising is permissible.
 
-III. Information about the data processing
+## III. Information about the data processing
+
 Your data processed when using our website will be deleted or blocked as soon as the purpose for its storage ceases to apply, provided the deletion of the same is not in breach of any statutory storage obligations or unless otherwise stipulated below.
 
-Server data
+### Server data
+
 For technical reasons, the following data sent by your internet browser to us or to our server provider will be collected, especially to ensure a secure and stable website: These server log files record the type and version of your browser, operating system, the website from which you came (referrer URL), the webpages on our site visited, the date and time of your visit, as well as the IP address from which you visited our site.
 
 The data thus collected will be temporarily stored, but not in association with any other of your data.
@@ -51,12 +56,14 @@ The basis for this storage is Art. 6 Para. 1 lit. f) GDPR. Our legitimate intere
 
 The data will be deleted within no more than seven days, unless continued storage is required for evidentiary purposes. In which case, all or part of the data will be excluded from deletion until the investigation of the relevant incident is finally resolved.
 
-Newsletter: FMI Info Service
+### Newsletter: FMI Info Service
+
 If you register for our free newsletter FMI Info Service, the data requested from you for this purpose will be handled by google, please refer to their data protection policy, including their unsubscribe policy.
 
 The legal basis for this is Art. 6 Para. 1 lit. a) GDPR.
 
-Contact
+### Contact
+
 If you contact us via email or the contact form, the data you provide will be used for the purpose of processing your request. We must have this data in order to process and answer your inquiry; otherwise we will not be able to answer it in full or at all.
 
 The legal basis for this data processing is Art. 6 Para. 1 lit. b) GDPR.
@@ -65,4 +72,4 @@ Your data will be deleted once we have fully answered your inquiry and there is 
 
 Please contact contact us if you have further questions.
 
-Generiert basierend auf ratgeberrecht.eu/leistungen/muster-datenschutzerklaerung.html Anwaltskanzlei Weiß & Partner
+Generated based on ratgeberrecht.eu/leistungen/muster-datenschutzerklaerung.html Anwaltskanzlei Weiß & Partner

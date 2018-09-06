@@ -1,10 +1,10 @@
 ---
-title: Imprint
-permalink: /imprint/
+title: Contact
+permalink: /contact/
 layout: default
 ---
 
-# Imprint
+Contact us here: [contact@fmi-standard.org](mailto:contact@fmi-standard.org)
 
 The Modelica Association is a non-profit organization with seat in Linköping, Sweden. It is registered as:
 
