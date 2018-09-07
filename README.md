@@ -2,6 +2,8 @@
 
 Sources of the new fmi-standard.org website
 
+[![Build Status](https://travis-ci.org/modelica/fmi-standard.org.svg?branch=master)](https://travis-ci.org/modelica/fmi-standard.org)
+
 ## Tools list
 
 The [tools page](https://fmi-standard.org/tools/) is generated from [_data/tools.csv](_data/tools.csv). To add, edit or remove a tool from the table update the respective line and push your changes.
