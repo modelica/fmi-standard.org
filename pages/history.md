@@ -42,25 +42,6 @@ Daimler, Dassault Systèmes, IFP EN, ITI, LMS, Modelon, QTronic, SIMPACK
 **Initial members of the Advisory Committee**  
 Armines, DLR, Fraunhofer (IIS/EAS First, SCAI), Open Source Modelica Consortium, TWT, University of Halle
 
-## Supplemental Material
-
-### FMI for PLM
-
-FMI for PLM was developed as part of the ITEA2 project MODELISAR. The intention is to provide a generic way to handle all FMI related data needed in a simulation of systems in a “Product Lifecycle Management” system.
-
-This includes:
-
-- Functional Mock-up Units data needed for: edition, documentation, simulation, validation
-- Co-simulation data needed for: edition, simulation, and results management.
-- Result valuation data needed for: post-processing, analysis, report
-
-Generic processes are defined here, as well as a format description to communicate between the PLM system and the authoring tools.
-
-**Version 1.0 was released on Mar. 31, 2011.**
-
-<a class="btn btn-outline-primary" href="https://svn.modelica.org/fmi/branches/public/specifications/v1.0/FMI_for_PLM_v1.0.zip"><i class="fa fa-download mr-1"></i> Complete Package</a>
-<a class="btn btn-outline-primary ml-2" href="https://svn.modelica.org/fmi/branches/public/specifications/v1.0/FMI_for_PLM_v1.0.pdf"><i class="fa fa-file mr-1"></i> Specification Only</a>
-
 ## Acknowledgement
 
 The FMI development was partially funded within the ITEA2 project MODELISAR by
