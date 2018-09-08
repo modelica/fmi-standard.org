@@ -36,11 +36,20 @@ The FMI specifications are published under the CC-BY-SA (Creative Common Attribu
 **Initial project leader**  
 Torsten Blochwitz from ITI
 
+**Current Project Leader**
+Andreas Junghanns projectleader@fmi-standard.org from QTronic GmbH
+
 **Initial members of the Steering Committee**  
 Daimler, Dassault Systèmes, IFP EN, ITI, LMS, Modelon, QTronic, SIMPACK
 
+**Current Members of the Steering Committee**
+BOSCH, Dassault Systemes, dSPACE, ESI ITI, IFP EN, Maplesoft, Modelon, QTronic, Siemens PLM
+
 **Initial members of the Advisory Committee**  
 Armines, DLR, Fraunhofer (IIS/EAS First, SCAI), Open Source Modelica Consortium, TWT, University of Halle
+
+**Current Members of the Advisory Committee**
+ABB, AVL, DLR, Fraunhofer (IIS/EAS First, SCAI), Open Modelica Consortium, PMSF, TLK Thermo, TWT, University of Halle, Wolfram MathCore AB
 
 ## Acknowledgement
 
