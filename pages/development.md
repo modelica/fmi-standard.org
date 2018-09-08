@@ -13,7 +13,7 @@ Therefore, the first step is getting your company to agree and sign the CCLA.
 The CCLA ensures that all IP contributed to the FMI standard will be licensed to the Modelica Association (MA) which in turn will sublicense the FMI standard to tool vendors implementing it and end users using it, free of charge.
 
 With the CCLA signed by your company, we will grant you access to our IT infrastructure.
-We will add you to the [FMI design mailing list](&#100;&#101;&#115;&#105;&#103;&#110;&#064;&#102;&#109;&#105;&#045;&#115;&#116;&#097;&#110;&#100;&#097;&#114;&#100;&#046;&#111;&#114;&#103;).
+We will add you to the [FMI design mailing list](mailto:design@fmi-standard.org).
 There you will be invited to our regular FMI design meetings.
 You will get access to the FMI SVN repository and wiki Both are the central information hubs for the Modelica Association Project (MAP) FMI.
 Here you can also find which working groups are currently working on FMI Change Proposals (FCPs) and you can decide which one of them to join (email the respective working group leader shown in a wiki table), or, if you have other ideas, you may propose to start and lead a new working group addressing your improvement to the FMI standard by searching for collaborators on the FMI design mailing list and/or presenting your ideas at a face-to-face design meeting.
@@ -67,7 +67,7 @@ Andreas Junghanns projectleader@fmi-standard.org from QTronic GmbH
 
 ## Voting
 
-Voting is performed by the Steering Committee members according to paragraph 14 of the [Modelica Association Bylaws](https://www.modelica.org/legal/organizational/Modelica-bylaws-2012-02-29.pdf/at_download/file) but with a quorum of four organizations. More information can be found in the [FMI project Bylaws](http://fmi-standard.org/assets/FMI_ProjectRules_v2.0_2016_06_21.pdf).
+Voting is performed by the Steering Committee members according to paragraph 14 of the [Modelica Association Bylaws](https://www.modelica.org/legal/organizational/Modelica-bylaws-2012-02-29.pdf/at_download/file) but with a quorum of four organizations. More information can be found in the [FMI project Bylaws](/assets/FMI_ProjectRules_v2.0_2016_06_21.pdf).
 
 ## Development Process
 
