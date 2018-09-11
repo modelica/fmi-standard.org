@@ -15,6 +15,10 @@ Please provide as much detail and context as possible.
 Good pull requests - patches, improvements, new features - are a fantastic help.
 They should remain focused in scope and avoid containing unrelated commits.
 
+If you only want to make small changes you can [edit files](https://help.github.com/articles/editing-files-in-your-repository/) and [open pull requests](https://help.github.com/articles/creating-a-pull-request) directly from your browser.
+
+If you plan bigger changes please continue reading...
+
 *Please ask first* before embarking on any significant pull request (e.g. implementing features, refactoring code, porting to a different language),
 otherwise you risk spending a lot of time working on something that the project's developers might not want to merge into the project.
 
@@ -110,7 +114,7 @@ See also: #456, #789
 
 ## Updating the tools list
 
-The [tools page](https://fmi-standard.org/tools/) is generated from [_data/tools.csv](_data/tools.csv). To add, edit or remove a tool from the list, update the respective line and push your changes.
+The [tools page](https://fmi-standard.org/tools/) is generated from [_data/tools.csv](_data/tools.csv). To add, edit or remove a tool from the list, update the respective line and make a [pull request](#pull-requests).
 
 ## Adding a news post
 
