@@ -17,56 +17,10 @@ They should remain focused in scope and avoid containing unrelated commits.
 
 If you only want to make small changes you can [edit files](https://help.github.com/articles/editing-files-in-your-repository/) and [open pull requests](https://help.github.com/articles/creating-a-pull-request) directly from your browser.
 
-If you plan bigger changes please continue reading...
+If you plan bigger changes you can [fork](https://guides.github.com/activities/forking/) and [clone](https://help.github.com/articles/cloning-a-repository/) the repository to your local machine.
 
 *Please ask first* before embarking on any significant pull request (e.g. implementing features, refactoring code, porting to a different language),
 otherwise you risk spending a lot of time working on something that the project's developers might not want to merge into the project.
-
-Please adhere to the coding conventions used throughout a project (indentation, accurate comments, etc.) and any other requirements (such as test coverage).
-
-Follow this process if you'd like your work considered for inclusion in the project:
-
-1. [Fork](https://help.github.com/articles/fork-a-repo/) the project, clone your fork, and configure the remotes:
-
-  ```bash
-  # Clone your fork of the repo into the current directory
-  git clone https://github.com/<your-username>/<repo-name>
-  # Navigate to the newly cloned directory
-  cd <repo-name>
-  # Assign the original repo to a remote called "upstream"
-  git remote add upstream https://github.com/<upstream-owner>/<repo-name>
-  ```
-
-2. If you cloned a while ago, get the latest changes from upstream:
-
-  ```
-  git checkout <dev-branch>
-  git pull upstream <dev-branch>
-  ```
-
-3. Create a new topic branch (off the main project development branch) to contain your feature, change, or fix:
-
-  ```
-  git checkout -b <topic-branch-name>
-  ```
-
-4. Commit your changes in logical chunks. Please adhere to the above rules when crafting [commit messages](#commit-messages) or your code is unlikely be merged into the main project. Use Git's [interactive rebase](https://help.github.com/articles/about-git-rebase/) feature to tidy up your commits before making them public.
-
-5. Locally merge (or rebase) the upstream development branch into your topic branch:
-
-  ```
-  git pull [--rebase] upstream <dev-branch>
-  ```
-
-6. Push your topic branch up to your fork:
-
-  ```
-  git push origin <topic-branch-name>
-  ```
-
-7. [Open a pull request](https://help.github.com/articles/about-pull-requests/) with a clear title and description.
-
-**IMPORTANT**: By submitting a patch, you agree to allow the project owner to license your work under the same license as that used by the project.
 
 ## Commit messages
 
@@ -105,8 +59,8 @@ Further paragraphs come after blank lines.
    by a single space, with blank lines in between, but conventions
    vary here
 
-If you use an issue tracker, put references to them at the bottom,
-like this:
+If the commit it related to an issue, put references to them at the
+bottom, like this:
 
 Resolves: #123
 See also: #456, #789
