@@ -68,7 +68,25 @@ See also: #456, #789
 
 ## Updating the tools list
 
-The [tools page](https://fmi-standard.org/tools/) is generated from [_data/tools.csv](_data/tools.csv). To add, edit or remove a tool from the list, update the respective line and make a [pull request](#pull-requests).
+The [tools page](https://fmi-standard.org/tools/) is the central location to find and get information about tools that support FMI.
+The page is generated from [tools.csv](_data/tools.csv).
+To add, edit or remove a tool from the list, update the respective line and make a [pull request](#pull-requests).
+Please respect the rules below when editing the file.
+
+### Position in the table
+
+The alphabetical order based on the tool name (case insensitive).
+Take a look at [the ASCII table](https://www.rapidtables.com/code/text/ascii-table.html) if in doubt.
+
+### Description
+
+The description field should
+
+- be a short description of the tool
+- not repeat information that is in the table (supported platforms, FMI types and versions, vendor and license)
+- have no dot (`.`) at the end if it's only one sentence
+- be neutral and not use biased additions like ~~leading~~, ~~innovative~~, ~~flexible~~ or buzzwords (~~performance~~, ~~next generation~~)
+- not contain hyperlinks or markup
 
 ## Adding a news post
 
