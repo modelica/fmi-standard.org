@@ -147,7 +147,7 @@ Linking to a PDF for readers to download:
 2. Clone the repository, change into the directory and pull the changes
    ```
    git clone https://github.com/modelica/fmi-standard.org.git
-   cd fmi-website
+   cd fmi-standard.org
    git pull
    ```
 
