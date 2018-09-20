@@ -16,6 +16,7 @@ Good pull requests - patches, improvements, new features - are a fantastic help.
 They should remain focused in scope and avoid containing unrelated commits.
 
 If you only want to make small changes you can [edit files](https://help.github.com/articles/editing-files-in-your-repository/) and [open pull requests](https://help.github.com/articles/creating-a-pull-request) directly from your browser.
+Please chose an expressive name for your branch like `add-my-news-post` (not ~~`patch-x`~~).
 
 If you plan bigger changes you can [fork](https://guides.github.com/activities/forking/) and [clone](https://help.github.com/articles/cloning-a-repository/) the repository to your local machine.
 
