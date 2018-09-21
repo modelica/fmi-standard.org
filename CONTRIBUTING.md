@@ -74,12 +74,34 @@ The page is generated from [tools.csv](_data/tools.csv).
 To add, edit or remove a tool from the list, update the respective line and make a [pull request](#pull-requests).
 Please respect the rules below when editing the file.
 
+### Format
+
+Optional fields may be empty.
+
+| Column         | Description                                               | Example / valid values
+|----------------|-----------------------------------------------------------|-----------------------
+| tool_name      | The tool name that appears in the tools list              | ExampleSim
+| tool_id        | Unique tool ID (must be a valid directory name)           | ExampleSim
+| vendor_id      | Unique vendor ID (must be be a valid GitHub project name) | ExampleCorp
+| homepage       | Link to the tool's homepage (optional)                    | https://example.com/example-sim/
+| description    | A [description](#tool-description) of the tool            | Run simulations in the cloud in real time
+| license        | License                                                   | `commercial`, `osi`
+| export_cs_fmi1 | FMI 1.0 Co-Simulation export (optional)                   | `planned`, `available`
+| export_cs_fmi2 | FMI 2.0 Co-Simulation export (optional)                   | `planned`, `available`
+| export_me_fmi1 | FMI 1.0 Model Exchange export (optional)                  | `planned`, `available`
+| export_me_fmi2 | FMI 2.0 Model Exchange export (optional)                  | `planned`, `available`
+| import_cs_fmi1 | FMI 1.0 Co-Simulation import (optional)                   | `planned`, `available`
+| import_cs_fmi2 | FMI 2.0 Co-Simulation import (optional)                   | `planned`, `available`
+| import_me_fmi1 | FMI 1.0 Model Exchange import (optional)                  | `planned`, `available`
+| import_me_fmi2 | FMI 2.0 Model Exchange import (optional)                  | `planned`, `available`
+
+
 ### Position in the table
 
 The alphabetical order based on the tool name (case insensitive).
 Take a look at [the ASCII table](https://www.rapidtables.com/code/text/ascii-table.html) if in doubt.
 
-### Description
+### Tool Description
 
 The description field should
 
