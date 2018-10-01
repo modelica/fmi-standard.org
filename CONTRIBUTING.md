@@ -80,9 +80,8 @@ Optional fields may be empty.
 
 | Column         | Description                                               | Example / valid values
 |----------------|-----------------------------------------------------------|-----------------------
-| tool_name      | The tool name that appears in the tools list              | ExampleSim
-| tool_id        | Unique tool ID (must be a valid directory name)           | ExampleSim
-| vendor_id      | Unique vendor ID (must be be a valid GitHub project name) | ExampleCorp
+| name           | The tool name that appears in the tools list              | `Example Sim`
+| id             | Unique tool ID (must be a valid directory name)           | `Example-Sim`
 | homepage       | Link to the tool's homepage (optional)                    | https://example.com/example-sim/
 | description    | A [description](#tool-description) of the tool            | Run simulations in the cloud in real time
 | license        | License                                                   | `commercial`, `osi`
