@@ -1,51 +1,62 @@
-<div class="alert alert-warning" role="alert">
-  <i class="fas fa-exclamation-triangle mr-3"></i>We're currently updating the cross-check infrastructure. Some results might not be up-to-date.
+<div class="row">
+  <div class="col-auto">
+    <div class="btn-toolbar" role="toolbar">
+        <div class="dropdown mr-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="fmiVersionButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {% if fmi_version == "fmi1" %}FMI 1.0{% else %}FMI 2.0{% endif %}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="fmiVersionButton">
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}fmi1-{{ fmi_type }}-{{ platform }}/">FMI 1.0</a>
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}fmi2-{{ fmi_type }}-{{ platform }}/">FMI 2.0</a>
+            </div>
+        </div>
+        <div class="dropdown mr-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="fmiTypeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {% if fmi_type == "cs" %}Co-Simulation{% else %}Model Exchange{% endif %}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="fmiTypeButton">
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-cs-{{ platform }}/">Co-Simulation</a>
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-me-{{ platform }}/">Model Exchange</a>
+            </div>
+        </div>
+        <div class="dropdown mr-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="platformButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {% if platform == "ccode" %}
+              <i class="fab fas-code mr-2"></i>C-code
+              {% elsif platform == "darwin64" %}
+              <i class="fab fa-apple mr-2"></i>macOS
+              {% elsif platform == "linux32" %}
+              <i class="fab fa-linux mr-2"></i>Linux 32-bit
+              {% elsif platform == "linux64" %}
+              <i class="fab fa-linux mr-2"></i>Linux 64-bit
+              {% elsif platform == "win32" %}
+              <i class="fab fa-windows mr-2"></i>Windows 32-bit
+              {% elsif platform == "win64" %}
+              <i class="fab fa-windows mr-2"></i>Windows 64-bit
+              {% endif %}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="platformButton">
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-ccode/">C-code</a>
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-darwin64/">macOS</a>
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-linux32/">Linux 32-bit</a>
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-linux64/">Linux 64-bit</a>
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-win32/">Windows 32-bit</a>
+                <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-win64/">Windows 64-bit</a>
+            </div>
+        </div>
+    </div>
+
+  </div>
+  <div class="col text-right">
+    <div class="col-lg legend text-right py-2">
+      <span class="text-muted mx-2">Legend:</span>
+      <span class="badge badge-success">successfully imported FMUs</span>
+    </div>
+  </div>
 </div>
 
-<div class="btn-toolbar" role="toolbar">
-    <div class="dropdown mr-2">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="fmiVersionButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {% if fmi_version == "fmi1" %}FMI 1.0{% else %}FMI 2.0{% endif %}
-        </button>
-        <div class="dropdown-menu" aria-labelledby="fmiVersionButton">
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}fmi1-{{ fmi_type }}-{{ platform }}/">FMI 1.0</a>
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}fmi2-{{ fmi_type }}-{{ platform }}/">FMI 2.0</a>
-        </div>
-    </div>
-    <div class="dropdown mr-2">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="fmiTypeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {% if fmi_type == "cs" %}Co-Simulation{% else %}Model Exchange{% endif %}
-        </button>
-        <div class="dropdown-menu" aria-labelledby="fmiTypeButton">
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-cs-{{ platform }}/">Co-Simulation</a>
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-me-{{ platform }}/">Model Exchange</a>
-        </div>
-    </div>
-    <div class="dropdown mr-2">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="platformButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {% if platform == "ccode" %}
-          <i class="fab fas-code mr-2"></i>C-code
-          {% elsif platform == "darwin64" %}
-          <i class="fab fa-apple mr-2"></i>macOS
-          {% elsif platform == "linux32" %}
-          <i class="fab fa-linux mr-2"></i>Linux 32-bit
-          {% elsif platform == "linux64" %}
-          <i class="fab fa-linux mr-2"></i>Linux 64-bit
-          {% elsif platform == "win32" %}
-          <i class="fab fa-windows mr-2"></i>Windows 32-bit
-          {% elsif platform == "win64" %}
-          <i class="fab fa-windows mr-2"></i>Windows 64-bit
-          {% endif %}
-        </button>
-        <div class="dropdown-menu" aria-labelledby="platformButton">
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-ccode/">C-code</a>
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-darwin64/">macOS</a>
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-linux32/">Linux 32-bit</a>
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-linux64/">Linux 64-bit</a>
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-win32/">Windows 32-bit</a>
-            <a class="dropdown-item" href="{{ "/cross-check/" | relative_url }}{{ fmi_version }}-{{ fmi_type }}-win64/">Windows 64-bit</a>
-        </div>
-    </div>
+<div class="text-right mx-3">
+  <small><a href="https://github.com/modelica/fmi-cross-check">How do I add my FMUs and results to the cross-check?</a></small>
 </div>
 
 {% if matrix[0].size == 0 %}
