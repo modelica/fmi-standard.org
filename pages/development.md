@@ -55,9 +55,19 @@ Membership in this project is open to companies, institutes, universities and ot
 
 The steering committee defines FMI policy, strategy, feature roadmap, and future FMI releases. Members are organizations that actively support FMI. Especially, a member has either to provide the FMI standard or part of it in a commercial or open source tool, and/or actively use FMI in industrial projects.
 
+Current Members of the Steering Committee: BOSCH, Dassault Systemes, dSPACE, ESI ITI, IFP EN, Maplesoft, Modelon, QTronic, Siemens PLM
+
 ## Advisory Committee
 
 The advisory committee contributes to the design of FMI. It consists of organizational members that have no voting rights but access to internal resources.
+
+Current Members of the Advisory Committee: ABB, AVL, DLR, Fraunhofer (IIS/EAS First, SCAI), Open Modelica Consortium, PMSF, TLK Thermo, TWT, University of Halle, Wolfram MathCore AB
+
+## Project leader
+
+The project leader and the deputy is elected by the Steering Committee for a two-years period
+
+Current Project Leader: Andreas Junghanns projectleader@fmi-standard.org from QTronic GmbH, deputy Torsten Blochwitz from ESI ITI GmbH
 
 ## Visitors
 
