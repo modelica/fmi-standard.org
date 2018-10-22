@@ -114,7 +114,7 @@ layout: default
     </tr>
   </thead>
   <tbody>
-    {% for tool in site.data.cross-check.tools %}
+    {% for tool in site.data.tools %}
     <tr>
       <td class="first" data-platforms="{{ tool.platforms | join: ',' }}"><a href="{{ tool.homepage }}" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="{{ tool.description }}">{{ tool.name }}</a></td>
       <td class="text-center">{% if tool.license == "osi" %}<i class="fab fa-osi"></i>{% else %}<i class="fas fa-dollar-sign"></i>{% endif %}</td>
@@ -126,26 +126,26 @@ layout: default
       </td>
       <td class="text-center">
         <div class="btn-group" role="group">
-          <a class="btn btn-sm {% if tool.export_cs_fmi1 == "planned" %}btn-outline-primary{% elsif tool.export_cs_fmi1 == "available" %}btn-primary{% elsif tool.export_cs_fmi1 == "passed" %}btn-success{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi1-cs-win64/" | relative_url }}" role="button">1.0</a>
-          <a class="btn btn-sm {% if tool.export_cs_fmi2 == "planned" %}btn-outline-primary{% elsif tool.export_cs_fmi2 == "available" %}btn-primary{% elsif tool.export_cs_fmi2 == "passed" %}btn-success{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi2-cs-win64/" | relative_url }}" role="button">2.0</a>
+          <a class="btn btn-sm {% if site.data.cross-check.result[0][tool.id] == "passed" %}btn-success{% else %}{% if tool.export_cs_fmi1 == "available" %}btn-primary{% elsif tool.export_cs_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi1-cs-win64/" | relative_url }}" role="button">1.0</a>
+          <a class="btn btn-sm {% if site.data.cross-check.result[1][tool.id] == "passed" %}btn-success{% else %}{% if tool.export_cs_fmi2 == "available" %}btn-primary{% elsif tool.export_cs_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi2-cs-win64/" | relative_url }}" role="button">2.0</a>
         </div>
       </td>
       <td class="text-center">
         <div class="btn-group" role="group">
-          <a class="btn btn-sm {% if tool.export_me_fmi1 == "planned" %}btn-outline-primary{% elsif tool.export_me_fmi1 == "available" %}btn-primary{% elsif tool.export_me_fmi1 == "passed" %}btn-success{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi1-me-win64/" | relative_url }}" role="button">1.0</a>
-          <a class="btn btn-sm {% if tool.export_me_fmi2 == "planned" %}btn-outline-primary{% elsif tool.export_me_fmi2 == "available" %}btn-primary{% elsif tool.export_me_fmi2 == "passed" %}btn-success{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi2-me-win64/" | relative_url }}" role="button">2.0</a>
+          <a class="btn btn-sm {% if site.data.cross-check.result[2][tool.id] == "passed" %}btn-success{% else %}{% if tool.export_me_fmi1 == "available" %}btn-primary{% elsif tool.export_me_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi1-me-win64/" | relative_url }}" role="button">1.0</a>
+          <a class="btn btn-sm {% if site.data.cross-check.result[3][tool.id] == "passed" %}btn-success{% else %}{% if tool.export_me_fmi2 == "available" %}btn-primary{% elsif tool.export_me_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi2-me-win64/" | relative_url }}" role="button">2.0</a>
         </div>
       </td>
       <td class="text-center">
         <div class="btn-group" role="group">
-          <a class="btn btn-sm {% if tool.import_cs_fmi1 == "planned" %}btn-outline-primary{% elsif tool.import_cs_fmi1 == "available" %}btn-primary{% elsif tool.import_cs_fmi1 == "passed" %}btn-success{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi1-cs-win64/" | relative_url }}" role="button">1.0</a>
-          <a class="btn btn-sm {% if tool.import_cs_fmi2 == "planned" %}btn-outline-primary{% elsif tool.import_cs_fmi2 == "available" %}btn-primary{% elsif tool.import_cs_fmi2 == "passed" %}btn-success{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi2-cs-win64/" | relative_url }}" role="button">2.0</a>
+          <a class="btn btn-sm {% if site.data.cross-check.result[4][tool.id] == "passed" %}btn-success{% else %}{% if tool.import_cs_fmi1 == "available" %}btn-primary{% elsif tool.import_cs_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi1-cs-win64/" | relative_url }}" role="button">1.0</a>
+          <a class="btn btn-sm {% if site.data.cross-check.result[5][tool.id] == "passed" %}btn-success{% else %}{% if tool.import_cs_fmi2 == "available" %}btn-primary{% elsif tool.import_cs_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi2-cs-win64/" | relative_url }}" role="button">2.0</a>
         </div>
       </td>
       <td class="text-center">
         <div class="btn-group" role="group">
-          <a class="btn btn-sm {% if tool.import_me_fmi1 == "planned" %}btn-outline-primary{% elsif tool.import_me_fmi1 == "available" %}btn-primary{% elsif tool.import_me_fmi1 == "passed" %}btn-success{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi1-me-win64/" | relative_url }}" role="button">1.0</a>
-          <a class="btn btn-sm {% if tool.import_me_fmi2 == "planned" %}btn-outline-primary{% elsif tool.import_me_fmi2 == "available" %}btn-primary{% elsif tool.import_me_fmi2 == "passed" %}btn-success{% else %}btn-outline-light{% endif %}" href="{{ "/cross-check/fmi2-me-win64/" | relative_url }}" role="button">2.0</a>
+          <a class="btn btn-sm {% if site.data.cross-check.result[6][tool.id] == "passed" %}btn-success{% else %}{% if tool.import_me_fmi1 == "available" %}btn-primary{% elsif tool.import_me_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi1-me-win64/" | relative_url }}" role="button">1.0</a>
+          <a class="btn btn-sm {% if site.data.cross-check.result[7][tool.id] == "passed" %}btn-success{% else %}{% if tool.import_me_fmi2 == "available" %}btn-primary{% elsif tool.import_me_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi2-me-win64/" | relative_url }}" role="button">2.0</a>
         </div>
       </td>
     </tr>
