@@ -61,7 +61,7 @@ Current Members of the Steering Committee: BOSCH, Dassault Systemes, dSPACE, ESI
 
 The advisory committee contributes to the design of FMI. It consists of organizational members that have no voting rights but access to internal resources.
 
-Current Members of the Advisory Committee: ABB, AVL, DLR, Fraunhofer (IIS/EAS First, SCAI), Open Modelica Consortium, PMSF, TLK Thermo, TWT, University of Halle, Wolfram MathCore AB
+Current Members of the Advisory Committee: ABB, AVL, DLR, Fraunhofer (IEM, IIS/EAS First, SCAI), Open Modelica Consortium, PMSF, TLK Thermo, TWT, University of Halle, Wolfram MathCore AB
 
 ## Project leader
 
