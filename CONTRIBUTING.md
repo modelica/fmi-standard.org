@@ -79,21 +79,21 @@ Please respect the rules below when editing the file.
 
 Optional fields may be empty.
 
-| Column         | Description                                               | Example / valid values
-|----------------|-----------------------------------------------------------|-----------------------
-| name           | The tool name that appears in the tools list              | `Example Sim`
-| id             | Unique tool ID (must be a valid directory name)           | `Example-Sim`
-| homepage       | Link to the tool's homepage (optional)                    | https://example.com/example-sim/
-| description    | A [description](#tool-description) of the tool            | Run simulations in the cloud in real time
-| license        | License                                                   | `commercial`, `osi`
-| export_cs_fmi1 | FMI 1.0 Co-Simulation export (optional)                   | `planned`, `available`
-| export_cs_fmi2 | FMI 2.0 Co-Simulation export (optional)                   | `planned`, `available`
-| export_me_fmi1 | FMI 1.0 Model Exchange export (optional)                  | `planned`, `available`
-| export_me_fmi2 | FMI 2.0 Model Exchange export (optional)                  | `planned`, `available`
-| import_cs_fmi1 | FMI 1.0 Co-Simulation import (optional)                   | `planned`, `available`
-| import_cs_fmi2 | FMI 2.0 Co-Simulation import (optional)                   | `planned`, `available`
-| import_me_fmi1 | FMI 1.0 Model Exchange import (optional)                  | `planned`, `available`
-| import_me_fmi2 | FMI 2.0 Model Exchange import (optional)                  | `planned`, `available`
+| Column         | Description                                     | Example / valid values
+|----------------|-------------------------------------------------|-----------------------
+| name           | The tool name that appears in the tools list    | `Example Sim`
+| id             | Unique tool ID (must be a valid directory name) | `Example-Sim`
+| homepage       | Link to the tool's homepage (optional)          | https://example.com/example-sim/
+| description    | A [description](#tool-description) of the tool  | Run simulations in the cloud in real time
+| license        | License (commercial or [OSI approved](https://opensource.org/licenses)) | `commercial`, `osi`
+| export_cs_fmi1 | FMI 1.0 Co-Simulation export (optional)         | `planned`, `available`
+| export_cs_fmi2 | FMI 2.0 Co-Simulation export (optional)         | `planned`, `available`
+| export_me_fmi1 | FMI 1.0 Model Exchange export (optional)        | `planned`, `available`
+| export_me_fmi2 | FMI 2.0 Model Exchange export (optional)        | `planned`, `available`
+| import_cs_fmi1 | FMI 1.0 Co-Simulation import (optional)         | `planned`, `available`
+| import_cs_fmi2 | FMI 2.0 Co-Simulation import (optional)         | `planned`, `available`
+| import_me_fmi1 | FMI 1.0 Model Exchange import (optional)        | `planned`, `available`
+| import_me_fmi2 | FMI 2.0 Model Exchange import (optional)        | `planned`, `available`
 
 
 ### Position in the table
