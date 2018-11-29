@@ -79,6 +79,7 @@ layout: default
           <button id="btn-opensource" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Open Source"><i class="fab fa-osi"></i></button>
         </div>
       </div>
+      <button id="btn-crosscheck" type="button"class="btn btn-secondary ml-3" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Cross-Check passed"><i class="fas fa-exchange-alt"></i></button>
       <input id="inp-filter" type="text" class="form-control ml-3 my-2" value="" placeholder="Filter">
     </form>
   </div>
@@ -187,6 +188,7 @@ function filterRows() {
   var showMacOS   = $("#btn-macos").hasClass('active');
   var showLinux   = $("#btn-linux").hasClass('active');
   var showWindows = $("#btn-windows").hasClass('active');
+  var showPassed  = $("#btn-crosscheck").hasClass('active');
 
   var showCommercial = $("#btn-commercial").hasClass('active');
   var showOpenSource = $("#btn-opensource").hasClass('active');
@@ -199,6 +201,7 @@ function filterRows() {
     var td1 = tr[i].getElementsByTagName("td")[1];
 
     var commercial = $(td1).find("i").hasClass("fa-dollar-sign");
+    var passed = $(tr[i]).find('.btn-primary, .btn-outline-primary').length == 0;
 
     if (td0) {
 
@@ -213,6 +216,7 @@ function filterRows() {
         (showWindows && !platforms.includes("win64"))    ||
         (showCommercial && !commercial) ||
         (showOpenSource && commercial)  ||
+        (showPassed && !passed)  ||
         (filter != "" && !tool.includes(filter) && !vendor.includes(filter))
       ) {
         tr[i].style.display = "none";
