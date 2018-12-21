@@ -2,18 +2,16 @@ version: 2
 jobs:
   build:
     machine: true
-    working_directory: /tmp/project
     steps:
       - checkout
       - run:
           name: Validate _data/tools.csv
           command: python _scripts/validate_tools_csv.py
       - run:
-          name: Create _site directory
-          command: mkdir _site
-      - run:
           name: Build site
-          command: docker run -v /tmp/project:/srv/jekyll jekyll/jekyll jekyll build
+          command: |
+            mkdir _site
+            docker run -v ~/project:/srv/jekyll jekyll/jekyll jekyll build
       - run:
-          name: Validate generated HTML
-          command: docker run -v /tmp/project/_site:/site 18fgsa/html-proofer /site --only-4xx
+          name: Validate site
+          command: docker run -v ~/project/_site:/site 18fgsa/html-proofer /site --only-4xx
