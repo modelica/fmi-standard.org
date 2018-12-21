@@ -164,31 +164,25 @@ Linking to a PDF for readers to download:
 
 ## Building the website locally
 
-1. Install a full [Ruby development environment](https://www.ruby-lang.org/en/downloads/)
-
-2. Clone the repository, change into the directory and pull the changes
+1. Clone the repository, change into the directory and pull the changes
    ```
    git clone https://github.com/modelica/fmi-standard.org.git
    cd fmi-standard.org
    git pull
    ```
 
-3. Install the Jekyll and [bundler](https://jekyllrb.com/docs/ruby-101/#bundler) [gems](https://jekyllrb.com/docs/ruby-101/#gems) and install the dependencies
-   ```
-   gem install jekyll bundler
-   bundle install
-   ```
+2. Install [Docker](https://www.docker.com/get-started)
 
-4. Build the site and make it available on a local server
+3. Build the site and make it available on a local server
+
    ```
-   bundle exec jekyll serve
+   docker run --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll jekyll serve
    ```
 
-5. Now browse to [http://localhost:4000](http://localhost:4000)
+   Now browse to [http://localhost:4000](http://localhost:4000)
 
-Before you push you changes, build and check your commit for syntax errors and broken links:
+4. Before you push your changes, build and check your commit for syntax errors and broken links:
 
-```
-bundle exec jekyll build
-bundle exec htmlproofer ./_site --only-4xx
-```
+   ```
+   docker run -v $PWD/_site:/site 18fgsa/html-proofer /site --only-4xx
+   ```
