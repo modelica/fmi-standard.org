@@ -18,5 +18,5 @@ Users can also give feedback on their experience with FMI and missing features f
 More information is contained in the [call for participation](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/CFP_FMI-User-Meeting_Modelica_Conference_2019.pdf).
 
 If you are interested in giving a 15 min presentation, please submit an [abstract of your presentation](https://modelica.org/events/modelica2019/subpages/callforpapers) until
-January 21, 20219 at the EasyChair Conference Management System selecting "Modelica 2019 Industrial User Presentations" and
+January 21, 2019 at the EasyChair Conference Management System selecting "Modelica 2019 Industrial User Presentations" and
 Topic "FMI – Functional Mockup Interface".
