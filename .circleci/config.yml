@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Validate _data/tools.csv
+          command: python _scripts/validate_tools_csv.py
+      - run:
+          name: Build site
+          command: docker run -v ~/project:/srv/jekyll jekyll/jekyll jekyll build
+      - run:
+          name: Validate generated HTML
+          command: docker run -v ~/project/_site:/site 18fgsa/html-proofer /site --only-4xx
