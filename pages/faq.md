@@ -5,6 +5,37 @@ layout: default
 toc: true
 ---
 
+# General questions about FMI
+
+## How are the FMI version numbers defined and what does backwards compatibility of a minor version mean?
+
+According to the FMI development process (link), the version number of an FMI release is defined in the following way:
+
+- Version number: `MajorVersion.MinorVersion.MaintnanceVersion`
+- Changes introduced by Major versions don't have to be *backward nor forward compatible*.
+- Minor versions within the same Major version have to be backward compatible.
+- Maintenance versions must not introduce new features and have to be forward and backward compatible.
+- All versions will have semantic version numbers.
+
+Note that **backward and forward compatibility** is with respect to the FMI specification, not with respect to a tool. For example, if FMI 2.1 is backward compatible to FMI 2.0, then every 2.0 FMU must be also a valid 2.1 FMU. As a consequence, a minor version implies restrictions with respect to the previous minor version, especially, but not limited to: (a) new XML elements and attributes, as well as new C API functions must be optional, (b) the argument lists of existing C API functions cannot change (only the meaning of existing arguments can be enhanced, if this is signaled in the modelDescription.xml file with new, optional, XML elements or attributes).
+
+A change to the previous FMI version is called backwards compatible if every FMU compliant with the previous version is also a valid component of the new FMI version. In more detail this means:
+
+- XML elements can be added in the new version, but existing XML elements cannot be removed.
+- An existing XML enumeration can be extended, but only in a way that the mapping of the enumeration to Integer does not change for the enumeration values of the previous version.
+- New function prototypes can be added in the new version, but existing function prototypes cannot be changed and cannot be removed.
+- New struct prototypes can be added in the new version, but existing struct prototypes cannot be changed and cannot be removed.
+
+
+## When will FMI 3.0 be released?
+
+ The FMI Steering Committee has decided not to publish a release date.
+ New versions will be released according to the [FMI Development Process](https://svn.fmi-standard.org/fmi/branches/public/docs/DevProcess/FMI_DevelopmentProcess_1.0.pdf) as soon as the quality gates are fulfilled.
+ Currently four FMI Working Groups are working on new FMI features (see below).
+ The Progress of the development can be tracked on [GitHub](https://github.com/modelica/fmi-standard).
+
+
+## What will be the new features of FMI 3.0?
 
 The FMI Steering Committee is happy to announce the preliminary (Alpha) feature list for FMI 3.0.
 "Preliminary" means that we might be forced to drop some features from that list for the actual release.
@@ -29,40 +60,6 @@ This list is based on the results of the respective working groups which were di
   Adding more information to the modelDescription.xml file to improve automatic import of source code FMUs.
 
 In the unlikely event of unsolvable conflicts between features, the FMI Steering Committee might be forced to again remove or alter features during the merge-phase of all FCPs starting after the release of the Beta feature list. The FMI Steering Committee will make these FCPs available to interested parties on request once their maturity allows dissemination.
-
-
-# General questions about FMI
-
-## How are the FMI version numbers defined and what does backwards compatibility of a minor version mean?
-
-According to the FMI development process (link), the version number of an FMI release is defined in the following way:
-
-- Version number: `MajorVersion.MinorVersion.MaintnanceVersion`
-- Changes introduced by Major versions don't have to be *backward nor forward compatible*.
-- Minor versions within the same Major version have to be backward compatible.
-- Maintenance versions must not introduce new features and have to be forward and backward compatible.
-- All versions will have semantic version numbers.
-
-Note that **backward and forward compatibility** is with respect to the FMI specification, not with respect to a tool. For example, if FMI 2.1 is backward compatible to FMI 2.0, then every 2.0 FMU must be also a valid 2.1 FMU. As a consequence, a minor version implies restrictions with respect to the previous minor version, especially, but not limited to: (a) new XML elements and attributes, as well as new C API functions must be optional, (b) the argument lists of existing C API functions cannot change (only the meaning of existing arguments can be enhanced, if this is signaled in the modelDescription.xml file with new, optional, XML elements or attributes).
-
-A change to the previous FMI version is called backwards compatible if every FMU compliant with the previous version is also a valid component of the new FMI version. In more detail this means:
-
-- XML elements can be added in the new version, but existing XML elements cannot be removed.
-- An existing XML enumeration can be extended, but only in a way that the mapping of the enumeration to Integer does not change for the enumeration values of the previous version.
-- New function prototypes can be added in the new version, but existing function prototypes cannot be changed and cannot be removed.
-- New struct prototypes can be added in the new version, but existing struct prototypes cannot be changed and cannot be removed.
-
-## Why shall the next FMI release with new features be 3.0 and not 2.1?
-
-After intense struggles to build easy to understand FMI Change Proposals (FCPs), the FMI Steering Committee decided that a point was reached where the cost to keep the FMI 2.1 release backward compatible with 2.0 was too high. Consequently, the decision was reached to rename the next release to "FMI 3.0".
-
-- The alpha feature list remains the same for 3.0 as it was published for 2.1: It is not intended to include additional new features in FMI 3.0 beyond the alpha features list.
-- The authors of the FCPs are requested to keep the non-backwards compatible changes at a minimum in order to keep the implementation effort at a minimum.
-- We will try to keep the release schedule largely the same: partial reformulation of some FCPs to take advantage of the fact that we are not bound to be backward compatible anymore will only create a limited additional effort.
-- We are considering some minor cleanup work in the standard document.
-- There are no current plans to release a FMI 2.1 version.
-- For importing tools there will be no higher effort to implement this 3.0 standard than the previously intended 2.1 version.
-We are certain that FMI 3.0 will be simpler to understand and implement now that we can simplify the FCPs.
 
 
 ## What are the license and usage conditions for the FMI standard?
