@@ -7,26 +7,6 @@ toc: true
 
 # General questions about FMI
 
-## How are the FMI version numbers defined and what does backwards compatibility of a minor version mean?
-
-According to the FMI development process (link), the version number of an FMI release is defined in the following way:
-
-- Version number: `MajorVersion.MinorVersion.MaintnanceVersion`
-- Changes introduced by Major versions don't have to be *backward nor forward compatible*.
-- Minor versions within the same Major version have to be backward compatible.
-- Maintenance versions must not introduce new features and have to be forward and backward compatible.
-- All versions will have semantic version numbers.
-
-Note that **backward and forward compatibility** is with respect to the FMI specification, not with respect to a tool. For example, if FMI 2.1 is backward compatible to FMI 2.0, then every 2.0 FMU must be also a valid 2.1 FMU. As a consequence, a minor version implies restrictions with respect to the previous minor version, especially, but not limited to: (a) new XML elements and attributes, as well as new C API functions must be optional, (b) the argument lists of existing C API functions cannot change (only the meaning of existing arguments can be enhanced, if this is signaled in the modelDescription.xml file with new, optional, XML elements or attributes).
-
-A change to the previous FMI version is called backwards compatible if every FMU compliant with the previous version is also a valid component of the new FMI version. In more detail this means:
-
-- XML elements can be added in the new version, but existing XML elements cannot be removed.
-- An existing XML enumeration can be extended, but only in a way that the mapping of the enumeration to Integer does not change for the enumeration values of the previous version.
-- New function prototypes can be added in the new version, but existing function prototypes cannot be changed and cannot be removed.
-- New struct prototypes can be added in the new version, but existing struct prototypes cannot be changed and cannot be removed.
-
-
 ## When will FMI 3.0 be released?
 
  The FMI Steering Committee has decided not to publish a release date.
@@ -69,7 +49,7 @@ Access and use of the FMI standard is free of charge. However, vendors may charg
 **To be clear: While the FMI standard is open and free, commercial implementations might not be.**
 
 
-## How can I join the FMI Mailing Lists?
+## How can I join the FMI mailing lists?
 
 - The “FMI-Info-Mailing list” is used for public announcements. You can find a registration link on our contact page.
 - The “FMI design” Mailing list is used by active developers of FMI (typically members of the FMI Advisory or Steering Committee). If you are interested please contact contact@fmi-standard.org
@@ -142,9 +122,4 @@ The Cross-Check Rules list a number of conditions before turning an entry “gre
 - Exporting tools must provide at least 3 FMUs and at least one importer must report successful import.
 - Importing tools must report (and prove) successful import of at least 3 FMUs of at least 3 exporting tools.
 
-Please refer to the complete set of rules and notes.
-
-
-## Why are the badge-numbers of the platform-drop-down not adding up to the badge-number in the overview?
-
-The platform-drop-down list contains only platforms the tool has passed the Cross-Check Rules. But the overview lists all FMUs or Cross-Check Results submitted.
+Please refer to the [FMI Cross-Check Rules](https://github.com/modelica/fmi-cross-check/blob/master/FMI-CROSS-CHECK-RULES.md).
