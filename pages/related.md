@@ -32,7 +32,7 @@ es possible to integrate various kinds of systems. The DCP specification is suit
 may be implemented on hardware as well as in software. Typical examples are middleware, runtime environments, (virtualized) operating
  systems, electronic control units, FPGAs, and many more. 
  
-Link to [project page](https://dcp-standard.org/dcp/).
+Link to [project page](https://dcp-standard.org/).
 
 
 ## ASAM XIL-MA
