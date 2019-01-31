@@ -19,7 +19,7 @@ of the “System Structure and Parameterization of Components for Virtual System
  - Define a standardized format for the connection structure for a network of components.
  - The developed standard / APIs should be usable in all stages of development process (architecture definition, integration, simulation, test in MiL, SiL, HiL).
 
-Link to [project page](www.ssp-standard.org).
+Link to [project page](https://ssp-standard.org/).
 
 ## MAP DCP
 
