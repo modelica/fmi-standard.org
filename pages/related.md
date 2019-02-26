@@ -19,7 +19,21 @@ of the “System Structure and Parameterization of Components for Virtual System
  - Define a standardized format for the connection structure for a network of components.
  - The developed standard / APIs should be usable in all stages of development process (architecture definition, integration, simulation, test in MiL, SiL, HiL).
 
-Link to [project page](https://www.modelica.org/projects).
+Link to [project page](https://ssp-standard.org/).
+
+## MAP DCP
+
+The DCP is a platform and communication medium independent standard for the integration of real-time systems into simulation environments. The DCP is standardized by the Modelica Association, where it is maintained as a Modelica Association Project (MAP). 
+
+The DCP is defined in a way such that it supports the integration of FMI based systems within DCP slaves. This applies to FMI for Model Exchange as well as FMI for Co-Simulation. The DCP state machine is designed that it matches operations defined in the state machine of the FMI. Furthermore, the DCP slave description file is aligned to the model description file of the FMI. The data types defined in the DCP slave description file may also be converted to FMI compatible data types. This principle supports FMI-based simulation models, considering the fact that FMI is one of the most common co-simulation standards today.   
+
+Whereas the FMI represents an application programming interface (API), the DCP represents a communication protocol. Therefore, it becom
+es possible to integrate various kinds of systems. The DCP specification is suitable for a broad range of computing platforms. It 
+may be implemented on hardware as well as in software. Typical examples are middleware, runtime environments, (virtualized) operating
+ systems, electronic control units, FPGAs, and many more. 
+ 
+Link to [project page](https://dcp-standard.org/).
+
 
 ## ASAM XIL-MA
 
