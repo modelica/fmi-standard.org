@@ -502,7 +502,7 @@ table tr.even,table tr.alt,table tr:nth-of-type(even) {
 <li><a href="#creation-destruction-and-logging">2.1.5. Creation, Destruction and Logging of FMU Instances</a></li>
 <li><a href="#_initialization_termination_and_resetting_an_fmu">2.1.6. Initialization, Termination, and Resetting an FMU</a></li>
 <li><a href="#get-and-set-variable-values">2.1.7. Getting and Setting Variable Values</a></li>
-<li><a href="#GetSetCompleteFMUState">2.1.8. Getting and Setting the Complete FMU State </a></li>
+<li><a href="#get-set-fmu-state">2.1.8. Getting and Setting the Complete FMU State</a></li>
 <li><a href="#_getting_partial_derivatives">2.1.9. Getting Partial Derivatives</a></li>
 <li><a href="#_getting_number_of_event_indicators">2.1.10. Getting Number of Event Indicators</a></li>
 <li><a href="#_getting_number_of_states">2.1.11. Getting Number of States</a></li>
@@ -1349,7 +1349,7 @@ Using this pointer, data from the <code>modelDescription.xml</code> file <em>[fo
 </div>
 <div class="paragraph">
 <p>This is a pointer to a data structure in the FMU that saves the internal FMU state of the actual or a previous time instant.
-This allows to restart a simulation from a previous FMU state (see <a href="#get-set-fmu-state">[get-set-fmu-state]</a>).</p>
+This allows to restart a simulation from a previous FMU state (see <a href="#get-set-fmu-state">Section 2.1.8</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2041,7 +2041,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Component c,
 </div>
 </div>
 <div class="sect3">
-<h4 id="GetSetCompleteFMUState">2.1.8. Getting and Setting the Complete FMU State <a id="get-set-fmu-state"></a></h4>
+<h4 id="get-set-fmu-state">2.1.8. Getting and Setting the Complete FMU State</h4>
 <div class="paragraph">
 <p>The FMU has an internal state consisting of all values that are needed to continue a simulation.
 This internal state consists especially of the values of the continuous-time states, iteration variables, parameter values, input values, delay buffers, file identifiers, and FMU internal status information.
@@ -8532,7 +8532,7 @@ The previous header file fmiFunctions.h is split into 2 header files, fmi2Functi
 </li>
 <li>
 <p>Fixing ticket #45:<br>
-Contrary to the ticket proposal, no new function <code>fmiResetModel</code> is added. Instead 6 new functions are added to get and set the internal FMU state via a pointer and to serialize and deserialize an FMU state via a byte vector provided by the environment. For details, see <a href="#get-set-fmu-state">[get-set-fmu-state]</a>. This feature allows, for example, to support more sophisticated co-simulation master algorithms which require the repetition of communication steps. Additionally, two capability flags have been added (<code>canGetAndSetFMUstate</code>, <code>canSerializeFMUstate</code>) in order to define whether these features are supported by the FMU.</p>
+Contrary to the ticket proposal, no new function <code>fmiResetModel</code> is added. Instead 6 new functions are added to get and set the internal FMU state via a pointer and to serialize and deserialize an FMU state via a byte vector provided by the environment. For details, see <a href="#get-set-fmu-state">Section 2.1.8</a>. This feature allows, for example, to support more sophisticated co-simulation master algorithms which require the repetition of communication steps. Additionally, two capability flags have been added (<code>canGetAndSetFMUstate</code>, <code>canSerializeFMUstate</code>) in order to define whether these features are supported by the FMU.</p>
 </li>
 <li>
 <p>Fixing ticket #46:<br>
