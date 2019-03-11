@@ -967,18 +967,18 @@ some functionality requires source code.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>A schematic view of an FMU is shown in Figure 1:</p>
+<p>A schematic view of an FMU is shown in <a href="#figure-data-flow">Figure 1</a>:</p>
 </div>
-<div class="paragraph">
-<div class="title">Data flow between the environment and an FMU.</div>
-<p>For details, see <a href="#fmi-for-model-exchange">Section 3</a> and <a href="#fmi-for-co-simulation">Section 4</a>.
-<span class="blue">Blue</span> arrows: Information provided by the FMU.
-<span class="red">Red</span> arrows: Information provided to the FMU.</p>
-</div>
-<div class="imageblock text-center">
+<div id="figure-data-flow" class="imageblock text-center">
 <div class="content">
 <img src="images/enclosing_model.svg" alt="enclosing model" width="60%">
 </div>
+<div class="title">Figure 1. Data flow between the environment and an FMU.</div>
+</div>
+<div class="paragraph">
+<p>For details, see <a href="#fmi-for-model-exchange">Section 3</a> and <a href="#fmi-for-co-simulation">Section 4</a>.
+<span class="blue">Blue</span> arrows: Information provided by the FMU.
+<span class="red">Red</span> arrows: Information provided to the FMU.</p>
 </div>
 <div class="paragraph">
 <p>Publications for FMI are available from <a href="https://fmi-standard.org/literature/" class="bare">https://fmi-standard.org/literature/</a>,
@@ -4878,19 +4878,19 @@ The version number of the header file used to construct the FMU can be deduced v
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter contains the interface description to access the equations of a dynamic system from a C program.
-A schematic view of a model in "FMI for Model Exchange" format is shown in Figure 2:</p>
+A schematic view of a model in "FMI for Model Exchange" format is shown in <a href="#figure-model-exchange-data-flow">Figure 2</a>:</p>
+</div>
+<div id="figure-model-exchange-data-flow" class="imageblock text-center">
+<div class="content">
+<img src="images/model-exchange-data-flow.svg" alt="model exchange data flow" width="80%">
+</div>
+<div class="title">Figure 2. Data flow between the environment and an FMU for Model Exchange</div>
 </div>
 <div class="paragraph">
-<div class="title">Data flow between the environment and an FMU for Model Exchange:</div>
 <p><strong class="blue">Blue</strong> arrows: Information provided by the FMU.<br>
 <strong class="red">Red</strong> arrows : Information provided to the FMU.<br>
 <strong>v</strong><sub>start</sub>, <strong>u</strong>, <strong>y</strong>, <strong>w</strong>, <strong>x</strong><sub>d</sub> are of type Real, Integer, Boolean, String;
 <strong>t</strong>, <strong>x</strong><sub>c</sub>, <strong>z</strong> are of type Real.</p>
-</div>
-<div class="imageblock text-center">
-<div class="content">
-<img src="images/model-exchange-data-flow.svg" alt="model exchange data flow" width="80%">
-</div>
 </div>
 <div class="sect2">
 <h3 id="math-model-exchange">3.1. Mathematical description</h3>
@@ -5005,13 +5005,13 @@ that is, a variable that changes its value only at an event instant \(t_i\).</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>At every event instant \(t_i\), variables might be discontinuous (see Figure 3).</p>
+<p>At every event instant \(t_i\), variables might be discontinuous (see <a href="#figure-piecwise-continuous-variables">Figure 3</a>).</p>
 </div>
-<div class="imageblock">
+<div id="figure-piecwise-continuous-variables" class="imageblock">
 <div class="content">
 <img src="images/PieceWiseContinuousVariables.svg" alt="PieceWiseContinuousVariables" width="60%">
 </div>
-<div class="title">Figure 3: Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
+<div class="title">Figure 3. Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
 </div>
 <div class="paragraph">
 <p>An <span class="underline">event instant</span> \(t_i\) is defined by one of the following conditions that give the smallest time instant:</p>
@@ -5031,18 +5031,18 @@ All the following events are internal events.</p>
 Such an event is called <span class="underline">time event</span>.</p>
 </li>
 <li>
-<p>At a time instant, where an <span class="underline">event indicator</span> \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see Figure 4 below).
+<p>At a time instant, where an <span class="underline">event indicator</span> \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 4</a> below).
 More precisely: An event \(t = t_i\) occurs at the smallest time instant "min t" with \(t&gt;t_{i-1}\) where "\((z_j(t)&gt;0) \ne (z_j(t_{i-1}) &gt;0)\)".
 Such an event is called <span class="underline">state event</span> <sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnotedef_11" title="View footnote.">11</a>]</sup>.
 All event indicators are piecewise continuous and are collected together in one vector of real numbers \(\mathbf{z(t)}\).<br></p>
 </li>
 </ol>
 </div>
-<div class="imageblock text-center">
+<div id="figure-events" class="imageblock text-center">
 <div class="content">
 <img src="images/Event.svg" alt="Event" width="60%">
 </div>
-<div class="title">Figure 4: An event occurs when the event indicator changes its domain from \(z&gt;0\) to \(z\leq 0\) or vice versa.</div>
+<div class="title">Figure 4. An event occurs when the event indicator changes its domain from \(z&gt;0\) to \(z\leq 0\) or vice versa.</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="4">
@@ -5174,13 +5174,13 @@ This data is optionally provided in the XML file under element <code>&lt;ModelSt
 If this data is not provided, the worst case must be assumed (for example, all output variables depend algebraically on all input variables).</p>
 </div>
 <div class="paragraph">
-<p><em>[Example: In Figure 5 two different types of connected FMUs are shown (the "dotted lines" characterize the dependency information):</em></p>
+<p><em>[Example: In <a href="#figure-connected-fmus">Figure 5</a> two different types of connected FMUs are shown (the "dotted lines" characterize the dependency information):</em></p>
 </div>
-<div class="imageblock text-center">
+<div id="figure-connected-fmus" class="imageblock text-center">
 <div class="content">
 <img src="images/ArtificialAlgebraicLoop.svg" alt="ArtificialAlgebraicLoop" width="80%">
 </div>
-<div class="title">Figure 5: Calling sequences for FMUs that are connected in a loop.</div>
+<div class="title">Figure 5. Calling sequences for FMUs that are connected in a loop.</div>
 </div>
 <div class="paragraph">
 <p><em>In the upper diagram, FMU1 and FMU2 are connected in such a way that by an appropriate sequence of <code>fmi3SetXXX</code> and <code>fmi3GetXXX</code> calls, the FMU variables can be computed.
@@ -5371,7 +5371,7 @@ initial=exact_~ are included here)</p></td>
 <p><em>In the table above, for notational convenience in every Mode one function call is defined to compute all output arguments from all inputs arguments.
 In reality, every scalar output argument is computed by one <code>fmi3GetXXX</code> function call.
 Additionally, the output argument need not be a function of all input arguments, but of only a subset from it, as defined in the XML file under</em> <code>&lt;ModelStructure&gt;</code>.
-<em>This is essential when FMUs are connected in a loop, as shown in</em> Figure 6: <em>For example, since</em> \(y_{2a}\) <em>depends only on</em>
+<em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 5</a>. For example, since</em> \(y_{2a}\) <em>depends only on</em>
 \(u_{1a}\) <em>, but not on</em> \(u_{1b}\)<em>, it is possible to call</em> <code>fmi3SetXXX</code> <em>to set</em> \(u_{1a}\) <em>, and then inquire</em> \(y_{2a}\) <em>with</em> <code>fmi3GetXXX</code> <em>without setting</em> \(u_{1b}\) <em>beforehand.</em></p>
 </div>
 <div class="paragraph">
@@ -5810,7 +5810,7 @@ Example:<br>
 <div class="content">
 <img src="images/CallingSequenceME.png" alt="CallingSequenceME" width="100%">
 </div>
-<div class="title">Figure 1. Calling sequence of Model Exchange C functions in form of an UML 2.0 state machine.</div>
+<div class="title">Figure 6. Calling sequence of Model Exchange C functions in form of an UML 2.0 state machine.</div>
 </div>
 <div class="paragraph">
 <p>The objective of the start chart is to define the allowed calling sequences for functions of the FMI: Calling sequences not accepted by the state chart are not supported by the FMI.
@@ -6599,19 +6599,19 @@ unsignedInt: 0</p>
 Co-simulation is a rather general approach to the simulation of coupled technical systems and coupled physical phenomena in engineering with focus on instationary (time-dependent) problems.</p>
 </div>
 <div class="paragraph">
-<p>FMI for Co-Simulation is designed both for coupling with subsystem models, which have been exported by their simulators together with its solvers as runnable code (Figure 7), and for coupling of simulation tools (simulator coupling, tool coupling (Figure 8 and Figure 7)).</p>
+<p>FMI for Co-Simulation is designed both for coupling with subsystem models, which have been exported by their simulators together with its solvers as runnable code (<a href="#figure-co-simulation-with-generated-code">Figure 7</a>), and for coupling of simulation tools (simulator coupling, tool coupling (<a href="#figure-co-simulation-with-tool-coupling">Figure 8</a> <a href="#figure-co-simulation-with-generated-code">Figure 7</a>)).</p>
 </div>
-<div class="imageblock text-center">
+<div id="figure-co-simulation-with-generated-code" class="imageblock text-center">
 <div class="content">
 <img src="images/co-simulation-single-slave.svg" alt="co simulation single slave" width="50%">
 </div>
-<div class="title">Figure 7: Co-simulation with generated code on a single computer (for simplicity shown for one slave only).</div>
+<div class="title">Figure 7. Co-simulation with generated code on a single computer (for simplicity shown for one slave only).</div>
 </div>
-<div class="imageblock text-center">
+<div id="figure-co-simulation-with-tool-coupling" class="imageblock text-center">
 <div class="content">
 <img src="images/co-simulation-tool-coupling.svg" alt="co simulation tool coupling" width="70%">
 </div>
-<div class="title">Figure 8: Co-simulation with tool coupling on a single computer (for simplicity shown for one slave only).</div>
+<div class="title">Figure 8. Co-simulation with tool coupling on a single computer (for simplicity shown for one slave only).</div>
 </div>
 <div class="paragraph">
 <p>In the tool coupling case the FMU implementation wraps the FMI function calls to API calls which are provided by the simulation tool (for example, a COM or CORBA API).
@@ -6621,13 +6621,13 @@ Additionally to the FMU the simulation tool is needed to run a co-simulation.</p
 <p>In its most general form, a tool coupling based co-simulation is implemented on distributed hardware with subsystems being handled by different computers with different OS (cluster computer, computer farm, computers at different locations).
 The data exchange and communication between the subsystems is typically done using one of the network communication technologies (for example, MPI, TCP/IP).
 The definition of this communication layer is not part of the FMI standard.
-However, distributed co-simulation scenarios can be implemented using FMI as shown in Figure 9.</p>
+However, distributed co-simulation scenarios can be implemented using FMI as shown in <a href="#figure-distributed-co-simulation">Figure 9</a>.</p>
 </div>
-<div class="imageblock text-center">
+<div id="figure-distributed-co-simulation" class="imageblock text-center">
 <div class="content">
 <img src="images/co-simulation-distributed-infrastructure.svg" alt="co simulation distributed infrastructure" width="90%">
 </div>
-<div class="title">Figure 9: Distributed co-simulation infrastructure (for simplicity shown for one slave only).</div>
+<div class="title">Figure 9. Distributed co-simulation infrastructure (for simplicity shown for one slave only).</div>
 </div>
 <div class="paragraph">
 <p>The master has to implement the communication layer.
@@ -6654,7 +6654,7 @@ In this framework, the physical connections between subsystems are represented b
 <div class="content">
 <img src="images/co-simulation-data-flow.svg" alt="co simulation data flow" width="80%">
 </div>
-<div class="title">Figure 10: Data flow at communication points.</div>
+<div class="title">Figure 10. Data flow at communication points.</div>
 </div>
 <div class="paragraph">
 <p>For co-simulation two basic groups of functions have to be realized:</p>
@@ -7783,7 +7783,7 @@ We consider two slaves, where both have one continuous real input and one contin
 <div class="content">
 <img src="images/co-simulation-connection-of-slaves.svg" alt="co simulation connection of slaves" width="30%">
 </div>
-<div class="title">Figure 12: Connection graph of the slaves.</div>
+<div class="title">Figure 11. Connection graph of the slaves.</div>
 </div>
 <div class="paragraph">
 <p>We assume no algebraic dependency between input and output of each slave.
@@ -7950,7 +7950,7 @@ See also <a href="#header-files-and-naming-of-functions">Section 2.1.1</a>.</p><
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>needsExecutionTool</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If true, a tool is needed to execute the model.
-The FMU just contains the communication to this tool (see Figure 8).
+The FMU just contains the communication to this tool (see <a href="#figure-co-simulation-with-tool-coupling">Figure 8</a>).
 <em>[Typically, this information is only utilized for information purposes.
 For example, a co-simulation master can inform the user that a tool has to be available on the computer where the slave is instantiated.
 The name of the tool can be taken from attribute <code>generationTool</code> of <code>fmiModelDescription</code>.]</em></p></td>
