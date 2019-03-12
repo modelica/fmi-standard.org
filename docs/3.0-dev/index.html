@@ -1310,7 +1310,7 @@ Typically, FMU functions are used as follows:</p>
 <p>If the FMU is shipped with C source code or with static link library:<br>
 The constructed function name is <code>MyModel_fmi3GetReal</code>.
 In other words the function name is prefixed with the model name and an <code>_</code>.
-As <code>FMI3_FUNCTION_PREFIX</code> the <code>modelIdentifier</code> attribute defined in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange&gt;</code>, or <code>&lt;fmiModelDescription&gt;&lt;CoSimulation&gt;</code> is used, together with <code>_</code> at the end (see sections <a href="#ModelExchange">Section 3.3.1</a> and <a href="#CoSimulation">Section 4.3.1</a>).
+As <code>FMI3_FUNCTION_PREFIX</code> the <code>modelIdentifier</code> attribute defined in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange&gt;</code>, or <code>&lt;fmiModelDescription&gt;&lt;CoSimulation&gt;</code> is used, together with <code>_</code> at the end (see <a href="#ModelExchange">Section 3.3.1</a> and <a href="#CoSimulation">Section 4.3.1</a>).
 A simulation environment can therefore construct the relevant function names by generating code for the actual function call.
 In case of a static link library, the name of the library is MyModel.lib on Windows and libMyModel.a on Linux; in other words the <code>modelIdentifier</code> attribute is used as library name.</p>
 </li>
@@ -2113,7 +2113,7 @@ The function returns a null pointer in argument <code>FMUstate</code>.</p>
 </div>
 <div class="paragraph">
 <p>These functions are only supported by the FMU,
-if the optional capability flag <code>canGetAndSetFMUstate</code> in <code>&lt;fmiModelDescription&gt; &lt;ModelExchange / CoSimulation&gt;</code> in the XML file is explicitly set to <code>true</code> (see sections <a href="#ModelExchange">Section 3.3.1</a> and <a href="#CoSimulation">Section 4.3.1</a>).</p>
+if the optional capability flag <code>canGetAndSetFMUstate</code> in <code>&lt;fmiModelDescription&gt; &lt;ModelExchange / CoSimulation&gt;</code> in the XML file is explicitly set to <code>true</code> (see <a href="#ModelExchange">Section 3.3.1</a> and <a href="#CoSimulation">Section 4.3.1</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2146,7 +2146,7 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 <div class="paragraph">
 <p>These functions are only supported by the FMU,
 if the optional capability flags <code>canGetAndSetFMUstate</code> and <code>canSerializeFMUstate</code> in
-<code>&lt;fmiModelDescription&gt;&lt;ModelExchange / CoSimulation&gt;</code> in the XML file are explicitly set to <code>true</code> (see sections <a href="#ModelExchange">Section 3.3.1</a> and <a href="#CoSimulation">Section 4.3.1</a>).</p>
+<code>&lt;fmiModelDescription&gt;&lt;ModelExchange / CoSimulation&gt;</code> in the XML file are explicitly set to <code>true</code> (see <a href="#ModelExchange">Section 3.3.1</a> and <a href="#CoSimulation">Section 4.3.1</a>).</p>
 </div>
 </div>
 <div class="sect3">
@@ -4630,7 +4630,7 @@ resources                     // resources needed by the FMU (optional)
 </div>
 </div>
 <div class="paragraph">
-<p>An FMU has to implement all common functions (according to tables in sections 3.2.3 and 4.2.4).
+<p>An FMU has to implement all common functions (according to tables in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.4</a>).
 ModelExchange FMUs have to provide additionally the respective Model Exchange function, CoSimulation FMUs the Co-Simulation functions.</p>
 </div>
 <div class="paragraph">
@@ -5215,7 +5215,7 @@ These types of artifical or real algebraic loops can occur in all the different 
 Since different variables are computed in every Mode and the causality of variable computation can be different in Initialization Mode as with respect to the other two Modes, it might be necessary to solve different kinds of loops in the different Modes.]</em></p>
 </div>
 <div class="paragraph">
-<p>In Table 1 the equations are defined that can be evaluated in the respective Mode.
+<p>In <a href="#table-math-model-exchange">Table 1</a> the equations are defined that can be evaluated in the respective Mode.
 The following color coding is used in the table:</p>
 </div>
 <div class="ulist">
@@ -5242,8 +5242,8 @@ Function <code>fmi3GetXXX</code> is an abbreviation for functions <code>fmi3GetR
 Tools will usually not have such a representation of time.
 However, super-dense time defines precisely when a new "model evaluation" starts and therefore which variable values belong to the same "model evaluation" at the same (super dense) time instant and should be stored together.]</em></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1: Mathematical description of an FMU for Model Exchange.</caption>
+<table id="table-math-model-exchange" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Mathematical description of an FMU for Model Exchange.</caption>
 <colgroup>
 <col style="width: 62.5%;">
 <col style="width: 37.5%;">
@@ -6986,7 +6986,7 @@ If the slave is connected in loops with other models, no iterations over the FMU
 <p><em>[Note that for a Co-Simulation FMU, no super dense time description is used at communication points.]</em></p>
 </div>
 <div class="paragraph">
-<p>The equations are defined in Table 2 can be evaluated in the respective Mode.
+<p>The equations are defined in <a href="#table-math-co-simulation">Table 2</a> can be evaluated in the respective Mode.
 The following color coding is used in the table:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -7015,8 +7015,8 @@ For an output argument, calling <code>fmi3GetXXX</code> on such a variable retur
 <p>Function <code>fmi3SetXXX</code> used in the table below, is an abbreviation for functions <code>fmi3SetReal</code>, <code>fmi3SetBoolean</code>, <code>fmi3SetInteger</code> and <code>fmi3SetString</code> respectively.
 Function <code>fmi3GetXXX</code> is an abbreviation for functions <code>fmi3GetReal</code>, <code>fmi3GetBoolean</code>, <code>fmi3GetInteger</code> and <code>fmi3GetString</code> respectively.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Mathematical description of an FMU for Co-Simulation.</caption>
+<table id="table-math-co-simulation" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Mathematical description of an FMU for Co-Simulation.</caption>
 <colgroup>
 <col style="width: 66.6666%;">
 <col style="width: 33.3334%;">
