@@ -1,5 +1,5 @@
 ---
-title: SSP and DCP: companion standards of FMI have been released
+title: SSP and DCP companion standards of FMI have been released
 categories: [news]
 layout: post
 ---
