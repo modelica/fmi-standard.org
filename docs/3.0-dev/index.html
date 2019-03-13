@@ -4911,8 +4911,8 @@ A schematic view of a model in "FMI for Model Exchange" format is shown in <a hr
 <div class="paragraph">
 <p><strong class="blue">Blue</strong> arrows: Information provided by the FMU.<br>
 <strong class="red">Red</strong> arrows : Information provided to the FMU.<br>
-<strong>v</strong><sub>start</sub>, <strong>u</strong>, <strong>y</strong>, <strong>w</strong>, <strong>x</strong><sub>d</sub> are of type Real, Integer, Boolean, String;
-<strong>t</strong>, <strong>x</strong><sub>c</sub>, <strong>z</strong> are of type Real.</p>
+\(\mathbf{v}_{start}\), \(\mathbf{u}\), \(\mathbf{y}\), \(\mathbf{w}\), \(\mathbf{x}_d\) are of type Real, Integer, Boolean, String;
+\(\mathbf{t}\), \(\mathbf{x}_c\), \(\mathbf{z}\) are of type Real.</p>
 </div>
 <div class="sect2">
 <h3 id="math-model-exchange">3.1. Mathematical description</h3>
@@ -5208,8 +5208,8 @@ If this data is not provided, the worst case must be assumed (for example, all o
 <p><em>In the upper diagram, FMU1 and FMU2 are connected in such a way that by an appropriate sequence of <code>fmi3SetXXX</code> and <code>fmi3GetXXX</code> calls, the FMU variables can be computed.
 In the lower diagram, FMU3 and FMU4 are connected in such a way that a "real" algebraic loop is present.
 This loop might be solved iteratively with a Newton method.
-In every iteration the iteration variable u<sub>4</sub> is provided by the solver, and via the shown sequence of <code>fmi3SetXXX</code> and <code>fmi3GetXXX</code> calls, the residue is computed and is provided back to the solver.
-Based on the residue a new value of u<sub>4</sub> is provided.
+In every iteration the iteration variable \(u_4\) is provided by the solver, and via the shown sequence of <code>fmi3SetXXX</code> and <code>fmi3GetXXX</code> calls, the residue is computed and is provided back to the solver.
+Based on the residue a new value of \(u_4\) is provided.
 The iteration is terminated when the residue is close to zero.
 These types of artifical or real algebraic loops can occur in all the different modes, such as Initialization Mode, Event Mode, and Continuous-Time Mode.
 Since different variables are computed in every Mode and the causality of variable computation can be different in Initialization Mode as with respect to the other two Modes, it might be necessary to solve different kinds of loops in the different Modes.]</em></p>
@@ -5238,7 +5238,7 @@ For an output argument, calling <code>fmi3GetXXX</code> on such a variable retur
 Function <code>fmi3GetXXX</code> is an abbreviation for functions <code>fmi3GetReal</code>, <code>fmi3GetBoolean</code>, <code>fmi3GetInteger</code> and <code>fmi3GetString</code> respectively.</p>
 </div>
 <div class="paragraph">
-<p><em>[In the following table the setting of the super dense time, (t<sub>R</sub>, t<sub>I</sub>), is precisely described.
+<p><em>[In the following table the setting of the super dense time, (\(t_R\), \(t_I\)), is precisely described.
 Tools will usually not have such a representation of time.
 However, super-dense time defines precisely when a new "model evaluation" starts and therefore which variable values belong to the same "model evaluation" at the same (super dense) time instant and should be stored together.]</em></p>
 </div>
@@ -5275,8 +5275,7 @@ discrete-time and continuous-time equations)</span></p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{initial=exact}\) that have a start value with
 <code>initial="exact"</code> (independent parameters \(\mathbf{p}\) and
-continuous-time states with start values \(\mathbf{x_c}\),
-initial=exact_~ are included here)</p></td>
+continuous-time states with start values \(\mathbf{x}_{c,initial=exact}\) are included here)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3SetXXX</code></p></td>
 </tr>
 <tr>
