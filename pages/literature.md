@@ -9,7 +9,7 @@ layout: default
 
 ### [American Modelica Conference 2018](https://www.modelica.org/events/modelica2018Americas)
 
-FMI related conference papers ([link to proceedings](https://www.modelica.org/events/modelica2018Americas/preliminary-program/166522_Modelica_Proceedings_v2.pdf):
+FMI related conference papers ([link to proceedings](https://www.modelica.org/events/modelica2018Americas/preliminary-program/166522_Modelica_Proceedings_v2.pdf)):
 
 * ModestPy: An Open-Source Python Tool for Parameter Estimation in Functional Mock-up Units 
 * A Safe Regression Test Selection Technique for Modelica 
