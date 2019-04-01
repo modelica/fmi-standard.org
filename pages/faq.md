@@ -19,7 +19,7 @@ toc: true
 
 The FMI Steering Committee is happy to announce the preliminary (Alpha) feature list for FMI 3.0.
 "Preliminary" means that we might be forced to drop some features from that list for the actual release.
-This list is based on the results of the respective working groups which were discussed at the FMI Design Meeting Nov 2017.
+This list is based on the results of the respective working groups which were discussed at the FMI Design Meeting Nov 2017 und updated by the FMI Steering Committee in Apr 2019.
 
 - Ports and Icons:  
   Help the user to build consistent systems from FMUs and render the systems more intuitively with better representation of structured ports (for instance busses and physical connectors) in the modelDescription.xml.
@@ -33,11 +33,14 @@ This list is based on the results of the respective working groups which were di
 - Binary Data Type:  
   Adds an opaque binary data type to FMU variables to allow, for instance, efficiently exchanging of complex sensor data.
 
-- Intermediate Output Values:  
-  Allow access of intermediate output values between communication time points from the FMU to disclose relevant subsystem behavior for analysis or advanced co-simulation master algorithms.
+- Intermediate Variables Access:  
+  Allow access to intermediate input and output values between communication time points from the FMU to disclose relevant subsystem behavior for analysis or advanced co-simulation master algorithms.
 
 - Source code FMUs:  
   Adding more information to the modelDescription.xml file to improve automatic import of source code FMUs.
+  
+- Numeric Variable Types: 
+Adding 8, 16, 32 and 64-bit signed and unsigned integer and a single precision floating point variable type to improve efficiency and type safety when importing / exporting models from the embedded, control and automotive domains.
 
 In the unlikely event of unsolvable conflicts between features, the FMI Steering Committee might be forced to again remove or alter features during the merge-phase of all FCPs starting after the release of the Beta feature list. The FMI Steering Committee will make these FCPs available to interested parties on request once their maturity allows dissemination.
 
