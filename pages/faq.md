@@ -34,7 +34,7 @@ This list is based on the results of the respective working groups which were di
   Adds an opaque binary data type to FMU variables to allow, for instance, efficiently exchanging of complex sensor data.
 
 - Intermediate Variables Access:  
-  Allow access to intermediate input and output values between communication time points from the FMU to disclose relevant subsystem behavior for analysis or advanced co-simulation master algorithms.
+  Allow access to intermediate input and output values between communication time points from the FMU to disclose relevant subsystem behavior for analysis or advanced co-simulation master algorithms for enhanced numerical stability”.
 
 - Source code FMUs:  
   Adding more information to the modelDescription.xml file to improve automatic import of source code FMUs.
