@@ -19,7 +19,7 @@ toc: true
 
 The FMI Steering Committee is happy to announce the preliminary (Alpha) feature list for FMI 3.0.
 "Preliminary" means that we might be forced to drop some features from that list for the actual release.
-This list is based on the results of the respective working groups which were discussed at the FMI Design Meeting Nov 2017 und updated by the FMI Steering Committee in Apr 2019.
+This list is based on the results of the respective working groups which were discussed at the FMI Design Meeting Nov 2017 and updated by the FMI Steering Committee in Apr 2019.
 
 - Ports and Icons:  
   Help the user to build consistent systems from FMUs and render the systems more intuitively with better representation of structured ports (for instance busses and physical connectors) in the modelDescription.xml.
