@@ -40,7 +40,7 @@ This list is based on the results of the respective working groups which were di
   Adding more information to the modelDescription.xml file to improve automatic import of source code FMUs.
   
 - Numeric Variable Types: 
-Adding 8, 16, 32 and 64-bit signed and unsigned integer and a single precision floating point variable type to improve efficiency and type safety when importing / exporting models from the embedded, control and automotive domains.
+Adds 8, 16, 32 and 64-bit signed and unsigned integer and single precision floating point variable types to improve efficiency and type safety when importing / exporting models from the embedded, control and automotive domains.
 
 In the unlikely event of unsolvable conflicts between features, the FMI Steering Committee might be forced to again remove or alter features during the merge-phase of all FCPs starting after the release of the Beta feature list. The FMI Steering Committee will make these FCPs available to interested parties on request once their maturity allows dissemination.
 
