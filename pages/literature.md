@@ -7,8 +7,7 @@ layout: default
 ## FMI Related Publications
 
 
-### [13th International Modelica Conference 2017](https://www.modelica.org/events/modelica2019)
-
+### [13th International Modelica Conference 2019](https://www.modelica.org/events/modelica2019)
 
 FMI User meeting ([Agenda](https://www.modelica.org/events/modelica2019/proceedings/html/userpres.html)):
 
