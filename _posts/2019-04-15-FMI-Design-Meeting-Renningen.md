@@ -1,5 +1,5 @@
 ---
-title: FMI Design Meeting at Robert Bosch Research Campus, Renningen (Germany)
+title: FMI Design Meeting at Robert Bosch Research Campus June 25 2019, Renningen (Germany)
 categories: [news]
 layout: post
 ---
