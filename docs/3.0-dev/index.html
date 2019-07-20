@@ -596,7 +596,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_fmi_application_programming_interface">2.1. FMI Application Programming Interface</a>
 <ul class="sectlevel3">
 <li><a href="#header-files-and-naming-of-functions">2.1.1. Header Files and Naming of Functions</a></li>
-<li><a href="#_platform_dependent_definitions_fmi3typesplatform_h">2.1.2. Platform Dependent Definitions (fmi3TypesPlatform.h)</a></li>
+<li><a href="#_platform_dependent_definitions_fmi3platformtypes_h">2.1.2. Platform Dependent Definitions (fmi3PlatformTypes.h)</a></li>
 <li><a href="#status-returned-by-functions">2.1.3. Status Returned by Functions</a></li>
 <li><a href="#inquire-platform-and-version-number">2.1.4. Inquire Platform and Version Number of Header Files</a></li>
 <li><a href="#creation-destruction-and-logging">2.1.5. Creation, Destruction and Logging of FMU Instances</a></li>
@@ -1331,7 +1331,7 @@ In all header files the convention is used that all C function and type definiti
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>fmi3TypesPlatform.h</code></dt>
+<dt class="hdlist1"><code>fmi3PlatformTypes.h</code></dt>
 <dd>
 <p>contains the type definitions of the input and output arguments of the functions.
 This header file must
@@ -1358,7 +1358,7 @@ When dynamically loading an FMU, these definitions can be used to type-cast the 
 </dl>
 </div>
 <div class="paragraph">
-<p>This header file includes <code>fmi3TypesPlatform.h</code> and <code>fmi3FunctionTypes.h</code>.
+<p>This header file includes <code>fmi3PlatformTypes.h</code> and <code>fmi3FunctionTypes.h</code>.
 The header file version number for which the model was compiled, can be inquired in the target simulator with <code>fmi3GetVersion</code> (see <a href="#inquire-platform-and-version-number">Section 2.1.4</a>).<br>
 <em>[Example for a definition in this header file</em> <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>:<br>
 <em>`FMI3_Export fmi3SetTimeTYPE fmi3SetTime;`]</em></p>
@@ -1421,10 +1421,10 @@ For example, the Windows API only supports full path-names of a file up to 260 c
 </div>
 </div>
 <div class="sect3">
-<h4 id="_platform_dependent_definitions_fmi3typesplatform_h">2.1.2. Platform Dependent Definitions (fmi3TypesPlatform.h)</h4>
+<h4 id="_platform_dependent_definitions_fmi3platformtypes_h">2.1.2. Platform Dependent Definitions (fmi3PlatformTypes.h)</h4>
 <div class="paragraph">
 <p>To simplify porting, no C types are used in the function interfaces, but the alias types are defined in this section.
-All definitions in this section are provided in the header file <code>fmi3TypesPlatform.h</code>.
+All definitions in this section are provided in the header file <code>fmi3PlatformTypes.h</code>.
 It is required to use this definition for all binary FMUs.
 <em>[Only for source code FMUs, a change might be useful in some cases.]</em>:</p>
 </div>
@@ -1503,7 +1503,7 @@ typedef const fmi3Byte* fmi3Binary;   /* Data type for binary data
 <p>These are the basic data types used in the interfaces of the C functions.
 More data types might be included in future versions of the interface.
 In order to keep flexibility, especially for embedded systems or for high performance computers, the exact data types or the word length of a number are not standardized.
-Instead, the precise definition (in other words, the header file <code>fmi3TypesPlatform.h</code>) is provided by the environment where the FMU shall be used.
+Instead, the precise definition (in other words, the header file <code>fmi3PlatformTypes.h</code>) is provided by the environment where the FMU shall be used.
 In most cases, the definition above will be used.
 If the target environment has different definitions and the FMU is distributed in binary format, it must be newly compiled and linked with this target header file.</p>
 </div>
@@ -5042,7 +5042,7 @@ documentation                 // directory containing the documentation (optiona
    &lt;other documentation files&gt;
 sources                       // directory containing the C sources (optional)
    // all needed C sources and C header files to compile and link the FMU
-   // with exception of: fmi3TypesPlatform.h, fmi3FunctionTypes.h and fmi3Functions.h
+   // with exception of: fmi3PlatformTypes.h, fmi3FunctionTypes.h and fmi3Functions.h
    // The files to be compiled (but not the files included from these files)
    // have to be reported in the XML file under the structure
    // &lt;ModelExchange&gt;&lt;SourceFiles&gt; ... and &lt;CoSimulation&gt;&lt;SourceFiles&gt;
@@ -5316,10 +5316,10 @@ The actual file names in the ZIP file to access the data files can either be har
 In the case of a co-simulation implementation of <code>needsExecutionTool = "true"</code> type, the <code>resources</code> directory can contain the model file in the tool specific file format.</p>
 </div>
 <div class="paragraph">
-<p><em>[Note that the header files <code>fmi3TypesPlatform.h</code> and <code>fmi3FunctionTypes.h/fmi3Functions.h</code> are not included in the FMU due to the following reasons:</em></p>
+<p><em>[Note that the header files <code>fmi3PlatformTypes.h</code> and <code>fmi3FunctionTypes.h/fmi3Functions.h</code> are not included in the FMU due to the following reasons:</em></p>
 </div>
 <div class="paragraph">
-<p><em><code>fmi3TypesPlatform.h</code> makes no sense in the <code>sources</code> directory, because if sources are provided, then the target simulator defines this header file and not the FMU.<br>
+<p><em><code>fmi3PlatformTypes.h</code> makes no sense in the <code>sources</code> directory, because if sources are provided, then the target simulator defines this header file and not the FMU.<br>
 This header file is not included in the <code>binaries</code> directory, because it is implicitly defined by the platform directory (for example, i686-windows for a 32-bit machine or x86_64-linux for a 64-bit machine).</em></p>
 </div>
 <div class="paragraph">
