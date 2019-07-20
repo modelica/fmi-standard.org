@@ -1348,7 +1348,7 @@ then the <span class="underline">FMU</span> needs to be <span class="underline">
 <p>contains <code>typedef</code> definitions of all function prototypes of an FMU.
 When dynamically loading an FMU, these definitions can be used to type-cast the function pointers to the respective function definition.
 <em>[Example for a definition in this header file:<br>
-<code>typedef fmi3Status fmi3SetTimeTYPE(fmi3Component, fmi3Real);</code>]</em></p>
+<code>typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance, fmi3Real);</code>]</em></p>
 </dd>
 <dt class="hdlist1"><code>fmi3Functions.h</code></dt>
 <dd>
@@ -1430,7 +1430,7 @@ It is required to use this definition for all binary FMUs.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3Component;             /* Pointer to FMU instance */</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3Instance;             /* Pointer to FMU instance */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1439,16 +1439,16 @@ This data structure is implemented by the environment that provides the FMU; in 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3ComponentEnvironment;  /* Pointer to FMU environment */</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3InstanceEnvironment;  /* Pointer to FMU environment */</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>This is a pointer to a data structure in the simulation environment that calls the FMU.
-Using this pointer, data from the <code>modelDescription.xml</code> file <em>[for example, mapping of <code>valueReference</code>s to variable names]</em> can be transferred between the simulation environment and the <code>logger</code> function (see <a href="#creation-destruction-and-logging">Section 2.1.5</a>).</p>
+Using this pointer, data from the <code>modelDescription.xml</code> file <em>[for example, mapping of <code>valueReference</code>s to variable names]</em> can be transferred between the simulation environment and the <code>logMessage</code> function (see <a href="#creation-destruction-and-logging">Section 2.1.5</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3FMUstate;              /* Pointer to internal FMU state */</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3FMUState;              /* Pointer to internal FMU state */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1548,7 +1548,7 @@ The status has the following meaning</p>
 <dt class="hdlist1"><code>fmi3Warning</code></dt>
 <dd>
 <p>things are not quite right, but the computation can continue.
-Function <code>logger</code> was called in the model (see below), and it is expected that
+Function <code>logMessage</code> was called in the model (see below), and it is expected that
 this function has shown the prepared information message to the user.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Discard</code></dt>
@@ -1561,24 +1561,24 @@ For "model exchange": It is recommended to perform a smaller step size and evalu
 If this is not possible, the simulation has to be terminated.<br>
 For "co-simulation": <code>fmi3Discard</code> is returned also if the slave is not able to return the required status information.
 The master has to decide if the simulation run can be continued.<br>
-In both cases, function <code>logger</code> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user if the FMU was called in debug mode (<code>loggingOn = fmi3True</code>).
-Otherwise, <code>logger</code> should not show a message.</p>
+In both cases, function <code>logMessage</code> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user if the FMU was called in debug mode (<code>loggingOn = fmi3True</code>).
+Otherwise, <code>logMessage</code> should not show a message.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Error</code></dt>
 <dd>
 <p>the FMU encountered an error.
 The simulation cannot be continued with this FMU instance.
-If one of the functions returns <code>fmi3Error</code>, it can be tried to restart the simulation from a formerly stored FMU state by calling <code>fmi3SetFMUstate</code>.
-This can be done if the capability flag <code>canGetAndSetFMUstate</code> is true and <code>fmi3GetFMUstate</code> was called before in non-erroneous state.
+If one of the functions returns <code>fmi3Error</code>, it can be tried to restart the simulation from a formerly stored FMU state by calling <code>fmi3SetFMUState</code>.
+This can be done if the capability flag <code>canGetAndSetFMUState</code> is true and <code>fmi3GetFMUState</code> was called before in non-erroneous state.
 If not, the simulation cannot be continued and <code>fmi3FreeInstance</code> or <code>fmi3Reset</code> <span class="underline">must</span> be called afterwards.<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup><br>
 Further processing is possible after this call; especially other FMU instances are not affected.
-Function <code>logger</code> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user.</p>
+Function <code>logMessage</code> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Fatal</code></dt>
 <dd>
 <p>the model computations are irreparably corrupted for all FMU instances.
 <em>[For example, due to a run-time exception such as access violation or integer division by zero during the execution of an fmi function]</em>.
-Function <code>logger</code> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user.
+Function <code>logMessage</code> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user.
 It is not possible to call any other function for any of the FMU instances.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Pending</code></dt>
@@ -1614,13 +1614,13 @@ The standard header file as documented in this specification has version <code>"
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Component fmi3InstantiateTYPE(fmi3String  instanceName,
-                                          fmi3Type    fmuType,
-                                          fmi3String  fmuInstantiationToken,
-                                          fmi3String  fmuResourceLocation,
-                                          const fmi3CallbackFunctions* functions,
-                                          fmi3Boolean visible,
-                                          fmi3Boolean loggingOn);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Instance fmi3InstantiateTYPE(fmi3String        instanceName,
+                                         fmi3InterfaceType fmuType,
+                                         fmi3String        fmuInstantiationToken,
+                                         fmi3String        fmuResourceLocation,
+                                         const fmi3CallbackFunctions* functions,
+                                         fmi3Boolean       visible,
+                                         fmi3Boolean       loggingOn);</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -1628,13 +1628,13 @@ The standard header file as documented in this specification has version <code>"
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef enum {
     fmi3ModelExchange,
     fmi3CoSimulation
-} fmi3Type;</code></pre>
+} fmi3InterfaceType;</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The function returns a new instance of an FMU.
 If a null pointer is returned, then instantiation failed.
-In that case, <code>functions&#8594;logger</code> is called with detailed information about the reason.
+In that case, <code>functions&#8594;logMessage</code> is called with detailed information about the reason.
 An FMU can be instantiated many times (provided capability flag <code>canBeInstantiatedOnlyOncePerProcess = false</code>).</p>
 </div>
 <div class="paragraph">
@@ -1706,36 +1706,36 @@ Which <code>LogCategories</code> the FMU sets is unspecified.]</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void  (*fmi3CallbackLogger)         (fmi3ComponentEnvironment componentEnvironment,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void  (*fmi3CallbackLogMessage)     (fmi3InstanceEnvironment instanceEnvironment,
                                              fmi3String instanceName,
                                              fmi3Status status,
                                              fmi3String category,
                                              fmi3String message);
-typedef void* (*fmi3CallbackAllocateMemory) (fmi3ComponentEnvironment componentEnvironment,
+typedef void* (*fmi3CallbackAllocateMemory) (fmi3InstanceEnvironment instanceEnvironment,
                                              size_t nobj,
                                              size_t size);
-typedef void  (*fmi3CallbackFreeMemory)     (fmi3ComponentEnvironment componentEnvironment,
+typedef void  (*fmi3CallbackFreeMemory)     (fmi3InstanceEnvironment instanceEnvironment,
                                              void* obj);
-typedef void  (*fmi3StepFinished)           (fmi3ComponentEnvironment componentEnvironment,
+typedef void  (*fmi3CallbackStepFinished)   (fmi3InstanceEnvironment instanceEnvironment,
                                              fmi3Status status);
 
 typedef struct {
-    fmi3CallbackLogger         logger;
+    fmi3CallbackLogMessage     logMessage;
     fmi3CallbackAllocateMemory allocateMemory;
     fmi3CallbackFreeMemory     freeMemory;
-    fmi3StepFinished           stepFinished;
-    fmi3ComponentEnvironment   componentEnvironment;
+    fmi3CallbackStepFinished   stepFinished;
+    fmi3InstanceEnvironment    instanceEnvironment;
 } fmi3CallbackFunctions;</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The struct contains pointers to functions provided by the environment to be used by the FMU.
 It is not allowed to change these functions between <code>fmi3Instantiate</code> and <code>fmi3Terminate</code> calls.
-Additionally, a pointer to the environment is provided (componentEnvironment) that needs to be passed to all of the callback functions, in order that those functions can utilize data from the environment, such as mapping a <code>valueReference</code> to a string, or assigning memory to a certain FMU instance.
-In the unlikely case that <code>fmi3Component</code> is also needed in those functions, it has to be passed via argument <code>componentEnvironment</code>. Argument <code>componentEnvironment</code> may be a null pointer.</p>
+Additionally, a pointer to the environment is provided (instanceEnvironment) that needs to be passed to all of the callback functions, in order that those functions can utilize data from the environment, such as mapping a <code>valueReference</code> to a string, or assigning memory to a certain FMU instance.
+In the unlikely case that <code>fmi3Instance</code> is also needed in those functions, it has to be passed via argument <code>instanceEnvironment</code>. Argument <code>instanceEnvironment</code> may be a null pointer.</p>
 </div>
 <div class="paragraph">
-<p>The <code>componentEnvironment</code> pointer is also passed to the <code>stepFinished</code> function in order that the environment can provide an efficient way to identify the slave that called <code>stepFinished</code>.</p>
+<p>The <code>instanceEnvironment</code> pointer is also passed to the <code>stepFinished</code> function in order that the environment can provide an efficient way to identify the slave that called <code>stepFinished</code>.</p>
 </div>
 <div class="paragraph">
 <p>In the default <code>fmi3FunctionTypes.h</code> file, typedefs for the function definitions are present to simplify the usage; this is non-normative.
@@ -1743,21 +1743,21 @@ The functions have the following meaning:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Function <code>logger</code></dt>
+<dt class="hdlist1">Function <code>logMessage</code></dt>
 <dd>
 <p>Pointer to a function that is called in the FMU, usually if an <code>fmi3XXX</code> function does not behave as desired.
-If <code>logger</code> is called with <code>status = fmi3OK</code>, then the message is a pure information message.
+If <code>logMessage</code> is called with <code>status = fmi3OK</code>, then the message is a pure information message.
 <code>instanceName</code> is the instance name of the model that calls this function.
 <code>category</code> is the category of the message.
 The meaning of <code>category</code> is defined by the modeling environment that generated the FMU.
 Depending on this modeling environment, none, some or all allowed values of <code>category</code> for this FMU are defined in the <code>modelDescription.xml</code> file via element <code>&lt;fmiModelDescription&gt;&lt;LogCategories&gt;</code>, see <a href="#definition-of-log-categories">Section 2.2.5</a>.
-Only messages are provided by function <code>logger</code> that have a category according to a call to <code>fmi3SetDebugLogging</code> (see below).
+Only messages are provided by function <code>logMessage</code> that have a category according to a call to <code>fmi3SetDebugLogging</code> (see below).
 Argument <code>message</code> is a string that contains the message.
 <em>[Typically, this function prints the message and stores it optionally in a log file.]</em></p>
 <div class="paragraph">
-<p>All string-valued arguments passed by the FMU to the <code>logger</code> may be deallocated by the FMU directly after function <code>logger</code> returns.
+<p>All string-valued arguments passed by the FMU to the <code>logMessage</code> may be deallocated by the FMU directly after function <code>logMessage</code> returns.
 The environment must therefore create copies of these strings if it needs to access these strings later.<br>
-The <code>logger</code> function will append a line break to each message when writing messages after each other to a terminal or a file (the messages may also be shown in other ways, for example, as separate text-boxes in a GUI).
+The <code>logMessage</code> function will append a line break to each message when writing messages after each other to a terminal or a file (the messages may also be shown in other ways, for example, as separate text-boxes in a GUI).
 The caller may include line-breaks (using "\n") within the message, but should avoid trailing line breaks.<br>
 Variables can be referenced in a message with <code>#&lt;ValueReference&gt;#</code>.
 If the character <code>#</code> shall be included in the message, it has to be prefixed with <code>#</code>, so <code>#</code> is an escape character.</p>
@@ -1765,7 +1765,7 @@ If the character <code>#</code> shall be included in the message, it has to be p
 <div class="paragraph">
 <p><em>[Example:</em><br>
 <em>The message</em> <code>#1365# must be larger than zero (used in IO channel ##4)</code><br>
-<em>might be changed by the</em> <code>logger</code> <em>function to</em><br>
+<em>might be changed by the</em> <code>logMessage</code> <em>function to</em><br>
 <code>body.m must be larger than zero (used in IO channel #4)</code><br>
 <em>if <code>body.m</code> is the name of the variable with value reference 1365.]</em></p>
 </div>
@@ -1797,7 +1797,7 @@ If a pointer to a function is provided, it must be called by the FMU after a com
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void fmi3FreeInstanceTYPE(fmi3Component c);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void fmi3FreeInstanceTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1806,7 +1806,7 @@ If a null pointer is provided for <code>c</code>, the function call is ignored (
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status  fmi3SetDebugLoggingTYPE(fmi3Component c,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status  fmi3SetDebugLoggingTYPE(fmi3Instance instance,
                                             fmi3Boolean loggingOn,
                                             size_t nCategories,
                                             const fmi3String categories[]);</code></pre>
@@ -1814,7 +1814,7 @@ If a null pointer is provided for <code>c</code>, the function call is ignored (
 </div>
 <div class="paragraph">
 <p>If <code>loggingOn=fmi3True</code>, debug logging is enabled, otherwise it is switched off.
-If <code>loggingOn=fmi3True</code> and <code>nCategories &gt; 0</code>, then only debug messages according to the <code>categories</code> argument shall be printed via the <code>logger</code> function.
+If <code>loggingOn=fmi3True</code> and <code>nCategories &gt; 0</code>, then only debug messages according to the <code>categories</code> argument shall be printed via the <code>logMessage</code> function.
 Vector <code>categories</code> has <code>nCategories</code> elements.
 The allowed values of <code>categories</code> are defined by the modeling environment that generated the FMU.
 Depending on the generating modeling environment, none, some or all allowed values for <code>categories</code> for this FMU are defined in the <code>modelDescription.xml</code> file via element <code>fmiModelDescription.LogCategories</code>, see <a href="#definition-of-log-categories">Section 2.2.5</a>.</p>
@@ -1827,7 +1827,7 @@ Depending on the generating modeling environment, none, some or all allowed valu
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetupExperimentTYPE(fmi3Component c,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetupExperimentTYPE(fmi3Instance instance,
                                            fmi3Boolean toleranceDefined,
                                            fmi3Float64 tolerance,
                                            fmi3Float64 startTime,
@@ -1863,7 +1863,7 @@ If <code>stopTimeDefined = fmi3True</code>, then <code>stopTime</code> is the de
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterInitializationModeTYPE(fmi3Component c);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterInitializationModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1874,7 +1874,7 @@ Furthermore, <code>fmi3SetupExperiment</code> must be called at least once befor
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitInitializationModeTYPE(fmi3Component c);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitInitializationModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1883,7 +1883,7 @@ For <code>fmuType = fmi3ModelExchange</code>, this function switches off all ini
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3TerminateTYPE(fmi3Component c);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3TerminateTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1894,7 +1894,7 @@ It is not allowed to call this function after one of the functions returned with
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ResetTYPE(fmi3Component c);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ResetTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1975,57 +1975,57 @@ Element <code>valueReference</code> shall be unique for all variables.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetFloat32TYPE(fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3Float32 value[], size_t nValues);
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetFloat32TYPE(fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3Float32 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetFloat64TYPE(fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3Float64 value[], size_t nValues);
+typedef fmi3Status fmi3GetFloat64TYPE(fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3Float64 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetInt8TYPE   (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3Int8 value[], size_t nValues);
+typedef fmi3Status fmi3GetInt8TYPE   (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3Int8 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetUInt8TYPE  (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3UInt8 value[], size_t nValues);
+typedef fmi3Status fmi3GetUInt8TYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3UInt8 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetInt16TYPE  (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3Int16 value[], size_t nValues);
+typedef fmi3Status fmi3GetInt16TYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3Int16 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetUInt16TYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3UInt16 value[], size_t nValues);
+typedef fmi3Status fmi3GetUInt16TYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3UInt16 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetInt32TYPE  (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3Int32 value[], size_t nValues);
+typedef fmi3Status fmi3GetInt32TYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3Int32 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetUInt32TYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3UInt32 value[], size_t nValues);
+typedef fmi3Status fmi3GetUInt32TYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3UInt32 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetInt64TYPE  (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3Int64 value[], size_t nValues);
+typedef fmi3Status fmi3GetInt64TYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3Int64 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetUInt64TYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3UInt64 value[], size_t nValues);
+typedef fmi3Status fmi3GetUInt64TYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3UInt64 values[], size_t nValues);
 
-typedef fmi3Status fmi3GetBooleanTYPE(fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3Boolean value[], size_t nValues);
+typedef fmi3Status fmi3GetBooleanTYPE(fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3Boolean values[], size_t nValues);
 
-typedef fmi3Status fmi3GetStringTYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      fmi3String value[], size_t nValues);
+typedef fmi3Status fmi3GetStringTYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      fmi3String values[], size_t nValues);
 
-typedef fmi3Status fmi3GetBinaryTYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      size_t size[], fmi3Binary value[], size_t nValues);</code></pre>
+typedef fmi3Status fmi3GetBinaryTYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      size_t sizes[], fmi3Binary values[], size_t nValues);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2038,7 +2038,7 @@ Furthermore, the actual value of every variable defined in the <code>modelDescri
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>vr</code> is a vector of <code>nvr</code> value handles that define the variables that shall be inquired.</p>
+<p>Argument <code>vr</code> is a vector of <code>nValueReferences</code> value handles that define the variables that shall be inquired.</p>
 </li>
 <li>
 <p>Argument <code>value</code> is a vector with the actual values of these variables.</p>
@@ -2047,7 +2047,7 @@ Furthermore, the actual value of every variable defined in the <code>modelDescri
 <p>Argument <code>size</code> is a vector with the actual sizes of the values for binary variables.</p>
 </li>
 <li>
-<p>Argument <code>nValues</code> provides the number of values in the <code>value</code> vector (and <code>size</code> vector, where applicable) which is only equal to <code>nvr</code> if all <code>valueReference</code>s point to scalar variables.</p>
+<p>Argument <code>nValues</code> provides the number of values in the <code>value</code> vector (and <code>size</code> vector, where applicable) which is only equal to <code>nValueReferences</code> if all <code>valueReference</code>s point to scalar variables.</p>
 </li>
 <li>
 <p>The strings returned by <code>fmi3GetString</code>, as well as the binary values returned by <code>fmi3GetBinary</code>, must be copied in the target environment because the allocated memory for these strings might be deallocated by the next call to any of the fmi3 interface functions or it might be an internal string buffer that is reused.</p>
@@ -2062,57 +2062,57 @@ Furthermore, the actual value of every variable defined in the <code>modelDescri
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetFloat32TYPE(fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3Float32 value[], size_t nValues);
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetFloat32TYPE(fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3Float32 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetFloat64TYPE(fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3Float64 value[], size_t nValues);
+typedef fmi3Status fmi3SetFloat64TYPE(fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3Float64 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetInt8TYPE   (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3Int8 value[], size_t nValues);
+typedef fmi3Status fmi3SetInt8TYPE   (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3Int8 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetUInt8TYPE  (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3UInt8 value[], size_t nValues);
+typedef fmi3Status fmi3SetUInt8TYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3UInt8 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetInt16TYPE  (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3Int16 value[], size_t nValues);
+typedef fmi3Status fmi3SetInt16TYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3Int16 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetUInt16TYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3UInt16 value[], size_t nValues);
+typedef fmi3Status fmi3SetUInt16TYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3UInt16 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetInt32TYPE  (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3Int32 value[], size_t nValues);
+typedef fmi3Status fmi3SetInt32TYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3Int32 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetUInt32TYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3UInt32 value[], size_t nValues);
+typedef fmi3Status fmi3SetUInt32TYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3UInt32 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetInt64TYPE  (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3Int64 value[], size_t nValues);
+typedef fmi3Status fmi3SetInt64TYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3Int64 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetUInt64TYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3UInt64 value[], size_t nValues);
+typedef fmi3Status fmi3SetUInt64TYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3UInt64 values[], size_t nValues);
 
-typedef fmi3Status fmi3SetBooleanTYPE(fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3Boolean value[], size_t nValues);
+typedef fmi3Status fmi3SetBooleanTYPE(fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3Boolean values[], size_t nValues);
 
-typedef fmi3Status fmi3SetStringTYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const fmi3String value[], size_t nValues);
+typedef fmi3Status fmi3SetStringTYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const fmi3String values[], size_t nValues);
 
-typedef fmi3Status fmi3SetBinaryTYPE (fmi3Component c,
-                                      const fmi3ValueReference vr[], size_t nvr,
-                                      const size_t size[], const fmi3Binary value[], size_t nValues);</code></pre>
+typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[], size_t nValueReferences,
+                                      const size_t sizes[], const fmi3Binary values[], size_t nValues);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2121,7 +2121,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Component c,
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>vr</code> is a vector of <code>nvr</code> value handles that define the variables that shall be set.</p>
+<p>Argument <code>vr</code> is a vector of <code>nValueReferences</code> value handles that define the variables that shall be set.</p>
 </li>
 <li>
 <p>Argument <code>value</code> is a vector with the actual values of these variables.</p>
@@ -2130,7 +2130,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Component c,
 <p>Argument <code>size</code> is a vector with the actual sizes of the values of binary variables.</p>
 </li>
 <li>
-<p>Argument <code>nValues</code> provides the number of values in the <code>value</code> vector which is only equal to <code>nvr</code> if all <code>valueReference</code>s point to scalar variables.</p>
+<p>Argument <code>nValues</code> provides the number of values in the <code>value</code> vector which is only equal to <code>nValueReferences</code> if all <code>valueReference</code>s point to scalar variables.</p>
 </li>
 <li>
 <p>All strings passed as arguments to <code>fmi3SetString</code>, as well as all binary values passed as arguments to <code>fmi3SetBinary</code>, must be copied inside these functions, because there is no guarantee of the lifetime of strings or binary values, when these functions return.</p>
@@ -2170,64 +2170,64 @@ The FMU state copy can be set as actual FMU state, in order to continue the simu
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetFMUstateTYPE (fmi3Component c, fmi3FMUstate* FMUstate);
-typedef fmi3Status fmi3SetFMUstateTYPE (fmi3Component c, fmi3FMUstate  FMUstate);
-typedef fmi3Status fmi3FreeFMUstateTYPE(fmi3Component c, fmi3FMUstate* FMUstate);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetFMUStateTYPE (fmi3Instance instance, fmi3FMUState* FMUState);
+typedef fmi3Status fmi3SetFMUStateTYPE (fmi3Instance instance, fmi3FMUState  FMUState);
+typedef fmi3Status fmi3FreeFMUStateTYPE(fmi3Instance instance, fmi3FMUState* FMUState);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>fmi3GetFMUstate</code> makes a copy of the internal FMU state and returns a pointer to this copy (<code>FMUstate</code>).
-If on entry <code>*FMUstate == NULL</code>, a new allocation is required.
-If <code>*FMUstate != NULL</code>, then <code>*FMUstate</code> points to a previously returned <code>FMUstate</code> that has not been modified since.
-In particular, <code>fmi3FreeFMUstate</code> had not been called with this <code>FMUstate</code> as an argument.
-<em>[Function <code>fmi3GetFMUstate</code> typically reuses the memory of this <code>FMUstate</code>
-in this case and returns the same pointer to it, but with the actual <code>FMUstate</code>.]</em></p>
+<p><code>fmi3GetFMUState</code> makes a copy of the internal FMU state and returns a pointer to this copy (<code>FMUState</code>).
+If on entry <code>*FMUState == NULL</code>, a new allocation is required.
+If <code>*FMUState != NULL</code>, then <code>*FMUState</code> points to a previously returned <code>FMUState</code> that has not been modified since.
+In particular, <code>fmi3FreeFMUState</code> had not been called with this <code>FMUState</code> as an argument.
+<em>[Function <code>fmi3GetFMUState</code> typically reuses the memory of this <code>FMUState</code>
+in this case and returns the same pointer to it, but with the actual <code>FMUState</code>.]</em></p>
 </div>
 <div class="paragraph">
-<p><code>fmi3SetFMUstate</code> copies the content of the previously copied <code>FMUstate</code> back and uses it as actual new FMU state.
-The <code>FMUstate</code> copy still exists.</p>
+<p><code>fmi3SetFMUState</code> copies the content of the previously copied <code>FMUState</code> back and uses it as actual new FMU state.
+The <code>FMUState</code> copy still exists.</p>
 </div>
 <div class="paragraph">
-<p><code>fmi3FreeFMUstate</code> frees all memory and other resources allocated with the <code>fmi3GetFMUstate</code> call for this <code>FMUstate</code>.
-The input argument to this function is the <code>FMUstate</code> to be freed.
+<p><code>fmi3FreeFMUState</code> frees all memory and other resources allocated with the <code>fmi3GetFMUState</code> call for this <code>FMUState</code>.
+The input argument to this function is the <code>FMUState</code> to be freed.
 If a null pointer is provided, the call is ignored.
-The function returns a null pointer in argument <code>FMUstate</code>.</p>
+The function returns a null pointer in argument <code>FMUState</code>.</p>
 </div>
 <div class="paragraph">
 <p>These functions are only supported by the FMU,
-if the optional capability flag <code>canGetAndSetFMUstate</code> in <code>&lt;fmiModelDescription&gt; &lt;ModelExchange / CoSimulation&gt;</code> in the XML file is explicitly set to <code>true</code> (see <a href="#ModelExchange">Section 3.3.1</a> and <a href="#CoSimulation">Section 4.3.1</a>).</p>
+if the optional capability flag <code>canGetAndSetFMUState</code> in <code>&lt;fmiModelDescription&gt; &lt;ModelExchange / CoSimulation&gt;</code> in the XML file is explicitly set to <code>true</code> (see <a href="#ModelExchange">Section 3.3.1</a> and <a href="#CoSimulation">Section 4.3.1</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SerializedFMUstateSizeTYPE(fmi3Component c,
-                                                  fmi3FMUstate  FMUstate,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SerializedFMUStateSizeTYPE(fmi3Instance instance,
+                                                  fmi3FMUState  FMUState,
                                                   size_t* size);
 
-typedef fmi3Status fmi3SerializeFMUstateTYPE     (fmi3Component c,
-                                                  fmi3FMUstate  FMUstate,
+typedef fmi3Status fmi3SerializeFMUStateTYPE     (fmi3Instance instance,
+                                                  fmi3FMUState  FMUState,
                                                   fmi3Byte serializedState[],
                                                   size_t size);
 
-typedef fmi3Status fmi3DeSerializeFMUstateTYPE   (fmi3Component c,
+typedef fmi3Status fmi3DeSerializeFMUStateTYPE   (fmi3Instance instance,
                                                   const fmi3Byte serializedState[],
                                                   size_t size,
-                                                  fmi3FMUstate* FMUstate);</code></pre>
+                                                  fmi3FMUState* FMUState);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>fmi3SerializedFMUstateSize</code> returns the <code>size</code> of the byte vector, in order that <code>FMUstate</code> can be stored in it.
+<p><code>fmi3SerializedFMUStateSize</code> returns the <code>size</code> of the byte vector, in order that <code>FMUState</code> can be stored in it.
 With this information, the environment has to allocate an <code>fmi3Byte</code> vector of the required length <code>size</code>.</p>
 </div>
 <div class="paragraph">
-<p><code>fmi3SerializeFMUstate</code> serializes the data which is referenced by pointer <code>FMUstate</code> and copies this data in to the byte vector <code>serializedState</code> of length <code>size</code>, that must be provided by the environment.</p>
+<p><code>fmi3SerializeFMUState</code> serializes the data which is referenced by pointer <code>FMUState</code> and copies this data in to the byte vector <code>serializedState</code> of length <code>size</code>, that must be provided by the environment.</p>
 </div>
 <div class="paragraph">
-<p><code>fmi3DeSerializeFMUstate</code> deserializes the byte vector <code>serializedState</code> of length <code>size</code>, constructs a copy of the FMU state and returns <code>FMUstate</code>, the pointer to this copy.
-<em>[The simulation is restarted at this state, when calling <code>fmi3SetFMUState</code> with <code>FMUstate</code>.]</em></p>
+<p><code>fmi3DeSerializeFMUState</code> deserializes the byte vector <code>serializedState</code> of length <code>size</code>, constructs a copy of the FMU state and returns <code>FMUState</code>, the pointer to this copy.
+<em>[The simulation is restarted at this state, when calling <code>fmi3SetFMUState</code> with <code>FMUState</code>.]</em></p>
 </div>
 <div class="paragraph">
 <p>These functions are only supported by the FMU,
-if the optional capability flags <code>canGetAndSetFMUstate</code> and <code>canSerializeFMUstate</code> in
+if the optional capability flags <code>canGetAndSetFMUState</code> and <code>canSerializeFMUState</code> in
 <code>&lt;fmiModelDescription&gt;&lt;ModelExchange / CoSimulation&gt;</code> in the XML file are explicitly set to <code>true</code> (see <a href="#ModelExchange">Section 3.3.1</a> and <a href="#CoSimulation">Section 4.3.1</a>).</p>
 </div>
 </div>
@@ -2242,15 +2242,15 @@ This function can be used to construct the desired partial derivative matrices.<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDirectionalDerivativeTYPE(fmi3Component c,
-                                                    const fmi3ValueReference vrUnknown[],
-                                                    size_t nUnknown,
-                                                    const fmi3ValueReference vrKnown[],
-                                                    size_t nKnown,
-                                                    const fmi3Float64 dvKnown[],
-                                                    size_t nDvKnown,
-                                                    fmi3Float64 dvUnknown[],
-                                                    size_t nDvUnknown);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDirectionalDerivativeTYPE(fmi3Instance instance,
+                                                    const fmi3ValueReference unknowns[],
+                                                    size_t nUnknowns,
+                                                    const fmi3ValueReference knowns[],
+                                                    size_t nKnowns,
+                                                    const fmi3Float64 deltaKnowns[],
+                                                    size_t nDeltaKnowns,
+                                                    fmi3Float64 deltaUnknowns[],
+                                                    size_t nDeltaOfUnknowns);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2461,7 +2461,7 @@ After each such call, the elements of the resulting directional derivative vecto
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfEventIndicatorsTYPE(fmi3Component c, size_t* nz);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfEventIndicatorsTYPE(fmi3Instance instance, size_t* nz);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2485,7 +2485,7 @@ After each such call, the elements of the resulting directional derivative vecto
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfContinuousStatesTYPE(fmi3Component c, size_t* nx);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfContinuousStatesTYPE(fmi3Instance instance, size_t* nx);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2512,8 +2512,8 @@ After each such call, the elements of the resulting directional derivative vecto
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfVariableDependenciesTYPE(fmi3Component c,
-                                                           fmi3ValueReference vr,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfVariableDependenciesTYPE(fmi3Instance instance,
+                                                           fmi3ValueReference valueReference,
                                                            size_t* nDependencies);</code></pre>
 </div>
 </div>
@@ -2544,12 +2544,12 @@ After each such call, the elements of the resulting directional derivative vecto
     fmi3Dependent = 5
 } fmi3DependencyKind;
 
-typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Component c,
-                                                   fmi3ValueReference vrDependent,
-                                                   size_t elementIndexDependent[],
-                                                   fmi3ValueReference vrIndependent[],
-                                                   size_t elementIndexIndependent[],
-                                                   fmi3DependencyKind dependencyType[],
+typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Instance instance,
+                                                   fmi3ValueReference dependent,
+                                                   size_t elementIndicesOfDependent[],
+                                                   fmi3ValueReference independents[],
+                                                   size_t elementIndicesOfIndependents[],
+                                                   fmi3DependencyKind dependencyKinds[],
                                                    size_t nDependencies);</code></pre>
 </div>
 </div>
@@ -3630,7 +3630,7 @@ For example, dividing by an input (so the input should not be in a small range o
 </div>
 </div>
 <div class="paragraph">
-<p><code>LogCategories</code> defines an unordered set of category strings that can be utilized to define the log output via function <code>logger</code>, see <a href="#creation-destruction-and-logging">Section 2.1.5</a>.
+<p><code>LogCategories</code> defines an unordered set of category strings that can be utilized to define the log output via function <code>logMessage</code>, see <a href="#creation-destruction-and-logging">Section 2.1.5</a>.
 A tool is free to use any <code>normalizedString</code> for a category value.
 The <code>name</code> attribute of <code>Category</code> must be unique with respect to all other elements of the <code>LogCategories</code> list.</p>
 </div>
@@ -3712,8 +3712,8 @@ If a tool supports one of these log categories and wants to expose it, then an e
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><em>The log output is drastically reduced, because via <code>fmi3SetDebugLogging</code> exactly the categories are set that shall be logged and therefore the FMU only has to print the messages with the corresponding categories to the <code>logger</code> function.
-In FMI 1.0, it was necessary to provide all log output of the FMU to the <code>logger</code> and then a filter in the <code>logger</code> could select what to show to the end-user.
+<p><em>The log output is drastically reduced, because via <code>fmi3SetDebugLogging</code> exactly the categories are set that shall be logged and therefore the FMU only has to print the messages with the corresponding categories to the <code>logMessage</code> function.
+In FMI 1.0, it was necessary to provide all log output of the FMU to the <code>logMessage</code> and then a filter in the <code>logMessage</code> could select what to show to the end-user.
 The approach introduced in FMI 2.0 is therefore much more efficient.]</em></p>
 </li>
 </ol>
@@ -6050,7 +6050,7 @@ This is unproblematic for time and states, but is more involved for parameters a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetTimeTYPE(fmi3Component c, fmi3Float64 time);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance instance, fmi3Float64 time);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6058,7 +6058,7 @@ This is unproblematic for time and states, but is more involved for parameters a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetContinuousStatesTYPE(fmi3Component c,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetContinuousStatesTYPE(fmi3Instance instance,
                                                const fmi3Float64 x[],
                                                size_t nx);</code></pre>
 </div>
@@ -6094,7 +6094,7 @@ to set the input arguments to the current model evaluation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Component c);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6102,8 +6102,8 @@ to set the input arguments to the current model evaluation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3NewDiscreteStatesTYPE(fmi3Component c,
-                                             fmi3EventInfo* fmi3eventInfo);
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3NewDiscreteStatesTYPE(fmi3Instance instance,
+                                             fmi3EventInfo* eventInfo);
 
 typedef struct {
     fmi3Boolean newDiscreteStatesNeeded;
@@ -6135,7 +6135,7 @@ Depending on the connection with other FMUs, the environment shall</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>When the FMU is terminated, it is assumed that an appropriate message is printed by the logger function (see <a href="#creation-destruction-and-logging">Section 2.1.5</a>) to explain the reason for the termination.<br>
+<p>When the FMU is terminated, it is assumed that an appropriate message is printed by the logMessage function (see <a href="#creation-destruction-and-logging">Section 2.1.5</a>) to explain the reason for the termination.<br>
 If <code>nominalsOfContinuousStatesChanged = fmi3True</code>, then the nominal values of the states have changed due to the function call and can be inquired with <code>fmi3GetNominalsOfContinuousStates</code>.<br>
 If <code>valuesOfContinuousStatesChanged = fmi3True</code>, then at least one element of the continuous state vector has changed its value due to the function call.
 The new values of the states can be inquired with <code>fmi3GetContinuousStates</code>.
@@ -6146,7 +6146,7 @@ If integration is stopped before <code>nextEventTime</code>, for example, due to
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterContinuousTimeModeTYPE(fmi3Component c);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterContinuousTimeModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6168,7 +6168,7 @@ This function has to be called when changing from <strong>Event Mode</strong> (a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3CompletedIntegratorStepTYPE(fmi3Component c,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3CompletedIntegratorStepTYPE(fmi3Instance instance,
                                                    fmi3Boolean noSetFMUStatePriorToCurrentPoint,
                                                    fmi3Boolean* enterEventMode,
                                                    fmi3Boolean* terminateSimulation);</code></pre>
@@ -6213,11 +6213,11 @@ whether the return argument <code>enterEventMode</code> of <code>fmi3CompletedIn
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDerivativesTYPE(fmi3Component c,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDerivativesTYPE(fmi3Instance instance,
                                           fmi3Float64 derivatives[],
                                           size_t nx);
 
-typedef fmi3Status fmi3GetEventIndicatorsTYPE(fmi3Component c,
+typedef fmi3Status fmi3GetEventIndicatorsTYPE(fmi3Instance instance,
                                               fmi3Float64 eventIndicators[],
                                               size_t ni);</code></pre>
 </div>
@@ -6235,7 +6235,7 @@ Note that <code>fmi3Status</code> = <code>fmi3Discard</code> is possible for bot
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetContinuousStatesTYPE(fmi3Component c, fmi3Float64 x[], size_t nx);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetContinuousStatesTYPE(fmi3Instance instance, fmi3Float64 x[], size_t nx);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6244,8 +6244,8 @@ This function has to be called directly after calling function <code>fmi3EnterCo
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNominalsOfContinuousStatesTYPE(fmi3Component c,
-                                                         fmi3Float64 x_nominal[],
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNominalsOfContinuousStatesTYPE(fmi3Instance instance,
+                                                         fmi3Float64 nominals[],
                                                          size_t nx);</code></pre>
 </div>
 </div>
@@ -6540,7 +6540,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in any of 
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3GetFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3GetFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -6551,7 +6551,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in any of 
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SetFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SetFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -6562,7 +6562,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in any of 
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3FreeFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3FreeFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -6573,7 +6573,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in any of 
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SerializedFMUstateSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SerializedFMUStateSize</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -6584,7 +6584,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in any of 
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SerializeFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SerializeFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -6595,7 +6595,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in any of 
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3DeSerializeFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3DeSerializeFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -6948,14 +6948,14 @@ If <code>false</code> (the default), the function must be called after every com
 The callback functions <code>allocateMemory</code> and <code>freeMemory</code> given in <code>fmi3Instantiate</code> are ignored.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canGetAndSetFMUstate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canGetAndSetFMUState</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the environment can inquire the internal FMU state and can restore it.
-That is, functions <code>fmi3GetFMUstate</code>, <code>fmi3SetFMUstate</code>, and <code>fmi3FreeFMUstate</code> are supported by the FMU.</p></td>
+That is, functions <code>fmi3GetFMUState</code>, <code>fmi3SetFMUState</code>, and <code>fmi3FreeFMUState</code> are supported by the FMU.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canSerializeFMUstate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the environment can serialize the internal FMU state, in other words, functions <code>fmi3SerializedFMUstateSize</code>, <code>fmi3SerializeFMUstate</code>, <code>fmi3DeSerializeFMUstate</code> are supported by the FMU.
-If this is the case, then flag <code>canGetAndSetFMUstate</code> must be true as well.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canSerializeFMUState</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the environment can serialize the internal FMU state, in other words, functions <code>fmi3SerializedFMUStateSize</code>, <code>fmi3SerializeFMUState</code>, <code>fmi3DeSerializeFMUState</code> are supported by the FMU.
+If this is the case, then flag <code>canGetAndSetFMUState</code> must be true as well.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesDirectionalDerivative</code></p></td>
@@ -7553,11 +7553,11 @@ Whether a slave is able to interpolate and therefore needs this information is p
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetInputDerivativesTYPE(fmi3Component c,
-                                               const fmi3ValueReference vr[],
-                                               size_t nvr,
-                                               const fmi3Int32 order[],
-                                               const fmi3Float64 value[],
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetInputDerivativesTYPE(fmi3Instance instance,
+                                               const fmi3ValueReference valueReferences[],
+                                               size_t nValueReferences,
+                                               const fmi3Int32 orders[],
+                                               const fmi3Float64 values[],
                                                size_t nValues);</code></pre>
 </div>
 </div>
@@ -7566,7 +7566,7 @@ Whether a slave is able to interpolate and therefore needs this information is p
 Argument <code>vr</code> is a vector of value references that define the variables whose derivatives shall be set.
 The array <code>order</code> contains the orders of the respective derivative (1 means the first derivative, 0 is not allowed).
 Argument "value" is a vector with the values of the derivatives.
-<code>nvr</code> is the dimension of the vectors.<br>
+<code>nValueReferences</code> is the dimension of the vectors.<br>
 Restrictions on using the function are the same as for the <code>fmi3SetReal</code> function.</p>
 </div>
 <div class="paragraph">
@@ -7586,17 +7586,17 @@ If the actual order is lower (because the order of integration algorithm is low)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetOutputDerivativesTYPE(fmi3Component c,
-                                                const fmi3ValueReference vr[],
-                                                size_t nvr,
-                                                const fmi3Int32 order[],
-                                                fmi3Float64 value[],
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetOutputDerivativesTYPE(fmi3Instance instance,
+                                                const fmi3ValueReference valueReferences[],
+                                                size_t nValueReferences,
+                                                const fmi3Int32 orders[],
+                                                fmi3Float64 values[],
                                                 size_t nValues);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Retrieves the n-th derivative of output values.
-Argument <code>vr</code> is a vector of <code>nvr</code> value references that define the variables whose derivatives shall be retrieved.
+Argument <code>vr</code> is a vector of <code>nValueReferences</code> value references that define the variables whose derivatives shall be retrieved.
 The array <code>order</code> contains the order of the respective derivative (1 means the first derivative, 0 is not allowed).
 Argument <code>value</code> is a vector with the actual values of the derivatives.<br>
 Restrictions on using the function are the same as for the <code>fmi3GetReal</code> function.</p>
@@ -7616,7 +7616,7 @@ E.g. after a successful <code>fmi3DoStep(&#8230;&#8203;)</code> the returned val
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3DoStepTYPE(fmi3Component c,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3DoStepTYPE(fmi3Instance instance,
                                   fmi3Float64 currentCommunicationPoint,
                                   fmi3Float64 communicationStepSize,
                                   fmi3Boolean noSetFMUStatePriorToCurrentPoint);</code></pre>
@@ -7659,13 +7659,13 @@ It is not allowed to call any other function during a pending <code>fmi3DoStep</
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3CancelStepTYPE(fmi3Component c);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3CancelStepTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Can be called if <code>fmi3DoStep</code> returned <code>fmi3Pending</code> in order to stop the current asynchronous execution.
 The master calls this function if, for example, the co-simulation run is stopped by the user or one of the slaves.
-Afterwards only calls to <code>fmi3Reset</code>, <code>fmi3FreeInstance</code>, or <code>fmi3SetFMUstate</code> are valid to exit the <strong>step Canceled</strong> state.
+Afterwards only calls to <code>fmi3Reset</code>, <code>fmi3FreeInstance</code>, or <code>fmi3SetFMUState</code> are valid to exit the <strong>step Canceled</strong> state.
 Refer to <a href="#state-machine-co-simulation">Section 4.2.4</a> for all other valid functions in this state.</p>
 </div>
 <div class="paragraph">
@@ -7679,7 +7679,7 @@ Refer to <a href="#state-machine-co-simulation">Section 4.2.4</a> for all other 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDoStepPendingStatusTYPE(fmi3Component c,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDoStepPendingStatusTYPE(fmi3Instance instance,
                                                   fmi3Status* status,
                                                   fmi3String* message);</code></pre>
 </div>
@@ -7691,7 +7691,7 @@ Refer to <a href="#state-machine-co-simulation">Section 4.2.4</a> for all other 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDoStepDiscardedStatusTYPE(fmi3Component c,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDoStepDiscardedStatusTYPE(fmi3Instance instance,
                                                     fmi3Boolean* terminate,
                                                     fmi3Float64* lastSuccessfulTime);</code></pre>
 </div>
@@ -8039,7 +8039,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in <strong
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3GetFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3GetFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -8052,7 +8052,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in <strong
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SetFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SetFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -8065,7 +8065,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in <strong
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3FreeFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3FreeFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -8078,7 +8078,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in <strong
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SerializedFMUstateSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SerializedFMUStateSize</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -8091,7 +8091,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in <strong
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SerializeFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SerializeFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -8104,7 +8104,7 @@ As a result, artificial or "real" algebraic loops over connected FMUs in <strong
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3DeSerializeFMUstate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3DeSerializeFMUState</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -8262,16 +8262,16 @@ The code demonstrates the simplest master algorithm as shown in <a href="#math-c
 //Initialization sub-phase
 //Set callback functions,
 fmi3CallbackFunctions cbf;
-cbf.logger = loggerFunction;  //logger function
+cbf.logMessage = logMessageFunction;  //logMessage function
 cbf.allocateMemory = calloc;
 cbf.freeMemory = free;
 cbf.stepFinished = NULL;      //synchronous execution
-cbf.componentEnvironment = NULL;
+cbf.instanceEnvironment = NULL;
 
 //Instantiate both slaves
-fmi3Component s1 = s1_fmi3Instantiate("Tool1" , fmi3CoSimulation, instantiationToken1, "",
+fmi3Instance s1 = s1_fmi3Instantiate("Tool1" , fmi3CoSimulation, instantiationToken1, "",
                                     fmi3False, fmi3False, &amp;cbf, fmi3True);
-fmi3Component s2 = s2_fmi3Instantiate("Tool2" , fmi3CoSimulation, instantiationToken2, "",
+fmi3Instance s2 = s2_fmi3Instantiate("Tool2" , fmi3CoSimulation, instantiationToken2, "",
                                     fmi3False, fmi3False, &amp;cbf, fmi3True);
 
 if ((s1 == NULL) || (s2 == NULL))
@@ -8435,14 +8435,14 @@ Calling of <code>fmi3GetRealOutputDerivatives</code> is allowed up to the order 
 The callback functions <code>allocateMemory</code> and <code>freeMemory</code> given in <code>fmi3Instantiate</code> are ignored.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canGetAndSetFMUstate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canGetAndSetFMUState</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If true, the environment can inquire the internal FMU state and restore it.
-That is, <code>fmi3GetFMUstate</code>, <code>fmi3SetFMUstate</code>, and <code>fmi3FreeFMUstate</code> are supported by the FMU.</p></td>
+That is, <code>fmi3GetFMUState</code>, <code>fmi3SetFMUState</code>, and <code>fmi3FreeFMUState</code> are supported by the FMU.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canSerializeFMUstate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the environment can serialize the internal FMU state, in other words, <code>fmi3SerializedFMUstateSize</code>, <code>fmi3SerializeFMUstate</code>, <code>fmi3DeSerializeFMUstate</code> are supported by the FMU.
-If this is the case, then flag <code>canGetAndSetFMUstate</code> must be true as well.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canSerializeFMUState</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the environment can serialize the internal FMU state, in other words, <code>fmi3SerializedFMUStateSize</code>, <code>fmi3SerializeFMUState</code>, <code>fmi3DeSerializeFMUState</code> are supported by the FMU.
+If this is the case, then flag <code>canGetAndSetFMUState</code> must be true as well.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesDirectionalDerivative</code></p></td>
@@ -8922,7 +8922,7 @@ This has been changed, so that version is a string.</p>
 <li>
 <p>Element "fmiModelDescription.Implementation" in the model description schema file has been replaced by a different structure where one hierarchical level is removed. There are now 2 elements directly under fmiModelDescription: "ModelExchange" and "CoSimulation".<br>
 File "fmiImplementation.xsd" has been removed.<br>
-New capability flags have been introduced both for <code>ModelExchange</code> and for <code>CoSimulation</code>, such as <code>canGetAndSetFMUstate</code>, <code>canSerializeFMUstate</code>, etc.<br>
+New capability flags have been introduced both for <code>ModelExchange</code> and for <code>CoSimulation</code>, such as <code>canGetAndSetFMUState</code>, <code>canSerializeFMUState</code>, etc.<br>
 Attribute <code>modelIdentifier</code> has been moved from an <code>fmiModelDescription</code> attribute to an attribute in <code>ModelExchange</code> and in <code>CoSimulation</code>. This allows providing different identifiers, and then an FMU may contain both distribution types with different DLL names (which correspond to the <code>modelIdentifier</code> names).<br>
 A new attribute <code>needsExecutionTool</code> has been introduced both in <code>ModelExchange</code> and in <code>CoSimulation</code> in order to define whether a tool is needed to execute the FMU. The previous elements in <code>CoSimulation_Tool</code> have been removed.</p>
 </li>
@@ -8953,12 +8953,12 @@ Wrong example in the previous section 2.10 of Co-Simulation has been fixed.</p>
 <li>
 <p>Fixing ticket #41:<br>
 New types introduced in fmi2TypesPlatform.h :<br>
-<code>fmi2ComponentEnvironment</code>, <code>fmi2FMUstate</code>, <code>fmi2Byte</code>.<br>
+<code>fmi2ComponentEnvironment</code>, <code>fmi2FMUState</code>, <code>fmi2Byte</code>.<br>
 Struct <code>fmi2CallbackFunctions</code> gets a new last argument:<br>
-<code>fmi2ComponentEnvironment componentEnvironment</code><br>
-The first argument of function <code>logger</code> is changed from type <code>fmi2Component</code>
+<code>fmi2ComponentEnvironment instanceEnvironment</code><br>
+The first argument of function <code>logMessage</code> is changed from type <code>fmi2Component</code>
 to <code>fmi2ComponentEnvironment</code>.<br>
-By these changes, a pointer to a data structure from the simulation environment is passed to the <code>logger</code> and allows the <code>logger</code>, for example, to transform a <code>valueReference</code> in the log message to a variable name.</p>
+By these changes, a pointer to a data structure from the simulation environment is passed to the <code>logMessage</code> and allows the <code>logMessage</code>, for example, to transform a <code>valueReference</code> in the log message to a variable name.</p>
 </li>
 <li>
 <p>Fixing ticket #42:<br>
@@ -8971,7 +8971,7 @@ The previous header file fmiFunctions.h is split into 2 header files, fmi2Functi
 </li>
 <li>
 <p>Fixing ticket #45:<br>
-Contrary to the ticket proposal, no new function <code>fmiResetModel</code> is added. Instead 6 new functions are added to get and set the internal FMU state via a pointer and to serialize and deserialize an FMU state via a byte vector provided by the environment. For details, see <a href="#get-set-fmu-state">Section 2.1.8</a>. This feature allows, for example, to support more sophisticated co-simulation master algorithms which require the repetition of communication steps. Additionally, two capability flags have been added (<code>canGetAndSetFMUstate</code>, <code>canSerializeFMUstate</code>) in order to define whether these features are supported by the FMU.</p>
+Contrary to the ticket proposal, no new function <code>fmiResetModel</code> is added. Instead 6 new functions are added to get and set the internal FMU state via a pointer and to serialize and deserialize an FMU state via a byte vector provided by the environment. For details, see <a href="#get-set-fmu-state">Section 2.1.8</a>. This feature allows, for example, to support more sophisticated co-simulation master algorithms which require the repetition of communication steps. Additionally, two capability flags have been added (<code>canGetAndSetFMUState</code>, <code>canSerializeFMUState</code>) in order to define whether these features are supported by the FMU.</p>
 </li>
 <li>
 <p>Fixing ticket #46:<br>
@@ -9496,7 +9496,7 @@ This definition is slightly different from the usual standard definition of stat
 <a href="#_footnoteref_3">3</a>. Functions <code>fmi3SetXXX</code> are usually not performing calculations but just store the passed values in internal buffers. The actual calculation is performed by <code>fmi3GetXXX</code> functions. Still <code>fmi3SetXXX</code> functions could check whether the input arguments are in their validity range. If not, these functions could return with <code>fmi3Discard</code>.
 </div>
 <div class="footnote" id="_footnotedef_4">
-<a href="#_footnoteref_4">4</a>. Typically, <code>fmi3Error</code> return is for non-numerical reasons, like "disk full". There might be cases where the environment can fix such errors (eventually with the help oft the user), and then simulation can continue at the last consistent state defined with <code>fmi3SetFMUstate</code>.
+<a href="#_footnoteref_4">4</a>. Typically, <code>fmi3Error</code> return is for non-numerical reasons, like "disk full". There might be cases where the environment can fix such errors (eventually with the help oft the user), and then simulation can continue at the last consistent state defined with <code>fmi3SetFMUState</code>.
 </div>
 <div class="footnote" id="_footnotedef_5">
 <a href="#_footnoteref_5">5</a>. The variable that is defined with <code>causality = "independent"</code> in the <code>fmiModelDescription.xml</code> file.
