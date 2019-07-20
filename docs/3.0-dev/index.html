@@ -612,14 +612,15 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#fmi-description-schema">2.2. FMI Description Schema</a>
 <ul class="sectlevel3">
 <li><a href="#fmiModelDescription">2.2.1. Definition of an FMU (fmiModelDescription)</a></li>
-<li><a href="#_definition_of_units_unitdefinitions">2.2.2. Definition of Units (UnitDefinitions)</a></li>
-<li><a href="#definition-of-types">2.2.3. Definition of Types (TypeDefinitions)</a></li>
-<li><a href="#definition-of-log-categories">2.2.4. Definition of Log Categories (LogCategories)</a></li>
-<li><a href="#DefaultExperiment">2.2.5. Definition of a Default Experiment (DefaultExperiment)</a></li>
-<li><a href="#_definition_of_vendor_annotations_vendorannotations">2.2.6. Definition of Vendor Annotations (VendorAnnotations)</a></li>
-<li><a href="#definition-of-model-variables">2.2.7. Definition of Model Variables (ModelVariables)</a></li>
-<li><a href="#ModelStructure">2.2.8. Definition of the Model Structure (ModelStructure)</a></li>
-<li><a href="#variableNamingConvention">2.2.9. Variable Naming Conventions (variableNamingConvention)</a></li>
+<li><a href="#_definition_of_source_code_buildconfiguration">2.2.2. Definition of Source Code (BuildConfiguration)</a></li>
+<li><a href="#_definition_of_units_unitdefinitions">2.2.3. Definition of Units (UnitDefinitions)</a></li>
+<li><a href="#definition-of-types">2.2.4. Definition of Types (TypeDefinitions)</a></li>
+<li><a href="#definition-of-log-categories">2.2.5. Definition of Log Categories (LogCategories)</a></li>
+<li><a href="#DefaultExperiment">2.2.6. Definition of a Default Experiment (DefaultExperiment)</a></li>
+<li><a href="#_definition_of_vendor_annotations_vendorannotations">2.2.7. Definition of Vendor Annotations (VendorAnnotations)</a></li>
+<li><a href="#definition-of-model-variables">2.2.8. Definition of Model Variables (ModelVariables)</a></li>
+<li><a href="#ModelStructure">2.2.9. Definition of the Model Structure (ModelStructure)</a></li>
+<li><a href="#variableNamingConvention">2.2.10. Variable Naming Conventions (variableNamingConvention)</a></li>
 </ul>
 </li>
 <li><a href="#fmu-distribution">2.3. FMU Distribution</a></li>
@@ -1749,7 +1750,7 @@ If <code>logger</code> is called with <code>status = fmi3OK</code>, then the mes
 <code>instanceName</code> is the instance name of the model that calls this function.
 <code>category</code> is the category of the message.
 The meaning of <code>category</code> is defined by the modeling environment that generated the FMU.
-Depending on this modeling environment, none, some or all allowed values of <code>category</code> for this FMU are defined in the <code>modelDescription.xml</code> file via element <code>&lt;fmiModelDescription&gt;&lt;LogCategories&gt;</code>, see <a href="#definition-of-log-categories">Section 2.2.4</a>.
+Depending on this modeling environment, none, some or all allowed values of <code>category</code> for this FMU are defined in the <code>modelDescription.xml</code> file via element <code>&lt;fmiModelDescription&gt;&lt;LogCategories&gt;</code>, see <a href="#definition-of-log-categories">Section 2.2.5</a>.
 Only messages are provided by function <code>logger</code> that have a category according to a call to <code>fmi3SetDebugLogging</code> (see below).
 Argument <code>message</code> is a string that contains the message.
 <em>[Typically, this function prints the message and stores it optionally in a log file.]</em></p>
@@ -1816,7 +1817,7 @@ If a null pointer is provided for <code>c</code>, the function call is ignored (
 If <code>loggingOn=fmi3True</code> and <code>nCategories &gt; 0</code>, then only debug messages according to the <code>categories</code> argument shall be printed via the <code>logger</code> function.
 Vector <code>categories</code> has <code>nCategories</code> elements.
 The allowed values of <code>categories</code> are defined by the modeling environment that generated the FMU.
-Depending on the generating modeling environment, none, some or all allowed values for <code>categories</code> for this FMU are defined in the <code>modelDescription.xml</code> file via element <code>fmiModelDescription.LogCategories</code>, see <a href="#definition-of-log-categories">Section 2.2.4</a>.</p>
+Depending on the generating modeling environment, none, some or all allowed values for <code>categories</code> for this FMU are defined in the <code>modelDescription.xml</code> file via element <code>fmiModelDescription.LogCategories</code>, see <a href="#definition-of-log-categories">Section 2.2.5</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1867,7 +1868,7 @@ If <code>stopTimeDefined = fmi3True</code>, then <code>stopTime</code> is the de
 </div>
 <div class="paragraph">
 <p>Informs the FMU to enter Initialization Mode.
-Before calling this function, all variables with attribute <code>&lt;Variable initial = "exact"</code> or <code>"approx"&gt;</code> can be set with the <code>fmi3SetXXX</code> functions (the <code>Variable</code> attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 2.2.7</a>).
+Before calling this function, all variables with attribute <code>&lt;Variable initial = "exact"</code> or <code>"approx"&gt;</code> can be set with the <code>fmi3SetXXX</code> functions (the <code>Variable</code> attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 Setting other variables is not allowed.
 Furthermore, <code>fmi3SetupExperiment</code> must be called at least once before calling <code>fmi3EnterInitializationMode</code>, in order that <code>startTime</code> is defined.</p>
 </div>
@@ -2032,7 +2033,7 @@ typedef fmi3Status fmi3GetBinaryTYPE (fmi3Component c,
 <em>[These functions are especially used to get the actual values of output variables if a model is connected with other models.
 Since state derivatives are also <code>Variable</code>s, it is possible to get the value of a state derivative.
 This is useful when connecting FMUs together.
-Furthermore, the actual value of every variable defined in the <code>modelDescription.xml</code> file can be determined at the actually defined time instant (see <a href="#definition-of-model-variables">Section 2.2.7</a>).]</em></p>
+Furthermore, the actual value of every variable defined in the <code>modelDescription.xml</code> file can be determined at the actually defined time instant (see <a href="#definition-of-model-variables">Section 2.2.8</a>).]</em></p>
 </div>
 <div class="ulist">
 <ul>
@@ -2115,7 +2116,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Component c,
 </div>
 </div>
 <div class="paragraph">
-<p>Set parameters, inputs, and start values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.7</a> for the exact rules on which type of variables <code>fmi3SetXXX</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of ModelExchange and <a href="#state-machine-co-simulation">Section 4.2.4</a> in case of CoSimulation).</p>
+<p>Set parameters, inputs, and start values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.8</a> for the exact rules on which type of variables <code>fmi3SetXXX</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of ModelExchange and <a href="#state-machine-co-simulation">Section 4.2.4</a> in case of CoSimulation).</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2312,7 +2313,7 @@ If <code>&lt;ModelStructure&gt;&lt;Derivatives&gt;</code> is present, also the v
 <li>
 <p>\(\color{blue}{\mathbf{v}_{known}}\) is the vector of Real input variables of function <strong>h</strong>
 that changes its value in the actual Mode.
-Details are described in the description of element <code>dependencies</code> in <a href="#ModelStructure">Section 2.2.8</a>.
+Details are described in the description of element <code>dependencies</code> in <a href="#ModelStructure">Section 2.2.9</a>.
 <em>[For example continuous-time inputs in Continuous-Time Mode.
 If a variable with <code>causality = "independent"</code> is explicitly defined under <code>Variable</code>s, a directional derivative with respect to this variable can be computed.
 If such a variable is not defined, the directional derivative with respect to the independent variable cannot be calculated].</em></p>
@@ -2603,10 +2604,13 @@ This schema file utilizes the following helper schema files:</p>
 <p><code>fmi3AttributeGroups.xsd</code><br></p>
 </li>
 <li>
-<p><code>fmi3Variable.xsd</code><br></p>
+<p><code>fmi3FMUType.xsd</code><br></p>
 </li>
 <li>
 <p><code>fmi3Type.xsd</code><br></p>
+</li>
+<li>
+<p><code>fmi3Variable.xsd</code><br></p>
 </li>
 <li>
 <p><code>fmi3VariableDependency.xsd</code><br></p>
@@ -2842,7 +2846,7 @@ The format is a subset of "xs:dateTime" and should be: "YYYY-MM-DDThh:mm:ssZ" (w
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>variableNamingConvention</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether the variable names in <code>ModelVariables / Variable / name</code> and in <code>TypeDefinitions / Type / name</code> follow a particular convention.
-For the details, see <a href="#variableNamingConvention">Section 2.2.9</a>. Currently standardized are:</p>
+For the details, see <a href="#variableNamingConvention">Section 2.2.10</a>. Currently standardized are:</p>
 <p class="tableblock">- <code>flat</code>: A list of strings (the default).</p>
 <p class="tableblock">- <code>structured</code>: Hierarchical names with "." as hierarchy separator,
 and with array elements and derivative characterization.</p></td>
@@ -2860,7 +2864,314 @@ since this information can be deduced from the remaining data in the XML file.]<
 </div>
 </div>
 <div class="sect3">
-<h4 id="_definition_of_units_unitdefinitions">2.2.2. Definition of Units (UnitDefinitions)</h4>
+<h4 id="_definition_of_source_code_buildconfiguration">2.2.2. Definition of Source Code (BuildConfiguration)</h4>
+<div class="paragraph">
+<p>The <code>BuildConfiguration</code> provides the necessary information to compile and link the contained sources of the model into a dynamic library or as part of an executable.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">platform</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Platform tuple of the platform the build configuration is intended for (e.g. <code>x86_64-linux</code>)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description of the build configuration</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="_sourcefileset">SourceFileSet</h5>
+<div class="paragraph">
+<p>The <code>SourceFileSet</code> element groups source files that can be compiled with the same compiler and compiler options. Every build configuration must contain at least one <code>SourceFileSet</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">language</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Language of the source files (e.g. <code>C99</code>, <code>C++11</code>)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compiler</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The compiler to compile the sources (e.g. <code>VisualC</code>, <code>gcc</code>, <code>clang++</code>)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compilerOptions</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The compiler flags that have to be used when compiling the sources (e.g. <code>-fno-rtti</code>, <code>/Od</code>)</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect5">
+<h6 id="_sourcefile">SourceFile</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Path of the source file relative to the <code>sources</code> directory</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_preprocessordefinition">PreprocessorDefinition</h6>
+<div class="paragraph">
+<p>The <code>PreprocessorDefinition</code> element defines a preprocessor definition that needs to be passed to the compiler when compiling the source files in the <code>SourceFileSet</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the preprocessor definition</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value of the preprocessor definition</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">optional</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Determines wether the definition is optional (default is <code>false</code>)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description of the preprocessor definition</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_preprocessordefinitionoption">PreprocessorDefinition/Option</h6>
+<div class="paragraph">
+<p>The <code>Option</code> element defines a possible value for the <code>PreprocessorDefinition</code>. If a <code>PreprocessorDefinition</code> contains <code>Option</code> elements, its default value must be contained in the options.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value of the preprocessor definition option</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description of the preprocessor definition option</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_includedirectory">IncludeDirectory</h6>
+<div class="paragraph">
+<p>The <code>IncludeDirectory</code> element defines the include directories that need to be passed to the compiler when compiling the source files in the <code>SourceFileSet</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Path of the include directory relative to the <code>sources</code> directory</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_library">Library</h6>
+<div class="paragraph">
+<p>The <code>Library</code> element defines a static library required to link the model binary.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the library</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Version specifier of the library as defined in <a href="https://www.python.org/dev/peps/pep-0440/#version-specifiers">PEP 440</a>.
+The characters <code>&gt;</code> (greater-than) and <code>&lt;</code> (less-than) must be escaped as <code>&gt;</code> and <code>&lt;</code>.
+ <em>[For example <code>2.5</code>, <code>&gt;=2.0,&lt;3.0</code> or <code>&gt;=1.0,!=1.2</code>]</em>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">external</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Boolean attribute that determines wether the library is contained in the <code>binaries/&lt;platform_tuple&gt;</code> directory (<code>false</code>) or if it has to be provided by the environment (<code>true</code>). The default is <code>false</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description of the library definition option</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_examples">Examples</h6>
+<div class="listingblock">
+<div class="title">A minimal build configuration</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelExchange modelIdentifier="PIDContoller"&gt;
+  &lt;BuildConfiguration&gt;
+    &lt;SourceFileSet&gt;
+      &lt;SourceFile name="all.c"/&gt;
+    &lt;/SourceFileSet&gt;
+  &lt;/BuildConfiguration&gt;
+&lt;/ModelExchange&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Multiple complex build configurations</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;CoSimulation modelIdentifier="PlantModel"&gt;
+  &lt;BuildConfiguration description="Build configuration for desktop platforms"&gt; <b class="conum">(1)</b>
+    &lt;SourceFileSet language="C99"&gt;
+      &lt;SourceFile name="fmi3Functions.c"/&gt;
+      &lt;SourceFile name="solver.c"/&gt;
+    &lt;/SourceFileSet&gt;
+    &lt;SourceFileSet language="C++11"&gt;
+      &lt;SourceFile name="model.c"/&gt;
+      &lt;SourceFile name="logging/src/logger.c"/&gt;
+      &lt;PreprocessorDefinition name="FMI_VERSION" value="3"/&gt;
+      &lt;PreprocessorDefinition name="LOG_TO_FILE" optional="true"/&gt;
+      &lt;PreprocessorDefinition name="LOG_LEVEL" value="0" optional="true"&gt;
+        &lt;Option value="0" description="Log infos, warnings and errors"/&gt;
+        &lt;Option value="1" description="Log warnings and errors"/&gt;
+        &lt;Option value="2" description="Log only errors"/&gt;
+      &lt;/PreprocessorDefinition&gt;
+      &lt;IncludeDirectory name="logging/include"/&gt;
+    &lt;/SourceFileSet&gt;
+    &lt;Library name="hdf5" version="&amp;gt;=1.8,!=1.8.17,&amp;lt;1.10" external="true" description="HDF5"/&gt;
+  &lt;/BuildConfiguration&gt;
+  &lt;BuildConfiguration platform="aarch64-linux" description=""&gt; <b class="conum">(2)</b>
+    &lt;SourceFileSet language="C99"&gt;
+      &lt;SourceFile name="fmi3Functions.c"/&gt;
+    &lt;/SourceFileSet&gt;
+    &lt;SourceFileSet language="C++11" compiler="clang++" compilerOptions="-fno-rtti"&gt; <b class="conum">(3)</b>
+      &lt;SourceFile name="model.c"/&gt;
+      &lt;PreprocessorDefinition name="NO_FILE_SYSTEM"/&gt;
+    &lt;/SourceFileSet&gt;
+    &lt;Library name="libm.a" description="OpenLibm math library"/&gt; <b class="conum">(4)</b>
+  &lt;/BuildConfiguration&gt;
+  &lt;VendorAnnotations&gt;
+    &lt;Tool name="SimTool"&gt;
+      &lt;License name="multi_thread"/&gt;
+    &lt;/Tool&gt;
+  &lt;/VendorAnnotations&gt;
+&lt;/CoSimulation&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Generic build configuration for desktop platforms</p>
+</li>
+<li>
+<p>Build configuration for a specialized real-time board</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_definition_of_units_unitdefinitions">2.2.3. Definition of Units (UnitDefinitions)</h4>
 <div class="paragraph">
 <p><em>[In this section, the units of the variables are (optionally) defined.
 Unit support is important for technical systems since otherwise it is very easy for errors to occur.
@@ -3157,7 +3468,7 @@ Example for a definition:</em></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="definition-of-types">2.2.3. Definition of Types (TypeDefinitions)</h4>
+<h4 id="definition-of-types">2.2.4. Definition of Types (TypeDefinitions)</h4>
 <div class="paragraph">
 <p>Element <strong>"TypeDefinitions"</strong> of <code>fmiModelDescription</code> is defined as:</p>
 </div>
@@ -3252,7 +3563,7 @@ The <code>max</code> definition is information from the FMU to the environment d
 If not defined and no other information about the nominal value is available, then nominal = 1 is assumed.<br>
 <em>[The nominal value of a variable can be, for example, used to determine the absolute tolerance for this variable as needed by numerical algorithms:</em><br>
 absoluteTolerance = <code>nominal</code> * <code>tolerance</code> * 0.01<br>
-<em>where <code>tolerance</code> is, for example, the relative tolerance defined in <code>&lt;DefaultExperiment&gt;</code>, see <a href="#DefaultExperiment">Section 2.2.5</a>.]</em></p></td>
+<em>where <code>tolerance</code> is, for example, the relative tolerance defined in <code>&lt;DefaultExperiment&gt;</code>, see <a href="#DefaultExperiment">Section 2.2.6</a>.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">unbounded</p></td>
@@ -3309,7 +3620,7 @@ For example, dividing by an input (so the input should not be in a small range o
 </div>
 </div>
 <div class="sect3">
-<h4 id="definition-of-log-categories">2.2.4. Definition of Log Categories (LogCategories)</h4>
+<h4 id="definition-of-log-categories">2.2.5. Definition of Log Categories (LogCategories)</h4>
 <div class="paragraph">
 <p>Element <code>LogCategories</code> of <code>fmiModelDescription</code> is defined as:</p>
 </div>
@@ -3409,7 +3720,7 @@ The approach introduced in FMI 2.0 is therefore much more efficient.]</em></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="DefaultExperiment">2.2.5. Definition of a Default Experiment (DefaultExperiment)</h4>
+<h4 id="DefaultExperiment">2.2.6. Definition of a Default Experiment (DefaultExperiment)</h4>
 <div class="paragraph">
 <p>Element <code>DefaultExperiment</code> of <code>fmiModelDescription</code> is defined as:</p>
 </div>
@@ -3426,7 +3737,7 @@ Furthermore, for CoSimulation the <code>stepSize</code> defines the preferred <c
 </div>
 </div>
 <div class="sect3">
-<h4 id="_definition_of_vendor_annotations_vendorannotations">2.2.6. Definition of Vendor Annotations (VendorAnnotations)</h4>
+<h4 id="_definition_of_vendor_annotations_vendorannotations">2.2.7. Definition of Vendor Annotations (VendorAnnotations)</h4>
 <div class="paragraph">
 <p>Element <code>VendorAnnotations</code> of <code>fmiModelDescription</code> is defined as:</p>
 </div>
@@ -3442,7 +3753,7 @@ Attribute <code>name</code> must be unique with respect to all other elements of
 </div>
 </div>
 <div class="sect3">
-<h4 id="definition-of-model-variables">2.2.7. Definition of Model Variables (ModelVariables)</h4>
+<h4 id="definition-of-model-variables">2.2.8. Definition of Model Variables (ModelVariables)</h4>
 <div class="paragraph">
 <p>The <code>ModelVariables</code> element of <code>fmiModelDescription</code> is the central part of the model description.
 It provides the static information of all exposed variables and is defined as:</p>
@@ -3538,7 +3849,7 @@ Allowed values of this enumeration:</p>
 It is not allowed to define <code>initial</code>.</p>
 <p class="tableblock">- <code>"output"</code>: The variable value can be used by another model or slave.
 The algebraic relationship to the inputs is defined via the <code>dependencies</code> attribute of <code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;&lt;Outputs&gt;&lt;Unknown&gt;</code>.</p>
-<p class="tableblock">- <code>"local"</code>: Local variable that is calculated from other variables or is a continuous-time state (see <a href="#ModelStructure">Section 2.2.8</a>).
+<p class="tableblock">- <code>"local"</code>: Local variable that is calculated from other variables or is a continuous-time state (see <a href="#ModelStructure">Section 2.2.9</a>).
 It is not allowed to use the variable value in another model or slave.</p>
 <p class="tableblock">- <code>"independent"</code>: The independent variable (usually <code>time</code>).
 All variables are a function of this independent variable.
@@ -3560,7 +3871,7 @@ Example:
 ]</em></p>
 <p class="tableblock">Structural parameters that are referenced in <code>Dimension</code> elements may have a <code>min</code> attribute with 0 but the <code>start</code> attribute, which is mandatory for structural parameters, must have a value larger than 0 for structural parameters used in <code>Dimension</code> elements. [This allows importing tools to ignore structural parameters because that start value reflects the internal default setting of that structural parameter.].</p>
 <p class="tableblock">The default of causality is <code>"local"</code>.<br>
-A continuous-time state must have <code>causality = "local"</code> or <code>output"</code>, see also <a href="#ModelStructure">Section 2.2.8</a>.</p>
+A continuous-time state must have <code>causality = "local"</code> or <code>output"</code>, see also <a href="#ModelStructure">Section 2.2.9</a>.</p>
 <p class="tableblock"><em>[<code>causality = "calculatedParameter"</code> and <code>causality = "local"</code> with <code>variability = "fixed"</code> or <code>"tunable"</code> are similar.
 The difference is that a <code>"calculatedParameter"</code> can be used in another model or slave, whereas a local variable cannot.
 For example, when importing an FMU in a Modelica environment, a <code>"calculatedParameter"</code> should be imported in a <code>public</code> section as <code>final parameter</code>, whereas a <code>"local"</code> variable should be imported in a <code>protected</code> section of the model.]</em></p></td>
@@ -4141,7 +4452,7 @@ For example, if it is stated that the output <code>y1</code> depends on input <c
 </div>
 </div>
 <div class="paragraph">
-<p>The attributes are defined in <a href="#definition-of-types">Section 2.2.3</a> (<code>TypeDefinitions</code>), except:</p>
+<p>The attributes are defined in <a href="#definition-of-types">Section 2.2.4</a> (<code>TypeDefinitions</code>), except:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -4158,7 +4469,7 @@ For example, if it is stated that the output <code>y1</code> depends on input <c
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>declaredType</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If present, name of type defined with <code>TypeDefinitions / SimpleType</code>.
-The value defined in the corresponding <code>TypeDefinition</code> (see <a href="#definition-of-types">Section 2.2.3</a>) is used as default.
+The value defined in the corresponding <code>TypeDefinition</code> (see <a href="#definition-of-types">Section 2.2.4</a>) is used as default.
 <em>[For example, if <code>min</code> is present both in <code>Real</code> (of <code>TypeDefinition</code>) and in <code>Real</code> (of <code>Variable</code>), then the <code>min</code> of <code>Variable</code> is actually used.]</em>
 For <code>Real</code>, <code>Integer</code>, <code>Boolean</code>, <code>String</code>, this attribute is optional.
 For <code>Enumeration</code> it is required, because the Enumeration items are defined in <code>TypeDefinitions / SimpleType</code>.</p></td>
@@ -4199,7 +4510,7 @@ If false, state will not be reinitialized at an event by the FMU.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>min / max</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The optional attributes <code>min</code> and <code>max</code> in element <code>Enumeration</code> restrict the allowed values of the enumeration.
-The <code>min/max</code> definitions are information from the FMU to the environment defining the region in which the FMU is designed to operate, see also comment in <a href="#definition-of-types">Section 2.2.3</a>.
+The <code>min/max</code> definitions are information from the FMU to the environment defining the region in which the FMU is designed to operate, see also comment in <a href="#definition-of-types">Section 2.2.4</a>.
 <em>[If, for example, an <code>Enumeration</code> is defined with <code>name1 = -4</code>, <code>name2 = 1</code>, <code>name3 = 5</code>, <code>name4 = 11</code> and min=-2, max = 5, then only <code>name2</code> and <code>name3</code> are allowed.]</em></p></td>
 </tr>
 </tbody>
@@ -4219,7 +4530,7 @@ The <code>any</code> element can be an arbitrary XML data structure defined by t
 </div>
 </div>
 <div class="sect3">
-<h4 id="ModelStructure">2.2.8. Definition of the Model Structure (ModelStructure)</h4>
+<h4 id="ModelStructure">2.2.9. Definition of the Model Structure (ModelStructure)</h4>
 <div class="paragraph">
 <p>The structure of the model is defined in element <code>ModelStructure</code> within <code>fmiModelDescription</code>.
 This structure is with respect to the underlying model equations, independently how these model equations are solved.
@@ -4564,7 +4875,7 @@ As a result, it is not possible to formulate algebraic loops of connected FMUs d
 </div>
 </div>
 <div class="sect3">
-<h4 id="variableNamingConvention">2.2.9. Variable Naming Conventions (variableNamingConvention)</h4>
+<h4 id="variableNamingConvention">2.2.10. Variable Naming Conventions (variableNamingConvention)</h4>
 <div class="paragraph">
 <p>With attribute <code>variableNamingConvention</code> of element <code>fmiModelDescription</code>, the convention is defined how the <code>Variable.name</code>s have been constructed.
 If this information is known, the environment may be able to represent the names in a better way (for example, as a tree and not as a linear list).</p>
@@ -5223,9 +5534,9 @@ Such an event is called <span class="underline">step event</span>.
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(v\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>,
-see <a href="#definition-of-model-variables">Section 2.2.7</a>).
+see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 A subset of the variables is selected via a subscript.
-Example: \(\mathbf{v}_{initial=exact}\) are variables defined with attribute <code>initial ="exact"</code> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).
+Example: \(\mathbf{v}_{initial=exact}\) are variables defined with attribute <code>initial ="exact"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 These are independent parameters and startvalues of other variables, such as initial values for states, state derivatives or outputs.</p></td>
 </tr>
 <tr>
@@ -5239,7 +5550,7 @@ Dependent parameters (variables with <code>causality = "calculatedParameter"</co
 <td class="tableblock halign-left valign-top"><p class="tableblock">Input variables.
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <code>causality = "input"</code>.
-Whether the input is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).</p></td>
+Whether the input is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(t)\)</p></td>
@@ -5247,12 +5558,12 @@ Whether the input is a discrete-time or continuous-time variable is defined via 
 The values of these variables are computed in the FMU and they are designed to be used in a model connection.
 For instance, output variables might be used in the environment as input values to other FMUs or other submodels.
 Variables of this type are defined with attribute <code>causality = "output"</code>.
-Whether the output is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).</p></td>
+Whether the output is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{w}(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Local variables of the FMU that cannot be used for FMU connections.
-Variables of this type are defined with attribute <code>causality = "local"</code>, see <a href="#definition-of-model-variables">Section 2.2.7</a>.</p></td>
+Variables of this type are defined with attribute <code>causality = "local"</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{z}(t)\)</p></td>
@@ -6934,10 +7245,10 @@ The communication step size is denoted as \(hc_i = tc_{i+1} - tc_i\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{v}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.7</a>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 A subset of the variables is selected via a subscript.
 Example:<br>
-\(\mathbf{v}_{initial=exact}\) are variables defined with attribute <code>initial = "exact"</code>, see <a href="#definition-of-model-variables">Section 2.2.7</a>.
+\(\mathbf{v}_{initial=exact}\) are variables defined with attribute <code>initial = "exact"</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>.
 These are independent parameters and start values of other variables, such as initial values for states, state derivatives or outputs.</p></td>
 </tr>
 <tr>
@@ -6951,7 +7262,7 @@ Dependent parameters (variables with <code>causality = "calculatedParameter"</co
 <td class="tableblock halign-left valign-top"><p class="tableblock">Input variables.
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <code>causality = "input"</code>.
-Whether the input is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).</p></td>
+Whether the input is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(tc_i)\)</p></td>
@@ -6959,12 +7270,12 @@ Whether the input is a discrete-time or continuous-time variable is defined via 
 The values of these variables are computed in the FMU and they are designed to be used in a model connection.
 So output variables might be used in the environment as input values to other FMUs or other submodels.
 Variables of this type are defined with attribute <code>causality = "output"</code>.
-Via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> it is defined whether the output is a discrete-time or continuous-time variable, see <a href="#definition-of-model-variables">Section 2.2.7</a>.</p></td>
+Via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> it is defined whether the output is a discrete-time or continuous-time variable, see <a href="#definition-of-model-variables">Section 2.2.8</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{w}(tc_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Local variables of the FMU that cannot be used for FMU connections.
-Variables of this type are defined with attribute <code>causality = "local"</code> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).</p></td>
+Variables of this type are defined with attribute <code>causality = "local"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{x}_c(t)\)</p></td>
