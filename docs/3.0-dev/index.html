@@ -600,7 +600,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#status-returned-by-functions">2.1.3. Status Returned by Functions</a></li>
 <li><a href="#inquire-platform-and-version-number">2.1.4. Inquire Platform and Version Number of Header Files</a></li>
 <li><a href="#creation-destruction-and-logging">2.1.5. Creation, Destruction and Logging of FMU Instances</a></li>
-<li><a href="#_initialization_termination_and_resetting_an_fmu">2.1.6. Initialization, Termination, and Resetting an FMU</a></li>
+<li><a href="#_configuration_initialization_termination_and_resetting_an_fmu">2.1.6. Configuration, Initialization, Termination, and Resetting an FMU</a></li>
 <li><a href="#get-and-set-variable-values">2.1.7. Getting and Setting Variable Values</a></li>
 <li><a href="#get-set-fmu-state">2.1.8. Getting and Setting the Complete FMU State</a></li>
 <li><a href="#_getting_partial_derivatives">2.1.9. Getting Partial Derivatives</a></li>
@@ -1821,9 +1821,9 @@ Depending on the generating modeling environment, none, some or all allowed valu
 </div>
 </div>
 <div class="sect3">
-<h4 id="_initialization_termination_and_resetting_an_fmu">2.1.6. Initialization, Termination, and Resetting an FMU</h4>
+<h4 id="_configuration_initialization_termination_and_resetting_an_fmu">2.1.6. Configuration, Initialization, Termination, and Resetting an FMU</h4>
 <div class="paragraph">
-<p>This section documents functions that deal with initialization, termination, and resetting of an FMU.</p>
+<p>This section documents functions that deal with configuration, initialization, termination, and resetting of an FMU.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1859,7 +1859,23 @@ An FMU for Co-Simulation might ignore this argument.</p>
 <p>The arguments <code>startTime</code> and <code>stopTime</code> can be used to check whether the model is valid within the given boundaries or to allocate memory which is necessary for storing results.
 Argument <code>startTime</code> is the fixed initial value of the independent variable <sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup> value <em>[if the independent variable is <code>time</code>, <code>startTime</code> is the starting time of initializaton]</em>.
 If <code>stopTimeDefined = fmi3True</code>, then <code>stopTime</code> is the defined final value of the independent variable [if the independent variable is <code>time</code>, <code>stopTime</code> is the stop time of the simulation] and if the environment tries to compute past <code>stopTime</code> the FMU has to return <code>fmi3Status = fmi3Error</code>.
- If <code>stopTimeDefined = fmi3False</code>, then no final value of the independent variable is defined and argument <code>stopTime</code> is meaningless.</p>
+If <code>stopTimeDefined = fmi3False</code>, then no final value of the independent variable is defined and argument <code>stopTime</code> is meaningless.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterConfigurationModeTYPE(fmi3Instance instance);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Informs the FMU to enter the Configuration Mode or Reconfiguration Mode.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitConfigurationModeTYPE(fmi3Instance instance);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Informs the FMU to exit the Configuration Mode or Reconfiguration Mode.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6288,6 +6304,12 @@ Each state of the state machine corresponds to a certain phase of a simulation a
 <dd>
 <p>In this state, start and guess values (= variables that have <code>initial = "exact"</code> or <code>"approx"</code>) can be set.</p>
 </dd>
+<dt class="hdlist1">Configuration Mode</dt>
+<dd>
+<p>In this state structural parameters with <code>variability</code> = <code>fixed</code> or <code>variability</code> = <code>tunable</code> can be changed.
+This state is entered from state <strong>instantiated</strong> by calling <code>fmi3EnterConfigurationMode()</code> and left back to <strong>instantiated</strong> by calling <code>fmi3ExitConfigurationMode()</code>.
+<code>fmi3EnterConfigurationMode()</code> can only be called if the FMU contains at least one structural parameter.</p>
+</dd>
 <dt class="hdlist1">Initialization Mode</dt>
 <dd>
 <p>In this state, equations are active to determine all continuous-time states, as well as all outputs (and optionally other variables exposed by the exporting tool).
@@ -6305,6 +6327,12 @@ The event time of a state event may be determined if a domain change of at least
 In this mode all continuous-time and discrete-time equations are active and the unknowns at an event can be computed and retrieved.
 After an event is completely processed, <code>fmi3NewDiscreteStates</code> must be called and depending on the return argument, <code>newDiscreteStatesNeeded</code>, the state chart stays in <strong>Event Mode</strong> or switches to <strong>Continuous-Time Mode</strong>.
 When the <strong>Initialization Mode</strong> is terminated with <code>fmi3ExitInitializationMode</code>, then <strong>Event Mode</strong> is directly entered, and the continuous-time and discrete-time variables at the initial time are computed based on the initial continuous-time states determined in the <strong>Initialization Mode</strong>.</p>
+</dd>
+<dt class="hdlist1">Reconfiguration Mode</dt>
+<dd>
+<p>In this state structural parameters with <code>variability</code> = <code>tunable</code> can be changed.
+This state is entered from state <strong>Event Mode</strong> by calling <code>fmi3EnterConfigurationMode()</code> and left back to <strong>Event Mode</strong> by calling <code>fmi3ExitConfigurationMode()</code>.
+<code>fmi3EnterConfigurationMode()</code> can only be called if the FMU contains at least one structural parameter.</p>
 </dd>
 <dt class="hdlist1">terminated</dt>
 <dd>
@@ -7720,6 +7748,16 @@ Refer to <a href="#state-machine-co-simulation">Section 4.2.4</a> for all other 
 <dd>
 <p>In this state, start and guess values (= variables that have <code>initial</code> = <code>"exact"</code> or <code>"approx"</code>) can be set.</p>
 </dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Configuration Mode:
+In this state structural parameters with <code>variability</code> = <code>fixed</code> or <code>variability</code> = <code>tunable</code> can be changed.
+This state is entered from state <strong>instantiated</strong> by calling <code>fmi3EnterConfigurationMode()</code> and left back to <strong>instantiated</strong> by calling <code>fmi3ExitConfigurationMode()</code>.
+<code>fmi3EnterConfigurationMode()</code> can only be called if the FMU contains at least one structural parameter.</p>
+</div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1">Initialization Mode</dt>
 <dd>
 <p>In this state, equations are active to determine all outputs (and optionally other variables exposed by the exporting tool).
@@ -7729,6 +7767,12 @@ Variables with <code>initial</code> = <code>"exact"</code>, as well as variables
 <dt class="hdlist1">slaveInitialized</dt>
 <dd>
 <p>In this state, the slave is initialized and the co-simulation computation is performed. The calculation until the next communication point is performed with function <code>fmi3DoStep</code>. Depending on the return value, the slave is in a different state (<strong>step Complete</strong>, <strong>step Failed</strong>, <strong>step Canceled</strong>).</p>
+</dd>
+<dt class="hdlist1">Reconfiguration Mode</dt>
+<dd>
+<p>In this state structural parameters with <code>variability</code> = <code>tunable</code> can be changed.
+This state is entered from state <strong>stepComplete</strong> by calling <code>fmi3EnterConfigurationMode()</code> and left back to <strong>stepComplete</strong> by calling <code>fmi3ExitConfigurationMode()</code>.
+<code>fmi3EnterConfigurationMode()</code> can only be called if the FMU contains at least one structural parameter.</p>
 </dd>
 <dt class="hdlist1">terminated</dt>
 <dd>
