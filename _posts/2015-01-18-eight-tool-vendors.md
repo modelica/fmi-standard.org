@@ -1,6 +1,6 @@
 ---
 title: Eight tool vendors
-categories: [news]
+categories: [events]
 layout: post
 ---
 

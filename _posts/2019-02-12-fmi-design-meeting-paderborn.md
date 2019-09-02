@@ -1,6 +1,6 @@
 ---
 title: FMI Design Meeting at Fraunhofer IEM in Paderborn (Germany)
-categories: [news]
+categories: [events]
 layout: post
 ---
 

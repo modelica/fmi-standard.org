@@ -1,6 +1,6 @@
 ---
 title: FMI User Meeting at the Modelica Conference 2019
-categories: [news]
+categories: [events]
 layout: post
 ---
 
