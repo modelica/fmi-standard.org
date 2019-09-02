@@ -1,6 +1,6 @@
 ---
 title: FMI Design Meeting at DLR in Oberpfaffenhofen (Germany)
-categories: [news]
+categories: [events]
 layout: post
 ---
 

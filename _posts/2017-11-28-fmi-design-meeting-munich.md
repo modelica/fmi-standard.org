@@ -1,6 +1,6 @@
 ---
 title: FMI Design Meeting at ITK in Munich (Germany)
-categories: [news]
+categories: [events]
 layout: post
 ---
 
