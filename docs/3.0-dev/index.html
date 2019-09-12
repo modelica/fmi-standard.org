@@ -657,9 +657,8 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel3">
 <li><a href="#transfer-of-input-output-and-parameters">4.2.1. Transfer of Input / Output Values and Parameters</a></li>
 <li><a href="#_computation">4.2.2. Computation</a></li>
-<li><a href="#retrieving-status-from-slave">4.2.3. Retrieving Status Information from the Slave</a></li>
-<li><a href="#state-machine-co-simulation">4.2.4. State Machine of Calling Sequence from Master to Slave</a></li>
-<li><a href="#_code_example_2">4.2.5. Code Example</a></li>
+<li><a href="#state-machine-co-simulation">4.2.3. State Machine of Calling Sequence from Master to Slave</a></li>
+<li><a href="#_code_example_2">4.2.4. Code Example</a></li>
 </ul>
 </li>
 <li><a href="#_fmi_description_schema_2">4.3. FMI Description Schema</a>
@@ -1308,7 +1307,7 @@ Note that the interface supports <span class="underline">several instances</span
 <li>
 <p>FMI functions of one instance do not need to be thread-safe.<br>
 <em>[For example, if the functions of one instance of an FMU are accessed from more than one thread;
-the multi-threaded environment that uses the FMU must guarantee that the calling sequences of functions defined in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.4</a>. are used.
+the multi-threaded environment that uses the FMU must guarantee that the calling sequences of functions defined in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.3</a>. are used.
 The FMU itself does not implement any services to support this.]</em></p>
 </li>
 <li>
@@ -1448,7 +1447,7 @@ Using this pointer, data from the <code>modelDescription.xml</code> file <em>[fo
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3FMUState;              /* Pointer to internal FMU state */</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3FMUState;             /* Pointer to internal FMU state */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1457,7 +1456,7 @@ This allows to restart a simulation from a previous FMU state (see <a href="#get
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef unsigned int    fmi3ValueReference;        /* Handle to the value of a variable */</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef unsigned int    fmi3ValueReference;       /* Handle to the value of a variable */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1475,21 +1474,21 @@ If a function in the following sections is called with a wrong <code>fmi3ValueRe
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef float           fmi3Float32;  /* Single precision floating point (32-bit) */
-typedef double          fmi3Float64;  /* Double precision floating point (64-bit) */
-typedef   int8_t        fmi3Int8;     /* 8-bit signed integer */
-typedef  uint8_t        fmi3UInt8;    /* 8-bit unsigned integer */
-typedef  int16_t        fmi3Int16;    /* 16-bit signed integer */
-typedef uint16_t        fmi3UInt16;   /* 16-bit unsigned integer */
-typedef  int32_t        fmi3Int32;    /* 32-bit signed integer */
-typedef uint32_t        fmi3UInt32;   /* 32-bit unsigned integer */
-typedef  int64_t        fmi3Int64;    /* 64-bit signed integer */
-typedef uint64_t        fmi3UInt64;   /* 64-bit unsigned integer */
-typedef int             fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
-typedef char            fmi3Char;     /* Data type for one character */
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef           float fmi3Float32;  /* Single precision floating point (32-bit) */
+typedef          double fmi3Float64;  /* Double precision floating point (64-bit) */
+typedef          int8_t fmi3Int8;     /* 8-bit signed integer */
+typedef         uint8_t fmi3UInt8;    /* 8-bit unsigned integer */
+typedef         int16_t fmi3Int16;    /* 16-bit signed integer */
+typedef        uint16_t fmi3UInt16;   /* 16-bit unsigned integer */
+typedef         int32_t fmi3Int32;    /* 32-bit signed integer */
+typedef        uint32_t fmi3UInt32;   /* 32-bit unsigned integer */
+typedef         int64_t fmi3Int64;    /* 64-bit signed integer */
+typedef        uint64_t fmi3UInt64;   /* 64-bit unsigned integer */
+typedef             int fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
+typedef            char fmi3Char;     /* Data type for one character */
 typedef const fmi3Char* fmi3String;   /* Data type for character strings
                                          ('\0' terminated, UTF8 encoded) */
-typedef char            fmi3Byte;     /* Smallest addressable unit of the machine
+typedef            char fmi3Byte;     /* Smallest addressable unit of the machine
                                          (typically one byte) */
 typedef const fmi3Byte* fmi3Binary;   /* Data type for binary data
                                          (out-of-band length terminated) */
@@ -1531,7 +1530,6 @@ The memory of this string/binary may be deallocated by the next call to any of t
     fmi3Discard,
     fmi3Error,
     fmi3Fatal,
-    fmi3Pending
 } fmi3Status;</code></pre>
 </div>
 </div>
@@ -1581,13 +1579,6 @@ Function <code>logMessage</code> was called in the FMU (see below), and it is ex
 Function <code>logMessage</code> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user.
 It is not possible to call any other function for any of the FMU instances.</p>
 </dd>
-<dt class="hdlist1"><code>fmi3Pending</code></dt>
-<dd>
-<p>this status is returned only from the co-simulation interface, if the slave executes the function in an asynchronous way.
-That means the slave starts to compute but returns immediately.
-The master has to call <code>fmi3GetDoStepPendingStatus</code> to determine if the slave has finished the computation.
-Can be returned only by <code>fmi3DoStep</code> and <code>fmi3GetDoStepPendingStatus</code> (see <a href="#retrieving-status-from-slave">Section 4.2.3</a>).</p>
-</dd>
 </dl>
 </div>
 </div>
@@ -1620,7 +1611,8 @@ The standard header file as documented in this specification has version <code>"
                                          fmi3String        fmuResourceLocation,
                                          const fmi3CallbackFunctions* functions,
                                          fmi3Boolean       visible,
-                                         fmi3Boolean       loggingOn);</code></pre>
+                                         fmi3Boolean       loggingOn,
+                                         const fmi3CoSimulationConfiguration* fmuCoSimulationConfiguration);</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -1715,17 +1707,7 @@ typedef void* (*fmi3CallbackAllocateMemory) (fmi3InstanceEnvironment instanceEnv
                                              size_t nobj,
                                              size_t size);
 typedef void  (*fmi3CallbackFreeMemory)     (fmi3InstanceEnvironment instanceEnvironment,
-                                             void* obj);
-typedef void  (*fmi3CallbackStepFinished)   (fmi3InstanceEnvironment instanceEnvironment,
-                                             fmi3Status status);
-
-typedef struct {
-    fmi3CallbackLogMessage     logMessage;
-    fmi3CallbackAllocateMemory allocateMemory;
-    fmi3CallbackFreeMemory     freeMemory;
-    fmi3CallbackStepFinished   stepFinished;
-    fmi3InstanceEnvironment    instanceEnvironment;
-} fmi3CallbackFunctions;</code></pre>
+                                             void* obj);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1790,7 +1772,6 @@ If attribute <code>canNotUseMemoryManagementFunctions = "true"</code> in <code>&
 <dd>
 <p>Optional call back function to signal if the computation of a communication step of a co- simulation slave is finished.
 A null pointer can be provided.
-In this case the master must use <code>fmi3GetDoStepPendingStatus</code> to query the status of <code>fmi3DoStep</code>.
 If a pointer to a function is provided, it must be called by the FMU after a completed communication step.</p>
 </dd>
 </dl>
@@ -2132,7 +2113,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 </div>
 </div>
 <div class="paragraph">
-<p>Set parameters, inputs, and start values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.8</a> for the exact rules on which type of variables <code>fmi3SetXXX</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of ModelExchange and <a href="#state-machine-co-simulation">Section 4.2.4</a> in case of CoSimulation).</p>
+<p>Set parameters, inputs, and start values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.8</a> for the exact rules on which type of variables <code>fmi3SetXXX</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of ModelExchange and <a href="#state-machine-co-simulation">Section 4.2.3</a> in case of CoSimulation).</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3689,10 +3670,6 @@ If a tool supports one of these log categories and wants to expose it, then an e
 <td class="tableblock halign-left valign-top"><p class="tableblock">Log messages when returning fmi3Fatal status from any function.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>logStatusPending</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log messages when returning fmi3Pending status from any function.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">logAll</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Log all messages.</p></td>
 </tr>
@@ -5073,7 +5050,7 @@ resources                     // resources needed by the FMU (optional)
 </div>
 </div>
 <div class="paragraph">
-<p>An FMU has to implement all common functions (according to tables in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.4</a>).
+<p>An FMU has to implement all common functions (according to tables in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.3</a>).
 ModelExchange FMUs have to provide additionally the respective Model Exchange function, CoSimulation FMUs the Co-Simulation functions.</p>
 </div>
 <div class="paragraph">
@@ -6112,12 +6089,12 @@ to set the input arguments to the current model evaluation.</p>
                                              fmi3EventInfo* eventInfo);
 
 typedef struct {
+    fmi3Float64 nextEventTime;  /* next event if nextEventTimeDefined=fmi3True */
     fmi3Boolean newDiscreteStatesNeeded;
     fmi3Boolean terminateSimulation;
     fmi3Boolean nominalsOfContinuousStatesChanged;
     fmi3Boolean valuesOfContinuousStatesChanged;
     fmi3Boolean nextEventTimeDefined;
-    fmi3Float64 nextEventTime;  /* next event if nextEventTimeDefined=fmi3True */
 } fmi3EventInfo;</code></pre>
 </div>
 </div>
@@ -6769,7 +6746,7 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">m = M_fmi3Instantiate("m", fmi3ModelExchange, guid, NULL, &amp;callbacks, fmi3False, fmi3False);
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">m = M_fmi3Instantiate("m", fmi3ModelExchange, guid, NULL, &amp;callbacks, fmi3False, fmi3False, NULL);
 // "m" is the instance name
 // "M_" is the MODEL_IDENTIFIER
 
@@ -7248,7 +7225,7 @@ The algorithm of the slave may have the property to be able to repeat the simula
 </div>
 <div class="paragraph">
 <p>FMI for Co-Simulation allows a co-simulation flow which starts with instantiation and initialization (all slaves are prepared for computation, the communication links are established), followed by simulation (the slaves are forced to simulate a communication step), and finishes with shutdown.
-The details of the flow are given in the state machine of the calling sequences from master to slave (see <a href="#state-machine-co-simulation">Section 4.2.4</a>).</p>
+The details of the flow are given in the state machine of the calling sequences from master to slave (see <a href="#state-machine-co-simulation">Section 4.2.3</a>).</p>
 </div>
 </div>
 <div class="sect3">
@@ -7677,7 +7654,8 @@ E.g. after a successful <code>fmi3DoStep(&#8230;&#8203;)</code> the returned val
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3DoStepTYPE(fmi3Instance instance,
                                   fmi3Float64 currentCommunicationPoint,
                                   fmi3Float64 communicationStepSize,
-                                  fmi3Boolean noSetFMUStatePriorToCurrentPoint);</code></pre>
+                                  fmi3Boolean noSetFMUStatePriorToCurrentPoint,
+                                  fmi3Boolean* earlyReturn);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7707,61 +7685,15 @@ Note that it is not possible to change <code>currentCommunicationPoint</code> in
 <code>fmi3Error</code> - the communication step could not be carried out at all.
 The master can try to repeat the step with other input values and/or a different communication step size in the same way as described in the <code>fmi3Discard</code> case above.<br>
 <code>fmi3Fatal</code> - if an error occurred which corrupted the FMU irreparably.
-<em>[The master should stop the simulation run immediatlely.]</em> See <a href="#status-returned-by-functions">Section 2.1.3</a> for details.<br>
-<code>fmi3Pending</code> - this status is returned if the slave executes the function asynchronously.
-That means the slave starts the computation but returns immediately.
-The master has to call <code>fmi3GetDoStepPendingStatus</code> to find out if the slave is done.
-An alternative is to wait until the callback function <code>fmi3StepFinished</code> is called by the slave.
-<code>fmi3CancelStep</code> can be called to cancel the current computation.
-It is not allowed to call any other function during a pending <code>fmi3DoStep</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3CancelStepTYPE(fmi3Instance instance);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Can be called if <code>fmi3DoStep</code> returned <code>fmi3Pending</code> in order to stop the current asynchronous execution.
-The master calls this function if, for example, the co-simulation run is stopped by the user or one of the slaves.
-Afterwards only calls to <code>fmi3Reset</code>, <code>fmi3FreeInstance</code>, or <code>fmi3SetFMUState</code> are valid to exit the <strong>step Canceled</strong> state.
-Refer to <a href="#state-machine-co-simulation">Section 4.2.4</a> for all other valid functions in this state.</p>
+<em>[The master should stop the simulation run immediatlely.]</em>
+See <a href="#status-returned-by-functions">Section 2.1.3</a> for details.</p>
 </div>
 <div class="paragraph">
 <p>It depends on the capabilities of the slave which parameter constellations and calling sequences are allowed (see <a href="#CoSimulation">Section 4.3.1</a>)</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="retrieving-status-from-slave">4.2.3. Retrieving Status Information from the Slave</h4>
-<div class="paragraph">
-<p>Status information is retrieved from the slave by the following functions:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDoStepPendingStatusTYPE(fmi3Instance instance,
-                                                  fmi3Status* status,
-                                                  fmi3String* message);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Can be called when the <code>fmi3DoStep</code> function returned <code>fmi3Pending</code>.
-<code>status</code> is the result of the asynchronously executed <code>fmi3DoStep</code> call or <code>fmi3Pending</code> if the computation is not finished.
-<code>message</code> is a pointer to string which informs about the status of the currently running asynchronous <code>fmi3DoStep</code> computation.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDoStepDiscardedStatusTYPE(fmi3Instance instance,
-                                                    fmi3Boolean* terminate,
-                                                    fmi3Float64* lastSuccessfulTime);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Can be called after <code>fmi3DoStep</code> returned <code>fmi3Discard</code>.
-<code>terminate</code> is true if the slave wants to terminate the simulation.
-<code>lastSuccessfulTime</code> is the time instant at which the slave stopped the <code>fmi3DoStep</code> call.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="state-machine-co-simulation">4.2.4. State Machine of Calling Sequence from Master to Slave</h4>
+<h4 id="state-machine-co-simulation">4.2.3. State Machine of Calling Sequence from Master to Slave</h4>
 <div class="paragraph">
 <p>The following state machine defines the supported calling sequences.</p>
 </div>
@@ -8242,45 +8174,6 @@ As a result, artificial or "real" algebraic loops over connected FMUs in <strong
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock">fmi3CancelStep               </p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock">fmi3GetDoStepPendingStatus   </p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock">fmi3GetDoStepDiscardedStatus </p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -8298,7 +8191,7 @@ retrieved values are useable for debugging only</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_code_example_2">4.2.5. Code Example</h4>
+<h4 id="_code_example_2">4.2.4. Code Example</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 We consider two slaves, where both have one continuous real input and one continuous real output which are connected in the following way:</p>
@@ -8335,15 +8228,13 @@ The code demonstrates the simplest master algorithm as shown in <a href="#math-c
 // Initialization sub-phase
 
 // set callback functions
-callbacks.logMessage          = cb_logMessage;
-callbacks.allocateMemory      = cb_allocateMemory;
-callbacks.freeMemory          = cb_freeMemory;
-callbacks.stepFinished        = NULL; // synchronous execution
-callbacks.instanceEnvironment = NULL;
+callbacks.logMessage     = cb_logMessage;
+callbacks.allocateMemory = cb_allocateMemory;
+callbacks.freeMemory     = cb_freeMemory;
 
 // instantiate both slaves
-s1 = s1_fmi3Instantiate("slave1", fmi3CoSimulation, guid, NULL, &amp;callbacks, fmi3False, fmi3False);
-s2 = s2_fmi3Instantiate("slave2", fmi3CoSimulation, guid, NULL, &amp;callbacks, fmi3False, fmi3False);
+s1 = s1_fmi3Instantiate("slave1", fmi3CoSimulation, guid, NULL, &amp;callbacks, fmi3False, fmi3False, NULL);
+s2 = s2_fmi3Instantiate("slave2", fmi3CoSimulation, guid, NULL, &amp;callbacks, fmi3False, fmi3False, NULL);
 
 if (s1 == NULL || s2 == NULL)
     return EXIT_FAILURE;
@@ -8388,7 +8279,7 @@ while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
     // fmi3SetReal(s2, ..., 1, &amp;y1);
 
     // call slave s1 and check status
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True);
+    status = s1_fmi3DoStep(s1, tc, h, fmi3True, NULL);
 
     switch (status) {
         case fmi3Discard:
@@ -8407,7 +8298,7 @@ while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
         break;
 
     // call slave s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True);
+    status = s2_fmi3DoStep(s2, tc, h, fmi3True, NULL);
 
     // ...
 
