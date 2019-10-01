@@ -6083,11 +6083,44 @@ to set the input arguments to the current model evaluation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
+                                          fmi3Boolean inputEvent,
+                                          fmi3Boolean stepEvent,
+                                          fmi3Boolean stateEvent,
+                                          fmi3Boolean timeEvent,
+                                          fmi3Float64 eventTime);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The model enters <strong>Event Mode</strong> from the <strong>Continuous-Time Mode</strong> and discrete-time equations may become active (and relations are not "frozen").</p>
+</div>
+<div class="paragraph">
+<p>The followings arguments can be set to <code>fmi3True</code> to inform the FMU why <strong>Event Mode</strong> was entered.
+<em>[These arguments are not mutually exclusive and may all be <code>fmi3False</code> if the caller cannot provide this information.]</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>inputEvent</code></dt>
+<dd>
+<p>an input event occurred</p>
+</dd>
+<dt class="hdlist1"><code>stepEvent</code></dt>
+<dd>
+<p>a step event occurred</p>
+</dd>
+<dt class="hdlist1"><code>stateEvent</code></dt>
+<dd>
+<p>a state event occurred</p>
+</dd>
+<dt class="hdlist1"><code>timeEvent</code></dt>
+<dd>
+<p>an time event occurred</p>
+</dd>
+<dt class="hdlist1"><code>eventTime</code></dt>
+<dd>
+<p>the time of the time event, if <code>timeEvent</code> is <code>fmi3True</code></p>
+</dd>
+</dl>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6792,10 +6825,10 @@ while (!terminateSimulation) {
     tNext = time + h;
 
     // handle events
-    if (enterEventMode || timeEvent || stateEvent) {
+    if (enterEventMode || stateEvent || timeEvent) {
 
         if (!initialEventMode) {
-            M_fmi3EnterEventMode(m);
+            M_fmi3EnterEventMode(m, fmi3False, fmi3False, stateEvent, timeEvent, time);
         }
 
         // event iteration
