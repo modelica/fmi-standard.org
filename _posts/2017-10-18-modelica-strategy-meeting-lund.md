@@ -1,6 +1,6 @@
 ---
 title: Modelica Association Strategy Meeting in Lund (Sweden)
-categories: [news]
+categories: [events]
 layout: post
 ---
 

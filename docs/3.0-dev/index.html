@@ -600,7 +600,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#status-returned-by-functions">2.1.3. Status Returned by Functions</a></li>
 <li><a href="#inquire-platform-and-version-number">2.1.4. Inquire Platform and Version Number of Header Files</a></li>
 <li><a href="#creation-destruction-and-logging">2.1.5. Creation, Destruction and Logging of FMU Instances</a></li>
-<li><a href="#_initialization_termination_and_resetting_an_fmu">2.1.6. Initialization, Termination, and Resetting an FMU</a></li>
+<li><a href="#_configuration_initialization_termination_and_resetting_an_fmu">2.1.6. Configuration, Initialization, Termination, and Resetting an FMU</a></li>
 <li><a href="#get-and-set-variable-values">2.1.7. Getting and Setting Variable Values</a></li>
 <li><a href="#get-set-fmu-state">2.1.8. Getting and Setting the Complete FMU State</a></li>
 <li><a href="#_getting_partial_derivatives">2.1.9. Getting Partial Derivatives</a></li>
@@ -634,7 +634,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#providing-independent-variables-and-re-initialization">3.2.1. Providing Independent Variables and Re-initialization of Caching</a></li>
 <li><a href="#evaluation-of-model-equations">3.2.2. Evaluation of Model Equations</a></li>
 <li><a href="#state-machine-model-exchange">3.2.3. State Machine of Calling Sequence</a></li>
-<li><a href="#_pseudo_code_example">3.2.4. Pseudo-code Example</a></li>
+<li><a href="#_code_example">3.2.4. Code Example</a></li>
 </ul>
 </li>
 <li><a href="#_fmi_description_schema">3.3. FMI Description Schema</a>
@@ -657,9 +657,8 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel3">
 <li><a href="#transfer-of-input-output-and-parameters">4.2.1. Transfer of Input / Output Values and Parameters</a></li>
 <li><a href="#_computation">4.2.2. Computation</a></li>
-<li><a href="#retrieving-status-from-slave">4.2.3. Retrieving Status Information from the Slave</a></li>
-<li><a href="#state-machine-co-simulation">4.2.4. State Machine of Calling Sequence from Master to Slave</a></li>
-<li><a href="#_pseudo_code_example_2">4.2.5. Pseudo-code Example</a></li>
+<li><a href="#state-machine-co-simulation">4.2.3. State Machine of Calling Sequence from Master to Slave</a></li>
+<li><a href="#_code_example_2">4.2.4. Code Example</a></li>
 </ul>
 </li>
 <li><a href="#_fmi_description_schema_2">4.3. FMI Description Schema</a>
@@ -1308,7 +1307,7 @@ Note that the interface supports <span class="underline">several instances</span
 <li>
 <p>FMI functions of one instance do not need to be thread-safe.<br>
 <em>[For example, if the functions of one instance of an FMU are accessed from more than one thread;
-the multi-threaded environment that uses the FMU must guarantee that the calling sequences of functions defined in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.4</a>. are used.
+the multi-threaded environment that uses the FMU must guarantee that the calling sequences of functions defined in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.3</a>. are used.
 The FMU itself does not implement any services to support this.]</em></p>
 </li>
 <li>
@@ -1448,7 +1447,7 @@ Using this pointer, data from the <code>modelDescription.xml</code> file <em>[fo
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3FMUState;              /* Pointer to internal FMU state */</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3FMUState;             /* Pointer to internal FMU state */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1457,7 +1456,7 @@ This allows to restart a simulation from a previous FMU state (see <a href="#get
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef unsigned int    fmi3ValueReference;        /* Handle to the value of a variable */</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef unsigned int    fmi3ValueReference;       /* Handle to the value of a variable */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1475,28 +1474,34 @@ If a function in the following sections is called with a wrong <code>fmi3ValueRe
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef float           fmi3Float32;  /* Single precision floating point (32-bit) */
-typedef double          fmi3Float64;  /* Double precision floating point (64-bit) */
-typedef   int8_t        fmi3Int8;     /* 8-bit signed integer */
-typedef  uint8_t        fmi3UInt8;    /* 8-bit unsigned integer */
-typedef  int16_t        fmi3Int16;    /* 16-bit signed integer */
-typedef uint16_t        fmi3UInt16;   /* 16-bit unsigned integer */
-typedef  int32_t        fmi3Int32;    /* 32-bit signed integer */
-typedef uint32_t        fmi3UInt32;   /* 32-bit unsigned integer */
-typedef  int64_t        fmi3Int64;    /* 64-bit signed integer */
-typedef uint64_t        fmi3UInt64;   /* 64-bit unsigned integer */
-typedef int             fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
-typedef char            fmi3Char;     /* Data type for one character */
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef           float fmi3Float32;  /* Single precision floating point (32-bit) */
+typedef          double fmi3Float64;  /* Double precision floating point (64-bit) */
+typedef          int8_t fmi3Int8;     /* 8-bit signed integer */
+typedef         uint8_t fmi3UInt8;    /* 8-bit unsigned integer */
+typedef         int16_t fmi3Int16;    /* 16-bit signed integer */
+typedef        uint16_t fmi3UInt16;   /* 16-bit unsigned integer */
+typedef         int32_t fmi3Int32;    /* 32-bit signed integer */
+typedef        uint32_t fmi3UInt32;   /* 32-bit unsigned integer */
+typedef         int64_t fmi3Int64;    /* 64-bit signed integer */
+typedef        uint64_t fmi3UInt64;   /* 64-bit unsigned integer */
+typedef             int fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
+typedef            char fmi3Char;     /* Data type for one character */
 typedef const fmi3Char* fmi3String;   /* Data type for character strings
                                          ('\0' terminated, UTF8 encoded) */
-typedef char            fmi3Byte;     /* Smallest addressable unit of the machine
+typedef            char fmi3Byte;     /* Smallest addressable unit of the machine
                                          (typically one byte) */
 typedef const fmi3Byte* fmi3Binary;   /* Data type for binary data
                                          (out-of-band length terminated) */
+typedef             int fmi3Clock ;   /* Data type to be used with fmi3ClockActive and
+                                         fmi3ClockInactive */
 
 /* Values for fmi3Boolean */
 #define fmi3True  1
-#define fmi3False 0</code></pre>
+#define fmi3False 0
+
+/* Values for fmi3Clock */
+#define fmi3ClockActive   1
+#define fmi3ClockInactive 0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1531,7 +1536,6 @@ The memory of this string/binary may be deallocated by the next call to any of t
     fmi3Discard,
     fmi3Error,
     fmi3Fatal,
-    fmi3Pending
 } fmi3Status;</code></pre>
 </div>
 </div>
@@ -1581,13 +1585,6 @@ Function <code>logMessage</code> was called in the FMU (see below), and it is ex
 Function <code>logMessage</code> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user.
 It is not possible to call any other function for any of the FMU instances.</p>
 </dd>
-<dt class="hdlist1"><code>fmi3Pending</code></dt>
-<dd>
-<p>this status is returned only from the co-simulation interface, if the slave executes the function in an asynchronous way.
-That means the slave starts to compute but returns immediately.
-The master has to call <code>fmi3GetDoStepPendingStatus</code> to determine if the slave has finished the computation.
-Can be returned only by <code>fmi3DoStep</code> and <code>fmi3GetDoStepPendingStatus</code> (see <a href="#retrieving-status-from-slave">Section 4.2.3</a>).</p>
-</dd>
 </dl>
 </div>
 </div>
@@ -1620,7 +1617,8 @@ The standard header file as documented in this specification has version <code>"
                                          fmi3String        fmuResourceLocation,
                                          const fmi3CallbackFunctions* functions,
                                          fmi3Boolean       visible,
-                                         fmi3Boolean       loggingOn);</code></pre>
+                                         fmi3Boolean       loggingOn,
+                                         const fmi3CoSimulationConfiguration* fmuCoSimulationConfiguration);</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -1715,17 +1713,7 @@ typedef void* (*fmi3CallbackAllocateMemory) (fmi3InstanceEnvironment instanceEnv
                                              size_t nobj,
                                              size_t size);
 typedef void  (*fmi3CallbackFreeMemory)     (fmi3InstanceEnvironment instanceEnvironment,
-                                             void* obj);
-typedef void  (*fmi3CallbackStepFinished)   (fmi3InstanceEnvironment instanceEnvironment,
-                                             fmi3Status status);
-
-typedef struct {
-    fmi3CallbackLogMessage     logMessage;
-    fmi3CallbackAllocateMemory allocateMemory;
-    fmi3CallbackFreeMemory     freeMemory;
-    fmi3CallbackStepFinished   stepFinished;
-    fmi3InstanceEnvironment    instanceEnvironment;
-} fmi3CallbackFunctions;</code></pre>
+                                             void* obj);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1790,7 +1778,6 @@ If attribute <code>canNotUseMemoryManagementFunctions = "true"</code> in <code>&
 <dd>
 <p>Optional call back function to signal if the computation of a communication step of a co- simulation slave is finished.
 A null pointer can be provided.
-In this case the master must use <code>fmi3GetDoStepPendingStatus</code> to query the status of <code>fmi3DoStep</code>.
 If a pointer to a function is provided, it must be called by the FMU after a completed communication step.</p>
 </dd>
 </dl>
@@ -1821,9 +1808,9 @@ Depending on the generating modeling environment, none, some or all allowed valu
 </div>
 </div>
 <div class="sect3">
-<h4 id="_initialization_termination_and_resetting_an_fmu">2.1.6. Initialization, Termination, and Resetting an FMU</h4>
+<h4 id="_configuration_initialization_termination_and_resetting_an_fmu">2.1.6. Configuration, Initialization, Termination, and Resetting an FMU</h4>
 <div class="paragraph">
-<p>This section documents functions that deal with initialization, termination, and resetting of an FMU.</p>
+<p>This section documents functions that deal with configuration, initialization, termination, and resetting of an FMU.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1859,7 +1846,23 @@ An FMU for Co-Simulation might ignore this argument.</p>
 <p>The arguments <code>startTime</code> and <code>stopTime</code> can be used to check whether the model is valid within the given boundaries or to allocate memory which is necessary for storing results.
 Argument <code>startTime</code> is the fixed initial value of the independent variable <sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup> value <em>[if the independent variable is <code>time</code>, <code>startTime</code> is the starting time of initializaton]</em>.
 If <code>stopTimeDefined = fmi3True</code>, then <code>stopTime</code> is the defined final value of the independent variable [if the independent variable is <code>time</code>, <code>stopTime</code> is the stop time of the simulation] and if the environment tries to compute past <code>stopTime</code> the FMU has to return <code>fmi3Status = fmi3Error</code>.
- If <code>stopTimeDefined = fmi3False</code>, then no final value of the independent variable is defined and argument <code>stopTime</code> is meaningless.</p>
+If <code>stopTimeDefined = fmi3False</code>, then no final value of the independent variable is defined and argument <code>stopTime</code> is meaningless.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterConfigurationModeTYPE(fmi3Instance instance);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Informs the FMU to enter the Configuration Mode or Reconfiguration Mode.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitConfigurationModeTYPE(fmi3Instance instance);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Informs the FMU to exit the Configuration Mode or Reconfiguration Mode.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2116,7 +2119,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 </div>
 </div>
 <div class="paragraph">
-<p>Set parameters, inputs, and start values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.8</a> for the exact rules on which type of variables <code>fmi3SetXXX</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of ModelExchange and <a href="#state-machine-co-simulation">Section 4.2.4</a> in case of CoSimulation).</p>
+<p>Set parameters, inputs, and start values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.8</a> for the exact rules on which type of variables <code>fmi3SetXXX</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of ModelExchange and <a href="#state-machine-co-simulation">Section 4.2.3</a> in case of CoSimulation).</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2406,28 +2409,31 @@ Depending on the environment where the FMUs are connected, these derivatives can
 </div>
 <div class="paragraph">
 <p><em>If a dense matrix shall be computed, the columns of the matrix can be easily constructed by successive calls of fmi3GetDirectionalDerivative.
-For example, constructing the system Jacobian \(\color{blue}{\mathbf{A} = \frac{\delta \mathbf{f}}{\delta \mathbf{x}}}\) as dense matrix can be performed in the following way (in pseudo-code notation):</em></p>
+For example, constructing the system Jacobian \(\color{blue}{\mathbf{A} = \frac{\delta \mathbf{f}}{\delta \mathbf{x}}}\) as dense matrix can be performed in the following way:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">m = M_fmi3Instantiate("m", ...)  // "m" is the instance name
-                                 // "M_" is the MODEL_IDENTIFIER
-// from XML file
-nx     = ...   // number of states
-x_ref [..] = ...   // vector of value references of cont.-time states
-xd_ref[..] = ...   // vector of value references of state derivatives
-...
-// If required at this step, compute the Jacobian as dense matrix
-   // Set time, states and inputs
-   M_fmi3SetTime(m, time)
-   M_fmi3SetContinuousStates(m, x, nx)
-   M_fmi3SetReal/Integer/Boolean/String(m, ...)
-   // Construct the Jacobian elements J[:,:] columnwise
-for i in 1:nx loop
-  M_fmi3GetDirectionalDerivative(m, x_ref[i], 1, xd_ref, nx, 1.0, ci);
-  J[:,i] = ci;    // ci is an auxiliary vector of nx elements
-                  // (it holds the i-th column of the Jacobian)
-end for;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">// from the XML file:
+//   nx       number of states
+//   vr_x[]   value references of continuous states
+//   vr_xd[]  value references of state derivatives
+//
+// variables:
+//   m        model instance
+//   x[]      continuous states
+//   dk = 1   delta knowns
+//   J[][]    Jacobian (transposed for simplicity)
+
+// set time, states and inputs
+fmi3SetTime(m, time);
+fmi3SetContinuousStates(m, x, nx);
+// fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
+
+// if required at this step, compute the Jacobian as a dense matrix
+for (i = 0; i &lt; nx; i++) {
+    // construct the Jacobian matrix column wise
+    fmi3GetDirectionalDerivative(m, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, &amp;J[i][0], nx);
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2881,6 +2887,12 @@ since this information can be deduced from the remaining data in the XML file.]<
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modelIdentifier</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The <code>modelIdentifier</code> of the <code>ModelExchange</code> or <code>CoSimulation</code> elements this build configuration is associated with.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">platform</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Platform tuple of the platform the build configuration is intended for (e.g. <code>x86_64-linux</code>)</p>
@@ -3107,65 +3119,46 @@ The characters <code>&gt;</code> (greater-than) and <code>&lt;</code> (less-than
 <div class="listingblock">
 <div class="title">A minimal build configuration</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelExchange modelIdentifier="PIDContoller"&gt;
-  &lt;BuildConfiguration&gt;
-    &lt;SourceFileSet&gt;
-      &lt;SourceFile name="all.c"/&gt;
-    &lt;/SourceFileSet&gt;
-  &lt;/BuildConfiguration&gt;
-&lt;/ModelExchange&gt;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;BuildConfiguration modelIdentifier="PIDContoller"&gt;
+  &lt;SourceFileSet&gt;
+    &lt;SourceFile name="all.c"/&gt;
+  &lt;/SourceFileSet&gt;
+&lt;/BuildConfiguration&gt;</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Multiple complex build configurations</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;CoSimulation modelIdentifier="PlantModel"&gt;
-  &lt;BuildConfiguration description="Build configuration for desktop platforms"&gt; <b class="conum">(1)</b>
-    &lt;SourceFileSet language="C99"&gt;
-      &lt;SourceFile name="fmi3Functions.c"/&gt;
-      &lt;SourceFile name="solver.c"/&gt;
-    &lt;/SourceFileSet&gt;
-    &lt;SourceFileSet language="C++11"&gt;
-      &lt;SourceFile name="model.c"/&gt;
-      &lt;SourceFile name="logging/src/logger.c"/&gt;
-      &lt;PreprocessorDefinition name="FMI_VERSION" value="3"/&gt;
-      &lt;PreprocessorDefinition name="LOG_TO_FILE" optional="true"/&gt;
-      &lt;PreprocessorDefinition name="LOG_LEVEL" value="0" optional="true"&gt;
-        &lt;Option value="0" description="Log infos, warnings and errors"/&gt;
-        &lt;Option value="1" description="Log warnings and errors"/&gt;
-        &lt;Option value="2" description="Log only errors"/&gt;
-      &lt;/PreprocessorDefinition&gt;
-      &lt;IncludeDirectory name="logging/include"/&gt;
-    &lt;/SourceFileSet&gt;
-    &lt;Library name="hdf5" version="&amp;gt;=1.8,!=1.8.17,&amp;lt;1.10" external="true" description="HDF5"/&gt;
-  &lt;/BuildConfiguration&gt;
-  &lt;BuildConfiguration platform="aarch64-linux" description=""&gt; <b class="conum">(2)</b>
-    &lt;SourceFileSet language="C99"&gt;
-      &lt;SourceFile name="fmi3Functions.c"/&gt;
-    &lt;/SourceFileSet&gt;
-    &lt;SourceFileSet language="C++11" compiler="clang++" compilerOptions="-fno-rtti"&gt; <b class="conum">(3)</b>
-      &lt;SourceFile name="model.c"/&gt;
-      &lt;PreprocessorDefinition name="NO_FILE_SYSTEM"/&gt;
-    &lt;/SourceFileSet&gt;
-    &lt;Library name="libm.a" description="OpenLibm math library"/&gt; <b class="conum">(4)</b>
-  &lt;/BuildConfiguration&gt;
-  &lt;VendorAnnotations&gt;
-    &lt;Tool name="SimTool"&gt;
-      &lt;License name="multi_thread"/&gt;
-    &lt;/Tool&gt;
-  &lt;/VendorAnnotations&gt;
-&lt;/CoSimulation&gt;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;BuildConfiguration modelIdentifier="PlantModel" description="Build configuration for desktop platforms"&gt;
+  &lt;SourceFileSet language="C99"&gt;
+    &lt;SourceFile name="fmi3Functions.c"/&gt;
+    &lt;SourceFile name="solver.c"/&gt;
+  &lt;/SourceFileSet&gt;
+  &lt;SourceFileSet language="C++11"&gt;
+    &lt;SourceFile name="model.c"/&gt;
+    &lt;SourceFile name="logging/src/logger.c"/&gt;
+    &lt;PreprocessorDefinition name="FMI_VERSION" value="3"/&gt;
+    &lt;PreprocessorDefinition name="LOG_TO_FILE" optional="true"/&gt;
+    &lt;PreprocessorDefinition name="LOG_LEVEL" value="0" optional="true"&gt;
+      &lt;Option value="0" description="Log infos, warnings and errors"/&gt;
+      &lt;Option value="1" description="Log warnings and errors"/&gt;
+      &lt;Option value="2" description="Log only errors"/&gt;
+    &lt;/PreprocessorDefinition&gt;
+    &lt;IncludeDirectory name="logging/include"/&gt;
+  &lt;/SourceFileSet&gt;
+  &lt;Library name="hdf5" version="&amp;gt;=1.8,!=1.8.17,&amp;lt;1.10" external="true" description="HDF5"/&gt;
+&lt;/BuildConfiguration&gt;
+&lt;BuildConfiguration modelIdentifier="PlantModel" platform="aarch64-linux"&gt;
+  &lt;SourceFileSet language="C99"&gt;
+    &lt;SourceFile name="fmi3Functions.c"/&gt;
+  &lt;/SourceFileSet&gt;
+  &lt;SourceFileSet language="C++11" compiler="clang++" compilerOptions="-fno-rtti"&gt;
+    &lt;SourceFile name="model.c"/&gt;
+    &lt;PreprocessorDefinition name="NO_FILE_SYSTEM"/&gt;
+  &lt;/SourceFileSet&gt;
+  &lt;Library name="libm.a" description="OpenLibm math library"/&gt;
+&lt;/BuildConfiguration&gt;</code></pre>
 </div>
-</div>
-<div class="colist arabic">
-<ol>
-<li>
-<p>Generic build configuration for desktop platforms</p>
-</li>
-<li>
-<p>Build configuration for a specialized real-time board</p>
-</li>
-</ol>
 </div>
 </div>
 </div>
@@ -3683,10 +3676,6 @@ If a tool supports one of these log categories and wants to expose it, then an e
 <td class="tableblock halign-left valign-top"><p class="tableblock">Log messages when returning fmi3Fatal status from any function.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>logStatusPending</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log messages when returning fmi3Pending status from any function.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">logAll</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Log all messages.</p></td>
 </tr>
@@ -3893,7 +3882,7 @@ CoSimulation: By convention, the variable is from a "real" sampled data system a
 <p class="tableblock">- <code>"continuous"</code>: Only a variable of <code>type = "Real"</code> can be <code>"continuous"</code>.<br>
 ModelExchange: No restrictions on value changes.<br>
 CoSimulation: By convention, the variable is from a differential</p>
-<p class="tableblock">The default is <code>"continuous"</code>.</p>
+<p class="tableblock">The default is <code>"continuous"</code> for variables of type <code>Float32</code> and <code>Float64</code>, and <code>"discrete"</code> for all other types.</p>
 <p class="tableblock"><em>[Note that the information about continuous states is defined with element <code>fmiModelDescription.ModelStructure.Derivatives</code>.]</em></p></td>
 </tr>
 <tr>
@@ -5067,7 +5056,7 @@ resources                     // resources needed by the FMU (optional)
 </div>
 </div>
 <div class="paragraph">
-<p>An FMU has to implement all common functions (according to tables in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.4</a>).
+<p>An FMU has to implement all common functions (according to tables in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.3</a>).
 ModelExchange FMUs have to provide additionally the respective Model Exchange function, CoSimulation FMUs the Co-Simulation functions.</p>
 </div>
 <div class="paragraph">
@@ -6094,11 +6083,44 @@ to set the input arguments to the current model evaluation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
+                                          fmi3Boolean inputEvent,
+                                          fmi3Boolean stepEvent,
+                                          fmi3Boolean stateEvent,
+                                          fmi3Boolean timeEvent,
+                                          fmi3Float64 eventTime);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The model enters <strong>Event Mode</strong> from the <strong>Continuous-Time Mode</strong> and discrete-time equations may become active (and relations are not "frozen").</p>
+</div>
+<div class="paragraph">
+<p>The followings arguments can be set to <code>fmi3True</code> to inform the FMU why <strong>Event Mode</strong> was entered.
+<em>[These arguments are not mutually exclusive and may all be <code>fmi3False</code> if the caller cannot provide this information.]</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>inputEvent</code></dt>
+<dd>
+<p>an input event occurred</p>
+</dd>
+<dt class="hdlist1"><code>stepEvent</code></dt>
+<dd>
+<p>a step event occurred</p>
+</dd>
+<dt class="hdlist1"><code>stateEvent</code></dt>
+<dd>
+<p>a state event occurred</p>
+</dd>
+<dt class="hdlist1"><code>timeEvent</code></dt>
+<dd>
+<p>an time event occurred</p>
+</dd>
+<dt class="hdlist1"><code>eventTime</code></dt>
+<dd>
+<p>the time of the time event, if <code>timeEvent</code> is <code>fmi3True</code></p>
+</dd>
+</dl>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6106,12 +6128,12 @@ to set the input arguments to the current model evaluation.</p>
                                              fmi3EventInfo* eventInfo);
 
 typedef struct {
+    fmi3Float64 nextEventTime;  /* next event if nextEventTimeDefined=fmi3True */
     fmi3Boolean newDiscreteStatesNeeded;
     fmi3Boolean terminateSimulation;
     fmi3Boolean nominalsOfContinuousStatesChanged;
     fmi3Boolean valuesOfContinuousStatesChanged;
     fmi3Boolean nextEventTimeDefined;
-    fmi3Float64 nextEventTime;  /* next event if nextEventTimeDefined=fmi3True */
 } fmi3EventInfo;</code></pre>
 </div>
 </div>
@@ -6288,6 +6310,12 @@ Each state of the state machine corresponds to a certain phase of a simulation a
 <dd>
 <p>In this state, start and guess values (= variables that have <code>initial = "exact"</code> or <code>"approx"</code>) can be set.</p>
 </dd>
+<dt class="hdlist1">Configuration Mode</dt>
+<dd>
+<p>In this state structural parameters with <code>variability</code> = <code>fixed</code> or <code>variability</code> = <code>tunable</code> can be changed.
+This state is entered from state <strong>instantiated</strong> by calling <code>fmi3EnterConfigurationMode()</code> and left back to <strong>instantiated</strong> by calling <code>fmi3ExitConfigurationMode()</code>.
+<code>fmi3EnterConfigurationMode()</code> can only be called if the FMU contains at least one structural parameter.</p>
+</dd>
 <dt class="hdlist1">Initialization Mode</dt>
 <dd>
 <p>In this state, equations are active to determine all continuous-time states, as well as all outputs (and optionally other variables exposed by the exporting tool).
@@ -6305,6 +6333,12 @@ The event time of a state event may be determined if a domain change of at least
 In this mode all continuous-time and discrete-time equations are active and the unknowns at an event can be computed and retrieved.
 After an event is completely processed, <code>fmi3NewDiscreteStates</code> must be called and depending on the return argument, <code>newDiscreteStatesNeeded</code>, the state chart stays in <strong>Event Mode</strong> or switches to <strong>Continuous-Time Mode</strong>.
 When the <strong>Initialization Mode</strong> is terminated with <code>fmi3ExitInitializationMode</code>, then <strong>Event Mode</strong> is directly entered, and the continuous-time and discrete-time variables at the initial time are computed based on the initial continuous-time states determined in the <strong>Initialization Mode</strong>.</p>
+</dd>
+<dt class="hdlist1">Reconfiguration Mode</dt>
+<dd>
+<p>In this state structural parameters with <code>variability</code> = <code>tunable</code> can be changed.
+This state is entered from state <strong>Event Mode</strong> by calling <code>fmi3EnterConfigurationMode()</code> and left back to <strong>Event Mode</strong> by calling <code>fmi3ExitConfigurationMode()</code>.
+<code>fmi3EnterConfigurationMode()</code> can only be called if the FMU contains at least one structural parameter.</p>
 </dd>
 <dt class="hdlist1">terminated</dt>
 <dd>
@@ -6743,126 +6777,155 @@ or (<code>causality</code> = <code>"parameter"</code> and <code>variability</cod
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pseudo_code_example">3.2.4. Pseudo-code Example</h4>
+<h4 id="_code_example">3.2.4. Code Example</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the <code>fmi3XXX</code> functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
-The example is given in a mix of pseudo-code and C, in order to keep it small and understandable.
 Furthermore, it is assumed that one FMU is directly integrated in a simulation environment.
 If the FMU would be used inside another model, additional code is needed, especially initialization and event iteration has to be adapted.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">m = M_fmi3Instantiate("m", ...)  // "m" is the instance name
-                                 // "M_" is the MODEL_IDENTIFIER
-nx = ...         // number of states, from XML file
-nz = ...         // number of event indicators, from XML file
-Tstart = 0       // could also be retrieved from XML file
-Tend = 10        // could also be retrieved from XML file
-dt = 0.01        // fixed step size of 10 milli-seconds
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">m = M_fmi3Instantiate("m", fmi3ModelExchange, guid, NULL, &amp;callbacks, fmi3False, fmi3False, NULL);
+// "m" is the instance name
+// "M_" is the MODEL_IDENTIFIER
 
 // set the start time
-Tnext = Tend
-time  = Tstart
-M_fmi3SetTime(m, time)
+time  = tStart;
 
 // set all variable start values (of "ScalarVariable / &lt;type&gt; / start") and
-// set the input values at time = Tstart
-M_fmi3SetReal/Integer/Boolean/String(m, ...)
+// set the start values at time = Tstart
+// M_fmi3SetReal/Integer/Boolean/String(m, ...)
 
 // initialize
-   // determine continuous and discrete states
-   M_fmi3SetupExperiment(m,fmi3False,0.0, Tstart, fmi3True,Tend)
-   M_fmi3EnterInitializationMode(m)
-   M_fmi3ExitInitializationMode(m)
+// determine continuous and discrete states
+M_fmi3SetupExperiment(m, fmi3False, 0.0, tStart, fmi3True, tEnd);
+M_fmi3EnterInitializationMode(m);
+M_fmi3ExitInitializationMode(m);
 
-   // event iteration
-   eventInfo.newDiscreteStatesNeeded = true;
-   while eventInfo.newDiscreteStatesNeeded loop
-     // update discrete states
-     M_fmi3NewDiscreteStates(m, &amp;eventInfo)
-     if eventInfo.terminateSimulation then goto TERMINATE_MODEL
-   end while
+initialEventMode = fmi3True;
+enterEventMode   = fmi3False;
+timeEvent        = fmi3False;
+stateEvent       = fmi3False;
 
-// enter Continuous-Time Mode
-M_fmi3EnterContinuousTimeMode(m)
+// initialize previous event indicators
+M_fmi3GetEventIndicators(m, previous_z, nz);
+
+M_fmi3EnterContinuousTimeMode(m);
 
 // retrieve initial state x and
 // nominal values of x (if absolute tolerance is needed)
-M_fmi3GetContinuousStates(m, x, nx)
-M_fmi3GetNominalsOfContinuousStates(m, x_nominal, nx)
+M_fmi3GetContinuousStates(m, x, nx);
+M_fmi3GetNominalsOfContinuousStates(m, x_nominal, nx);
 
 // retrieve solution at t=Tstart, for example, for outputs
-M_fmi3GetReal/Integer/Boolean/String(m, ...)
+// M_fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
 
-while time &lt; Tend loop
-  // compute derivatives
-  M_fmi3GetDerivatives(m, der_x, nx)
+while (!terminateSimulation) {
 
-  // advance time
-  h = min(dt, Tnext-time)
-  time = time + h
-  M_fmi3SetTime(m, time)
+    tNext = time + h;
 
-  // set inputs at t = time
-  M_fmi3SetReal/Integer/Boolean/String(m, ...)
+    // handle events
+    if (enterEventMode || stateEvent || timeEvent) {
 
-  // set states at t = time and perform one step
-  x = x + h*der_x  // forward Euler method
-  M_fmi3SetContinuousStates(m, x, nx)
+        if (!initialEventMode) {
+            M_fmi3EnterEventMode(m, fmi3False, fmi3False, stateEvent, timeEvent, time);
+        }
 
-  // get event indicators at t = time
-  M_fmi3GetEventIndicators(m, z, nz)
+        // event iteration
+        eventInfo.newDiscreteStatesNeeded = fmi3True;
+        valuesOfContinuousStatesChanged   = fmi3False;
+        nominalsOfContinuousStatesChanged = fmi3False;
 
-  // detect  events, if any
-  time_event = abs(time - Tnext) &lt;= eps
-  state_event = ...          // compare sign of z with previous z
+        while (eventInfo.newDiscreteStatesNeeded) {
 
-  // inform the model about an accepted step
-  M_fmi3CompletedIntegratorStep(m, fmi3True, &amp;enterEventMode, &amp;terminateSimulation)
-  if terminateSimulation then goto TERMINATE_MODEL
+            // set inputs at super dense time point
+            // M_fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
 
-  // handle events
-  if entertEventMode or time_event or state_event then
-    M_fmi3EnterEventMode(m)
+            // update discrete states
+            M_fmi3NewDiscreteStates(m, &amp;eventInfo);
 
-    // event iteration
-    eventInfo.newDiscreteStatesNeeded = true;
-    while eventInfo.newDiscreteStatesNeeded loop
-      // update discrete states
-      M_fmi3NewDiscreteStates(m, &amp;eventInfo)
-      if eventInfo.terminateSimulation then goto TERMINATE_MODEL
-    end while
+            // getOutput at super dense time point
+            // M_fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
+            valuesOfContinuousStatesChanged |= eventInfo.valuesOfContinuousStatesChanged;
+            nominalsOfContinuousStatesChanged |= eventInfo.nominalsOfContinuousStatesChanged;
 
-    // enter Continuous-Time Mode
-    M_fmi3EnterContinuousTimeMode(m)
+            if (eventInfo.terminateSimulation) goto TERMINATE_MODEL;
+        }
 
-    // retrieve solution at simulation restart
-    M_fmi3GetReal/Integer/Boolean/String(m, ...)
-    if eventInfo.valuesOfContinuousStatesChanged == fmi3True then
-      //the model signals a value change of states, retrieve them
-      M_fmi3GetContinuousStates(m, x, nx)
-    end if
 
-    if eventInfo.nominalsOfContinuousStatesChanged = fmi3True then
-      //the meaning of states has changed; retrieve new nominal values
-      M_fmi3GetNominalsOfContinuousStates(m, x_nominal, nx)
-    end if
+        // enter Continuous-Time Mode
+        M_fmi3EnterContinuousTimeMode(m);
 
-    if eventInfo.nextEventTimeDefined then
-      Tnext = min(eventInfo.nextEventTime, Tend)
-    else
-      Tnext = Tend
-    end if
-  end if
-end while
+        // retrieve solution at simulation (re)start
+        // M_fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
+
+        if (initialEventMode || valuesOfContinuousStatesChanged) {
+            // the model signals a value change of states, retrieve them
+            M_fmi3GetContinuousStates(m, x, nx);
+        }
+
+        if (initialEventMode || nominalsOfContinuousStatesChanged) {
+            // the meaning of states has changed; retrieve new nominal values
+            M_fmi3GetNominalsOfContinuousStates(m, x_nominal, nx);
+        }
+
+        if (eventInfo.nextEventTimeDefined) {
+            tNext = min(eventInfo.nextEventTime, tEnd);
+        } else {
+            tNext = tEnd;
+        }
+
+        initialEventMode = fmi3False;
+    }
+
+    if (time &gt;= tEnd) {
+        goto TERMINATE_MODEL;
+    }
+
+    // compute derivatives
+    M_fmi3GetDerivatives(m, der_x, nx);
+
+    // advance time
+    h = min(dt, tNext - time);
+    time += h;
+    M_fmi3SetTime(m, time);
+
+    // set continuous inputs at t = time
+    // M_fmi3SetFloat*(m, ...)
+
+    // set states at t = time and perform one step
+    for (i = 0; i &lt; nx; i++) {
+        x[i] += h * der_x[i]; // forward Euler method
+    }
+
+    M_fmi3SetContinuousStates(m, x, nx);
+
+    // get event indicators at t = time
+    M_fmi3GetEventIndicators(m, z, nz);
+
+    stateEvent = fmi3False;
+
+    for (i = 0; i &lt; nz; i++) {
+        stateEvent |= sign(z[i]) != sign(previous_z[i]); // detect events
+        previous_z[i] = z[i]; // remember the current value
+    }
+
+    // inform the model about an accepted step
+    M_fmi3CompletedIntegratorStep(m, fmi3True, &amp;enterEventMode, &amp;terminateSimulation);
+
+    // get continuous output
+    // M_fmi3GetFloat*(m, ...)
+}
+
+TERMINATE_MODEL:
 
 // terminate simulation and retrieve final values
-TERMINATE_MODEL:
-M_fmi3Terminate(m)
-M_fmi3GetReal/Integer/Boolean/String(m, ...)
+M_fmi3Terminate(m);
+
+// M_fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
 
 // cleanup
-M_fmi3FreeInstance(m)</code></pre>
+M_fmi3FreeInstance(m);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6871,9 +6934,20 @@ M_fmi3FreeInstance(m)</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">status = M_fmi3GetDerivatives(m, der_x, nx);
-switch ( status ) { case fmi3Discard: ....; break; // reduce step size and try again
-                    case fmi3Error  : ....; break; // cleanup and stop simulation
-                    case fmi3Fatal  : ....; }      // stop using the model</code></pre>
+
+switch (status) {
+    case fmi3Discard:
+        // reduce step size and try again
+        break;
+    case fmi3Error:
+        // clean up and stop simulation
+        break;
+    case fmi3Fatal:
+        // stop using the model
+        break;
+    default:
+        break;
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7190,7 +7264,7 @@ The algorithm of the slave may have the property to be able to repeat the simula
 </div>
 <div class="paragraph">
 <p>FMI for Co-Simulation allows a co-simulation flow which starts with instantiation and initialization (all slaves are prepared for computation, the communication links are established), followed by simulation (the slaves are forced to simulate a communication step), and finishes with shutdown.
-The details of the flow are given in the state machine of the calling sequences from master to slave (see <a href="#state-machine-co-simulation">Section 4.2.4</a>).</p>
+The details of the flow are given in the state machine of the calling sequences from master to slave (see <a href="#state-machine-co-simulation">Section 4.2.3</a>).</p>
 </div>
 </div>
 <div class="sect3">
@@ -7619,7 +7693,8 @@ E.g. after a successful <code>fmi3DoStep(&#8230;&#8203;)</code> the returned val
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3DoStepTYPE(fmi3Instance instance,
                                   fmi3Float64 currentCommunicationPoint,
                                   fmi3Float64 communicationStepSize,
-                                  fmi3Boolean noSetFMUStatePriorToCurrentPoint);</code></pre>
+                                  fmi3Boolean noSetFMUStatePriorToCurrentPoint,
+                                  fmi3Boolean* earlyReturn);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7649,61 +7724,15 @@ Note that it is not possible to change <code>currentCommunicationPoint</code> in
 <code>fmi3Error</code> - the communication step could not be carried out at all.
 The master can try to repeat the step with other input values and/or a different communication step size in the same way as described in the <code>fmi3Discard</code> case above.<br>
 <code>fmi3Fatal</code> - if an error occurred which corrupted the FMU irreparably.
-<em>[The master should stop the simulation run immediatlely.]</em> See <a href="#status-returned-by-functions">Section 2.1.3</a> for details.<br>
-<code>fmi3Pending</code> - this status is returned if the slave executes the function asynchronously.
-That means the slave starts the computation but returns immediately.
-The master has to call <code>fmi3GetDoStepPendingStatus</code> to find out if the slave is done.
-An alternative is to wait until the callback function <code>fmi3StepFinished</code> is called by the slave.
-<code>fmi3CancelStep</code> can be called to cancel the current computation.
-It is not allowed to call any other function during a pending <code>fmi3DoStep</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3CancelStepTYPE(fmi3Instance instance);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Can be called if <code>fmi3DoStep</code> returned <code>fmi3Pending</code> in order to stop the current asynchronous execution.
-The master calls this function if, for example, the co-simulation run is stopped by the user or one of the slaves.
-Afterwards only calls to <code>fmi3Reset</code>, <code>fmi3FreeInstance</code>, or <code>fmi3SetFMUState</code> are valid to exit the <strong>step Canceled</strong> state.
-Refer to <a href="#state-machine-co-simulation">Section 4.2.4</a> for all other valid functions in this state.</p>
+<em>[The master should stop the simulation run immediatlely.]</em>
+See <a href="#status-returned-by-functions">Section 2.1.3</a> for details.</p>
 </div>
 <div class="paragraph">
 <p>It depends on the capabilities of the slave which parameter constellations and calling sequences are allowed (see <a href="#CoSimulation">Section 4.3.1</a>)</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="retrieving-status-from-slave">4.2.3. Retrieving Status Information from the Slave</h4>
-<div class="paragraph">
-<p>Status information is retrieved from the slave by the following functions:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDoStepPendingStatusTYPE(fmi3Instance instance,
-                                                  fmi3Status* status,
-                                                  fmi3String* message);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Can be called when the <code>fmi3DoStep</code> function returned <code>fmi3Pending</code>.
-<code>status</code> is the result of the asynchronously executed <code>fmi3DoStep</code> call or <code>fmi3Pending</code> if the computation is not finished.
-<code>message</code> is a pointer to string which informs about the status of the currently running asynchronous <code>fmi3DoStep</code> computation.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDoStepDiscardedStatusTYPE(fmi3Instance instance,
-                                                    fmi3Boolean* terminate,
-                                                    fmi3Float64* lastSuccessfulTime);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Can be called after <code>fmi3DoStep</code> returned <code>fmi3Discard</code>.
-<code>terminate</code> is true if the slave wants to terminate the simulation.
-<code>lastSuccessfulTime</code> is the time instant at which the slave stopped the <code>fmi3DoStep</code> call.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="state-machine-co-simulation">4.2.4. State Machine of Calling Sequence from Master to Slave</h4>
+<h4 id="state-machine-co-simulation">4.2.3. State Machine of Calling Sequence from Master to Slave</h4>
 <div class="paragraph">
 <p>The following state machine defines the supported calling sequences.</p>
 </div>
@@ -7720,6 +7749,16 @@ Refer to <a href="#state-machine-co-simulation">Section 4.2.4</a> for all other 
 <dd>
 <p>In this state, start and guess values (= variables that have <code>initial</code> = <code>"exact"</code> or <code>"approx"</code>) can be set.</p>
 </dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Configuration Mode:
+In this state structural parameters with <code>variability</code> = <code>fixed</code> or <code>variability</code> = <code>tunable</code> can be changed.
+This state is entered from state <strong>instantiated</strong> by calling <code>fmi3EnterConfigurationMode()</code> and left back to <strong>instantiated</strong> by calling <code>fmi3ExitConfigurationMode()</code>.
+<code>fmi3EnterConfigurationMode()</code> can only be called if the FMU contains at least one structural parameter.</p>
+</div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1">Initialization Mode</dt>
 <dd>
 <p>In this state, equations are active to determine all outputs (and optionally other variables exposed by the exporting tool).
@@ -7729,6 +7768,12 @@ Variables with <code>initial</code> = <code>"exact"</code>, as well as variables
 <dt class="hdlist1">slaveInitialized</dt>
 <dd>
 <p>In this state, the slave is initialized and the co-simulation computation is performed. The calculation until the next communication point is performed with function <code>fmi3DoStep</code>. Depending on the return value, the slave is in a different state (<strong>step Complete</strong>, <strong>step Failed</strong>, <strong>step Canceled</strong>).</p>
+</dd>
+<dt class="hdlist1">Reconfiguration Mode</dt>
+<dd>
+<p>In this state structural parameters with <code>variability</code> = <code>tunable</code> can be changed.
+This state is entered from state <strong>stepComplete</strong> by calling <code>fmi3EnterConfigurationMode()</code> and left back to <strong>stepComplete</strong> by calling <code>fmi3ExitConfigurationMode()</code>.
+<code>fmi3EnterConfigurationMode()</code> can only be called if the FMU contains at least one structural parameter.</p>
 </dd>
 <dt class="hdlist1">terminated</dt>
 <dd>
@@ -8168,45 +8213,6 @@ As a result, artificial or "real" algebraic loops over connected FMUs in <strong
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock">fmi3CancelStep               </p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock">fmi3GetDoStepPendingStatus   </p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock">fmi3GetDoStepDiscardedStatus </p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -8224,10 +8230,9 @@ retrieved values are useable for debugging only</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pseudo_code_example_2">4.2.5. Pseudo-code Example</h4>
+<h4 id="_code_example_2">4.2.4. Code Example</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
-The example is given in a mix of pseudo-code and C, in order to keep it small and understandable.
 We consider two slaves, where both have one continuous real input and one continuous real output which are connected in the following way:</p>
 </div>
 <div class="imageblock text-center">
@@ -8258,95 +8263,96 @@ The code demonstrates the simplest master algorithm as shown in <a href="#math-c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">//////////////////////////
-//Initialization sub-phase
-//Set callback functions,
-fmi3CallbackFunctions cbf;
-cbf.logMessage = logMessageFunction;  //logMessage function
-cbf.allocateMemory = calloc;
-cbf.freeMemory = free;
-cbf.stepFinished = NULL;      //synchronous execution
-cbf.instanceEnvironment = NULL;
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">////////////////////////////
+// Initialization sub-phase
 
-//Instantiate both slaves
-fmi3Instance s1 = s1_fmi3Instantiate("Tool1" , fmi3CoSimulation, instantiationToken1, "",
-                                    fmi3False, fmi3False, &amp;cbf, fmi3True);
-fmi3Instance s2 = s2_fmi3Instantiate("Tool2" , fmi3CoSimulation, instantiationToken2, "",
-                                    fmi3False, fmi3False, &amp;cbf, fmi3True);
+// set callback functions
+callbacks.logMessage     = cb_logMessage;
+callbacks.allocateMemory = cb_allocateMemory;
+callbacks.freeMemory     = cb_freeMemory;
 
-if ((s1 == NULL) || (s2 == NULL))
-      return FAILURE;
+// instantiate both slaves
+s1 = s1_fmi3Instantiate("slave1", fmi3CoSimulation, guid, NULL, &amp;callbacks, fmi3False, fmi3False, NULL);
+s2 = s2_fmi3Instantiate("slave2", fmi3CoSimulation, guid, NULL, &amp;callbacks, fmi3False, fmi3False, NULL);
 
-// Start and stop time
+if (s1 == NULL || s2 == NULL)
+    return EXIT_FAILURE;
+
+// start and stop time
 startTime = 0;
 stopTime = 10;
 
-//communication step size
+// communication step size
 h = 0.01;
 
 // set all variable start values (of "ScalarVariable / &lt;type&gt; / start")
-s1_fmi3SetReal/Integer/Boolean/String(s1, ...);
-s2_fmi3SetReal/Integer/Boolean/String(s2, ...);
+// s1_fmi3SetReal/Integer/Boolean/String(s1, ...);
+// s2_fmi3SetReal/Integer/Boolean/String(s2, ...);
 
-//Initialize slaves
+// initialize the slaves
 s1_fmi3SetupExperiment(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
-s2_fmi3SetupExperiment(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
+s2_fmi3SetupExperiment(s2, fmi3False, 0.0, startTime, fmi3True, stopTime);
+
 s1_fmi3EnterInitializationMode(s1);
 s2_fmi3EnterInitializationMode(s2);
 
 // set the input values at time = startTime
-s1_fmi3SetReal/Integer/Boolean/String(s1, ...);
-s2_fmi3SetReal/Integer/Boolean/String(s2, ...);
+// fmi3SetReal/Integer/Boolean/String(s1, ...);
+// fmi3SetReal/Integer/Boolean/String(s2, ...);
+
 s1_fmi3ExitInitializationMode(s1);
 s2_fmi3ExitInitializationMode(s2);
 
-//////////////////////////
-//Simulation sub-phase
-tc = startTime; //Current master time
+////////////////////////
+// Simulation sub-phase
+tc = startTime; // current master time
 
-while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK))
-{
-    //retrieve outputs
-    s1_fmi3GetReal(s1, ..., 1, &amp;y1);
-    s2_fmi3GetReal(s2, ..., 1, &amp;y2);
+while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
 
-    //set inputs
-    s1_fmi3SetReal(s1, ..., 1, &amp;y2);
-    s2_fmi3SetReal(s2, ..., 1, &amp;y1);
+    // retrieve outputs
+    // fmi3GetReal(s1, ..., 1, &amp;y1);
+    // fmi3GetReal(s2, ..., 1, &amp;y2);
 
-    //call slave s1 and check status
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True);
+    // set inputs
+    // fmi3SetReal(s1, ..., 1, &amp;y2);
+    // fmi3SetReal(s2, ..., 1, &amp;y1);
+
+    // call slave s1 and check status
+    status = s1_fmi3DoStep(s1, tc, h, fmi3True, NULL);
+
     switch (status) {
-    case fmi3Discard:
-      s1_fmi3GetDoStepDiscardedStatus(s1, &amp;boolVal, &amp;lastSuccessfulTime);
-      if (boolVal == fmi3True)
-            printf("Slave s1 wants to terminate simulation.");
-    case fmi3Error:
-    case fmi3Fatal:
-      terminateSimulation = true;
-      break;
+        case fmi3Discard:
+            s1_fmi3GetDoStepDiscardedStatus(s1, &amp;discard, &amp;lastSuccessfulTime);
+            if (discard == fmi3True)
+                printf("Slave s1 wants to terminate simulation.");
+        case fmi3Error:
+        case fmi3Fatal:
+            terminateSimulation = true;
+            break;
+        default:
+            break;
     }
+
     if (terminateSimulation)
-      break;
+        break;
 
-    //call slave s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True);
-    ...
+    // call slave s2 and check status as above
+    status = s2_fmi3DoStep(s2, tc, h, fmi3True, NULL);
 
-    //increment master time
+    // ...
+
+    // increment master time
     tc += h;
-}
+ }
 
 //////////////////////////
-//Shutdown sub-phase
-if ((status != fmi3Error) &amp;&amp; (status != fmi3Fatal))
-{
+// Shutdown sub-phase
+if (status != fmi3Error &amp;&amp; status != fmi3Fatal) {
     s1_fmi3Terminate(s1);
     s2_fmi3Terminate(s2);
 }
 
-if (status != fmi3Fatal)
-{
+if (status != fmi3Fatal) {
     s1_fmi3FreeInstance(s1);
     s2_fmi3FreeInstance(s2);
 }</code></pre>

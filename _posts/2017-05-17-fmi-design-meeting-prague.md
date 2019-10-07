@@ -1,6 +1,6 @@
 ---
 title: FMI Design Meeting at Modelica Conference 2017 in Prague (Czech Republic)
-categories: [news]
+categories: [events]
 layout: post
 ---
 

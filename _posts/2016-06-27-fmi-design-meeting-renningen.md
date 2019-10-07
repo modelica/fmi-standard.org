@@ -1,6 +1,6 @@
 ---
 title: FMI Design Meeting at Bosch in Renningen (Germany)
-categories: [news]
+categories: [events]
 layout: post
 ---
 

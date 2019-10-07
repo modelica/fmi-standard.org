@@ -1,6 +1,6 @@
 ---
 title: FMI Design Meeting at Dassault Systemes, Velizy (France)
-categories: [news]
+categories: [events]
 layout: post
 ---
 

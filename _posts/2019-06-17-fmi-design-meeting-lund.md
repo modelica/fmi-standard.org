@@ -1,6 +1,6 @@
 ---
 title: FMI Design Meeting and Jubilee Modelica Symposium in Lund, Sweden
-categories: [news]
+categories: [events]
 layout: post
 ---
 The Modelica Association, Modelica companies in Lund and Lund University are organizing a jubilee symposium in Lund on September 30, 2019, to celebrate the 100th Modelica Design Meeting taking place in Lund on October 1-2, 2019.
