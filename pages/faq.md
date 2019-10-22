@@ -43,7 +43,7 @@ This list is based on the results of the respective working groups which were di
 Adds 8, 16, 32 and 64-bit signed and unsigned integer and single precision floating point variable types to improve efficiency and type safety when importing / exporting models from the embedded, control and automotive domains.
 
 - Extra directory: 
-Adding a new subilder in the ZIP Archive representing an FMU, providing addtional data to travel with the FMU which can be modified by different tools; allowing for layered standards
+Adding a new folder in the ZIP Archive representing an FMU, providing addtional data to travel with the FMU which can be modified by different tools, allowing for layered standards
 
 In the unlikely event of unsolvable conflicts between features, the FMI Steering Committee might be forced to again remove or alter features during the merge-phase of all FCPs starting after the release of the Beta feature list. The FMI Steering Committee will make these FCPs available to interested parties on request once their maturity allows dissemination.
 
