@@ -1,5 +1,5 @@
 ---
-title: FMI Steering Committee decisions: FMI 2.0.1 approval and inclusion of "extra" directory in FMI 3.0 features list
+title: FMI 2.0.1 approved and "extra" directory in FMI 3.0
 categories: [news]
 layout: post
 ---
