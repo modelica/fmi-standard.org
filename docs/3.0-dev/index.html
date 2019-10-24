@@ -6672,9 +6672,9 @@ to set the input arguments to the current model evaluation.</p>
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
                                           fmi3Boolean inputEvent,
                                           fmi3Boolean stepEvent,
-                                          fmi3Boolean stateEvent,
-                                          fmi3Boolean timeEvent,
-                                          fmi3Float64 eventTime);</code></pre>
+                                          const fmi3Boolean rootsFound[],
+                                          size_t nEventIndicators,
+                                          fmi3Boolean timeEvent);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6694,17 +6694,18 @@ to set the input arguments to the current model evaluation.</p>
 <dd>
 <p>a step event occurred</p>
 </dd>
-<dt class="hdlist1"><code>stateEvent</code></dt>
+<dt class="hdlist1"><code>rootsFound</code></dt>
 <dd>
-<p>a state event occurred</p>
+<p>array of length <code>nEventIndicators</code>. For <code>i = 1, &#8230;&#8203;, nEventIndicators, rootsFound[i] == fmi3True</code> if the event indicator has a root, and <code>rootsFound[i] == fmi3False</code> if not.
+If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is not defined.</p>
+</dd>
+<dt class="hdlist1"><code>nEventIndicators</code></dt>
+<dd>
+<p>the number of event indicators or <code>0</code> if the caller cannot provide this information.</p>
 </dd>
 <dt class="hdlist1"><code>timeEvent</code></dt>
 <dd>
-<p>an time event occurred</p>
-</dd>
-<dt class="hdlist1"><code>eventTime</code></dt>
-<dd>
-<p>the time of the time event, if <code>timeEvent</code> is <code>fmi3True</code></p>
+<p>a time event occurred</p>
 </dd>
 </dl>
 </div>
@@ -7414,7 +7415,8 @@ while (!terminateSimulation) {
     if (enterEventMode || stateEvent || timeEvent) {
 
         if (!initialEventMode) {
-            M_fmi3EnterEventMode(m, fmi3False, fmi3False, stateEvent, timeEvent, time);
+            // TODO: pass rootsFound
+            M_fmi3EnterEventMode(m, fmi3False, fmi3False, NULL, 0, timeEvent);
         }
 
         // event iteration
@@ -9852,9 +9854,9 @@ If the FMU returns from <code>fmi3DoStep()</code> with the <code>earlyReturn = f
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
                                           fmi3Boolean inputEvent,
                                           fmi3Boolean stepEvent,
-                                          fmi3Boolean stateEvent,
-                                          fmi3Boolean timeEvent,
-                                          fmi3Float64 eventTime);</code></pre>
+                                          const fmi3Boolean rootsFound[],
+                                          size_t nEventIndicators,
+                                          fmi3Boolean timeEvent);</code></pre>
 </div>
 </div>
 <div class="paragraph">
