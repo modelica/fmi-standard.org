@@ -35,6 +35,10 @@ layout: default
     font-size: 1.5rem;
     font-weight: 300;
 }
+
+.label {
+    font-weight: 450;
+}
 </style>
 
 <div class="container mt-5">
@@ -70,55 +74,51 @@ layout: default
     <div class="card mt-2">
         <div class="card-header">Model Info</div>
         <div class="card-body" id="nav-model-info">
-            <div id="model-info" class="table-responsive">
-                <table class="table table-sm borderless">
-                    <tbody>
-                    <tr>
-                        <td class="fit">FMI Version</td>
-                        <td>{{ fmiVersion }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">FMI Type</td>
-                        <td>{{ fmiTypes.join(', ') }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">Model Name</td>
-                        <td>{{ modelName }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">Description</td>
-                        <td>{{ description }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">Platforms</td>
-                        <td>{{ platforms.join(', ') }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">Continuous States</td>
-                        <td>{{ numberOfContinuousStates }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">Event Indicators</td>
-                        <td>{{ numberOfEventIndicators }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">Generation Tool</td>
-                        <td>{{ generationTool }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">Generation Date</td>
-                        <td>{{ generationDateAndTime }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">SHA256</td>
-                        <td>{{ sha256 }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fit">File Size</td>
-                        <td>{{ size }} <span v-if="size"> byte</span></td>
-                    </tr>
-                  </tbody>
-                </table>
+            <div id="model-info" class="container">
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">FMI Version</div>
+                    <div class="col-md-9 py-1 pl-4">{{ fmiVersion }}</div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">FMI Type</div>
+                    <div class="col-md-9 py-1 pl-4">{{ fmiTypes.join(', ') }}</div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">Model Name</div>
+                    <div class="col-md-9 py-1 pl-4">{{ modelName }}</div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">Description</div>
+                    <div class="col-md-9 py-1 pl-4">{{ description }}<span v-if="!description" class="text-muted">n/a</span></div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">Platforms</div>
+                    <div class="col-md-9 py-1 pl-4">{{ platforms.join(', ') }}</div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">Continuous States</div>
+                    <div class="col-md-9 py-1 pl-4">{{ numberOfContinuousStates }}</div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">Event Indicators</div>
+                    <div class="col-md-9 py-1 pl-4">{{ numberOfEventIndicators }}</div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">Generation Tool</div>
+                    <div class="col-md-9 py-1 pl-4">{{ generationTool }}<span v-if="!generationTool" class="text-muted">n/a</span></div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">Generation Date</div>
+                    <div class="col-md-9 py-1 pl-4">{{ generationDateAndTime }}<span v-if="!generationDateAndTime" class="text-muted">n/a</span></div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">SHA256</div>
+                    <div class="col-md-9 py-1 pl-4">{{ sha256 }}</div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-md-3 label py-1">File Size</div>
+                    <div class="col-md-9 py-1 pl-4">{{ size }} <span v-if="size"> byte</span></div>
+                </div>
             </div>
         </div>
     </div>
