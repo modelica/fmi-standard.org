@@ -6672,7 +6672,7 @@ to set the input arguments to the current model evaluation.</p>
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
                                           fmi3Boolean inputEvent,
                                           fmi3Boolean stepEvent,
-                                          const fmi3Boolean rootsFound[],
+                                          const fmi3Int32 rootsFound[],
                                           size_t nEventIndicators,
                                           fmi3Boolean timeEvent);</code></pre>
 </div>
@@ -6696,7 +6696,9 @@ to set the input arguments to the current model evaluation.</p>
 </dd>
 <dt class="hdlist1"><code>rootsFound</code></dt>
 <dd>
-<p>array of length <code>nEventIndicators</code>. For <code>i = 1, &#8230;&#8203;, nEventIndicators, rootsFound[i] == fmi3True</code> if the event indicator has a root, and <code>rootsFound[i] == fmi3False</code> if not.
+<p>array of length <code>nEventIndicators</code>. For <code>i = 1, &#8230;&#8203;, nEventIndicators, rootsFound[i] != 0</code> if the event indicator \(z_i\) has a root, and <code>rootsFound[i] == 0</code> if not.
+For the components \(z_i\) for which a root was found, the sign of <code>rootsFound[i]</code> indicates the direction of the zero-crossing.
+A value of <code>+1</code> indicates that \(z_i\) is increasing, while a value of <code>−1</code> indicates a decreasing \(z_i\).
 If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is not defined.</p>
 </dd>
 <dt class="hdlist1"><code>nEventIndicators</code></dt>
@@ -9854,7 +9856,7 @@ If the FMU returns from <code>fmi3DoStep()</code> with the <code>earlyReturn = f
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
                                           fmi3Boolean inputEvent,
                                           fmi3Boolean stepEvent,
-                                          const fmi3Boolean rootsFound[],
+                                          const fmi3Int32 rootsFound[],
                                           size_t nEventIndicators,
                                           fmi3Boolean timeEvent);</code></pre>
 </div>
