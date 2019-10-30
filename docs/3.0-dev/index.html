@@ -1800,7 +1800,7 @@ If attribute <code>canNotUseMemoryManagementFunctions = "true"</code> in <code>&
 </dd>
 <dt class="hdlist1">Function <code>intermediateUpdate</code></dt>
 <dd>
-<p>This callback allows internal events of different types (e.g. associated to triggered clock ticks or intermediate variable access) to be signaled from an FMU to the co-simulation master.
+<p>This callback allows internal events of different types (e.g. associated to output clock ticks or intermediate variable access) to be signaled from an FMU to the co-simulation master.
 If <code>fmu3Type</code> is set to <code>fmi3CoSimulation</code> and either the <code>coSimulationMode</code> in <code>fmi3CoSimulationConfiguration</code> is set to <code>fmi3ModeHybridCoSimulation</code> or <code>fmi3ModeScheduledExecutionSimulation</code> or any of the intermediate variable access modes is set to "true", then the <code>fmi3CallbackIntermediateUpdate()</code> callback must be defined in <code>fmi3CallbackFunctions</code> in <code>fmi3Instantiate()</code>.
 In other cases a NULL pointer can be assigned to the <code>intermediateUpdate</code> callback, such as if the <code>fmu3Type</code> is set to  <code>fmi3ModelExchange</code>.</p>
 </dd>
@@ -2185,7 +2185,7 @@ Clocks are defined for the evaluation of <strong>clocked model partitions</stron
 Two types of clocks are available, desinged to address similar use cases with differences in details.
 One clock type (Synchronous Clocks) complies with the limitations imposed by the synchronous clock theory, the other clock type (Communication Point Clocks) is a general purpose co-simulation clock for providing suitable communication points for the timed evaluation of model partitions.
 The term clock and clocked is therefore used for both clock types.
-Both clock types can handle two different variants, the <strong>inferred clocks</strong> and the <strong>triggered clocks</strong>. First the two different clock types are presented with the mathematical definition of their use cases.
+Both clock types can handle two different variants, the <strong>input clocks</strong> and the <strong>output clocks</strong>. First the two different clock types are presented with the mathematical definition of their use cases.
 After that the two clock variants are described. The section ends with a short description of connecting clocked FMUs.</p>
 </div>
 <div class="sect4">
@@ -2270,15 +2270,15 @@ These clocks are not compatible to synchronous clocks theory and must not be use
 <p>This section gives a definition of the two clock variants.</p>
 </div>
 <div class="sect5">
-<h6 id="_triggered_clocks">Triggered Clocks</h6>
+<h6 id="_output_clocks">Output Clocks</h6>
 <div class="paragraph">
-<p>A triggered clock is a general clock that ticks when a time-, state- or step-event occurs in the continuous-model partition of the FMU (for CPClocks these triggered clock tick events can occour in all model partitions) and are identified based on their clockReference (see 2.2.3).
+<p>An output clock is a general clock that ticks when a time-, state- or step-event occurs in the continuous-model partition of the FMU (for CPClocks these output clock tick events can occour in all model partitions) and are identified based on their clockReference (see 2.2.3).
 It can be periodic or non-periodic.
-<em>[Example: If</em> \(b = x &gt; 0\) <em>, and a state event is defined when b changes from false to true, and b is defined as triggered clock, then this clock is active whenever x changes from negative to positive values.]</em></p>
+<em>[Example: If</em> \(b = x &gt; 0\) <em>, and a state event is defined when b changes from false to true, and b is defined as output clock, then this clock is active whenever x changes from negative to positive values.]</em></p>
 </div>
 <div class="paragraph">
-<p>Since triggered clocks are ticking based on model internal information it is required in case of FMI for Co-Simulation to signal the ticking of a triggered clock to the simulation environment during a <em>fmi3DoStep()</em> computation.
-In most cases the signaling of a triggered clock tick is a <code>strong event</code> that requires creating a communication point for exchanging additional information (i.e. variable values) with the simulation environment. Additional cases need to be handled if a clock tick is not associated to an event that requires the creation of a communication point for the model partition that generated the event.</p>
+<p>Since output clocks are ticking based on model internal information it is required in case of FMI for Co-Simulation to signal the ticking of an output clock to the simulation environment during a <em>fmi3DoStep()</em> computation.
+In most cases the signaling of an output clock tick is a <code>strong event</code> that requires creating a communication point for exchanging additional information (i.e. variable values) with the simulation environment. Additional cases need to be handled if a clock tick is not associated to an event that requires the creation of a communication point for the model partition that generated the event.</p>
 </div>
 <div class="paragraph">
 <p>[Outside of the FMU it is not known in advance when this clock ticks. Instead, only when the clock is activated by the FMU, then the environment is informed that the clock ticks at this time instant.
@@ -2288,15 +2288,15 @@ Example:
 </div>
 </div>
 <div class="sect5">
-<h6 id="_inferred_clocks">Inferred Clocks</h6>
+<h6 id="_input_clocks">Input Clocks</h6>
 <div class="paragraph">
-<p>An inferred clock is a periodic or non-periodic clock that is defined directly or indirectly by a clock outside of the FMU.
+<p>An input clock is a periodic or non-periodic clock that is defined directly or indirectly by a clock outside of the FMU.
 Its interval is initialized by the environment.</p>
 </div>
 <div class="paragraph">
 <p><em>[Inside of the FMU it is not known in advance when this clock ticks. Instead, only when the clock is activated by the environment of the FMU, then the FMU is informed that the clock ticks at this time instant.]</em>
 <em>[Example:]</em>
-<em>[A clocked PI controller can be defined as FMU and the input and output signal of the controller can be defined to be on the same <code>Inferred</code> clock. In such a case, the environment deduces the clock ticks from the components that are connected to the PI controller (e.g. a component connected to the input, or to the output may define the relevant clock).]</em></p>
+<em>[A clocked PI controller can be defined as FMU and the input and output signal of the controller can be defined to be on the same <code>Input</code> clock. In such a case, the environment deduces the clock ticks from the components that are connected to the PI controller (e.g. a component connected to the input, or to the output may define the relevant clock).]</em></p>
 </div>
 </div>
 </div>
@@ -2308,7 +2308,7 @@ Its interval is initialized by the environment.</p>
 <div class="sect5">
 <h6 id="_periodic_clock_ticks">Periodic Clock Ticks</h6>
 <div class="paragraph">
-<p>Either triggered or inferred, a periodic clock ticks at equidistant sample time points that are known a priori (defined in modelDescription.xml) or are alternatively determined by the environment in case of inferred clocks. Mathematically, the next clock tick at time instant ti is defined as:</p>
+<p>Either output or input, a periodic clock ticks at equidistant sample time points that are known a priori (defined in modelDescription.xml) or are alternatively determined by the environment in case of input clocks. Mathematically, the next clock tick at time instant ti is defined as:</p>
 </div>
 <div class="stemblock">
 <div class="content">
@@ -2343,8 +2343,8 @@ t_i &amp;:= t_{i-1} + \Delta T, i = 1,2,3,{...}
 </table>
 <div class="paragraph">
 <p>The interval \(\Delta T\) and \(t_{offset}\) must be defined for periodic clocks in the xml-file.
-In case of periodic inferred clocks these values are the start interval values if they are not given by the simulation master.
-<em>[This information can be used for emulating periodic inferred clocks in co-simulation mode <code>fmi3ModeCoSimulation</code>]</em>.</p>
+In case of periodic input clocks these values are the start interval values if they are not given by the simulation master.
+<em>[This information can be used for emulating periodic input clocks in co-simulation mode <code>fmi3ModeCoSimulation</code>]</em>.</p>
 </div>
 <div class="paragraph">
 <p>If \(\Delta T\) is fixed for an FMU and cannot be changed it is a strictly periodic clock.
@@ -2366,12 +2366,12 @@ For periodic clocks it is recommended to derive the priorities based on a rate m
 <div class="sect5">
 <h6 id="clock-relationships-for-communication-point-clocks">Clock Relationships for Communication Point Clocks</h6>
 <div class="paragraph">
-<p>If triggered clocks and inferred clocks are defined it is possible to define a tick relationship from a triggered clock to an inferred clock.
+<p>If output clocks and input clocks are defined it is possible to define a tick relationship from an output clock to an input clock.
 This is needed to allow for an external resource management to achieve an optimal control of model partitions.
-The triggered clocks and the associtated inferred clocks define a union of clocks.
-In that sense, if a triggered clock ticks the associated inferred clock ticks at the same time instant in such a union.
-It is only meaningful to combine one or multiple triggered clocks with a single aperiodic inferred clock in such a union.
-It is possible to define multiple unions of clocks, with the maximum number defined by the number of available aperiodic inferred clocks.</p>
+The output clocks and the associtated input clocks define a union of clocks.
+In that sense, if an output clock ticks the associated input clock ticks at the same time instant in such a union.
+It is only meaningful to combine one or multiple output clocks with a single aperiodic input clock in such a union.
+It is possible to define multiple unions of clocks, with the maximum number defined by the number of available aperiodic input clocks.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -2380,8 +2380,8 @@ It is possible to define multiple unions of clocks, with the maximum number defi
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inferred clock variant</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Triggered clock variant</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Input clock variant</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Output clock variant</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">aperiodic</p></td>
@@ -2398,7 +2398,7 @@ It is possible to define multiple unions of clocks, with the maximum number defi
 </tbody>
 </table>
 <div class="paragraph">
-<p>A clock union can be defined based on the <code>clockReference</code> attribute of inferred clock variables.</p>
+<p>A clock union can be defined based on the <code>clockReference</code> attribute of input clock variables.</p>
 </div>
 <div id="ExampleUseCase" class="imageblock">
 <div class="content">
@@ -2417,7 +2417,7 @@ If this is not possible, an explicit cast of one clock to another clock is typic
 <p>The environment can evaluate required clock adaptions/casts for connections basing on the clockReference attribute of assigned variables <em>[i.e. the variables that are assigned to a clock based on modelDescription.xml information]</em>.</p>
 </div>
 <div class="paragraph">
-<p><em>[Example: Elementary blocks like a PI controller will have all variables on an inferred clock with identical properties.</em>
+<p><em>[Example: Elementary blocks like a PI controller will have all variables on an input clock with identical properties.</em>
 <em>Connecting such blocks together will therefore be possible without computationally expensive clock cast operations (and the environment can readily do the computation of assigned variables of the connected blocks based on the same clock).]</em></p>
 </div>
 </div>
@@ -2451,7 +2451,7 @@ It is not allowed to call this function within the callback function <code>fmi3I
 <div class="paragraph">
 <p>Inquires whether a set of clocks is active by providing the value references of the corresponding clock varaibels.
 A clock with valueReference[i] is active at the current time instant if value[i] equals fmi3True, otherwise the clock is not active. It is allowed to call this function within the callback function <code>fmi3IntermediateUpdate()</code>.
-It is required for an FMU to directly internally set back the activation state of a triggered clock \(i\) to <code>fmi3False</code> if the function <code>fmi3GetClock()</code> is called for a clock \(i\) and the co-simulation mode is set to <code>fmi3ModeScheduledExecutionSimulation</code>. <em>[This is required to allow preemption.]</em></p>
+It is required for an FMU to directly internally set back the activation state of an output clock \(i\) to <code>fmi3False</code> if the function <code>fmi3GetClock()</code> is called for a clock \(i\) and the co-simulation mode is set to <code>fmi3ModeScheduledExecutionSimulation</code>. <em>[This is required to allow preemption.]</em></p>
 </div>
 <div class="paragraph">
 <p>A clock interval is set by the environment for the current time instant by the function <code>fmi3SetIntervalDecimal()</code> or <code>fmi3SetIntervalFraction()</code>, and it can be inquired with the function <code>fmi3GetIntervalDecimal()</code> or <code>fmi3GetIntervalFraction()</code>:</p>
@@ -2493,8 +2493,8 @@ typedef fmi3Status fmi3GetIntervalFractionTYPE(fmi3Instance instance,
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>API function</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Triggered clock</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inferred Clock</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Output clock</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Input Clock</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>fmi3GetClock</em></p></td>
@@ -4044,7 +4044,7 @@ It is not allowed to set <code>strict</code> to "true" if <code>periodic</code> 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">intervalCounter, shiftCounter, resolution</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The interval of triggered or inferred periodic clocks is defined with unsignedLong valued <code>intervalCounter</code> and <code>resolution</code></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The interval of output or input periodic clocks is defined with unsignedLong valued <code>intervalCounter</code> and <code>resolution</code></p>
 <p class="tableblock">interval = <code>intervalCounter</code> / <code>resolution</code>.</p>
 <p class="tableblock">The initial tick of periodic clocks may be delayed by defining a <code>shiftCounter</code> (default value 0). This results in the actual</p>
 <p class="tableblock">offset = interval * <code>shiftCounter</code> / <code>resolution</code>.</p>
@@ -4310,10 +4310,10 @@ Example:
 &lt;/Variable&gt;
 ]</em></p>
 <p class="tableblock">Structural parameters that are referenced in <code>Dimension</code> elements may have a <code>min</code> attribute with 0 but the <code>start</code> attribute, which is mandatory for structural parameters, must have a value larger than 0 for structural parameters used in <code>Dimension</code> elements. [This allows importing tools to ignore structural parameters because that start value reflects the internal default setting of that structural parameter.].</p>
-<p class="tableblock">- <code>"inferred"</code>: the variable defines an inferred clock that is controlled by the master.
+<p class="tableblock">- <code>"input"</code>: the variable defines an input clock that is controlled by the master.
 Variability must be "clock".
 Only a variable of type "Clock" can have this causality.</p>
-<p class="tableblock">- <code>"triggered"</code>: the variable defines an triggered clock that is controlled by the FMU.
+<p class="tableblock">- <code>"output"</code>: the variable defines an output clock that is controlled by the FMU.
 Variability must be "clock".
 Only a variable of type "Clock" can have this causality.</p>
 <p class="tableblock">The default of causality is <code>"local"</code>.<br>
@@ -4358,8 +4358,8 @@ If <code>initial = "calculated"</code>, or <code>causality = "independent"</code
 Examples: (a) automatic tests of FMUs are performed, and the FMU is tested by providing the start value as constant input.
 (b) For a ModelExchange FMU, the FMU might be part of an algebraic loop.
 If the input variable is iteration variable of this algebraic loop, then initialization starts with its start value.]</em></p>
-<p class="tableblock">If causality equals <code>inferred</code> the value for <code>initial</code> has to be set to "exact" and it is required to provide a start value for describing the expected initial contidion of master clocks for that FMU. If an inferred clock has <code>fmi3True</code> as an start value the master should activate the clock the first time it enters event mode. The master can nevertheless choose different start values if it is not possible to fulfill the conditions in a simulation setup.</p>
-<p class="tableblock">If causality equals <code>triggered</code> the initial attribute value is set to <code>calculated</code> and no start value is provided.</p>
+<p class="tableblock">If causality equals <code>input</code> the value for <code>initial</code> has to be set to "exact" and it is required to provide a start value for describing the expected initial contidion of master clocks for that FMU. If an input clock has <code>fmi3True</code> as an start value the master should activate the clock the first time it enters event mode. The master can nevertheless choose different start values if it is not possible to fulfill the conditions in a simulation setup.</p>
+<p class="tableblock">If causality equals <code>output</code> the initial attribute value is set to <code>calculated</code> and no start value is provided.</p>
 <p class="tableblock">If <code>fmi3SetXXX</code> is not called on a variable with <code>causality = "input"</code>, then the FMU must use the start value as value of this input.</p></td>
 </tr>
 <tr>
@@ -4383,11 +4383,11 @@ The <code>clockReference</code> holds only <code>valueReference</code> informati
 It is not possible to associate more than one clock to a variable.</p>
 <p class="tableblock">Communication Point Clock (clockType equals <code>CPClock</code>): If present, the variable is associated with the clock referenced by valueReference and defined in element <code>ModelVariables</code>.
 It is possible to associate multiple clocks to a variable. Variables that are assigned to a Communication Point Clock are not necessarily "clocked" in the sense of synchronous time clock theory. Such variables can also be Continuous-time or Discrete-time variables.</p>
-<p class="tableblock">If triggered clocks and inferred clocks of clockType equals <code>CPClock</code> are defined in the modelDescription.xml it is possible to define a tick relationship from a triggered clock to an aperiodic inferred clock based on <code>clockReference</code> (<a href="#clock-relationships-for-communication-point-clocks">Section 2.1.8.3.3</a>).
-This is done for aperiodic inferred clocks that have the clockType = <code>CPClock</code> via providing a list of valueReferences of triggered clocks of the same FMU.
-If a triggered clock of this valueReference list ticks the master has to create a tick for the associated aperiodic inferred clock at the same time instant.
-It is not allowed to combine triggered clocks with periodic or strict periodic inferred clocks based on <code>clockReference</code>.</p>
-<p class="tableblock">The attribute clockReference must not be used if <code>causality</code> equals "triggered" for a variable.</p></td>
+<p class="tableblock">If output clocks and input clocks of clockType equals <code>CPClock</code> are defined in the modelDescription.xml it is possible to define a tick relationship from a output clock to an aperiodic input clock based on <code>clockReference</code> (<a href="#clock-relationships-for-communication-point-clocks">Section 2.1.8.3.3</a>).
+This is done for aperiodic input clocks that have the clockType = <code>CPClock</code> via providing a list of valueReferences of output clocks of the same FMU.
+If a output clock of this valueReference list ticks the master has to create a tick for the associated aperiodic input clock at the same time instant.
+It is not allowed to combine output clocks with periodic or strict periodic input clocks based on <code>clockReference</code>.</p>
+<p class="tableblock">The attribute clockReference must not be used if <code>causality</code> equals "output" for a variable.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>previous</code></p></td>
@@ -4487,8 +4487,8 @@ This attribute is only used for co-simulation. The default value of this attribu
 <td class="tableblock halign-center valign-top"><p class="tableblock"><strong>output</strong></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><strong>local</strong></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><strong>independent</strong></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>inferred</strong></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>triggered</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>input</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>output</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top" rowspan="7"><p class="tableblock"><strong>variability</strong></p></td>
@@ -4663,8 +4663,8 @@ calculated</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><strong>output</strong></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><strong>local</strong></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><strong>independent</strong></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>inferred</strong></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>triggered</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>input</strong></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>output</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top" rowspan="6"><p class="tableblock"><strong>variability</strong></p></td>
@@ -5263,7 +5263,7 @@ If an independent variable is not explicitly defined under <code>Variable</code>
 If an independent variable is not explicitly defined under <code>Variable</code>s, it is assumed that the <code>Unknown</code> depends explicitly on the independent variable.</p>
 <p class="tableblock">For Co-Simulation, <code>dependencies</code> does not list the dependency on continuous-time, if the capability flag <code>providesDirectionalDerivative</code> has a value of <code>"false"</code>.
 In other words, the respective partial derivatives cannot be computed.</p>
-<p class="tableblock"><strong>TODO</strong> is it helpful to include also clock dependencies here -&#8594; i.e. changing this variable will lead to a triggered clock tick.<strong>TODO</strong></p></td>
+<p class="tableblock"><strong>TODO</strong> is it helpful to include also clock dependencies here -&#8594; i.e. changing this variable will lead to a output clock tick.<strong>TODO</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dependenciesKind</code></p></td>
@@ -7546,11 +7546,11 @@ switch (status) {
 <h4 id="_clocks_api">3.2.5. Clocks API</h4>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Triggered Clocks</dt>
+<dt class="hdlist1">Output Clocks</dt>
 <dd>
-<p>For a triggered clock, the environment integrates until a continuous-time event occurs and calls <code>fmi3EnterEventMode</code>. Afterwards with function call <code>fmi3GetClock</code> the triggered clocks that became active at this event instant can be inquired by the environment.</p>
+<p>For a output clock, the environment integrates until a continuous-time event occurs and calls <code>fmi3EnterEventMode</code>. Afterwards with function call <code>fmi3GetClock</code> the output clocks that became active at this event instant can be inquired by the environment.</p>
 </dd>
-<dt class="hdlist1">Inferred Clocks</dt>
+<dt class="hdlist1">Input Clocks</dt>
 <dd>
 <p>Intervall is set with the function <code>fmi3SetIntervalDecimal</code> or <code>fmi3SetIntervalFraction</code>. It is activated by the environment with the function <code>fmi3SetClock</code>.</p>
 </dd>
@@ -7569,13 +7569,13 @@ switch (status) {
 <dl>
 <dt class="hdlist1">Enter event mode</dt>
 <dd>
-<p>The event mode is entered after initialization (call to function <code>fmi3ExitInitializationMode</code>) or during simulation with a call to the function <code>fmi3EnterEventMode</code>. The FMU activates triggered clocks.</p>
+<p>The event mode is entered after initialization (call to function <code>fmi3ExitInitializationMode</code>) or during simulation with a call to the function <code>fmi3EnterEventMode</code>. The FMU activates output clocks.</p>
 </dd>
 <dt class="hdlist1">Synchronize clock activation and intervals with the environment</dt>
 <dd>
-<p>The clock activation status can be inquired with the function <code>fmi3GetClock</code>. The environment calls the function <code>fmi3SetClock</code> for periodic clocks and inferred clocks.
+<p>The clock activation status can be inquired with the function <code>fmi3GetClock</code>. The environment calls the function <code>fmi3SetClock</code> for periodic clocks and input clocks.
 Moreover the current clock intervals may be inquired with the function <code>fmi3GetIntervalDecimal()</code> or <code>fmi3GetIntervalFraction()</code> and set with the function <code>fmi3SetIntervalDecimal()</code> <code>fmi3SetIntervalFraction()</code>.
-<em>[In the Modelica language this is the value returned by the interval() operator. The initialization of intervals is needed for triggered and inferred sample times if a clock ticks the first time. The FMU determines the interval itself at subsequent clock ticks.]</em></p>
+<em>[In the Modelica language this is the value returned by the interval() operator. The initialization of intervals is needed for output and input sample times if a clock ticks the first time. The FMU determines the interval itself at subsequent clock ticks.]</em></p>
 </dd>
 <dt class="hdlist1">Solve algebraic loops among discrete-time equations of multiple FMUs or repeated evaluation in model-based control applications (optional)</dt>
 <dd>
@@ -7592,7 +7592,7 @@ Before a new loop iteration is started, the environment must activate the clocks
 Clocks are automatically deactivated by <code>fmi3NewDiscreteStates</code> and by <code>fmi3Reset</code>.
 <em>[This handling of discrete states and time events is forward compatible with FMI 2.0 for any model that could be treated with FMI 2.0 and is exported again using the new features.
 The environment may ignore the new functions <code>fmi3SetClock</code>, <code>fmi3GetClock</code>, <code>fmi3SetIntervalDecimal</code>, <code>fmi3SetIntervalFraction</code>, <code>fmi3GetIntervalDecimal</code> and <code>fmi3GetIntervalFraction</code>.
-The new functions are needed for FMUs with inferred sample times and to set discrete-time states in model-based control applications or if algebraic loops are present among discrete-time equations of multiple connected FMUs.]</em></p>
+The new functions are needed for FMUs with input sample times and to set discrete-time states in model-based control applications or if algebraic loops are present among discrete-time equations of multiple connected FMUs.]</em></p>
 </dd>
 </dl>
 </div>
@@ -7802,13 +7802,13 @@ The asynchronous mode for FMUs has been removed since this mode was not supporte
 <div class="paragraph">
 <p>In FMI 3.0, an FMU is allowed to stop the execution of <code>fmi3DoStep()</code> and return without reaching the predefined communication instant, i.e. <code>currentCommunicationPoint + communicationStepSize</code>.
 This mechanism is called early-return.
-With the early return feature, an FMU shall be able to signal triggered clock events or internal state changes, i.e., discontinuity events to the co-simulation master at any time (not only at the end of <code>fmi3DoStep()</code> function calls).
+With the early return feature, an FMU shall be able to signal output clock events or internal state changes, i.e., discontinuity events to the co-simulation master at any time (not only at the end of <code>fmi3DoStep()</code> function calls).
 When an FMU internal event happens at a time instant, the FMU informs the master that a new communication point for the co-simulation can be created.
 Note that, an event signal is not seen in the narrow sense of solver induced discontinuity events but in the general sense of a simulation event that has to be handled by the co-simulation master (e.g. state changes that require extended handling).
 On a multi-node architecture, in particular, significant co-simulation speed-up may be obtained if the co-simulation master can avoid waiting until the end of the slowest <code>fmi3DoStep()</code> when many FMUs are integrating in parallel and an event occurred.
 To exploit such efficiency gains also the co-simulation master can command the FMU to return early from the current communication step.
 This is even helpful if the FMU or the co-simulation master do not support the advanced handling of events based on the <code>fmi3ModeHybridCoSimulation</code> functionalities.
-In this way multiple event types and also triggered clock ticks or interrupts can be supported based on the early return functionality and additional functionalities provided in the mode <code>fmi3ModeHybridCoSimulation</code>.</p>
+In this way multiple event types and also output clock ticks or interrupts can be supported based on the early return functionality and additional functionalities provided in the mode <code>fmi3ModeHybridCoSimulation</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong>Clocked Co-Simulation</strong>  <a id="clocked-co-simulation"></a></p>
@@ -8028,7 +8028,7 @@ These data are not transferred via the FMI API.</p>
 <div class="paragraph">
 <p>Generally it is assumed that an FMI 3.0 for Co-Simulation FMU always supports the co-simulation mode <code>fmi3ModeCoSimulation</code>.
 If that is not possible for an FMU
-- e.g. if the FMU can not provide an emulation of inferred clock tick occurrences -
+- e.g. if the FMU can not provide an emulation of input clock tick occurrences -
 it has to include the capability flag <code>canNotUseBasicCoSimulation</code> equals true in the modelDescription.XML.</p>
 </div>
 <div class="paragraph">
@@ -8052,7 +8052,7 @@ A common application of this multiple mode support is the reuse of FMUs for real
 <p><em>[Remark:</em>
 <em>Wrapping towards other co-simulation modes can influence the simulation results.</em>
 <em>Depending on the model especially wrapping towards the mode fmi3ModeCoSimulation may result in divergent simulation results.</em>
-<em>Especially aperiodic inferred clocks can not always be sufficiently emulated in modes that do not directly support clocks.</em>
+<em>Especially aperiodic input clocks can not always be sufficiently emulated in modes that do not directly support clocks.</em>
 <em>Therefore it is recommended that the FMU provides logging information to the user about the influence of the current mode on simulation results, if non-optimal modes are used by the simulation environment.
 ]</em></p>
 </div>
@@ -8560,34 +8560,34 @@ Afterwards, a new step integration done on the FMU returns and signals the prema
 <p>The notion of clock in FMI for ModelExchange has been extended to the FMI for CoSimulation.</p>
 </div>
 <div class="paragraph">
-<p>Both triggered and inferred clocks are supported in CoSimulation with clocks.
-In order to handle inferred and triggered clocks in the CoSimulation, a new Event mode has been introduced.</p>
+<p>Both output and input clocks are supported in CoSimulation with clocks.
+In order to handle input and output clocks in the CoSimulation, a new Event mode has been introduced.</p>
 </div>
 <div class="paragraph">
-<p>The concept and the way inferred and triggered clocks are handled are very similar in ModelExchange and Co-simulation.
-In order to handle inferred clocks, the co-simulation master schedules inferred clocks and adjusts the communication steps in such a way that inferred clock ticks become communication points.
-At these communication points, the FMU is pushed to the Event mode and inferred clocks are handled.</p>
+<p>The concept and the way input and output clocks are handled are very similar in ModelExchange and Co-simulation.
+In order to handle input clocks, the co-simulation master schedules input clocks and adjusts the communication steps in such a way that input clock ticks become communication points.
+At these communication points, the FMU is pushed to the Event mode and input clocks are handled.</p>
 </div>
 <div class="paragraph">
-<p>Triggered clocks, on the other hand, are detected by the FMU.
-The FMU detects a triggered clock and informs the master by invoking a callback in which the event time and the event type is communicated to the master.
+<p>Output clocks, on the other hand, are detected by the FMU.
+The FMU detects a output clock and informs the master by invoking a callback in which the event time and the event type is communicated to the master.
 Then FMU stops the current co-simulation step and returns back from Dostep.
 Then the FMU is pushed to the Event mode and the event is handled.
-Note that, since triggered events time instants are not known in advance, at triggered event time instants, new communication steps are created.</p>
+Note that, since output events time instants are not known in advance, at output event time instants, new communication steps are created.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="math-scheduled-execution-simulation">4.1.4. Scheduled Execution Simulation Support</h4>
 <div class="paragraph">
 <p>The Scheduled Execution Simulation mode has a different timing concept compared to the other co-simulation modes.
-This is required to cover clock ticks for aperiodic inferred clocks which may tick at time instances that are not predictable in advance for the simulation master.
+This is required to cover clock ticks for aperiodic input clocks which may tick at time instances that are not predictable in advance for the simulation master.
 Typically, hardware I/O or virtual ECU software events belong to this category.</p>
 </div>
 <div class="paragraph">
-<p>A co-simulation master&#8217;s call for computing a model partition will compute the results of the model partition defined by an inferred clock for the current clock tick time \(t_i\).</p>
+<p>A co-simulation master&#8217;s call for computing a model partition will compute the results of the model partition defined by an input clock for the current clock tick time \(t_i\).</p>
 </div>
 <div class="paragraph">
-<p>The result values will be computed for the current clock tick time (activation time) \(t_i\) from the assigned inferred clock (which is known to the co-simulation master).
+<p>The result values will be computed for the current clock tick time (activation time) \(t_i\) from the assigned input clock (which is known to the co-simulation master).
 Refer to the clock time progress definition (<a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>) for periodic clocks.</p>
 </div>
 <div class="paragraph">
@@ -8597,8 +8597,8 @@ Refer to the clock time progress definition (<a href="#clock-types-for-evaluatio
 <p>A model partition can only be activated once per activation time point \(t_i\).</p>
 </div>
 <div class="paragraph">
-<p>Model partitions that are associated to triggered clocks will accordingly provide the result values of the model partition&#8217;s variables for the current triggered clock tick time \(t_i\) of the active triggered clock.
-The activation of such a triggered clock is not directly controlled by the co-simulation master but internally by the FMU.</p>
+<p>Model partitions that are associated to output clocks will accordingly provide the result values of the model partition&#8217;s variables for the current output clock tick time \(t_i\) of the active output clock.
+The activation of such a output clock is not directly controlled by the co-simulation master but internally by the FMU.</p>
 </div>
 </div>
 <div class="sect3">
@@ -9773,12 +9773,12 @@ Note that <code>Event Mode</code> is not supported in <code>fmi3ModeCoSimulation
 <h5 id="_communication_of_event_time_and_inputoutput_values">Communication of event time and input/output values</h5>
 <div class="paragraph">
 <p>The <code>fmi3CallbackIntermediateUpdate()</code> callback described in section <a href="#earlyreturn-co-simulation">Section 4.2.2</a> is also used in order to communicate the input and output and, in particular, the event and clock time from the FMU to the co-simulation master.
-The <code>fmi3CallbackIntermediateUpdate()</code> callback allows internal events (e.g. associated to triggered clock ticks) to be signaled from an FMU to the co-simulation master.
+The <code>fmi3CallbackIntermediateUpdate()</code> callback allows internal events (e.g. associated to output clock ticks) to be signaled from an FMU to the co-simulation master.
 If <code>fmu3Type</code> is set to <code>fmi3CoSimulation</code> and the Co-simulation mode is set to <code>fmi3ModeHybridCoSimulation</code>, the <code>fmi3CallbackIntermediateUpdate()</code> callback must be defined in <code>fmi3CallbackFunctions</code> in <code>fmi3Instantiate()</code>.
 In other cases a NULL pointer can be assigned to the <code>fmi3CallbackIntermediateUpdate()</code> callback, such as if the <code>fmu3Type</code> is set to  <code>fmi3ModelExchange</code>.</p>
 </div>
 <div class="paragraph">
-<p>The <code>fmi3IntermediateUpdateInfo</code>  argument in the <code>fmi3CallbackIntermediateUpdate()</code> function is a structure which is used to signal triggered clock ticks and internal events to the master.
+<p>The <code>fmi3IntermediateUpdateInfo</code>  argument in the <code>fmi3CallbackIntermediateUpdate()</code> function is a structure which is used to signal output clock ticks and internal events to the master.
 Whenever the FMU invokes the <code>fmi3CallbackIntermediateUpdate()</code> callback function, it fills the <code>fmi3IntermediateUpdateInfo</code> structure to pass information concerning the call to the co-simulation master.
 The structure is defined as follows:</p>
 </div>
@@ -9799,7 +9799,7 @@ The structure is defined as follows:</p>
 <ul>
 <li>
 <p><code>intermediateUpdateTime</code> is the internal simulation time of the FMU at which the callback has been called.
-If an event happens or a triggered clock ticks, <code>intermediateUpdateTime</code> is the time of event or triggered clock tick.
+If an event happens or a output clock ticks, <code>intermediateUpdateTime</code> is the time of event or output clock tick.
 If the FMU signals an <code>earlyReturn</code> equals <code>fmi3True</code> and <code>fmi3OK`after returning from `fmi3DoStep()</code> then <code>intermediateUpdateTime</code> is the internal simulation time of the FMU of the last <code>fmi3CallbackIntermediateUpdate()</code> call that signaled <code>canReturnEarly</code> equals <code>fmi3true</code>.
 <code>intermediateUpdateTime</code> is also the time of intermediate steps of the internal FMU solver.</p>
 </li>
@@ -9814,7 +9814,7 @@ If the FMU signals an <code>earlyReturn</code> equals <code>fmi3True</code> and 
 <p>when <code>eventOccurred</code> is <code>fmi3True</code>, the master must call <code>fmi3DoEarlyReturn()</code> to do an early return and handle the event via entering event mode. In this case, <code>earlyReturnTime</code> argument of <code>fmi3DoEarlyReturn()</code> is ignored. In <code>Event Mode</code> the master shall call the <code>fmi3NewDiscreteStates()</code> function for gathering <code>fmi3eventInfo</code> related information about the event occurred at <code>intermediateUpdateTime</code>.</p>
 </li>
 <li>
-<p>when <code>clocksTicked</code>  is <code>fmi3True</code>, it means that <code>fmi3GetClock()</code> function should be called for gathering all clock related information about ticking triggered clocks at <code>intermediateUpdateTime</code>.
+<p>when <code>clocksTicked</code>  is <code>fmi3True</code>, it means that <code>fmi3GetClock()</code> function should be called for gathering all clock related information about ticking output clocks at <code>intermediateUpdateTime</code>.
 If this flag is <code>fmi3True</code> the master must call <code>fmi3DoEarlyReturn()</code> to do an early return and handle the clock event in <code>Event Mode</code>.
 In this case, <code>earlyReturnTime</code> argument of <code>fmi3DoEarlyReturn()</code> is ignored.</p>
 </li>
@@ -9860,7 +9860,7 @@ If the FMU returns from <code>fmi3DoStep()</code> with the <code>earlyReturn = f
 </div>
 </div>
 <div class="paragraph">
-<p>The co-simulation master can also call <code>fmi3EnterEventMode()</code> at communication instants to handle inferred events, as will be discussed in following sections.</p>
+<p>The co-simulation master can also call <code>fmi3EnterEventMode()</code> at communication instants to handle input events, as will be discussed in following sections.</p>
 </div>
 <div class="paragraph">
 <p>If an FMU provides the early-return capability that includes the handling of events in <code>Event Mode</code>, the FMU signals this via <code>canReturnEarlyAfterIntermediateUpdate</code> and <code>providesHybridCoSimulation</code> equals true in the modelDescription.
@@ -9922,25 +9922,25 @@ Note, even if no clock is defined by an FMU in <em>modelDescription.xml</em>, th
 <p><em>[Remark:</em>
 <em>Wrapping towards other co-simulation modes can influence the simulation results.</em>
 <em>Depending on the model especially wrapping towards the mode fmi3ModeCoSimulation may result in divergent simulation results.</em>
-<em>Especially aperiodic inferred clocks can not always be sufficiently emulated in modes that do not directly support clocks.</em>
+<em>Especially aperiodic input clocks can not always be sufficiently emulated in modes that do not directly support clocks.</em>
 <em>Therefore it is recommended that the FMU provides logging information to the user about the influence of the current mode on simulation results, if non-optimal modes are used by the simulation environment.
 ]</em></p>
 </div>
 <div class="sect4">
 <h5 id="transfer-of-input-output-and-parameters-clocked-co-simulation">Transfer of Input / Output Values and Parameters in fmi3ModeHybridCoSimulation</h5>
 <div class="paragraph">
-<p>If the co-simulation master supports clocks, all inferred clocks of the model should be handled and inferred clock events should be scheduled by the master.
-If a triggered clock ticks, the FMU invokes the <code>fmi3CallbackIntermediateUpdate()</code> callback and sets <code>intermediateUpdateInfo.clocksTicked</code> to <code>fmi3True</code>.
+<p>If the co-simulation master supports clocks, all input clocks of the model should be handled and input clock events should be scheduled by the master.
+If a output clock ticks, the FMU invokes the <code>fmi3CallbackIntermediateUpdate()</code> callback and sets <code>intermediateUpdateInfo.clocksTicked</code> to <code>fmi3True</code>.
 Then the master must call <code>fmi3DoEarlyReturn()</code> to do an early return from <code>fmi3DoStep()</code>.
 Then the master should push the FMU into <code>Event Mode</code> by calling <code>fmi3EnterEventMode()</code>.
-Once the FMU in <code>Event Mode</code>, the activation status of triggered clocks are retrieved by <code>fmi3GetClock()</code> function.
-Then <code>fmi3SetClock()</code> (and <code>fmi3SetIntervalDecimal()</code> or <code>fmi3SetIntervalFraction()</code> if necessary) should be invoked to enable the ticked inferred clocks.
-Each clock, that ticks outside of the FMU (i.e. inferred clock), is activated for an FMU based on its <em>clockReference</em> and an associated <code>fmi3SetClock()</code> in <code>Event Mode</code>.
+Once the FMU in <code>Event Mode</code>, the activation status of output clocks are retrieved by <code>fmi3GetClock()</code> function.
+Then <code>fmi3SetClock()</code> (and <code>fmi3SetIntervalDecimal()</code> or <code>fmi3SetIntervalFraction()</code> if necessary) should be invoked to enable the ticked input clocks.
+Each clock, that ticks outside of the FMU (i.e. input clock), is activated for an FMU based on its <em>clockReference</em> and an associated <code>fmi3SetClock()</code> in <code>Event Mode</code>.
 <code>fmi3SetClock()</code> can activate multiple clocks with each call.
 An event iteration is possible.
 Once all clock events are handled for this time instant, the FMU should be pushed into Step Mode by calling <code>fmi3EnterStepMode()</code>.
-In Step Mode, the co-simulation master can call <code>fmi3DoStep()</code> for the time interval from the current event time instant until the next inferred event instant.
-Note that <code>fmi3DoStep()</code> may not reach the next inferred event instant because an early return may occur.</p>
+In Step Mode, the co-simulation master can call <code>fmi3DoStep()</code> for the time interval from the current event time instant until the next input event instant.
+Note that <code>fmi3DoStep()</code> may not reach the next input event instant because an early return may occur.</p>
 </div>
 <div class="paragraph">
 <p>The simulation master sets and gets clock variable values similar to the FMI for ModelExchange, as defined in <a href="#fmi-api-setting-getting-clock-activation-state">Section 2.1.9</a>.</p>
@@ -9949,11 +9949,11 @@ Note that <code>fmi3DoStep()</code> may not reach the next inferred event instan
 <div class="sect4">
 <h5 id="computation-clocked-co-simulation">Computation in fmi3ModeHybridCoSimulation</h5>
 <div class="paragraph">
-<p>Similar to FMI for ModelExchange, in order to activate inferred clocks of an FMU, it is required to push the FMU into Event Mode by calling <code>fmi3EnterEventMode()</code>.
+<p>Similar to FMI for ModelExchange, in order to activate input clocks of an FMU, it is required to push the FMU into Event Mode by calling <code>fmi3EnterEventMode()</code>.
 If <code>fmi3DoStep()</code> returns with <code>earlyReturn</code> = <code>fmi3True</code> and <code>intermediateUpdateInfo.eventOccurred</code> or <code>intermediateUpdateInfo.clocksTicked</code> is <code>fmi3True</code>, the FMU must be pushed into the Event Mode by calling <code>fmi3EnterEventMode()</code>.</p>
 </div>
 <div class="paragraph">
-<p>In order to retrieve the status of triggered clocks, <code>fmi3GetClock()</code> and <code>fmi3GetIntervalDecimal()</code> or <code>fmi3GetIntervalFraction()</code> need to be called in the Event Mode.
+<p>In order to retrieve the status of output clocks, <code>fmi3GetClock()</code> and <code>fmi3GetIntervalDecimal()</code> or <code>fmi3GetIntervalFraction()</code> need to be called in the Event Mode.
 If the <code>fmi3DoStep()</code> return value is <code>fmi3OK</code> and <code>earlyReturn</code> = <code>fmi3False</code>, the calling of <code>fmi3GetClock()</code>, <code>fmi3GetIntervalDecimal()</code>, <code>fmi3GetIntervalFraction()</code>, <code>fmi3NewDiscreteStates()</code> is only meaningful after <code>fmi3SetClock()</code> in the case of super-dense time iterations are desired.</p>
 </div>
 <div class="paragraph">
@@ -9969,8 +9969,8 @@ Once handling of the clock events finished, the master calls <code>fmi3EnterStep
 Note that it is not allowed to call <code>fmi3EnterEventMode()</code> or <code>fmi3EnterStepMode()</code> in co-simulation mode <code>fmi3ModeCoSimulation</code> or <code>fmi3ScheduledExecutionSimulation</code>.</p>
 </div>
 <div class="paragraph">
-<p><em>[Usually the co-simulation master should be able to derive (but is not forced to do so) the correct communication point times for inferred clocks in advance and thus it should be able to set the proper <code>communicationStepSize</code> for <code>fmi3DoStep()</code>.
-This might not be possible if an aperiodic inferred clock of an FMU depends on the ticking of an aperiodic triggered clock of another FMU or other aperiodic tick sources.]</em></p>
+<p><em>[Usually the co-simulation master should be able to derive (but is not forced to do so) the correct communication point times for input clocks in advance and thus it should be able to set the proper <code>communicationStepSize</code> for <code>fmi3DoStep()</code>.
+This might not be possible if an aperiodic input clock of an FMU depends on the ticking of an aperiodic output clock of another FMU or other aperiodic tick sources.]</em></p>
 </div>
 </div>
 <div class="sect4">
@@ -10063,17 +10063,17 @@ In this case, a new step can be started from the current communication point tim
 </dd>
 <dt class="hdlist1"><code>fmi3SetClock()</code></dt>
 <dd>
-<p>For inferred clocks, <code>fmi3SetClock()</code> is called after entering event mode to set the activation status of clocks.
-For both inferred and trigerred clocks, this function can be called several times, only if recomputations of clock state are needed during event mode.</p>
+<p>For input clocks, <code>fmi3SetClock()</code> is called after entering event mode to set the activation status of clocks.
+For both input and trigerred clocks, this function can be called several times, only if recomputations of clock state are needed during event mode.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3GetIntervalDecimal()</code> &amp; <code>fmi3GetIntervalFraction()</code></dt>
 <dd>
-<p>For both triggered and inferred clocks it is allowed to call these functions during event mode.</p>
+<p>For both output and input clocks it is allowed to call these functions during event mode.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3SetIntervalDecimal</code> &amp; <code>fmi3SetIntervalFraction</code></dt>
 <dd>
-<p>It is not allowed to call these functions for triggered, aperiodic and strictly periodic clocks.
-For inferred periodic clocks, these functions are called after the first clock activaion.</p>
+<p>It is not allowed to call these functions for output, aperiodic and strictly periodic clocks.
+For input periodic clocks, these functions are called after the first clock activaion.</p>
 </dd>
 </dl>
 </div>
@@ -10930,7 +10930,7 @@ The co-simulation master signals to the FMU that it supports and has recognized 
 <p>If the flag <code>providesScheduledExecutionSimulation</code> equals false, it is not allowed to set the co-simulation mode to <code>fmi3ModeScheduledExecutionSimulation</code>.</p>
 </div>
 <div class="paragraph">
-<p>If no inferred clocks are defined by the FMU it is not allowed to set <code>providesScheduledExecutionSimulation</code> to true in the modelDescription.xml.</p>
+<p>If no input clocks are defined by the FMU it is not allowed to set <code>providesScheduledExecutionSimulation</code> to true in the modelDescription.xml.</p>
 </div>
 <div class="paragraph">
 <p>Error, reset or terminate information is a global state of the FMU. If e.g. an function returns <code>fmi3Discard</code> or <code>fmi3Error</code> this is also assumed for all active or preempted model partitions.
@@ -10955,17 +10955,17 @@ The simulation master can assume that <code>fmi3Get{VariableType} and fmi3Set{Va
 In mode <code>fmi3ModeScheduledExecutionSimulation</code> the handling of <code>fmi3CallbackIntermediateUpdate()</code> callbacks is the same as in section <a href="#clocked-co-simulation">[clocked-co-simulation]</a>.
 The only difference is that an early return has no meaning in this mode and  no additional event handling based on <code>fmi3NewDiscreteStates()</code> is conducted.
 All internal events that shall be handled by the co-simulation master are signaled via <code>fmi3CallbackIntermediateUpdate()</code>.
-<em>[In this mode it is recommended to restrict such updates by the FMU to triggered clock ticks for reducing the computational load in real-time simulations.]</em></p>
+<em>[In this mode it is recommended to restrict such updates by the FMU to output clock ticks for reducing the computational load in real-time simulations.]</em></p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_computation_in_fmi3modescheduledexecutionsimulation">Computation in fmi3ModeScheduledExecutionSimulation</h5>
 <div class="paragraph">
-<p>If this mode is set, the master has to directly control the time of computation of model partitions associated to inferred clocks.
-The activation states of triggered clocks are transported via <code>fmi3CallbackIntermediateUpdate()</code> and <code>fmi3GetClock()</code>.</p>
+<p>If this mode is set, the master has to directly control the time of computation of model partitions associated to input clocks.
+The activation states of output clocks are transported via <code>fmi3CallbackIntermediateUpdate()</code> and <code>fmi3GetClock()</code>.</p>
 </div>
 <div id="fmi3ActivateModelPartition" class="paragraph">
-<p>Each <code>fmi3ActivateModelPartition()</code> call is now associated to the computation of a (publicly disclosed, externally controlled) model partition of the model and therefore to a single defined inferred clock.</p>
+<p>Each <code>fmi3ActivateModelPartition()</code> call is now associated to the computation of a (publicly disclosed, externally controlled) model partition of the model and therefore to a single defined input clock.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10983,7 +10983,7 @@ The activation states of triggered clocks are transported via <code>fmi3Callback
 <p><code>fmi3Instance instance</code>: same meaning as for other fmi3 functions</p>
 </li>
 <li>
-<p><code>fmi3ValueReference clockReference</code>: valueReference of an inferred clock defined in the modelDescription.XML which shall be activated</p>
+<p><code>fmi3ValueReference clockReference</code>: valueReference of an input clock defined in the modelDescription.XML which shall be activated</p>
 </li>
 <li>
 <p><code>fmi3Float64 activationTime</code>: simulation (i.e. virtual) time of the clock tick</p>
@@ -10991,15 +10991,15 @@ The activation states of triggered clocks are transported via <code>fmi3Callback
 </ul>
 </div>
 <div class="paragraph">
-<p>Scheduling of <code>fmi3ActivateModelPartition()</code> calls for each FMU is done by the simulation master. Calls are based on ticks of periodic or aperiodic inferred clocks.
-These inferred clock ticks can be based on clock ticks from FMU external sources (e.g. triggered clocks of other FMUs) or other external clocks/events/interrupts assigned via the simulation master configuration (such external events can be based on a potentially unpredictable process or can be just simulation time based events e.g. the planned Communication Point).
-The <code>fmi3ActivateModelPartition()</code> function is not called for triggered clocks of an FMU.</p>
+<p>Scheduling of <code>fmi3ActivateModelPartition()</code> calls for each FMU is done by the simulation master. Calls are based on ticks of periodic or aperiodic input clocks.
+These input clock ticks can be based on clock ticks from FMU external sources (e.g. output clocks of other FMUs) or other external clocks/events/interrupts assigned via the simulation master configuration (such external events can be based on a potentially unpredictable process or can be just simulation time based events e.g. the planned Communication Point).
+The <code>fmi3ActivateModelPartition()</code> function is not called for output clocks of an FMU.</p>
 </div>
 <div class="paragraph">
 <p>The <code>fmi3DoStep()</code>, <code>fmi3SetClock()</code>, <code>fmi3SetIntervalDecimal()</code>, <code>fmi3SetIntervalFraction()</code>, <code>fmi3DoEarlyReturn()</code>, <code>fmi3EnterEventMode()</code>, <code>fmi3EnterStepMode()</code> functions must not be called in this co-simulation mode.</p>
 </div>
 <div class="paragraph">
-<p>The value for the <code>fmi3ActivateModelPartition()</code> parameter <code>activationTime</code> is the clock tick time \(t_i\) from the  assigned inferred clock (which is known to the co-simulation master).</p>
+<p>The value for the <code>fmi3ActivateModelPartition()</code> parameter <code>activationTime</code> is the clock tick time \(t_i\) from the  assigned input clock (which is known to the co-simulation master).</p>
 </div>
 <div class="paragraph">
 <p>Refer to <a href="#math-scheduled-execution-simulation">Section 4.1.4</a> and <a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>.</p>
@@ -11009,7 +11009,7 @@ The <code>fmi3ActivateModelPartition()</code> function is not called for trigger
 A <code>fmi3ActivateModelPartition()</code> call will compute the results of the model partition defined by clockReference (i.e. valueReference of the variable that defines a clock) for the current clock tick \(t_i\).</p>
 </div>
 <div class="paragraph">
-<p>The value for the <code>fmi3ActivateModelPartition()</code> parameter <code>activationTime</code> is the clock tick time \(t_i\) from the assigned inferred clock (which is known to the co-simulation master).
+<p>The value for the <code>fmi3ActivateModelPartition()</code> parameter <code>activationTime</code> is the clock tick time \(t_i\) from the assigned input clock (which is known to the co-simulation master).
 Refer to the clock time progress definition (<a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>) for periodic clocks.</p>
 </div>
 <div class="paragraph">
@@ -11059,14 +11059,14 @@ All states must not be entered or exited concurrently for model partitions of an
 <p>This super state is entered by the FMU when <code>fmi3ExitInitializatoinMode()</code> is called.
 If the function <code>fmi3Terminate()</code> is called, the FMU enters state <code>Terminated</code> from all states of this super state.
 The FMU enters state <code>Terminated</code> only after all other tasks related to the computation of model partitions of this FMU have ended.
-After <code>fmi3Terminate()</code> has been called no new tasks can be started (e.g. related to triggered clock ticks) and all other function calls for this FMU must return <code>fmi3Error</code> until the state <code>Terminated</code> is reached.</p>
+After <code>fmi3Terminate()</code> has been called no new tasks can be started (e.g. related to output clock ticks) and all other function calls for this FMU must return <code>fmi3Error</code> until the state <code>Terminated</code> is reached.</p>
 </div>
 </div>
 <div class="sect5">
 <h6 id="_state_clock_activation_mode">State: Clock Activation Mode</h6>
 <div class="paragraph">
 <p>The FMU enters this state when the master calls <code>fmi3ExitInitializationMode()</code> in state <code>Initialization Mode</code> or <code>fmi3ExitConfigurationMode</code> in state <code>Reconfiguration Mode</code>.
-In this state the master can create multiple concurrent tasks related to an FMU and in each task the master can activate one or multiple inferred clocks of an FMU based on the defined clock properties via a <code>fmi3ActivateModelPartition()</code> call for each clock.</p>
+In this state the master can create multiple concurrent tasks related to an FMU and in each task the master can activate one or multiple input clocks of an FMU based on the defined clock properties via a <code>fmi3ActivateModelPartition()</code> call for each clock.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -11075,33 +11075,33 @@ In this state the master can create multiple concurrent tasks related to an FMU 
 <dd>
 <p>If the function returns with <code>fmi3OK</code> or <code>fmi3Warning</code> the FMU stays in this state.
 In case of <code>fmi3Fatal</code> the master can prematurely end all tasks related to the computation of model partitions of this FMU.
-In case of <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wait until all other tasks related to the computation of model partitions of this FMU have ended, but no new tasks can be started (e.g. related to triggered clock tick) and all other function calls for this FMU must also return <code>fmi3Discard</code> or <code>fmi3Error</code> until the state <code>terminated</code> is reached.</p>
+In case of <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wait until all other tasks related to the computation of model partitions of this FMU have ended, but no new tasks can be started (e.g. related to output clock tick) and all other function calls for this FMU must also return <code>fmi3Discard</code> or <code>fmi3Error</code> until the state <code>terminated</code> is reached.</p>
 <div class="paragraph">
 <p>It is recommended to call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> in the same task as <code>fmi3ActivateModelPartition()</code> for setting and retrieving variable values associated to a clock activation.</p>
 </div>
 </dd>
 <dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Set{VariableType}()</a>, <code>fmi3SetRealInputDerivatives()</code></dt>
 <dd>
-<p>Is called before the start of the computation of a model partition (i.e. before call of <code>fmi3ActivateModelPartition()</code>) and only for global variables and variables associated to the inferred clock assigned to the model partition.</p>
+<p>Is called before the start of the computation of a model partition (i.e. before call of <code>fmi3ActivateModelPartition()</code>) and only for global variables and variables associated to the input clock assigned to the model partition.</p>
 <div class="paragraph">
 <p>The restrictions related to variable causality and variability defined for <code>Step Mode</code> in mode <code>fmi3ModeCoSimulation</code> apply.</p>
 </div>
 <div class="paragraph">
 <p>If the function returns with <code>fmi3OK</code> or <code>fmi3Warning</code> the FMU stays in this state.
 In case the function returns <code>fmi3Fatal</code> the master can prematurely end all tasks related to the computation of model partitions of this FMU.
-In case the function returns <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wait until all other tasks related to the computation of the model partitions of this FMU have ended, but new tasks must not be started (e.g. related to triggered clock ticks) and all other function calls for this FMU must also return <code>fmi3Discard</code> or <code>fmi3Error</code> until the state <code>Terminated</code> is reached.</p>
+In case the function returns <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wait until all other tasks related to the computation of the model partitions of this FMU have ended, but new tasks must not be started (e.g. related to output clock ticks) and all other function calls for this FMU must also return <code>fmi3Discard</code> or <code>fmi3Error</code> until the state <code>Terminated</code> is reached.</p>
 </div>
 </dd>
 <dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Get{VariableType}</a>, <code>fmi3GetRealOutputDerivatives()</code>, <code>fmi3GetDirectionalDerivative()</code></dt>
 <dd>
-<p>Is called after the end of the computation of a model partition (i.e. after return of <code>fmi3ActivateModelPartition()</code>) and only for global variables and variables associated to the inferred clock assigned to the model partition.</p>
+<p>Is called after the end of the computation of a model partition (i.e. after return of <code>fmi3ActivateModelPartition()</code>) and only for global variables and variables associated to the input clock assigned to the model partition.</p>
 <div class="paragraph">
 <p>The restrictions related to variable causality and variability defined for <code>Step Mode</code> in mode <code>fmi3ModeCoSimulation</code> apply.</p>
 </div>
 <div class="paragraph">
 <p>If the function returns with <code>fmi3OK</code> or <code>fmi3Warning</code> the FMU stays in this state.
 In case the function returns <code>fmi3Fatal</code> the master can prematurely end all tasks related to the computation of model partitions of this FMU.
-In case the function returns <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wait until all other tasks related to the computation of model partitions of this FMU have ended, but new tasks must not be started (e.g. related to triggered clock ticks) and all other function calls for this FMU have to also return <code>fmi3Discard</code> or <code>fmi3Error</code> until the state <code>Terminated</code> is reached.</p>
+In case the function returns <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wait until all other tasks related to the computation of model partitions of this FMU have ended, but new tasks must not be started (e.g. related to output clock ticks) and all other function calls for this FMU have to also return <code>fmi3Discard</code> or <code>fmi3Error</code> until the state <code>Terminated</code> is reached.</p>
 </div>
 </dd>
 </dl>
@@ -11199,9 +11199,9 @@ If the function returns <code>fmi3Fatal</code> the FMU enters state <code>Fatal<
 </dd>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p>For a triggered clock only the first call of fmi3GetClock() for a specific activation of this clock signals <code>fmi3True</code>.
-The FMU sets the reported activation state immediately back to <code>fmi3False</code> for the following fmi3GetClock() calls for that clock (in the same or other model partitions of the FMU) until this triggered clock is internally activated again.
-The master can call fmi3Set{VariableType} and fmi3Get{VariableType} during the callback for variables associated to a triggered clock that is active during this callback.
+<p>For a output clock only the first call of fmi3GetClock() for a specific activation of this clock signals <code>fmi3True</code>.
+The FMU sets the reported activation state immediately back to <code>fmi3False</code> for the following fmi3GetClock() calls for that clock (in the same or other model partitions of the FMU) until this output clock is internally activated again.
+The master can call fmi3Set{VariableType} and fmi3Get{VariableType} during the callback for variables associated to a output clock that is active during this callback.
 Also intermediate variable access is allowed as defined in <a href="#state-intermediate-update-mode-co-simulation">Section 4.2.1.4.7</a></p>
 </dd>
 </dl>
@@ -11247,19 +11247,19 @@ Usually a preemptive scheduling of the <code>fmi3ActivateModelPartition()</code>
 <p>The FMU’s code has to be prepared for being able to correctly handle preemptive calls of <code>fmi3ActivateModelPartition()</code>,<code>fmi3Get{VariableType}()</code>,<code>fmi3Set{VariableType}()</code>.
 That requires a secured internal and external access to global states and variable values.
 Thus in this co-simulation mode a support for a correct handling of the preemption of model partition computations is required.
-That also requires that the FMU reports the active state of a triggered clock only with the first call of <code>fmi3GetClock()</code> for a specific activation of this clock and sets the reported activation state immediately back to false for the following <code>fmi3GetClock()</code> calls for that clock until this triggered clock is internally activated again.</p>
+That also requires that the FMU reports the active state of a output clock only with the first call of <code>fmi3GetClock()</code> for a specific activation of this clock and sets the reported activation state immediately back to false for the following <code>fmi3GetClock()</code> calls for that clock until this output clock is internally activated again.</p>
 </div>
 <div class="paragraph">
-<p>If a preemptive multitasking regime is intended an individual task (or thread&#8201;&#8212;&#8201;task and thread are used synonymously here) for each model partition (associated to an inferred clock) has to be created.
+<p>If a preemptive multitasking regime is intended an individual task (or thread&#8201;&#8212;&#8201;task and thread are used synonymously here) for each model partition (associated to an input clock) has to be created.
 The task for computing each <code>fmi3ActivateModelPartition()</code> is created and controlled by the simulation master, not by the FMU.
 So the FMU exporting tool does not need to take care for that (except for preparing its code to support preemption).</p>
 </div>
 <div class="paragraph">
-<p><em>[If only one single model partition (inferred clock) is available via the interface of an FMU, preemptive calls of the related <code>fmi3ActivateModelPartition()</code> function are possible by default since there are no external cross dependencies within one model partition between communication points.]</em></p>
+<p><em>[If only one single model partition (input clock) is available via the interface of an FMU, preemptive calls of the related <code>fmi3ActivateModelPartition()</code> function are possible by default since there are no external cross dependencies within one model partition between communication points.]</em></p>
 </div>
 <div class="paragraph">
-<p>Based on the inferred clock settings defined in the XML the master calls <code>fmi3Set{VariableType}()</code>, <code>fmi3ActivateModelPartition()</code>, <code>fmi3Get{VariableType}()</code> calls.
-Set/get calls for each task are only allowed for variables that are associated to the inferred clock associated to that task or – here preemption issues become important – to variables that are associated to no clocks (global variables), based on the XML information (see 4.4.3).</p>
+<p>Based on the input clock settings defined in the XML the master calls <code>fmi3Set{VariableType}()</code>, <code>fmi3ActivateModelPartition()</code>, <code>fmi3Get{VariableType}()</code> calls.
+Set/get calls for each task are only allowed for variables that are associated to the input clock associated to that task or – here preemption issues become important – to variables that are associated to no clocks (global variables), based on the XML information (see 4.4.3).</p>
 </div>
 <div class="paragraph">
 <p><em>[The recommendation is to avoid global variable associations as much as possible in the XML.
@@ -11269,7 +11269,7 @@ It is also recommended to reduce dependencies (defined in XML model structure) b
 <p>The co-simulation master has no knowledge about the FMU internal communication between the model partitions of a single FMU and does not handle it.</p>
 </div>
 <div class="paragraph">
-<p>The simulation master schedules the <code>fmi3ActivateModelPartition()</code> (as well as related fmi3Get{VariableType} and fmi3Set{VariableType}) calls based on given priorities for inferred clocks defined in the modelDescription.xml.</p>
+<p>The simulation master schedules the <code>fmi3ActivateModelPartition()</code> (as well as related fmi3Get{VariableType} and fmi3Set{VariableType}) calls based on given priorities for input clocks defined in the modelDescription.xml.</p>
 </div>
 <div class="paragraph">
 <p>Priority (see <a href="#clock-type-definition">[clock-type-definition]</a>):</p>
@@ -11288,7 +11288,7 @@ It is also recommended to reduce dependencies (defined in XML model structure) b
 <p><em>[If multiple tasks are needed to be scheduled for computation at a certain time instant a master must schedule a task of a higher priority always before a task of a lower priority]</em></p>
 </div>
 <div class="paragraph">
-<p>Inferred clock ticks (see <a href="#variants-of-clocks">Section 2.1.8.2</a>):</p>
+<p>Input clock ticks (see <a href="#variants-of-clocks">Section 2.1.8.2</a>):</p>
 </div>
 <div class="ulist">
 <ul>
@@ -11304,7 +11304,7 @@ It is also recommended to reduce dependencies (defined in XML model structure) b
 <p>Based on the period and priority definitions the exporting tool can restrict the code execution order.
 It nevertheless has to secure its code against concurrent execution <em>[not against parallel execution, as this is not supported for model partitions of an FMU in the interface description of this mode]</em> along the defined priority restrictions.
 Mostly this is required for internal inter-model-partition communication and in general for the joint use of global variables within the FMU.
-The exporting tool has to consider external events i.e. interrupts (if inferred aperiodic clocks are defined) and the influences of computing speed, so the exact preemption occurrence points cannot be foreseen (within the given priority and period restrictions).</p>
+The exporting tool has to consider external events i.e. interrupts (if input aperiodic clocks are defined) and the influences of computing speed, so the exact preemption occurrence points cannot be foreseen (within the given priority and period restrictions).</p>
 </div>
 <div class="paragraph">
 <p>To provide more options to secure the code against unwanted preemption new callback functions are defined that can be used to prevent preemption for certain code parts.
@@ -11364,7 +11364,7 @@ void Task2(void) //high priority
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 The example is given in a mix of pseudo-code and C, in order to keep it small and understandable.
-We consider one slave with three model partitions. Two model partitions associated to two periodic inferred clocks (clock periods 1 ms and 2 ms) and one aperiodic inferred clock.</p>
+We consider one slave with three model partitions. Two model partitions associated to two periodic input clocks (clock periods 1 ms and 2 ms) and one aperiodic input clock.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -11978,8 +11978,8 @@ The XML file may have the following content:</p>
 <p>The definition of clocks is optional.</p>
 </div>
 <div class="paragraph">
-<p>Each inferred clock that ticks outside of the FMU, is activated for an FMU based on their <em>valueReferences</em>.
-Triggered clocks inside of an FMU signal their activation based on their <em>valueReferences</em>.</p>
+<p>Each input clock that ticks outside of the FMU, is activated for an FMU based on their <em>valueReferences</em>.
+Output clocks inside of an FMU signal their activation based on their <em>valueReferences</em>.</p>
 </div>
 <div class="paragraph">
 <p><em>[If dependencies (_fmi3VariableDependency</em>) are defined in the <em>Modelstructure</em> section of the <em>modelDescription.xml</em>, it is recommended to define such dependencies only within a model partition of a model (i.e. between variables that are assigned to the same clock).]_</p>
@@ -12025,7 +12025,7 @@ There is a direct one-to-one relation for a clock and a model partition.</p>
 </div>
 <div class="paragraph">
 <p>If clocks are defined and the flag <code>providesScheduledExecutionSimulation</code> equals true, the co-simulation master can set the fmuType to <code>fmi3ScheduledExecutionSimulation</code>.
-If no inferred clocks are defined the flag <code>providesScheduledExecutionSimulation</code> shall not be set to true.</p>
+If no input clocks are defined the flag <code>providesScheduledExecutionSimulation</code> shall not be set to true.</p>
 </div>
 <div class="sect4">
 <h5 id="_example_xml_description_file_2">Example XML Description File</h5>
@@ -12835,7 +12835,7 @@ Evolving standard of the automotive industry to define the implementation of emb
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>clock tick</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When the clock ticks an event is present otherwise the event is absent.
 For FMI for Co-Simulation the ticking of a clock is interpreted as an activity of the associated model partition.
-The ticking of a <em>triggered clock</em> may lead to an <em>inferred clock</em> tick for another FMU (has to be defined via co-simulation master) or for a model partition of the same FMU (is defined in modelDescription.xml).</p></td>
+The ticking of a <em>output clock</em> may lead to an <em>input clock</em> tick for another FMU (has to be defined via co-simulation master) or for a model partition of the same FMU (is defined in modelDescription.xml).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>communication points</em></p></td>
@@ -12899,7 +12899,7 @@ A "model class" from which one or more "model instances" can be instantiated for
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>interrupt</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> connected to the tick of an inferred clock of an FMU that is caused by an external potentially random process, i.e. hardware interrupt, software interrupt.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> connected to the tick of an input clock of an FMU that is caused by an external potentially random process, i.e. hardware interrupt, software interrupt.�</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>master/slave</em></p></td>
@@ -12933,9 +12933,9 @@ It can be used to compute its expected behavior under specified conditions.</p><
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>model partition</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Model partitions can be associated to a discrete or (piecewise) continuous part of the FMU.
-The computation of model partitions can be externally controlled based on clock ticks of associated inferred clocks.</p>
+The computation of model partitions can be externally controlled based on clock ticks of associated input clocks.</p>
 <p class="tableblock">Not all FMU internal model partitions have to be exposed in the Co-Simulation interface as clock and can also be handled FMU internally (e.g. internal subsampling).
-Nevertheless, it is assumed that the activation of all exposed inferred clocks results in the computation of the complete FMU.</p>
+Nevertheless, it is assumed that the activation of all exposed input clocks results in the computation of the complete FMU.</p>
 <p class="tableblock">As stated above, continuous parts of the FMU are also associated to model partitions that define the sampling points (i.e. communication points) for the continuous values.
 Please note that this is only possible for CommunicationPointClocks.</p></td>
 </tr>
