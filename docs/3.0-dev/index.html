@@ -619,10 +619,12 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#definition-of-types">2.2.4. Definition of Types (TypeDefinitions)</a></li>
 <li><a href="#definition-of-log-categories">2.2.5. Definition of Log Categories (LogCategories)</a></li>
 <li><a href="#DefaultExperiment">2.2.6. Definition of a Default Experiment (DefaultExperiment)</a></li>
-<li><a href="#_definition_of_vendor_annotations_vendorannotations">2.2.7. Definition of Vendor Annotations (VendorAnnotations)</a></li>
-<li><a href="#definition-of-model-variables">2.2.8. Definition of Model Variables (ModelVariables)</a></li>
-<li><a href="#ModelStructure">2.2.9. Definition of the Model Structure (ModelStructure)</a></li>
-<li><a href="#variableNamingConvention">2.2.10. Variable Naming Conventions (variableNamingConvention)</a></li>
+<li><a href="#_definition_of_terminals_terminals">2.2.7. Definition of Terminals (Terminals)</a></li>
+<li><a href="#_definition_of_a_graphical_representation_graphicalrepresentation">2.2.8. Definition of a Graphical Representation (GraphicalRepresentation)</a></li>
+<li><a href="#_definition_of_vendor_annotations_vendorannotations">2.2.9. Definition of Vendor Annotations (VendorAnnotations)</a></li>
+<li><a href="#definition-of-model-variables">2.2.10. Definition of Model Variables (ModelVariables)</a></li>
+<li><a href="#ModelStructure">2.2.11. Definition of the Model Structure (ModelStructure)</a></li>
+<li><a href="#variableNamingConvention">2.2.12. Variable Naming Conventions (variableNamingConvention)</a></li>
 </ul>
 </li>
 <li><a href="#fmu-distribution">2.3. FMU Distribution</a></li>
@@ -1901,7 +1903,7 @@ If <code>stopTimeDefined = fmi3False</code>, then no final value of the independ
 </div>
 <div class="paragraph">
 <p>Informs the FMU to enter Initialization Mode.
-Before calling this function, all variables with attribute <code>&lt;Variable initial = "exact"</code> or <code>"approx"&gt;</code> can be set with the <code>fmi3SetXXX</code> functions (the <code>Variable</code> attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
+Before calling this function, all variables with attribute <code>&lt;Variable initial = "exact"</code> or <code>"approx"&gt;</code> can be set with the <code>fmi3SetXXX</code> functions (the <code>Variable</code> attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 2.2.10</a>).
 Setting other variables is not allowed.
 Furthermore, <code>fmi3SetupExperiment</code> must be called at least once before calling <code>fmi3EnterInitializationMode</code>, in order that <code>startTime</code> is defined.</p>
 </div>
@@ -2066,7 +2068,7 @@ typedef fmi3Status fmi3GetBinaryTYPE (fmi3Instance instance,
 <em>[These functions are especially used to get the actual values of output variables if a model is connected with other models.
 Since state derivatives are also <code>Variable</code>s, it is possible to get the value of a state derivative.
 This is useful when connecting FMUs together.
-Furthermore, the actual value of every variable defined in the <code>modelDescription.xml</code> file can be determined at the actually defined time instant (see <a href="#definition-of-model-variables">Section 2.2.8</a>).]</em></p>
+Furthermore, the actual value of every variable defined in the <code>modelDescription.xml</code> file can be determined at the actually defined time instant (see <a href="#definition-of-model-variables">Section 2.2.10</a>).]</em></p>
 </div>
 <div class="ulist">
 <ul>
@@ -2149,7 +2151,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 </div>
 </div>
 <div class="paragraph">
-<p>Set parameters, inputs, and start values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.8</a> for the exact rules on which type of variables <code>fmi3SetXXX</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of ModelExchange and <a href="#state-machine-co-simulation">Section 4.2.1.4</a> in case of CoSimulation).</p>
+<p>Set parameters, inputs, and start values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.10</a> for the exact rules on which type of variables <code>fmi3SetXXX</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of ModelExchange and <a href="#state-machine-co-simulation">Section 4.2.1.4</a> in case of CoSimulation).</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2690,7 +2692,7 @@ If <code>&lt;ModelStructure&gt;&lt;Derivatives&gt;</code> is present, also the v
 <li>
 <p>\(\color{blue}{\mathbf{v}_{known}}\) is the vector of Real input variables of function <strong>h</strong>
 that changes its value in the actual Mode.
-Details are described in the description of element <code>dependencies</code> in <a href="#ModelStructure">Section 2.2.9</a>.
+Details are described in the description of element <code>dependencies</code> in <a href="#ModelStructure">Section 2.2.11</a>.
 <em>[For example continuous-time inputs in Continuous-Time Mode.
 If a variable with <code>causality = "independent"</code> is explicitly defined under <code>Variable</code>s, a directional derivative with respect to this variable can be computed.
 If such a variable is not defined, the directional derivative with respect to the independent variable cannot be calculated].</em></p>
@@ -3230,7 +3232,7 @@ The format is a subset of "xs:dateTime" and should be: "YYYY-MM-DDThh:mm:ssZ" (w
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>variableNamingConvention</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether the variable names in <code>ModelVariables / Variable / name</code> and in <code>TypeDefinitions / Type / name</code> follow a particular convention.
-For the details, see <a href="#variableNamingConvention">Section 2.2.10</a>. Currently standardized are:</p>
+For the details, see <a href="#variableNamingConvention">Section 2.2.12</a>. Currently standardized are:</p>
 <p class="tableblock">- <code>flat</code>: A list of strings (the default).</p>
 <p class="tableblock">- <code>structured</code>: Hierarchical names with "." as hierarchy separator,
 and with array elements and derivative characterization.</p></td>
@@ -4176,7 +4178,452 @@ Furthermore, for CoSimulation the <code>stepSize</code> defines the preferred <c
 </div>
 </div>
 <div class="sect3">
-<h4 id="_definition_of_vendor_annotations_vendorannotations">2.2.7. Definition of Vendor Annotations (VendorAnnotations)</h4>
+<h4 id="_definition_of_terminals_terminals">2.2.7. Definition of Terminals (Terminals)</h4>
+<div class="sect4">
+<h5 id="_rationale">Rationale</h5>
+<div class="paragraph">
+<p>Terminals are fully optional and can be ignored by any importing tool.</p>
+</div>
+<div class="paragraph">
+<p>Definition "Terminal": A terminal is&#8230;&#8203;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a structured interface for connections to other models</p>
+</li>
+<li>
+<p>intended to be used for signal flow between models, parameter propagation, and compatibility checks of the model configuration</p>
+</li>
+<li>
+<p>a sequence of references to variables with connection meta data</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Predefined rules for variable matching in a connection are given below.
+Predefined variable kinds are used to describe how the member variables have to be handled.
+Domain specific connection rules, terminals and their member variables can be provided by other standards.</p>
+</div>
+<div class="paragraph">
+<p><em>[CoSimulation errors are not addressed by the terminals.</em>
+<em>The CoSimulation algorithm has to be chosen and implemented by the importing tool.</em>
+<em>Features that might be required for specific CoSimulation algorithms had to be implemented by the FMU exporting tool.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Algebraic loops in systems of connected ModelExchange FMUs are not addressed or resolved by the terminals.</em>
+<em>It is not required that the causality of the terminal member variables in connected terminals match.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The SSP standard refers to a "connectorKind".</em>
+<em>This "connectorKind" is not related to the <code>terminalKind</code> or <code>variableKind</code> described in the following sections.]</em></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_terminals">Terminals</h5>
+<div class="paragraph">
+<p>Element <code>Terminals</code> of <code>fmiModelDescription</code> is defined as:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fmiModelDescription_Terminals_Schema.png" alt="fmiModelDescription Terminals Schema" width="40%">
+</div>
+</div>
+<div class="paragraph">
+<p>All instances of <code>Terminal</code> have the type <code>fmi3Terminal</code> and are listed in the <code>Terminals</code> sequence:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fmiModelDescription_Terminals_Terminal_Schema.png" alt="fmiModelDescription Terminals Terminal Schema" width="60%">
+</div>
+</div>
+<div class="paragraph">
+<p>The normalized string attribute <code>name</code> of the <code>Terminal</code> element is the instance name of the terminal. The terminal name must be unique on each level.</p>
+</div>
+<div class="paragraph">
+<p>The normalized string attribute <code>matchingRule</code> describes the rules for variable matching in a connection.
+There are three predefined matching rules: plug, bus, and sequence.
+Other standards may define new matching rules.
+<em>[It is recommended that vendor specific rules start with "_vendorName" or "_toolName" to avoid namespace clashes.]</em></p>
+</div>
+<div class="paragraph">
+<p>There is a sequence of terminal member variables, terminal stream member variables, and nested terminals in the <code>Terminal</code> element.
+The member variables are the exchanged variables.
+The type of the nested terminals is <code>fmi3Terminal</code>, and they can be used to implement structured terminals.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><em>matchingRule</em></th>
+<th class="tableblock halign-left valign-top"><em>Description</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"plug"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Matching of the variables is based on <code>memberName</code>.
+An importing tool should connect terminals only if all member variables are present and match.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"bus"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Matching of the variables is based on <code>memberName</code>.
+An importing tool may connect terminals if some or no terminal member variables are present.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"sequence"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Matching of the variables is based on the order of the terminal member variables.
+An importing tool should connect terminals only if the number of member variables matches.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The normalized string <code>terminalKind</code> is an optional attribute. Other standards may define terminal kinds.
+It is intended that the <code>terminalKind</code> is used to define domain specific member variable sequences, member names and order, or high level restrictions for connections.</p>
+</div>
+<div class="paragraph">
+<p><em>[Other terminal kinds should refer to the predefined matchingRules.
+Vendor specific terminal kinds should start with "_vendorName" or "_toolName" to avoid namespace clashes.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Examples for terminalKind: StandardXXX_Mechanical_Translational, Modelica.Mechanics.Translational.Interfaces.Flange_a, vendorNameA_customTypeA, _vendorNameB_customLibrary_customTypeB</em></p>
+</div>
+<div class="paragraph">
+<p><em>The structured naming convention of the <code>ModelVariables</code> is independent from the terminal names and member variable names.</em></p>
+</div>
+<div class="paragraph">
+<p><em>A tool may choose to connect terminals with a different or unknown <code>terminalKind</code>, if the <code>matchingRule</code> matches.]</em></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_terminal_member_variable">Terminal Member Variable</h5>
+<div class="paragraph">
+<p>The <code>TerminalMemberVariable</code> is defined as:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fmi3Terminal_TerminalMemberVariable_Schema.png" alt="fmi3Terminal TerminalMemberVariable Schema" width="50%">
+</div>
+</div>
+<div class="paragraph">
+<p>The normalized string <code>variableKind</code> is used to provide general information about the variable.
+This information defines how the connection of this variable has to be implemented (e.g. Kirchhoff&#8217;s current law or common signal flow).</p>
+</div>
+<div class="paragraph">
+<p>The normalized string <code>memberName</code> is the representation in tools which apply name-based matching in connections.
+The member name has to be unique in a terminal.</p>
+</div>
+<div class="paragraph">
+<p>The normalized string <code>variableName</code> is used to identify the terminal member variable in the list of <code>ModelVariables</code>.
+<em>[The <code>name</code> attribute of the model variable is equal to the <code>variableName</code> of the <code>TerminalMemberVariable</code>.</em>
+<em>An importing tool may use the <code>variableName</code> attribute to identify a specific alias to get additional information, such as minimum, maximum, and nominal values.]</em></p>
+</div>
+<div class="paragraph">
+<p>One variable can be part of several terminals, which is considered aliasing according to the rules of <a href="#aliasing-of-variables">Section 2.2.10.1</a>.</p>
+</div>
+<div class="paragraph">
+<p><em>[Tools which apply sequence based matching should also provide unique member names, so that all importing tools which use name based matching use the same member names.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The suggested variable naming scheme for the structured naming convention is: &lt;ModelVariable name&gt; = &lt;terminalName&gt;.&lt;memberName&gt;</em></p>
+</div>
+<div class="paragraph">
+<p><em>Not all <code>ModelVariables</code> which have the prefix "&lt;terminalName&gt;." are a member variable, and there may exist member variables which don&#8217;t have this prefix.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Example 1 (suggested scheme): &lt;ModelVariable name&gt; is "portA.U", &lt;terminalName&gt; is "portA", &lt;memberName&gt; is "U".</em></p>
+</div>
+<div class="paragraph">
+<p><em>Example 2 (suggested scheme): &lt;ModelVariable name&gt; is "hierarchConn.innerConn.U", &lt;outer terminal name&gt; is "hierarchConn", &lt;inner terminal name&gt; is "innerConn", &lt;memberName&gt; is "U".</em></p>
+</div>
+<div class="paragraph">
+<p><em>Example 3 (no prefix): &lt;ModelVariable name&gt; is "u", &lt;terminalName&gt; is "portA", &lt;memberName&gt; is "u".</em></p>
+</div>
+<div class="paragraph">
+<p><em>Example 4 (prefix but not a member): &lt;ModelVariable name&gt; is "portA.u", there is a terminal with &lt;terminalName&gt; "portA", but this variable is not a terminal member.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The suggested variable naming scheme for the non-structured naming convention is: &lt;ModelVariable name&gt; = &lt;memberName&gt;</em></p>
+</div>
+<div class="paragraph">
+<p><em>Matching is not restricted by variability, causality or variable type.</em>
+<em>Example: A fixed variable may be connected to a tunable variable, a variable of type Real may be connected to a variable of type Integer.</em>
+<em>However, it is recommended that the variable types and variabilities are equal.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The <code>matchingRule</code> refers to the <code>TerminalMemberVariables</code> on the same level only. Nested terminals can have different <code>matchingRules</code>.</em></p>
+</div>
+<div class="paragraph">
+<p><em>There is no special handling of derivatives.</em>
+<em>If a derivative is a terminal member variable then it is considered as normal member variable.</em>
+<em>However, if a derivative of a terminal member variable is not terminal member, then this derivative information may be used by an importing tool.]</em></p>
+</div>
+<div class="paragraph">
+<p>The predefined variable kinds are:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><em>variableKind</em></th>
+<th class="tableblock halign-left valign-top"><em>Description</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"signal"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The values in connected terminals are intended to be equal.
+Restricted to input and output, parameter and calculatedParameter.
+<em>[Example: Signal flow, parameter propagation, equality checks]</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"inflow" / "outflow"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variables which fulfill Kirchhoff’s current law.
+Restricted to input and output, parameter and calculatedParameter.
+<em>[Example: Electric current]</em></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_general_remark_on_signal">General remark on signal</h5>
+<div class="paragraph">
+<p><em>[The signal <code>variableKind</code> can be applied for different use cases.</em>
+<em>The first use case is a signal flow from an output of one FMU to an input of another FMU. The output value has to be forwarded to the input.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The signal flow can cause algebraic loops.</em>
+<em>If variables in connected terminals have the causality output, then an importing tool may iterate an undefined input of an FMU to ensure that the connected output values are equal.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Another use case is the parameter propagation.</em>
+<em>If a variable in both connected terminals has the causality parameter, then an importing tool could ask the user for the value of one of those parameters only, and propagate this value to the other FMU.</em>
+<em>If only one of the variables has causality parameter, and the other is a constant output or calculatedParameter, then the importing tool could also propagate the parameter value without presenting a parameter to the user.</em>
+<em>One example of use would be the name of a substance flowing through a pipe.</em>
+<em>If the fluid flows from one pipe FMU to another, the substance should be the same.</em>
+<em>This substance name could be propagated over several FMUs.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Finally the <code>variableKind</code> "signal" can be applied to implement compatibility checks.</em>
+<em>If for example the variability of the variables in connected terminals are constant, then the importing tool can implement an equality assertion.</em>
+<em>This is also possible with calculated parameters.</em>
+<em>One example of use would be the cross sectional flow area in pipes which is calculated from geometry parameters.</em>
+<em>A change in the cross sectional flow area is relevant for the momentum equation, and therefore the connection has to be deemed incompatible if these variables are present and unequal.]</em></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_general_remark_on_inflow_and_outflow">General remark on inflow and outflow</h5>
+<div class="paragraph">
+<p><em>[Flow variables have a direction and must fulfill a zero sum constraint i.e. the sum of all flow variables connected together must be zero (Kirchhoff’s current law).</em>
+<em>In addition because different tools might have different direction definitions both, "inflow" and "outflow" <code>variableKinds</code> are available.</em>
+<em>For variables with "inflow" a positive value means that the flow is inwards, and for "outflow" a positive value means that the flow is outwards.</em>
+<em>For the sake of simplicity in the following \(\dot{m}_i\) denotes an inflowing quantity:</em></p>
+</div>
+<div class="paragraph">
+<p>\(0 = \sum{\dot{m}_i}\)</p>
+</div>
+<div class="paragraph">
+<p><em>Connecting a single output "outflow" to a single input "inflow", or vice versa automatically fulfills the flow constraint, while connecting two single signals of the same flow type requires a negation of the signal.]</em></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_terminal_stream_member_variable">Terminal Stream Member Variable</h5>
+<div class="paragraph">
+<p>The <code>TerminalStreamMemberVariable</code> is defined as:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fmi3Terminal_TerminalStreamMemberVariable_Schema.png" alt="fmi3Terminal TerminalStreamMemberVariable Schema" width="60%">
+</div>
+</div>
+<div class="paragraph">
+<p>This element is used for variables which fulfill the balance equation for transported quantities.
+It is restricted to input and output, parameter and calculatedParameter.</p>
+</div>
+<div class="paragraph">
+<p>The Stream concept is described in the appendix D.3 of the Modelica specification.
+Only one terminal member variable with the <code>variableKind</code> "inflow" or "outflow" per terminal is allowed, if a TerminalStreamMemberVariable is present.
+<em>[More sophisticated structures can be implemented using hierarchical terminals.]</em></p>
+</div>
+<div class="paragraph">
+<p>The attribute <code>inStreamVariableName</code> and <code>outStreamVariableName</code> are used to identify the <code>ModelVariables</code>.
+If the referenced model variables are arrays, then the size of the <code>inStreamVariableName</code> and <code>outStreamVariableName</code> has to be equal.
+A terminal may have more than one TerminalStreamMemberVariable.
+The <code>inStreamMemberName</code> and <code>outStreamMemberName</code> describe the terminal member name for matching purposes, similar to the <code>memberName</code> attribute in the <code>TerminalMemberVariable</code>.</p>
+</div>
+<div class="paragraph">
+<p><em>[An example of use for an array of stream variables is a gas mixture flow.</em>
+<em>The gas composition could be implemented as a mass fraction vector.</em>
+<em>The <code>outStreamVariableName</code> refers to</em> \(portA.q_\textit{outStream}\textit{[]}\) <em>and the <code>inStreamVariableName</code> refers to</em>  \(portA.q_\textit{inStream}\textit{[]}\) <em>.</em>
+<em>The <code>inStreamMemberName</code> and <code>outStreamMemberName</code> are "</em> \(q_\textit{inStream}\textit{[]}\) <em>" and "</em> \(q_\textit{outStream}\textit{[]}\) <em>".</em></p>
+</div>
+<div class="paragraph">
+<p><em>Balance equation for transported quantities:</em></p>
+</div>
+<div class="paragraph">
+<p><em>\(0 = \sum{q_i\dot{m}_i}\)</em></p>
+</div>
+<div class="paragraph">
+<p><em>\(0 = \sum{\dot{m}_i}\cdot
+\left\{\begin{array}{ll}
+q_{\textit{$i$, outStream}} &amp;\textit{if $\dot{m}$ is outflowing through terminal $i$}\\
+q_{\textit{$i$, inStream}} &amp;\textit{if $\dot{m}$ is inflowing through terminal $i$}
+\end{array}\right.\)</em></p>
+</div>
+<div class="paragraph">
+<p><em>The</em> \(q_\textit{$i$, outStream}\) <em>is the convective quantity in case the matter flows out of the FMU.</em>
+\(q_\textit{$i$, inStream}\) <em>is the convective quantity in case the matter flows into the FMU. Both variables are present in the terminal.</em>
+<em>The outStream variable has the causality output or calculatedParameter because this information has to be provided by each FMU.</em>
+<em>The inStream variable has the causality input or parameter.</em>
+<em>To display the actual value in an importing tool, this actual value has to be selected depending on the sign of the terminal member variable with <code>variableKind</code> "inflow" or "outflow".</em>
+<em>However, calculating the actual value is not necessary.</em></p>
+</div>
+<div class="paragraph">
+<p><em>If only two terminals with a variable  are connected and their causality matches, then the values of the outStream variables can be forwarded to the corresponding inStream values.</em></p>
+</div>
+<div class="paragraph">
+<p><em>In Modelica the inStream variable is not directly visible, the value can only be accessed using "inStream()", therefore an additional ModelVariable has to be added during the export.</em>
+<em>It is suggested that Modelica tools exporting an FMU derive the member name for the inStream variable according to the scheme "&lt;outStream name&gt;_inStream".</em>
+<em>E.g. if the outStream name is "h_outflow" then the inStream name should be "h_outflow_inStream".]</em></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_definition_of_a_graphical_representation_graphicalrepresentation">2.2.8. Definition of a Graphical Representation (GraphicalRepresentation)</h4>
+<div class="sect4">
+<h5 id="_rationale_2">Rationale</h5>
+<div class="paragraph">
+<p>The graphical representation of the FMU and terminals are needed in order to more easily comprehend the meaning of connected FMUs and to help an importing tool to display the terminals and the FMU icon in the way the exporter intended.</p>
+</div>
+<div class="paragraph">
+<p>The graphical representation is fully optional.
+The graphical representation of terminals is separate from the terminal definitions in the <code>Terminals</code> element.</p>
+</div>
+<div class="paragraph">
+<p>There are three optional elements in the <code>GraphicalRepresentation</code>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>CoordinateSystem</code> defines the extent of the whole icon (graphical items may exceed that rectangle).</p>
+</li>
+<li>
+<p>The <code>Icon</code> defines an image source for the FMU.</p>
+</li>
+<li>
+<p>The <code>Terminal</code> sequence contains the graphical representation of the visible terminals.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fmiModelDescription_GraphicalRepresentation_Schema.png" alt="fmiModelDescription GraphicalRepresentation Schema" width="60%">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_coordinatesystem">CoordinateSystem</h5>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fmiModelDescription_GraphicalRepresentation_CoordinateSystem_Schema.png" alt="fmiModelDescription GraphicalRepresentation CoordinateSystem Schema" width="60%">
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>CoordinateSystem</code> element and its defined extent is used as reference for other graphical items. It also provides a scaling factor to millimeter.</p>
+</div>
+<div class="paragraph">
+<p>The coordinate system is defined by the coordinates of two points, the left lower (<code>x1</code>, <code>y1</code>) corner and the right upper (<code>x2</code>, <code>y2</code>) corner, where the coordinates of the first point shall be less than the coordinates of the second point <em>[a first quadrant coordinate system]</em>.
+The x-axis directed to the right, the y-axis is directed upwards.</p>
+</div>
+<div class="paragraph">
+<p><em>[The exporting tool should define how the coordinate system unit relates to mm display or print out size.</em>
+<em>However, an importing tool might choose to use the factor from the default coordinate system extent to the actual coordinate system extent to calculate a scaling factor, to match the default icon size in the importing tool.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The area defined by the coordinate system suggested to be used as "clickable icon size" in other tools.</em>
+<em>A <code>Terminal</code> might be placed outside of this area, so the visible bounding box has to be determined by the importing tool.]</em></p>
+</div>
+<div class="paragraph">
+<p>The coordinate system default is x1=-100, y1=-100, x2=100, y2=100. This extent is used if the <code>CoordinateSystem</code> element is missing.
+The default <code>suggestedScalingFactorTo_mm</code> is 0.1.
+So the default coordinate system display size should be 20 mm width and 20 mm height.</p>
+</div>
+<div class="paragraph">
+<p>The FMU icon and all graphical representations provide the position and extent with the attributes <code>x1</code>, <code>y1</code>, <code>x2</code>, <code>y2</code>.
+The values of these attributes directly relate to this coordinate system and are not normalized.
+Flipping of the FMU icon or a terminal can be realized by setting its attributes x2 &lt; x1 or y2 &lt; y1 without changing the coordinate system.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_icon">Icon</h5>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fmiModelDescription_GraphicalRepresentation_Icon_Schema.png" alt="fmiModelDescription GraphicalRepresentation Icon Schema" width="30%">
+</div>
+</div>
+<div class="paragraph">
+<p>In the <code>Icon</code> element the FMU icon without terminals is defined, its extent and position.</p>
+</div>
+<div class="paragraph">
+<p>The <code>iconSource_PNG</code> attribute is mandatory to simplify the import in other tools, so a PNG file has to be provided in any case.
+Optionally an SVG file can be provided.
+This enables high quality rendering and printing in importing tools.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_terminals_2">Terminals</h5>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fmiModelDescription_GraphicalRepresentation_Terminal_Schema.png" alt="fmiModelDescription GraphicalRepresentation Terminal Schema" width="50%">
+</div>
+</div>
+<div class="paragraph">
+<p>For <code>fmi3Terminals</code> (terminals which are listed in the <code>Terminals</code> element) the name of the terminal in the <code>GraphicalRepresentation</code> is equal to the name of the terminal in the <code>Terminals</code> element (e.g. "port_a").
+<em>[If the graphical representation is used for an input or output (e.g. a Real input "u"), then a <code>Terminal</code> has to be added to the <code>Terminals</code> element which has one <code>TerminalMemberVariable</code>.</em>
+<em>The name of the <code>Terminal</code> and the name of the <code>TerminalMemberVariable</code> should be equal to the name of the input/output.]</em></p>
+</div>
+<div class="paragraph">
+<p>The <code>iconSource_PNG</code> is mandatory for a terminal, optionally an SVG file can be provided.
+The default connection stroke size and color can be provided, to define the intended connection line layout in the importing tool. The stroke size is given relative to the coordinate system extent.
+The stroke color is given in RGB values from 0 to 255. E.g.: "255 255 0".</p>
+</div>
+<div class="paragraph">
+<p>The VendorAnnotations element can be used by vendors to store additional information for the graphical representation.
+<em>[It is suggested that Modelica tools store the Modelica annotation of the connector under the tool name "Modelica3Annotation" in the attribute "annotation" of an element "connector". The attribute "name" of the connector element is equal to the "name" attribute of the referenced <code>fmi3Terminal</code>.]</em></p>
+</div>
+<div class="paragraph">
+<p><em>[Only terminals from the <code>Terminals</code> element can have a graphical representation. For simple inputs/outputs a terminal with one member has to be added.]</em></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_placement_extent_and_painting_order_of_graphical_items">Placement, Extent, and Painting Order of Graphical Items</h5>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/GraphicalRepresentation.svg" alt="GraphicalRepresentation" width="70%">
+</div>
+</div>
+<div class="paragraph">
+<p>The clickable icon size is defined by the CoordinateSystem element.
+The FMU icon itself may exceed this extent (or bounding box).
+The bounding box of the terminals is given by the extent in the terminals element.
+Their location is neither limited to the extent of the icon nor the extent of the coordinate system.
+<em>[An importing tool has to determine the outer bounding box enclosing all graphical items.]</em></p>
+</div>
+<div class="paragraph">
+<p>Transparent SVG or PNG files are allowed and wanted. The order of the elements in the XML file defines the order of painting.
+The first element in the GraphicalRepresentation is painted first and therefore behind the others, the last element is painted on top of the others and because of that in front of them.
+<em>[So the FMU icon should be placed first in the XML file, terminal below.]</em></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_definition_of_vendor_annotations_vendorannotations">2.2.9. Definition of Vendor Annotations (VendorAnnotations)</h4>
 <div class="paragraph">
 <p>Element <code>VendorAnnotations</code> of <code>fmiModelDescription</code> is defined as:</p>
 </div>
@@ -4192,7 +4639,7 @@ Attribute <code>name</code> must be unique with respect to all other elements of
 </div>
 </div>
 <div class="sect3">
-<h4 id="definition-of-model-variables">2.2.8. Definition of Model Variables (ModelVariables)</h4>
+<h4 id="definition-of-model-variables">2.2.10. Definition of Model Variables (ModelVariables)</h4>
 <div class="paragraph">
 <p>The <code>ModelVariables</code> element of <code>fmiModelDescription</code> is the central part of the model description.
 It provides the static information of all exposed variables and is defined as:</p>
@@ -4289,7 +4736,7 @@ Allowed values of this enumeration:</p>
 It is not allowed to define <code>initial</code>.</p>
 <p class="tableblock">- <code>"output"</code>: The variable value can be used by another model or slave.
 The algebraic relationship to the inputs is defined via the <code>dependencies</code> attribute of <code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;&lt;Outputs&gt;&lt;Unknown&gt;</code>.</p>
-<p class="tableblock">- <code>"local"</code>: Local variable that is calculated from other variables or is a continuous-time state (see <a href="#ModelStructure">Section 2.2.9</a>).
+<p class="tableblock">- <code>"local"</code>: Local variable that is calculated from other variables or is a continuous-time state (see <a href="#ModelStructure">Section 2.2.11</a>).
 It is not allowed to use the variable value in another model or slave.</p>
 <p class="tableblock">- <code>"independent"</code>: The independent variable (usually <code>time</code>).
 All variables are a function of this independent variable.
@@ -4317,7 +4764,7 @@ Only a variable of type "Clock" can have this causality.</p>
 Variability must be "clock".
 Only a variable of type "Clock" can have this causality.</p>
 <p class="tableblock">The default of causality is <code>"local"</code>.<br>
-A continuous-time state must have <code>causality = "local"</code> or <code>output"</code>, see also <a href="#ModelStructure">Section 2.2.9</a>.</p>
+A continuous-time state must have <code>causality = "local"</code> or <code>output"</code>, see also <a href="#ModelStructure">Section 2.2.11</a>.</p>
 <p class="tableblock"><em>[<code>causality = "calculatedParameter"</code> and <code>causality = "local"</code> with <code>variability = "fixed"</code> or <code>"tunable"</code> are similar.
 The difference is that a <code>"calculatedParameter"</code> can be used in another model or slave, whereas a local variable cannot.
 For example, when importing an FMU in a Modelica environment, a <code>"calculatedParameter"</code> should be imported in a <code>public</code> section as <code>final parameter</code>, whereas a <code>"local"</code> variable should be imported in a <code>protected</code> section of the model.]</em></p></td>
@@ -4936,6 +5383,8 @@ With this interpretation, changing parameters online is "clean", as long as thes
 <em>Changing of tunable parameters is allowed before an <code>fmi3DoStep</code> call (so, whenever an input can be set with <code>fmi3SetXXX</code>) and before <code>fmi3ExitInitializationMode</code> is called (that is before and during Initialization Mode).
 The FMU internally carries out event handling if necessary.]</em></p>
 </div>
+<div class="sect4">
+<h5 id="aliasing-of-variables">Aliasing of Variables</h5>
 <div class="paragraph">
 <p>Variables of the same base type (like <code>fmi3Real</code>) that have identical <code>valueReference</code> definitions are called "alias" variables.
 The main purpose of "alias" variables is to enhance efficiency.
@@ -5077,8 +5526,9 @@ The <code>any</code> element can be an arbitrary XML data structure defined by t
 <em>[Typically, additional data is defined here how to build up the menu for the variable, including the graphical layout and enabling/disabling an input field based on the values of other parameters.]</em></p>
 </div>
 </div>
+</div>
 <div class="sect3">
-<h4 id="ModelStructure">2.2.9. Definition of the Model Structure (ModelStructure)</h4>
+<h4 id="ModelStructure">2.2.11. Definition of the Model Structure (ModelStructure)</h4>
 <div class="paragraph">
 <p>The structure of the model is defined in element <code>ModelStructure</code> within <code>fmiModelDescription</code>.
 This structure is with respect to the underlying model equations, independently how these model equations are solved.
@@ -5438,7 +5888,7 @@ As a result, it is not possible to formulate algebraic loops of connected FMUs d
 </div>
 </div>
 <div class="sect3">
-<h4 id="variableNamingConvention">2.2.10. Variable Naming Conventions (variableNamingConvention)</h4>
+<h4 id="variableNamingConvention">2.2.12. Variable Naming Conventions (variableNamingConvention)</h4>
 <div class="paragraph">
 <p>With attribute <code>variableNamingConvention</code> of element <code>fmiModelDescription</code>, the convention is defined how the <code>Variable.name</code>s have been constructed.
 If this information is known, the environment may be able to represent the names in a better way (for example, as a tree and not as a linear list).</p>
@@ -6105,9 +6555,9 @@ Such an event is called <span class="underline">step event</span>.
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(v\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>,
-see <a href="#definition-of-model-variables">Section 2.2.8</a>).
+see <a href="#definition-of-model-variables">Section 2.2.10</a>).
 A subset of the variables is selected via a subscript.
-Example: \(\mathbf{v}_{initial=exact}\) are variables defined with attribute <code>initial ="exact"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).
+Example: \(\mathbf{v}_{initial=exact}\) are variables defined with attribute <code>initial ="exact"</code> (see <a href="#definition-of-model-variables">Section 2.2.10</a>).
 These are independent parameters and startvalues of other variables, such as initial values for states, state derivatives or outputs.</p></td>
 </tr>
 <tr>
@@ -6121,7 +6571,7 @@ Dependent parameters (variables with <code>causality = "calculatedParameter"</co
 <td class="tableblock halign-left valign-top"><p class="tableblock">Input variables.
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <code>causality = "input"</code>.
-Whether the input is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
+Whether the input is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.10</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(t)\)</p></td>
@@ -6129,12 +6579,12 @@ Whether the input is a discrete-time or continuous-time variable is defined via 
 The values of these variables are computed in the FMU and they are designed to be used in a model connection.
 For instance, output variables might be used in the environment as input values to other FMUs or other submodels.
 Variables of this type are defined with attribute <code>causality = "output"</code>.
-Whether the output is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
+Whether the output is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.10</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{w}(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Local variables of the FMU that cannot be used for FMU connections.
-Variables of this type are defined with attribute <code>causality = "local"</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>.</p></td>
+Variables of this type are defined with attribute <code>causality = "local"</code>, see <a href="#definition-of-model-variables">Section 2.2.10</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{z}(t)\)</p></td>
@@ -8226,10 +8676,10 @@ The communication step size is denoted as \(hc_i = tc_{i+1} - tc_i\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{v}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.10</a>).
 A subset of the variables is selected via a subscript.
 Example:<br>
-\(\mathbf{v}_{initial=exact}\) are variables defined with attribute <code>initial = "exact"</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>.
+\(\mathbf{v}_{initial=exact}\) are variables defined with attribute <code>initial = "exact"</code>, see <a href="#definition-of-model-variables">Section 2.2.10</a>.
 These are independent parameters and start values of other variables, such as initial values for states, state derivatives or outputs.</p></td>
 </tr>
 <tr>
@@ -8243,7 +8693,7 @@ Dependent parameters (variables with <code>causality = "calculatedParameter"</co
 <td class="tableblock halign-left valign-top"><p class="tableblock">Input variables.
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <code>causality = "input"</code>.
-Whether the input is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
+Whether the input is a discrete-time or continuous-time variable is defined via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> (see <a href="#definition-of-model-variables">Section 2.2.10</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(tc_i)\)</p></td>
@@ -8251,12 +8701,12 @@ Whether the input is a discrete-time or continuous-time variable is defined via 
 The values of these variables are computed in the FMU and they are designed to be used in a model connection.
 So output variables might be used in the environment as input values to other FMUs or other submodels.
 Variables of this type are defined with attribute <code>causality = "output"</code>.
-Via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> it is defined whether the output is a discrete-time or continuous-time variable, see <a href="#definition-of-model-variables">Section 2.2.8</a>.</p></td>
+Via attribute <code>variability = "discrete"</code> or <code>"continuous"</code> it is defined whether the output is a discrete-time or continuous-time variable, see <a href="#definition-of-model-variables">Section 2.2.10</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{w}(tc_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Local variables of the FMU that cannot be used for FMU connections.
-Variables of this type are defined with attribute <code>causality = "local"</code> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
+Variables of this type are defined with attribute <code>causality = "local"</code> (see <a href="#definition-of-model-variables">Section 2.2.10</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{x}_c(t)\)</p></td>
