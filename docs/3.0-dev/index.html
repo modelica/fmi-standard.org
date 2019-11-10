@@ -6076,7 +6076,10 @@ resources                     // resources needed by the FMU (optional)
    // also more folders can be added under resources (tool/model specific).
    // In order for the FMU to access these resource files, the resource directory
    // must be available in unzipped form and the absolute path to this directory
-   // must be reported via argument "fmuResourceLocation" via fmi3Instantiate.</pre>
+   // must be reported via argument "fmuResourceLocation" via fmi3Instantiate.
+extra                         // Additional (meta-)data of the FMU (optional)
+   // additional (meta-)data that is supposed to travel with the FMU;
+   // see below for structure and content definition.</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6341,6 +6344,12 @@ Furthermore, in order that the C compiler can check for consistent function argu
 It would therefore be counter-productive (unsafe) if this header file was present.<br>
 These header files are not included in the <code>binaries</code> directory, since they are already utilized to build the target simulator executable.
 The version number of the header file used to construct the FMU can be deduced via attribute <code>fmiVersion</code> in file <code>modelDescription.xml</code> or via function call <code>fmi3GetVersion</code>.]</em></p>
+</div>
+<div class="paragraph">
+<p>The ZIP archive may contain additional entries with the prefix <code>extra/</code> that can be used to store additional data and meta-data.
+In order to avoid ambiguities the extra files should be provided in subdirectories using a reverse domain name notation of a domain that is controlled by the entity defining the semantics and content of the additional entries <em>[(for example <code>extra/com.example/SimTool/meta.xml</code> or <code>extra/org.example.stdname/data.asd</code>)]</em>.
+The use of subdirectories beginning with <code>org.modelica</code> and <code>org.fmi-standard</code> is explicitly reserved for use by MAP FMI-defined layered standards, i.e. other uses must not use subdirectory names beginning with these prefixes.
+It is explicitly allowed for tools and users other than the original creator of an FMU to modify, add or delete entries in the <code>extra/</code> directory without affecting the validity of the FMU in all other aspects. Specifically all validation or digital signature schemes used to protect the content of the FMU should take the variability of extra file content into account <em>[(for example by having seperate checksums or signatures for FMU core content and extra content, or not having signatures at all for extra content)]</em>.</p>
 </div>
 </div>
 </div>
