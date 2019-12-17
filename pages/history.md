@@ -43,7 +43,7 @@ Andreas Junghanns projectleader@fmi-standard.org from Synopsys GmbH
 Daimler, Dassault Systèmes, IFP EN, ITI, LMS, Modelon, QTronic, SIMPACK
 
 **Current Members of the Steering Committee**  
-AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, IFP EN, Maplesoft, Modelon, Siemens PLM, Synopsys
+AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, Siemens PLM, Synopsys
 
 **Initial members of the Advisory Committee**  
 Armines, DLR, Fraunhofer (IIS/EAS First, SCAI), Open Source Modelica Consortium, TWT, University of Halle
