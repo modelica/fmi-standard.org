@@ -39,7 +39,7 @@ Torsten Blochwitz from ITI
 **Current Project Leader**  
 Andreas Junghanns projectleader@fmi-standard.org from Synopsys GmbH
 
-**Initial members of the Steering Committee**
+**Initial members of the Steering Committee**  
 Daimler, Dassault Systèmes, IFP EN, ITI, LMS, Modelon, QTronic, SIMPACK
 
 **Current Members of the Steering Committee**  
