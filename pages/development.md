@@ -55,7 +55,7 @@ Membership in this project is open to companies, institutes, universities and ot
 
 The steering committee defines FMI policy, strategy, feature roadmap, and future FMI releases. Members are organizations that actively support FMI. Especially, a member has either to provide the FMI standard or part of it in a commercial or open source tool, and/or actively use FMI in industrial projects.
 
-Current Members of the Steering Committee: AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, QTronic, Siemens PLM
+Current Members of the Steering Committee: AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, Siemens PLM, Synopsys
 
 ## Advisory Committee
 
@@ -67,7 +67,7 @@ Current Members of the Advisory Committee: ABB, Altair, DLR, ETAS, Fraunhofer (I
 
 The project leader and the deputy is elected by the Steering Committee for a two-years period
 
-Current Project Leader: Andreas Junghanns projectleader@fmi-standard.org from QTronic GmbH, deputy Torsten Blochwitz from ESI ITI GmbH
+Current Project Leader: Andreas Junghanns projectleader@fmi-standard.org from Synopsys GmbH, deputy Torsten Blochwitz from ESI ITI GmbH
 
 ## Visitors
 
