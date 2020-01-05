@@ -1,6 +1,10 @@
 ---
 title: About
-permalink: "/about/"
+permalink: /about/
+redirect_from:
+  - /development/
+  - /history/
+  - /related/
 layout: default
 ---
 
