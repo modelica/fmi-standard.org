@@ -72,7 +72,7 @@ Access and use of the FMI standard is free of charge. However, vendors may charg
 
 ## Does my simulation tool support FMI?
 
-Please see the FMI tools page for a list of tools for that tool vendors have announced their support of FMI.
+Please see the FMI [tools page](http://fmi-standard.org/tools/) for a list of tools for that tool vendors have announced their support of FMI.
 
 **While the FMI project defines cross check rules, the tool vendors carry sole responsibility for their stated FMI support and the provided compatibility results.**
 
@@ -89,10 +89,10 @@ Please see the FMI tools page for a list of tools for that tool vendors have ann
 
 That depends mostly on your background knowledge. We assume here you already have fundamental knowledge of simulation technology (ODE vs. DAE, zero-crossing, state/time events, derivatives etc.):
 
-- First make a quick pass trough the standard document.
-- Then browse and play with the available 3rd party development toolkits.
-- Read the implementation hints contained in FMI_for_ModelExchange_v1.0.zip - not yet available for FMI 2.0.
-- Re-read the standard document in detail.
+- First make a quick pass trough the [standard document](https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Specification-2.0.1.pdf).
+- Then browse and play with the available [3rd party development toolkits](http://fmi-standard.org/downloads/).
+- Read the implementation hints contained in [FMI_for_ModelExchange_v1.0.zip](https://svn.modelica.org/fmi/branches/public/specifications/v1.0/FMI_for_ModelExchange_v1.0.1.pdf) - not yet available for FMI 2.0.
+- Re-read the [standard document](https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Specification-2.0.1.pdf) in detail.
 
 
 ## Does FMI 2.0 support Partial Differential Equations (PDEs)?
