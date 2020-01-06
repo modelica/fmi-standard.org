@@ -5,16 +5,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Jekyll Plug-ins
-          command: gem install jekyll-redirect-from
-      - run:
           name: Validate _data/tools.csv
           command: python _scripts/validate_tools_csv.py
       - run:
           name: Build site
           command: |
             mkdir _site
-            docker run -v ~/project:/srv/jekyll jekyll/jekyll:3 jekyll build
+            docker run -v ~/project:/srv/jekyll jekyll/jekyll jekyll build
       - run:
           name: Validate site
           command: docker run -v ~/project/_site:/site 18fgsa/html-proofer /site --only-4xx --url-ignore "#"
