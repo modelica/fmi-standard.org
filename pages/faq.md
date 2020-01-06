@@ -58,7 +58,7 @@ Access and use of the FMI standard is free of charge. However, vendors may charg
 ## How can I join the FMI mailing lists?
 
 - The “FMI-Info-Mailing list” is used for public announcements.
-  If you are interested please contact [contact@fmi-standard.org](contact@fmi-standard.org).
+  If you are interested please contact [contact@fmi-standard.org](mailto:contact@fmi-standard.org).
 - The “FMI design” Mailing list is used by active developers of FMI (typically members of the FMI Advisory or Steering Committee).
 - The “FMI Steering” Mailing list is used by members of the FMI Steering Committee. To join you need to be a member of the FMI Steering Committee.
 
