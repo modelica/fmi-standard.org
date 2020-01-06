@@ -38,11 +38,11 @@ This list is based on the results of the respective working groups which were di
 
 - Source code FMUs:  
   Adding more information to the modelDescription.xml file to improve automatic import of source code FMUs.
-  
-- Numeric Variable Types: 
+
+- Numeric Variable Types:
 Adds 8, 16, 32 and 64-bit signed and unsigned integer and single precision floating point variable types to improve efficiency and type safety when importing / exporting models from the embedded, control and automotive domains.
 
-- Extra directory: 
+- Extra directory:
 Adding a new folder in the ZIP Archive representing an FMU, providing addtional data to travel with the FMU which can be modified by different tools, allowing for layered standards
 
 In the unlikely event of unsolvable conflicts between features, the FMI Steering Committee might be forced to again remove or alter features during the merge-phase of all FCPs starting after the release of the Beta feature list. The FMI Steering Committee will make these FCPs available to interested parties on request once their maturity allows dissemination.
@@ -57,8 +57,9 @@ Access and use of the FMI standard is free of charge. However, vendors may charg
 
 ## How can I join the FMI mailing lists?
 
-- The “FMI-Info-Mailing list” is used for public announcements. You can find a registration link on our contact page.
-- The “FMI design” Mailing list is used by active developers of FMI (typically members of the FMI Advisory or Steering Committee). If you are interested please contact contact@fmi-standard.org
+- The “FMI-Info-Mailing list” is used for public announcements.
+  If you are interested please contact [contact@fmi-standard.org](contact@fmi-standard.org).
+- The “FMI design” Mailing list is used by active developers of FMI (typically members of the FMI Advisory or Steering Committee).
 - The “FMI Steering” Mailing list is used by members of the FMI Steering Committee. To join you need to be a member of the FMI Steering Committee.
 
 
@@ -67,17 +68,6 @@ Access and use of the FMI standard is free of charge. However, vendors may charg
 - Technically FMI is not related to Modelica, and can be seen as a complementary technology.
 - The intention of the FMI project is to be neutral with respect to tools, technologies (e.g. solvers, OS, files, systems…) and languages (including Modelica).
 - The FMI standard is developed as a Modelica Association Project within the Modelica Association, an organization focused on the “coordinated standardization and development of software technology and methods in the area of cyber physical- systems and systems engineering”, see the Modelica Association Bylaws and the History page
-
-
-# I'm a modeler and want to use FMI in my simulation tool
-
-## How can I get a first overview on FMI?
-
-Please have a look at the literature page, especially on the overview talks/slides from the 8th, 9th and 10th Modelica Conference
-
-- FMI 1.0: “The Functional Mock-up Interface for Tool independent Exchange of Simulation Models” PDF
-- FMI 2.0: “Functional Mock-up Interface 2.0: The Standard for Tool independent Exchange of Simulation Models” PDF
-- FMI 2.0: Presentations about new features and applications ZIP
 
 
 ## Does my simulation tool support FMI?
@@ -91,11 +81,6 @@ Please see the FMI tools page for a list of tools for that tool vendors have ann
 
 - Typically an exporting and an importing tool are involved in FMI-based simulation. So if problems occur and if it is not obvious which tool causes the problem, you should communicate the problem to the support team of both involved tools
 - As a general discussion forum about FMI, you may use the FMI forum on Stack Overflow
-
-
-## Is there a tool vendor independent way to access model information during simulation?
-
-ASAM XIL-MA is a standardized API that allows the access of model parameters, stimulations and simulation results and to control simulation experiments as well. Please see the related ASAM XIL-MA section.
 
 
 # I'm a developer and want to support FMI with my tool
