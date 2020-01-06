@@ -1,10 +1,6 @@
 ---
 title: About
 permalink: /about/
-redirect_from:
-  - /development/
-  - /history/
-  - /related/
 layout: default
 ---
 
