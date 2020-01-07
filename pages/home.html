@@ -152,11 +152,11 @@ layout: default
       }
     },
     mounted () {
+      var minDate = new Date();
+      minDate.setDate(minDate.getDate() - 7);  // today minus one week
       axios
-        .get('https://www.googleapis.com/calendar/v3/calendars/obe72dhd3apjmipcpmr2asehjs@group.calendar.google.com/events?key=AIzaSyDo78g40_od26-CDjAs6qM21f34deK-GyU')
-        .then(response => (this.items = response.data.items.sort(
-          (a,b) => new Date(b.start.dateTime) - new Date(a.start.dateTime)))
-        )
+        .get('https://www.googleapis.com/calendar/v3/calendars/obe72dhd3apjmipcpmr2asehjs@group.calendar.google.com/events?key=AIzaSyDo78g40_od26-CDjAs6qM21f34deK-GyU&timeMin=' + minDate.toISOString() + '&singleEvents=true&orderBy=startTime')
+        .then(response => (this.items = response.data.items.reverse()))
         .finally(() => (
             /* enable popovers and tooltips */
             $(document).ready(function() {
