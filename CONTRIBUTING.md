@@ -86,6 +86,7 @@ Optional fields may be empty.
 | homepage       | Link to the tool's homepage (optional)          | https://example.com/example-sim/
 | description    | A [description](#tool-description) of the tool  | Run simulations in the cloud in real time
 | license        | License (commercial or [OSI approved](https://opensource.org/licenses)) | `commercial`, `osi`
+| platforms      | List of supported platforms, space separated    | 'c-code win32 win64 linux64'
 | export_cs_fmi1 | FMI 1.0 Co-Simulation export (optional)         | `planned`, `available`
 | export_cs_fmi2 | FMI 2.0 Co-Simulation export (optional)         | `planned`, `available`
 | export_me_fmi1 | FMI 1.0 Model Exchange export (optional)        | `planned`, `available`
