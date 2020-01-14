@@ -714,7 +714,7 @@ document.addEventListener('keydown', (event) => {
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document defines the Functional Mock-up Interface (FMI), version 2.0.
+<p>This document defines the Functional Mock-up Interface (FMI), version 3.0.
 FMI is a tool-independent standard to support both model exchange and co-simulation of dynamic models using a combination of XML files and C code (either compiled in DLL/shared libraries or in source code).
 The first version, FMI 1.0, was published in 2010.
 The FMI development was initiated by Daimler AG with the goal to improve the exchange of simulation models between suppliers and OEMs.
@@ -829,7 +829,7 @@ Modelica Association shall not be held responsible for identifying such patent r
 </div>
 <div class="paragraph">
 <p>This document defines the Functional Mock-up Interface (FMI),
-version 2.0 to (a) exchange dynamic models between tools and (b) define tool
+version 3.0 to (a) exchange dynamic models between tools and (b) define tool
 coupling for dynamic system simulation environments.</p>
 </div>
 <div class="paragraph">
@@ -914,7 +914,7 @@ The actual list of tools is available at: <a href="https://www.fmi-standard.org/
 <p><strong>About FMI 2.0</strong></p>
 </div>
 <div class="paragraph">
-<p>This version 2.0 is a major enhancement to FMI 1.0,
+<p>Version 2.0 is a major enhancement to FMI 1.0,
 that merges the FMI 1.0 Model Exchange and
 Co-Simulation standards
 and incorporates many improvements,
@@ -1011,7 +1011,7 @@ simulators together with its solvers as runnable code.
 The goal is to compute the solution of time-dependent
 coupled systems consisting of subsystems that are continuous in time (model components
 that are described by differential-algebraic equations) or are time-discrete (model components that are
-described by difference equations, for example discrete controllers).
+described by difference equations, for example discrete controllers) or both.
 In a block representation of the coupled system,
 the subsystems are represented by blocks with (internal) <a href="#state"><code>state</code></a> variables <code>x(t)</code> that are
 connected to other subsystems (blocks) of the coupled problem
@@ -1024,8 +1024,8 @@ simulation process beginning with the separate model setup and pre-processing fo
 subsystems in different simulation tools.
 During time integration, the simulation is again performed independently for all
 subsystems restricting the data exchange between subsystems to discrete communication points.
-Finally, the visualization and post-processing of simulation data is done
-individually for each subsystem in its own native simulation tool.</p>
+Finally, the visualization and post-processing of simulation data can be done
+individually for each subsystem in its own native simulation tool or by the simulation environment.</p>
 </div>
 <div class="paragraph">
 <p>The two interfaces have large parts in common.
@@ -1158,7 +1158,7 @@ As a result, the binary FMU can be executed by any simulator running on the targ
 <dt class="hdlist1">Small run-time overhead</dt>
 <dd>
 <p>Communication between an FMU and a target simulator through the FMI does not introduce significant run-time overhead.
-This is achieved by a new caching technique (to avoid computing the same variables several times) and by exchanging vectors instead of scalar quantities.</p>
+This is achieved by a new caching technique (to avoid computing the same variables several times) and by exchanging multiple quantities with one call.</p>
 </dd>
 <dt class="hdlist1">Small footprint</dt>
 <dd>
@@ -1322,7 +1322,7 @@ Note that the interface supports several instances of one FMU.</p>
 <p>This section contains the common interface definitions to execute functions of an FMU from a C program.</p>
 </div>
 <div class="paragraph">
-<p>Note that he following general properties hold for an FMU:</p>
+<p>Note that the following general properties hold for an FMU:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1334,7 +1334,7 @@ The FMU itself does not implement any services to support this.]</em></p>
 </li>
 <li>
 <p>FMI functions must not change global settings which affect other processes/threads.
-An FMI function may change settings of the process/thread in which it is called (such as floating point control registers), provided these changes are restored before leaving the function or before a callback function is called.<br>
+An FMI function may change settings of the thread in which it is called (such as floating point control registers), provided these changes are restored before leaving the function or before a callback function is called.<br>
 <em>[This property ensures that functions of different FMU instances can be called safely in any order.</em>
 <em>Additionally, they can be called in parallel provided the functions are called in different process/threads.</em>
 <em>If an FMI function changes for example the floating point control word of the CPU, it must restore the previous value before return of the function.</em>
@@ -1354,18 +1354,16 @@ In all header files the convention is used that all C function and type definiti
 <dl>
 <dt class="hdlist1"><code>fmi3PlatformTypes.h</code></dt>
 <dd>
-<p>contains the type definitions of the <a href="#input"><code>input</code></a> and output arguments of the functions.
+<p>contains the type definitions of the <a href="#input"><code>input</code></a> and output arguments of the functions as well as some C preprocessor macro defintions for constants.
 This header file must
 be used both by the FMU and by the target simulator.
 If the target simulator has different definitions in
-the header file (for example, <code>typedef float fmi3Real</code> instead of <code>typedef double** fmi3Real</code>),
-then the FMU needs to be re-compiled with the header file used by the target simulator.</p>
-<div class="paragraph">
-<p><em>[Example of a definition in this header file:</em></p>
-</div>
+the header file (for example, <code>typedef float fmi3Float64</code> instead of <code>typedef double fmi3Float64</code>),
+then the <span class="underline">FMU</span> needs to be <span class="underline">re-compiled</span> with the header file used by the <span class="underline">target simulator</span>.
+<em>[Example of a definition in this header file:</em></p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef double fmi3Real;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef double fmi3Float64;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1374,14 +1372,15 @@ then the FMU needs to be re-compiled with the header file used by the target sim
 </dd>
 <dt class="hdlist1"><code>fmi3FunctionTypes.h</code></dt>
 <dd>
-<p>contains <code>typedef</code> definitions of all function prototypes of an FMU.
+<p>contains <code>typedef</code> definitions of all function prototypes of an FMU as well as enumerations for constants.
+This header file includes <code>fmi3PlatformTypes.h</code>.
 When dynamically loading an FMU, these definitions can be used to type-cast the function pointers to the respective function definition.</p>
 <div class="paragraph">
 <p><em>[Example of a definition in this header file:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance, fmi3Real);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance, fmi3Float64);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1421,10 +1420,12 @@ Typically, FMU functions are used as follows:</p>
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">// FMU is shipped with C source code, or with static link library
 #define FMI3_FUNCTION_PREFIX MyModel_
 #include "fmi3Functions.h"
-&lt; usage of the FMU functions &gt;
+&lt; usage of the FMU functions e.g. fmi3SetTime &gt;
+
 // FMU is shipped with DLL/SharedObject
-#include "fmi3Functions.h"
-&lt; usage of the FMU functions &gt;</code></pre>
+#include "fmi3FunctionTypes.h"
+fmi3SetTimeTYPE *myname_setTime = &lt; load symbol "fmi3SetTime" from DLL/SharedObject &gt;;
+&lt; usage of the FMU function pointers, e.g. myname_setTime &gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1504,12 +1505,12 @@ This allows to restart a simulation from a saved FMU state (see <a href="#get-se
 </div>
 <div class="paragraph">
 <p>This is a handle to a (base type) variable value of the model.
-Handle and base type (such as <code>fmi3Real</code>) uniquely identify the value of a variable.
+Handle and base type (such as <code>fmi3Float64</code>) uniquely identify the value of a variable.
 Variables of the same base type that have the same handle, always have identical values, but other parts of the variable definition might be different <em>[for example, min/max attributes]</em>.</p>
 </div>
 <div class="paragraph">
-<p>All structured entities, such as records or arrays, are flattened into a set of scalar values of type <code>fmi3Real</code>, <code>fmi3Integer</code> etc.
-An <code>fmi3ValueReference</code> references one such scalar.
+<p>All structured entities, such as records or arrays, are flattened into a set of scalar values of type <code>fmi3Float64</code>, <code>fmi3Int32</code> etc.
+An <code>fmi3ValueReference</code> references one such entity, record or array.
 The coding of <code>fmi3ValueReference</code> is a "secret" of the environment that generated the FMU.
 The interface to the equations only provides access to variables via this handle.
 Extracting concrete information about a variable is specific to the used environment that reads the Model Description File in which the value handles are defined.
@@ -1679,8 +1680,7 @@ In that case, <code>functions&#8594;logMessage</code> is called with detailed in
 An FMU can be instantiated many times (provided capability flag <code>canBeInstantiatedOnlyOncePerProcess = false</code>).</p>
 </div>
 <div class="paragraph">
-<p>This function must be called successfully before any of the following functions can be called.
-For Co-Simulation, this function call has to perform all actions of a slave which are necessary before a simulation run starts (for example, loading the model file, compilation&#8230;&#8203;).</p>
+<p>This function must be called successfully before any of the following functions can be called.</p>
 </div>
 <div class="paragraph">
 <p>Argument <code>instanceName</code> is a unique identifier for the FMU instance.
@@ -1768,11 +1768,9 @@ typedef void  (*fmi3CallbackFreeMemory)     (fmi3InstanceEnvironment instanceEnv
 </div>
 </div>
 <div class="paragraph">
-<p>The struct contains pointers to functions provided by the environment to be used by the FMU.
+<p>These function pointers are provided by the environment to be used by the FMU.
 It is not allowed to change these functions between <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> and <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> calls.
-Additionally, a pointer to the environment is provided (instanceEnvironment) that needs to be passed to all of the callback functions, in order that those functions can utilize data from the environment, such as mapping a <a href="#valueReference"><code>valueReference</code></a> to a string, or assigning memory to a certain FMU instance.
-In the unlikely case that <code>fmi3Instance</code> is also needed in those functions, it has to be passed via argument <code>instanceEnvironment</code>.
-Argument <code>instanceEnvironment</code> may be a null pointer.</p>
+Additionally, a pointer to the environment is provided (instanceEnvironment) that needs to be passed to all of the callback functions, in order that those functions can utilize data from the environment, such as mapping a <a href="#valueReference"><code>valueReference</code></a> to a string, or assigning memory to a certain FMU instance.</p>
 </div>
 <div class="paragraph">
 <p>The <code>instanceEnvironment</code> pointer is also passed to the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> function in order that the environment can provide an efficient way to identify the slave that called <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</p>
@@ -2133,22 +2131,22 @@ Furthermore, the actual value of every variable defined in the <code>modelDescri
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>vr</code> is a vector of <code>nValueReferences</code> value handles that define the variables that shall be inquired.</p>
+<p>Argument <code>valueReferences</code> is a vector of <code>nValueReferences</code> value handles that define the variables that shall be inquired.</p>
 </li>
 <li>
-<p>Argument <code>value</code> is a vector with the actual values of these variables.</p>
+<p>Argument <code>values</code> is a vector with the actual values of these variables.</p>
 </li>
 <li>
-<p>Argument <code>size</code> is a vector with the actual sizes of the values for binary variables.</p>
+<p>Argument <code>sizes</code> is a vector with the actual sizes of the values for binary variables.</p>
 </li>
 <li>
-<p>Argument <code>nValues</code> provides the number of values in the <code>value</code> vector (and <code>size</code> vector, where applicable) which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar variables.</p>
+<p>Argument <code>nValues</code> provides the number of values in the <code>values</code> vector (and <code>sizes</code> vector, where applicable) which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar variables.</p>
 </li>
 <li>
 <p>The strings returned by <code>fmi3GetString</code>, as well as the binary values returned by <code>fmi3GetBinary</code>, must be copied in the target environment because the allocated memory for these strings might be deallocated by the next call to any of the fmi3 interface functions or it might be an internal string buffer that is reused.</p>
 </li>
 <li>
-<p>For Model Exchange: <code>fmi3Status = fmi3Discard</code> is possible for <code>fmi3GetReal</code> only, but not for <code>fmi3GetInteger</code>, <code>fmi3GetBoolean</code>, <code>fmi3GetString</code>, <code>fmi3GetBinary</code>, because these are discrete-time variables and their values can only change at an event instant where <code>fmi3Discard</code> does not make sense.</p>
+<p>For Model Exchange: <code>fmi3Status = fmi3Discard</code> is possible for <code>fmi3GetFloat32</code> and <code>fmi3GetFloat64</code> only, but not for <code>fmi3Get*Int*</code>, <code>fmi3GetBoolean</code>, <code>fmi3GetString</code>, <code>fmi3GetBinary</code>, because these are discrete-time variables and their values can only change at an event instant where <code>fmi3Discard</code> does not make sense.</p>
 </li>
 </ul>
 </div>
@@ -2243,16 +2241,16 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>vr</code> is a vector of <code>nValueReferences</code> value handles that define the variables that shall be set.</p>
+<p>Argument <code>valueReferences</code> is a vector of <code>nValueReferences</code> value handles that define the variables that shall be set.</p>
 </li>
 <li>
-<p>Argument <code>value</code> is a vector with the actual values of these variables.</p>
+<p>Argument <code>values</code> is a vector with the actual values of these variables.</p>
 </li>
 <li>
-<p>Argument <code>size</code> is a vector with the actual sizes of the values of binary variables.</p>
+<p>Argument <code>sizes</code> is a vector with the actual sizes of the values of binary variables.</p>
 </li>
 <li>
-<p>Argument <code>nValues</code> provides the number of values in the <code>value</code> vector which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar variables.</p>
+<p>Argument <code>nValues</code> provides the number of values in the <code>values</code> vector which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar variables.</p>
 </li>
 <li>
 <p>All strings passed as arguments to <code>fmi3SetString</code>, as well as all binary values passed as arguments to <code>fmi3SetBinary</code>, must be copied inside these functions, because there is no guarantee of the lifetime of strings or binary values, when these functions return.</p>
@@ -5683,7 +5681,7 @@ This attribute is only used for Co-Simulation. The default value of this attribu
 <div class="sect4">
 <h5 id="aliasing-of-variables">Aliasing of Variables</h5>
 <div class="paragraph">
-<p>Variables of the same base type (like <code>fmi3Real</code>) that have identical <a href="#valueReference"><code>valueReference</code></a> definitions are called alias variables.
+<p>Variables of the same base type (like <code>fmi3Float64</code>) that have identical <a href="#valueReference"><code>valueReference</code></a> definitions are called alias variables.
 The main purpose of alias variables is to enhance efficiency.
 If two variables <code>a</code> and <code>b</code> are alias variables, then this is only allowed if the behavior of the FMU would be exactly the same if <code>a</code> and <code>b</code> were not treated as alias variables (that is, had different <a href="#valueReference"><code>valueReference</code></a>s).
 This requirement leads naturally to the following restrictions:</p>
@@ -6249,7 +6247,7 @@ If this information is known, the environment may be able to represent the names
 </div>
 </div>
 <div class="paragraph">
-<p>The following conventions for scalar names are defined:</p>
+<p>The following conventions for variable names are defined:</p>
 </div>
 <div class="paragraph">
 <p><strong><code>variableNamingConvention = flat</code></strong></p>
@@ -9293,7 +9291,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 </div>
 <div class="paragraph">
 <p><em>In the table above, for notational convenience in Initialization Mode one function call is defined to compute all output arguments from all inputs arguments.</em>
-<em>In reality, every scalar output argument is computed by one</em> <code>fmi3Get{VariableType}</code> <em>function call.</em></p>
+<em>In reality, every variable output argument is computed by one</em> <code>fmi3Get{VariableType}</code> <em>function call.</em></p>
 </div>
 <div class="paragraph">
 <p><em>In Step Mode the input arguments to</em> \(\mathbf{f}_{doStep}\) <em>are defined by calls to</em> <code>fmi3Set{VariableType}</code> <em>and</em> <code>fmi3SetRealInputDerivatives</code> <em>functions.</em>
@@ -12193,8 +12191,8 @@ fmi3IntermediateUpdateInfo s1_intermediateInfo;
 fmi3Status s1_triggeredClock_intermediateUpdate(fmi3InstanceEnvironment instance, fmi3IntermediateUpdateInfo* intermediateUpdateInfo)
 {
 	//local variables;
-	fmi2Boolean triggered_clockStatesS1[];
-	fmi2Integer triggered_clockReferenceS1[];
+	fmi3Boolean triggered_clockStatesS1[];
+	fmi3ValueReference triggered_clockReferenceS1[];
 	size_t nclocks;
 
 	// Save intermediateInfo for later use
@@ -12332,9 +12330,9 @@ fmi3Status s1_Execute_clockIndex2(activationTime, currentTime)
 // Shutdown sub-phase
 fmi3Status GlobalTerminate(status)
 {
-	if ((status1 != fmi2Error) and (status1 != fmi2Fatal)) then fmi3Terminate(s1);
+	if ((status1 != fmi3Error) and (status1 != fmi3Fatal)) then fmi3Terminate(s1);
 
-	if (status1 != fmi2Fatal) then fmi3FreeInstance(s1);
+	if (status1 != fmi3Fatal) then fmi3FreeInstance(s1);
 }</code></pre>
 </div>
 </div>
@@ -12513,9 +12511,9 @@ while (tc &lt; tStop) do
 
 //////////////////////////
 // Shutdown sub-phase
-if ((status != fmi2Error) and (status != fmi2Fatal)) then fmi3Terminate(s);
+if ((status != fmi3Error) and (status != fmi3Fatal)) then fmi3Terminate(s);
 
-if (status != fmi2Fatal) then fmi3FreeInstance(s1);</code></pre>
+if (status != fmi3Fatal) then fmi3FreeInstance(s1);</code></pre>
 </div>
 </div>
 </div>
@@ -13828,7 +13826,7 @@ This definition is slightly different from the usual standard definition of stat
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>value reference</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of a scalar variable of an FMU is identified with an Integer handle called <em>value reference</em>. This handle is defined in the <code>modelDescription.xml</code> file (as attribute <a href="#valueReference"><code>valueReference</code></a> in element <code>ScalarVariable</code>). Element <a href="#valueReference"><code>valueReference</code></a> might not be unique for all variables. If two or more variables of the same base data type (such as <code>fmi2Real</code>) have the same <a href="#valueReference"><code>valueReference</code></a>, then they have identical values but other parts of the variable definition might be different (for example, min/max attributes).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of a scalar variable of an FMU is identified with an Integer handle called <em>value reference</em>. This handle is defined in the <code>modelDescription.xml</code> file (as attribute <a href="#valueReference"><code>valueReference</code></a> in element <code>ScalarVariable</code>). Element <a href="#valueReference"><code>valueReference</code></a> might not be unique for all variables. If two or more variables of the same base data type (such as <code>fmi3Float64</code>) have the same <a href="#valueReference"><code>valueReference</code></a>, then they have identical values but other parts of the variable definition might be different (for example, min/max attributes).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>XML</em></p></td>
