@@ -1123,9 +1123,8 @@ starting from high-level properties to low-level implementation issues.</p>
 <dl>
 <dt class="hdlist1">Expressivity</dt>
 <dd>
-<p>The FMI provides the necessary features that Modelica&#174;, Simulink&#174; and SIMPACK&#174; models
-<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>
-can transform to an FMU.</p>
+<p>The FMI provides the necessary features that Modelica&#174;, Simulink&#174; and SIMPACK&#174; models can transform to an FMU.
+<em>[Modelica is a registered trademark of the Modelica Association, Simulink is a registered trademark of the MathWorks Inc., SIMPACK is a registered trademark of SIMPACK AG.]</em></p>
 </dd>
 <dt class="hdlist1">Stability</dt>
 <dd>
@@ -1396,7 +1395,7 @@ When dynamically loading an FMU, these definitions can be used to type-cast the 
 The header file version number for which the model was compiled, can be inquired in the target simulator with <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a> (see <a href="#inquire-platform-and-version-number">Section 2.1.4</a>).<br></p>
 </div>
 <div class="paragraph">
-<p><em>[Example of a definition in this header file</em> <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup> <em>:</em></p>
+<p><em>[Example of a definition in this header file:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1404,7 +1403,8 @@ The header file version number for which the model was compiled, can be inquired
 </div>
 </div>
 <div class="paragraph">
-<p><em>]</em></p>
+<p><em>For Microsoft and Cygwin compilers <code>FMI3_Export</code> is defined as</em> <code>__declspec(dllexport)</code> <em>and for Gnu-Compilers as</em> <code>__attribute__ ( ( visibility("default") ) )</code> <em>in order to export the name for dynamic loading.</em>
+<em>Otherwise it is an empty definition.]</em></p>
 </div>
 </dd>
 </dl>
@@ -1601,16 +1601,22 @@ this function has shown the prepared information message to the user.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Discard</code></dt>
 <dd>
-<p>this return status is only possible if explicitly defined for the corresponding function <sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup>:
-(Model Exchange: <code>fmi3SetReal</code>, <code>fmi3SetInteger</code>, <code>fmi3SetBoolean</code>, <code>fmi3SetString</code>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <code>fmi3GetReal</code>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>,
-<a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>; Co-Simulation: <code>fmi3SetReal</code>, <code>fmi3SetInteger</code>, <code>fmi3SetBoolean</code>, <code>fmi3SetString</code>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>,
-<code>fmi3GetXXXStatus</code>):<br>
-For Model Exchange: It is recommended to perform a smaller step size and evaluate the model equations again, for example because an iterative solver in the model did not converge or because a function is outside of its domain <em>[for example, <code>sqrt(&lt;negative number&gt;)</code>]</em>.
-If this is not possible, the simulation has to be terminated.<br>
-For Co-Simulation: <code>fmi3Discard</code> is returned also if the slave is not able to return the required status information.
+<p>this return status is only possible if explicitly defined for the corresponding function.
+<em>[Functions <code>fmi3SetXXX</code> are usually not performing calculations but just store the passed values in internal buffers.</em>
+<em>The actual calculation is performed by <code>fmi3GetXXX</code> functions.</em>
+<em>Still <code>fmi3SetXXX</code> functions could check whether the input arguments are in their validity range.</em>
+<em>If not, these functions could return with <code>fmi3Discard</code>.]</em>
+(Model Exchange: <code>fmi3SetReal</code>, <code>fmi3SetInteger</code>, <code>fmi3SetBoolean</code>, <code>fmi3SetString</code>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <code>fmi3GetReal</code>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>; Co-Simulation: <code>fmi3SetReal</code>, <code>fmi3SetInteger</code>, <code>fmi3SetBoolean</code>, <code>fmi3SetString</code>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3GetXXXStatus</code>):</p>
+<div class="paragraph">
+<p>For Model Exchange: It is recommended to perform a smaller step size and evaluate the model equations again, for example because an iterative solver in the model did not converge or because a function is outside of its domain <em>[for example, <code>sqrt(&lt;negative number&gt;)</code>]</em>.
+If this is not possible, the simulation has to be terminated.</p>
+</div>
+<div class="paragraph">
+<p>For Co-Simulation: <code>fmi3Discard</code> is returned also if the slave is not able to return the required status information.
 The master has to decide if the simulation run can be continued.<br>
 In both cases, function <a href="#logMessage"><code>logMessage</code></a> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user if the FMU was called in debug mode (<code>loggingOn = fmi3True</code>).
 Otherwise, <a href="#logMessage"><code>logMessage</code></a> should not show a message.</p>
+</div>
 </dd>
 <dt class="hdlist1"><code>fmi3Error</code></dt>
 <dd>
@@ -1618,7 +1624,9 @@ Otherwise, <a href="#logMessage"><code>logMessage</code></a> should not show a m
 The simulation cannot be continued with this FMU instance.
 If one of the functions returns <code>fmi3Error</code>, it can be tried to restart the simulation from a formerly stored FMU state by calling <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>.
 This can be done if the capability flag <code>canGetAndSetFMUState = true</code> and <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a> was called before in non-erroneous state.
-If not, the simulation cannot be continued and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a> or <a href="#fmi3Reset"><code>fmi3Reset</code></a> <span class="underline">must</span> be called afterwards.<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup><br>
+If not, the simulation cannot be continued and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a> or <a href="#fmi3Reset"><code>fmi3Reset</code></a> <span class="underline">must</span> be called afterwards.
+<em>[Typically, <code>fmi3Error</code> return is for non-numerical reasons, like "disk full".</em>
+<em>There may be cases where the environment can fix such errors (possibly with the help of the user), and the simulation can continue at the last consistent state set with <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>.]</em><br>
 Further processing is possible after this call; especially other FMU instances are not affected.
 Function <a href="#logMessage"><code>logMessage</code></a> was called in the FMU (see below), and it is expected that this function has shown the prepared information message to the user.</p>
 </dd>
@@ -1908,8 +1916,10 @@ An FMU for Co-Simulation might ignore this argument.</p>
 </div>
 <div class="paragraph">
 <p>The arguments <code>startTime</code> and <code>stopTime</code> can be used to check whether the model is valid within the given boundaries or to allocate memory which is necessary for storing results.
-Argument <code>startTime</code> is the <a href="#fixed"><code>fixed</code></a> <a href="#initial"><code>initial</code></a> value of the <a href="#independent"><code>independent</code></a> variable <sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup> value <em>[if the <a href="#independent"><code>independent</code></a> variable is <code>time</code>, <code>startTime</code> is the starting time of initializaton]</em>.
-If <code>stopTimeDefined = fmi3True</code>, then <code>stopTime</code> is the defined final value of the <a href="#independent"><code>independent</code></a> variable <em>[if the <a href="#independent"><code>independent</code></a> variable is <code>time</code>, <code>stopTime</code> is the stop time of the simulation]</em> and if the environment tries to compute past <code>stopTime</code> the FMU has to return <code>fmi3Status = fmi3Error</code>.
+Argument <code>startTime</code> is the <a href="#fixed"><code>fixed</code></a> <a href="#initial"><code>initial</code></a> value of the <a href="#independent"><code>independent</code></a> variable <em>[(that is defined with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> in the <code>fmiModelDescription.xml</code>]</em>). <em>[If the <a href="#independent"><code>independent</code></a> variable is <code>time</code>, <code>startTime</code> is the starting time of initializaton.]</em>
+If <code>stopTimeDefined = fmi3True</code>, then <code>stopTime</code> is the defined final value of the <a href="#independent"><code>independent</code></a> variable.
+<em>[If the <a href="#independent"><code>independent</code></a> variable is <code>time</code>, <code>stopTime</code> is the stop time of the simulation.]</em>
+If the environment tries to compute past <code>stopTime</code> the FMU has to return <code>fmi3Status = fmi3Error</code>.
 If <code>stopTimeDefined = fmi3False</code>, then no final value of the <a href="#independent"><code>independent</code></a> variable is defined and argument <code>stopTime</code> is meaningless.</p>
 </div>
 <div id="fmi3EnterConfigurationMode" class="listingblock">
@@ -2941,7 +2951,12 @@ for (i = 0; i &lt; nx; i++) {
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><em>The incidence information of the matrix (whether an element is zero or not zero) is extracted from the XML file from element &lt;ModelStructure&gt;.</em></p>
+<p><em>The incidence information of the matrix (whether an element is zero or not zero) is extracted from the XML file from element <code>&lt;ModelStructure&gt;</code>.</em></p>
+</li>
+<li>
+<p><em>A so called graph coloring algorithm is employed to determine the columns of the matrix that can be computed by one call of fmi2GetDirectionalDerivative.</em>
+<em>Efficient graph coloring algorithms are freely available, such as library <a href="https://cscapes.cs.purdue.edu/coloringpage/">ColPack</a> written in C/C++ (LGPL), or the routines by <a href="#CGM84">[CGM84]</a>.</em>
+<em>See e.g. <a href="http://www.netlib.org/toms/618" class="bare">http://www.netlib.org/toms/618</a>.</em></p>
 </li>
 <li>
 <p><em>For the columns determined in (2), one call to <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a> is made.</em>
@@ -3141,7 +3156,7 @@ This schema file utilizes the following helper schema files:</p>
 </div>
 <div class="paragraph">
 <p>In this section these schema files are discussed.
-The normative definition are the above mentioned schema files <sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup>.
+The normative definition are the above mentioned schema files.
 Below, optional elements are marked with a dashed box.
 The required data types (like: <code>xs:normalizedString</code>) are defined in <a href="https://www.w3.org/TR/xmlschema-2/">XML Schema Part 2: Datatypes Second Edition</a>.
 The types used in the FMI schema files are:</p>
@@ -3237,8 +3252,9 @@ Data is defined by attributes to these elements):</p>
 </div>
 </div>
 <div class="paragraph">
-<p>On the top level, the schema consists of the following elements (see <a href="#system_overview">figure above</a>
-<sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="#_footnotedef_7" title="View footnote.">7</a>]</sup>):</p>
+<p>On the top level, the schema consists of the following elements (see <a href="#system_overview">figure above</a>).
+<em>[Note that elements <code>&lt;ModelVariables&gt;</code> and <code>&lt;ModelStructure&gt;</code> are mandatory, whereas <code>&lt;UnitDefinitions&gt;</code>, <code>&lt;TypeDefinitions&gt;</code>, <code>&lt;LogCategories&gt;</code>, <code>&lt;DefaultExperiment&gt;</code>, and <code>&lt;VendorAnnotation&gt;</code> are optional.</em>
+<em>If an optional element is present and defines a list (such as <code>&lt;UnitDefinitions&gt;</code>), the list must have at least one element (such as <code>&lt;Unit&gt;</code>).]</em></p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -3692,7 +3708,9 @@ The characters <code>&gt;</code> (greater-than) and <code>&lt;</code> (less-than
 </div>
 </div>
 <div class="paragraph">
-<p>It consists of zero or more <code>Unit</code> definitions <sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnotedef_8" title="View footnote.">8</a>]</sup>.
+<p>It consists of zero or more <code>Unit</code> definitions.
+<em>[If no units are defined, element <code>&lt;UnitDefinitions&gt;</code> must not be present.</em>
+<em>If 1 or more units are defined, this element must be present.]</em>
 A <code>Unit</code> is defined by its <code>name</code> attribute such as <code>N.m</code> or <code>N*m</code> or <code>Nm</code>, which must be unique with respect to all other defined elements of the <code>UnitDefinitions</code> list.
 If a variable is associated with a <code>Unit</code>, then the value of the variable has to be provided with the <code>fmi3SetXXX</code> functions or else is returned by the <code>fmi3GetXXX</code> functions with respect to this <code>Unit</code>.
 <em>[The purpose of the name is to uniquely identify a unit and, for example, use it to display the unit in menus or in plots.</em>
@@ -6283,7 +6301,7 @@ der(pipe[3,4].T[14],2) // second time derivative of pipe[3,4].T[14]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The precise syntax is <sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnotedef_9" title="View footnote.">9</a>]</sup>:</p>
+<p>The precise syntax is:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6302,6 +6320,9 @@ escape          = "\'" | "\"" | "\?" | "\\" | "\a" | "\b" |
 arrayIndices    = "[" unsignedInteger {"," unsignedInteger} "]"
 unsignedInteger = digit { digit }</pre>
 </div>
+</div>
+<div class="paragraph">
+<p><em>[This definition is identical to the syntax of an identifier in Modelica version 3.2.]</em></p>
 </div>
 <div class="paragraph">
 <p>The tree of names is mapped to an ordered list of <code>Variable.name</code>s in <a href="http://en.wikipedia.org/wiki/Depth-first_search">depth-first</a> order.
@@ -6730,7 +6751,8 @@ The real part \(t_R\) of this tuple is the <a href="#independent"><code>independ
 In this phase \(t_I = 0\).
 The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).
 This time definition is also called "super dense time" in literature, see, for example, <a href="#LZ07">[LZ07]</a>.
-An ordering is defined on \(\mathbb{\text{T}}\) leading to the following notation <sup class="footnote">[<a id="_footnoteref_10" class="footnote" href="#_footnotedef_10" title="View footnote.">10</a>]</sup>:</p>
+An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation below.
+<em>[The notation \(^{\bullet}t\) is from <a href="#BCP10">BCP10</a>, adapted from non-standard analysis to super-dense time, in order to precisely define the value from the previous event iteration.]</em></p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -6854,13 +6876,15 @@ Such an event is called external event.
 All the following events are internal events.</p>
 </li>
 <li>
-<p>At a predefined time instant \(t_i=(T_{next}(t_{i-1}, 0)\) that was defined at the previous event instant ti-1 by the FMU.
+<p>At a predefined time instant \(t_i=(T_{next}(t_{i-1}, 0)\) that was defined at the previous event instant \(t_{i-1}\) by the FMU.
 Such an event is called time event.</p>
 </li>
 <li>
 <p>At a time instant, where an event indicator \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 4</a> below).
 More precisely: An event \(t = t_i\) occurs at the smallest time instant "min t" with \(t&gt;t_{i-1}\) where "\((z_j(t)&gt;0) \ne (z_j(t_{i-1}) &gt;0)\)".
-Such an event is called state event <sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnotedef_11" title="View footnote.">11</a>]</sup>.
+Such an event is called state event.
+<em>[This definition is slightly different from the standard definition of state events: "</em> \(z_j(t) \cdot z_j(t_{i-1}) \leq 0\) <em>".</em>
+<em>This often used definition has the severe drawback that</em> \(z_j(t_{i-1}) \ne 0\) <em>is required in order to be well-defined and this condition cannot be guaranteed.].</em>
 All event indicators are piecewise continuous and are collected together in one vector of real numbers \(\mathbf{z(t)}\).<br></p>
 </li>
 </ol>
@@ -12889,6 +12913,9 @@ If no <a href="#inputClock"><code>input clocks</code></a> are defined the flag <
 <p><a id="PZ06"></a>[PZ06] Pouzet M. (2006): Lucid Synchrone, Version 3.0, Tutorial and Reference Manual.
 <a href="http://www.di.ens.fr/~pouzet/lucid-synchrone/" class="bare">http://www.di.ens.fr/~pouzet/lucid-synchrone/</a></p>
 </li>
+<li>
+<p><a id="CGM84"></a>[CGM84] Coleman, Garbow, Mor&#233; (1984): <strong>Software for estimating sparse Jacobian matrices, ACM Transactions on Mathematical Software</strong>. TOMS , vol. 10, no. 3, pp. 346-347</p>
+</li>
 </ul>
 </div>
 </div>
@@ -13835,42 +13862,6 @@ This definition is slightly different from the usual standard definition of stat
 </tbody>
 </table>
 </div>
-</div>
-</div>
-<div id="footnotes">
-<hr>
-<div class="footnote" id="_footnotedef_1">
-<a href="#_footnoteref_1">1</a>. Modelica is a registered trademark of the Modelica Association, Simulink is a registered trademark of the MathWorks Inc., SIMPACK is a registered trademark of SIMPACK AG.
-</div>
-<div class="footnote" id="_footnotedef_2">
-<a href="#_footnoteref_2">2</a>. For Microsoft and Cygwin compilers; <code>FMI3_Export</code> is defined as <code>__declspec(dllexport)</code> and for Gnu-Compilers <code>FMI3_Export</code> is defined as <code>__attribute__ ( ( visibility("default") ) )</code> in order to export the name for dynamic loading. Otherwise it is an empty definition.
-</div>
-<div class="footnote" id="_footnotedef_3">
-<a href="#_footnoteref_3">3</a>. Functions <code>fmi3SetXXX</code> are usually not performing calculations but just store the passed values in internal buffers. The actual calculation is performed by <code>fmi3GetXXX</code> functions. Still <code>fmi3SetXXX</code> functions could check whether the input arguments are in their validity range. If not, these functions could return with <code>fmi3Discard</code>.
-</div>
-<div class="footnote" id="_footnotedef_4">
-<a href="#_footnoteref_4">4</a>. Typically, <code>fmi3Error</code> return is for non-numerical reasons, like "disk full". There might be cases where the environment can fix such errors (eventually with the help oft the user), and then simulation can continue at the last consistent state defined with <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>.
-</div>
-<div class="footnote" id="_footnotedef_5">
-<a href="#_footnoteref_5">5</a>. The variable that is defined with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> in the <code>fmiModelDescription.xml</code> file.
-</div>
-<div class="footnote" id="_footnotedef_6">
-<a href="#_footnoteref_6">6</a>. Note that the screenshots of this section have been generated from the schema files with the tool "Altova XMLSpy" (www.altova.com). With the enterprise edition of XMLSpy it is possible to automatically generate C++, C# and Java code that reads an XML file of fmiModelDescription.xsd. An efficient open source XML parser is SAX (<a href="http://sax.sourceforge.net/" class="bare">http://sax.sourceforge.net/</a>, <a href="http://en.wikipedia.org/wiki/Simple_API_for_XML" class="bare">http://en.wikipedia.org/wiki/Simple_API_for_XML</a>). All data from the XML file is only defined via attributes and not via elements. Therefore, only an attribute handler needs to be defined for a SAX parser.
-</div>
-<div class="footnote" id="_footnotedef_7">
-<a href="#_footnoteref_7">7</a>. Note, elements <code>&lt;ModelVariables&gt;</code> and <code>&lt;ModelStructure&gt;</code> are mandatory, whereas <code>&lt;UnitDefinitions&gt;</code>, <code>&lt;TypeDefinitions&gt;</code>, <code>&lt;LogCategories&gt;</code>, <code>&lt;DefaultExperiment&gt;</code>, <code>&lt;VendorAnnotation&gt;</code> are optional. If an optional element is present and defines a list (such as <code>&lt;UnitDefinitions&gt;</code>), the list must have at least one element (such as <code>&lt;Unit&gt;</code>).
-</div>
-<div class="footnote" id="_footnotedef_8">
-<a href="#_footnoteref_8">8</a>. If no units are defined, element <code>&lt;UnitDefinitions&gt;</code> must not be present. If 1 or more units are defined, this element must be present.
-</div>
-<div class="footnote" id="_footnotedef_9">
-<a href="#_footnoteref_9">9</a>. This definition is identical to the syntax of an identifier in Modelica version 3.2.
-</div>
-<div class="footnote" id="_footnotedef_10">
-<a href="#_footnoteref_10">10</a>. The notation \(^{\bullet}t\) is from <a href="#BCP10">BCP10</a> adapted from non-standard analysis to super-dense time, in order to precisely define the value from the previous event iteration.
-</div>
-<div class="footnote" id="_footnotedef_11">
-<a href="#_footnoteref_11">11</a>. This definition is slightly different from the standard definition of state events: "\(z_j(t) \cdot z_j(t_{i-1}) \leq 0\)". This often used definition has the severe drawback that \(z_j(t_{i-1}) \ne 0\) is required in order to be well-defined and this condition cannot be guaranteed.
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
