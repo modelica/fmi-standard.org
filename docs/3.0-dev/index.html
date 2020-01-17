@@ -1945,7 +1945,7 @@ If <code>stopTimeDefined = fmi3False</code>, then no final value of the <a href=
 </div>
 <div class="paragraph">
 <p>Informs the FMU to enter <strong>Initialization Mode</strong>.
-Before calling this function, all variables with attribute <code>&lt;Variable <a href="#initial"><code>initial</code></a></code> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>`&gt;` can be set with the <code>fmi3SetXXX</code> functions (the <code>Variable</code> attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 2.2.10</a>).
+Before calling this function, all variables with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a> can be set with the <code>fmi3SetXXX</code> functions (the variable attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 2.2.10</a>).
 Setting other variables is not allowed.
 Furthermore, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a> must be called at least once before calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, in order that <code>startTime</code> is defined.</p>
 </div>
@@ -1984,7 +1984,7 @@ Before starting a new run, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperim
 <h4 id="get-and-set-variable-values">2.1.7. Getting and Setting Variable Values</h4>
 <div class="paragraph">
 <p>All variable values of an FMU are identified with a variable handle called "value reference".
-The handle is defined in the <code>modelDescription.xml</code> file (as attribute <a href="#valueReference"><code>valueReference</code></a> in element <code>Variable</code>).
+The handle is defined in the <code>modelDescription.xml</code> file (as attribute <a href="#valueReference"><code>valueReference</code></a> in variable elements).
 Element <a href="#valueReference"><code>valueReference</code></a> shall be unique for all variables.</p>
 </div>
 <div class="paragraph">
@@ -2134,7 +2134,7 @@ typedef fmi3Status fmi3GetBinaryTYPE (fmi3Instance instance,
 <div class="paragraph">
 <p>Get actual values of variables by providing their variable references.
 <em>[These functions are especially used to get the actual values of output variables if a model is connected with other models.
-Since state derivatives are also <code>Variable</code>s, it is possible to get the value of a state derivative.
+Since state derivatives are also variables, it is possible to get the value of a state derivative.
 This is useful when connecting FMUs together.
 Furthermore, the actual value of every variable defined in the <code>modelDescription.xml</code> file can be determined at the actually defined time instant (see <a href="#definition-of-model-variables">Section 2.2.10</a>).]</em></p>
 </div>
@@ -2314,10 +2314,10 @@ A clocked partition is mathematically defined as:</p>
 <div class="paragraph">
 <p>Variables \(x_j\) are called <code>states of a clocked partition</code>, or <code>discrete-time states</code> and \(j\) is the \(j+1\)th tick of the associated <a href="#clock"><code>clock</code></a>.
 Variables \(u_j\) are the (external or <a href="#local"><code>local</code></a>) <a href="#input"><code>inputs</code></a> and \(y_j\) are the (external or <a href="#local"><code>local</code></a>) <a href="#output"><code>outputs</code></a> of a clocked partition.
-A discrete-time <a href="#state"><code>state</code></a> can be from any type of a Variable (with exception of a <a href="#clock"><code>clock</code></a>) such as of type <code>fmi3Float64</code> or <code>fmi3Boolean</code>.
+A discrete-time <a href="#state"><code>state</code></a> can be from any type of a variable (with exception of a <a href="#clock"><code>clock</code></a>) such as of type <code>fmi3Float64</code> or <code>fmi3Boolean</code>.
 A clocked partition is not executed during <strong>Initialization Mode</strong>, but it is executed the first time at its first <a href="#clock"><code>clock</code></a> tick.
 The associated <a href="#clock"><code>clock</code></a> of the model partion is synchronous to its discrete-time <a href="#state"><code>states</code></a>.
-Discrete-time <a href="#state"><code>states</code></a> are listed in the ModelStructure and have the Variable xml-attribute <a href="#previous"><code>previous</code></a> referring to the variable holding the previous value of the <a href="#state"><code>state</code></a>.
+Discrete-time <a href="#state"><code>states</code></a> are listed in the ModelStructure and have the variable xml-attribute <a href="#previous"><code>previous</code></a> referring to the variable holding the previous value of the <a href="#state"><code>state</code></a>.
 They can have initial values defined by xml-attributes <a href="#initial"><code>initial</code></a> and <a href="#start"><code>start</code></a>, or the initial values are computed internally as a function of parameters.</p>
 </div>
 <div class="paragraph">
@@ -2781,7 +2781,7 @@ The number of <a href="#valueReference"><code>valueReference</code></a>s is give
 The number of <a href="#valueReference"><code>valueReference</code></a>s is given by the argument <code>nKnown</code>.</p>
 </li>
 <li>
-<p>Arguments <code>dvKnown</code> and <code>dvUnknown</code> contain the serialized values of the referenced Variables (serialization of values as defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>).</p>
+<p>Arguments <code>dvKnown</code> and <code>dvUnknown</code> contain the serialized values of the referenced variables (serialization of values as defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>).</p>
 </li>
 <li>
 <p>Argument <code>nDvKnown</code> provides the number of values in <code>dvKnown</code> which is only equal to <code>nKnown</code> if all <a href="#valueReference"><code>valueReference</code></a>s of <code>vrKnown</code> point to variables.</p>
@@ -2830,7 +2830,7 @@ If <code>&lt;ModelStructure&gt;&lt;Derivatives&gt;</code> is present, also the v
 <p>\(\color{blue}{\mathbf{v}_{known}}\) is the vector of Real <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that changes its value in the actual mode.
 Details are described in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.2.11</a>.
 <em>[For example continuous-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>.</em>
-<em>If a variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> is explicitly defined under <code>Variable</code>s, a directional derivative with respect to this variable can be computed.</em>
+<em>If a variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> is explicitly defined under <code>ModelVariables</code>, a directional derivative with respect to this variable can be computed.</em>
 <em>If such a variable is not defined, the directional derivative with respect to the <a href="#independent"><code>independent</code></a> variable cannot be calculated].</em></p>
 </li>
 <li>
@@ -3384,7 +3384,7 @@ The format is a subset of <code>dateTime</code> and should be: <code>YYYY-MM-DDT
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>variableNamingConvention</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether the variable names in <code>ModelVariables / Variable / name</code> and in <code>TypeDefinitions / Type / name</code> follow a particular convention.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether the variable names in <code>ModelVariables</code> and in <code>TypeDefinitions</code> follow a particular convention.
 For the details, see <a href="#variableNamingConvention">Section 2.2.12</a>. Currently standardized are:</p>
 <p class="tableblock">- <code>flat</code>: A list of strings (the default).</p>
 <p class="tableblock">- <code>structured</code>: Hierarchical names with <code>.</code> as hierarchy separator, and with array elements and derivative characterization.</p></td>
@@ -3964,7 +3964,7 @@ A value with respect to Unit (abbreviated as <code>Unit_value</code>) is convert
 <p><em>and therefore, <code>factor = 1.8 (=9/5)</code> and <code>offset = -459.67 (= 32 - 273.15*9/5)</code>.</em></p>
 </div>
 <div class="paragraph">
-<p><em>Both the <code>DisplayUnit.name</code> definitions as well as the <code>Unit.name</code> definitions are used in the <code>Variable</code> elements.</em>
+<p><em>Both the <code>DisplayUnit.name</code> definitions as well as the <code>Unit.name</code> definitions are used in the variable elements.</em>
 <em>Example of a definition:</em></p>
 </div>
 <div class="listingblock">
@@ -4005,7 +4005,7 @@ A value with respect to Unit (abbreviated as <code>Unit_value</code>) is convert
 <p>This element consists of a set of <code>SimpleType</code> definitions according to schema <code>fmi3SimpleType</code> in file <code>fmi3Type.xsd</code>.
 One <code>SimpleType</code> has a type <code>name</code> and <code>description</code> as attributes.
 Attribute <code>name</code> must be unique with respect to all other elements of the <code>TypeDefinitions</code> list.
-Furthermore, <code>name</code> of a <code>SimpleType</code> must be different to all <code>name</code> attributes of <code>Variable</code>s <em>[if the same names would be used, then this would nearly always give problems when importing the FMU in an environment such as Modelica, where a type name cannot be used as instance name]</em>.
+Furthermore, <code>name</code> of a <code>SimpleType</code> must be different to all <code>name</code> attributes of variables <em>[if the same names would be used, then this would nearly always give problems when importing the FMU in an environment such as Modelica, where a type name cannot be used as instance name]</em>.
 Additionally, one of the elements <code>Real</code>, <code>Integer</code>, <code>Boolean</code>, <code>String</code>, <code>Binary</code>, <code>Enumeration</code> or <code>Clock</code> must be present.
 They have the following definitions:</p>
 </div>
@@ -4020,7 +4020,7 @@ They have the following definitions:</p>
 </div>
 </div>
 <div class="paragraph">
-<p><em>[The attributes of <code>Real</code> and <code>Integer</code> are collected in the attribute groups <code>fmi3RealAttributes</code> and <code>fmi3IntegerAttributes</code> in file <code>fmi3AttributeGroups.xsd</code>, since these attributes are reused in the <code>Variable</code> element definitions below.]</em></p>
+<p><em>[The attributes of <code>Real</code> and <code>Integer</code> are collected in the attribute groups <code>fmi3RealAttributes</code> and <code>fmi3IntegerAttributes</code> in file <code>fmi3AttributeGroups.xsd</code>, since these attributes are reused in the variable element definitions below.]</em></p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -4028,7 +4028,7 @@ They have the following definitions:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>These definitions are used as default values in element <code>Variable</code>s <em>[in order that, say, the definition of a <code>Torque</code> type does not have to be repeated over and over again]</em>.
+<p>These definitions are used as default values in variable elements <em>[in order that, say, the definition of a <code>Torque</code> type does not have to be repeated over and over again]</em>.
 The attributes and elements have the following meaning:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -4146,7 +4146,7 @@ An <code>Enumeration</code> element must have at least one Item.</p></td>
 <p><strong>Clock Type Definition</strong> <a id="clock-type-definition"></a></p>
 </div>
 <div class="paragraph">
-<p>Clocks are integrated in the element <code>ModelVariables</code> of fmiModelDescription as a <code>Variable</code> element with the base type <code>fmi3Clock</code>.
+<p>Clocks are integrated in the element <code>ModelVariables</code> of fmiModelDescription as a variable element with the base type <code>fmi3Clock</code>.
 The variable sub type <code>fmi3Clock</code> provides additional attributes for defining <a href="#clock"><code>clocks</code></a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -4804,11 +4804,11 @@ It provides the static information of all exposed variables and is defined as:</
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>ModelVariables</code> element consists of an ordered set of <code>Variable</code> elements (see figure above).
-<code>Variable</code> elements can uniformly represent variables of primitive (atomic) types, like single real or integer variables, or as well as arrays of an arbitrary (but fixed) number of dimensions. The schema definition is present in a separate file <code>fmi3Variable.xsd</code>.</p>
+<p>The <code>ModelVariables</code> element consists of an ordered set of variable elements (see figure above).
+Variable elements can uniformly represent variables of primitive (atomic) types, like single real or integer variables, or as well as arrays of an arbitrary (but fixed) number of dimensions. The schema definition is present in a separate file <code>fmi3Variable.xsd</code>.</p>
 </div>
 <div class="paragraph">
-<p><code>Variable</code> elements representing array variables must contain a <code>Dimensions</code> element specifying the array dimensions.
+<p>Variable elements representing array variables must contain a <code>Dimensions</code> element specifying the array dimensions.
 The <code>Dimensions</code> element contains a sequence of <code>Dimension</code> elements, each specifying the size of one dimension of the array:</p>
 </div>
 <div class="ulist">
@@ -4818,7 +4818,7 @@ The <code>Dimensions</code> element contains a sequence of <code>Dimension</code
 The <a href="#variability"><code>variability</code></a> of the dimension size is <a href="#constant"><code>constant</code></a> in this case.</p>
 </li>
 <li>
-<p>If the <a href="#valueReference"><code>valueReference</code></a> attribute of the <code>Dimension</code> element is present, it defines the size of this dimension to be the value of the <code>Variable</code> with the value reference given by the <a href="#valueReference"><code>valueReference</code></a> attribute.
+<p>If the <a href="#valueReference"><code>valueReference</code></a> attribute of the <code>Dimension</code> element is present, it defines the size of this dimension to be the value of the variable with the value reference given by the <a href="#valueReference"><code>valueReference</code></a> attribute.
 The referenced variable must be a variable of integer type, and must either be a constant (i.e. with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>) or a <a href="#structuralParameter"><code>structural parameter</code></a>(i.e. with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a>).
 The <a href="#variability"><code>variability</code></a> of the dimension size is in this case the <a href="#variability"><code>variability</code></a> of the referenced variable.</p>
 </li>
@@ -4841,7 +4841,7 @@ It should be noted that changing a <a href="#structuralParameter"><code>structur
 <p>It is not possible to use a variable of type <code>Clock</code> in arrays, since array elements do not have individual <a href="#valueReference"><code>valueReference</code></a> and the access to <a href="#clock"><code>clocks</code></a> requires a unique <a href="#valueReference"><code>valueReference</code></a> information.</p>
 </div>
 <div class="paragraph">
-<p>The attributes of <code>Variable</code> are:</p>
+<p>The attributes of variables are:</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -4936,7 +4936,7 @@ It is not allowed to use the variable value in another model or slave.</p>
 <p><code>independent</code>: The independent variable (usually <code>time</code>).
 All variables are a function of this <a href="#independent"><code>independent</code></a> variable.
 <a href="#variability"><code>variability</code></a> must be <a href="#continuous"><code>continuous</code></a>.
-At most one <code>Variable</code> of an FMU can be defined as <a href="#independent"><code>independent</code></a>.
+At most one variable of an FMU can be defined as <a href="#independent"><code>independent</code></a>.
 If no variable is defined as <a href="#independent"><code>independent</code></a>, it is implicitly present with name = <code>time</code> and <code>unit = s</code>.
 If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined as <code>Real</code> without a <a href="#start"><code>start</code></a> attribute.
 It is not allowed to call function <code>fmi3SetReal</code> on an <a href="#independent"><code>independent</code></a> variable.
@@ -4949,7 +4949,7 @@ Instead, its value is initialized with <a href="#fmi3SetupExperiment"><code>fmi3
 <ul>
 <li>
 <p><a href="#structuralParameter"><code>structuralParameter</code></a>: <a href="#independent"><code>independent</code></a> parameter (a data value that is constant during the simulation and is provided by the environment and cannot be used in connections). <a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>. <a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).
-This <a href="#causality"><code>causality</code></a> requires the <code>Variable</code> not to have a <code>Dimension</code> element.</p>
+This <a href="#causality"><code>causality</code></a> requires the variable not to have a <code>Dimension</code> element.</p>
 </li>
 </ul>
 </div>
@@ -5156,7 +5156,7 @@ It is not allowed to combine <a href="#outputClock"><code>output clocks</code></
 <p>If present, this variable is a discrete-time <a href="#state"><code>state</code></a> <code>xd</code>.
 The value of <code>xd</code> at the previous super-dense time instant is stored in the variable with <a href="#valueReference"><code>valueReference</code></a> <a href="#previous"><code>previous</code></a>.
 The <a href="#previous"><code>previous</code></a> variable must have <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and a <a href="#start"><code>start</code></a> value defined.
-<em>[For example, if there are 10 Variables and <a href="#previous"><code>previous</code></a> equals 3 for Variable 8, then at a super-dense time instant Variable 8 holds the value of this discrete <a href="#state"><code>state</code></a> at the actual time instant and Variable 3 holds the value of this <a href="#state"><code>state</code></a> from the previous super-dense time instant.]</em></p>
+<em>[For example, if there are 10 variables and <a href="#previous"><code>previous</code></a> equals 3 for variable 8, then at a super-dense time instant variable 8 holds the value of this discrete <a href="#state"><code>state</code></a> at the actual time instant and variable 3 holds the value of this <a href="#state"><code>state</code></a> from the previous super-dense time instant.]</em></p>
 </div></div></td>
 </tr>
 <tr>
@@ -5390,7 +5390,7 @@ This attribute is only used for Co-Simulation. The default value of this attribu
 <div class="paragraph">
 <p><em>[Note: (1) If <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, it is neither allowed to define a value for <a href="#initial"><code>initial</code></a> nor a value for start.</em>
 <em>(2) If <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, it is not allowed to define a value for <a href="#initial"><code>initial</code></a> and a value for <a href="#start"><code>start</code></a> must be defined.</em>
-<em>(3) If (C) and <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, then the variable is explicitly defined by its <a href="#start"><code>start</code></a> value in <strong>Initialization Mode</strong> (so directly after calling <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, the value of the variable is either the <a href="#start"><code>start</code></a> value stored in element <code>&lt;Variable&gt;&lt;XXX start=YYY/&gt;</code> or the value provided by <code>fmi3SetXXX</code>, if this function was called on this variable).]</em></p>
+<em>(3) If (C) and <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, then the variable is explicitly defined by its <a href="#start"><code>start</code></a> value in <strong>Initialization Mode</strong> (so directly after calling <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, the value of the variable is either the <a href="#start"><code>start</code></a> value stored in a variable element <code>&lt;XXX start=YYY/&gt;</code> or the value provided by <code>fmi3SetXXX</code>, if this function was called on this variable).]</em></p>
 </div>
 <div class="paragraph">
 <p>The following combinations of <a href="#variability"><code>variability</code></a>/<a href="#causality"><code>causality</code></a> settings are allowed:</p>
@@ -5781,7 +5781,7 @@ However, aliased variables may have different attributes, such as <code>min/max/
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>If present, name of type defined with <code>TypeDefinitions / SimpleType</code>.
 The value defined in the corresponding <code>TypeDefinition</code> (see <a href="#definition-of-types">Section 2.2.4</a>) is used as default.
-<em>[For example, if <code>min</code> is present both in <code>Real</code> (of <code>TypeDefinition</code>) and in <code>Real</code> (of <code>Variable</code>), then the <code>min</code> of <code>Variable</code> is actually used.]</em>
+<em>[For example, if <code>min</code> is present both in <code>Real</code> (of <code>TypeDefinition</code>) and in <code>Real</code>, then the <code>min</code> of variables is actually used.]</em>
 For <code>Real</code>, <code>Integer</code>, <code>Boolean</code>, <code>String</code>, this attribute is optional.
 For <code>Enumeration</code> it is required, because the Enumeration items are defined in <code>TypeDefinitions / SimpleType</code>.</p>
 </div></div></td>
@@ -5791,7 +5791,7 @@ For <code>Enumeration</code> it is required, because the Enumeration items are d
 <td class="tableblock halign-left valign-top"><div class="content"><div id="start" class="paragraph">
 <p>Initial or guess value of variable.
 <strong>This value is also stored in the C functions</strong>.
-<em>[Therefore, calling</em> <code>fmi3SetXXX</code> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.]</em> The interpretation of <a href="#start"><code>start</code></a> is defined by <code>Variable</code> / <a href="#initial"><code>initial</code></a>.
+<em>[Therefore, calling</em> <code>fmi3SetXXX</code> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.]</em> The interpretation of <a href="#start"><code>start</code></a> is defined by variable attribute <a href="#initial"><code>initial</code></a>.
 A different <a href="#start"><code>start</code></a> value can be provided with an <code>fmi3SetXXX</code> function before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (but not for variables with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>).</p>
 </div>
 <div class="paragraph">
@@ -5827,13 +5827,13 @@ A different <a href="#start"><code>start</code></a> value can be provided with a
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>derivative</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="derivative" class="paragraph">
-<p>If present, this variable is the derivative of variable with <code>Variable</code> value reference <code>derivative</code>.
-<em>[For example, if there are 10 <code>Variable</code>s and <code>derivative = 3</code> for <code>Variable</code> 8, then <code>Variable</code> 8 is the derivative of <code>Variable</code> 3 with respect to the <a href="#independent"><code>independent</code></a> variable (usually time).</em>
+<p>If present, this variable is the derivative of variable with value reference <code>derivative</code>.
+<em>[For example, if there are 10 variables and <code>derivative = 3</code> for variable 8, then variable 8 is the derivative of variable 3 with respect to the <a href="#independent"><code>independent</code></a> variable (usually time).</em>
 <em>This information might be especially used if an <a href="#input"><code>input</code></a> or an <a href="#output"><code>output</code></a> is the derivative of another <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a>, or to define the <a href="#state"><code>states</code></a>.]</em></p>
 </div>
 <div class="paragraph">
 <p>The <a href="#state"><code>state</code></a> <a href="#derivative"><code>derivatives</code></a> of an FMU are listed under element <code>&lt;ModelStructure&gt;&lt;Derivatives&gt;</code>.
-All <code>Variable</code>s listed in this element must have attribute <code>derivative</code> (in order that the continuous-time <a href="#state"><code>states</code></a> are uniquely defined).</p>
+All variables listed in this element must have attribute <code>derivative</code> (in order that the continuous-time <a href="#state"><code>states</code></a> are uniquely defined).</p>
 </div></div></td>
 </tr>
 <tr>
@@ -5942,7 +5942,7 @@ A Co- Simulation FMU does not need to expose these state derivatives.
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Outputs</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of all outputs, in other words, a list of <code>Variable</code> value references where every corresponding <code>Variable</code> must have <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> (and <strong>every variable with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> must be listed here</strong>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of all outputs, in other words, a list of value references where every corresponding variable must have <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> (and <strong>every variable with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> must be listed here</strong>).
 <em>[Note that all <a href="#output"><code>output</code></a> variables are listed here, especially <a href="#discrete"><code>discrete</code></a> and <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a>.</em>
 <em>The ordering of the variables in this list is defined by the exporting tool.</em>
 <em>Usually, it is best to order according to the declaration order in the source model, since then the <code>Outputs</code> list does not change if the declaration order of <a href="#output"><code>outputs</code></a> in the source model is not changed.</em>
@@ -5953,13 +5953,13 @@ The functional dependency is defined as (dependencies of variables that are fixe
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Derivatives</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of all state derivatives, in other words, a list of <code>Variable</code> value references where every corresponding <code>Variable</code> must be a state derivative.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of all state derivatives, in other words, a list of value references where every corresponding variable must be a state derivative.
 <em>[Note that only <a href="#continuous"><code>continuous</code></a> Real variables are listed here.</em>
-<em>If a <a href="#state"><code>state</code></a> or a <a href="#derivative"><code>derivative</code></a> of a <a href="#state"><code>state</code></a> shall not be exposed from the FMU, or if states are not statically associated with a variable (due to dynamic state selection), then dummy <code>Variable</code>s have to be introduced, for example, <code>x[4]</code>, or <code>xDynamicStateSet2[5]</code>.</em>
+<em>If a <a href="#state"><code>state</code></a> or a <a href="#derivative"><code>derivative</code></a> of a <a href="#state"><code>state</code></a> shall not be exposed from the FMU, or if states are not statically associated with a variable (due to dynamic state selection), then dummy variables have to be introduced, for example, <code>x[4]</code>, or <code>xDynamicStateSet2[5]</code>.</em>
 <em>The ordering of the variables in this list is defined by the exporting tool.</em>
 <em>Usually, it is best to order according to the declaration order of the <a href="#state"><code>states</code></a> in the source model, since then the &lt;Derivatives&gt; list does not change if the declaration order of states in the source model is not changed.</em>
 <em>This is for example, important for linearization, in order that the interpretation of the state vector does not change for a re-exported FMU.]</em>
-The corresponding continuous-time <a href="#state"><code>states</code></a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding <code>Variable</code> state derivative element.
+The corresponding continuous-time <a href="#state"><code>states</code></a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding variable state derivative element.
 <em>[Note that higher order derivatives must be mapped to first order derivatives but the mapping definition can be preserved due to attribute <a href="#derivative"><code>derivative</code></a>.</em>
 <em>Example: if</em> \(\color{blue}{\frac{\text{ds}}{\text{dt}} = v,\ \frac{\text{dv}}{\text{dt}} =f(..)}\) <em>,then</em> \(\color{blue}{\left\{ v,\ \frac{\text{dv}}{\text{dt}} \right\}}\) <em>is the vector of state derivatives and attribute <a href="#derivative"><code>derivative</code></a> of</em> \(\color{blue}{v}\) <em>references</em> \(\color{blue}{s}\) <em>, and attribute <a href="#derivative"><code>derivative</code></a> of</em> \(\color{blue}{\frac{\text{dv}}{\text{dt}}}\) <em>references</em> \(\color{blue}{v}\) <em>.]</em><br>
 For Co-Simulation, element <code>Derivatives</code> is ignored if capability flag <code>providesDirectionalDerivative</code> has a value of <code>false</code>, in other words, it cannot be computed.
@@ -6018,7 +6018,7 @@ The functional dependency is defined as:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Unknown</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="Unknown"></a>
-An element of one of the lists above defining the unknown with a reference to the corresponding <code>Variable</code> element.
+An element of one of the lists above defining the unknown with a reference to the corresponding variable element.
 It is assumed that at a super-dense time instant \(\color{blue}{t = (t_R, t_I)}\) (Model Exchange) and at a communication point (Co-Simulation) the following relationship holds:</p>
 <p class="tableblock">\(\color{blue}{v_{unknown} = h(\mathbf{v}_{known}, \mathbf{v}_{freeze})}\)</p>
 <p class="tableblock">where</p>
@@ -6030,8 +6030,8 @@ It is assumed that at a super-dense time instant \(\color{blue}{t = (t_R, t_I)}\
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscreteStates</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of all exposed discrete <a href="#state"><code>states</code></a>, in other words a list of Variable indices.
-Every corresponding Variable may have attribute <a href="#previous"><code>previous</code></a> defined. Discrete <a href="#state"><code>states</code></a> must have a <a href="#clockReference"><code>clockReference</code></a> attribute.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of all exposed discrete <a href="#state"><code>states</code></a>, in other words a list of variable indices.
+Every corresponding variable may have attribute <a href="#previous"><code>previous</code></a> defined. Discrete <a href="#state"><code>states</code></a> must have a <a href="#clockReference"><code>clockReference</code></a> attribute.</p></td>
 </tr>
 </tbody>
 </table>
@@ -6052,7 +6052,7 @@ Every corresponding Variable may have attribute <a href="#previous"><code>previo
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>valueReference</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>Variable</code> value reference of the <a href="#Unknown"><code>Unknown</code></a> \(\color{blue}{v_{\text{unknown}}}\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value reference of the <a href="#Unknown"><code>Unknown</code></a> \(\color{blue}{v_{\text{unknown}}}\).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dependencies</code></p></td>
@@ -6060,18 +6060,18 @@ Every corresponding Variable may have attribute <a href="#previous"><code>previo
 Optional attribute defining the dependencies of the unknown \(\color{blue}{v_{\text{unknown}}}\) (directly or indirectly via auxiliary variables) with respect to \(\color{blue}{\mathbf{v}_{\text{known}}}\).
 If not present, it must be assumed that the <a href="#Unknown"><code>Unknown</code></a> depends on all <code>Knowns</code>.
 If present as empty list, the <a href="#Unknown"><code>Unknown</code></a> depends on none of the <code>Knowns</code>.
-Otherwise the <a href="#Unknown"><code>Unknown</code></a> depends on the <code>Knowns</code> defined by the given <code>Variable</code> value references.<br>
-<code>Knowns</code> \(\color{blue}{\mathbf{v}_{\text{known}}}\) in Event and <strong>Continuous-Time Mode</strong> (Model Exchange) and at communication points (Co-Simulation) for elements <code>Outputs</code>, <code>Derivatives</code>:</p>
+Otherwise the <a href="#Unknown"><code>Unknown</code></a> depends on the <code>Knowns</code> defined by the given value references.<br>
+<code>Knowns</code> \(\color{blue}{\mathbf{v}_{\text{known}}}\) in <strong>Event Mode</strong> and <strong>Continuous-Time Mode</strong> (Model Exchange) and at communication points (Co-Simulation) for elements <code>Outputs</code>, <code>Derivatives</code>:</p>
 <p class="tableblock">- inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>)</p>
 <p class="tableblock">- continuous-time states</p>
 <p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).
-If an <a href="#independent"><code>independent</code></a> variable is not explicitly defined under <code>Variable</code>s, it is assumed that the <a href="#Unknown"><code>Unknown</code></a> depends explicitly on the <a href="#independent"><code>independent</code></a> variable.</p>
+If an <a href="#independent"><code>independent</code></a> variable is not explicitly defined under variables, it is assumed that the <a href="#Unknown"><code>Unknown</code></a> depends explicitly on the <a href="#independent"><code>independent</code></a> variable.</p>
 <p class="tableblock"><code>Knowns</code> \(\color{blue}{\mathbf{v}_{\text{known}}}\) in <strong>Initialization Mode</strong> (for elements <a href="#InitialUnknowns"><code>InitialUnknowns</code></a>):</p>
 <p class="tableblock">- inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>)</p>
 <p class="tableblock">- variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a><br>
 <em>[for example, <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> or initial <a href="#state"><code>states</code></a>.]</em></p>
 <p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).
-If an <a href="#independent"><code>independent</code></a> variable is not explicitly defined under <code>Variable</code>s, it is assumed that the <a href="#Unknown"><code>Unknown</code></a> depends explicitly on the <a href="#independent"><code>independent</code></a> variable.</p>
+If an <a href="#independent"><code>independent</code></a> variable is not explicitly defined under variables, it is assumed that the <a href="#Unknown"><code>Unknown</code></a> depends explicitly on the <a href="#independent"><code>independent</code></a> variable.</p>
 <p class="tableblock">For Co-Simulation, <a href="#dependencies"><code>dependencies</code></a> does not list the dependency on continuous-time, if the capability flag <code>providesDirectionalDerivative</code> has a value of <code>false</code>.
 In other words, the respective partial derivatives cannot be computed.</p></td>
 </tr>
@@ -6250,7 +6250,7 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 <div class="sect3">
 <h4 id="variableNamingConvention">2.2.12. Variable Naming Conventions (variableNamingConvention)</h4>
 <div class="paragraph">
-<p>With attribute <code>variableNamingConvention</code> of element <code>fmiModelDescription</code>, the convention is defined how the <code>Variable.name</code>s have been constructed.
+<p>With attribute <code>variableNamingConvention</code> of element <code>fmiModelDescription</code>, the convention is defined how the variable names have been constructed.
 If this information is known, the environment may be able to represent the names in a better way (for example, as a tree and not as a linear list).</p>
 </div>
 <div class="paragraph">
@@ -6325,7 +6325,7 @@ unsignedInteger = digit { digit }</pre>
 <p><em>[This definition is identical to the syntax of an identifier in Modelica version 3.2.]</em></p>
 </div>
 <div class="paragraph">
-<p>The tree of names is mapped to an ordered list of <code>Variable.name</code>s in <a href="http://en.wikipedia.org/wiki/Depth-first_search">depth-first</a> order.
+<p>The tree of names is mapped to an ordered list of variable names in <a href="http://en.wikipedia.org/wiki/Depth-first_search">depth-first</a> order.
 Example:</p>
 </div>
 <div class="listingblock">
@@ -6340,7 +6340,7 @@ Example:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>is mapped to the following list of <code>Variable.name</code>s:</p>
+<p>is mapped to the following list of variable names:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6351,11 +6351,11 @@ vehicle.engine.temperature</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>All array elements are given in a consecutive sequence of <code>Variable</code>s.
+<p>All array elements are given in a consecutive sequence of variables.
 Elements of multi-dimensional arrays are ordered according to "row major" order that is elements of the last index are given in sequence.</p>
 </div>
 <div class="paragraph">
-<p><em>[For example, the vector <code>centerOfMass</code> in body <code>arm1</code> is mapped to the following <code>Variable</code>s:</em></p>
+<p><em>[For example, the vector <code>centerOfMass</code> in body <code>arm1</code> is mapped to the following variables:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6365,7 +6365,7 @@ robot.arm1.centerOfMass[3]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><em>For example, a table <code>T[4,3,2]</code> (first dimension 4 entries, second dimension 3 entries, third dimension 2 entries) is mapped to the following <code>Variable</code>s:</em></p>
+<p><em>For example, a table <code>T[4,3,2]</code> (first dimension 4 entries, second dimension 3 entries, third dimension 2 entries) is mapped to the following variables:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
