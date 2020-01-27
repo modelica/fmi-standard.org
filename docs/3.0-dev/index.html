@@ -1983,12 +1983,13 @@ Before starting a new run, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperim
 <div class="sect3">
 <h4 id="get-and-set-variable-values">2.1.7. Getting and Setting Variable Values</h4>
 <div class="paragraph">
-<p>All variable values of an FMU are identified with a variable handle called "value reference".
-The handle is defined in the <code>modelDescription.xml</code> file (as attribute <a href="#valueReference"><code>valueReference</code></a> in variable elements).
-Element <a href="#valueReference"><code>valueReference</code></a> shall be unique for all variables.</p>
+<p>All variables of an FMU are identified with a handle called "value reference".
+The handle is defined in the <code>modelDescription.xml</code> file as attribute <a href="#valueReference"><code>valueReference</code></a> in variable elements.
+Each variable must have a unique <a href="#valueReference"><code>valueReference</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>Variables can be scalar or array variables. When getting or setting the values of array variables, the serialization of array variable values used in C-API function calls, as well as in the XML <a href="#start"><code>start</code></a> attributes is defined as row major - i.e. dimension order from left&#8594;right for the C-API (e.g. <code>array[dim1][dim2]&#8230;&#8203;[dimN]</code>), and document order in the XML attributes.</p>
+<p>Variables can be scalar or array variables.
+When getting or setting the values of array variables, the serialization of array variable values used in C-API function calls, as well as in the XML <a href="#start"><code>start</code></a> attributes is defined as row major - i.e. dimension order from left to right for the C-API (e.g. <code>array[dim1][dim2]&#8230;&#8203;[dimN]</code>), and document order in the XML attributes.</p>
 </div>
 <div class="paragraph">
 <p><em>[Example: A 2D matrix</em></p>
@@ -2272,6 +2273,9 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 </div>
 <div class="paragraph">
 <p>For Co-Simulation FMUs, additional functions are defined in <a href="#transfer-of-input-output-and-parameters">Section 4.2.1.1</a> to set and inquire <a href="#derivative"><code>derivatives</code></a> of variables with respect to time in order to allow interpolation.</p>
+</div>
+<div class="paragraph">
+<p>The value of a variable may only be accessed with the respective <code>fmi3Get/Set{VariableType}</code> for its type.</p>
 </div>
 </div>
 <div class="sect3">
