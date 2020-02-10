@@ -704,6 +704,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_a_3_3_contributors">A.3.3 Contributors</a></li>
 </ul>
 </li>
+<li><a href="#_a_3_4_fmi_2_0_1_maintenane_release_changes_and_contributors">A.3.4 FMI 2.0.1 maintenane release: changes and contributors</a></li>
 </ul>
 </li>
 <li><a href="#_glossary">Appendix B: Glossary</a></li>
@@ -715,11 +716,14 @@ document.addEventListener('keydown', (event) => {
 <div class="sectionbody">
 <div class="paragraph">
 <p>This document defines the Functional Mock-up Interface (FMI), version 3.0.
-FMI is a tool-independent standard to support both model exchange and co-simulation of dynamic models using a combination of XML files and C code (either compiled in DLL/shared libraries or in source code).
+This is a major release with new features compared to FMI 2.0.</p>
+</div>
+<div class="paragraph">
+<p>FMI is a tool-independent standard to support both model exchange and co-simulation of dynamic models using a combination of XML files and C code (either compiled in DLL/shared libraries or in source code).
 The first version, FMI 1.0, was published in 2010.
 The FMI development was initiated by Daimler AG with the goal to improve the exchange of simulation models between suppliers and OEMs.
-As of today, development of the standard continues through the participation of 16 companies and research institutes.
-FMI 1.0 is supported by over 45 tools and is used by automotive and non-automotive organizations throughout Europe, Asia and North America.</p>
+As of today, development of the standard continues through the participation of many companies and research institutes.
+FMI 2.0 is supported by over 100 tools and is used by automotive and non-automotive organizations throughout Europe, Asia and North America.</p>
 </div>
 <div class="paragraph">
 <p>The downloads page (<a href="https://fmi-standard.org/downloads/" class="bare">https://fmi-standard.org/downloads/</a>) provides, this specification, as well as supporting C header and XML schema files, and an FMI compliance checker.
@@ -760,6 +764,16 @@ In addition, sample models (exported from different tools in FMI format) are pro
 <td class="tableblock halign-left valign-top"><p class="tableblock">2014-07-25</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Second version of FMI for Model Exchange and Co-Simulation</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2019-10-31</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bugfix/maintenance release of FMI for Model Exchange and Co-Simulation 2.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Third  version of FMI for Model Exchange and Co-Simulation</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -773,7 +787,7 @@ In addition, sample models (exported from different tools in FMI format) are pro
 <dt class="hdlist1">Copyright &#169;</dt>
 <dd>
 <p>2008-2011 MODELISAR consortium and<br>
-2012-2014 Modelica Association Project "FMI"</p>
+2012-2020 Modelica Association Project "FMI"</p>
 </dd>
 </dl>
 </div>
@@ -811,18 +825,16 @@ You may do so in any reasonable manner, but not in any way that suggests the lic
 <dt class="hdlist1">Note</dt>
 <dd>
 <p>Article (3a) of this license requires that modifications of this work must clearly label, demarcate or otherwise identify that changes were made.</p>
-<div class="paragraph">
-<p>The C header and XML schema files that accompany this document are available under the <a href="https://opensource.org/licenses/BSD-2-Clause">2-Clause BSD license</a>.</p>
-</div>
-<div class="paragraph">
-<p>Attention is drawn to the possibility that some of the elements of this document may be the subject of patent rights.
-Modelica Association shall not be held responsible for identifying such patent rights.</p>
-</div>
-<div class="paragraph">
-<p>If you have improvement suggestions, please send them to the FMI development group at mailto:contact@fmi-standard.org.</p>
-</div>
 </dd>
 </dl>
+</div>
+<div class="paragraph indented2">
+<p>The C header and XML-schema files that accompany this document are available under the BSD 2-Clause license (<a href="http://www.opensource.org/licenses/bsd-license.html" class="bare">http://www.opensource.org/licenses/bsd-license.html</a>).</p>
+</div>
+<div class="paragraph indented2">
+<p>Attention is drawn to the possibility that some of the elements of this document may be the subject of patent rights.
+Modelica Association shall not be held responsible for identifying such patent rights.<br>
+If you have improvement suggestions, please send them to the FMI development group at <a href="mailto:contact@fmi-standard.org">contact@fmi-standard.org</a>.</p>
 </div>
 <div class="paragraph">
 <p><strong>Abstract</strong></p>
@@ -843,7 +855,7 @@ algebraic and discrete equations with time-, state- and step-events.
 If the C code describes a continuous system,
 this system is solved with the integrators of the environment where it is used.
 The models to be treated by this interface can be large for usage in offline or online simulation,
-or they can be used in embedded control systems on micro-processors.</p>
+or they can be used in embedded control systems on microprocessors.</p>
 </div>
 <div class="paragraph">
 <p><em>FMI for Co-Simulation (<a href="#fmi-for-co-simulation">Section 4</a>)</em></p>
@@ -911,25 +923,20 @@ utilized.</p>
 The actual list of tools is available at: <a href="https://www.fmi-standard.org/tools" class="bare">https://www.fmi-standard.org/tools</a></p>
 </div>
 <div class="paragraph">
+<p><strong>About FMI 2.0.1</strong></p>
+</div>
+<div class="paragraph">
+<p>FMI 2.0.1 was a maintenance release with no new features compared to FMI 2.0.
+FMUs created according to FMI 2.0.1 are valid FMUs according to FMI 2.0.</p>
+</div>
+<div class="paragraph">
 <p><strong>About FMI 2.0</strong></p>
 </div>
 <div class="paragraph">
-<p>Version 2.0 is a major enhancement to FMI 1.0,
-that merges the FMI 1.0 Model Exchange and
-Co-Simulation standards
-and incorporates many improvements,
-often due to practical experience when using the FMI 1.0 standards.
+<p>FMI 2.0 was a major enhancement to FMI 1.0, that merged the FMI 1.0 Model Exchange and Co-Simulation standards and incorporates many improvements, often due to practical experience when using the FMI 1.0 standards.
 New features are usually optional
 (need neither be supported by the tool that exports an FMU, nor by the tool that imports an FMU).
-Details are provided in appendix A.3.1.
-The appendix of the FMI 1.0 specification has been mostly moved in an
-extended and improved form to a companion document</p>
-</div>
-<div class="paragraph">
-<p><code>FunctionalMockupInterface-ImplementationHints.pdf</code></p>
-</div>
-<div class="paragraph">
-<p>where practical information for the implementation of the FMI standard is provided.</p>
+Details are provided in appendix A.3.1.</p>
 </div>
 <div class="paragraph">
 <p><strong>Conventions used in this Document</strong></p>
@@ -960,8 +967,7 @@ used to define the sparseness structure of partial derivative matrices).</p>
 <li>
 <p>In the implementation view, one-dimensional C arrays are used.
 In order to access an array element the C convention is used.
-For example,
-the first element of input argument <code>x</code> for function <code>setContinuousStates</code> is <code>x[0]</code>.</p>
+For example, the first element of input argument <code>x</code> for function <code>setContinuousStates</code> is <code>x[0]</code>.</p>
 </li>
 </ul>
 </div>
@@ -970,6 +976,36 @@ the first element of input argument <code>x</code> for function <code>setContinu
 <p>The key words <strong>MUST</strong>, <strong>MUST NOT</strong>, <strong>REQUIRED</strong>, <strong>SHALL</strong>, <strong>SHALL NOT</strong>, <strong>SHOULD</strong>, <strong>SHOULD NOT</strong>, <strong>RECOMMENDED</strong>, <strong>NOT RECOMMENDED</strong>, <strong>MAY</strong>, and <strong>OPTIONAL</strong> in this document are to be interpreted as described in <a href="https://tools.ietf.org/html/rfc2119">RFC 2119</a>.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p><strong>FMI 2.0 Implementation Help</strong></p>
+</div>
+<div class="paragraph">
+<p>If you plan to export or import models in FMI 2.0 format, you may find the following tools/models helpful for your development (available from <a href="https://fmi-standard.org/downloads" class="bare">https://fmi-standard.org/downloads</a>):</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">FMU Compliance Checker</dt>
+<dd>
+<p>Free software to check whether an FMI model is compliant to the FMI standard.</p>
+</dd>
+<dt class="hdlist1">FMUs from other tools</dt>
+<dd>
+<p>In order to test the import of FMI models from other vendors in your tool, a set of test FMUs is provided.</p>
+</dd>
+<dt class="hdlist1">Library to test connected FMUs</dt>
+<dd>
+<p>Free Modelica library to test difficult cases of connected FMI models.</p>
+</dd>
+<dt class="hdlist1">FMU Software Development Kit</dt>
+<dd>
+<p>Free software development kit by QTronic to demonstrate basic use of FMI.</p>
+</dd>
+<dt class="hdlist1">FMI Library</dt>
+<dd>
+<p>Free software package by Modelon that enables integration of FMI models in applications.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -988,8 +1024,7 @@ or require the simulation environment to perform numerical integration
 (FMI for Model Exchange, <a href="#fmi-for-model-exchange">Section 3</a>).
 The goal of this interface is that the calling of an FMU
 in a simulation environment is reasonably simple.
-No provisions are provided in this document for how to generate an FMU from a modeling environment.
-Hints for implementation can be found in the companion document <code>FunctionalMockupInterfaceImplementationHints.pdf</code>.</p>
+No provisions are provided in this document for how to generate an FMU from a modeling environment.</p>
 </div>
 <div class="paragraph">
 <p>The FMI for Model Exchange interface defines an interface to the model
@@ -1128,7 +1163,7 @@ starting from high-level properties to low-level implementation issues.</p>
 </dd>
 <dt class="hdlist1">Stability</dt>
 <dd>
-<p>The FMI is expected to be supported by many simulation tools world-wide.
+<p>The FMI is expected to be supported by many simulation tools worldwide.
 Implementing such support is a major investment for tool vendors.
 Stability and backwards compatibility of the FMI has therefore high priority.
 To support this, the FMI defines "capability flags" that will be used by future versions of the FMI to extend and improve the FMI in a backwards compatible way, whenever feasible.</p>
@@ -1162,8 +1197,8 @@ This is achieved by a new caching technique (to avoid computing the same variabl
 <dt class="hdlist1">Small footprint</dt>
 <dd>
 <p>A compiled FMU (the executable) is small.
-Reason: An FMU may run on an ECU (Electronic Control Unit, for example, a micro-processor), and ECUs have strong memory limitations.
-This is achieved by storing signal attributes (names, units, etc.) and all other static information not needed for model evaluation in a separate text file (= Model Description File) that is not needed on the micro-processor where the executable might run.</p>
+Reason: An FMU may run on an ECU (Electronic Control Unit, for example, a microprocessor), and ECUs have strong memory limitations.
+This is achieved by storing signal attributes (names, units, etc.) and all other static information not needed for model evaluation in a separate text file (= Model Description File) that is not needed on the microprocessor where the executable might run.</p>
 </dd>
 <dt class="hdlist1">Hide data structure</dt>
 <dd>
@@ -1173,7 +1208,7 @@ Reason: the FMI standard shall not unnecessarily restrict or prescribe a certain
 <dt class="hdlist1">Support many and nested FMUs</dt>
 <dd>
 <p>A simulator may run many FMUs in a single simulation run and/or multiple instances of one FMU.
-The inputs and outputs of these FMUs can be connected with direct feed-through.
+The inputs and outputs of these FMUs can be connected with direct feedthrough.
 Moreover, an FMU may contain nested FMUs.</p>
 </dd>
 <dt class="hdlist1">Numerical Robustness</dt>
@@ -1388,8 +1423,7 @@ When dynamically loading an FMU, these definitions can be used to type-cast the 
 </dd>
 <dt class="hdlist1"><code>fmi3Functions.h</code></dt>
 <dd>
-<p>contains the function prototypes of an FMU that can be accessed in simulation environments and that are defined in <a href="#fmi-common-concepts">Section 2</a>, <a href="#fmi-for-model-exchange">Section 3</a> and
-<a href="#fmi-for-co-simulation">Section 4</a>.</p>
+<p>contains the function prototypes of an FMU that can be accessed in simulation environments and that are defined in <a href="#fmi-common-concepts">Section 2</a>, <a href="#fmi-for-model-exchange">Section 3</a> and <a href="#fmi-for-co-simulation">Section 4</a>.</p>
 <div class="paragraph">
 <p>This header file includes <code>fmi3PlatformTypes.h</code> and <code>fmi3FunctionTypes.h</code>.
 The header file version number for which the model was compiled, can be inquired in the target simulator with <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a> (see <a href="#inquire-platform-and-version-number">Section 2.1.4</a>).<br></p>
@@ -1412,8 +1446,19 @@ The header file version number for which the model was compiled, can be inquired
 <div class="paragraph">
 <p>The goal is that both textual and binary representations of FMUs are supported and that several FMUs might be present at the same time in an executable (for example, FMU A may use an FMU B).
 In order for this to be possible, the names of the functions in different FMUs must be different, or function pointers must be used.
-To support the first variant macros are provided in <code>fmi3Functions.h</code> to build the actual function names by using a function prefix that depends on how the FMU is shipped.
-Typically, FMU functions are used as follows:</p>
+To support the first variant macros are provided in <code>fmi3Functions.h</code> to build the actual function names by using a function prefix that depends on how the FMU is shipped.</p>
+</div>
+<div class="paragraph">
+<p><em>[These macros can be defined differently in a target specific variant of <code>fmi3Functions.h</code> to adjust them to the requirements of the supported compilers and platforms of the importing tool.]</em></p>
+</div>
+<div class="paragraph">
+<p>An FMU C-file must include at the beginning a <code>define</code> of <code>FMI3_FUNCTION_PREFIX</code> as the <code>modelIdentifier</code> attribute defined in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange&gt;</code> or <code>&lt;fmiModelDescription&gt;&lt;CoSimulation&gt;`together with `_</code> at the end (see sections <a href="#ModelExchange">Section 3.3.1</a> and <a href="#schema-co-simulation">Section 4.3.1</a>).</p>
+</div>
+<div class="paragraph">
+<p>This <code>define</code> must be directly followed with an <code>#include "fmi3Functions.h"</code> statement.</p>
+</div>
+<div class="paragraph">
+<p>Typically, FMU functions are used as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1437,13 +1482,13 @@ fmi3SetTimeTYPE *myname_setTime = &lt; load symbol "fmi3SetTime" from DLL/Shared
 <p>If the FMU is shipped with C source code or with static link library:<br>
 The constructed function name is <code>MyModel_fmi3GetReal</code>.
 In other words the function name is prefixed with the model name and an <code>_</code>.
-As <code>FMI3_FUNCTION_PREFIX</code> the <code>modelIdentifier</code> attribute defined in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange&gt;</code>, or <code>&lt;fmiModelDescription&gt;&lt;CoSimulation&gt;</code> is used, together with <code>_</code> at the end (see <a href="#ModelExchange">Section 3.3.1</a> and <a href="#fmi-for-co-simulation">Section 4</a>).
 A simulation environment can therefore construct the relevant function names by generating code for the actual function call.
 In case of a static link library, the name of the library is <code>MyModel.lib</code> on Windows and <code>libMyModel.a</code> on Linux; in other words the <code>modelIdentifier</code> attribute is used to create the library name.</p>
 </li>
 <li>
 <p>If the FMU is shipped with DLL/SharedObject:<br>
 The constructed function name is <code>fmi3GetReal</code>, in other words, it is not changed.
+<em>[This can be realized in the case of a source code FMU with a target-specific version of <code>fmi3Functions.h</code> that does not use FMI3_FUNCTION_PREFIX to construct the function names.]</em>
 A simulation environment will then dynamically load this library and will explicitly import the function symbols by providing the FMI function names as strings.
 The name of the library is <code>MyModel.dll</code> on Windows or <code>MyModel.so</code> on Linux; in other words the <code>modelIdentifier</code> attribute is used as library name.</p>
 </li>
@@ -1531,7 +1576,7 @@ typedef        uint64_t fmi3UInt64;   /* 64-bit unsigned integer */
 typedef             int fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
 typedef            char fmi3Char;     /* Data type for one character */
 typedef const fmi3Char* fmi3String;   /* Data type for character strings
-                                         ('\0' terminated, UTF8 encoded) */
+                                         ('\0' terminated, UTF-8 encoded) */
 typedef            char fmi3Byte;     /* Smallest addressable unit of the machine
                                          (typically one byte) */
 typedef const fmi3Byte* fmi3Binary;   /* Data type for binary data
@@ -1872,7 +1917,11 @@ If a null pointer is provided for <code>c</code>, the function call is ignored (
 </div>
 </div>
 <div class="paragraph">
+<p>The function controls debug logging that is output via the logger function callback.</p>
+</div>
+<div class="paragraph">
 <p>If <code>loggingOn = fmi3True</code>, debug logging is enabled, otherwise it is switched off.
+If <code>loggingOn = fmi3True</code> and <code>nCategories = 0</code>, then all debug messages shall be output.
 If <code>loggingOn = fmi3True</code> and <code>nCategories &gt; 0</code>, then only debug messages according to the <code>categories</code> argument shall be printed via the <a href="#logMessage"><code>logMessage</code></a> function.
 Vector <code>categories</code> has <code>nCategories</code> elements.
 The allowed values of <code>categories</code> are defined by the modeling environment that generated the FMU.
@@ -1896,7 +1945,7 @@ Depending on the generating modeling environment, none, some or all allowed valu
 </div>
 <div class="paragraph">
 <p>Informs the FMU to setup the experiment.
-This function can be called after <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> and before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.
+This function must be called after <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> and before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.
 Arguments <code>toleranceDefined</code> and <code>tolerance</code> depend on the FMU type:</p>
 </div>
 <div class="dlist">
@@ -2847,7 +2896,7 @@ Details are described in the description of element <a href="#dependencies"><cod
 </div>
 <div class="stemblock">
 <div class="content">
-\[\Delta \mathbf{v}_{unknown} = \frac{\delta \mathbf{h}}{\delta \mathbf{v}_{known}}\mathbf{v}_{known}\]
+\[\Delta \mathbf{v}_{unknown} = \frac{\partial \mathbf{h}}{\partial \mathbf{v}_{known}} \Delta \mathbf{v}_{known}\]
 </div>
 </div>
 <div class="paragraph">
@@ -3345,6 +3394,7 @@ These definitions are used in the XML element <code>ModelVariables</code>.</p></
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModelStructure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines the structure of the model.
 Especially, the ordered lists of <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and initial unknowns (the unknowns during <strong>Initialization Mode</strong>) are defined here.
+For more details on ModelStructure, see section <a href="#ModelStructure">Section 2.2.11</a>.
 Furthermore, the dependency of the unkowns from the knowns can be optionally defined.
 <em>[This information can be, for example, used to compute efficiently a sparse Jacobian for simulation, or to utilize the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> dependency in order to detect that in some cases there are actually no algebraic loops when connecting FMUs together]</em>.</p></td>
 </tr>
@@ -3379,7 +3429,7 @@ The details of these elements are defined in <a href="#ModelExchange">Section 3.
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmiVersion</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Version of FMI for Model Exchange or FMI for Co-Simulation that was used to generate the XML file.
 The value for this version is <code>3.0</code>.
-Future minor revisions are denoted as <code>3.0.1</code>, <code>3.1</code>, &#8230;&#8203;</p>
+Future minor revisions are denoted as <code>3.1</code>, <code>3.2</code> &#8230;&#8203;</p>
 <p class="tableblock"><em>[During development prototype FMU implementations can indicate compliance with a certain development version based on the tags available at <a href="https://github.com/modelica/fmi-standard/tags" class="bare">https://github.com/modelica/fmi-standard/tags</a>.</em>
 <em>For example the value for the FMI 3.0 Alpha 2 release is <code>3.0-alpha.2</code>.]</em></p></td>
 </tr>
@@ -4091,7 +4141,9 @@ The quantity names are not standardized]</em></p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Unit of the variable defined with <code>UnitDefinitions.Unit.name</code> that is used for the model equations.
-<em>[For example, <code>N.m</code>: in this case a <code>Unit.name = `N.m</code> must be present under <code>UnitDefinitions</code>.]</em></p></td>
+<em>[For example, <code>N.m</code>: in this case a <code>Unit.name = `N.m</code> must be present under <code>UnitDefinitions</code>.]</em>
+<em>[Note that for variables that are without a unit, the element should not have a <code>unit</code> attribute.]</em>
+<em>[Giving an empty string as a <code>unit</code> attribute specifies a valid unit that needs to be defined among the unit definitions.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>displayUnit</code></p></td>
@@ -5215,7 +5267,8 @@ This attribute is only used for Co-Simulation. The default value of this attribu
 <div class="ulist">
 <ul>
 <li>
-<p>if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a> <em>[in order to set the corresponding <a href="#start"><code>start</code></a> value.]</em></p>
+<p>if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a> <em>[in order to set the corresponding <a href="#start"><code>start</code></a> value.]</em>
+<em>[Note that this prevents any changes to the input before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.]</em></p>
 </li>
 </ul>
 </div>
@@ -5774,6 +5827,10 @@ However, aliased variables may have different attributes, such as <code>min/max/
 <em>For example, if it is stated that the <a href="#output"><code>output</code></a> <code>y1</code> depends on <a href="#input"><code>input</code></a> <code>u1</code> and the <a href="#output"><code>output</code></a> <code>y2</code> depends on <a href="#input"><code>input</code></a> <code>u2</code>, and <code>y1</code> is an alias to <code>y2</code>, then this definition is fine, although it can be deduced that in reality neither <code>y1</code> nor <code>y2</code> depend on any <a href="#input"><code>input</code></a>.].</em></p>
 </div>
 <div class="paragraph">
+<p><em>[In case of different variability among the set of alias variables, and if that set of aliases does not contain an input or parameter, the variability should be the highest of the variables in the set, e.g. continuous &gt; discrete &gt; tunable &gt; fixed.</em>
+<em>If the set includes a parameter or input the aliases will have the stated variability of that parameter or input.]</em></p>
+</div>
+<div class="paragraph">
 <p>Type specific properties are defined in the required choice element, where exactly one of <code>Real</code>, <code>Integer</code>, <code>Boolean</code>, <code>String</code>, <code>Enumeration</code> must be present in the XML file:</p>
 </div>
 <div class="imageblock text-center">
@@ -5831,7 +5888,12 @@ For <code>Enumeration</code> it is required, because the Enumeration items are d
 <td class="tableblock halign-left valign-top"><div class="content"><div id="start" class="paragraph">
 <p>Initial or guess value of variable.
 <strong>This value is also stored in the C functions</strong>.
-<em>[Therefore, calling</em> <code>fmi3SetXXX</code> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.]</em> The interpretation of <a href="#start"><code>start</code></a> is defined by variable attribute <a href="#initial"><code>initial</code></a>.
+<em>[Therefore, calling</em> <code>fmi3SetXXX</code> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.]</em>
+<em>WARNING: It is not recommended to change the start values in the <code>modelDescription.xml</code> file of an FMU, as this would break the consistency with the hard-coded start values in the C-Code.</em>
+<em>This could lead to unpredictable behavior of the FMU in different importing tools, as it is not mandatory to call <code>fmi3SetXXX</code> to set start values during initialization. Instead it is recommended to use the SSP Standard (<a href="https://ssp-standard.org/" class="bare">https://ssp-standard.org/</a>) to handle modified parameters of FMUs or different parameter sets.</em></p>
+</div>
+<div class="paragraph">
+<p>The interpretation of <a href="#start"><code>start</code></a> is defined by variable attribute <a href="#initial"><code>initial</code></a>.
 A different <a href="#start"><code>start</code></a> value can be provided with an <code>fmi3SetXXX</code> function before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (but not for variables with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>).</p>
 </div>
 <div class="paragraph">
@@ -5999,7 +6061,8 @@ The functional dependency is defined as (dependencies of variables that are fixe
 <em>The ordering of the variables in this list is defined by the exporting tool.</em>
 <em>Usually, it is best to order according to the declaration order of the <a href="#state"><code>states</code></a> in the source model, since then the &lt;Derivatives&gt; list does not change if the declaration order of states in the source model is not changed.</em>
 <em>This is for example, important for linearization, in order that the interpretation of the state vector does not change for a re-exported FMU.]</em>
-The corresponding continuous-time <a href="#state"><code>states</code></a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding variable state derivative element.
+The number of Unknown elements in the Derivatives element uniquely define the number of continuous time state variables, as required by the corresponding Model Exchange functions (integer argument <code>nx</code> of <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a> see hereafter) that require it.</p>
+<p class="tableblock">The corresponding continuous-time <a href="#state"><code>states</code></a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding variable state derivative element.
 <em>[Note that higher order derivatives must be mapped to first order derivatives but the mapping definition can be preserved due to attribute <a href="#derivative"><code>derivative</code></a>.</em>
 <em>Example: if</em> \(\color{blue}{\frac{\text{ds}}{\text{dt}} = v,\ \frac{\text{dv}}{\text{dt}} =f(..)}\) <em>,then</em> \(\color{blue}{\left\{ v,\ \frac{\text{dv}}{\text{dt}} \right\}}\) <em>is the vector of state derivatives and attribute <a href="#derivative"><code>derivative</code></a> of</em> \(\color{blue}{v}\) <em>references</em> \(\color{blue}{s}\) <em>, and attribute <a href="#derivative"><code>derivative</code></a> of</em> \(\color{blue}{\frac{\text{dv}}{\text{dt}}}\) <em>references</em> \(\color{blue}{v}\) <em>.]</em><br>
 For Co-Simulation, element <code>Derivatives</code> is ignored if capability flag <code>providesDirectionalDerivative</code> has a value of <code>false</code>, in other words, it cannot be computed.
@@ -6267,6 +6330,33 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 <em>Therefore <a href="#dependenciesKind"><code>dependenciesKind</code></a> = <a href="#dependenciesKind"><code>dependent</code></a> because it is not a linear relationship on</em> \(\color{blue}{u}\). <em>]</em></p>
 </div>
 <div class="paragraph">
+<p><em>Example 4:</em></p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[\frac{dx}{dt}=u, y=x\]
+</div>
+</div>
+<div class="paragraph">
+<p>where <code>u</code> is continuous-time input value reference "1", <code>y</code> is a continuous-time output with value reference "2" and <code>dxdt</code> is a continuous-time derivative with value reference="4". The definition of the model structure is then:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelVariables&gt;
+   &lt;Float64 name="u" valueReference= "1"/&gt;
+   &lt;Float64 name="y" valueReference= "2"/&gt;
+   &lt;Float64 name="x" valueReference= "3"/&gt;
+   &lt;Float64 name="dxdt" valueReference= "4"/&gt;
+&lt;/ModelVariables&gt;
+&lt;ModelStructure&gt;
+  &lt;Output valueReference="2" dependencies="3" dependenciesKind="constant"/&gt;
+  &lt;Derivative valueReference="4" dependencies="1" dependenciesKind="constant"/&gt;
+  &lt;InitialUnknown valueReference="2" dependencies="3"/&gt;
+  &lt;InitialUnknown valueReference="4" dependencies="1"/&gt;
+&lt;/ModelStructure&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><em>Defining FMU features with the</em> <a href="#dependencies"><code>dependencies</code></a> <em>list:</em></p>
 </div>
 <div class="paragraph">
@@ -6305,7 +6395,11 @@ If this information is known, the environment may be able to represent the names
 </div>
 </div>
 <div class="paragraph">
-<p>The following conventions for variable names are defined:</p>
+<p>The names must be unique, non-empty strings.<br>
+<em>[It is recommended that the names are visually clearly different from each other; but it is not required.]</em></p>
+</div>
+<div class="paragraph">
+<p>The following conventions for scalar names are defined:</p>
 </div>
 <div class="paragraph">
 <p><strong><code>variableNamingConvention = flat</code></strong></p>
@@ -6316,10 +6410,6 @@ If this information is known, the environment may be able to represent the names
 Unicode-char = any Unicode character without carriage return (#xD),
 line feed (#xA) nor tab (#x9)</pre>
 </div>
-</div>
-<div class="paragraph">
-<p>The names must be unique, non-empty strings.<br>
-<em>[It is recommended that the names are visually clearly different from each other; but it is not required.]</em></p>
 </div>
 <div class="paragraph">
 <p><strong><code>variableNamingConvention</code> = structured`</strong></p>
@@ -6443,6 +6533,15 @@ The extension of the ZIP file must be <code>.fmu</code> <em>[, for example, <cod
 The compression method used for the ZIP file must be <code>deflate</code> <em>[(most free tools, such as zlib, offer only the common compression method <code>deflate</code>)]</em>.</p>
 </div>
 <div class="paragraph">
+<p>The ZIP format specification can be found here: <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT" class="bare">https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT</a></p>
+</div>
+<div class="paragraph">
+<p><em>[Note: especially section 4.4.17 states that backslashes "\" are forbidden as path separator, only forward slashes "/" are allowed.]</em></p>
+</div>
+<div class="paragraph">
+<p><em>[Note: non-ASCII directory names are not explicitly forbidden, but might pose a problem on different operating systems and are thus discouraged.]</em></p>
+</div>
+<div class="paragraph">
 <p>Every FMU is distributed with its own ZIP file.
 This ZIP file has the following structure:</p>
 </div>
@@ -6454,6 +6553,9 @@ model.png                     // image file of FMU icon (optional)
 documentation                 // directory containing the documentation (optional)
    index.html                 // entry point of the documentation
    &lt;other documentation files&gt;
+   licenses // Optional directory for licenses
+      license.{txt,html}      // Entry point for license information
+      &lt;license files&gt;         // For example BSD licenses
 sources                       // directory containing the C sources (optional)
    // all needed C sources and C header files to compile and link the FMU
    // with exception of: fmi3PlatformTypes.h, fmi3FunctionTypes.h and fmi3Functions.h
@@ -6472,6 +6574,10 @@ binaries                      // directory containing the binaries (optional)
       &lt;modelIdentifier&gt;.so    // shared library of the FMI implementation
    x86_64-darwin              // binaries for macOS
       &lt;modelIdentifier&gt;.dylib // shared library of the FMI implementation
+   // If an FMU is run through one of its binaries all items in that binary
+   // folder are recommended to be unpacked at the same location as the binary
+   // &lt; modelIdentifier &gt;.* is unpacked. If not it is likely that, if the FMU
+   // has dependencies on those items, it will not be able to find them.
 resources                     // resources needed by the FMU (optional)
    // data in FMU specific files which will be read during initialization;
    // also more folders can be added under resources (tool/model specific).
@@ -6726,7 +6832,12 @@ If default options of the compiler are sufficient, it might then be possible to 
 An exporting tool should give documentation on how to build an executable, either via a documentation file and/or via a template makefile for a particular platform, from which a user can construct the makefile for his/her target platform.
 This documentation should be stored in the <code>documentation</code> directory, possibly with a link to the template makefile (stored in the <code>sources</code> directory).
 <em>[As template makefile, CMake (<a href="http://www.cmake.org" class="bare">http://www.cmake.org</a>), a cross- platform, open-source build system might be used.]</em><br>
-In directory <code>resources</code>, additional data can be provided in FMU specific formats, typically for tables and maps used in the FMU.
+<em>[The sub-directory "licenses" can be used to bundle all license files.</em>
+<em>It is strongly recommended to include all license and copyright related information in the licenses folder of an FMU (especially but not only for contained open source software) - the <code>license.{txt,html}</code> file can serve as an entry point for describing the contained licenses.</em>
+<em>This will help the users to comply with license conditions when passing source or binary code contained in an FMU to other persons or organizations.]</em></p>
+</div>
+<div class="paragraph">
+<p>In directory <code>resources</code>, additional data can be provided in FMU specific formats, typically for tables and maps used in the FMU.
 This data must be read into the model at the latest during initialization (that is, before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called).
 The actual file names in the ZIP file to access the data files can either be hard-coded in the generated FMU functions, or the file names can be provided as string parameters via the <code>fmi3SetString</code> function.
 <em>[Note that the absolute file name of the resource directory is provided by the initialization functions.]</em>
@@ -7411,14 +7522,14 @@ r2 = z2 &gt; 0</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><em>Furthermore, a hysteresis should be added for the event indicators.</em>
-<em>For more details see the companion document FunctionalMockupInterface-ImplementationHints.docx.</em></p>
+<p><em>Furthermore, a hysteresis should be added for the event indicators.</em></p>
 </div>
 <div class="paragraph">
-<p><em>Remark 4 - Pure Discrete-Time FMUs:</em></p>
+<p><em>Remark 4 - pure discrete-time FMUs:</em></p>
 </div>
 <div class="paragraph">
-<p><em>If an FMU has only discrete-time equations (and no variables with <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>), then the environment need not to call <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> but can directly call <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> to set the value of the next event instant, before <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> is called.]</em></p>
+<p><em>If an FMU has only discrete-time equations (and no variables with <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>), then the environment need not to call <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> but can directly call <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> to set the value of the next event instant, before <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> is called.]</em>
+<em>This is an optional optimization for the master, the FMU must support all functions that are required for a continuous time FMU and should run in a master that treats it as such. If a pure discrete-time FMU has state events and uses event indicators, it has to enter <strong>Continuous-Time Mode</strong> to evaluate these. In fact, it is no longer a pure discrete-time FMU but this was not clearly defined in 2.0 so this clarification is needed for 2.0.1]</em></p>
 </div>
 <div class="paragraph">
 <p>An FMU is initialized in <strong>Initialization Mode</strong> with \(\mathbf{f}_{init}(\ldots)\).
@@ -7605,7 +7716,7 @@ If <code>nominalsOfContinuousStatesChanged = fmi3True</code>, then the nominal v
 If <code>valuesOfContinuousStatesChanged = fmi3True</code>, then at least one element of the continuous state vector has changed its value due to the function call.</p>
 </div>
 <div id="state" class="paragraph">
-<p>The new values of the <a href="#state"><code>states</code></a> can be inquired with <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>.
+<p>The new values of the <a href="#state"><code>states</code></a> can be inquired with <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a> or individually for each state for which <code>reinit = true</code> by calling <code>fmi3GetFloat*</code>.
 If no element of the continuous state vector has changed its value, <code>valuesOfContinuousStatesChanged</code> must return <code>fmi3False</code>.
 <em>[If <code>fmi3True</code> would be returned in this case, an infinite event loop may occur.]</em><br>
 If <code>nextEventTimeDefined = fmi3True</code>, then the simulation shall integrate at most until <code>time = nextEventTime</code>, and shall call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> at this time instant.
@@ -7707,8 +7818,7 @@ Note that <code>fmi3Status = fmi3Discard</code> is possible for both functions.<
 </div>
 </div>
 <div class="paragraph">
-<p>Return the new (continuous) state vector <code>x</code>.
-This function has to be called directly after calling function <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> if it returns with <code>eventInfo&#8594;valuesOfContinuousStatesChanged = fmi3True</code> (indicating that the (continuous-time) state vector has changed).</p>
+<p>Return the new (continuous) state vector <code>x</code>.</p>
 </div>
 <div id="fmi3GetNominalsOfContinuousStates" class="listingblock">
 <div class="content">
@@ -7752,9 +7862,9 @@ Each state of the state machine corresponds to a certain phase of a simulation a
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Instantiated</dt>
+<dt class="hdlist1">instantiated</dt>
 <dd>
-<p>In this state, <a href="#start"><code>start</code></a> and guess values (= variables that have <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>) can be set.</p>
+<p>In this state, <a href="#start"><code>start</code></a> and guess values (= variables that have <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>) set and <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> can be set, this does not include inputs as they do not have an <a href="#initial"><code>initial</code></a> attribute.</p>
 </dd>
 <dt class="hdlist1">Configuration Mode</dt>
 <dd>
@@ -7766,7 +7876,7 @@ This state is entered from state <strong>Instantiated</strong> by calling <a hre
 <dd>
 <p>In this state, equations are active to determine all continuous-time states, as well as all <a href="#output"><code>outputs</code></a> (and optionally other variables exposed by the exporting tool).
 The variables that can be retrieved by <code>fmi3GetXXX</code> calls are (1) defined in the XML file under <code>&lt;ModelStructure&gt;&lt;InitialUnknowns&gt;</code> and (2) variables with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.
-Variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, as well as variables with <a href="#variability"><code>variability</code></a> = <a href="#input"><code>input</code></a> can be set.</p>
+Variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a>, as well as variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> can be set.</p>
 </dd>
 <dt class="hdlist1">Continuous-Time Mode</dt>
 <dd>
@@ -7775,7 +7885,7 @@ The event time of a state event may be determined if a domain change of at least
 </dd>
 <dt class="hdlist1">Event Mode</dt>
 <dd>
-<p>If an event is triggered in <strong>Continuous-Time Mode</strong>, then <strong>Event Mode</strong> is entered by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
+<p>If an event is triggered in <strong>Continuous-Time Mode</strong>, <strong>Event Mode</strong> is entered by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
 In this mode all continuous-time and discrete-time equations are active and the unknowns at an event can be computed and retrieved.
 After an event is completely processed, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called and depending on the return argument, <code>newDiscreteStatesNeeded</code>, the state chart stays in <strong>Event Mode</strong> or switches to <strong>Continuous-Time Mode</strong>.
 When the <strong>Initialization Mode</strong> is terminated with <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, then <strong>Event Mode</strong> is directly entered, and the continuous-time and discrete-time variables at the initial time are computed based on the initial continuous-time states determined in the <strong>Initialization Mode</strong>.</p>
@@ -7794,7 +7904,7 @@ This state is entered from state <strong>Event Mode</strong> by calling <a href=
 </div>
 <div class="paragraph">
 <p>Note that simulation backward in time is only allowed over continuous time intervals.
-As soon as an event occurred (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is forbidden, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
+As soon as an event occurrs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is forbidden, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
 </div>
 <div class="paragraph">
 <p>Note that during <strong>Initialization</strong>, <strong>Event</strong>, and <strong>Continuous-Time Mode</strong> <a href="#input"><code>input</code></a> variables can be set with <code>fmi3SetXXX</code> and output variables can be retrieved with <code>fmi3GetXXX</code> interchangeably according to the model structure defined under element <code>&lt;ModelStructure&gt;</code> in the XML file.
@@ -8009,7 +8119,7 @@ As soon as an event occurred (<a href="#fmi3EnterEventMode"><code>fmi3EnterEvent
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;&lt;fmi3SetString</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3SetString</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
@@ -8145,7 +8255,7 @@ As soon as an event occurred (<a href="#fmi3EnterEventMode"><code>fmi3EnterEvent
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -8219,7 +8329,8 @@ or <a href="#causality"><code>causality</code></a> = <a href="#input"><code>inpu
 <strong>4</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>,
 or (<a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>)<br>
 <strong>5</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a><br>
-<strong>7</strong> always, but retrieved values are usable for debugging only</p>
+<strong>7</strong> always, but retrieved values are usable for debugging only
+<strong>8</strong> only for a pure discrete-time FMU. This exits the current event mode and sets the time for the next event instant. <code>fmi3NewDiscreteStates</code> must have been called with <code>newDiscreteStatesNeeded = fmi3False</code> at least once before this can be done.</p>
 </div>
 </div>
 <div class="sect3">
@@ -8574,6 +8685,9 @@ unsignedInt: 0</p>
     &lt;/Unit&gt;
     &lt;Unit name="kg.m2"&gt;
       &lt;BaseUnit kg="1" m="2"/&gt;
+    &lt;/Unit&gt;
+    &lt;Unit name="N.m"&gt;
+      &lt;BaseUnit kg="1" m="2" s="-2"/&gt;
     &lt;/Unit&gt;
   &lt;/UnitDefinitions&gt;
   &lt;TypeDefinitions&gt;
@@ -9198,7 +9312,7 @@ O(hc_i^{2}).\]
 <div class="ulist">
 <ul>
 <li>
-<p>The current <a href="#input"><code>input</code></a> variables \(\mathbf{u}_i^{(0)}\) of the subsystem (in other words, the <a href="#input"><code>input</code></a> variables of the model contained in the slave simulator, in the sense of system-level simulation), along with some of their successive <a href="#derivative"><code>derivatives</code></a> \(\left\{ \mathbf{u}_i^{(j)} \right\}_{j=1,\cdots,m_{ido}}\) (in case of continuous-time variables).</p>
+<p>The current <a href="#input"><code>input</code></a> variables \(\mathbf{u}_i^{(0)}\) of the subsystem (in other words, the <a href="#input"><code>input</code></a> variables of the model contained in the slave simulator, in the sense of system-level simulation), along with some of their successive <a href="#derivative"><code>derivatives</code></a> \(\left\{ \mathbf{u}_i^{(j)} \right\}_{j=1,\cdots,m_{ido}}\) (in case of continuous-time variables), where \(m_{ido}\) stands for the model input derivative order.</p>
 </li>
 <li>
 <p>Varying <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{tune,i}\), also known as <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a>.</p>
@@ -9538,6 +9652,7 @@ Argument <code>vr</code> is a vector of value references that define the variabl
 The array <code>order</code> contains the orders of the respective <a href="#derivative"><code>derivative</code></a> (1 means the first <a href="#derivative"><code>derivative</code></a>, 0 is not allowed).
 Argument <code>value</code> is a vector with the values of the <a href="#derivative"><code>derivatives</code></a>.
 <code>nValueReferences</code> is the dimension of the vectors.<br>
+Differents input variables may have different interpolation order.<br>
 Restrictions on using the function are the same as for the <code>fmi3SetReal</code> function.</p>
 </div>
 <div class="paragraph">
@@ -12745,6 +12860,9 @@ The XML file may have the following content:</p>
     &lt;Unit name="kg.m2"&gt;
       &lt;BaseUnit kg="1" m="2"/&gt;
     &lt;/Unit&gt;
+    &lt;Unit name="N.m"&gt;
+      &lt;BaseUnit kg="1" m="2" s="-2"/&gt;
+    &lt;/Unit&gt;
   &lt;/UnitDefinitions&gt;
   &lt;TypeDefinitions&gt;
     &lt;Float64 name="Modelica.SIunits.Inertia" quantity="MomentOfInertia" unit="kg.m2" min="0.0"/&gt;
@@ -13678,6 +13796,49 @@ list):</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_a_3_4_fmi_2_0_1_maintenane_release_changes_and_contributors">A.3.4 FMI 2.0.1 maintenane release: changes and contributors</h3>
+<div class="paragraph">
+<p>The changes w.r.t. FMI 2.0 (clarifications and bugfixes) are summarized on the release page for FMI 2.0.1 <a href="https://github.com/modelica/fmi-standard/releases/tag/v2.0.1" class="bare">https://github.com/modelica/fmi-standard/releases/tag/v2.0.1</a></p>
+</div>
+<div class="paragraph">
+<p>The following partners participated at FMI 2.0.1 meetings (alphabetical list):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Christian Bertsch, Robert Bosch GmbH, Germany</p>
+</li>
+<li>
+<p>Torsten Blochwitz, ESI ITI GmbH, Germany</p>
+</li>
+<li>
+<p>Robert Braun, Link&#252;ping University, Sweden</p>
+</li>
+<li>
+<p>Andreas Junghanns, QTronic GmbH, Germany</p>
+</li>
+<li>
+<p>Pierre R. Mai, PMSF IT Consulting, Germany</p>
+</li>
+<li>
+<p>Masoud Najafi, Altair, France</p>
+</li>
+<li>
+<p>Andreas Pillekeit, dSPACE GmbH, Germany</p>
+</li>
+<li>
+<p>Torsten Sommer, Dassault Syst&#232;mes, Germany</p>
+</li>
+<li>
+<p>Karl Wernersson, Dassault Syst&#232;mes, Sweden</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For further contributors by comments please refer to the issue tracking system <a href="https://github.com/modelica/fmi-standard/milestone/3" class="bare">https://github.com/modelica/fmi-standard/milestone/3</a></p>
 </div>
 </div>
 </div>
