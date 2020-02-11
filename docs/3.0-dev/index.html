@@ -667,17 +667,17 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#math-co-simulation">4.1.1. Co-Simulation</a></li>
 <li><a href="#_early_return_from_current_communication_step">4.1.2. Early Return from Current Communication Step</a></li>
 <li><a href="#math-clocked-co-simulation">4.1.3. Co-Simulation with Clock Support</a></li>
-<li><a href="#math-scheduled-execution-simulation">4.1.4. Scheduled Execution Simulation Support</a></li>
+<li><a href="#math-scheduled-execution-simulation">4.1.4. Scheduled Execution Simulation interface</a></li>
 <li><a href="#math-intermediate-variable-access">4.1.5. Intermediate Variable Access Support</a></li>
 </ul>
 </li>
 <li><a href="#_fmi_application_programming_interface_2">4.2. FMI Application Programming Interface</a>
 <ul class="sectlevel3">
-<li><a href="#_mode_fmi3modecosimulation">4.2.1. Mode fmi3ModeCoSimulation</a></li>
-<li><a href="#earlyreturn-co-simulation">4.2.2. Early-return Requested by the Co-Simulation Master in fmi3ModeCoSimulation</a></li>
-<li><a href="#api-hybrid-co-simulation">4.2.3. Mode fmi3ModeHybridCoSimulation</a></li>
-<li><a href="#api-clocked-co-simulation">4.2.4. Co-Simulation with Clock Support in fmi3ModeHybridCoSimulation</a></li>
-<li><a href="#api-scheduled-execution-simulation">4.2.5. Scheduled Execution Simulation</a></li>
+<li><a href="#_fmi3cosimulation">4.2.1. fmi3CoSimulation</a></li>
+<li><a href="#earlyreturn-co-simulation">4.2.2. Early-return Requested by the Co-Simulation Master in fmi3CoSimulation</a></li>
+<li><a href="#api-hybrid-co-simulation">4.2.3. fmi3HybridCoSimulation</a></li>
+<li><a href="#api-clocked-co-simulation">4.2.4. Co-Simulation with Clock Support in fmi3HybridCoSimulation</a></li>
+<li><a href="#api-scheduled-execution-co-simulation">4.2.5. Scheduled Execution Simulation</a></li>
 <li><a href="#api-intermediate-variable-access">4.2.6. Intermediate Variable Access</a></li>
 </ul>
 </li>
@@ -845,82 +845,89 @@ version 3.0 to (a) exchange dynamic models between tools and (b) define tool
 coupling for dynamic system simulation environments.</p>
 </div>
 <div class="paragraph">
-<p><em>FMI for Model Exchange (<a href="#fmi-for-model-exchange">Section 3</a>)</em></p>
-</div>
-<div class="paragraph">
-<p>The intention is that a modeling environment can generate a C code representation of
-a dynamic system model that can be utilized by other modeling and simulation environments.
-Models are described by differential,
-algebraic and discrete equations with time-, state- and step-events.
-If the C code describes a continuous system,
-this system is solved with the integrators of the environment where it is used.
-The models to be treated by this interface can be large for usage in offline or online simulation,
-or they can be used in embedded control systems on microprocessors.</p>
-</div>
-<div class="paragraph">
 <p><em>FMI for Co-Simulation (<a href="#fmi-for-co-simulation">Section 4</a>)</em></p>
 </div>
 <div class="paragraph">
 <p>The intention is to provide an interface standard for coupling
-of simulation tools in a co-simulation environment.
+of simulation models or tools in a co-simulation environment.
 The data exchange between subsystems is restricted to discrete communication points.
 In the time between two communication points,
-the subsystems are solved independently from each other by their individual solver.
-Master algorithms control the data exchange between subsystems and the
-synchronization of all simulation solvers (slaves).
-Simple master algorithms,
-as well as more sophisticated ones are both supported.
-Note that the master algorithm itself is not part of the FMI standard.</p>
+the subsystems are solved independently by internal means, see below.
+Master algorithms control the data exchange and the
+synchronization between subsystems (FMUs).</p>
+</div>
+<div class="paragraph">
+<p>Note that the master algorithm itself is not part of the FMI standard.</p>
+</div>
+<div class="paragraph">
+<p><em>FMI for Hybrid Co-Simulation</em></p>
+</div>
+<div class="paragraph">
+<p>The Hybrid Co-Simulation interface adds a number of features primarily to allow for more sophisticated master algorithms that aim at more efficient and robust simulations.
+Such additional features are raising events between communication time points using synchronous and asynchronous clocks or sharing values between communication points to allow for improved interpolation of data.</p>
+</div>
+<div class="paragraph">
+<p>For both Co-Simulation and Hybrid Co-Simulation the master algorithm is shielded from how the subsystem FMU advances time internally.
+For example, FMUs containing ODEs and exposing either of the Co-Simulation interfaces require to include an ODE solver inside the FMU to internally advance time between the communication points.
+Or, for controller code packaged as FMU, an internal scheduling algorithm will trigger tasks at the correct time and order while advancing time to the next communication point or event.</p>
+</div>
+<div class="paragraph">
+<p><em>FMI for Model Exchange (<a href="#fmi-for-model-exchange">Section 3</a>)</em></p>
+</div>
+<div class="paragraph">
+<p>The Model Exchange interface exposes an ODE to an external solver of an importing tool&#8217;s master algorithm.
+Models are described by differential, algebraic and discrete equations with time-, state- and step-events.
+That master algorithm, usually an ODE or DAE solver, like DASSL, is responsible to advance time, set states and handle events etc.</p>
+</div>
+<div class="paragraph">
+<p><em>FMI for Scheduled Execution Simulation</em></p>
+</div>
+<div class="paragraph">
+<p>The Scheduled Execution Simulation interface exposes individual parts or tasks of a control algorithm to be called from an external scheduler of an importing tool&#8217;s master algorithm.
+That master algorithm scheduler is responsible to advance time and trigger execution of synchronous and asynchronous controller tasks.</p>
+</div>
+<div class="paragraph">
+<p>In many ways, the Scheduled Execution Simulation interface is the equivalent of the Model Exchange interface: the first externalizes a scheduling algorithm usually found in a controller algorithm and the second interface externalizes the ODE/DAE solver.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fmi-types-overview.svg" alt="fmi types overview" width="50%">
+</div>
 </div>
 <div class="paragraph">
 <p><em>FMI Common Concepts (<a href="#fmi-common-concepts">Section 2</a>)</em></p>
 </div>
 <div class="paragraph">
 <p>The two interface standards have many parts in common.
-In particular, it is possible to utilize several
-instances of a model and/or a co-simulation tool and to connect them together.
-The interfaces are independent of the target environment because no header files
-are used that depend on the target environment
-(with exception of the data types of the target platform).
+In particular, it is possible to utilize several instances of a model and/or a co-simulation tool and to connect them together.
+The interfaces are independent of the target environment because no header files are used that depend on the target environment (with exception of the data types of the target platform).
 This allows generating one dynamic link library that can be utilized in any environment on the same platform.
-A model, a cosimulation slave or the coupling part of a tool,
-is distributed in one ZIP file called FMU (Functional Mockup Unit) that contains several files:</p>
+A model, a cosimulation slave or the coupling part of a tool, is distributed in one ZIP file called FMU (Functional Mockup Unit) that contains several files:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p>An XML file contains the definitions of all exposed variables in the FMU and other static information.
-It is then possible to run the FMU on a target system without this information,
-in other words with no unnecessary overhead.</p>
+It is then possible to run the FMU on a target system without this information, in other words with no unnecessary overhead.</p>
 </li>
 <li>
 <p>All required model equations or the access to co-simulation tools are provided with a small set of easy-to-use C functions.
-A new caching technique allows a more efficient evaluation of
-the model equations than in other approaches.
+A new caching technique allows a more efficient evaluation of the model equations than in other approaches.
 These C functions can either be provided in source and/or binary form.
 Binary forms for different platforms can be included in the same FMU ZIP file.</p>
 </li>
 <li>
 <p>The model equations or the co-simuation tool can be either provided directly in the FMU,
-or the FMU contains only a generic communication module that communicates
-with an external tool that evaluates or simulates the model.
-In the XML file, information about the capabilities of the FMU are present,
-for example to characterize the ability of a Co-Simulation slave to support advanced master algorithms such as the usage of variable communication step sizes,
-higher order signal extrapolation, or others.</p>
+or the FMU contains only a generic communication module that communicates with an external tool that evaluates or simulates the model.
+In the XML file, information about the capabilities of the FMU are present, for example to characterize the ability of a Co-Simulation slave to support advanced master algorithms such as the usage of variable communication step sizes, higher order signal extrapolation, or others.</p>
 </li>
 <li>
-<p>Further data can be included in the FMU ZIP file,
-especially a model icon (bitmap file),
-documentation files,
-maps and tables needed by the FMU,
-and/or all object libraries or dynamic link libraries that are
-utilized.</p>
+<p>Further data can be included in the FMU ZIP file, especially a model icon (bitmap file), documentation files, maps and tables needed by the FMU, and/or all object libraries or dynamic link libraries that are utilized.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>A growing set of tools supports FMI.
-The actual list of tools is available at: <a href="https://www.fmi-standard.org/tools" class="bare">https://www.fmi-standard.org/tools</a></p>
+<p>A <a href="https://www.fmi-standard.org/tools">growing set of tools</a> supports FMI.</p>
 </div>
 <div class="paragraph">
 <p><strong>About FMI 2.0.1</strong></p>
@@ -934,8 +941,7 @@ FMUs created according to FMI 2.0.1 are valid FMUs according to FMI 2.0.</p>
 </div>
 <div class="paragraph">
 <p>FMI 2.0 was a major enhancement to FMI 1.0, that merged the FMI 1.0 Model Exchange and Co-Simulation standards and incorporates many improvements, often due to practical experience when using the FMI 1.0 standards.
-New features are usually optional
-(need neither be supported by the tool that exports an FMU, nor by the tool that imports an FMU).
+New features are usually optional (need neither be supported by the tool that exports an FMU, nor by the tool that imports an FMU).
 Details are provided in appendix A.3.1.</p>
 </div>
 <div class="paragraph">
@@ -952,17 +958,10 @@ Details are provided in appendix A.3.1.</p>
 <ul>
 <li>
 <p>In the end-user/logical view, one- and two-dimensional arrays are used.
-Here the convention of linear algebra,
-the control community and the most important tools in this area is utilized.
+Here the convention of linear algebra, the control community and the most important tools in this area is utilized.
 In other words the first element along one dimension starts at index one.
-In all these cases,
-the starting index is also explicitly mentioned at the respective definition of the array.
-For example,
-in the <code>modelDescription.xml</code> file,
-the set of exposed variables is defined as ordered sets where the first
-element is referenced with index one
-(these indices are, for example,
-used to define the sparseness structure of partial derivative matrices).</p>
+In all these cases, the starting index is also explicitly mentioned at the respective definition of the array.
+For example, in the <code>modelDescription.xml</code> file, the set of exposed variables is defined as ordered sets where the first element is referenced with index one (these indices are, for example, used to define the sparseness structure of partial derivative matrices).</p>
 </li>
 <li>
 <p>In the implementation view, one-dimensional C arrays are used.
@@ -1722,7 +1721,9 @@ The standard header file as documented in this specification has version <code>"
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef enum {
     fmi3ModelExchange,
-    fmi3CoSimulation
+    fmi3CoSimulation,
+    fmi3HybridCoSimulation,
+    fmi3ScheduledExecutionSimulation
 } fmi3InterfaceType;</code></pre>
 </div>
 </div>
@@ -1802,7 +1803,6 @@ If <code>loggingOn = fmi3False</code>, debug logging is disabled.</p>
 </div>
 <div class="paragraph">
 <p>Argument <code>fmuCoSimulationConfiguration</code> is used to configure Co-Simulation features used by the Co-Simulation master.
-Refer to section <code><a href="#co-simulation-feature-selection">[co-simulation-feature-selection]</a></code> and <code><a href="#intermediate-variable-access">[intermediate-variable-access]</a></code>.
 It is only used if <code>fmuType = fmi3CoSimulation</code>.
 It is NULL for fmuType <code>fmi3ModelExchange</code>.</p>
 </div>
@@ -1888,13 +1888,13 @@ If attribute <code>canNotUseMemoryManagementFunctions = true</code> in <code>&lt
 <dt class="hdlist1">Function <code>intermediateUpdate</code></dt>
 <dd>
 <p>This callback allows internal events of different types (e.g. associated to <a href="#outputClock"><code>output clock</code></a> ticks or intermediate variable access) to be signaled from an FMU to the Co-Simulation master.
-If <code>fmu3Type</code> is set to <code>fmi3CoSimulation</code> and either the <code>coSimulationMode</code> in <code>fmi3CoSimulationConfiguration</code> is set to <code>fmi3ModeHybridCoSimulation</code> or <code>fmi3ModeScheduledExecutionSimulation</code> or any of the intermediate variable access modes is set to <code>true</code>, then the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback must be defined in <a href="#fmi3CallbackFunctions"><code>fmi3CallbackFunctions</code></a> in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.
+If <code>fmu3Type</code> is set to <code>fmi3HybridCoSimulation</code> or <code>fmi3ScheduledExecutionSimulation</code> or any of the intermediate variable access modes is set to <code>true</code>, then the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback must be defined in <a href="#fmi3CallbackFunctions"><code>fmi3CallbackFunctions</code></a> in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.
 In other cases a NULL pointer can be assigned to the <code>intermediateUpdate</code> callback, such as if the <code>fmu3Type</code> is set to <code>fmi3ModelExchange</code>.</p>
 </dd>
 <dt class="hdlist1">Function <code>lockPreemption</code> and <code>unlockPreemption</code></dt>
 <dd>
 <p>To provide more options to secure the code against unwanted preemption these callback functions are defined.
-They can be used to prevent preemption for certain code parts enclosed by <code>lockPreemption</code> and <code>unlockPreemption</code> in Co-Simulation mode <code>fmi3ModeScheduledExecutionSimulation</code>.
+They can be used to prevent preemption for certain code parts enclosed by <code>lockPreemption</code> and <code>unlockPreemption</code> in <code>fmi3ScheduledExecutionSimulation</code>.
 Even if the Co-Simulation master does not support preemption, at least an empty implementation of these callback functions must be provided to allow the reuse of code for different modes together with an efficient preemption.</p>
 </dd>
 </dl>
@@ -2335,7 +2335,8 @@ Clocks are defined for the evaluation of <strong>clocked model partitions</stron
 Two types of <a href="#clock"><code>clocks</code></a> are available, designed to address similar use cases with differences in details.
 One <a href="#clock"><code>clock</code></a> type (Synchronous Clocks) complies with the limitations imposed by the synchronous clock theory, the other clock type (Communication Point Clocks) is a general purpose Co-Simulation clock for providing suitable communication points for the timed evaluation of model partitions.
 The term <a href="#clock"><code>clock</code></a> and clocked is therefore used for both <a href="#clock"><code>clock</code></a> types.
-Both clock types can handle two different variants, the <a href="#inputClock"><code>input clocks</code></a> and the <a href="#outputClock"><code>output clocks</code></a>. First the two different clock types are presented with the mathematical definition of their use cases.
+Both clock types can handle two different variants, the <a href="#inputClock"><code>input clocks</code></a> and the <a href="#outputClock"><code>output clocks</code></a>.
+First the two different clock types are presented with the mathematical definition of their use cases.
 After that the two clock variants are described. The section ends with a short description of connecting clocked FMUs.</p>
 </div>
 <div class="sect4">
@@ -2501,7 +2502,7 @@ It is defined as a rational number based on <code>intervalCounter</code> and <co
 <div class="paragraph">
 <p>The interval \(\Delta T\) and \(t_{offset}\) must be defined for periodic <a href="#clock"><code>clocks</code></a> in the XML file.
 In case of periodic <a href="#inputClock"><code>input clocks</code></a> these values are the start interval values if they are not given by the simulation master.
-<em>[This information can be used for emulating periodic <a href="#inputClock"><code>input clocks</code></a> in Co-Simulation mode <code>fmi3ModeCoSimulation</code>]</em>.</p>
+<em>[This information can be used for emulating periodic <a href="#inputClock"><code>input clocks</code></a> in the interface <code>fmi3CoSimulation</code>]</em>.</p>
 </div>
 <div class="paragraph">
 <p>If \(\Delta T\) is fixed for an FMU and cannot be changed it is a strictly periodic <a href="#clock"><code>clock</code></a>.
@@ -2611,7 +2612,7 @@ It is not allowed to call this function within the callback function <code>fmi3I
 <div class="paragraph">
 <p>Inquires whether a set of <a href="#clock"><code>clocks</code></a> is active by providing the value references of the corresponding <a href="#clock"><code>clock</code></a> varaibels.
 A <a href="#clock"><code>clock</code></a> with <a href="#valueReference"><code>valueReference</code></a>[i] is active at the current time instant if <code>value[i] = fmi3True</code>, otherwise the <a href="#clock"><code>clock</code></a> is not active. It is allowed to call this function within the callback function <code>fmi3IntermediateUpdate()</code>.
-It is required for an FMU to directly internally set back the activation <a href="#state"><code>state</code></a> of an <a href="#outputClock"><code>output clock</code></a> \(i\) to <code>fmi3False</code> if the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> is called for a <a href="#clock"><code>clock</code></a> \(i\) and the Co-Simulation mode is set to <code>fmi3ModeScheduledExecutionSimulation</code>.
+It is required for an FMU to directly internally set back the activation <a href="#state"><code>state</code></a> of an <a href="#outputClock"><code>output clock</code></a> \(i\) to <code>fmi3False</code> if the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> is called for a <a href="#clock"><code>clock</code></a> \(i\) and the interface is set to <code>fmi3ScheduledExecutionSimulation</code>.
 <em>[This is required to allow preemption.]</em></p>
 </div>
 <div class="paragraph">
@@ -8737,7 +8738,7 @@ unsignedInt: 0</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter defines the Functional Mock-up Interface (FMI) for the coupling of two or more simulation models in a co-simulation environment (FMI for Co-Simulation).
-It is designed both for coupling with subsystem models, which have been exported by their simulators together with its solvers as runnable code (<a href="#figure-co-simulation-with-generated-code">Figure 7</a>), and for coupling of simulation tools (simulator coupling, tool coupling (<a href="#figure-co-simulation-with-tool-coupling">Figure 8</a> and <a href="#figure-distributed-co-simulation">Figure 9</a>)).</p>
+It is designed both for coupling with subsystem models, which have been exported by their simulator together with its solver as runnable code (<a href="#figure-co-simulation-with-generated-code">Figure 7</a>), and for coupling of simulation tools on a single machine (<a href="#figure-co-simulation-with-tool-coupling">Figure 8</a>) or as part of a distributed co-simulation (<a href="#figure-distributed-co-simulation">Figure 9</a>).</p>
 </div>
 <div class="paragraph">
 <p>In FMI version 3.0 the following new features have been added:</p>
@@ -8745,75 +8746,80 @@ It is designed both for coupling with subsystem models, which have been exported
 <div class="ulist">
 <ul>
 <li>
-<p>Signal <a href="#clock"><code>clock</code></a> ticks (i.e. events/interrupts) from FMU to simulation environment</p>
+<p>signaling of <a href="#clock"><code>clock</code></a> ticks (i.e. events/interrupts) from the FMU to simulation environment</p>
 </li>
 <li>
-<p>Signal <a href="#clock"><code>clock</code></a> ticks from simulation environment to FMU</p>
+<p>signaling of <a href="#clock"><code>clock</code></a> ticks from simulation environment to the FMU</p>
 </li>
 <li>
-<p>Define multiple model rates (periodic, variable/triggerable) in one FMU</p>
+<p>definition of multiple model rates (periodic, variable/triggerable) in one FMU</p>
 </li>
 <li>
-<p>Access intermediate values of FMU variables between two communication points.</p>
+<p>access to intermediate values of the FMU&#8217;s variables between two communication points</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>Please refer to the different sections for a more detailed explanation of the motivation and use of the new features.</p>
 </div>
-<div class="paragraph">
-<p><strong>Co-Simulation</strong> <a id="co-simulation"></a></p>
-</div>
-<div class="paragraph">
+<div id="co-simulation" class="dlist">
+<dl>
+<dt class="hdlist1">Co-Simulation</dt>
+<dd>
 <p>Co-simulation is a rather general approach to the simulation of coupled technical systems and coupled physical phenomena in engineering with focus on instationary (time-dependent) problems.
-The basic Co-Simulation mode is similar to the feature set of FMI 2.0 for Co-Simulation.
+The basic Co-Simulation interface is similar to the feature set of FMI 2.0 for Co-Simulation.
 The asynchronous mode for FMUs has been removed since this mode was not supported by tools and it can be suitably replaced by Co-Simulation master implementations that control the asynchronous computation of FMUs via separate tasks/threads created for each FMU.</p>
+</dd>
+</dl>
 </div>
-<div class="paragraph">
-<p><strong>Early Return</strong> <a id="co-simulation-with-early-return"></a></p>
-</div>
-<div class="paragraph">
+<div id="co-simulation-with-early-return" class="dlist">
+<dl>
+<dt class="hdlist1">Early Return</dt>
+<dd>
 <p>In FMI 3.0, an FMU is allowed to stop the execution of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> and return without reaching the predefined communication instant, i.e. <code>currentCommunicationPoint + communicationStepSize</code>.
-This mechanism is called early-return.
-With the early return feature, an FMU shall be able to signal <a href="#outputClock"><code>output clock</code></a> events or internal <a href="#state"><code>state</code></a> changes, i.e., discontinuity events to the Co-Simulation master at any time (not only at the end of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function calls).
-When an FMU internal event happens at a time instant, the FMU informs the master that a new communication point for the Co-Simulation can be created.
-Note that, an event signal is not seen in the narrow sense of solver induced discontinuity events but in the general sense of a simulation event that has to be handled by the Co-Simulation master (e.g. state changes that require extended handling).
+This mechanism is called "early return".
+With the early return feature, an FMU can signal <a href="#outputClock"><code>output clock</code></a> events or internal state changes, i.e., discontinuity events to the Co-Simulation master at any time (not only at the end of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function calls).
+When an internal event occurs inside the FMU at a time instant, it informs the master that a new communication point for the Co-Simulation can be created.
+Note that an event signal is not seen in the narrow sense of solver induced discontinuity events but in the general sense of a simulation event that has to be handled by the Co-Simulation master (e.g. state changes that require extended handling).
 On a multi-node architecture, in particular, significant co-simulation speed-up may be obtained if the Co-Simulation master can avoid waiting until the end of the slowest <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> when many FMUs are integrating in parallel and an event occurred.
 To exploit such efficiency gains also the Co-Simulation master can command the FMU to return early from the current communication step.
-This is even helpful if the FMU or the Co-Simulation master do not support the advanced handling of events based on the <code>fmi3ModeHybridCoSimulation</code> functionalities.
-In this way multiple event types and also <a href="#outputClock"><code>output clock</code></a> ticks or interrupts can be supported based on the early return functionality and additional functionalities provided in the mode <code>fmi3ModeHybridCoSimulation</code>.</p>
+This is even helpful if the FMU or the Co-Simulation master do not support the advanced handling of events based on the <a href="#api-hybrid-co-simulation">Hybrid Co-Simulation</a> functionalities.
+In this way multiple event types and also <a href="#outputClock"><code>output clock</code></a> ticks or interrupts can be supported based on the early return functionality and additional functionalities provided by <a href="#api-hybrid-co-simulation">Hybrid Co-Simulation</a>.</p>
+</dd>
+</dl>
 </div>
-<div class="paragraph">
-<p><strong>Clocked Co-Simulation</strong>  <a id="clocked-co-simulation"></a></p>
-</div>
-<div class="paragraph">
-<p>The mode <code>fmi3ModeHybridCoSimulation</code> provides functionalities to control and observe the ticking of <a href="#clock"><code>clocks</code></a>.
-For FMI for Co-Simulation, the ticking of a <a href="#clock"><code>clock</code></a> is interpreted as an activity of the associated model partition.
-During simulation, the Co-Simulation master updates and manages values of <a href="#input"><code>inputs</code></a> and <a href="#output"><code>outputs</code></a> of FMUs and further models at communication points (CP) for each model partition.
+<div id="clocked-co-simulation" class="dlist">
+<dl>
+<dt class="hdlist1">Clocked Co-Simulation</dt>
+<dd>
+<p>The <a href="#api-hybrid-co-simulation">Hybrid Co-Simulation</a> interface provides functionalities to control and observe the ticking of <a href="#clock">clocks</a>.
+For FMI for Co-Simulation, the ticking of a clock is interpreted as an activity of the associated model partition.
+During simulation, the Co-Simulation master updates and manages values of inputs and outputs of FMUs and further models at communication points for each model partition.
 The ratio between communication points created for a model partition and time can be seen as a model rate.
 In that sense multiple model partitions of a model define multiple model rates in a model.</p>
+</dd>
+</dl>
 </div>
+<div id="scheduled-execution-simulation" class="dlist">
+<dl>
+<dt class="hdlist1">Scheduled Execution Simulation</dt>
+<dd>
+<p>The <a href="#api-hybrid-co-simulation">Hybrid Co-Simulation</a> interface provides an indirect control over the computation of model partitions.
+With <a href="#api-scheduled-execution-co-simulation">Scheduled Execution Simulation</a> a simulation master can directly control the time of computation (i.e. scheduling) for such model partitions.</p>
 <div class="paragraph">
-<p><strong>Scheduled Execution Simulation</strong> <a id="scheduled-execution-simulation"></a></p>
+<p>The Scheduled Execution Simulation interface addresses simulation use cases that require:</p>
 </div>
-<div class="paragraph">
-<p>The Co-Simulation mode <code>fmi3ModeHybridCoSimulation</code> provides an indirect control over the computation of model partitions.
-With the mode <code>fmi3ModeScheduledExecutionSimulation</code> it is possible that a Co-Simulation master takes direct control over the time of computation (i.e. scheduling) for such model partitions.</p>
-</div>
-<div class="paragraph">
-<p>The Co-Simulation mode <code>fmi3ModeScheduledExecutionSimulation</code> addresses simulation use cases that require:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>That at any time (even for unpredictable events) an event can be signaled to an FMU</p>
 </li>
 <li>
-<p>If multiple FMUs share (execution) resources then the time requirements (e.g. execution time, communication deadlines) of all model partitions have to be observed and respected</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<p>If multiple FMUs share (execution) resources, the time requirements (e.g. execution time, communication deadlines) of all model partitions have to be observed and respected</p>
+<div class="ulist">
+<ul>
 <li>
-<p>Time requirements may exist due to communication constraints that are not apparent at FMU simulation level that have to be fulfilled by the simulation master</p>
+<p>Time requirements may exist due to communication constraints (that are not apparent at FMU simulation level) which have to be fulfilled by the simulation master</p>
 </li>
 <li>
 <p>That requires a global execution order and preemption policy for all model partitions of the multiple FMUs</p>
@@ -8821,23 +8827,17 @@ With the mode <code>fmi3ModeScheduledExecutionSimulation</code> it is possible t
 <li>
 <p>Priority information provided by the FMUs has to be evaluated and merged to an overall priority for available model partitions</p>
 </li>
-</ol>
+</ul>
 </div>
 </li>
 <li>
 <p>Data shall move between the different FMU model partitions for the same or next activation time, if direct communication via FMUs exist.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<div class="ulist">
+<ul>
 <li>
-<p>Get/set actions must also be possible for the same activation time for different model partitions between the computation of these model partitions.</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
+<p>Get/set operations must also be possible for the same activation time for different model partitions between the computation of these model partitions.</p>
 <div class="paragraph">
-<p>This Co-Simulation mode provides support for a concurrent computation of model partitions (i.e. a support of multiple rates) on a single computational resource (e.g. CPU-core) for an FMU.
+<p>This Co-Simulation interface provides support for concurrent computation of model partitions (i.e. a support of multiple rates) on a single computational resource (e.g. CPU-core) of an FMU.
 For that a preemptive multitasking regime is intended (cooperative multitasking is not covered by this description).</p>
 </div>
 <div class="paragraph">
@@ -8845,18 +8845,26 @@ For that a preemptive multitasking regime is intended (cooperative multitasking 
 <em>An FMU may still internally use parallel computation on multiple cores, but handling this is (currently) not part of the FMI standard. Such an internal parallel computation is not visible to the simulation master.</em>
 <em>It is a tool vendor specific solution that has ties to the used OS and the co-simulation environment]</em></p>
 </div>
-<div class="paragraph">
-<p><strong>Intermediate Variable Access</strong> <a id="intermediate-variable-access"></a></p>
+</li>
+</ul>
 </div>
-<div class="paragraph">
-<p>An FMU shall be able to inform a Co-Simulation master that is able to provide intermediate output variables and/or receive intermediate <a href="#input"><code>input</code></a> variables at any time, i.e. not only at the end of a current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function call.
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div id="intermediate-variable-access" class="dlist">
+<dl>
+<dt class="hdlist1">Intermediate Variable Access</dt>
+<dd>
+<p>An FMU shall be able to inform a Co-Simulation master that is able to provide intermediate output variables and/or receive intermediate input variables at any time, i.e. not only at the end of a current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function call.
 It shall be possible for the FMU to inform the master whether the internal solver is in a temporary state or if it has just completed an internal integration step.
-If the internal solver is at a temporary state, intermediate output variables shall only be used for directly computing intermediate <a href="#input"><code>input</code></a> variables.
+If the internal solver is in a temporary state, intermediate output variables shall only be used for directly computing intermediate input variables.
 If the internal integration step is completed, the master can forward intermediate outputs to interconnected simulation units.</p>
-</div>
-<div class="paragraph">
-<p><strong>Coupling Scenarios</strong></p>
-</div>
+</dd>
+<dt class="hdlist1">Coupling Scenarios</dt>
+<dd>
 <div id="figure-co-simulation-with-generated-code" class="imageblock text-center">
 <div class="content">
 <img src="images/co-simulation-single-slave.svg" alt="co simulation single slave" width="50%">
@@ -8874,8 +8882,8 @@ If the internal integration step is completed, the master can forward intermedia
 Additionally to the FMU the simulation tool is needed to run a co-simulation.</p>
 </div>
 <div class="paragraph">
-<p>In its most general form, a tool coupling based co-simulation is implemented on distributed hardware with subsystems being handled by different computers with different OS (cluster computer, computer farm, computers at different locations).
-The data exchange and communication between the subsystems is typically done using one of the network communication technologies (for example, MPI, TCP/IP).
+<p>In its most general form, a tool coupling based co-simulation is implemented on distributed hardware with subsystems being handled by different computers with different OSs (cluster computer, computer farm, computers at different locations).
+The data exchange and communication between the subsystems is typically performed using one of the network communication technologies (for example, MPI, TCP/IP).
 The definition of this communication layer is not part of the FMI standard.
 However, distributed co-simulation scenarios can be implemented using FMI as shown in <a href="#figure-distributed-co-simulation">Figure 9</a>.</p>
 </div>
@@ -8890,36 +8898,15 @@ However, distributed co-simulation scenarios can be implemented using FMI as sho
 Additional parameters for establishing the network communication (for example, identification of the remote computer, port numbers, user account) are to be set via the GUI of the master.
 These data are not transferred via the FMI API.</p>
 </div>
-<div class="paragraph">
-<p><strong>Co-Simulation Feature Selection</strong> <a id="co-simulation-feature-selection"></a></p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
-<p>The following Co-Simulation modes are supported in FMI 3.0</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Basic Co-Simulation (<code>fmi3ModeCoSimulation</code>, section <a href="#co-simulation">[co-simulation]</a>)</p>
-</li>
-<li>
-<p>Hybrid Co-Simulation (<code>fmi3ModeHybridCoSimulation</code>, section <a href="#co-simulation-with-early-return">[co-simulation-with-early-return]</a> and section <a href="#clocked-co-simulation">[clocked-co-simulation]</a>)</p>
-</li>
-<li>
-<p>Scheduled Execution Simulation (<code>fmi3ModeScheduledExecutionSimulation</code>, section <a href="#scheduled-execution-simulation">[scheduled-execution-simulation]</a>)</p>
-</li>
-</ol>
+<p>For all Co-Simulation interfaces intermediate variable access can be activated, if the FMU and the master supports this.
+More information can be found in <a href="#intermediate-variable-access">[intermediate-variable-access]</a>.</p>
 </div>
 <div class="paragraph">
-<p>Each mode defines a specific set of features explained in the referenced subsections.</p>
-</div>
-<div class="paragraph">
-<p>In each Co-Simulation mode also the intermediate variable access option can be activated, if the FMU and the master supports this. More information can be found in section <a href="#intermediate-variable-access">[intermediate-variable-access]</a></p>
-</div>
-<div class="paragraph">
-<p>It is required that the Co-Simulation master signals to the FMU which features shall be used for the current use of the FMU.</p>
-</div>
-<div class="paragraph">
-<p>For that the following function is used:</p>
+<p>The Co-Simulation master signals to the FMU which features shall be used for the current instance of the FMU in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8934,13 +8921,7 @@ These data are not transferred via the FMI API.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For details about this function please refer to section <a href="#fmi-application-programming-interface">Section 2.1</a>.</p>
-</div>
-<div class="paragraph">
-<p>The Co-Simulation master must set the function parameter <code>fmuType</code> to <code>fmi3CoSimulation</code> in order to activate the Co-Simulation use in general.</p>
-</div>
-<div class="paragraph">
-<p>Additionally the Co-Simulation master has to configure the Co-Simulation mode used for the current instance of the FMU via setting the argument <code>fmuCoSimulationConfiguration</code> which is defined as follows:</p>
+<p>Additionally the Co-Simulation master provides the required Co-Simulation features via the argument <code>fmuCoSimulationConfiguration</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8948,84 +8929,66 @@ These data are not transferred via the FMI API.</p>
     fmi3Boolean intermediateVariableGetRequired;
     fmi3Boolean intermediateInternalVariableGetRequired;
     fmi3Boolean intermediateVariableSetRequired;
-    fmi3CoSimulationMode coSimulationMode;
 } fmi3CoSimulationConfiguration;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The element <code>coSimulationMode</code> in the above struct is an enumeration variable of type <code>fmi3CoSimulationMode</code> which has to be set by the master for this FMU instance.
-<code>coSimulationMode</code> can be one of the following enumeration values:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef enum {
-    fmi3ModeCoSimulation,
-    fmi3ModeHybridCoSimulation,
-    fmi3ModeScheduledExecutionSimulation
-} fmi3CoSimulationMode;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The master can only activate Co-Simulation modes for an FMU that the FMU defines as supported via <code>modelDescription.xml</code>.</p>
-</div>
-<div class="paragraph">
-<p>For setting the FMU to certain Co-Simulation modes the following capability flags (i.e. attributes) have to be <code>true</code>.</p>
+<p>The master can only select a certain Co-Simulation interface for an FMU if the following attributes are set in the  <code>modelDescription.xml</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
 </colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Co-Simulation interface</th>
+<th class="tableblock halign-left valign-top">Required attributes</th>
+</tr>
+</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Co-Simulation Mode</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Attributes the mode requires to be <code>true</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3CoSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseBasicCoSimulation = false</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3ModeCoSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">only if <code>canNotUseBasicCoSimulation = false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3HybridCoSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesHybridCoSimulation = true</code>, <code>canReturnEarlyAfterIntermediateUpdate = true</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3ModeHybridCoSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesHybridCoSimulation</code>, <code>canReturnEarlyAfterIntermediateUpdate</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3ModeScheduledExecutionSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesScheduledExecutionSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3ScheduledExecutionSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesScheduledExecutionSimulation = true</code></p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>A detailed description of the capability flags is given in the following sections.</p>
+<p>Generally it is assumed, that a Co-Simulation FMU always supports the interface <code>fmi3CoSimulation</code>.
+If that is not possible for an FMU (e.g. if the FMU cannot provide an emulation of <a href="#inputClock"><code>input clock</code></a> tick occurrences), it has to include the capability flag <code>canNotUseBasicCoSimulation = true</code> in the <code>modelDescription.xml</code>.</p>
 </div>
 <div class="paragraph">
-<p>Generally it is assumed that an FMI 3.0 for Co-Simulation FMU always supports the Co-Simulation mode <code>fmi3ModeCoSimulation</code>.
-If that is not possible for an FMU - e.g. if the FMU can not provide an emulation of <a href="#inputClock"><code>input clock</code></a> tick occurrences - it has to include the capability flag <code>canNotUseBasicCoSimulation = true</code> in the <code>modelDescription.xml</code>.</p>
+<p>If the FMU does not support the Co-Simulation interface selected in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> it has to return <code>NULL</code>.</p>
 </div>
-<div class="paragraph">
-<p>If the FMU cannot provide a support for a Co-Simulation mode it has to refuse this mode via return value <code>NULL</code> for <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.</p>
-</div>
-<div class="paragraph">
-<p><strong>Multiple Co-Simulation Mode Support in one FMU</strong></p>
-</div>
-<div class="paragraph">
-<p>If the <code>fmuType</code> is <code>fmi3CoSimulation</code>, then it is encouraged to support multiple Co-Simulation modes in one FMU so it can be used in differently capable Co-Simulation master implementations and for different use cases.
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Multiple Co-Simulation Interface Support in one FMU</dt>
+<dd>
+<p>Exporters are encouraged to support multiple Co-Simulation interfaces in one FMU, so it can be used in differently capable Co-Simulation master implementations and for different use cases.
 <em>[That improves the reusability of FMUs.</em>
 <em>A common application of this multiple mode support is the reuse of FMUs for real-time and non-real-time simulations.]</em></p>
+<div class="paragraph">
+<p>The described multi mode support is based on wrapping functionality into the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function by emulating missing features of the Co-Simulation interface, the FMU has been originally exported for.</p>
 </div>
 <div class="paragraph">
-<p>The described multi mode support is based on wrapping functionality into the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function via emulating missing features of the mode the FMU has been originally exported for.</p>
+<p>An FMU that supports <a href="#api-scheduled-execution-co-simulation">Scheduled Execution Simulation</a> will in most cases also support <a href="#api-hybrid-co-simulation">Hybrid Co-Simulation</a>.</p>
 </div>
 <div class="paragraph">
-<p>An FMU that supports the mode <code>fmi3ModeScheduledExecutionSimulation</code> will support in most cases also the mode <code>fmi3ModeHybridCoSimulation</code>.</p>
-</div>
-<div class="paragraph">
-<p><em>[Remark:</em>
-<em>Wrapping towards other Co-Simulation modes can influence the simulation results.</em>
-<em>Depending on the model especially wrapping towards the mode <code>fmi3ModeCoSimulation</code> may result in divergent simulation results.</em>
+<p><em>[Wrapping towards other Co-Simulation interfaces can influence the simulation results.</em>
+<em>Depending on the model especially wrapping towards the (basic) Co-Simulation interface may result in divergent simulation results.</em>
 <em>Especially aperiodic <a href="#inputClock"><code>input clocks</code></a> can not always be sufficiently emulated in modes that do not directly support <a href="#clock"><code>clocks</code></a>.</em>
-<em>Therefore it is recommended that the FMU provides logging information to the user about the influence of the current mode on simulation results, if non-optimal modes are used by the simulation environment.</em>
-<em>]</em></p>
+<em>Therefore it is recommended that the FMU provides logging information to the user about the influence of the current mode on simulation results, if non-optimal modes are used by the simulation environment.]</em></p>
+</div>
+</dd>
+</dl>
 </div>
 <div class="sect2">
 <h3 id="_mathematical_description">4.1. Mathematical Description</h3>
@@ -9546,9 +9509,9 @@ Note that, since output events time instants are not known in advance, at output
 </div>
 </div>
 <div class="sect3">
-<h4 id="math-scheduled-execution-simulation">4.1.4. Scheduled Execution Simulation Support</h4>
+<h4 id="math-scheduled-execution-simulation">4.1.4. Scheduled Execution Simulation interface</h4>
 <div class="paragraph">
-<p>The Scheduled Execution Simulation mode has a different timing concept compared to the other Co-Simulation modes.
+<p>The Scheduled Execution Simulation interface has a different timing concept compared to both Co-Simulation interfaces.
 This is required to cover <a href="#clock"><code>clock</code></a> ticks for aperiodic <a href="#inputClock"><code>input clocks</code></a> which may tick at time instances that are not predictable in advance for the simulation master.
 Typically, hardware I/O or virtual ECU software events belong to this category.</p>
 </div>
@@ -9622,12 +9585,12 @@ Whenever the internal solver in the FMU needs updated intermediate <a href="#inp
 <div class="sect2">
 <h3 id="_fmi_application_programming_interface_2">4.2. FMI Application Programming Interface</h3>
 <div class="sect3">
-<h4 id="_mode_fmi3modecosimulation">4.2.1. Mode fmi3ModeCoSimulation</h4>
+<h4 id="_fmi3cosimulation">4.2.1. fmi3CoSimulation</h4>
 <div class="paragraph">
 <p>This section contains the interface description to access the input/output data and status information of a Co-Simulation slave from a C program.</p>
 </div>
 <div class="sect4">
-<h5 id="transfer-of-input-output-and-parameters">Variables access in fmi3ModeCoSimulation</h5>
+<h5 id="transfer-of-input-output-and-parameters">Variables access in fmi3CoSimulation</h5>
 <div class="paragraph">
 <p><a href="#input"><code>Input</code></a> and <a href="#output"><code>output</code></a> variables and other variables are accessed via the <code>fmi3Get{VariableTypes}</code> and <code>fmi3Set{VariableTypes}</code> functions, defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
 </div>
@@ -9693,7 +9656,7 @@ E.g. after a successful call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a
 </div>
 </div>
 <div class="sect4">
-<h5 id="_computation_in_fmi3modecosimulation">Computation in fmi3ModeCoSimulation</h5>
+<h5 id="_computation_in_fmi3cosimulation">Computation in fmi3CoSimulation</h5>
 <div class="paragraph">
 <p>The computation of time steps is controlled by the following function.</p>
 </div>
@@ -9743,7 +9706,7 @@ See <a href="#status-returned-by-functions">Section 2.1.3</a> for details.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="retrieving-status-from-slave">Retrieving Status Information from the Slave in fmi3ModeCoSimulation</h5>
+<h5 id="retrieving-status-from-slave">Retrieving Status Information from the Slave in fmi3CoSimulation</h5>
 <div class="paragraph">
 <p>Status information is retrieved from the slave by the following function:</p>
 </div>
@@ -9760,7 +9723,7 @@ See <a href="#status-returned-by-functions">Section 2.1.3</a> for details.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="state-machine-co-simulation">State Machine of Calling Sequence from Master to Slave in fmi3ModeCoSimulation</h5>
+<h5 id="state-machine-co-simulation">State Machine of Calling Sequence from Master to Slave in fmi3CoSimulation</h5>
 <div class="paragraph">
 <p>The following state machine defines the supported calling sequences.</p>
 </div>
@@ -9771,7 +9734,7 @@ See <a href="#status-returned-by-functions">Section 2.1.3</a> for details.</p>
 <div class="title">Figure 11. Calling sequence of Co-Simulation C functions in form of an UML 2.0 state machine.</div>
 </div>
 <div class="paragraph">
-<p>In this Co-Simulation mode the following functions must not be called: <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> including all functions that are specific to fmuType <code>fmi3ModelExchange</code>.</p>
+<p>In this Co-Simulation interface the following functions must not be called: <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> including all functions that are specific to fmuType <code>fmi3ModelExchange</code>.</p>
 </div>
 <div class="sect5">
 <h6 id="state-slave-setable-fmu-state-co-simulation">State: Slave Setable FMU State</h6>
@@ -10550,7 +10513,7 @@ retrieved values are useable for debugging only ]_</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_example_for_fmi3modecosimulation">Code Example for fmi3ModeCoSimulation</h5>
+<h5 id="_code_example_for_fmi3cosimulation">Code Example for fmi3CoSimulation</h5>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 We consider two slaves, where both have one <a href="#continuous"><code>continuous</code></a> real <a href="#input"><code>input</code></a> and one <a href="#continuous"><code>continuous</code></a> real <a href="#output"><code>output</code></a> which are connected in the following way:</p>
@@ -10681,7 +10644,7 @@ if (status != fmi3Fatal) {
 </div>
 </div>
 <div class="sect3">
-<h4 id="earlyreturn-co-simulation">4.2.2. Early-return Requested by the Co-Simulation Master in fmi3ModeCoSimulation</h4>
+<h4 id="earlyreturn-co-simulation">4.2.2. Early-return Requested by the Co-Simulation Master in fmi3CoSimulation</h4>
 <div class="paragraph">
 <p>The boolean capability flag <code>canReturnEarlyAfterIntermediateUpdate</code> in the modelDescription XML file indicates whether the FMU supports the early-return feature.
 The default value of this capability flag is <code>false</code>.
@@ -10733,20 +10696,20 @@ In that case the internal simulation time of the FMU equals the value of <code>e
 <div class="paragraph">
 <p>In state <strong>Step Discarded</strong> the Co-Simulation master can retrieve the <code>lastSuccessfulTime</code> via calling <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>.
 The Co-Simulation master can decide if a rollback of the FMU to reach the <code>earlyReturnTime</code> time is required or it may continue the simulation from <code>lastSuccessfulTime</code> for that FMU.
-Note that <strong>Event Mode</strong> is not supported in <code>fmi3ModeCoSimulation</code>.</p>
+Note that <strong>Event Mode</strong> is not supported in <code>fmi3CoSimulation</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="api-hybrid-co-simulation">4.2.3. Mode fmi3ModeHybridCoSimulation</h4>
+<h4 id="api-hybrid-co-simulation">4.2.3. fmi3HybridCoSimulation</h4>
 <div class="paragraph">
-<p>If the boolean capability flag <code>providesHybridCoSimulation</code> and <code>canReturnEarlyAfterIntermediateUpdate = true</code> the Co-Simulation master can use the mode <code>fmi3ModeHybridCoSimulation</code>.</p>
+<p>If the boolean capability flag <code>providesHybridCoSimulation</code> and <code>canReturnEarlyAfterIntermediateUpdate = true</code> the Co-Simulation master can use the interface <code>fmi3HybridCoSimulation</code>.</p>
 </div>
 <div class="sect4">
 <h5 id="_communication_of_event_time_and_inputoutput_values">Communication of event time and input/output values</h5>
 <div class="paragraph">
 <p>The <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback described in section <a href="#earlyreturn-co-simulation">Section 4.2.2</a> is also used in order to communicate the <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a> and, in particular, the event and <a href="#clock"><code>clock</code></a> time from the FMU to the Co-Simulation master.
 The <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback allows internal events (e.g. associated to <a href="#outputClock"><code>output clock</code></a> ticks) to be signaled from an FMU to the Co-Simulation master.
-If <code>fmu3Type</code> is set to <code>fmi3CoSimulation</code> and the Co-simulation mode is set to <code>fmi3ModeHybridCoSimulation</code>, the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback must be defined in <a href="#fmi3CallbackFunctions"><code>fmi3CallbackFunctions</code></a> in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.
+If <code>fmu3Type</code> is set to <code>fmi3HybridCoSimulation</code>, the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback must be defined in <a href="#fmi3CallbackFunctions"><code>fmi3CallbackFunctions</code></a> in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.
 In other cases a NULL pointer can be assigned to the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback, such as if the <code>fmu3Type</code> is set to  <code>fmi3ModelExchange</code>.</p>
 </div>
 <div class="paragraph">
@@ -10821,7 +10784,7 @@ But in <strong>Event Mode</strong>, there may be an event iteration at a Newtoni
 </div>
 </div>
 <div class="sect4">
-<h5 id="_handling_a_successful_early_return_by_the_co_simulation_master_in_fmi3modehybridcosimulation">Handling a Successful Early-Return by the Co-Simulation Master in fmi3ModeHybridCoSimulation</h5>
+<h5 id="_handling_a_successful_early_return_by_the_co_simulation_master_in_fmi3hybridcosimulation">Handling a Successful Early-Return by the Co-Simulation Master in fmi3HybridCoSimulation</h5>
 <div class="paragraph">
 <p>If the FMU is successful in conducting an early return, the return value of the <code>earlyReturn</code> argument in <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> is <code>fmi3True</code>, otherwise <code>fmi3False</code>.
 If the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with the <code>earlyReturn = fmi3True</code> the Co-Simulation master has to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> for that FMU.</p>
@@ -10842,7 +10805,7 @@ If the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with t
 <div class="paragraph">
 <p>If an FMU provides the early-return capability that includes the handling of events in <strong>Event Mode</strong>, the FMU signals this via <code>canReturnEarlyAfterIntermediateUpdate</code> and <code>providesHybridCoSimulation = true</code> in the modelDescription.
 The master should indicate to the FMU that this early-return feature is also supported by the master.
-The Co-Simulation master signals to the FMU that it supports and has recognized the early return Co-Simulation capabilities of the FMU by setting the CoSimulation mode to <code>fmi3ModeHybridCoSimulation</code> in the <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> function.</p>
+The Co-Simulation master signals to the FMU that it supports and has recognized the early return Co-Simulation capabilities of the FMU by setting the CoSimulation interface to <code>fmi3HybridCoSimulation</code> in the <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> function.</p>
 </div>
 <div class="paragraph">
 <p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through <code>intermediateUpdateInfo.intermediateUpdateTime</code>.
@@ -10877,28 +10840,28 @@ This is the case when the model can report in advance the accurate time of the n
 The FMU leaves <strong>Event Mode</strong> when the master calls <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for that FMU.</p>
 </div>
 <div class="paragraph">
-<p>It is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for an FMU in mode <code>fmi3ModeCoSimulation</code> or <code>fmi3ModeScheduledExecutionSimulation</code>.</p>
+<p>It is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for an FMU with interface <code>fmi3CoSimulation</code> or <code>fmi3ScheduledExecutionSimulation</code>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_machine_of_calling_sequence_from_master_to_slave_in_fmi3modehybridcosimulation">State Machine of Calling Sequence from Master to Slave in fmi3ModeHybridCoSimulation</h5>
+<h5 id="_state_machine_of_calling_sequence_from_master_to_slave_in_fmi3hybridcosimulation">State Machine of Calling Sequence from Master to Slave in fmi3HybridCoSimulation</h5>
 
 </div>
 </div>
 <div class="sect3">
-<h4 id="api-clocked-co-simulation">4.2.4. Co-Simulation with Clock Support in fmi3ModeHybridCoSimulation</h4>
+<h4 id="api-clocked-co-simulation">4.2.4. Co-Simulation with Clock Support in fmi3HybridCoSimulation</h4>
 <div class="paragraph">
 <p>In this section, signaling and retrieving <a href="#clock"><code>clock</code></a> ticks as well as the interface for supporting <a href="#clock"><code>clocks</code></a> in FMI for Co-Simulation will be discussed.
 If an FMU for Co-Simulation declares <a href="#clock"><code>clocks</code></a> and clocked variables in the <code>modelDescription.xml</code> file, it supports <a href="#clock"><code>clocks</code></a>.
-The Co-Simulation master should indicate the FMU that the master has recognized the <a href="#clock"><code>clock</code></a> capabilities of the FMU and supports the <a href="#clock"><code>clock</code></a> handling by setting the Co-Simulation mode to <code>fmi3ModeHybridCoSimulation</code> in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.
-Note, even if no <a href="#clock"><code>clock</code></a> is defined by an FMU in <code>modelDescription.xml</code>, the master is allowed to set the Co-Simulation mode to <code>fmi3ModeHybridCoSimulation</code> to be able to do early return with event handling in <strong>Event Mode</strong>.</p>
+The Co-Simulation master should indicate the FMU that the master has recognized the <a href="#clock"><code>clock</code></a> capabilities of the FMU and supports the <a href="#clock"><code>clock</code></a> handling by setting the Co-Simulation interface to <code>fmi3HybridCoSimulation</code> in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.
+Note, even if no <a href="#clock"><code>clock</code></a> is defined by an FMU in <code>modelDescription.xml</code>, the master is allowed to set the interface to <code>fmi3HybridCoSimulation</code> to be able to do early return with event handling in <strong>Event Mode</strong>.</p>
 </div>
 <div class="paragraph">
-<p>If an FMU provides <a href="#clock"><code>clocks</code></a>, but the Co-Simulation master does not support or does not want to support early-return or <a href="#clock"><code>clocks</code></a>, by setting Co-Simulation mode to <code>fmi3ModeCoSimulation</code>, the activation of model partitions inside of the FMU has to be handled internally within <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
+<p>If an FMU provides <a href="#clock"><code>clocks</code></a>, but the Co-Simulation master does not support or does not want to support early-return or <a href="#clock"><code>clocks</code></a>, by setting the interface to <code>fmi3CoSimulation</code>, the activation of model partitions inside of the FMU has to be handled internally within <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
 </div>
 <div class="paragraph">
-<p><em>[Remark: Wrapping towards other Co-Simulation modes can influence the simulation results.</em>
-<em>Depending on the model especially wrapping towards the mode <code>fmi3ModeCoSimulation</code> may result in divergent simulation results.</em>
+<p><em>[Remark: Wrapping towards other Co-Simulation interfaces can influence the simulation results.</em>
+<em>Depending on the model especially wrapping towards <code>fmi3CoSimulation</code> may result in divergent simulation results.</em>
 <em>Especially aperiodic <a href="#inputClock"><code>input clocks</code></a> can not always be sufficiently emulated in modes that do not directly support <a href="#clock"><code>clocks</code></a>.</em>
 <em>Therefore it is recommended that the FMU provides logging information to the user about the influence of the current mode on simulation results, if non-optimal modes are used by the simulation environment.]</em></p>
 </div>
@@ -10908,7 +10871,7 @@ Note, even if no <a href="#clock"><code>clock</code></a> is defined by an FMU in
 </div>
 </div>
 <div class="sect4">
-<h5 id="transfer-of-input-output-and-parameters-clocked-co-simulation">Transfer of Input / Output Values and Parameters in fmi3ModeHybridCoSimulation</h5>
+<h5 id="transfer-of-input-output-and-parameters-clocked-co-simulation">Transfer of Input / Output Values and Parameters in fmi3HybridCoSimulation</h5>
 <div class="paragraph">
 <p>If the Co-Simulation master supports <a href="#clock"><code>clocks</code></a>, all <a href="#inputClock"><code>input clocks</code></a> of the model should be handled and <a href="#inputClock"><code>input clock</code></a> events should be scheduled by the master.
 If an <a href="#outputClock"><code>output clock</code></a> ticks, the FMU invokes the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback and sets <code>intermediateUpdateInfo.clocksTicked</code> to <code>fmi3True</code>.
@@ -10928,7 +10891,7 @@ Note that <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may not reach the ne
 </div>
 </div>
 <div class="sect4">
-<h5 id="computation-clocked-co-simulation">Computation in fmi3ModeHybridCoSimulation</h5>
+<h5 id="computation-clocked-co-simulation">Computation in fmi3HybridCoSimulation</h5>
 <div class="paragraph">
 <p>Similar to FMI for Model Exchange, in order to activate <a href="#inputClock"><code>input clocks</code></a> of an FMU, it is required to push the FMU into <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
 If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <code>earlyReturn = fmi3True</code> and <code>intermediateUpdateInfo.eventOccurred</code> or <code>intermediateUpdateInfo.clocksTicked</code> is <code>fmi3True</code>, the FMU must be pushed into the <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.</p>
@@ -10942,12 +10905,12 @@ If the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> return value is <code>f
 Function calls of this call order can be omitted.</p>
 </div>
 <div class="paragraph">
-<p>The handling of return values of function calls is identical to mode <code>fmi3ModeCoSimulation</code>.</p>
+<p>The handling of return values of function calls is identical to <code>fmi3CoSimulation</code>.</p>
 </div>
 <div class="paragraph">
 <p>If <code>eventInfo.terminateSimulation</code> becomes <code>fmi3True</code> after calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> then the co-simulation should be terminated by calling <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.
 Once handling of the <a href="#clock"><code>clock</code></a> events finished, the master calls <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for that FMU to push it into <strong>Step Mode</strong>.
-Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> in Co-Simulation mode <code>fmi3ModeCoSimulation</code> or <code>fmi3ScheduledExecutionSimulation</code>.</p>
+Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> in <code>fmi3CoSimulation</code> or <code>fmi3ScheduledExecutionSimulation</code>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Usually the Co-Simulation master should be able to derive (but is not forced to do so) the correct communication point times for <a href="#inputClock"><code>input clocks</code></a> in advance and thus it should be able to set the proper <code>communicationStepSize</code> for <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</em>
@@ -10955,7 +10918,7 @@ Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3Ente
 </div>
 </div>
 <div class="sect4">
-<h5 id="state-machine-calling-sequence-clocked-co-simulation">State Machine of Calling Sequence from Master to Slave in fmi3ModeHybridCoSimulation</h5>
+<h5 id="state-machine-calling-sequence-clocked-co-simulation">State Machine of Calling Sequence from Master to Slave in fmi3HybridCoSimulation</h5>
 <div class="paragraph">
 <p>The following state machine defines the supported calling sequences.</p>
 </div>
@@ -10963,10 +10926,10 @@ Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3Ente
 <div class="content">
 <img src="images/calling-sequence-hybrid-co-simulation.svg" alt="calling sequence hybrid co simulation" width="80%">
 </div>
-<div class="title">Figure 13. Calling sequence of clocked Co-Simulation mode.</div>
+<div class="title">Figure 13. Calling sequence of clocked Co-Simulation interface.</div>
 </div>
 <div id="figure-hybrid-co-simulation-state-machine" class="paragraph">
-<p>In this Co-Simulation mode the following functions must not be called: <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> including all functions that are specific to fmuType <code>fmi3ModelExchange</code>.</p>
+<p>In this Co-Simulation interface the following functions must not be called: <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> including all functions that are specific to fmuType <code>fmi3ModelExchange</code>.</p>
 </div>
 <div class="paragraph">
 <p>Unlike the state machine in section <a href="#state-machine-co-simulation">Section 4.2.1.4</a> the entry state after <strong>Initialization Mode</strong> is the <strong>Event Mode</strong> in order to allow the FMU to handle the very first discrete event.
@@ -11717,7 +11680,7 @@ For <a href="#input"><code>input</code></a> periodic <a href="#clock"><code>cloc
 </div>
 </div>
 <div class="sect4">
-<h5 id="code-example-clocked-co-simulation">Code Example for fmi3ModeHybridCoSimulation</h5>
+<h5 id="code-example-clocked-co-simulation">Code Example for fmi3HybridCoSimulation</h5>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 We consider &#8230;&#8203;</p>
@@ -11899,17 +11862,17 @@ We consider &#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="api-scheduled-execution-simulation">4.2.5. Scheduled Execution Simulation</h4>
+<h4 id="api-scheduled-execution-co-simulation">4.2.5. Scheduled Execution Simulation</h4>
 <div class="paragraph">
-<p>This section contains the interface description for supporting the scheduled execution mode from a C program.</p>
+<p>This section contains the interface description for supporting the Scheduled Execution Simulation interface from a C program.</p>
 </div>
 <div class="paragraph">
 <p>The direct scheduling of model partitions based on <a href="#clock"><code>clock</code></a> ticks requires an additional handling mode for FMUs.
 The FMU signals its support for direct model partition scheduling in the <code>modelDescription.xml</code> via the flag <code>providesScheduledExecutionSimulation = true</code>.
-The Co-Simulation master signals to the FMU that it supports and has recognized the <a href="#clock"><code>clock</code></a> and model partition scheduling capabilities of the FMU via setting the Co-Simulation mode in <code>fmi3CoSimulationMode</code> to <code>fmi3ModeScheduledExecutionSimulation</code> in the struct <code>fmi3CoSimulationConfiguration</code> function <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.</p>
+The Co-Simulation master signals to the FMU that it supports and has recognized the <a href="#clock"><code>clock</code></a> and model partition scheduling capabilities of the FMU via setting the Co-Simulation interface in <code>fmi3CoSimulationMode</code> to <code>fmi3ScheduledExecutionSimulation</code> in the struct <code>fmi3CoSimulationConfiguration</code> function <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>If the flag <code>providesScheduledExecutionSimulation = false</code>, it is not allowed to set the Co-Simulation mode to <code>fmi3ModeScheduledExecutionSimulation</code>.</p>
+<p>If the flag <code>providesScheduledExecutionSimulation = false</code>, it is not allowed to set the Co-Simulation interface to <code>fmi3ScheduledExecutionSimulation</code>.</p>
 </div>
 <div class="paragraph">
 <p>If no <a href="#inputClock"><code>input clocks</code></a> are defined by the FMU it is not allowed to set <code>providesScheduledExecutionSimulation</code> to <code>true</code> in the <code>modelDescription.xml</code>.</p>
@@ -11920,7 +11883,7 @@ If e.g. an function returns <code>fmi3Discard</code> or <code>fmi3Error</code> t
 In case of <code>fmi3Discard</code> or <code>fmi3Error</code> no repetition of the step is possible, the only possible way to go forward is to enter the <strong>Terminated</strong> state and to end or to reset the simulation or - if supported - to set the FMU back to a former state.</p>
 </div>
 <div class="sect4">
-<h5 id="_transfer_of_input_output_values_and_parameters_in_fmi3modescheduledexecutionsimulation">Transfer of Input / Output Values and Parameters in fmi3ModeScheduledExecutionSimulation</h5>
+<h5 id="_transfer_of_input_output_values_and_parameters_in_fmi3scheduledexecutionsimulation">Transfer of Input / Output Values and Parameters in fmi3ScheduledExecutionSimulation</h5>
 <div class="paragraph">
 <p>The simulation master sets and gets variable values as defined in section <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
 </div>
@@ -11935,14 +11898,14 @@ Set/get operations have to be atomic for a single variable.</p>
 <div class="paragraph">
 <p>The computational effort has to be predictable, thus all computationally expensive operations needed to calculate a model partition have to be contained within the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function.
 The simulation master can assume that <code>fmi3Get{VariableType} and fmi3Set{VariableType}</code> operations are not computationally expensive.
-In mode <code>fmi3ModeScheduledExecutionSimulation</code> the handling of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks is the same as in section <a href="#clocked-co-simulation">[clocked-co-simulation]</a>.
+In <code>fmi3ScheduledExecutionSimulation</code> the handling of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks is the same as in section <a href="#clocked-co-simulation">[clocked-co-simulation]</a>.
 The only difference is that an early return has no meaning in this mode and  no additional event handling based on <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is conducted.
 All internal events that shall be handled by the Co-Simulation master are signaled via <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
 <em>[In this mode it is recommended to restrict such updates by the FMU to <a href="#outputClock"><code>output clock</code></a> ticks for reducing the computational load in real-time simulations.]</em></p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_computation_in_fmi3modescheduledexecutionsimulation">Computation in fmi3ModeScheduledExecutionSimulation</h5>
+<h5 id="_computation_in_fmi3scheduledexecutionsimulation">Computation in fmi3ScheduledExecutionSimulation</h5>
 <div class="paragraph">
 <p>If this mode is set, the master has to directly control the time of computation of model partitions associated to <a href="#inputClock"><code>input clocks</code></a>.
 The activation states of <a href="#outputClock"><code>output clocks</code></a> are transported via <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.</p>
@@ -11980,9 +11943,6 @@ These <a href="#inputClock"><code>input clock</code></a> ticks can be based on <
 The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function is not called for <a href="#outputClock"><code>output clocks</code></a> of an FMU.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> functions must not be called in this Co-Simulation mode.</p>
-</div>
-<div class="paragraph">
 <p>The value for the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> parameter <code>activationTime</code> is the <a href="#clock"><code>clock</code></a> tick time \(t_i\) from the  assigned <a href="#inputClock"><code>input clock</code></a> (which is known to the Co-Simulation master).</p>
 </div>
 <div class="paragraph">
@@ -12004,7 +11964,7 @@ Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_machine_for_fmi3modescheduledexecutionsimulation">State Machine for fmi3ModeScheduledExecutionSimulation</h5>
+<h5 id="_state_machine_for_fmi3scheduledexecutionsimulation">State Machine for fmi3ScheduledExecutionSimulation</h5>
 <div class="paragraph">
 <p>This section summarizes the available states and the allowed function calls in the respective states.
 All states must not be entered or exited concurrently for model partitions of an FMU but only for the whole FMU instance.</p>
@@ -12013,13 +11973,13 @@ All states must not be entered or exited concurrently for model partitions of an
 <div class="content">
 <img src="images/calling-sequence-co-simulation_scheduled_execution.svg" alt="calling sequence co simulation scheduled execution" width="80%">
 </div>
-<div class="title">Figure 10: Calling sequence of scheduled execution simulation mode.</div>
+<div class="title">Figure 10: Calling sequence of Scheduled Execution Simulation.</div>
 </div>
 <div class="paragraph">
-<p>In this Co-Simulation mode the following functions must not be called: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> including all functions that are specific to fmuType <code>fmi3ModelExchange</code>.</p>
+<p>In Scheduled Execution Simulation the following functions must not be called: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> including all functions that are specific to the Model Exchange interface.</p>
 </div>
 <div class="paragraph">
-<p>The states <strong>Configuration Mode</strong>, <strong>Instantiated</strong>, <strong>Initialization Mode</strong>, <strong>Terminated</strong>, and <strong>Fatal</strong> are handled in the same way as in mode <code>fmi3ModeCoSimulation</code> with the exception that the generally not allowed functions of the Co-Simulation mode <code>fmi3ModeScheduledExecutionSimulation</code> must not be called.</p>
+<p>The states <strong>Configuration Mode</strong>, <strong>Instantiated</strong>, <strong>Initialization Mode</strong>, <strong>Terminated</strong>, and <strong>Fatal</strong> are handled in the same way as in <code>fmi3CoSimulation</code>, with the exception that the generally not allowed functions of <code>fmi3ScheduledExecutionSimulation</code> must not be called.</p>
 </div>
 <div class="sect5">
 <h6 id="_state_slave_setable_fmu_state_2">State: Slave Setable FMU State</h6>
@@ -12068,7 +12028,7 @@ In case of <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wa
 <dd>
 <p>Is called before the start of the computation of a model partition (i.e. before call of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>input clock</code></a> assigned to the model partition.</p>
 <div class="paragraph">
-<p>The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <strong>Step Mode</strong> in mode <code>fmi3ModeCoSimulation</code> apply.</p>
+<p>The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <strong>Step Mode</strong> in <code>fmi3CoSimulation</code> apply.</p>
 </div>
 <div class="paragraph">
 <p>If the function returns with <code>fmi3OK</code> or <code>fmi3Warning</code> the FMU stays in this state.
@@ -12080,7 +12040,7 @@ In case the function returns <code>fmi3Discard</code> or <code>fmi3Error</code> 
 <dd>
 <p>Is called after the end of the computation of a model partition (i.e. after return of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>input clock</code></a> assigned to the model partition.</p>
 <div class="paragraph">
-<p>The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <strong>Step Mode</strong> in mode <code>fmi3ModeCoSimulation</code> apply.</p>
+<p>The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <strong>Step Mode</strong> in <code>fmi3CoSimulation</code> apply.</p>
 </div>
 <div class="paragraph">
 <p>If the function returns with <code>fmi3OK</code> or <code>fmi3Warning</code> the FMU stays in this state.
@@ -12154,12 +12114,12 @@ If these functions are called while a model partition of an FMU is currently act
 </dd>
 <dt class="hdlist1"><a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a>,<a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a></dt>
 <dd>
-<p>Can be called if no other task related to the computation of model partitions of this FMU is currently active or preempted and the prerequisites defined for these functions in mode <code>fmi3ModeCoSimulation</code> are fulfilled.
+<p>Can be called if no other task related to the computation of model partitions of this FMU is currently active or preempted and the prerequisites defined for these functions in <code>fmi3CoSimulation</code> are fulfilled.
 Thus these functions can not be called concurrently for model partitions of an FMU but only for the whole FMU instance.</p>
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p>Additionally to the generally forbidden functions in this Co-Simulation mode as listed above, the following functions must not be called in this state: <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a></p>
+<p>Additionally to the generally forbidden functions in Scheduled Execution Simulation as listed above, the following functions must not be called in this state: <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>.</p>
 </dd>
 </dl>
 </div>
@@ -12192,7 +12152,7 @@ Also intermediate variable access is allowed as defined in <a href="#state-inter
 </div>
 <div class="paragraph">
 <p><em>[Based on the FMI standard it cannot be determined which part of the code of an FMU has called the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</em>
-<em>This is especially the case for the Co-Simulation mode <code>fmi3ModeScheduledExecutionSimulation</code> in which multiple model partitions can be active at the same time.</em>
+<em>This is especially the case for <code>fmi3ScheduledExecutionSimulation</code> in which multiple model partitions can be active at the same time.</em>
 <em>This causes no issues since all function call prerequisites are connected to the activation state of <a href="#clock"><code>clocks</code></a>, <code>modelDescription.xml</code> information and additionally available information of the struct <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a>]</em></p>
 </div>
 </div>
@@ -12219,7 +12179,7 @@ This state is entered from state <strong>Clock Activation Mode</strong> by calli
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p>Additionally to the generally forbidden functions in this Co-Simulation mode listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,<code>fmi3SetRealInputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>, <code>fmi3GetRealOutputDerivatives</code>, <code>fmi3Get{VariableTypes}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
+<p>Additionally to the generally forbidden functions in Scheduled Execution Simulation listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,<code>fmi3SetRealInputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>, <code>fmi3GetRealOutputDerivatives</code>, <code>fmi3Get{VariableTypes}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
 </dd>
 </dl>
 </div>
@@ -12234,7 +12194,7 @@ Usually a preemptive scheduling of the <a href="#fmi3ActivateModelPartition"><co
 <div class="paragraph">
 <p>The FMU&#8217;s code has to be prepared for being able to correctly handle preemptive calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <code>fmi3Get{VariableType}</code>, <code>fmi3Set{VariableType}</code>.
 That requires a secured internal and external access to global states and variable values.
-Thus in this Co-Simulation mode a support for a correct handling of the preemption of model partition computations is required.
+Thus in Scheduled Execution Simulation a support for a correct handling of the preemption of model partition computations is required.
 That also requires that the FMU reports the active state of a <a href="#outputClock"><code>output clock</code></a> only with the first call of <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> for a specific activation of this <a href="#clock"><code>clock</code></a> and sets the reported activation state immediately back to <code>false</code> for the following <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> calls for that <a href="#clock"><code>clock</code></a> until this <a href="#outputClock"><code>output clock</code></a> is internally activated again.</p>
 </div>
 <div class="paragraph">
@@ -12310,7 +12270,7 @@ typedef void       (*fmi3CallbackUnlockPreemption) ();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Even if the Co-Simulation master does not support preemption and the mode <code>fmi3ModeScheduledExecutionSimulation</code>, at least an empty implementation of these callback functions is required.</p>
+<p>Even if the Co-Simulation master does not support preemption and the mode <code>fmi3ScheduledExecutionSimulation</code>, at least an empty implementation of these callback functions is required.</p>
 </div>
 <div class="paragraph">
 <p>Example for the use of <code>fmi3CallbackLockPreemption</code> and <code>fmi3CallbackUnlockPreemption</code> callback functions in the FMU code:</p>
@@ -12348,7 +12308,7 @@ void Task2(void) //high priority
 </div>
 </div>
 <div class="sect4">
-<h5 id="_pseudo_code_example_for_fmi3modescheduledexecutionsimulation">Pseudo-code Example for fmi3ModeScheduledExecutionSimulation</h5>
+<h5 id="_pseudo_code_example_for_fmi3scheduledexecutionsimulation">Pseudo-code Example for fmi3ScheduledExecutionSimulation</h5>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 The example is given in a mix of pseudo-code and C, in order to keep it small and understandable.
@@ -12522,7 +12482,7 @@ fmi3Status GlobalTerminate(status)
 <div class="sect3">
 <h4 id="api-intermediate-variable-access">4.2.6. Intermediate Variable Access</h4>
 <div class="paragraph">
-<p>If the Co-Simulation master signals the support for intermediate variable access see section <a href="#co-simulation-feature-selection">[co-simulation-feature-selection]</a> and an FMU has at least one variable with <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code>, the FMU can invoke the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback function to sent the <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a> back to the Co-Simulation master.</p>
+<p>If the Co-Simulation master signals the support for intermediate variable access and an FMU has at least one variable with <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code>, the FMU can invoke the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback function to sent the <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a> back to the Co-Simulation master.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -12804,16 +12764,16 @@ The accessible variables are marked with attribute <a href="#intermediateAccess"
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesHybridCoSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave can be set to Co-Simulation mode <code>fmi3ModeHybridCoSimulation</code> during instantiation of FMU.
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave can be set to <code>fmi3HybridCoSimulation</code> during instantiation of FMU.
 If set to <code>true</code> also <code>canReturnEarlyAfterIntermediateUpdate</code> must be set to <code>true</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesScheduledExecutionSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave can be set to Co-Simulation mode <code>fmi3ModeScheduledExecutionSimulation</code> during instantiation of FMU.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave can be set to <code>fmi3ScheduledExecutionSimulation</code> during instantiation of FMU.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseBasicCoSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>false</code>, the slave can be set to Co-Simulation mode <code>fmi3ModeCoSimulation</code> during instantiation of FMU.
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>false</code>, the slave can be set to <code>fmi3CoSimulation</code> during instantiation of the FMU.
 <em>[the support of basic co-simulation should be possible for most Co-Simulation FMUs, thus the default value is <code>false</code>.]</em></p></td>
 </tr>
 </tbody>
@@ -12824,7 +12784,7 @@ boolean: <code>false</code><br>
 unsignedInt: <code>0</code><br></p>
 </div>
 <div class="paragraph">
-<p>Note that if <code>needsExecutionTool = true</code>, then it is required that the original tool is available to be executed in Co-Simulation mode.
+<p>Note that if <code>needsExecutionTool = true</code>, then it is required that the original tool is available to be executed during co-simulation.
 If <code>needsExecutionTool = false</code>, the slave is completely contained inside the FMU in source code or binary format (DLL/SharedObject).</p>
 </div>
 <div class="sect4">
