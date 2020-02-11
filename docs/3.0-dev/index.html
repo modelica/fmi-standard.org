@@ -2893,11 +2893,11 @@ Details are described in the description of element <a href="#dependencies"><cod
 </ul>
 </div>
 <div class="paragraph">
-<p>If the capability attribute <code>providesDirectionalDerivative = true</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a> computes a linear combination of the partial derivatives of <strong>h</strong> with respect to the selected <a href="#input"><code>input</code></a> variables \(\color{blue}{\mathbf{v}_{known}}\):</p>
+<p>If the capability attribute <code>providesDirectionalDerivative</code> is <code>true</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a> computes a linear combination of the partial derivatives of <strong>h</strong> with respect to all elements of the selected <a href="#input"><code>input</code></a> variables \(\color{blue}{\mathbf{v}_{known}}\):</p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[\Delta \mathbf{v}_{unknown} = \frac{\partial \mathbf{h}}{\partial \mathbf{v}_{known}} \Delta \mathbf{v}_{known}\]
+\[\Delta \mathbf{v}_{unknown} = \sum_i \frac{\partial \mathbf{h}}{\partial \mathbf{v}(i)_{known}}\Delta \mathbf{v}(i)_{known}\]
 </div>
 </div>
 <div class="paragraph">
@@ -3020,6 +3020,52 @@ for (i = 0; i &lt; nx; i++) {
 </div>
 <div class="paragraph">
 <p><em>More details and implementational notes are available from <a href="#ABL12">[ABL12]</a>.]</em></p>
+</div>
+<div class="paragraph">
+<p>Directional derivatives for higher dimension variables are almost treated in the same way.
+Consider, for example, an FMU which calculates its output \({Y}\) by multiplying its 2x2 input \({U}\) with a 3x2 constant gain \({K}\), with</p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[K=
+\begin{bmatrix}
+a, b
+\\
+c, d
+\\
+e, f
+\end{bmatrix}\]
+</div>
+</div>
+<div class="paragraph">
+<p>The output \({Y=K U}\) is a matrix of size 3x2.
+The directional derivative of an output element \({Y(i,j)}\) with respect to the input \({U}\)) is:</p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[\Delta Y(i,j) =
+\frac{\delta Y}{\delta U(1,1)} \cdot \Delta U(1,1) +
+\frac{\delta Y}{\delta U(1,2)} \cdot \Delta U(1,2) +
+\frac{\delta Y}{\delta U(2,1)} \cdot \Delta U(2,1) +
+\frac{\delta Y}{\delta U(2,2)} \cdot \Delta U(2,2)\]
+</div>
+</div>
+<div class="stemblock">
+<div class="content">
+\[\Delta \mathbf{Y} =
+\begin{bmatrix}
+a \Delta U(1,1)+b \Delta U(2,1), a \Delta U(1,2)+ b \Delta U(2,2)
+\\
+c \Delta U(1,1)+d \Delta U(2,1), c \Delta U(1,2)+ d \Delta U(2,2)
+\\
+e \Delta U(1,1)+f \Delta U(2,1), e \Delta U(1,2)+ f \Delta U(2,2)
+\end{bmatrix}\]
+</div>
+</div>
+<div class="paragraph">
+<p>To get the directional derivative of \({Y}\) with respect to \({U(2,1)}\) the command <code>fmi3GetDirectionalDerivative(m, vr_Y, 1, vr_U, 1, {0.0, 0.0, 1.0, 0.0}, 4, dd, 6)</code> can be used where <code>vr_Y</code> and <code>vr_U</code> are references of the variable \({Y}\) and \({U}\), respectively.
+Note that in order to get the directional derivative of \({Y}\) with respect to \({U(2,1)}\), the seed value <code>{0, 0, 1.0, 0}</code> has been used.
+The retrieved directional derivative <code>dd</code> is stored in a matrix of size 3x2, so <code>nDvUnknown</code> is 6.</p>
 </div>
 </div>
 <div class="sect3">
