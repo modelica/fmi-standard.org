@@ -1957,7 +1957,7 @@ In such a case all numerical algorithms used inside the model (for example, to s
 </dd>
 <dt class="hdlist1"><code>fmuType = fmi3CoSimulation</code></dt>
 <dd>
-<p>If <code>toleranceDefined = fmi3True</code>, then the communication interval of the slave is controlled by error estimation.
+<p>If <code>toleranceDefined = fmi3True</code>, then the communication step size of the slave is controlled by error estimation.
 In case the slave utilizes a numerical integrator with variable step size and error estimation, it is suggested to use <code>tolerance</code> for the error estimation of the internal integrator (usually as relative tolerance).<br>
 An FMU for Co-Simulation might ignore this argument.</p>
 </dd>
@@ -9578,8 +9578,8 @@ The activation of such a <a href="#outputClock"><code>output clock</code></a> is
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>An FMU is able to produce valid output variables at intermediate points during a communication interval.</strong>
-This is typically the result of an internal solver taking multiple integration steps at each communication interval.
+<p><strong>An FMU is able to produce valid output variables at intermediate points between two consecutive communication points.</strong>
+This is typically the result of an internal solver taking multiple integration steps between two consecutive communication points.
 The FMU exposes intermediate output variables for the master whenever they are available.
 These can be used for e.g. extrapolation, interpolation, filtering or asynchronous co-simulation.</p>
 </li>
