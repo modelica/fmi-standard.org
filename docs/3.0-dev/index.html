@@ -2901,7 +2901,7 @@ Details are described in the description of element <a href="#dependencies"><cod
 </div>
 </div>
 <div class="paragraph">
-<p>Accordingly, it computes the directional derivative vector \(\color{blue}{\Delta \mathbf{v}_{unknown}}\) (<code>dvUnknown</code>) from the seed vector \(\color{blue}{\Delta \mathbf{v}_{known}}\) (<code>dvKnown</code>)</p>
+<p>Accordingly, it computes the directional derivative vector \(\color{blue}{\Delta \mathbf{v}_{unknown}}\) (<code>deltaUnknowns</code>) from the seed vector \(\color{blue}{\Delta \mathbf{v}_{known}}\) (<code>deltaKnowns</code>)</p>
 </div>
 <div class="paragraph">
 <p><em>[The variable relationships are different in different modes.</em>
@@ -3145,7 +3145,7 @@ Note that these functions are only defined if the <code>providesPerElementDepend
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>vr</code> specifies the <a href="#valueReference"><code>valueReference</code></a> of the variable for which the number of <a href="#dependencies"><code>dependencies</code></a> should be returned.</p>
+<p>Argument <code>valueReference</code> specifies the <a href="#valueReference"><code>valueReference</code></a> of the variable for which the number of <a href="#dependencies"><code>dependencies</code></a> should be returned.</p>
 </li>
 <li>
 <p>Argument <code>nDependencies</code> points to the <code>size_t</code> variable that will receive the number of <a href="#dependencies"><code>dependencies</code></a>.</p>
@@ -3181,30 +3181,30 @@ typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Instance instance,
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>vrDependent</code> specifies the <a href="#valueReference"><code>valueReference</code></a> of the variable for which the dependencies should be returned.</p>
+<p>Argument <code>dependent</code> specifies the <a href="#valueReference"><code>valueReference</code></a> of the variable for which the dependencies should be returned.</p>
 </li>
 <li>
 <p>Argument <code>nDependencies</code> specifies the number of dependencies that the calling environment allocated space for in the result buffers, and should correspond to the returned by calling <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
 </li>
 <li>
-<p>Argument <code>elementIndexDependent</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
+<p>Argument <code>elementIndicesOfDependent</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the element index of the dependent variable that dependency information is provided for.
 The element indices start with 1. Using the element index 0 means all elements of the variable.
 (Note: If an array has more than one dimension the indices are serialized in the same order as defined for values).</p>
 </li>
 <li>
-<p>Argument <code>vrIndependent</code> must point to a buffer of <code>fmi3ValueReference</code> values of size <code>nDependencies</code> allocated by the calling environment.
+<p>Argument <code>independents</code> must point to a buffer of <code>fmi3ValueReference</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the value reference of the <a href="#independent"><code>independent</code></a> variable that this dependency entry is dependent upon.</p>
 </li>
 <li>
-<p>Argument <code>elementIndexIndependent</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
+<p>Argument <code>elementIndicesIndependents</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the element index of the <a href="#independent"><code>independent</code></a> variable that this dependency entry is dependent upon.
 The element indices start with 1.
 Using the element index 0 means all elements of the variable.
 (Note: If an array has more than one dimension the indices are serialized in the same order as defined for values).</p>
 </li>
 <li>
-<p>Argument <code>dependencyType</code> must point to a buffer of <code>fmi3DependencyKind</code> values of size <code>nDependencies</code> allocated by the calling environment.
+<p>Argument <code>dependencyKinds</code> must point to a buffer of <code>fmi3DependencyKind</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the enumeration value describing the dependency of this dependency entry.</p>
 </li>
 </ul>
