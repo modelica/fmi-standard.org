@@ -8,7 +8,8 @@ layout: default
 
 Development and promotion of the Functional Mock-up Interface (FMI) standard. The intention is to simplify the creation, storage, exchange and (re-) use of dynamic system models of different simluation systems for model/software/hardware-in-the-loop simulation, for cyber physical systems, and other applications.
 
-The FMI specifications are published under the [http://creativecommons.org/licenses/by-sa/4.0](CC-BY-SA 4.0) (Creative Common Attribution-ShareAlike 4.0 International) license. Source code, such as C-header and XML-schema files, that accompany the specification documents, are provided under the [2-Clause BSD License](https://www.opensource.org/licenses/bsd-license.html).
+The FMI specifications are published under the [http://creativecommons.org/licenses/by-sa/4.0](CC-BY-SA 4.0) (Creative Common Attribution-ShareAlike 4.0 International) license.
+Source code, such as C-header and XML-schema files, that accompany the specification documents, are provided under the [2-Clause BSD License](https://www.opensource.org/licenses/bsd-license.html).
 
 FMI is a registered trademark. The rules for trademark usage are [here](https://svn.fmi-standard.org/fmi/branches/public/docs/Trademark%20Guidelines%20for%20the%20Use%20of%20the%20FMI%20Trademark%20V1.0.pdf).
 
