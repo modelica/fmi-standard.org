@@ -4483,13 +4483,13 @@ Implementations can use this information to provide guidance to the user about v
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>min</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum value of variable (variable value &#8805; <code>min</code>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum value of variable (variable value \(\geq\) <code>min</code>).
 If not defined, the minimum is the largest negative number that can be represented on the machine.
 The <code>min</code> definition is information from the FMU to the environment defining the region in which the FMU is designed to operate, see also comment after this table.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>max</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum value of variable (variable value &#8804; <code>max</code>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum value of variable (variable value \(\leq\) <code>max</code>).
 If not defined, the maximum is the largest positive number that can be represented on the machine.
 The <code>max</code> definition is information from the FMU to the environment defining the region in which the FMU is designed to operate, see also comment after this table.</p></td>
 </tr>
@@ -5581,7 +5581,7 @@ This attribute is only used for Co-Simulation. The default value of this attribu
 </tbody>
 </table>
 <div class="paragraph">
-<p><strong>fmi3SetXXX</strong> can be called on any variable with <a href="#variability"><code>variability</code></a> &#8800; <a href="#constant"><code>constant</code></a> <strong>before initialization</strong> (before calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>)</p>
+<p><strong>fmi3Set{VariableType}</strong> can be called on any variable with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> <strong>before initialization</strong> (before calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>)</p>
 </div>
 <div class="ulist">
 <ul>
@@ -5592,7 +5592,7 @@ This attribute is only used for Co-Simulation. The default value of this attribu
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>fmi3SetXXX</strong> can be called on any variable with <a href="#variability"><code>variability</code></a> &#8800; <a href="#constant"><code>constant</code></a> <strong>during initialization</strong> (after calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called)</p>
+<p><strong>fmi3Set{VariableType}</strong> can be called on any variable with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> <strong>during initialization</strong> (after calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called)</p>
 </div>
 <div class="ulist">
 <ul>
@@ -6125,7 +6125,7 @@ This requirement leads naturally to the following restrictions:</p>
 <em>However, if variable a has <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <code>b</code> has <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> and <code>b := a</code>, then <code>a</code> and <code>b</code> can have the same value reference.]</em></p>
 </li>
 <li>
-<p>At most one variable of the same alias set of variables with <a href="#variability"><code>variability</code></a> &#8800; <a href="#constant"><code>constant</code></a> can have a <a href="#start"><code>start</code></a> attribute <em>[since <a href="#start"><code>start</code></a> variables are independent initial values.]</em></p>
+<p>At most one variable of the same alias set of variables with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> can have a <a href="#start"><code>start</code></a> attribute <em>[since <a href="#start"><code>start</code></a> variables are independent initial values.]</em></p>
 </li>
 <li>
 <p>A variable with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a> can only be aliased to another variable with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>.
@@ -10737,7 +10737,7 @@ In this case, a new step may be started from <code>lastSuccessfulTime</code> whi
 <strong>1</strong> for a variable with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> that has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a><br>
 <strong>2</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> or continuous-time states or state derivatives
 (if element <code>&lt;Derivatives&gt;</code> is present)<br>
-<strong>3</strong> for a variable with <a href="#variability"><code>variability</code></a> &#8800; <a href="#constant"><code>constant</code></a> that has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>,
+<strong>3</strong> for a variable with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> that has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>,
 or <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a><br>
 <strong>6</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> or (<a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>)<br>
 <strong>7</strong> always, but retrieved values are usable for debugging only<br>
