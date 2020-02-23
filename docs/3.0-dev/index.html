@@ -2390,7 +2390,7 @@ States get updated.</p>
 <li>
 <p>Partly evaluation for a subactive <a href="#clock"><code>clock</code></a>: <a href="#state"><code>states</code></a> are left unmodified.
 <em>[Modelica uses this mode for the first tick in clocked continuous equations.</em>
-<em>This mode can also be requested by the calling environment with <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, e.g. to form partial derivatives</em> \(\delta y_j / \delta x_{j-1}\) <em>.]</em></p>
+<em>This mode can also be requested by the calling environment with <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, e.g. to form partial derivatives</em> \(\partial y_j / \partial x_{j-1}\) <em>.]</em></p>
 </li>
 </ol>
 </div>
@@ -2808,51 +2808,15 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 <div class="paragraph">
 <p>It is optionally possible to provide evaluation of partial derivatives for an FMU.
 For Model Exchange, this means computing the partial derivatives at a particular time instant.
-For Co-Simulation, this means to compute the partial derivatives at a particular communication point.
-One function is provided to compute directional derivatives.
-This function can be used to construct the desired partial derivative matrices.</p>
-</div>
-<div id="fmi3GetDirectionalDerivative" class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDirectionalDerivativeTYPE(fmi3Instance instance,
-                                                    const fmi3ValueReference unknowns[],
-                                                    size_t nUnknowns,
-                                                    const fmi3ValueReference knowns[],
-                                                    size_t nKnowns,
-                                                    const fmi3Float64 deltaKnowns[],
-                                                    size_t nDeltaKnowns,
-                                                    fmi3Float64 deltaUnknowns[],
-                                                    size_t nDeltaOfUnknowns);</code></pre>
-</div>
+For Co-Simulation, this means to compute the partial derivatives at a particular communication point.</p>
 </div>
 <div class="paragraph">
-<p>This function computes the directional derivatives of an FMU.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Argument <code>vrUnknown</code> contains the <a href="#valueReference"><code>valueReference</code></a>s of the unknown variables.
-The number of <a href="#valueReference"><code>valueReference</code></a>s is given by the argument <code>nUnknown</code>.</p>
-</li>
-<li>
-<p>Argument <code>vrKnown</code> contains the <a href="#valueReference"><code>valueReference</code></a>s of the known variables.
-The number of <a href="#valueReference"><code>valueReference</code></a>s is given by the argument <code>nKnown</code>.</p>
-</li>
-<li>
-<p>Arguments <code>dvKnown</code> and <code>dvUnknown</code> contain the serialized values of the referenced variables (serialization of values as defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>).</p>
-</li>
-<li>
-<p>Argument <code>nDvKnown</code> provides the number of values in <code>dvKnown</code> which is only equal to <code>nKnown</code> if all <a href="#valueReference"><code>valueReference</code></a>s of <code>vrKnown</code> point to variables.</p>
-</li>
-<li>
-<p>Argument <code>nDvUnknown</code> provides the number of values in <code>dvUnknown</code> which is only equal to <code>nUnknown</code> if all <a href="#valueReference"><code>valueReference</code></a>s of <code>vrUnknown</code> point to variables.</p>
-</li>
-</ul>
+<p>The partial derivatives refer are defined as partial derivatives of certain variables of the FMU w.r.t. to other variables:</p>
 </div>
 <div class="paragraph">
-<p>An FMU has different modes and in every mode an FMU might be described by different equations and different unknowns.
+<p>An FMU has different states and in every state an FMU might be described by different equations and different unknowns.
 The precise definitions are given in the mathematical descriptions of Model Exchange (<a href="#math-model-exchange">Section 3.1</a>) and Co-Simulation (<a href="#math-co-simulation">Section 4.1.1</a>).
-In every mode, the general form of the FMU equations are:</p>
+In every state, the general form of the FMU equations are:</p>
 </div>
 <div class="stemblock">
 <div class="content">
@@ -2865,7 +2829,7 @@ In every mode, the general form of the FMU equations are:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>\(\color{blue}{\mathbf{v}_{unknown}}\) is the vector of unknown Real variables computed in the actual mode:</p>
+<p>\(\mathbf{v}_{unknonwn}\) is the vector of unknown Real variables computed in the actual state:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -2885,36 +2849,122 @@ If <code>&lt;ModelStructure&gt;&lt;Derivatives&gt;</code> is present, also the v
 </div>
 </li>
 <li>
-<p>\(\color{blue}{\mathbf{v}_{known}}\) is the vector of Real <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that changes its value in the actual mode.
+<p>\(\mathbf{v}_{known}\) is the vector of known Real <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that changes its value in the actual state.
 Details are described in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.2.11</a>.
 <em>[For example continuous-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>.</em>
 <em>If a variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> is explicitly defined under <code>ModelVariables</code>, a directional derivative with respect to this variable can be computed.</em>
 <em>If such a variable is not defined, the directional derivative with respect to the <a href="#independent"><code>independent</code></a> variable cannot be calculated].</em></p>
 </li>
 <li>
-<p>\(\color{blue}{\mathbf{v}_{rest}}\) is the set of <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that either changes its value in the actual mode but are non-Real variables, or do not change their values in this mode, but change their values in other modes <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>]</em>.</p>
+<p>\({\mathbf{v}_{rest}}\) is the set of <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that either changes its value in the actual state but are non-Real variables, or do not change their values in this state, but change their values in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>]</em>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>If the capability attribute <code>providesDirectionalDerivative</code> is <code>true</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a> computes a linear combination of the partial derivatives of <strong>h</strong> with respect to all elements of the selected <a href="#input"><code>input</code></a> variables \(\color{blue}{\mathbf{v}_{known}}\):</p>
+<p><em>[The variable relationships are different in different states.</em>
+<em>For example, during <strong>Continuous-Time Mode</strong>, a continuous-time output y does not depend on discrete-time <a href="#input"><code>inputs</code></a> (because they are held constant between events).</em>
+<em>However, at <strong>Event Mode</strong>, y depends on discrete-time <a href="#input"><code>inputs</code></a>.</em>
+<em>The function may compute the directional derivatives by numerical differentiation taking into account the sparseness of the equation system, or (preferred) by analytic derivatives.]</em></p>
+</div>
+<div class="paragraph">
+<p>There are two access functions for partial derivatives:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> to compute the directional derivatives \(\mathbf{v}_{sensitivity} = \mathbf{J} \cdot \mathbf{v}_{seed}\), and</p>
+</li>
+<li>
+<p><a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> to calculate the adjoint derivatives \(\mathbf{v}_{sensitivity}^T = \mathbf{v}_{seed}^T \cdot \mathbf{J}\)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>with the Jacobian</p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[\Delta \mathbf{v}_{unknown} = \sum_i \frac{\partial \mathbf{h}}{\partial \mathbf{v}(i)_{known}}\Delta \mathbf{v}(i)_{known}\]
+\[\mathbf{J}
+=
+\begin{bmatrix}
+\frac{\partial h_1}{\partial v_{knwon,1}} &amp; \cdots &amp; \frac{\partial h_1}{\partial v_{knwon, n}} \\
+\vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial h_m}{\partial v_{known, 1}} &amp; \cdots &amp; \frac{\partial h_m}{\partial v_{known, n}}
+\end{bmatrix}\]
 </div>
 </div>
 <div class="paragraph">
-<p>Accordingly, it computes the directional derivative vector \(\color{blue}{\Delta \mathbf{v}_{unknown}}\) (<code>deltaUnknowns</code>) from the seed vector \(\color{blue}{\Delta \mathbf{v}_{known}}\) (<code>deltaKnowns</code>)</p>
+<p>where \(\mathbf{v}_{known}\) are the \(n\) knowns, and \(\mathbf{h}\) are the \(m\) functions to calculate the \(m\) unknwon variables \(\mathbf{v}_{unknwon}\)  from the knowns.</p>
 </div>
 <div class="paragraph">
-<p><em>[The variable relationships are different in different modes.</em>
-<em>For example, during <strong>Continuous-Time Mode</strong>, a continuous-time output y does not depend on discrete-time <a href="#input"><code>inputs</code></a> (because they are held constant between events).</em>
-<em>However, at <strong>Event Mode</strong>, y depends on discrete-time <a href="#input"><code>inputs</code></a>.</em>
-<em>The function may compute the directional derivatives by numerical differentiation taking into account the sparseness of the equation system, or (preferred) by analytic derivatives.</em></p>
+<p>Both functions can also be used to construct the partial derivative matrices.
+The functions may only be called if their availability is indicated by the attributes <code>providesDirectionalDerivative</code> and <code>providesAdjointDerivative</code> respectively.</p>
+</div>
+<div id="fmi3GetDirectionalDerivative" class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDirectionalDerivativeTYPE(fmi3Instance instance,
+                                                    const fmi3ValueReference unknowns[],
+                                                    size_t nUnknowns,
+                                                    const fmi3ValueReference knowns[],
+                                                    size_t nKnowns,
+                                                    const fmi3Float64 seed[],
+                                                    size_t nSeed,
+                                                    fmi3Float64 sensitivity[],
+                                                    size_t nSensitivity);</code></pre>
+</div>
+</div>
+<div id="fmi3GetAdjointDerivative" class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetAdjointDerivativeTYPE(fmi3Instance instance,
+                                                const fmi3ValueReference unknowns[],
+                                                size_t nUnknowns,
+                                                const fmi3ValueReference knowns[],
+                                                size_t nKnowns,
+                                                const fmi3Float64 seed[],
+                                                size_t nSeed,
+                                                fmi3Float64 sensitivity[],
+                                                size_t nSensitivity);</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p><em>Example:</em><br>
+<p>Both functions have the same parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>unknowns</code>: value references to the unknowns</p>
+</li>
+<li>
+<p><code>nUnknowns</code>: length of <code>unknowns</code></p>
+</li>
+<li>
+<p><code>knowns</code>:value references of the knowns</p>
+</li>
+<li>
+<p><code>nKnowns</code>: length of <code>knowns</code></p>
+</li>
+<li>
+<p><code>seed</code>: seed values</p>
+</li>
+<li>
+<p><code>nSeed</code>: length of <code>seed</code></p>
+</li>
+<li>
+<p><code>sensitivity</code>: the sensitivities</p>
+</li>
+<li>
+<p><code>nSensitivity</code>: length of <code>sensitivity</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>[Note that array variables will be serialized, so <code>nSeed</code> is only equal to <code>nKnowns</code> in the case of directional derivatives resp. equal to <code>nUnknowns</code> in the case of adjoint derivatives, if all value references of <code>knowns</code> resp. <code>unknowns</code> point to scalar variables.</em>
+<em>Likewise <code>nSensitivity</code> is only equal to <code>nUnknowns</code> resp. <code>nKnowns</code> if all value references of <code>unknowns</code> resp. <code>knowns</code> point to scalar variables.]</em></p>
+</div>
+<div class="sect4">
+<h5 id="_directional_derivatives">Directional derivatives</h5>
+<div class="paragraph">
+<p><em>[Example 1</em><br>
 <em>Assume an FMU has the output equations</em></p>
 </div>
 <div class="stemblock">
@@ -2933,35 +2983,35 @@ g_2(x, u_1)
 </div>
 </div>
 <div class="paragraph">
-<p><em>and this FMU is connected, so that \(\color{blue}{y_1, u_1, u_3}\) appear in an algebraic loop.</em>
-<em>Then the nonlinear solver needs a Jacobian and this Jacobian can be computed (without numerical differentiation) provided the partial derivative of \(\color{blue}{y_1}\) with respect to \(\color{blue}{u_1}\) and \(\color{blue}{u_3}\) is available.</em>
+<p><em>and this FMU is connected, so that \({y_1, u_1, u_3}\) appear in an algebraic loop.</em>
+<em>Then the nonlinear solver needs a Jacobian and this Jacobian can be computed (without numerical differentiation) provided the partial derivative of \({y_1}\) with respect to \({u_1}\) and \({u_3}\) is available.</em>
 <em>Depending on the environment where the FMUs are connected, these <a href="#derivative"><code>derivatives</code></a> can be provided</em></p>
 </div>
 <div class="paragraph">
-<p>(a) <em>with one wrapper function around function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a> to compute the directional derivatives with respect to these two variables (in other words, \(\color{blue}{v_{unknown} = y_1}\), \(\color{blue}{v_{known} = \left \{ u_1, u_3 \right \}}\)), and then the environment calls this wrapper function with \(\color{blue}{\Delta v_{known} = \left \{ 1, 0 \right \}}\) to compute the partial derivative with respect to \(\color{blue}{u_1}\) and \(\color{blue}{\Delta v_{known} = \left \{ 0, 1 \right \}}\) to compute the partial derivative with respect to \(\color{blue}{u_3}\), or</em></p>
+<p>(a) <em>with one wrapper function around function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> to compute the directional derivatives with respect to these two variables (in other words, \({v_{unknown} = y_1}\), \({v_{known} = \left \{ u_1, u_3 \right \}}\)), and then the environment calls this wrapper function with \({\Delta v_{known} = \left \{ 1, 0 \right \}}\) to compute the partial derivative with respect to \({u_1}\) and \({\Delta v_{known} = \left \{ 0, 1 \right \}}\) to compute the partial derivative with respect to \({u_3}\), or</em></p>
 </div>
 <div class="paragraph">
-<p>(b) <em>with two direct function calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a> (in other words, \(\color{blue}{v_{unknown} = y_1, v_{known} = u_1, \Delta v_{known} = 1}\); and \(\color{blue}{v_{unknown} = y_1, v_{known} = u_3, \Delta v_{known} = 1}\)).</em></p>
+<p>(b) <em>with two direct function calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> (in other words, \({v_{unknown} = y_1, v_{known} = u_1, \Delta v_{known} = 1}\); and \({v_{unknown} = y_1, v_{known} = u_3, \Delta v_{known} = 1}\)).</em></p>
 </div>
 <div class="paragraph">
 <p><em>Note that a direct implementation of this function with analytic derivatives:</em></p>
 </div>
 <div class="paragraph">
-<p>(a) <em>Provides the directional derivative for all <a href="#input"><code>input</code></a> variables; so in the above example: \(\color{blue}{\Delta y_1 = \frac{\delta g_1}{\delta x} \cdot \Delta x + \frac{\delta g_1}{\delta u_1} \cdot \Delta u_1 + \frac{\delta g_1}{\delta u_3} \cdot \Delta u_3 + \frac{\delta g_1}{\delta u_4} \cdot \Delta u_4}\)</em></p>
+<p>(a) <em>Provides the directional derivative for all <a href="#input"><code>input</code></a> variables; so in the above example: \({\Delta y_1 = \frac{\partial g_1}{\partial x} \cdot \partial x + \frac{\partial g_1}{\partial u_1} \cdot \Delta u_1 + \frac{\partial g_1}{\partial u_3} \cdot \Delta u_3 + \frac{\partial g_1}{\partial u_4} \cdot \Delta u_4}\)</em></p>
 </div>
 <div class="paragraph">
-<p>(b) <em>Initializes all seed-values to zero; so in the above example: \(\color{blue}{\Delta x = \Delta u_1 = \Delta u_3 = \Delta u_4 = 0}\)</em></p>
+<p>(b) <em>Initializes all seed-values to zero; so in the above example: \({\Delta x = \Delta u_1 = \Delta u_3 = \Delta u_4 = 0}\)</em></p>
 </div>
 <div class="paragraph">
-<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the above example: \(\color{blue}{\Delta v_{unknown} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
+<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the above example: \({\Delta v_{unknown} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
 </div>
 <div class="paragraph">
-<p><em>[Note, function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a> can be utilized for the following purposes:</em></p>
+<p><em>[Note, function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> can be utilized for the following purposes:</em></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><em>Numerical integrators of stiff methods need matrix \(\color{blue}{\frac{\delta \mathbf{f}}{\delta \mathbf{x}}}\).</em></p>
+<p><em>Numerical integrators of stiff methods need matrix \({\frac{\partial \mathbf{f}}{\partial \mathbf{x}}}\).</em></p>
 </li>
 <li>
 <p><em>If the FMU is connected with other FMUs, the partial derivatives of the state derivatives and outputs with respect to the continuous states and the <a href="#input"><code>inputs</code></a> are needed in order to compute the Jacobian for the system of the connected FMUs.</em></p>
@@ -2970,13 +3020,13 @@ g_2(x, u_1)
 <p><em>If the FMU shall be linearized, the same <a href="#derivative"><code>derivatives</code></a> as in the previous item are needed.</em></p>
 </li>
 <li>
-<p><em>If the FMU is used as the model for an extended Kalman filter, \(\color{blue}{\frac{\delta \mathbf{f}}{\delta \mathbf{x}}}\) and \(\color{blue}{\frac{\delta \mathbf{g}}{\delta \mathbf{x}}}\) are needed.</em></p>
+<p><em>If the FMU is used as the model for an extended Kalman filter, \({\frac{\partial \mathbf{f}}{\partial \mathbf{x}}}\) and \({\frac{\partial \mathbf{g}}{\partial \mathbf{x}}}\) are needed.</em></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><em>If a dense matrix shall be computed, the columns of the matrix can be easily constructed by successive calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>.</em>
-<em>For example, constructing the system Jacobian \(\color{blue}{\mathbf{A} = \frac{\delta \mathbf{f}}{\delta \mathbf{x}}}\) as dense matrix can be performed in the following way:</em></p>
+<p><em>If a dense matrix shall be computed, the columns of the matrix can be easily constructed by successive calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</em>
+<em>For example, constructing the system Jacobian \({\mathbf{A} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}}}\) as dense matrix can be performed in the following way:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3017,17 +3067,20 @@ for (i = 0; i &lt; nx; i++) {
 <em>See e.g. <a href="http://www.netlib.org/toms/618" class="bare">http://www.netlib.org/toms/618</a>.</em></p>
 </li>
 <li>
-<p><em>For the columns determined in (2), one call to <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a> is made.</em>
+<p><em>For the columns determined in (2), one call to <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> is made.</em>
 <em>After each such call, the elements of the resulting directional derivative vector are copied into their correct locations of the partial derivative matrix.</em></p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p><em>More details and implementational notes are available from <a href="#ABL12">[ABL12]</a>.]</em></p>
+<p>_More details and implementational notes are available from <a href="#ABL12">[ABL12]</a>.</p>
 </div>
 <div class="paragraph">
-<p>Directional derivatives for higher dimension variables are almost treated in the same way.
-Consider, for example, an FMU which calculates its output \({Y}\) by multiplying its 2x2 input \({U}\) with a 3x2 constant gain \({K}\), with</p>
+<p><em>Example 2</em></p>
+</div>
+<div class="paragraph">
+<p><em>Directional derivatives for higher dimension variables are almost treated in the same way.
+Consider, for example, an FMU which calculates its output \({Y}\) by multiplying its 2x2 input \({U}\) with a 3x2 constant gain \({K}\), with</em></p>
 </div>
 <div class="stemblock">
 <div class="content">
@@ -3042,16 +3095,16 @@ e, f
 </div>
 </div>
 <div class="paragraph">
-<p>The output \({Y=K U}\) is a matrix of size 3x2.
-The directional derivative of an output element \({Y(i,j)}\) with respect to the input \({U}\)) is:</p>
+<p><em>The output \({Y=K U}\) is a matrix of size 3x2.</em>
+<em>The directional derivative of an output element \({Y(i,j)}\) with respect to the input \({U}\)) is:</em></p>
 </div>
 <div class="stemblock">
 <div class="content">
 \[\Delta Y(i,j) =
-\frac{\delta Y}{\delta U(1,1)} \cdot \Delta U(1,1) +
-\frac{\delta Y}{\delta U(1,2)} \cdot \Delta U(1,2) +
-\frac{\delta Y}{\delta U(2,1)} \cdot \Delta U(2,1) +
-\frac{\delta Y}{\delta U(2,2)} \cdot \Delta U(2,2)\]
+\frac{\partial Y}{\partial U(1,1)} \cdot \Delta U(1,1) +
+\frac{\partial Y}{\partial U(1,2)} \cdot \Delta U(1,2) +
+\frac{\partial Y}{\partial U(2,1)} \cdot \Delta U(2,1) +
+\frac{\partial Y}{\partial U(2,2)} \cdot \Delta U(2,2)\]
 </div>
 </div>
 <div class="stemblock">
@@ -3067,9 +3120,58 @@ e \Delta U(1,1)+f \Delta U(2,1), e \Delta U(1,2)+ f \Delta U(2,2)
 </div>
 </div>
 <div class="paragraph">
-<p>To get the directional derivative of \({Y}\) with respect to \({U(2,1)}\) the command <code>fmi3GetDirectionalDerivative(m, vr_Y, 1, vr_U, 1, {0.0, 0.0, 1.0, 0.0}, 4, dd, 6)</code> can be used where <code>vr_Y</code> and <code>vr_U</code> are references of the variable \({Y}\) and \({U}\), respectively.
-Note that in order to get the directional derivative of \({Y}\) with respect to \({U(2,1)}\), the seed value <code>{0, 0, 1.0, 0}</code> has been used.
-The retrieved directional derivative <code>dd</code> is stored in a matrix of size 3x2, so <code>nDvUnknown</code> is 6.</p>
+<p><em>To get the directional derivative of \({Y}\) with respect to \({U(2,1)}\) the command <code>fmi3GetDirectionalDerivative(m, vr_Y, 1, vr_U, 1, {0.0, 0.0, 1.0, 0.0}, 4, dd, 6)</code> can be used where <code>vr_Y</code> and <code>vr_U</code> are references of the variable \({Y}\) and \({U}\), respectively.</em>
+<em>Note that in order to get the directional derivative of \({Y}\) with respect to \({U(2,1)}\), the seed value <code>{0, 0, 1.0, 0}</code> has been used.</em>
+<em>The retrieved directional derivative <code>dd</code> is stored in a matrix of size 3x2, so <code>nDvUnknown</code> is 6.</em></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_adjoint_derivatives">Adjoint derivatives</h5>
+<div class="paragraph">
+<p><em>[Adjoint derivatives are beneficial in several contexts:</em></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>in artifical intelligence (AI) frameworks the adjoint derivatives are called "vector gradient products" (VJPs).</em>
+<em>There adjoint derivatives are used in the backpropagation process to perform gradient-based optimization of parameters using reverse mode automatic differentiation (AD), see, e.g., <a href="#BPRS15">[BPRS15]</a>.</em></p>
+</li>
+<li>
+<p><em>in pararameter estimation (see <a href="#BKF17">[BKF17]</a>)</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>Typically, reverse mode automatic differentiatian (AD) is more efficient for these use cases than forward mode AD, as explained in the cited references.</em></p>
+</div>
+<div class="paragraph">
+<p><em>If one would like to construct the full Jacobian matrix, one can use either <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> (to column-wise construct it) or <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (to row-wise construct it, possibly improved with coloring methods as mentioned above).</em>
+<em>However in the applications motivating the adjoint derivatives, one does not need the full Jacobian matrix \(\mathbf{J}\), but vector  \(\mathbf{v}^T\) multiplied from the left to the Jacobian, i.e. \(\mathbf{v}^T\mathbf{J}\).</em>
+<em>For computing the full Jacobian matrix the column-wise construct is generally more efficient.]</em></p>
+</div>
+<div class="paragraph">
+<p><em>Example:</em><br>
+<em>Assume an FMU has the output equations</em></p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[\begin{bmatrix}
+y_1
+\\
+y_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+h_1(u_1, u_2)
+\\
+h_2(u_1, u_2)
+\end{bmatrix}\]
+</div>
+</div>
+<div class="paragraph">
+<p><em>and \(\left( w_1  w_2 \right) \cdot \mathbf{ \frac{\partial h}{\partial u} }\) for some vector \(\left( w_1  w_2 \right)^T\) is needed.</em>
+<em>Then one can get this with one function call of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (with arguments</em> \(\mathbf{v}_{unknown} = \left \{ y_1, y_2 \right \},  \mathbf{v}_{knwon} = \left \{ u_1, u_2 \right \},  \mathbf{v}_{seed} = \left( w_1 w_2 \right)^T\) <em>), while with <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> at least two calls would be necessary to first construct the Jacobian column-wise and then multiplying from the right with</em> \(\left( w_1  w_2 \right)^T\) <em>]</em></p>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -8225,7 +8327,7 @@ As soon as an event occurrs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventM
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -9795,7 +9897,7 @@ The intention is to set <a href="#start"><code>start</code></a> and guess values
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></p>
+<p><a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></p>
 </dd>
 </dl>
 </div>
@@ -9812,7 +9914,7 @@ In this way artificial or real algebraic loops over connected FMUs in <strong>In
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p><a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a></p>
+<p><a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></p>
 </dd>
 <dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
 <dd>
@@ -9851,7 +9953,7 @@ In this way artificial or real algebraic loops over connected FMUs in <strong>In
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p><a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a></p>
+<p><a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a></p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
 <dd>
@@ -9968,7 +10070,7 @@ Intermediate variables are variables that are marked with attribute <a href="#in
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
 <p>The same functions which are not allowed to be called in <strong>Step Mode</strong> must not be called in this state.
-Additionally the following functions must not be called  <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>.</p>
+Additionally the following functions must not be called  <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</p>
 </dd>
 </dl>
 </div>
@@ -9991,7 +10093,7 @@ This state is entered from state <strong>Step Mode</strong> by calling <a href="
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableTypes}</code></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableTypes}</code></p>
 </dd>
 </dl>
 </div>
@@ -10008,7 +10110,7 @@ It does not enter into this state if the FMU returns early from a communication 
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p><a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p>
+<p><a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a></dt>
 <dd>
@@ -10036,7 +10138,7 @@ In this case, a new step may be started from <code>lastSuccessfulTime</code> whi
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p>
+<p><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p>
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
@@ -10065,7 +10167,7 @@ In this case, a new step may be started from <code>lastSuccessfulTime</code> whi
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableTypes}</code></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableTypes}</code></p>
 </dd>
 </dl>
 </div>
@@ -10378,7 +10480,7 @@ In this case, a new step may be started from <code>lastSuccessfulTime</code> whi
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -11464,7 +11566,7 @@ For <a href="#input"><code>input</code></a> periodic <a href="#clock"><code>cloc
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -11963,7 +12065,7 @@ In case the function returns <code>fmi3Fatal</code> the master can prematurely e
 In case the function returns <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wait until all other tasks related to the computation of the model partitions of this FMU have ended, but new tasks must not be started (e.g. related to <a href="#outputClock"><code>output clock</code></a> ticks) and all other function calls for this FMU must also return <code>fmi3Discard</code> or <code>fmi3Error</code> until the state <strong>Terminated</strong> is reached.</p>
 </div>
 </dd>
-<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Get{VariableType}</a>, <code>fmi3GetRealOutputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>`</dt>
+<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Get{VariableType}</a>, <code>fmi3GetRealOutputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>`</dt>
 <dd>
 <p>Is called after the end of the computation of a model partition (i.e. after return of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>input clock</code></a> assigned to the model partition.</p>
 <div class="paragraph">
@@ -12106,7 +12208,7 @@ This state is entered from state <strong>Clock Activation Mode</strong> by calli
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p>Additionally to the generally forbidden functions in Scheduled Execution Simulation listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,<code>fmi3SetRealInputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative()</code></a>, <code>fmi3GetRealOutputDerivatives</code>, <code>fmi3Get{VariableTypes}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
+<p>Additionally to the generally forbidden functions in Scheduled Execution Simulation listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,<code>fmi3SetRealInputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <code>fmi3GetRealOutputDerivatives</code>, <code>fmi3Get{VariableTypes}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
 </dd>
 </dl>
 </div>
@@ -12936,10 +13038,16 @@ If no <a href="#inputClock"><code>input clocks</code></a> are defined the flag <
 <p><a id="ABL12"></a>[ABL12] &#197;kesson J., Braun W., Lindholm P., and Bachmann B. (2012): <strong>Generation of Sparse Jacobians for the Functional Mockup Interface 2.0</strong>. 9th International Modelica Conference, Munich, 2012. <a href="http://www.ep.liu.se/ecp/076/018/ecp12076018.pdf" class="bare">http://www.ep.liu.se/ecp/076/018/ecp12076018.pdf</a></p>
 </li>
 <li>
+<p><a id="BPRS15"></a>[BPRS15] Atilim Gunes Baydin, Barak A. Pearlmutter, Alexey Andreyevich Radul, Jeffrey Mark Siskind (2015): <strong>Automatic differentiation in machine learning: a survey</strong>. <a href="https://arxiv.org/abs/1502.05767" class="bare">https://arxiv.org/abs/1502.05767</a></p>
+</li>
+<li>
 <p><a id="BCP10"></a>[BCP10] Benveniste A., Caillaud B., Pouzet M. (2010): <strong>The Fundamentals of Hybrid Systems Modelers</strong>. In 49th IEEE International Conference on Decision and Control (CDC), Atlanta, Georgia, USA, December 15-17. <a href="http://www.di.ens.fr/~pouzet/bib/cdc10.pdf" class="bare">http://www.di.ens.fr/~pouzet/bib/cdc10.pdf</a></p>
 </li>
 <li>
 <p><a id="BOA11"></a>[BOA11] Blochwitz T., Otter M., Arnold M., Bausch C., Clau&#223; C., Elmqvist H., Junghanns A., Mauss J., Monteiro M., Neidhold T., Neumerkel D., Olsson H., Peetz J.-V., Wolf S. (2011): <strong>The Functional Mockup Interface for Tool independent Exchange of Simulation Models</strong>. 8th International Modelica Conference, Dresden 2011. <a href="http://www.ep.liu.se/ecp/063/013/ecp11063013.pdf" class="bare">http://www.ep.liu.se/ecp/063/013/ecp11063013.pdf</a></p>
+</li>
+<li>
+<p><a id="BKF17"></a>[BKF17] Braun W., Kulshreshtha K., Franke R., Walther A., Bachmann B., Towards Adjoint and Directional Derivatives in FMI utilizing ADOL-C within OpenModelica, 12th International Modelica Conference, Prague, 2017. <a href="https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132363_BraunKulshreshthaFrankeBachmannWalther.pdf" class="bare">https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132363_BraunKulshreshthaFrankeBachmannWalther.pdf</a></p>
 </li>
 <li>
 <p><a id="BOA12"></a>[BOA12] Blochwitz T., Otter M., &#197;kesson J., Arnold M., Clau&#223; C., Elmqvist H., Friedrich M., Junghanns A., Mauss J., Neumerkel D., Olsson H., Viel A. (2012): <strong>Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models</strong>. 9th International Modelica Conference, Munich, 2012. <a href="http://www.ep.liu.se/ecp/076/017/ecp12076017.pdf" class="bare">http://www.ep.liu.se/ecp/076/017/ecp12076017.pdf</a></p>
