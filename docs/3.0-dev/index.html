@@ -4251,7 +4251,7 @@ An <code>Enumeration</code> element must have at least one Item.</p></td>
 <p><em>[Attributes <code>min</code> and <code>max</code> can be set for variables of type Real, Integer or Enumeration.</em>
 <em>The question is how <code>fmi3SetReal</code>, <code>fmi3SetInteger</code>, <code>fmi3GetReal</code>, <code>fmi3GetInteger</code> shall utilize this definition.</em>
 <em>There are several conflicting requirements:</em><br>
-<em>Avoiding forbidden regions (for example, if <code>u</code> is an <a href="#input"><code>input</code></a> and "sqrt(u)" is computed in the FMU, min=0 on <code>u</code> shall guarantee that only values of <code>u</code> in the allowed regions are provided).</em>
+<em>Avoiding forbidden regions (for example, if <code>u</code> is an <a href="#input"><code>input</code></a> and "sqrt(u)" is computed in the FMU, <code>min = 0</code> on <code>u</code> shall guarantee that only values of <code>u</code> in the allowed regions are provided).</em>
 <em>Numerical algorithms (ODE-solver, optimizers. nonlinear solvers) do not guarantee constraints.</em>
 <em>If a variable is outside of the bounds, the solver tries to bring it back into the bounds.</em>
 <em>As a consequence, calling <code>fmi3GetReal</code> during an iteration of such a solver might return values that are not in the defined min/max region.</em>
@@ -5874,7 +5874,7 @@ It is then required that the <a href="#start"><code>start</code></a> values of a
 <div class="paragraph">
 <p>The aliasing of variables only means that the <code>value</code> of the variables is always identical.
 However, aliased variables may have different attributes, such as <code>min/max/nominal</code> values or description texts.
-<em>[For example, if v1, v2 are two alias variables with <code>v1=v2</code> and <code>v1.max=10</code> and <code>v2.max=5</code>, then the FMU will trigger an error if either <code>v1</code> or <code>v2</code> becomes larger than 5.]</em></p>
+<em>[For example, if <code>v1</code>, <code>v2</code> are two alias variables with <code>v1 = v2</code> and <code>v1.max = 10</code> and <code>v2.max = 5</code>, then the FMU will trigger an error if either <code>v1</code> or <code>v2</code> becomes larger than 5.]</em></p>
 </div>
 <div class="paragraph">
 <p><em>[The dependency definition in <code>fmiModelDescription.ModelStructure</code> is completely unrelated to the alias definition.</em>
@@ -6008,7 +6008,7 @@ If <code>false</code>, <a href="#state"><code>state</code></a> will not be reini
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>The optional attributes <code>min</code> and <code>max</code> in element <code>Enumeration</code> restrict the allowed values of the enumeration.
 The <code>min/max</code> definitions are information from the FMU to the environment defining the region in which the FMU is designed to operate, see also comment in <a href="#definition-of-types">Section 2.2.4</a>.
-<em>[If, for example, an <code>Enumeration</code> is defined with <code>name1 = -4</code>, <code>name2 = 1</code>, <code>name3 = 5</code>, <code>name4 = 11</code> and min=-2, max = 5, then only <code>name2</code> and <code>name3</code> are allowed.]</em></p>
+<em>[If, for example, an <code>Enumeration</code> is defined with <code>name1 = -4</code>, <code>name2 = 1</code>, <code>name3 = 5</code>, <code>name4 = 11</code> and <code>min = -2</code>, <code>max = 5</code>, then only <code>name2</code> and <code>name3</code> are allowed.]</em></p>
 </div></div></td>
 </tr>
 </tbody>
@@ -6392,7 +6392,8 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 </div>
 </div>
 <div class="paragraph">
-<p>where <code>u</code> is continuous-time input value reference "1", <code>y</code> is a continuous-time output with value reference "2" and <code>dxdt</code> is a continuous-time derivative with value reference="4". The definition of the model structure is then:</p>
+<p>where <code>u</code> is continuous-time input value reference <code>1</code>, <code>y</code> is a continuous-time output with value reference <code>2</code> and <code>dxdt</code> is a continuous-time derivative with value reference <code>4</code>.
+The definition of the model structure is then:</p>
 </div>
 <div class="listingblock">
 <div class="content">
