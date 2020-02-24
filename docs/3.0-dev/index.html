@@ -1617,7 +1617,7 @@ To support the first variant macros are provided in <code>fmi3Functions.h</code>
 <p><em>[These macros can be defined differently in a target specific variant of <code>fmi3Functions.h</code> to adjust them to the requirements of the supported compilers and platforms of the importing tool.]</em></p>
 </div>
 <div class="paragraph">
-<p>An FMU C-file must include at the beginning a <code>define</code> of <code>FMI3_FUNCTION_PREFIX</code> with the same value as the value of the <code>modelIdentifier</code> attribute defined in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange&gt;</code> or <code>&lt;fmiModelDescription&gt;&lt;CoSimulation&gt;</code> together with <code>_</code> at the end (see sections <a href="#ModelExchange">Section 3.3.1</a> and <a href="#schema-co-simulation">Section 4.3.1</a>).</p>
+<p>An FMU C-file must include at the beginning a <code>define</code> of <code>FMI3_FUNCTION_PREFIX</code> with the same value as the value of the <code>modelIdentifier</code> attribute defined in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange&gt;</code> or <code>&lt;fmiModelDescription&gt;&lt;CoSimulation&gt;</code> together with <code>_</code> at the end (see <a href="#ModelExchange">Section 3.3.1</a> and <a href="#schema-co-simulation">Section 4.3.1</a>).</p>
 </div>
 <div class="paragraph">
 <p>This <code>define</code> must be directly followed with an <code>#include "fmi3Functions.h"</code> statement.</p>
@@ -2591,7 +2591,7 @@ These <a href="#clock"><code>clocks</code></a> are not compatible to synchronous
 <div class="sect5">
 <h6 id="_output_clocks">2.1.8.2.1. Output Clocks</h6>
 <div class="paragraph">
-<p>An <a href="#outputClock"><code>output clock</code></a> is a general <a href="#clock"><code>clock</code></a> that ticks when a time-, state- or step-event occurs in the continuous-model partition of the FMU (for CPClocks these <a href="#outputClock"><code>output clock</code></a> tick events can occour in all model partitions) and are identified based on their <a href="#clockReference"><code>clockReference</code></a> (see 2.2.3).
+<p>An <a href="#outputClock"><code>output clock</code></a> is a general <a href="#clock"><code>clock</code></a> that ticks when a time-, state- or step-event occurs in the continuous-model partition of the FMU (for CPClocks these <a href="#outputClock"><code>output clock</code></a> tick events can occour in all model partitions) and are identified based on their <a href="#clockReference"><code>clockReference</code></a> (see <a href="#operation-on-clocks">Section 2.1.8</a>).
 It can be periodic or non-periodic.
 <em>[Example: If</em> \(b = x &gt; 0\) <em>, and a state event is defined when b changes from <code>false</code> to <code>true</code>, and b is defined as <a href="#outputClock"><code>output clock</code></a>, then this <a href="#clock"><code>clock</code></a> is active whenever x changes from negative to positive values.]</em></p>
 </div>
@@ -3710,7 +3710,7 @@ These definitions are used in the XML element <code>ModelVariables</code>.</p></
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModelStructure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines the structure of the model.
 Especially, the ordered lists of <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and initial unknowns (the unknowns during <strong>Initialization Mode</strong>) are defined here.
-For more details on ModelStructure, see section <a href="#ModelStructure">Section 2.2.11</a>.
+For more details on ModelStructure, see <a href="#ModelStructure">Section 2.2.11</a>.
 Furthermore, the dependency of the unkowns from the knowns can be optionally defined.
 <em>[This information can be, for example, used to compute efficiently a sparse Jacobian for simulation, or to utilize the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> dependency in order to detect that in some cases there are actually no algebraic loops when connecting FMUs together]</em>.</p></td>
 </tr>
@@ -6851,13 +6851,8 @@ The extension of the ZIP file must be <code>.fmu</code> <em>[, for example, <cod
 The compression method used for the ZIP file must be <code>deflate</code> <em>[(most free tools, such as zlib, offer only the common compression method <code>deflate</code>)]</em>.</p>
 </div>
 <div class="paragraph">
-<p>The ZIP format specification can be found here: <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT" class="bare">https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT</a></p>
-</div>
-<div class="paragraph">
-<p><em>[Note: especially section 4.4.17 states that backslashes "\" are forbidden as path separator, only forward slashes "/" are allowed.]</em></p>
-</div>
-<div class="paragraph">
-<p><em>[Note: non-ASCII directory names are not explicitly forbidden, but might pose a problem on different operating systems and are thus discouraged.]</em></p>
+<p><em>[Note: especially section 4.4.17 of <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">the ZIP format specification</a> states that backslashes "\" are forbidden as path separator, only forward slashes "/" are allowed.</em><br>
+<em>Non-ASCII directory names are not explicitly forbidden, but might pose a problem on different operating systems and are thus discouraged.]</em></p>
 </div>
 <div class="paragraph">
 <p>Every FMU is distributed with its own ZIP file.
@@ -8898,7 +8893,7 @@ See also <a href="#header-files-and-naming-of-functions">Section 2.1.1</a>.</p><
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, a tool is needed to execute the model and the FMU just contains the communication to this tool.
 <em>[Typically, this information is only utilized for information purposes.</em>
 <em>For example, when loading an FMU with <code>needsExecutionTool = true</code>, the environment can inform the user that a tool has to be available on the computer where the model is instantiated.</em>
-<em>The name of the tool can be taken from attribute generationTool of fmiModelDescription.]</em></p></td>
+<em>The name of the tool can be taken from attribute <code>generationTool</code> of <code>fmiModelDescription</code>.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>completedIntegratorStepNotNeeded</code></p></td>
@@ -12397,7 +12392,7 @@ So the FMU exporting tool does not need to take care for that (except for prepar
 </div>
 <div class="paragraph">
 <p>Based on the <a href="#inputClock"><code>input clock</code></a> settings defined in the XML the master calls <code>fmi3Set{VariableType}</code>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <code>fmi3Get{VariableType}</code> calls.
-Set/get calls for each task are only allowed for variables that are associated to the <a href="#inputClock"><code>input clock</code></a> associated to that task or - here preemption issues become important - to variables that are associated to no <a href="#clock"><code>clocks</code></a> (global variables), based on the XML information (see 4.4.3).</p>
+Set/get calls for each task are only allowed for variables that are associated to the <a href="#inputClock"><code>input clock</code></a> associated to that task or - here preemption issues become important - to variables that are associated to no <a href="#clock"><code>clocks</code></a> (global variables), based on the XML information (see <a href="#clock-type-definition">[clock-type-definition]</a>).</p>
 </div>
 <div class="paragraph">
 <p><em>[The recommendation is to avoid global variable associations as much as possible in the XML.</em>
@@ -13114,7 +13109,7 @@ The XML file may have the following content:</p>
 <div class="sect3">
 <h4 id="schema-clocked-co-simulation">4.3.3. Co-Simulation with Clock Support</h4>
 <div class="paragraph">
-<p>The Co-Simulation master collects the information about the number and properties of <a href="#clock"><code>clocks</code></a> supported by the FMU by analyzing the <code>modelDescription.xml</code>, see section <a href="#clock-type-definition">[clock-type-definition]</a>.</p>
+<p>The Co-Simulation master collects the information about the number and properties of <a href="#clock"><code>clocks</code></a> supported by the FMU by analyzing the <code>modelDescription.xml</code>, see <a href="#clock-type-definition">[clock-type-definition]</a>.</p>
 </div>
 <div class="paragraph">
 <p>The definition of <a href="#clock"><code>clocks</code></a> is optional.</p>
@@ -14082,7 +14077,7 @@ It connects the <em>external model</em> component with the <em>solver</em> compo
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMU</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Unit:<br>
-A "model class" from which one or more "model instances" can be instantiated for simulation. An FMU is stored in one ZIP file as defined in <a href="#fmu-distribution">Section 2.3</a> consisting basically of one XML file that defines the model variables and a set of C functions (see section 2.1), in source or binary form, to execute the model equations or the simulator slave. In case of tool execution, additionally, the original simulator is required to perform the co-simulation (compare <a href="#fmi-for-co-simulation">Section 4</a>)</p></td>
+A "model class" from which one or more "model instances" can be instantiated for simulation. An FMU is stored in one ZIP file as defined in <a href="#fmu-distribution">Section 2.3</a> consisting basically of one XML file that defines the model variables and a set of C functions (see <a href="#fmi-application-programming-interface">Section 2.1</a>), in source or binary form, to execute the model equations or the simulator slave. In case of tool execution, additionally, the original simulator is required to perform the co-simulation (compare <a href="#fmi-for-co-simulation">Section 4</a>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>integration algorithm</em></p></td>
