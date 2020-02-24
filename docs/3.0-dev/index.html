@@ -2565,7 +2565,7 @@ States get updated.</p>
 <h6 id="_communication_point_clocks">2.1.8.1.2. Communication Point Clocks</h6>
 <div class="paragraph">
 <p>In addition to the above definition also a simplified <a href="#clock"><code>clock</code></a> definition used only in FMI for Co-Simulation is available that can be used to define the communication points of model partitions of the model (in the following such partitions are called model partitions).
-Such <a href="#clock"><code>clocks</code></a> are called Communication Point Clocks (CPClocks).
+Such <a href="#clock"><code>clocks</code></a> are called Communication Point Clocks.
 These <a href="#clock"><code>clocks</code></a> are not compatible to synchronous clocks theory and must not be used together with synchronous clocks in one model.</p>
 </div>
 <div class="paragraph">
@@ -2594,7 +2594,7 @@ These <a href="#clock"><code>clocks</code></a> are not compatible to synchronous
 <div class="sect5">
 <h6 id="_output_clocks">2.1.8.2.1. Output Clocks</h6>
 <div class="paragraph">
-<p>An <a href="#outputClock"><code>output clock</code></a> is a general <a href="#clock"><code>clock</code></a> that ticks when a time-, state- or step-event occurs in the continuous-model partition of the FMU (for CPClocks these <a href="#outputClock"><code>output clock</code></a> tick events can occour in all model partitions) and are identified based on their <a href="#clockReference"><code>clockReference</code></a> (see <a href="#operation-on-clocks">Section 2.1.8</a>).
+<p>An <a href="#outputClock"><code>output clock</code></a> is a general <a href="#clock"><code>clock</code></a> that ticks when a time-, state- or step-event occurs in the continuous-model partition of the FMU (for Communication Point Clocks these <a href="#outputClock"><code>output clock</code></a> tick events can occour in all model partitions) and are identified based on their <a href="#clockReference"><code>clockReference</code></a> (see <a href="#operation-on-clocks">Section 2.1.8</a>).
 It can be periodic or non-periodic.
 <em>[Example: If</em> \(b = x &gt; 0\) <em>, and a state event is defined when b changes from <code>false</code> to <code>true</code>, and b is defined as <a href="#outputClock"><code>output clock</code></a>, then this <a href="#clock"><code>clock</code></a> is active whenever x changes from negative to positive values.]</em></p>
 </div>
@@ -2766,9 +2766,9 @@ If this is not possible, an explicit cast of one <a href="#clock"><code>clock</c
 </div>
 <div class="paragraph">
 <p>Sets the <a href="#clock"><code>clock</code></a> activation status by providing the value references of the corresponding <a href="#clock"><code>clock</code></a> variables and their values.
-A <a href="#clock"><code>clock</code></a> with <a href="#valueReference"><code>valueReference</code></a>[i] is activated at the current time instant if value[i] is set to <code>fmi3True</code>, otherwise the <a href="#clock"><code>clock</code></a> is deactivated.
+A <a href="#clock"><code>clock</code></a> with <a href="#valueReference"><code>valueReference</code></a>s[i] is activated at the current time instant if values[i] is set to <code>fmi3ClockActive</code>, otherwise the <a href="#clock"><code>clock</code></a> is deactivated.
 The clocked partition is evaluated in subactive mode (only output equations) if the argument subactive is non NULL and <code>subactive[i] = fmi3True</code>.
-The <a href="#parameter"><code>parameter</code></a> <code>subactive</code> has no meaning for CommunicationPointClocks (<code>fmi3CPClock</code>) and is ignored for such <a href="#clock"><code>clocks</code></a>.
+The <a href="#parameter"><code>parameter</code></a> <code>subactive</code> has no meaning for Communication Point Clocks and is ignored for such <a href="#clock"><code>clocks</code></a>.
 It is not allowed to call this function within the callback function <code>fmi3IntermediateUpdate()</code>.</p>
 </div>
 <div id="fmi3GetClock" class="listingblock">
@@ -2781,8 +2781,8 @@ It is not allowed to call this function within the callback function <code>fmi3I
 </div>
 <div class="paragraph">
 <p>Inquires whether a set of <a href="#clock"><code>clocks</code></a> is active by providing the value references of the corresponding <a href="#clock"><code>clock</code></a> varaibels.
-A <a href="#clock"><code>clock</code></a> with <a href="#valueReference"><code>valueReference</code></a>[i] is active at the current time instant if <code>value[i] = fmi3True</code>, otherwise the <a href="#clock"><code>clock</code></a> is not active. It is allowed to call this function within the callback function <code>fmi3IntermediateUpdate()</code>.
-It is required for an FMU to directly internally set back the activation <a href="#state"><code>state</code></a> of an <a href="#outputClock"><code>output clock</code></a> \(i\) to <code>fmi3False</code> if the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> is called for a <a href="#clock"><code>clock</code></a> \(i\) and the interface is set to <code>fmi3ScheduledExecutionSimulation</code>.
+A <a href="#clock"><code>clock</code></a> with <a href="#valueReference"><code>valueReference</code></a>s[i] is active at the current time instant if <code>values[i] = fmi3ClockActive</code>, otherwise the <a href="#clock"><code>clock</code></a> is not active. It is allowed to call this function within the callback function <code>fmi3IntermediateUpdate()</code>.
+It is required for an FMU to directly internally set back the activation <a href="#state"><code>state</code></a> of an <a href="#outputClock"><code>output clock</code></a> \(i\) to <code>fmi3ClockInactive</code> if the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> is called for a <a href="#clock"><code>clock</code></a> \(i\) and the interface is set to <code>fmi3ScheduledExecutionSimulation</code>.
 <em>[This is required to allow preemption.]</em></p>
 </div>
 <div class="paragraph">
@@ -4575,9 +4575,9 @@ The variable sub type <code>fmi3Clock</code> provides additional attributes for 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>clockType</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The type of <a href="#clock"><code>clocks</code></a> is defined based on the mandatory attribute <code>clockType</code>.
-If the properties of a <a href="#clock"><code>clock</code></a> adhere to synchronous clock theory it is defined with clockType = <code>STClock</code>.
+If the properties of a <a href="#clock"><code>clock</code></a> adhere to synchronous clock theory it is defined with <code>clockType = synchronousTime</code>.
 As an additional option for FMI for Co-Simulation discrete parts (that do not necessarily apply to synchronous clock theory) or continuous parts of the FMU can be associated to model partitions via <a href="#clock"><code>clocks</code></a> whose ticks define the sampling points (i.e. communication points) for the variables of these model partitions.
-Clocks that are defined for such cases have the clockType attribute value <code>CPClock</code> and have to be ignored for FMI for Model Exchange.
+Clocks that are defined for such cases have <code>clockType = communicationPoint</code> and have to be ignored for Model Exchange.
 It is not allowed to include <a href="#clock"><code>clocks</code></a> of different <code>clockType</code> in one FMU.
 <code>clockType</code> is a required attribute.</p></td>
 </tr>
@@ -5545,13 +5545,13 @@ The <a href="#clockReference"><code>clockReference</code></a> holds only <a href
 It is not possible to associate more than one <a href="#clock"><code>clock</code></a> to a variable.</p>
 </div>
 <div class="paragraph">
-<p>Communication Point Clock (<code>clockType = CPClock</code>): If present, the variable is associated with the <a href="#clock"><code>clock</code></a> referenced by <a href="#valueReference"><code>valueReference</code></a> and defined in element <code>ModelVariables</code>.
+<p>Communication Point Clock (<code>clockType = communicationPoint</code>): If present, the variable is associated with the <a href="#clock"><code>clock</code></a> referenced by <a href="#valueReference"><code>valueReference</code></a> and defined in element <code>ModelVariables</code>.
 It is possible to associate multiple <a href="#clock"><code>clocks</code></a> to a variable.
 Variables that are assigned to a Communication Point Clock are not necessarily <code>clocked</code> in the sense of synchronous time clock theory. Such variables can also be continuous-time or discrete-time variables.</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#outputClock"><code>output clocks</code></a> and <a href="#inputClock"><code>input clocks</code></a> of <code>clockType = CPClock</code> are defined in the <code>modelDescription.xml</code> it is possible to define a tick relationship from a <a href="#outputClock"><code>output clock</code></a> to an aperiodic <a href="#inputClock"><code>input clock</code></a> based on <a href="#clockReference"><code>clockReference</code></a> (<a href="#clock-relationships-for-communication-point-clocks">Section 2.1.8.3.3</a>).
-This is done for aperiodic <a href="#inputClock"><code>input clocks</code></a> that have the clockType = <code>CPClock</code> via providing a list of <a href="#valueReference"><code>valueReference</code></a> of <a href="#outputClock"><code>output clocks</code></a> of the same FMU.
+<p>If <a href="#outputClock"><code>output clocks</code></a> and <a href="#inputClock"><code>input clocks</code></a> of <code>clockType = communicationPoint</code> are defined in the <code>modelDescription.xml</code> it is possible to define a tick relationship from a <a href="#outputClock"><code>output clock</code></a> to an aperiodic <a href="#inputClock"><code>input clock</code></a> based on <a href="#clockReference"><code>clockReference</code></a> (<a href="#clock-relationships-for-communication-point-clocks">Section 2.1.8.3.3</a>).
+This is done for aperiodic <a href="#inputClock"><code>input clocks</code></a> that have the <code>clockType = communicationPoint</code> via providing a list of <a href="#valueReference"><code>valueReference</code></a> of <a href="#outputClock"><code>output clocks</code></a> of the same FMU.
 If a <a href="#outputClock"><code>output clock</code></a> of this <a href="#valueReference"><code>valueReference</code></a> list ticks the master has to create a tick for the associated aperiodic <a href="#inputClock"><code>input clock</code></a> at the same time instant.
 It is not allowed to combine <a href="#outputClock"><code>output clocks</code></a> with periodic or strict periodic <a href="#inputClock"><code>input clocks</code></a> based on <a href="#clockReference"><code>clockReference</code></a>.</p>
 </div>
@@ -13126,7 +13126,7 @@ The XML file may have the following content:</p>
 </div>
 <div class="paragraph">
 <p>For FMI for Co-Simulation, variables that are assigned to a model partition of the model based on <a href="#clockReference"><code>clockReference</code></a> are not necessarily <code>clocked</code>.
-Such variables can be Continuous-time or Discrete-time variables if the <a href="#clock"><code>clock</code></a> is of <code>clockType = CPClock</code>.</p>
+Such variables can be Continuous-time or Discrete-time variables if the <a href="#clock"><code>clock</code></a> is of <code>clockType = communicationPoint</code>.</p>
 </div>
 <div class="sect4">
 <h5 id="xml-flags-clocked-co-simulation">4.3.3.1. Capability Flags</h5>
