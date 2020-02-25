@@ -1559,9 +1559,6 @@ In all header files the convention is used that all C function and type definiti
 <p>contains the type definitions of the <a href="#input"><code>input</code></a> and output arguments of the functions as well as some C preprocessor macro defintions for constants.
 This header file must
 be used both by the FMU and by the target simulator.
-If the target simulator has different definitions in
-the header file (for example, <code>typedef float fmi3Float64</code> instead of <code>typedef double fmi3Float64</code>),
-then the <span class="underline">FMU</span> needs to be <span class="underline">re-compiled</span> with the header file used by the <span class="underline">target simulator</span>.
 <em>[Example of a definition in this header file:</em></p>
 <div class="listingblock">
 <div class="content">
@@ -1642,20 +1639,20 @@ fmi3SetTimeTYPE *myname_setTime = &lt; load symbol "fmi3SetTime" from DLL/Shared
 </div>
 </div>
 <div class="paragraph">
-<p>A function that is defined as <code>fmi3GetReal</code> is changed by the macros to a function name as follows:</p>
+<p>A function that is defined as <code>fmi3GetFloat64</code> is changed by the macros to a function name as follows:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>If the FMU is shipped with C source code or with static link library:<br>
-The constructed function name is <code>MyModel_fmi3GetReal</code>.
+The constructed function name is <code>MyModel_fmi3GetFloat64</code>.
 In other words the function name is prefixed with the model name and an <code>_</code>.
 A simulation environment can therefore construct the relevant function names by generating code for the actual function call.
 In case of a static link library, the name of the library is <code>MyModel.lib</code> on Windows and <code>libMyModel.a</code> on Linux; in other words the <code>modelIdentifier</code> attribute is used to create the library name.</p>
 </li>
 <li>
 <p>If the FMU is shipped with DLL/SharedObject:<br>
-The constructed function name is <code>fmi3GetReal</code>, in other words, it is not changed.
+The constructed function name is <code>fmi3GetFloat64</code>, in other words, it is not changed.
 <em>[This can be realized in the case of a source code FMU with a target-specific version of <code>fmi3Functions.h</code> that does not use FMI3_FUNCTION_PREFIX to construct the function names.]</em>
 A simulation environment will then dynamically load this library and will explicitly import the function symbols by providing the FMI function names as strings.
 The name of the library is <code>MyModel.dll</code> on Windows or <code>MyModel.so</code> on Linux; in other words the <code>modelIdentifier</code> attribute is used as library name.</p>
@@ -1728,7 +1725,7 @@ An <code>fmi3ValueReference</code> references one such value (scalar or array).
 The coding of <code>fmi3ValueReference</code> is a "secret" of the environment that generated the FMU.
 The interface to the equations only provides access to variables via this handle.
 Extracting concrete information about a variable is specific to the used environment that reads the Model Description File in which the value handles are defined.
-If a function in the following sections is called with a wrong <code>fmi3ValueReference</code> value <em>[for example, setting a constant with a <code>fmi3SetReal</code> function call]</em>, then the function has to return with an error ( <code>fmi3Status = fmi3Error</code>, see <a href="#status-returned-by-functions">Section 2.1.3</a>).</p>
+If a function in the following sections is called with a wrong <code>fmi3ValueReference</code> value <em>[for example, setting a constant with a call to <code>fmi3SetFloat64</code>]</em>, then the function has to return with an error ( <code>fmi3Status = fmi3Error</code>, see <a href="#status-returned-by-functions">Section 2.1.3</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1820,7 +1817,7 @@ this function has shown the prepared information message to the user.</p>
 <em>The actual calculation is performed by <code>fmi3Get{VariableType}</code> functions.</em>
 <em>Still <code>fmi3Set{VariableType}</code> functions could check whether the input arguments are in their validity range.</em>
 <em>If not, these functions could return with <code>fmi3Discard</code>.]</em>
-(Model Exchange: <code>fmi3SetReal</code>, <code>fmi3SetInteger</code>, <code>fmi3SetBoolean</code>, <code>fmi3SetString</code>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <code>fmi3GetReal</code>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>; Co-Simulation: <code>fmi3SetReal</code>, <code>fmi3SetInteger</code>, <code>fmi3SetBoolean</code>, <code>fmi3SetString</code>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>):</p>
+(Model Exchange: <code>fmi3Set{VariableType}</code>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>; Co-Simulation: <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>):</p>
 <div class="paragraph">
 <p>For Model Exchange: It is recommended to perform a smaller step size and evaluate the model equations again, for example because an iterative solver in the model did not converge or because a function is outside of its domain <em>[for example, <code>sqrt(&lt;negative number&gt;)</code>]</em>.
 If this is not possible, the simulation has to be terminated.</p>
@@ -2995,34 +2992,40 @@ In every state, the general form of the FMU equations are:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>\(\mathbf{v}_{unknonwn}\) is the vector of unknown Real variables computed in the actual state:</p>
+<p>\(\mathbf{v}_{unknonwn}\) is the vector of unknown floating point variables computed in the actual state:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Initialization Mode</strong>: The exposed unknowns listed under <code>&lt;ModelStructure&gt;&lt;InitialUnknowns&gt;</code> that have type Real.</p>
+<p><strong>Initialization Mode</strong>: The exposed unknowns listed under <code>&lt;ModelStructure&gt;&lt;InitialUnknowns&gt;</code> that have a floating point type.</p>
 </li>
 <li>
-<p><strong>Continuous-Time Mode</strong> (Model Exchange): The continuous-time outputs and state derivatives (= the variables listed under <code>&lt;ModelStructure&gt;&lt;Outputs&gt;</code> with type Real and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a> and the variables listed as state derivatives under <code>&lt;ModelStructure&gt;&lt;Derivatives&gt;</code>).</p>
+<p><strong>Continuous-Time Mode</strong> (Model Exchange): The continuous-time outputs and state derivatives (= the variables listed under <code>&lt;ModelStructure&gt;&lt;Outputs&gt;</code> with a floating point type and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a> and the variables listed as state derivatives under <code>&lt;ModelStructure&gt;&lt;Derivatives&gt;</code>).</p>
 </li>
 <li>
-<p><strong>Event Mode</strong> (Model Exchange): The same variables as in the <strong>Continuous-Time Mode</strong> and additionally variables under <code>&lt;ModelStructure&gt;&lt;Outputs&gt;</code> with type Real and <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a>.</p>
+<p><strong>Event Mode</strong> (Model Exchange): The same variables as in the <strong>Continuous-Time Mode</strong> and additionally variables under <code>&lt;ModelStructure&gt;&lt;Outputs&gt;</code> with a floating point type and <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a>.</p>
 </li>
 <li>
-<p><strong>Step Mode</strong> (Co-Simulation): The variables listed under <code>&lt;ModelStructure&gt;&lt;Outputs&gt;</code> with type Real and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a> or <a href="#discrete"><code>discrete</code></a>.
+<p><strong>Step Mode</strong> (Co-Simulation): The variables listed under <code>&lt;ModelStructure&gt;&lt;Outputs&gt;</code> with a floating point type and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a> or <a href="#discrete"><code>discrete</code></a>.
 If <code>&lt;ModelStructure&gt;&lt;Derivatives&gt;</code> is present, also the variables listed here as state derivatives.</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>\(\mathbf{v}_{known}\) is the vector of known Real <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that changes its value in the actual state.
-Details are described in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.2.11</a>.
+<p>\(\mathbf{v}_{known}\) is the vector of known floating point <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that changes its value in the actual state.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Details are described in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.2.11</a>.
 <em>[For example continuous-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>.</em>
 <em>If a variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> is explicitly defined under <code>ModelVariables</code>, a directional derivative with respect to this variable can be computed.</em>
 <em>If such a variable is not defined, the directional derivative with respect to the <a href="#independent"><code>independent</code></a> variable cannot be calculated].</em></p>
-</li>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p>\({\mathbf{v}_{rest}}\) is the set of <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that either changes its value in the actual state but are non-Real variables, or do not change their values in this state, but change their values in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>]</em>.</p>
+<p>\({\mathbf{v}_{rest}}\) is the set of <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that either changes its value in the actual state but are non-floating point variables, or do not change their values in this state, but change their values in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>]</em>.</p>
 </li>
 </ul>
 </div>
@@ -4415,7 +4418,7 @@ A value with respect to Unit (abbreviated as <code>Unit_value</code>) is convert
 One <code>SimpleType</code> has a type <code>name</code> and <code>description</code> as attributes.
 Attribute <code>name</code> must be unique with respect to all other elements of the <code>TypeDefinitions</code> list.
 Furthermore, <code>name</code> of a <code>SimpleType</code> must be different to all <code>name</code> attributes of variables <em>[if the same names would be used, then this would nearly always give problems when importing the FMU in an environment such as Modelica, where a type name cannot be used as instance name]</em>.
-Additionally, one of the elements <code>Real</code>, <code>Integer</code>, <code>Boolean</code>, <code>String</code>, <code>Binary</code>, <code>Enumeration</code> or <code>Clock</code> must be present.
+Additionally, one variable type element must be present.
 They have the following definitions:</p>
 </div>
 <div class="imageblock text-center">
@@ -4427,9 +4430,6 @@ They have the following definitions:</p>
 <div class="content">
 <img src="images/Integer_schema.png" alt="Integer schema" width="50%">
 </div>
-</div>
-<div class="paragraph">
-<p><em>[The attributes of <code>Real</code> and <code>Integer</code> are collected in the attribute groups <code>fmi3RealAttributes</code> and <code>fmi3IntegerAttributes</code> in file <code>fmi3AttributeGroups.xsd</code>, since these attributes are reused in the variable element definitions below.]</em></p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -4468,7 +4468,7 @@ The quantity names are not standardized]</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>displayUnit</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Default display unit. The conversion to the <code>unit</code> is defined with the element <code>&lt;fmiModelDescription&gt;&lt;UnitDefinitions&gt;</code>.
 If the corresponding <code>displayUnit</code> is not defined under <code>&lt;UnitDefinitions&gt; &lt;Unit&gt; &lt;DisplayUnit&gt;</code>, then <code>displayUnit</code> is ignored.
-It is an error if <code>displayUnit</code> is defined in element <code>Real</code>, but <code>unit</code> is not, or unit is not defined under <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code>.</p></td>
+It is an error if <code>displayUnit</code> is defined as variable type element, but <code>unit</code> is not, or unit is not defined under <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mimeType</code></p></td>
@@ -4516,13 +4516,13 @@ An <code>Enumeration</code> element must have at least one Item.</p></td>
 </tbody>
 </table>
 <div class="paragraph">
-<p><em>[Attributes <code>min</code> and <code>max</code> can be set for variables of type Real, Integer or Enumeration.</em>
-<em>The question is how <code>fmi3SetReal</code>, <code>fmi3SetInteger</code>, <code>fmi3GetReal</code>, <code>fmi3GetInteger</code> shall utilize this definition.</em>
+<p><em>[Attributes <code>min</code> and <code>max</code> can be set for variables of numeric type or Enumeration.</em>
+<em>The question is how <code>fmi3Set{VariableType}</code>, <code>fmi3Get{VariableType}</code> shall utilize this definition.</em>
 <em>There are several conflicting requirements:</em><br>
 <em>Avoiding forbidden regions (for example, if <code>u</code> is an <a href="#input"><code>input</code></a> and "sqrt(u)" is computed in the FMU, <code>min = 0</code> on <code>u</code> shall guarantee that only values of <code>u</code> in the allowed regions are provided).</em>
 <em>Numerical algorithms (ODE-solver, optimizers. nonlinear solvers) do not guarantee constraints.</em>
 <em>If a variable is outside of the bounds, the solver tries to bring it back into the bounds.</em>
-<em>As a consequence, calling <code>fmi3GetReal</code> during an iteration of such a solver might return values that are not in the defined min/max region.</em>
+<em>As a consequence, calling <code>fmi3Get{VariableType}</code> during an iteration of such a solver might return values that are not in the defined min/max region.</em>
 <em>After the iteration is finalized, it is only guaranteed that a value is within its bounds up to a certain numerical precision.</em><br>
 <em>In debug mode checks on min/max should be performed.</em>
 <em>For maximum performance on a real-time system the checks might not be performed.</em><br>
@@ -4535,7 +4535,7 @@ An <code>Enumeration</code> element must have at least one Item.</p></td>
 <p><em>If the FMU is generated so that min/max shall be checked whenever meaningful (for example, for debug purposes), then the following strategy should be used:</em></p>
 </div>
 <div class="paragraph">
-<p><em>If <code>fmi3SetReal</code> or <code>fmi3SetInteger</code> is called violating the min/max attribute settings of the corresponding variable, the following actions are performed:</em></p>
+<p><em>If <code>fmi3Set{VariableType}</code> is called violating the min/max attribute settings of the corresponding variable, the following actions are performed:</em></p>
 </div>
 <div class="ulist">
 <ul>
@@ -4548,10 +4548,10 @@ An <code>Enumeration</code> element must have at least one Item.</p></td>
 </ul>
 </div>
 <div class="paragraph">
-<p><em>If an FMU defines min/max values for Integer and Enumerations (<a href="#local"><code>local</code></a> and <a href="#output"><code>output</code></a> variables), then the expected behavior of the FMU is that <code>fmi3GetInteger</code> returns values in the defined range.</em></p>
+<p><em>If an FMU defines min/max values for integer types and Enumerations (<a href="#local"><code>local</code></a> and <a href="#output"><code>output</code></a> variables), then the expected behavior of the FMU is that <code>fmi3Get{VariableType}</code> functions return values in the defined range.</em></p>
 </div>
 <div class="paragraph">
-<p><em>If an FMU defines min/max values for Reals, then the expected behavior of the FMU is that <code>fmi3GetReal</code> returns values at the solution (accepted steps of the integrators) in the defined range with a certain uncertainty related to the tolerances of the numerical algorithms.]</em></p>
+<p><em>If an FMU defines min/max values for numeric types, then the expected behavior of the FMU is that <code>fmi3Get{VariableType}</code> returns values at the solution (accepted steps of the integrators) in the defined range with a certain uncertainty related to the tolerances of the numerical algorithms.]</em></p>
 </div>
 <div class="paragraph">
 <p><strong>Clock Type Definition</strong> <a id="clock-type-definition"></a></p>
@@ -4908,7 +4908,7 @@ The member name has to be unique in a terminal.</p>
 </div>
 <div class="paragraph">
 <p><em>Matching is not restricted by <a href="#variability"><code>variability</code></a>, <a href="#causality"><code>causality</code></a> or variable type.</em>
-<em>Example: A <a href="#fixed"><code>fixed</code></a> variable may be connected to a <a href="#tunable"><code>tunable</code></a> variable, a variable of type Real may be connected to a variable of type Integer.</em>
+<em>Example: A <a href="#fixed"><code>fixed</code></a> variable may be connected to a <a href="#tunable"><code>tunable</code></a> variable, a variable of type <code>fmi3Float64</code> may be connected to a variable of type <code>fmi3Int32</code>.</em>
 <em>However, it is recommended that the variable types and variabilities are equal.</em></p>
 </div>
 <div class="paragraph">
@@ -5146,7 +5146,7 @@ This enables high quality rendering and printing in importing tools.</p>
 </div>
 <div class="paragraph">
 <p>For <code>fmi3Terminals</code> (terminals which are listed in the <code>Terminals</code> element) the name of the terminal in the <code>GraphicalRepresentation</code> is equal to the name of the terminal in the <code>Terminals</code> element (e.g. <code>port_a</code>).
-<em>[If the graphical representation is used for an <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a> (e.g. a Real <a href="#input"><code>input</code></a> <code>u</code>), then a <code>Terminal</code> has to be added to the <code>Terminals</code> element which has one <code>TerminalMemberVariable</code>.</em>
+<em>[If the graphical representation is used for an <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a> (e.g. a <code>fmi3Float64</code> <a href="#input"><code>input</code></a> <code>u</code>), then a <code>Terminal</code> has to be added to the <code>Terminals</code> element which has one <code>TerminalMemberVariable</code>.</em>
 <em>The name of the <code>Terminal</code> and the name of the <code>TerminalMemberVariable</code> should be equal to the name of the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a>.]</em></p>
 </div>
 <div class="paragraph">
@@ -5214,7 +5214,7 @@ It provides the static information of all exposed variables and is defined as:</
 </div>
 <div class="paragraph">
 <p>The <code>ModelVariables</code> element consists of an ordered set of variable elements (see figure above).
-Variable elements can uniformly represent variables of primitive (atomic) types, like single real or integer variables, or as well as arrays of an arbitrary (but fixed) number of dimensions. The schema definition is present in a separate file <code>fmi3Variable.xsd</code>.</p>
+Variable elements can uniformly represent variables of primitive (atomic) types, like single floating point or integer variables, or as well as arrays of an arbitrary (but fixed) number of dimensions. The schema definition is present in a separate file <code>fmi3Variable.xsd</code>.</p>
 </div>
 <div class="paragraph">
 <p>Variable elements representing array variables must contain at least one <code>Dimension</code> element.
@@ -5347,10 +5347,10 @@ All variables are a function of this <a href="#independent"><code>independent</c
 <a href="#variability"><code>variability</code></a> must be <a href="#continuous"><code>continuous</code></a>.
 At most one variable of an FMU can be defined as <a href="#independent"><code>independent</code></a>.
 If no variable is defined as <a href="#independent"><code>independent</code></a>, it is implicitly present with name = <code>time</code> and <code>unit = s</code>.
-If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined as <code>Real</code> without a <a href="#start"><code>start</code></a> attribute.
-It is not allowed to call function <code>fmi3SetReal</code> on an <a href="#independent"><code>independent</code></a> variable.
+If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined with a floating point type without a <a href="#start"><code>start</code></a> attribute.
+It is not allowed to call function <code>fmi3Set{VariableType}</code> on an <a href="#independent"><code>independent</code></a> variable.
 Instead, its value is initialized with <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <code>currentCommunicationPoint</code> and <code>communicationStepSize</code> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation.
-<em>[The actual value can be inquired with <code>fmi3GetReal</code>.]</em></p>
+<em>[The actual value can be inquired with <code>fmi3Get{VariableType}</code>.]</em></p>
 </li>
 </ul>
 </div>
@@ -5449,7 +5449,7 @@ Co-Simulation: By convention, the variable is from a real sampled data system an
 <div id="continuous" class="ulist">
 <ul>
 <li>
-<p><code>continuous</code>: Only a variable of <code>type = Real</code> can be <a href="#continuous"><code>continuous</code></a>.<br>
+<p><code>continuous</code>: Only a variable of <code>type = fmi3GetFloat32</code> or <code>type = fmi3GetFloat64</code> can be <a href="#continuous"><code>continuous</code></a>.<br>
 Model Exchange: No restrictions on value changes.<br>
 Co-Simulation: By convention, the variable is from a differential</p>
 </li>
@@ -5458,7 +5458,7 @@ Co-Simulation: By convention, the variable is from a differential</p>
 <div id="clock" class="ulist">
 <ul>
 <li>
-<p><code>clock</code>: Only a variable of type <code>Clock</code> can have this variablity.</p>
+<p><code>clock</code>: Only a variable of type <code>Clock</code> can have this variability.</p>
 </li>
 </ul>
 </div>
@@ -5478,7 +5478,7 @@ It is not allowed to provide a value for <a href="#initial"><code>initial</code>
 <div id="exact" class="ulist">
 <ul>
 <li>
-<p>= <code>exact</code>: The variable is initialized with the <a href="#start"><code>start</code></a> value (provided under <code>Real</code>, <code>Integer</code>, <code>Boolean</code>, <code>String</code> or <code>Enumeration</code>).</p>
+<p>= <code>exact</code>: The variable is initialized with the <a href="#start"><code>start</code></a> value (provided under the variable type element).</p>
 </li>
 </ul>
 </div>
@@ -6152,7 +6152,7 @@ However, aliased variables may have different attributes, such as <code>min/max/
 <em>If the set includes a parameter or input the aliases will have the stated variability of that parameter or input.]</em></p>
 </div>
 <div class="paragraph">
-<p>Type specific properties are defined in the required choice element, where exactly one of <code>Real</code>, <code>Integer</code>, <code>Boolean</code>, <code>String</code>, <code>Enumeration</code> must be present in the XML file:</p>
+<p>Type specific properties are defined in the required choice element, where exactly one of the numeric types or an Enumeration must be present in the XML file:</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -6199,8 +6199,8 @@ However, aliased variables may have different attributes, such as <code>min/max/
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>If present, name of type defined with <code>TypeDefinitions / SimpleType</code>.
 The value defined in the corresponding <code>TypeDefinition</code> (see <a href="#definition-of-types">Section 2.2.4</a>) is used as default.
-<em>[For example, if <code>min</code> is present both in <code>Real</code> (of <code>TypeDefinition</code>) and in <code>Real</code>, then the <code>min</code> of variables is actually used.]</em>
-For <code>Real</code>, <code>Integer</code>, <code>Boolean</code>, <code>String</code>, this attribute is optional.
+<em>[For example, if <code>min</code> is present both in variable type element of <code>TypeDefinition</code> and in the concrete variable type element of the variable, then the <code>min</code> of the variable is actually used.]</em>
+For numeric types and <code>String</code>, this attribute is optional.
 For <code>Enumeration</code> it is required, because the Enumeration items are defined in <code>TypeDefinitions / SimpleType</code>.</p>
 </div></div></td>
 </tr>
@@ -6377,7 +6377,7 @@ The functional dependency is defined as (dependencies of variables that are fixe
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Derivatives</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of all state derivatives, in other words, a list of value references where every corresponding variable must be a state derivative.
-<em>[Note that only <a href="#continuous"><code>continuous</code></a> Real variables are listed here.</em>
+<em>[Note that only <a href="#continuous"><code>continuous</code></a> floating point variables are listed here.</em>
 <em>If a <a href="#state"><code>state</code></a> or a <a href="#derivative"><code>derivative</code></a> of a <a href="#state"><code>state</code></a> shall not be exposed from the FMU, or if states are not statically associated with a variable (due to dynamic state selection), then dummy variables have to be introduced, for example, <code>x[4]</code>, or <code>xDynamicStateSet2[5]</code>.</em>
 <em>The ordering of the variables in this list is defined by the exporting tool.</em>
 <em>Usually, it is best to order according to the declaration order of the <a href="#state"><code>states</code></a> in the source model, since then the &lt;Derivatives&gt; list does not change if the declaration order of states in the source model is not changed.</em>
@@ -6505,9 +6505,9 @@ If not present, it must be assumed that the <a href="#Unknown"><code>Unknown</co
 Otherwise, the corresponding <code>Known</code> \(\color{blue}{v_{known,i}}\) enters the equation as:</p>
 <p class="tableblock">If <a href="#dependenciesKind"><code>dependenciesKind</code></a> is present, <a href="#dependencies"><code>dependencies</code></a> must be present and must have the same number of list elements.</p>
 <p class="tableblock"><code>= dependent</code>: no particular structure, \(\color{blue}{{h(..,\ v}_{known,i}}\),..)</p>
-<p class="tableblock">Only for Real unknowns \(\color{blue}{v_{\text{unknown}}}\):</p>
+<p class="tableblock">Only for floating point type unknowns \(\color{blue}{v_{\text{unknown}}}\):</p>
 <p class="tableblock"><code>=</code> <a href="#constant"><code>constant</code></a>: constant factor, \(\color{blue}{c \cdot v_{known,i}}\) where \(\color{blue}{c}\) is an expression that is evaluated before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.</p>
-<p class="tableblock">Only for Real unknowns \(\color{blue}{v_{\text{unknown}}}\) in Event and <strong>Continuous-Time Mode</strong> (Model Exchange) and at communication points (Co-Simulation), and not for <a href="#InitialUnknowns"><code>InitialUnknowns</code></a> for <strong>Initialization Mode</strong>:</p>
+<p class="tableblock">Only for floating point type unknowns \(\color{blue}{v_{\text{unknown}}}\) in Event and <strong>Continuous-Time Mode</strong> (Model Exchange) and at communication points (Co-Simulation), and not for <a href="#InitialUnknowns"><code>InitialUnknowns</code></a> for <strong>Initialization Mode</strong>:</p>
 <p class="tableblock"><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \(\color{blue}{p \cdot v_{known,i}}\) where \(\color{blue}{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
 <p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \(\color{blue}{p \cdot v_{known,i}}\) where \(\color{blue}{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external event (Model Exchange) or at a communication point (Co-Simulation)</p>
 <p class="tableblock"><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \(\color{blue}{d \cdot v_{known,i}}\) where \(\color{blue}{d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external or internal event or at a communication point (Co-Simulation).</p>
@@ -6547,7 +6547,7 @@ y &amp;= g_1(x_2, x_3)
 </div>
 </div>
 <div class="paragraph">
-<p><em>where</em> \(\color{blue}{u_{1}}\) <em>is a continuous-time <a href="#input"><code>input</code></a> (<a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>),</em> \(\color{blue}{u_{2}}\) <em>is any type of <a href="#input"><code>input</code></a>,</em> \(\color{blue}{u_{3}}\) <em>is a Real discrete-time <a href="#input"><code>input</code></a> (<a href="#variability"><code>variability</code></a> = "discrete"`), and</em> \(\color{blue}{p}\) <em>is a <a href="#fixed"><code>fixed</code></a> <a href="#parameter"><code>parameter</code></a> (<a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a>).</em>
+<p><em>where</em> \(\color{blue}{u_{1}}\) <em>is a continuous-time <a href="#input"><code>input</code></a> (<a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>),</em> \(\color{blue}{u_{2}}\) <em>is any type of <a href="#input"><code>input</code></a>,</em> \(\color{blue}{u_{3}}\) <em>is a floating point discrete-time <a href="#input"><code>input</code></a> (<a href="#variability"><code>variability</code></a> = "discrete"`), and</em> \(\color{blue}{p}\) <em>is a <a href="#fixed"><code>fixed</code></a> <a href="#parameter"><code>parameter</code></a> (<a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a>).</em>
 <em>The initialization is defined by:</em></p>
 </div>
 <div class="stemblock">
@@ -7199,8 +7199,8 @@ A schematic view of a model in FMI for Model Exchange format is shown in <a href
 <div class="paragraph">
 <p><strong class="blue">Blue</strong> arrows: Information provided by the FMU.<br>
 <strong class="red">Red</strong> arrows : Information provided to the FMU.<br>
-\(\mathbf{v}_{start}\), \(\mathbf{u}\), \(\mathbf{y}\), \(\mathbf{w}\), \(\mathbf{x}_d\) are of type Real, Integer, Boolean, String;
-\(\mathbf{t}\), \(\mathbf{x}_c\), \(\mathbf{z}\) are of type Real.</p>
+\(\mathbf{v}_{start}\), \(\mathbf{u}\), \(\mathbf{y}\), \(\mathbf{w}\), \(\mathbf{x}_d\) are of a numeric type or String;
+\(\mathbf{t}\), \(\mathbf{x}_c\), \(\mathbf{z}\) are of floating point type.</p>
 </div>
 <div class="sect2">
 <h3 id="math-model-exchange">3.1. Mathematical description</h3>
@@ -7247,7 +7247,7 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation below
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(t^{+}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\({{(t}_{R},t_{I})}^{+} \Leftrightarrow (\lim_{\epsilon \rightarrow 0}{\left(t_{R} + \varepsilon \right),t_{Imax})}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">right limit at \(t\).
-\(t_{Imax}\) is the largest occurring Integer index of super dense time</p></td>
+\(t_{Imax}\) is the largest occurring integer index of super dense time</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(^-t\)</p></td>
@@ -7288,7 +7288,7 @@ Events can be known before hand (= time event), or are defined implicitly (= sta
 Between events, variables are either <a href="#continuous"><code>continuous</code></a> or do not change their value.
 A variable is called discrete-time, if it changes its value only at an event instant.
 Otherwise the variable is called continuous-time.
-Only real variables can be continuous-time.
+Only floating point variables can be continuous-time.
 The following variable indices are used to describe the timing behavior of the corresponding variable (for example, \(v_d\) is a discrete-time variable).</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -7316,7 +7316,7 @@ is a continuous function of time inside each interval \(t_i^+ &lt; \ ^-t_{i+1}\)
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">r</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A <strong>Clocked</strong> variable \(r(t)\), is a variable of type Real, Integer, Boolean, String or Enumeration associated to a <a href="#clock"><code>clock</code></a> \(c(t)\) and therefore active only at particular time instants.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A <strong>Clocked</strong> variable \(r(t)\), is a variable of a numeric type, String or Enumeration associated to a <a href="#clock"><code>clock</code></a> \(c(t)\) and therefore active only at particular time instants.</p></td>
 </tr>
 </tbody>
 </table>
@@ -7352,7 +7352,7 @@ More precisely: An event \(t = t_i\) occurs at the smallest time instant "min t"
 Such an event is called state event.
 <em>[This definition is slightly different from the standard definition of state events: "</em> \(z_j(t) \cdot z_j(t_{i-1}) \leq 0\) <em>".</em>
 <em>This often used definition has the severe drawback that</em> \(z_j(t_{i-1}) \neq 0\) <em>is required in order to be well-defined and this condition cannot be guaranteed.].</em>
-All event indicators are piecewise continuous and are collected together in one vector of real numbers \(\mathbf{z(t)}\).<br></p>
+All event indicators are piecewise continuous and are collected together in one vector of floating point numbers \(\mathbf{z(t)}\).<br></p>
 </li>
 </ol>
 </div>
@@ -7425,11 +7425,11 @@ Variables of this type are defined with attribute <a href="#causality"><code>cau
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{z}(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of real continuous-time variables utilized to define state events, see below.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables utilized to define state events, see below.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{x}_c(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of real continuous-time variables representing the continuous-time <a href="#state"><code>states</code></a>.
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the continuous-time <a href="#state"><code>states</code></a>.
 For notational convenience, a continuous-time <a href="#state"><code>state</code></a> is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description below.
 In reality, a continuous-time <a href="#state"><code>state</code></a> is however part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
@@ -7473,7 +7473,7 @@ The phases can be categorized according to the following modes:</p>
 <div class="sect4">
 <h5 id="_continuous_time_mode">3.1.2.2. Continuous-Time Mode</h5>
 <div class="paragraph">
-<p>This mode is used to compute the values of all (real) continuous-time variables between events by numerically solving ordinary differential and algebraic equations.
+<p>This mode is used to compute the values of all floating point continuous-time variables between events by numerically solving ordinary differential and algebraic equations.
 All discrete-time variables are fixed during this phase and the corresponding discrete-time equations are not evaluated.</p>
 </div>
 </div>
@@ -7486,7 +7486,7 @@ In FMI 2.0 there is no mechanism that the FMU can provide the information whethe
 Therefore, the environment has to assume that at an event instant always all discrete-time variables are computed, although internally in the FMU only a subset might be newly computed.</p>
 </div>
 <div class="paragraph">
-<p>When connecting FMUs together, loop structures can occur that lead to particular difficulties because linear or non-linear algebraic systems of equations in Real variables but also in Boolean or Integer variables might be present.
+<p>When connecting FMUs together, loop structures can occur that lead to particular difficulties because linear or non-linear algebraic systems of equations in floating point variables but also in Boolean or Integer variables might be present.
 In order to solve such systems of equations over FMUs efficiently, the dependency information is needed stating, for example, which <a href="#output"><code>outputs</code></a> depend directly on <a href="#input"><code>inputs</code></a>.
 This data is optionally provided in the XML file under element <code>&lt;ModelStructure&gt;</code>.
 If this data is not provided, the worst case must be assumed (for example, all output variables depend algebraically on all <a href="#input"><code>input</code></a> variables).</p>
@@ -7672,7 +7672,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">\(t \in \mathbb{R}, \mathbf{p} \in \mathbb{P}^{np},  \mathbf{u}(t) \in \mathbb{P}^{nu},\mathbf{y}(t) \in \mathbb{P}^{ny}, \mathbf{x}_c(t) \in \mathbb{R}^{nxc}, \mathbf{x}_d(t) \in \mathbb{P}^{nxd}, \mathbf{w}(t) \in \mathbb{P}^{nw}, \mathbf{z}(t) \in \mathbb{R}^{nz}\)<br>
-\(\qquad \mathbb{R}\): Real variable, \(\mathbb{P}\): real <strong>or</strong> boolean <strong>or</strong> integer <strong>or</strong> enumeration <strong>or</strong> string variable<br>
+\(\qquad \mathbb{R}\): floating point variable, \(\mathbb{P}\): floating point <strong>or</strong> boolean <strong>or</strong> integer <strong>or</strong> enumeration <strong>or</strong> string variable<br>
 \(\mathbf{f}_{init}, \mathbf{f}_{sim} \in C^0\) (=continuous functions with respect to all input arguments inside the respective mode).</p></td>
 </tr>
 </tbody>
@@ -7749,7 +7749,7 @@ y2 := w2</pre>
 <div class="paragraph">
 <p><em>At an event instant, the discrete system is described by algebraic equations as function of the <a href="#previous"><code>previous</code></a> (internal) discrete-time <a href="#state"><code>states</code></a></em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>and the discrete-time <a href="#input"><code>inputs</code></a></em> \(\mathbf{u}_{d}\).
 <em>If FMUs are connected in a loop, these algebraic equations are called iteratively, until the solution is found.</em>
-<em>If the actual discrete-time <a href="#state"><code>states</code></a></em> \(\mathbf{x}_{d}\) <em>and the <a href="#previous"><code>previous</code></a> discrete-time <a href="#state"><code>states</code></a></em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>are not identical, the discrete-time <a href="#state"><code>states</code></a> are updated, the Integer part of the time is incremented and a new event iteration is performed.</em>
+<em>If the actual discrete-time <a href="#state"><code>states</code></a></em> \(\mathbf{x}_{d}\) <em>and the <a href="#previous"><code>previous</code></a> discrete-time <a href="#state"><code>states</code></a></em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>are not identical, the discrete-time <a href="#state"><code>states</code></a> are updated, the integer part of the time is incremented and a new event iteration is performed.</em>
 <em>Other discrete-time models must be mapped to this description form.</em>
 <em>Examples:</em></p>
 </div>
@@ -8163,9 +8163,9 @@ Note that it is required that <code>x_nominal[i] &gt; 0.0</code>.
 <div class="paragraph">
 <p>The objective of the start chart is to define the allowed calling sequences for functions of the FMI: Calling sequences not accepted by the state chart are not supported by the FMI.
 The behavior of an FMU is undefined for such a calling sequence.
-For example, the state chart indicates that when an FMU for Model Exchange is in state <strong>Continuous-Time Mode</strong>, a call to <code>fmi3SetReal</code> for a <a href="#discrete"><code>discrete</code></a> <a href="#input"><code>input</code></a> is not supported.
+For example, the state chart indicates that when an FMU for Model Exchange is in state <strong>Continuous-Time Mode</strong>, a call to <code>fmi3Set{VariableType}</code> for a <a href="#discrete"><code>discrete</code></a> <a href="#input"><code>input</code></a> is not supported.
 The state chart is given here as UML 2.0 state machine.
-If a transition is labelled with one or more function names (for example, <code>fmi3GetReal</code>, <code>fmi3GetInteger</code>), this means that the transition is taken if any of these functions is successfully called.
+If a transition is labelled with one or more function names (for example, <code>fmi3GetFloat64</code>, <code>fmi3GetUInt8</code>), this means that the transition is taken if any of these functions is successfully called.
 Note that the FMU can always determine in which state it is since every state is entered by a particular function call (such as <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>), or a particular return value (such as <code>fmi3Fatal</code>).</p>
 </div>
 <div class="paragraph">
@@ -9378,10 +9378,6 @@ The details of the flow are given in the state machine of the calling sequences 
 <div class="sect4">
 <h5 id="_mathematical_model_co_simulation">4.1.1.2. Mathematical Model Co-Simulation</h5>
 <div class="paragraph">
-<p><em>[Function <code>fmi3Set{VariableType}</code> used in the document, is an abbreviation for functions <code>fmi3SetFloat64</code>, <code>fmi3SetInt8</code>, <code>fmi3SetInt16</code>, <code>fmi3SetString</code> and for other base variable types respectively - with the exception of <a href="#clock"><code>clocks</code></a>.</em>
-<em>Function <code>fmi3Get{VariableType}</code> is an abbreviation for functions <code>fmi3SetFloat64</code>, <code>fmi3SetInt8</code>, <code>fmi3SetInt16</code>, <code>fmi3SetString</code> and for other base variable types respectively - with the exception of <a href="#clock"><code>clocks</code></a>.]</em></p>
-</div>
-<div class="paragraph">
 <p>This section contains a formal mathematical model of a Co-Simulation FMU.
 The following fundamental assumptions are made:</p>
 </div>
@@ -9392,12 +9388,12 @@ Such a sampled-data system can be:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>A real sampled-data system (so a sampled discrete controller; the <a href="#input"><code>inputs</code></a> and <a href="#output"><code>outputs</code></a> can be of type Real, Integer, Boolean, String, or enumeration.
+<p>A real sampled-data system (so a sampled discrete controller; the <a href="#input"><code>inputs</code></a> and <a href="#output"><code>outputs</code></a> can be of numeric type, String or Enumeration.
 Variables of this type are defined with <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a>; the smallest sample period as accessible by the outside of the FMU is defined by attribute <code>stepSize</code> in element <code>DefaultExperiment</code>).</p>
 </li>
 <li>
 <p>A hybrid ODE that is integrated between communication points (known as "sampled access to time continuous systems") where internal events may occur and be handled, but events are not visible from the outside of the FMU.
-It is assumed here that all <a href="#input"><code>inputs</code></a> and all <a href="#output"><code>outputs</code></a> of this hybrid ODE are Real signals (defined with <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>),</p>
+It is assumed here that all <a href="#input"><code>inputs</code></a> and all <a href="#output"><code>outputs</code></a> of this hybrid ODE are floating point signals (defined with <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>),</p>
 </li>
 <li>
 <p>A combination of the systems above.</p>
@@ -9465,7 +9461,7 @@ Variables of this type are defined with attribute <a href="#causality"><code>cau
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{x}_c(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of real continuous-time variables representing the continuous-time <a href="#state"><code>states</code></a>.
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the continuous-time <a href="#state"><code>states</code></a>.
 For notational convenience, a continuous-time <a href="#state"><code>state</code></a> is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description below.
 However, at a communication point, a continuous-time <a href="#state"><code>state</code></a> is part of the <a href="#output"><code>outputs</code></a> or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
@@ -9593,7 +9589,7 @@ Algebraic equations are solved in this mode.</p>
 <div class="sect4">
 <h5 id="_step_mode">4.1.1.4. Step Mode</h5>
 <div class="paragraph">
-<p>This mode is used to compute the values of all (real) continuous-time and discrete-time variables at communication points by numerically solving ordinary differential, algebraic and discrete equations.
+<p>This mode is used to compute the values of all continuous-time and discrete-time variables at communication points by numerically solving ordinary differential, algebraic and discrete equations.
 If the slave is connected in loops with other models, no iterations over the FMU equations are possible.</p>
 </div>
 <div class="paragraph">
@@ -9663,7 +9659,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}(tc_0)\) and optionally the <a href="#derivative"><code>derivatives</code></a> of continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}^{(j)}(tc_0)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code><br>
-<code>fmi3SetRealInputDerivatives</code></p></td>
+<code>fmi3SetInputDerivatives</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{v}_{InitialUnknowns} := \mathbf{f}_{init}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{initial=exact})\)</span></p></td>
@@ -9684,14 +9680,14 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d+c}(tc_i)\) and optionally the <a href="#derivative"><code>derivatives</code></a> of continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}^{(j)}(tc_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code><br>
-<code>fmi3SetRealInputDerivatives</code></p></td>
+<code>fmi3SetInputDerivatives</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\begin{matrix} tc_{i+1} := tc_i + hc_i \\ (\mathbf{y}_{c+d}, \mathbf{y}_c^{(j)}, \mathbf{w}_{c+d}) := \mathbf{f}_{doStep}(\mathbf{u}_{c+d}, \mathbf{u}_{c}^{(j)}, tc_i, hc_i, \mathbf{p}_{tune}, \mathbf{p}_{other})_{tc_i} \\ tc_i := tc_{i+1} \end{matrix}\)</span><br>
 <span class="blue">\(\mathbf{f}_{doStep}\) is also a function of the internal variables \(\mathbf{x}_c\), \(^{\bullet}\mathbf{x}_d\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3DoStep</span></code><br>
 <code>fmi3Get{VariableType}</code><br>
-<code><span class="blue">fmi3GetRealOutputDerivatives</span></code><br>
+<code><span class="blue">fmi3GetOutputDerivatives</span></code><br>
 <code><span class="blue">fmi3GetDirectionalDerivative</span></code></p></td>
 </tr>
 <tr>
@@ -9699,7 +9695,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">\(t, tc, hc \in \mathbb{R}, \mathbf{p} \in \mathbb{P}^{np}, \mathbf{u}(tc) \in \mathbb{P}^{nu}, \mathbf{y}(tc) \in \mathbb{P}^{ny}, \mathbf{x}_c(t) \in \mathbb{R}^{nxc}, \mathbf{x}_d(t) \in \mathbb{P}^{nxd}, \mathbf{w}(tc) \in \mathbb{P}^{nw}\)<br>
-\(\mathbb{R}\): Real variable, \(\mathbb{R}\): real <strong>or</strong> boolean <strong>or</strong> integer <strong>or</strong> enumeration <strong>or</strong> string variable<br>
+\(\mathbb{R}\): floating point variable, \(\mathbb{R}\): floating point <strong>or</strong> boolean <strong>or</strong> integer <strong>or</strong> enumeration <strong>or</strong> string variable<br>
 \(\mathbf{f}_{init}, \mathbf{f}_{out} \in C^0\) (=continuous functions with respect to all input arguments inside the respective mode).</p></td>
 </tr>
 </tbody>
@@ -9712,7 +9708,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <em>In reality, every variable output argument is computed by one</em> <code>fmi3Get{VariableType}</code> <em>function call.</em></p>
 </div>
 <div class="paragraph">
-<p><em>In <strong>Step Mode</strong> the input arguments to</em> \(\mathbf{f}_{doStep}\) <em>are defined by calls to</em> <code>fmi3Set{VariableType}</code> <em>and</em> <code>fmi3SetRealInputDerivatives</code> <em>functions.</em>
+<p><em>In <strong>Step Mode</strong> the input arguments to</em> \(\mathbf{f}_{doStep}\) <em>are defined by calls to</em> <code>fmi3Set{VariableType}</code> <em>and</em> <code>fmi3SetInputDerivatives</code> <em>functions.</em>
 <em>The variables computed by</em> \(\mathbf{f}_{doStep}\) <em>can be inquired by</em>  <code>fmi3Get{VariableType}</code> <em>function calls.]</em></p>
 </div>
 </div>
@@ -9870,7 +9866,7 @@ Whenever the internal solver in the FMU needs updated intermediate <a href="#inp
 <p><a href="#input"><code>Input</code></a> and <a href="#output"><code>output</code></a> variables and other variables are accessed via the <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> functions, defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
 </div>
 <div class="paragraph">
-<p>In order to enable the slave to interpolate the <a href="#continuous"><code>continuous</code></a> real <a href="#input"><code>inputs</code></a> between communication steps, the <a href="#derivative"><code>derivatives</code></a> of the <a href="#input"><code>inputs</code></a> with respect to time can be provided.
+<p>In order to enable the slave to interpolate the <a href="#continuous"><code>continuous</code></a> floating point <a href="#input"><code>inputs</code></a> between communication steps, the <a href="#derivative"><code>derivatives</code></a> of the <a href="#input"><code>inputs</code></a> with respect to time can be provided.
 Also, higher <a href="#derivative"><code>derivatives</code></a> can be set to allow higher order interpolation.
 Whether the slave is able to handle the <a href="#derivative"><code>derivatives</code></a> of <a href="#input"><code>inputs</code></a> is given by the unsigned integer capability flag <code>MaxInputDerivativeOrder</code>. It delivers the maximum order of the input <a href="#derivative"><code>derivative</code></a>.</p>
 </div>
@@ -9885,19 +9881,19 @@ Whether the slave is able to handle the <a href="#derivative"><code>derivatives<
 </div>
 </div>
 <div class="paragraph">
-<p>Sets the n-th time <a href="#derivative"><code>derivative</code></a> of real <a href="#input"><code>input</code></a> variables.
+<p>Sets the n-th time <a href="#derivative"><code>derivative</code></a> of floating point <a href="#input"><code>input</code></a> variables.
 Argument <code>vr</code> is a vector of value references that define the variables whose <a href="#derivative"><code>derivatives</code></a> shall be set.
 The array <code>order</code> contains the orders of the respective <a href="#derivative"><code>derivative</code></a> (1 means the first <a href="#derivative"><code>derivative</code></a>, 0 is not allowed).
 Argument <code>value</code> is a vector with the values of the <a href="#derivative"><code>derivatives</code></a>.
 <code>nValueReferences</code> is the dimension of the vectors.<br>
-Differents input variables may have different interpolation order.<br>
-Restrictions on using the function are the same as for the <code>fmi3SetReal</code> function.</p>
+Different input variables may have different interpolation order.<br>
+Restrictions on using the function are the same as for the <code>fmi3Set{VariableType}</code> function.</p>
 </div>
 <div class="paragraph">
 <p><a href="#input"><code>Inputs</code></a> and their <a href="#derivative"><code>derivatives</code></a> are set with respect to the beginning of a communication time step.</p>
 </div>
 <div class="paragraph">
-<p>To allow interpolation/approximation of the real output variables between communication steps (if they are used as inputs for other slaves), the <a href="#derivative"><code>derivatives</code></a> of the <a href="#output"><code>outputs</code></a> with respect to time can be read.
+<p>To allow interpolation/approximation of the floating point output variables between communication steps (if they are used as inputs for other slaves), the <a href="#derivative"><code>derivatives</code></a> of the <a href="#output"><code>outputs</code></a> with respect to time can be read.
 Whether the slave is able to provide the <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>output</code></a> is given by the unsigned integer capability flag <code>MaxOutputDerivativeOrder</code>.
 It delivers the maximum order of the <a href="#output"><code>output</code></a> <a href="#derivative"><code>derivative</code></a>.
 If the actual order is lower (because the order of integration algorithm is low), the retrieved value is 0.</p>
@@ -9923,7 +9919,7 @@ If the actual order is lower (because the order of integration algorithm is low)
 Argument <code>vr</code> is a vector of <code>nValueReferences</code> value references that define the variables whose <a href="#derivative"><code>derivatives</code></a> shall be retrieved.
 The array <code>order</code> contains the order of the respective <a href="#derivative"><code>derivative</code></a> (1 means the first <a href="#derivative"><code>derivative</code></a>, 0 is not allowed).
 Argument <code>value</code> is a vector with the actual values of the <a href="#derivative"><code>derivatives</code></a>.<br>
-Restrictions on using the function are the same as for the <code>fmi3GetReal</code> function.</p>
+Restrictions on using the function are the same as for the <code>fmi3Get{VariableType}</code> function.</p>
 </div>
 <div class="paragraph">
 <p>The returned <a href="#output"><code>outputs</code></a> correspond to the current slave time.
@@ -10740,7 +10736,7 @@ retrieved values are useable for debugging only ]_</p>
 <h5 id="_code_example_for_fmi3cosimulation">4.2.1.5. Code Example for fmi3CoSimulation</h5>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
-We consider two slaves, where both have one <a href="#continuous"><code>continuous</code></a> real <a href="#input"><code>input</code></a> and one <a href="#continuous"><code>continuous</code></a> real <a href="#output"><code>output</code></a> which are connected in the following way:</p>
+We consider two slaves, where both have one <a href="#continuous"><code>continuous</code></a> floating point <a href="#input"><code>input</code></a> and one <a href="#continuous"><code>continuous</code></a> floating point <a href="#output"><code>output</code></a> which are connected in the following way:</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -12209,7 +12205,7 @@ In case of <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wa
 <p>It is recommended to call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for setting and retrieving variable values associated to a <a href="#clock"><code>clock</code></a> activation.</p>
 </div>
 </dd>
-<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Set{VariableType}</a>, <code>fmi3SetRealInputDerivatives</code></dt>
+<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Set{VariableType}</a>, <code>fmi3SetInputDerivatives</code></dt>
 <dd>
 <p>Is called before the start of the computation of a model partition (i.e. before call of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>input clock</code></a> assigned to the model partition.</p>
 <div class="paragraph">
@@ -12221,7 +12217,7 @@ In case the function returns <code>fmi3Fatal</code> the master can prematurely e
 In case the function returns <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wait until all other tasks related to the computation of the model partitions of this FMU have ended, but new tasks must not be started (e.g. related to <a href="#outputClock"><code>output clock</code></a> ticks) and all other function calls for this FMU must also return <code>fmi3Discard</code> or <code>fmi3Error</code> until the state <strong>Terminated</strong> is reached.</p>
 </div>
 </dd>
-<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Get{VariableType}</a>, <code>fmi3GetRealOutputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>`</dt>
+<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Get{VariableType}</a>, <code>fmi3GetOutputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>`</dt>
 <dd>
 <p>Is called after the end of the computation of a model partition (i.e. after return of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>input clock</code></a> assigned to the model partition.</p>
 <div class="paragraph">
@@ -12364,7 +12360,7 @@ This state is entered from state <strong>Clock Activation Mode</strong> by calli
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p>Additionally to the generally forbidden functions in Scheduled Execution Simulation listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,<code>fmi3SetRealInputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <code>fmi3GetRealOutputDerivatives</code>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
+<p>Additionally to the generally forbidden functions in Scheduled Execution Simulation listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,<code>fmi3SetInputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <code>fmi3GetOutputDerivatives</code>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
 </dd>
 </dl>
 </div>
@@ -12924,12 +12920,12 @@ If this is the case, then flag <code>canGetAndSetFMUState</code> must be <code>t
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canInterpolateInputs</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The slave is able to interpolate <a href="#continuous"><code>continuous</code></a> <a href="#input"><code>inputs</code></a>.
-Calling of <code>fmi3SetRealInputDerivatives</code> has an effect for the slave.</p></td>
+Calling of <code>fmi3SetInputDerivatives</code> has an effect for the slave.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxOutputDerivativeOrder</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The slave is able to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> with maximum order.
-Calling of <code>fmi3GetRealOutputDerivatives</code> is allowed up to the order defined by <code>maxOutputDerivativeOrder</code>.</p></td>
+Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defined by <code>maxOutputDerivativeOrder</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canHandleVariableCommunicationStepSize</code></p></td>
