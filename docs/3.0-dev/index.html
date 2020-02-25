@@ -3154,22 +3154,22 @@ g_2(x, u_1)
 <em>Depending on the environment where the FMUs are connected, these <a href="#derivative"><code>derivatives</code></a> can be provided</em></p>
 </div>
 <div class="paragraph">
-<p>(a) <em>with one wrapper function around function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> to compute the directional derivatives with respect to these two variables (in other words, \({v_{unknown} = y_1}\), \({v_{known} = \left \{ u_1, u_3 \right \}}\)), and then the environment calls this wrapper function with \({\Delta v_{known} = \left \{ 1, 0 \right \}}\) to compute the partial derivative with respect to \({u_1}\) and \({\Delta v_{known} = \left \{ 0, 1 \right \}}\) to compute the partial derivative with respect to \({u_3}\), or</em></p>
+<p>(a) <em>with one wrapper function around function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> to compute the directional derivatives with respect to these two variables (in other words, \({v_{unknown} = y_1}\), \({v_{known} = \left \{ u_1, u_3 \right \}}\)), and then the environment calls this wrapper function with \({v_{seed} = \left \{ 1, 0 \right \}}\) to compute the partial derivative with respect to \({u_1}\) and \({v_{seed} = \left \{ 0, 1 \right \}}\) to compute the partial derivative with respect to \({u_3}\), or</em></p>
 </div>
 <div class="paragraph">
-<p>(b) <em>with two direct function calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> (in other words, \({v_{unknown} = y_1, v_{known} = u_1, \Delta v_{known} = 1}\); and \({v_{unknown} = y_1, v_{known} = u_3, \Delta v_{known} = 1}\)).</em></p>
+<p>(b) <em>with two direct function calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> (in other words, \({v_{unknown} = y_1, v_{known} = u_1, v_{seed} = 1}\); and \({v_{unknown} = y_1, v_{known} = u_3, v_{seed} = 1}\)).</em></p>
 </div>
 <div class="paragraph">
 <p><em>Note that a direct implementation of this function with analytic derivatives:</em></p>
 </div>
 <div class="paragraph">
-<p>(a) <em>Provides the directional derivative for all <a href="#input"><code>input</code></a> variables; so in the above example: \({\Delta y_1 = \frac{\partial g_1}{\partial x} \cdot \partial x + \frac{\partial g_1}{\partial u_1} \cdot \Delta u_1 + \frac{\partial g_1}{\partial u_3} \cdot \Delta u_3 + \frac{\partial g_1}{\partial u_4} \cdot \Delta u_4}\)</em></p>
+<p>(a) <em>Provides the directional derivative for all <a href="#input"><code>input</code></a> variables; so in the above example: \({\Delta y_1 = \frac{\partial g_1}{\partial x} \cdot \Delta x + \frac{\partial g_1}{\partial u_1} \cdot \Delta u_1 + \frac{\partial g_1}{\partial u_3} \cdot \Delta u_3 + \frac{\partial g_1}{\partial u_4} \cdot \Delta u_4}\)</em></p>
 </div>
 <div class="paragraph">
 <p>(b) <em>Initializes all seed-values to zero; so in the above example: \({\Delta x = \Delta u_1 = \Delta u_3 = \Delta u_4 = 0}\)</em></p>
 </div>
 <div class="paragraph">
-<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the above example: \({\Delta v_{unknown} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
+<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the above example: \({v_{sensitivity} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 0, \Delta u_4 = 0)}\)] and \({v_{sensitivity} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 0, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
 </div>
 <div class="paragraph">
 <p><em>[Note, function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> can be utilized for the following purposes:</em></p>
@@ -3262,15 +3262,15 @@ e, f
 </div>
 <div class="paragraph">
 <p><em>The output \({Y=K U}\) is a matrix of size 3x2.</em>
-<em>The directional derivative of an output element \({Y(i,j)}\) with respect to the input \({U}\)) is:</em></p>
+<em>The directional derivative of an output element \({Y(i,j)}\) with respect to the input \({U}\) and the seed \({\Delta U}\) is:</em></p>
 </div>
 <div class="stemblock">
 <div class="content">
 \[\Delta Y(i,j) =
-\frac{\partial Y}{\partial U(1,1)} \cdot \Delta U(1,1) +
-\frac{\partial Y}{\partial U(1,2)} \cdot \Delta U(1,2) +
-\frac{\partial Y}{\partial U(2,1)} \cdot \Delta U(2,1) +
-\frac{\partial Y}{\partial U(2,2)} \cdot \Delta U(2,2)\]
+\frac{\partial Y(i,j)}{\partial U(1,1)} \cdot \Delta U(1,1) +
+\frac{\partial Y(i,j)}{\partial U(1,2)} \cdot \Delta U(1,2) +
+\frac{\partial Y(i,j)}{\partial U(2,1)} \cdot \Delta U(2,1) +
+\frac{\partial Y(i,j)}{\partial U(2,2)} \cdot \Delta U(2,2)\]
 </div>
 </div>
 <div class="stemblock">
@@ -3288,7 +3288,7 @@ e \Delta U(1,1)+f \Delta U(2,1), e \Delta U(1,2)+ f \Delta U(2,2)
 <div class="paragraph">
 <p><em>To get the directional derivative of \({Y}\) with respect to \({U(2,1)}\) the command <code>fmi3GetDirectionalDerivative(m, vr_Y, 1, vr_U, 1, {0.0, 0.0, 1.0, 0.0}, 4, dd, 6)</code> can be used where <code>vr_Y</code> and <code>vr_U</code> are references of the variable \({Y}\) and \({U}\), respectively.</em>
 <em>Note that in order to get the directional derivative of \({Y}\) with respect to \({U(2,1)}\), the seed value <code>{0, 0, 1.0, 0}</code> has been used.</em>
-<em>The retrieved directional derivative <code>dd</code> is stored in a matrix of size 3x2, so <code>nDvUnknown</code> is 6.</em></p>
+<em>The retrieved directional derivative <code>dd</code> is stored in a matrix of size 3x2, so <code>nSensitivity</code> is 6.</em></p>
 </div>
 </div>
 <div class="sect4">
@@ -3335,8 +3335,8 @@ h_2(u_1, u_2)
 </div>
 </div>
 <div class="paragraph">
-<p><em>and \(\left( w_1  w_2 \right) \cdot \mathbf{ \frac{\partial h}{\partial u} }\) for some vector \(\left( w_1  w_2 \right)^T\) is needed.</em>
-<em>Then one can get this with one function call of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (with arguments</em> \(\mathbf{v}_{unknown} = \left \{ y_1, y_2 \right \},  \mathbf{v}_{knwon} = \left \{ u_1, u_2 \right \},  \mathbf{v}_{seed} = \left( w_1 w_2 \right)^T\) <em>), while with <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> at least two calls would be necessary to first construct the Jacobian column-wise and then multiplying from the right with</em> \(\left( w_1  w_2 \right)^T\) <em>]</em></p>
+<p><em>and \(\left( w_1,  w_2 \right)^T \cdot \mathbf{ \frac{\partial h}{\partial u} }\) for some vector \(\left( w_1,  w_2 \right)^T\) is needed.</em>
+<em>Then one can get this with one function call of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (with arguments</em> \(\mathbf{v}_{unknown} = \text{valueReferences of} \left \{ y_1, y_2 \right \},  \mathbf{v}_{knwon} = \text{valueReferences of} \left \{ u_1, u_2 \right \},  \mathbf{v}_{seed} = \left( w_1, w_2 \right)^T\) <em>), while with <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> at least two calls would be necessary to first construct the Jacobian column-wise and then multiplying from the right with</em> \(\left( w_1,  w_2 \right)^T\) <em>]</em></p>
 </div>
 </div>
 </div>
