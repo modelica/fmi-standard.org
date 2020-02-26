@@ -5552,7 +5552,7 @@ The master can nevertheless choose different <a href="#start"><code>start</code>
 <p>Only for Model Exchange (if only Co-Simulation FMU, this attribute must not be present.
 If both Model Exchange and Co-Simulation FMU, this attribute is ignored for Co-Simulation):<br>
 Only for variables with <a href="#variability"><code>variability</code></a> = <a href="#input"><code>input</code></a> :<br>
-If present with value equals <code>false</code>, then only one <code>fmi3Set{VariableType}</code> call is allowed at one super dense time instant (model evaluation) on this variable.
+If present with value equals <code>false</code>, then only one <code>fmi3Set{VariableType}</code> call is allowed at one super-dense time instant (model evaluation) on this variable.
 That is, this <a href="#input"><code>input</code></a> is not allowed to appear in a (real) algebraic loop requiring multiple calls of <code>fmi3Set{VariableType}</code> on this variable <em>[for example, due to a Newton iteration]</em>.<br>
 <em>[This flag must be set by FMUs where (internal) discrete-time <a href="#state"><code>states</code></a> are directly updated when assigned (xd := f(xd) instead of xd = f(previous(xd)), and at least one <a href="#output"><code>output</code></a> depends on this <a href="#input"><code>input</code></a> and on discrete <a href="#state"><code>states</code></a>.</em><br>
 <em>It is strongly recommended that such an FMU checks the fulfillment of the requirement by itself during run-time, because an environment might not be able to check it; usually, there is a generic mechanism to import an FMU in an environment, but the mechanism to connect FMUs together is unrelated to the import mechanism.</em>
@@ -6338,7 +6338,7 @@ A Co- Simulation FMU does not need to expose these state derivatives.
 <em>[If a Co-Simulation FMU exposes its state derivatives, they are usually not utilized for the co-simulation, but, for example, to linearize the FMU at a communication point.]</em></p>
 </div>
 <div class="paragraph">
-<p>The optional part defines in which way <a href="#derivative"><code>derivatives</code></a> and <a href="#output"><code>outputs</code></a> depend on <a href="#input"><code>inputs</code></a>, and continuous-time <a href="#state"><code>states</code></a> at the current super dense time instant (Model Exchange) or at the current communication point (Co-Simulation).
+<p>The optional part defines in which way <a href="#derivative"><code>derivatives</code></a> and <a href="#output"><code>outputs</code></a> depend on <a href="#input"><code>inputs</code></a>, and continuous-time <a href="#state"><code>states</code></a> at the current super-dense time instant (Model Exchange) or at the current communication point (Co-Simulation).
 <em>[The listed <a href="#dependencies"><code>dependencies</code></a> declare the dependencies between whole (multi-dimensional-)variables and not individual elements of the variables.]</em>
 <em>[A simulation environment can utilize this information to improve the efficiency, for example, when connecting FMUs together, or when computing the partial derivative of the <a href="#derivative"><code>derivatives</code></a> with respect to the <a href="#state"><code>states</code></a> in the simulation engine.]</em></p>
 </div>
@@ -6396,7 +6396,7 @@ A Co- Simulation FMU does not need to expose these state derivatives.
 <em>The ordering of the variables in this list is defined by the exporting tool.</em>
 <em>Usually, it is best to order according to the declaration order in the source model, since then the <code>Outputs</code> list does not change if the declaration order of <a href="#output"><code>outputs</code></a> in the source model is not changed.</em>
 <em>This is for example, important for linearization, in order that the interpretation of the output vector does not change for a re-exported FMU.]</em>
-Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns at the current super dense time instant in Event and in <strong>Continuous-Time Mode</strong> (Model Exchange) and at the current communication point (Co-Simulation).
+Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (Model Exchange) and at the current communication point (Co-Simulation).
 The functional dependency is defined as (dependencies of variables that are fixed in Event and <strong>Continuous-Time Mode</strong> and at communication points are not shown):<br>
 <span class="blue">\(\color{blue}{(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{output}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{tune})}\)</span></p></td>
 </tr>
@@ -6417,7 +6417,7 @@ For Co-Simulation, element <code>Derivatives</code> is ignored if capability fla
 <em>If an FMU supports both Model Exchange and Co-Simulation, then the <code>Derivatives</code> element might be present, since it is needed for Model Exchange.</em>
 <em>If the above flag is set to <code>false</code> for the Co-Simulation case, then the <code>Derivatives</code> element is ignored for Co-Simulation.</em>
 <em>If "inline integration" is used for a Co-Simulation slave, then the model still has continuous-time <a href="#state"><code>states</code></a> and just a special solver is used (internally the implementation results in a discrete-time system, but from the outside, it is still a continuous-time system).]</em><br>
-Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the state derivatives from the knowns at the current super dense time instant in Event and in <strong>Continuous-Time Mode</strong> (Model Exchange) and at the current communication point (Co-Simulation).
+Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the state derivatives from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (Model Exchange) and at the current communication point (Co-Simulation).
 The functional dependency is defined as (dependencies of variables that are fixed in Event and <strong>Continuous-Time Mode</strong> and at communication points are not shown):<br>
 <span class="blue">\(\color{blue}{\dot{\mathbf{x}_c} := \mathbf{f}_{der}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{tune})}\)</span></p></td>
 </tr>
@@ -7825,7 +7825,7 @@ Also, the FMU might consist of discrete-time equations only, for example, descri
 The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
 In this phase \(t_I = 0\).
 The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).
-This time definition is also called "super dense time" in literature, see, for example, <a href="#LZ07">[LZ07]</a>.
+This time definition is also called "super-dense time" in literature, see, for example, <a href="#LZ07">[LZ07]</a>.
 An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation below.
 <em>[The notation \(^{\bullet}t\) is from <a href="#BCP10">BCP10</a>, adapted from non-standard analysis to super-dense time, in order to precisely define the value from the previous event iteration.]</em></p>
 </div>
@@ -7855,7 +7855,7 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation below
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(t^{+}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\({{(t}_{R},t_{I})}^{+} \Leftrightarrow (\lim_{\epsilon \rightarrow 0}{\left(t_{R} + \varepsilon \right),t_{Imax})}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">right limit at \(t\).
-\(t_{Imax}\) is the largest occurring integer index of super dense time</p></td>
+\(t_{Imax}\) is the largest occurring integer index of super-dense time</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(^-t\)</p></td>
@@ -8045,7 +8045,7 @@ In reality, a continuous-time <a href="#state"><code>state</code></a> is however
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\)<br>
 \(^{\bullet}\mathbf{x}_d(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\) is a vector of (internal) discrete-time variables (of any type) representing the discrete <a href="#state"><code>states</code></a>.<br>
-\({}^{\bullet}\mathbf{x}_d(t)\) a is the value of \(\mathbf{x}_d(t)\) at the previous super dense time instant, so \({}^{\bullet}\mathbf{x}_d(t)=\mathbf{x}_d({}^{\bullet}t)\).
+\({}^{\bullet}\mathbf{x}_d(t)\) a is the value of \(\mathbf{x}_d(t)\) at the previous super-dense time instant, so \({}^{\bullet}\mathbf{x}_d(t)=\mathbf{x}_d({}^{\bullet}t)\).
 Given the <a href="#previous"><code>previous</code></a> values of the discrete-time <a href="#state"><code>states</code></a>, \({}^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t)\), can be computed.<br>
 Discrete <a href="#state"><code>states</code></a> are not visible in the interface of an FMU and are only introduced here to clarify the mathematical description.
 Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
@@ -8138,9 +8138,9 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 </ul>
 </div>
 <div class="paragraph">
-<p><em>[In the following table the setting of the super dense time, (\(t_R\), \(t_I\)), is precisely described.</em>
+<p><em>[In the following table the setting of the super-dense time, (\(t_R\), \(t_I\)), is precisely described.</em>
 <em>Tools will usually not have such a representation of time.</em>
-<em>However, super-dense time defines precisely when a new "model evaluation" starts and therefore which variable values belong to the same "model evaluation" at the same (super dense) time instant and should be stored together.]</em></p>
+<em>However, super-dense time defines precisely when a new "model evaluation" starts and therefore which variable values belong to the same "model evaluation" at the same (super-dense) time instant and should be stored together.]</em></p>
 </div>
 <table id="table-math-model-exchange" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Mathematical description of an FMU for Model Exchange.</caption>
@@ -8222,7 +8222,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <code><span class="blue">fmi3GetEventIndicators</span></code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Increment super dense time and define with</span>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Increment super-dense time and define with</span>
 <code><span class="lime">newDiscreteStatesNeeded</span></code> <span class="lime">whether a new event iteration is required.</span><br>
 <span class="blue">\(\qquad\)<strong>if not</strong></span> <code><span class="blue">newDiscreteStatesNeeded</span></code><span class="blue"><strong>then</strong><br>
 \(\qquad \qquad T_{next}=T_{next}(\mathbf{x}_c,{}^\bullet\mathbf{x}_d, \mathbf{u_{c+d}}, \color{grey}t_{\color{grey} i}, \mathbf{p}_{tune}, \color{grey}{\mathbf{p}_{other})}\)</span><br>
@@ -8372,7 +8372,7 @@ y2 := w2</pre>
 <dt class="hdlist1">State machines with one memory location for a state</dt>
 <dd>
 <p><em>In such a system there is only one memory location for a discrete-time <a href="#state"><code>state</code></a> and not two, and therefore a discrete-time <a href="#state"><code>state</code></a> is updated in the statement where it is assigned (and not in <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>).</em>
-<em>As a result, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is basically just used to start a new (super dense) time instant.</em>
+<em>As a result, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is basically just used to start a new (super-dense) time instant.</em>
 <em>This is unproblematic, as long as no algebraic loops occur.</em>
 <em>FMUs of this type can therefore not be used in real algebraic loops if the involved variables depend on a discrete-time <a href="#state"><code>state</code></a>.</em>
 <em>This restriction is communicated to the environment of the FMU by the <code>ScalarVariable</code> definition of the corresponding <a href="#input"><code>input</code></a> with flag <a href="#canHandleMultipleSetPerTimeInstant"><code>canHandleMultipleSetPerTimeInstant</code></a> <code>= false</code> (so an <a href="#input"><code>input</code></a> with this flag is not allowed to be called in an algebraic loop).</em></p>
@@ -8470,7 +8470,7 @@ In order to determine a state event, the event indicators <strong>z</strong> hav
 Once the event indicators signal a change of their domain, an iteration over time is performed between the previous and the actual completed integrator step, in order to determine the time instant of the domain change up to a certain precision.<br>
 After an event is triggered, the FMU needs to be switched to <strong>Event Mode</strong>.
 In this mode, systems of equations over connected FMUs might be solved (similarily as in <strong>Continuous-Time Mode</strong>).
-Once convergence is reached, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called to increment super dense time (and conceptually update the discrete-time <a href="#state"><code>states</code></a> defined internally in the FMU by \(^{\bullet}\mathbf{x}_d := \mathbf{x}_d\)).
+Once convergence is reached, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called to increment super-dense time (and conceptually update the discrete-time <a href="#state"><code>states</code></a> defined internally in the FMU by \(^{\bullet}\mathbf{x}_d := \mathbf{x}_d\)).
 Depending on the discrete-time model, a new event iteration might be needed (for example, because the FMU describes internally a state machine
 and transitions are still able to fire, but new <a href="#input"><code>inputs</code></a> shall be taken into account).<br>
 The function calls in the table above describe precisely which input arguments are needed to compute the desired output argument(s).
@@ -8612,8 +8612,8 @@ If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is no
 </div>
 </div>
 <div class="paragraph">
-<p>The FMU is in <strong>Event Mode</strong> and the super dense time is incremented by this call.<br>
-If the super dense time before a call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> was \((t_R,t_I)\), then the time instant after the call is \((t_R,t_I)\).<br>
+<p>The FMU is in <strong>Event Mode</strong> and the super-dense time is incremented by this call.<br>
+If the super-dense time before a call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> was \((t_R,t_I)\), then the time instant after the call is \((t_R,t_I)\).<br>
 If return argument <code>fmi3eventInfo->newDiscreteStatesNeeded = fmi3True</code>, the FMU should stay in <strong>Event Mode</strong>, and the FMU requires to set new inputs to the FMU (<code>fmi3Set{VariableType}</code> on <a href="#input"><code>inputs</code></a>) to compute and get the <a href="#output"><code>outputs</code></a> (<code>fmi3Get{VariableType}</code> on <a href="#output"><code>outputs</code></a>) and to call <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> again.
 Depending on the connection with other FMUs, the environment shall</p>
 </div>
@@ -9834,7 +9834,7 @@ Algebraic equations are solved in this mode.</p>
 If the slave is connected in loops with other models, no iterations over the FMU equations are possible.</p>
 </div>
 <div class="paragraph">
-<p><em>[Note that for a Co-Simulation FMU, no super dense time description is used at communication points.]</em></p>
+<p><em>[Note that for a Co-Simulation FMU, no super-dense time description is used at communication points.]</em></p>
 </div>
 <div class="paragraph">
 <p>The equations are defined in <a href="#table-math-basic-co-simulation">Table 2</a> can be evaluated in the respective mode.
@@ -11424,7 +11424,7 @@ If <code>canReturnEarly</code> is <code>fmi3False</code> the FMU will not do the
 </div>
 <div class="paragraph">
 <p>Note that only the first discontinuity event at a Newtonian time instant shall be signaled that way.
-But in <strong>Event Mode</strong>, there may be an event iteration at a Newtonian time instant and have super dense time instants.</p>
+But in <strong>Event Mode</strong>, there may be an event iteration at a Newtonian time instant and have super-dense time instants.</p>
 </div>
 <div class="paragraph">
 <p>Based on the information delivered in <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a>, additional information about the discontinuity at that time instant can be obtained from the <a href="#fmi3EventInfo"><code>fmi3EventInfo</code></a> structure after calling  <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>  and/or <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.</p>
@@ -14600,7 +14600,7 @@ This definition is slightly different from the usual standard definition of stat
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> that might occur at a completed integrator step. Since this event type is not defined by a precise time or condition, it is usually not defined by a user. A program may use it, for example, to dynamically switch between different states. A step event is handled much more efficiently than a <em>state event</em>, because the event is just triggered after performing a check at a completed integrator step, whereas a search procedure is needed for a state event.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>super dense time</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>super-dense time</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A precise definition of time taking into account iterations at an event. For an <em>FMU</em>, the <a href="#independent"><code>independent</code></a> variable time \(t \in \mathbb{T}\) is a tuple \(t = (t_R, t_I)\) where \(t_R \in  \mathbb{R}, t_I \in \mathbb{N} = \{0,1,2,\ldots\}\). The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events. In this phase \(t_I = 0\). The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).</p></td>
 </tr>
 <tr>
