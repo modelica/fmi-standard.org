@@ -5249,12 +5249,12 @@ Each <code>Dimension</code> element specifies the size of one dimension of the a
 <div class="ulist">
 <ul>
 <li>
-<p>If the <a href="#start"><code>start</code></a> attribute of the <code>Dimension</code> element is present, it defines a constant unsigned 32-bit integer size for this dimension.
+<p>If the <a href="#start"><code>start</code></a> attribute of the <code>Dimension</code> element is present, it defines a constant unsigned 64-bit integer size for this dimension.
 The <a href="#variability"><code>variability</code></a> of the dimension size is <a href="#constant"><code>constant</code></a> in this case.</p>
 </li>
 <li>
 <p>If the <a href="#valueReference"><code>valueReference</code></a> attribute of the <code>Dimension</code> element is present, it defines the size of this dimension to be the value of the variable with the value reference given by the <a href="#valueReference"><code>valueReference</code></a> attribute.
-The referenced variable must be a variable of <code>UInt32</code> type, and must either be a constant (i.e. with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>) or a <a href="#structuralParameter"><code>structural parameter</code></a>(i.e. with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a>).
+The referenced variable must be a variable of type <code>UInt64</code>, and must either be a constant (i.e. with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>) or a <a href="#structuralParameter"><code>structural parameter</code></a>(i.e. with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a>).
 The <a href="#variability"><code>variability</code></a> of the dimension size is in this case the <a href="#variability"><code>variability</code></a> of the referenced variable.</p>
 </li>
 </ul>
@@ -5267,6 +5267,11 @@ However different dimension sizes can be specified using different mechanisms an
 <p>All initial dimension sizes (i.e. prior to any configuration or reconfiguration) must be positive integers (i.e. not zero), so that no dimension is initially vanished.
 Changes to dimension sizes are constrained by the <code>min</code>/<code>max</code> attributes of the referenced <a href="#structuralParameter"><code>structural parameters</code></a>, which can be any non-negative integer, including zero.
 Specifying a minimum size of zero on a <a href="#structuralParameter"><code>structural parameter</code></a>allows any related dimension sizes to be changed to zero in <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong>, thus causing the respective array size to go to zero, which leaves the respective array variable without any active elements.</p>
+</div>
+<div class="paragraph">
+<p>The actual dimension sizes of arrays are also constrained by the FMU platform, due to memory and addressing constraints:
+Since the API functions to access variables and their values are constrained to <code>size_t</code> individual elements, platforms with addresses of less than 64-bit width will not be able to access elements beyond their addressing limits, neither will they be able to allocate enough memory or address space to represent such arrays.
+For these reasons implementations must take platform-specific constraints into account when changing dimension sizes, and must be prepared to handle the inability of the FMU to adjust to the desired sizes during <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong>.</p>
 </div>
 <div class="paragraph">
 <p>Changing any dimension of a variable in <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong> invalidates the variable&#8217;s current value (including its <a href="#start"><code>start</code></a> value).
