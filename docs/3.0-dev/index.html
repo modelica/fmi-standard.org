@@ -10107,12 +10107,8 @@ At the first call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> after <a 
 <div class="paragraph">
 <p>The function returns:<br>
 <code>fmi3OK</code> - if the communication step was computed successfully until its end.<br>
-<code>fmi3Discard</code> - if the slave computed successfully only a subinterval of the communication step.
-The master can call <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a> to get further information.
-If possible, the master should retry the simulation with a shorter communication step size.
-<em>[Redoing a step is only possible if the FMU state has been recorded at the beginning of the current (discarded) step with <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>.</em>
-<em>Redoing a step is performed by calling <code>fmi3SetFMUState</code> and afterwards calling <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with the new communicationStepSize.</em>
-<em>Note that it is not possible to change <code>currentCommunicationPoint</code> in such a call.]</em><br>
+<code>fmi3Discard</code> - if the slave computed successfully only a subinterval of the communication step. The FMU enters the <code>Step Discarded</code> state, see <a href="#state-step-discarded-co-simulation">Section 4.2.4.9</a> for more information.
+<br>
 <code>fmi3Error</code> - the communication step could not be carried out at all.
 The master can try to repeat the step with other input values and/or a different communication step size in the same way as described in the <code>fmi3Discard</code> case above.<br>
 <code>fmi3Fatal</code> - if an error occurred which corrupted the FMU irreparably.
@@ -10402,14 +10398,18 @@ This state is entered from state <strong>Step Mode</strong> by calling <a href="
 <div class="paragraph">
 <p>The FMU changes into this state if it is not able to compute a communication step completely by returning <code>fmi3Discard</code> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
 This might have been caused by numerical problems or intended stop of the simulation run.
-In case of numerical problems the master may try to achieve a correct solution for example by repeating the last step with a different communication step size or by continuing from the <code>lastSuccessfulTime</code>.
+The master can call <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a> to get further information.
+In case of numerical problems the master may try to achieve a correct solution for example by repeating the last step with a different communication step size. <em>[Redoing a step is only possible if the FMU state has been recorded at the beginning of the current (discarded) step with <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>.</em>
+<em>Redoing a step is performed by calling <code>fmi3SetFMUState</code> and afterwards calling <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with the new communicationStepSize.</em>
+<em>Note that it is not possible to change <code>currentCommunicationPoint</code> in such a call.]</em>
+The master can also continue from the <code>lastSuccessfulTime</code>.
 It does not enter into this state if the FMU returns early from a communication step caused by <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>.</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p><a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p>
+<p><a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a></p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a></dt>
 <dd>
