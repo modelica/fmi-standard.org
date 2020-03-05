@@ -1475,9 +1475,6 @@ Properties that might be additionally needed for trajectory optimization, for ex
 <li>
 <p>No explicit definition of the variable hierarchy in the XML file.</p>
 </li>
-<li>
-<p>The number of states and number of event indicators are fixed for an FMU and cannot be changed.</p>
-</li>
 </ul>
 </div>
 </div>
@@ -3375,6 +3372,7 @@ h_2(u_1, u_2)
 <p>This function returns the number of event indicators.
 The dependency of the number of event indicators on <a href="#structuralParameter"><code>structural parameters</code></a> must be specified in the <code>ModelStructure</code> in the element <code>NumberOfEventIndicators</code>.
 This element is optional but necessary if the number of event indicators depends on <a href="#structuralParameter"><code>structural parameters</code></a>.
+The attribute <code>dependencies</code> of this element holds a list of <code>valueReferences</code> of <a href="#structuralParameter"><code>structural parameters</code></a> having an influence on the number of event indicators.
 If the <code>NumberOfEventIndicators</code> element is not present or its <a href="#dependencies"><code>dependencies</code></a> list is empty, the number of event indicators does not depend on <a href="#structuralParameter"><code>structural parameters</code></a>, i.e. it is constant.</p>
 </div>
 <div class="paragraph">
@@ -3399,7 +3397,13 @@ If the <code>NumberOfEventIndicators</code> element is not present or its <a hre
 </div>
 </div>
 <div class="paragraph">
-<p>This function returns the number of <a href="#state"><code>states</code></a>.</p>
+<p>This function returns the number of <a href="#state"><code>states</code></a>.
+The dependency of the number of states on <a href="#structuralParameter"><code>structural parameters</code></a> is implicitly given in the <code>modelDescription.xml</code> file.
+<em>[All state derivative variables are listed as elements <code>Derivative</code> in <code>ModelStrcture</code>.</em>
+<em>Each state derivative variable maps to the corresponding state variable by the <code>derivative</code> attribute.</em>
+<em>If the state variable is an array variable and the <code>Dimension</code> element maps to a dependent variable than this dependent variable is a dependency for the number of states.]</em>
+If all <a href="#structuralParameter"><code>structural parameters</code></a> are unchanged then this dependency information can be used to calculate the initial number of states just using information given in the XML file without the need to call this C-API function.
+<em>[Therefore their is no <code>numberOfStates</code> attribute as it is for <code>numberOfEventIndicators</code>.]</em></p>
 </div>
 <div class="ulist">
 <ul>
@@ -6409,8 +6413,7 @@ The functional dependency is defined as (dependencies of variables that are fixe
 <em>If a <a href="#state"><code>state</code></a> or a <a href="#derivative"><code>derivative</code></a> of a <a href="#state"><code>state</code></a> shall not be exposed from the FMU, or if states are not statically associated with a variable (due to dynamic state selection), then dummy variables have to be introduced, for example, <code>x[4]</code>, or <code>xDynamicStateSet2[5]</code>.</em>
 <em>The ordering of the variables in this list is defined by the exporting tool.</em>
 <em>Usually, it is best to order according to the declaration order of the <a href="#state"><code>states</code></a> in the source model, since then the &lt;Derivatives&gt; list does not change if the declaration order of states in the source model is not changed.</em>
-<em>This is for example, important for linearization, in order that the interpretation of the state vector does not change for a re-exported FMU.]</em>
-The number of Unknown elements in the Derivatives element uniquely define the number of continuous time state variables, as required by the corresponding Model Exchange functions (integer argument <code>nx</code> of <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a> see hereafter) that require it.</p>
+<em>This is for example, important for linearization, in order that the interpretation of the state vector does not change for a re-exported FMU.]</em></p>
 <p class="tableblock">The corresponding continuous-time <a href="#state"><code>states</code></a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding variable state derivative element.
 <em>[Note that higher order derivatives must be mapped to first order derivatives but the mapping definition can be preserved due to attribute <a href="#derivative"><code>derivative</code></a>.</em>
 <em>Example: if</em> \(\color{blue}{\frac{\text{ds}}{\text{dt}} = v,\ \frac{\text{dv}}{\text{dt}} =f(..)}\) <em>,then</em> \(\color{blue}{\left\{ v,\ \frac{\text{dv}}{\text{dt}} \right\}}\) <em>is the vector of state derivatives and attribute <a href="#derivative"><code>derivative</code></a> of</em> \(\color{blue}{v}\) <em>references</em> \(\color{blue}{s}\) <em>, and attribute <a href="#derivative"><code>derivative</code></a> of</em> \(\color{blue}{\frac{\text{dv}}{\text{dt}}}\) <em>references</em> \(\color{blue}{v}\) <em>.]</em><br>
@@ -8580,8 +8583,8 @@ Before one of these functions can be called, the appropriate functions from the 
 </dd>
 <dt class="hdlist1"><code>rootsFound</code></dt>
 <dd>
-<p>Array of length <code>nEventIndicators</code>. For <code>i = 1, &#8230;&#8203;, nEventIndicators, rootsFound[i]</code> \(\neq\) <code>0</code> if the event indicator \(z_i\) has a root, and <code>rootsFound[i] == 0</code> if not.
-For the components \(z_i\) for which a root was found, the sign of <code>rootsFound[i]</code> indicates the direction of the zero-crossing.
+<p>Array of length <code>nEventIndicators</code>. For <code>i = 1, &#8230;&#8203;, nEventIndicators, rootsFound[i-1]</code> \(\neq\) <code>0</code> if the event indicator \(z_i\) has a root, and <code>rootsFound[i-1] == 0</code> if not.
+For the components \(z_i\) for which a root was found, the sign of <code>rootsFound[i-1]</code> indicates the direction of the zero-crossing.
 A value of <code>+1</code> indicates that \(z_i\) is increasing, while a value of <code>-1</code> indicates a decreasing \(z_i\).
 If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is not defined.</p>
 </dd>
