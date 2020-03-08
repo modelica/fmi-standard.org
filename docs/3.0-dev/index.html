@@ -836,11 +836,11 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#math-scheduled-co-simulation">6.1. Mathematical Description</a></li>
 <li><a href="#scheduled-co-simulation-api">6.2. Application Programming Interface</a>
 <ul class="sectlevel3">
-<li><a href="#_transfer_of_input_output_values_and_parameters_in_fmi3scheduledcosimulation">6.2.1. Transfer of Input / Output Values and Parameters in fmi3ScheduledCoSimulation</a></li>
-<li><a href="#_computation_in_fmi3scheduledcosimulation">6.2.2. Computation in fmi3ScheduledCoSimulation</a></li>
-<li><a href="#_state_machine_for_fmi3scheduledcosimulation">6.2.3. State Machine for fmi3ScheduledCoSimulation</a>
+<li><a href="#_transfer_of_input_output_values_and_parameters_in_scheduled_co_simulation">6.2.1. Transfer of Input / Output Values and Parameters in Scheduled Co-Simulation</a></li>
+<li><a href="#_computation_in_scheduled_co_simulation">6.2.2. Computation in Scheduled Co-Simulation</a></li>
+<li><a href="#_state_machine_for_scheduled_co_simulation">6.2.3. State Machine for Scheduled Co-Simulation</a>
 <ul class="sectlevel4">
-<li><a href="#_state_slave_setable_fmu_state_2">6.2.3.1. State: Slave Setable FMU State</a></li>
+<li><a href="#_state_slave_settable_fmu_state">6.2.3.1. State: Slave Settable FMU State</a></li>
 <li><a href="#_state_slave_under_evaluation_2">6.2.3.2. State: Slave Under Evaluation</a></li>
 <li><a href="#_state_slave_initialized_2">6.2.3.3. State: Slave Initialized</a></li>
 <li><a href="#_state_clock_activation_mode">6.2.3.4. State: Clock Activation Mode</a></li>
@@ -849,7 +849,7 @@ document.addEventListener('keydown', (event) => {
 </ul>
 </li>
 <li><a href="#preemption-support">6.2.4. Preemption Support</a></li>
-<li><a href="#_pseudo_code_example_for_fmi3scheduledcosimulation">6.2.5. Pseudo-code Example for fmi3ScheduledCoSimulation</a></li>
+<li><a href="#_pseudo_code_example_for_scheduled_co_simulation">6.2.5. Pseudo-code Example for Scheduled Co-Simulation</a></li>
 </ul>
 </li>
 <li><a href="#scheduled-co-simulation-schema">6.3. Description Schema</a>
@@ -1878,24 +1878,63 @@ The standard header file as documented in this specification has version <code>"
 </div>
 <div id="fmi3Instantiate" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Instance fmi3InstantiateTYPE(fmi3String        instanceName,
-                                         fmi3InterfaceType fmuType,
-                                         fmi3String        fmuInstantiationToken,
-                                         fmi3String        fmuResourceLocation,
-                                         const fmi3CallbackFunctions* functions,
-                                         fmi3Boolean       visible,
-                                         fmi3Boolean       loggingOn,
-                                         const fmi3CoSimulationConfiguration* fmuCoSimulationConfiguration);</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef enum {
-    fmi3ModelExchange,
-    fmi3CoSimulation,
-    fmi3HybridCoSimulation,
-    fmi3ScheduledCoSimulation
-} fmi3InterfaceType;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Instance fmi3InstantiateModelExchangeTYPE(
+    fmi3String                 instanceName,
+    fmi3String                 instantiationToken,
+    fmi3String                 resourceLocation,
+    fmi3Boolean                visible,
+    fmi3Boolean                loggingOn,
+    fmi3InstanceEnvironment    instanceEnvironment,
+    fmi3CallbackLogMessage     logMessage,
+    fmi3CallbackAllocateMemory allocateMemory,
+    fmi3CallbackFreeMemory     freeMemory);
+
+typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourceLocation,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    intermediateVariableGetRequired,
+    fmi3Boolean                    intermediateInternalVariableGetRequired,
+    fmi3Boolean                    intermediateVariableSetRequired,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackAllocateMemory     allocateMemory,
+    fmi3CallbackFreeMemory         freeMemory,
+    fmi3CallbackIntermediateUpdate intermediateUpdate);
+
+typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourceLocation,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    intermediateVariableGetRequired,
+    fmi3Boolean                    intermediateInternalVariableGetRequired,
+    fmi3Boolean                    intermediateVariableSetRequired,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackAllocateMemory     allocateMemory,
+    fmi3CallbackFreeMemory         freeMemory,
+    fmi3CallbackIntermediateUpdate intermediateUpdate);
+
+typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourceLocation,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    intermediateVariableGetRequired,
+    fmi3Boolean                    intermediateInternalVariableGetRequired,
+    fmi3Boolean                    intermediateVariableSetRequired,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackAllocateMemory     allocateMemory,
+    fmi3CallbackFreeMemory         freeMemory,
+    fmi3CallbackIntermediateUpdate intermediateUpdate,
+    fmi3CallbackLockPreemption     lockPreemption,
+    fmi3CallbackUnlockPreemption   unlockPreemption);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2057,13 +2096,13 @@ If attribute <code>canNotUseMemoryManagementFunctions = true</code> in <code>&lt
 <dt class="hdlist1">Function <code>intermediateUpdate</code></dt>
 <dd>
 <p>This callback allows internal events of different types (e.g. associated to <a href="#outputClock"><code>output clock</code></a> ticks or intermediate variable access) to be signaled from an FMU to the Co-Simulation master.
-If <code>fmu3Type</code> is set to <code>fmi3HybridCoSimulation</code> or <code>fmi3ScheduledCoSimulation</code> or any of the intermediate variable access modes is set to <code>true</code>, then the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback must be defined in <a href="#fmi3CallbackFunctions"><code>fmi3CallbackFunctions</code></a> in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.
-In other cases a NULL pointer can be assigned to the <code>intermediateUpdate</code> callback, such as if the <code>fmu3Type</code> is set to <code>fmi3ModelExchange</code>.</p>
+For Hybrid Co-Simulation and Scheduled Co-Simulation or if any of the intermediate variable access modes is set to <code>true</code>, the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> must be passed to <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.
+In other cases a <code>NULL</code> can be assigned to the <code>intermediateUpdate</code> callback.</p>
 </dd>
 <dt class="hdlist1">Function <code>lockPreemption</code> and <code>unlockPreemption</code></dt>
 <dd>
 <p>To provide more options to secure the code against unwanted preemption these callback functions are defined.
-They can be used to prevent preemption for certain code parts enclosed by <code>lockPreemption</code> and <code>unlockPreemption</code> in <code>fmi3ScheduledCoSimulation</code>.
+They can be used to prevent preemption for certain code parts enclosed by <code>lockPreemption</code> and <code>unlockPreemption</code> in Scheduled Co-Simulation.
 Even if the Co-Simulation master does not support preemption, at least an empty implementation of these callback functions must be provided to allow the reuse of code for different modes together with an efficient preemption.</p>
 </dd>
 </dl>
@@ -2697,7 +2736,7 @@ It is not possible for an FMU exporting tool to know in advance the priorities o
 It is the task of the simulation master to derive a computational order for the computation of two or more distinct FMUs based on the local FMU clock priorities and input-output relationships of connected FMUs.</p>
 </div>
 <div class="paragraph">
-<p>For real-time computation use cases i.e. in <code>fmi3ScheduledExecution</code> the priority information is used also for task preemption configurations.
+<p>For real-time computation use cases i.e. in Scheduled Co-Simulation the priority information is used also for task preemption configurations.
 It is therefore important to restrict the number of distinct priority levels for an FMU to available priority levels on the target platform.
 A common number of different priority levels is e.g. 100 (0 to 99) as defined in Linux based operating systems.
 Nevertheless, restricting the number of used distinct priority levels as much as possible is recommended to avoid unnecessary computational overhead.]_</p>
@@ -2794,7 +2833,7 @@ It is not allowed to call this function within the callback function <code>fmi3I
 <div class="paragraph">
 <p>Inquires whether a set of <a href="#clock"><code>clocks</code></a> is active by providing the value references of the corresponding <a href="#clock"><code>clock</code></a> varaibels.
 A <a href="#clock"><code>clock</code></a> with <a href="#valueReference"><code>valueReference</code></a>s[i] is active at the current time instant if <code>values[i] = fmi3ClockActive</code>, otherwise the <a href="#clock"><code>clock</code></a> is not active. It is allowed to call this function within the callback function <code>fmi3IntermediateUpdate()</code>.
-It is required for an FMU to directly internally set back the activation <a href="#state"><code>state</code></a> of an <a href="#outputClock"><code>output clock</code></a> \(i\) to <code>fmi3ClockInactive</code> if the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> is called for a <a href="#clock"><code>clock</code></a> \(i\) and the interface is set to <code>fmi3ScheduledCoSimulation</code>.
+It is required for an FMU to directly internally set back the activation <a href="#state"><code>state</code></a> of an <a href="#outputClock"><code>output clock</code></a> \(i\) to <code>fmi3ClockInactive</code>, if the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> is called for a <a href="#clock"><code>clock</code></a> \(i\) and the interface is Scheduled Co-Simulation`.
 <em>[This is required to allow preemption.]</em></p>
 </div>
 <div class="paragraph">
@@ -7529,30 +7568,67 @@ More information can be found in <a href="#intermediate-variable-access">[interm
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Instance fmi3InstantiateTYPE(fmi3String        instanceName,
-                                         fmi3InterfaceType fmuType,
-                                         fmi3String        fmuInstantiationToken,
-                                         fmi3String        fmuResourceLocation,
-                                         const fmi3CallbackFunctions* functions,
-                                         fmi3Boolean       visible,
-                                         fmi3Boolean       loggingOn,
-                                         const fmi3CoSimulationConfiguration* fmuCoSimulationConfiguration);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Instance fmi3InstantiateModelExchangeTYPE(
+    fmi3String                 instanceName,
+    fmi3String                 instantiationToken,
+    fmi3String                 resourceLocation,
+    fmi3Boolean                visible,
+    fmi3Boolean                loggingOn,
+    fmi3InstanceEnvironment    instanceEnvironment,
+    fmi3CallbackLogMessage     logMessage,
+    fmi3CallbackAllocateMemory allocateMemory,
+    fmi3CallbackFreeMemory     freeMemory);
+
+typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourceLocation,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    intermediateVariableGetRequired,
+    fmi3Boolean                    intermediateInternalVariableGetRequired,
+    fmi3Boolean                    intermediateVariableSetRequired,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackAllocateMemory     allocateMemory,
+    fmi3CallbackFreeMemory         freeMemory,
+    fmi3CallbackIntermediateUpdate intermediateUpdate);
+
+typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourceLocation,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    intermediateVariableGetRequired,
+    fmi3Boolean                    intermediateInternalVariableGetRequired,
+    fmi3Boolean                    intermediateVariableSetRequired,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackAllocateMemory     allocateMemory,
+    fmi3CallbackFreeMemory         freeMemory,
+    fmi3CallbackIntermediateUpdate intermediateUpdate);
+
+typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourceLocation,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    intermediateVariableGetRequired,
+    fmi3Boolean                    intermediateInternalVariableGetRequired,
+    fmi3Boolean                    intermediateVariableSetRequired,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackAllocateMemory     allocateMemory,
+    fmi3CallbackFreeMemory         freeMemory,
+    fmi3CallbackIntermediateUpdate intermediateUpdate,
+    fmi3CallbackLockPreemption     lockPreemption,
+    fmi3CallbackUnlockPreemption   unlockPreemption);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Additionally the Co-Simulation master provides the required Co-Simulation features via the argument <code>fmuCoSimulationConfiguration</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef struct {
-    fmi3Boolean intermediateVariableGetRequired;
-    fmi3Boolean intermediateInternalVariableGetRequired;
-    fmi3Boolean intermediateVariableSetRequired;
-} fmi3CoSimulationConfiguration;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The master can only select a certain Co-Simulation interface for an FMU if the following attributes are set in the  <code>modelDescription.xml</code>.</p>
+<p>The master can only select a certain Co-Simulation interface for an FMU if the following attributes are set in the <code>modelDescription.xml</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -7567,22 +7643,22 @@ More information can be found in <a href="#intermediate-variable-access">[interm
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3CoSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Basic Co-Simulation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseBasicCoSimulation = false</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3HybridCoSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hybrid Co-Simulation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesHybridCoSimulation = true</code>, <code>canReturnEarlyAfterIntermediateUpdate = true</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3ScheduledCoSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scheduled Co-Simulation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesScheduledCoSimulation = true</code></p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Generally it is assumed, that a Co-Simulation FMU always supports the interface <code>fmi3CoSimulation</code>.
-If that is not possible for an FMU (e.g. if the FMU cannot provide an emulation of <a href="#inputClock"><code>input clock</code></a> tick occurrences), it has to include the capability flag <code>canNotUseBasicCoSimulation = true</code> in the <code>modelDescription.xml</code>.</p>
+<p>Generally it is assumed, that a Hybrid or Scheduled Co-Simulation FMU also supports Basic Co-Simulation.
+If that is not possible for an FMU <em>[(e.g. if the FMU cannot provide an emulation of <a href="#inputClock"><code>input clock</code></a> tick occurrences)]</em>, it has to include the capability flag <code>canNotUseBasicCoSimulation = true</code> in the <code>modelDescription.xml</code>.</p>
 </div>
 <div class="paragraph">
 <p>If the FMU does not support the Co-Simulation interface selected in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> it has to return <code>NULL</code>.</p>
@@ -7615,37 +7691,37 @@ If that is not possible for an FMU (e.g. if the FMU cannot provide an emulation 
 <div class="sect4">
 <h5 id="api-intermediate-variable-access">2.4.3.1. Intermediate Variable Access</h5>
 <div class="paragraph">
-<p>If the Co-Simulation master signals the support for intermediate variable access and an FMU has at least one variable with <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code>, the FMU can invoke the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback function to sent the <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a> back to the Co-Simulation master.</p>
+<p>If the Co-Simulation master signals the support for intermediate variable access and an FMU has at least one variable with <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code>, the FMU can use the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to communicate information back to the Co-Simulation master.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef struct{
-    fmi3Float64 intermediateUpdateTime;
-    fmi3Boolean eventOccurred;
-    fmi3Boolean clocksTicked;
-    fmi3Boolean intermediateVariableSetAllowed;
-    fmi3Boolean intermediateVariableGetAllowed;
-    fmi3Boolean intermediateStepFinished;
-    fmi3Boolean canReturnEarly;
-} fmi3IntermediateUpdateInfo;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status (*fmi3CallbackIntermediateUpdate) (
+  fmi3InstanceEnvironment instanceEnvironment,
+  fmi3Float64 intermediateUpdateTime,
+  fmi3Boolean eventOccurred,
+  fmi3Boolean clocksTicked,
+  fmi3Boolean intermediateVariableSetAllowed,
+  fmi3Boolean intermediateVariableGetAllowed,
+  fmi3Boolean intermediateStepFinished,
+  fmi3Boolean canReturnEarly);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The following flags in the <code>fmi3IntermediateInfo</code> struct are used for intermediate variable access:</p>
+<p>The following output arguments in <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> are used for intermediate variable access:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>intermediateTime</code> is the simulation time at which the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback-function got called by the FMU.</p>
+<p><code>intermediateUpdateTime</code> is the simulation time at which the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback function is called by the FMU.</p>
 </li>
 <li>
-<p>If <code>intermediateVariableSetAllowed</code> is <code>fmi3True</code>, the Co-Simulation master may provide intermediate <a href="#input"><code>input</code></a> variables by calling <code>fmi3Set{VariableType}</code> functions for variables with <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code>.</p>
+<p>If <code>intermediateVariableSetAllowed = fmi3True</code>, the Co-Simulation master may provide intermediate <a href="#input"><code>input</code></a> variables by calling <code>fmi3Set{VariableType}</code> for variables with <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code>.</p>
 </li>
 <li>
-<p>If <code>intermediateVariableGetAllowed</code> is <code>fmi3True</code>, the Co-Simulation master may collect intermediate output variables by calling <code>fmi3Get{VariableType}</code> functions for variables with <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code>.</p>
+<p>If <code>intermediateVariableGetAllowed = fmi3True</code>, the Co-Simulation master may collect intermediate output variables by calling <code>fmi3Get{VariableType}</code> for variables with <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code>.</p>
 </li>
 <li>
-<p>If <code>intermediateStepFinished</code> is <code>fmi3False</code>, the Co-Simulation master shall only use intermediate output variables to compute intermediate <a href="#input"><code>input</code></a> variables at the current state.</p>
+<p>If <code>intermediateStepFinished = fmi3False</code>, the Co-Simulation master shall only use intermediate output variables to compute intermediate <a href="#input"><code>input</code></a> variables at the current state.</p>
 </li>
 </ul>
 </div>
@@ -8371,7 +8447,7 @@ y2 := w2</pre>
 <dt class="hdlist1">Synchronous systems</dt>
 <dd>
 <p><em>A synchronous system, such as Lucid Synchrone <a href="#PZ06">[PZ06]</a> or Modelica 3.3 <a href="#MLS12">[MLS12]</a>, is called periodically, and at every sample instant the discrete-time equations are evaluated exactly once.</em>
-<em>An FMU of this type can be implemented by activating the model equations only at the first event iteration and returning always <code>newDiscreteStatesNeeded = false</code> from <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.</em>
+<em>An FMU of this type can be implemented by activating the model equations only at the first event iteration and returning always <code>newDiscreteStatesNeeded = fmi3False</code> from <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.</em>
 <em>Furthermore, the discrete-time <a href="#state"><code>states</code></a> are not updated by <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, but as first action before the discrete-time equations are evaluated, in order that</em> \(^{\bullet}\mathbf{x}_d\) <em>(= value at the previous <a href="#clock"><code>clock</code></a> tick) and</em> \(\mathbf{x}_d\) <em>(value at the latest <a href="#clock"><code>clock</code></a> tick) have reasonable values between <a href="#clock"><code>clock</code></a> ticks.</em></p>
 </dd>
 <dt class="hdlist1">State machines with one memory location for a state</dt>
@@ -8601,26 +8677,21 @@ If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is no
 <div id="fmi3NewDiscreteStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3NewDiscreteStatesTYPE(fmi3Instance instance,
-                                             fmi3EventInfo* eventInfo);</code></pre>
-</div>
-</div>
-<div id="fmi3EventInfo" class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef struct {
-    fmi3Float64 nextEventTime;  /* next event if nextEventTimeDefined=fmi3True */
-    fmi3Boolean newDiscreteStatesNeeded;
-    fmi3Boolean terminateSimulation;
-    fmi3Boolean nominalsOfContinuousStatesChanged;
-    fmi3Boolean valuesOfContinuousStatesChanged;
-    fmi3Boolean nextEventTimeDefined;
-} fmi3EventInfo;</code></pre>
+                                             fmi3Boolean *newDiscreteStatesNeeded,
+                                             fmi3Boolean *terminateSimulation,
+                                             fmi3Boolean *nominalsOfContinuousStatesChanged,
+                                             fmi3Boolean *valuesOfContinuousStatesChanged,
+                                             fmi3Boolean *nextEventTimeDefined,
+                                             fmi3Float64 *nextEventTime);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The FMU is in <strong>Event Mode</strong> and the super-dense time is incremented by this call.<br>
-If the super-dense time before a call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> was \((t_R,t_I)\), then the time instant after the call is \((t_R,t_I)\).<br>
-If return argument <code>fmi3eventInfo->newDiscreteStatesNeeded = fmi3True</code>, the FMU should stay in <strong>Event Mode</strong>, and the FMU requires to set new inputs to the FMU (<code>fmi3Set{VariableType}</code> on <a href="#input"><code>inputs</code></a>) to compute and get the <a href="#output"><code>outputs</code></a> (<code>fmi3Get{VariableType}</code> on <a href="#output"><code>outputs</code></a>) and to call <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> again.
-Depending on the connection with other FMUs, the environment shall</p>
+<p>The FMU is in <strong>Event Mode</strong> and the super dense time is incremented by this call.<br>
+If the super dense time before a call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> was \((t_R,t_I)\), then the time instant after the call is \((t_R,t_I)\).<br>
+If output argument <code>newDiscreteStatesNeeded = fmi3True</code>, the FMU should stay in <strong>Event Mode</strong>, and the FMU requires to set new inputs to the FMU (<code>fmi3Set{VariableType}</code> on <a href="#input"><code>inputs</code></a>) to compute and get the <a href="#output"><code>outputs</code></a> (<code>fmi3Get{VariableType}</code> on <a href="#output"><code>outputs</code></a>) and to call <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> again.</p>
+</div>
+<div class="paragraph">
+<p>Depending on the connection with other FMUs, the environment shall</p>
 </div>
 <div class="ulist">
 <ul>
@@ -8754,7 +8825,7 @@ Note that <code>fmi3Status = fmi3Discard</code> is possible for both functions.<
 </div>
 <div class="paragraph">
 <p>Return the nominal values of the continuous <a href="#state"><code>states</code></a>.
-This function should always be called after calling function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> if it returns with <code>eventInfo&#8594;nominalsOfContinuousStatesChanged = fmi3True</code>, since then the nominal values of the continuous <a href="#state"><code>states</code></a> have changed <em>[for example, because the association of the continuous <a href="#state"><code>states</code></a> to variables has changed due to internal dynamic state selection]</em>.
+This function should always be called after calling function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged = fmi3True</code>, since then the nominal values of the continuous <a href="#state"><code>states</code></a> have changed <em>[for example, because the association of the continuous <a href="#state"><code>states</code></a> to variables has changed due to internal dynamic state selection]</em>.
 If the FMU does not have information about the nominal value of a continuous <a href="#state"><code>state</code></a> i, a nominal value <code>x_nominal[i] = 1.0</code> should be returned.
 Note that it is required that <code>x_nominal[i] &gt; 0.0</code>.
 <em>[Typically, the nominal values of the continuous <a href="#state"><code>states</code></a> are used to compute the absolute tolerance required by the integrator.</em>
@@ -9231,7 +9302,8 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">m = M_fmi3Instantiate("m", fmi3ModelExchange, guid, NULL, &amp;callbacks, fmi3False, fmi3False, NULL);
+<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">m = M_fmi3InstantiateModelExchange("m", "{8c4e810f-3da3-4a00-8276-176fa3c9f000}", NULL, fmi3False, fmi3False,
+                                   NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory);
 // "m" is the instance name
 // "M_" is the MODEL_IDENTIFIER
 
@@ -9272,6 +9344,8 @@ while (!terminateSimulation) {
 
     // handle events
     if (enterEventMode || stateEvent || timeEvent) {
+        fmi3Boolean nextEventTimeDefined;
+        fmi3Float64 nextEventTime;
 
         if (!initialEventMode) {
             // TODO: pass rootsFound
@@ -9279,24 +9353,32 @@ while (!terminateSimulation) {
         }
 
         // event iteration
-        eventInfo.newDiscreteStatesNeeded = fmi3True;
+        newDiscreteStatesNeeded = fmi3True;
         valuesOfContinuousStatesChanged   = fmi3False;
         nominalsOfContinuousStatesChanged = fmi3False;
 
-        while (eventInfo.newDiscreteStatesNeeded) {
+        while (newDiscreteStatesNeeded) {
+            fmi3Boolean _nominalsOfContinuousStatesChanged;
+            fmi3Boolean _valuesOfContinuousStatesChanged;
 
             // set inputs at super dense time point
             // M_fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
 
             // update discrete states
-            M_fmi3NewDiscreteStates(m, &amp;eventInfo);
+            M_fmi3NewDiscreteStates(m,
+                                    &amp;newDiscreteStatesNeeded,
+                                    &amp;terminateSimulation,
+                                    &amp;_nominalsOfContinuousStatesChanged,
+                                    &amp;_valuesOfContinuousStatesChanged,
+                                    &amp;nextEventTimeDefined,
+                                    &amp;nextEventTime);
 
             // getOutput at super dense time point
             // M_fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
-            valuesOfContinuousStatesChanged |= eventInfo.valuesOfContinuousStatesChanged;
-            nominalsOfContinuousStatesChanged |= eventInfo.nominalsOfContinuousStatesChanged;
+            valuesOfContinuousStatesChanged |= _valuesOfContinuousStatesChanged;
+            nominalsOfContinuousStatesChanged |= _nominalsOfContinuousStatesChanged;
 
-            if (eventInfo.terminateSimulation) goto TERMINATE_MODEL;
+            if (terminateSimulation) goto TERMINATE_MODEL;
         }
 
 
@@ -9316,8 +9398,8 @@ while (!terminateSimulation) {
             M_fmi3GetNominalsOfContinuousStates(m, x_nominal, nx);
         }
 
-        if (eventInfo.nextEventTimeDefined) {
-            tNext = min(eventInfo.nextEventTime, tEnd);
+        if (nextEventTimeDefined) {
+            tNext = min(nextEventTime, tEnd);
         } else {
             tNext = tEnd;
         }
@@ -10355,12 +10437,12 @@ If the function returns <code>fmi3Fatal</code> the FMU enters the terminal state
 </dd>
 <dt class="hdlist1"><code>fmi3Set{VariableType}</code>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a></dt>
 <dd>
-<p>If <code>intermediateUpdateInfo&#8594;intermediateVariableSetAllowed</code> is equal to <code>fmi3True</code>, the value of intermediate variables can be set.
+<p>If <code>intermediateVariableSetAllowed = fmi3True</code>, the value of intermediate variables can be set.
 Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code> in the <code>modelDescription.xml</code>.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
 <dd>
-<p>If <code>intermediateUpdateInfo&#8594;intermediateVariableGetAllowed</code> is equal to <code>fmi3True</code>, the value of intermediate variables can be retrieved.
+<p>If <code>intermediateVariableGetAllowed = fmi3True</code>, the value of intermediate variables can be retrieved.
 Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code> in the <code>modelDescription.xml</code>.</p>
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
@@ -10917,14 +10999,11 @@ The code demonstrates the simplest master algorithm as shown in <a href="#math-b
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">////////////////////////////
 // Initialization sub-phase
 
-// set callback functions
-callbacks.logMessage     = cb_logMessage;
-callbacks.allocateMemory = cb_allocateMemory;
-callbacks.freeMemory     = cb_freeMemory;
-
 // instantiate both slaves
-s1 = s1_fmi3Instantiate("slave1", fmi3CoSimulation, guid, NULL, &amp;callbacks, fmi3False, fmi3False, NULL);
-s2 = s2_fmi3Instantiate("slave2", fmi3CoSimulation, guid, NULL, &amp;callbacks, fmi3False, fmi3False, NULL);
+s1 = s1_fmi3InstantiateBasicCoSimulation("slave1", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False,
+                        NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory, NULL);
+s2 = s2_fmi3InstantiateBasicCoSimulation("slave2", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False,
+                        NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory, NULL);
 
 if (s1 == NULL || s2 == NULL)
     return EXIT_FAILURE;
@@ -11015,31 +11094,25 @@ if (status != fmi3Fatal) {
 <div class="paragraph">
 <p>The boolean capability flag <code>canReturnEarlyAfterIntermediateUpdate</code> in the modelDescription XML file indicates whether the FMU supports the early-return feature.
 The default value of this capability flag is <code>false</code>.
-Each time an internal discontinuity or an event happens inside an FMU with capability flag <code>canReturnEarlyAfterIntermediateUpdate=true</code>, the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> is invoked by the FMU and the associated structure <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a> is sent back to the Co-Simulation master.
+Each time an internal discontinuity or an event happens inside an FMU with capability flag <code>canReturnEarlyAfterIntermediateUpdate = true</code>, the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> is invoked by the FMU.
 The master can only use this early return functionality if it provides the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback function pointer in <a href="#fmi3CallbackFunctions"><code>fmi3CallbackFunctions</code></a> in <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.</p>
 </div>
 <div id="fmi3CallbackIntermediateUpdate" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">typedef fmi3Status (*fmi3CallbackIntermediateUpdate) (fmi3InstanceEnvironment instanceEnvironment,
-                                                      fmi3IntermediateUpdateInfo* intermediateUpdateInfo);</code></pre>
-</div>
-</div>
-<div id="fmi3IntermediateUpdateInfo" class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">typedef struct{
-    fmi3Float64 intermediateUpdateTime;
-    fmi3Boolean eventOccurred;
-    fmi3Boolean clocksTicked;
-    fmi3Boolean intermediateVariableSetAllowed;
-    fmi3Boolean intermediateVariableGetAllowed;
-    fmi3Boolean intermediateStepFinished;
-    fmi3Boolean canReturnEarly;
-} fmi3IntermediateUpdateInfo;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">typedef fmi3Status (*fmi3CallbackIntermediateUpdate) (
+  fmi3InstanceEnvironment instanceEnvironment,
+  fmi3Float64 intermediateUpdateTime,
+  fmi3Boolean eventOccurred,
+  fmi3Boolean clocksTicked,
+  fmi3Boolean intermediateVariableSetAllowed,
+  fmi3Boolean intermediateVariableGetAllowed,
+  fmi3Boolean intermediateStepFinished,
+  fmi3Boolean canReturnEarly);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The Co-Simulation master can request the FMU to end the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> at a Newtonian time instant and to do an early return by calling the <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> function inside the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
-The Co-Simulation master is only allowed to call this function, if <code>fmi3IntermediateUpdateInfo&#8594;canReturnEarly = fmi3True</code>.
+The Co-Simulation master is only allowed to call this function, if <code>canReturnEarly = fmi3True</code>.
 If the master does not call <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> the FMU continues the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> computation until the next predefined communication instant (i.e., <code>currentCommunicationPoint + communicationStepSize</code>) or until the next call of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</p>
 </div>
 <div id="fmi3DoEarlyReturn" class="listingblock">
@@ -11163,7 +11236,7 @@ The accessible variables are marked with attribute <a href="#intermediateAccess"
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canReturnEarlyAfterIntermediateUpdate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if master calls <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> during callback function call <code>intermediateUpdate()</code> and <code>canReturnEarly = true</code> in <code>fmi3IntermediateUpdateInfo</code>.
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if master calls <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> during callback function call <code>intermediateUpdate()</code> and <code>canReturnEarly = true</code> in <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
 <em>[If set to <code>true</code> and <code>providesHybridCoSimulation</code> is set to <code>false</code>, the FMU supports the basic functionality of ending DoSteps before the planned next communication point time.</em>
 <em>This is controlled by the simulation master for avoiding unnecessary computations and roll backs of the FMU due to external events known by the simulation master]</em></p></td>
 </tr>
@@ -11174,7 +11247,7 @@ If set to <code>true</code> also <code>canReturnEarlyAfterIntermediateUpdate</co
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesScheduledCoSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave can be set to <code>fmi3ScheduledCoSimulation</code> during instantiation of FMU.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave can instantiated as Scheduled Co-Simulation.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseBasicCoSimulation</code></p></td>
@@ -11368,21 +11441,19 @@ If <code>fmu3Type</code> is set to <code>fmi3HybridCoSimulation</code>, the <a h
 In other cases a NULL pointer can be assigned to the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback, such as if the <code>fmu3Type</code> is set to  <code>fmi3ModelExchange</code>.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a>  argument in the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> function is a structure which is used to signal <a href="#outputClock"><code>output clock</code></a> ticks and internal events to the master.
-Whenever the FMU invokes the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback function, it fills the <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a> structure to pass information concerning the call to the Co-Simulation master.
-The structure is defined as follows:</p>
+<p>The output arguments of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> are used to signal <a href="#outputClock"><code>output clock</code></a> ticks and internal events to the master.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef struct{
-    fmi3Float64 intermediateUpdateTime;
-    fmi3Boolean eventOccurred;
-    fmi3Boolean clocksTicked;
-    fmi3Boolean intermediateVariableSetAllowed;
-    fmi3Boolean intermediateVariableGetAllowed;
-    fmi3Boolean intermediateStepFinished;
-    fmi3Boolean canReturnEarly;
-} fmi3IntermediateUpdateInfo;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status (*fmi3CallbackIntermediateUpdate) (
+  fmi3InstanceEnvironment instanceEnvironment,
+  fmi3Float64 intermediateUpdateTime,
+  fmi3Boolean eventOccurred,
+  fmi3Boolean clocksTicked,
+  fmi3Boolean intermediateVariableSetAllowed,
+  fmi3Boolean intermediateVariableGetAllowed,
+  fmi3Boolean intermediateStepFinished,
+  fmi3Boolean canReturnEarly);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -11405,7 +11476,7 @@ Default value of variables is <code>fmi3False</code>.</p>
 <li>
 <p>when <code>eventOccurred</code> is <code>fmi3True</code>, the master must call <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> to do an early return and handle the event via entering <strong>Event Mode</strong>.
 In this case, <code>earlyReturnTime</code> argument of <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> is ignored.
-In <strong>Event Mode</strong> the master shall call the <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> function for gathering <a href="#fmi3EventInfo"><code>fmi3EventInfo</code></a> related information about the event occurred at <code>intermediateUpdateTime</code>.</p>
+In <strong>Event Mode</strong> the master shall call the <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> function for gathering related information about the event that occurred at <code>intermediateUpdateTime</code>.</p>
 </li>
 <li>
 <p>when <code>clocksTicked</code>  is <code>fmi3True</code>, it means that <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function should be called for gathering all <a href="#clock"><code>clock</code></a> related information about ticking <a href="#outputClock"><code>output clocks</code></a> at <code>intermediateUpdateTime</code>.
@@ -11432,10 +11503,10 @@ If <code>canReturnEarly</code> is <code>fmi3False</code> the FMU will not do the
 But in <strong>Event Mode</strong>, there may be an event iteration at a Newtonian time instant and have super-dense time instants.</p>
 </div>
 <div class="paragraph">
-<p>Based on the information delivered in <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a>, additional information about the discontinuity at that time instant can be obtained from the <a href="#fmi3EventInfo"><code>fmi3EventInfo</code></a> structure after calling  <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>  and/or <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.</p>
+<p>Based on the information provided by <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, additional information about the discontinuity at that time instant can be obtained by calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> and <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The FMU must not call the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback function with a <code>intermediateUpdateInfo.intermediateUpdateTime</code> value that is smaller than the <code>intermediateUpdateInfo.intermediateUpdateTime</code> value given in a previous call of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <code>intermediateUpdateInfo.intermediateStepFinished</code> is <code>fmi3True</code>.</p>
+<p>The FMU must not call the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with an <code>intermediateUpdateTime</code> that is smaller than the <code>intermediateUpdateTime</code> given in a previous call of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <code>intermediateStepFinished = fmi3True</code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -11463,39 +11534,39 @@ The master should indicate to the FMU that this early-return feature is also sup
 The Co-Simulation master signals to the FMU that it supports and has recognized the early return Co-Simulation capabilities of the FMU by setting the CoSimulation interface to <code>fmi3HybridCoSimulation</code> in the <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> function.</p>
 </div>
 <div class="paragraph">
-<p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through <code>intermediateUpdateInfo.intermediateUpdateTime</code>.
-If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <code>earlyReturn = fmi3True</code> and an event has happened, i.e. <code>intermediateUpdateInfo.eventOccurred</code> is <code>fmi3True</code>, then an event handling has to be done by the Co-Simulation master.
+<p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through <code>intermediateUpdateTime</code>.
+If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <code>earlyReturn = fmi3True</code> and an event has happened, i.e. <code>eventOccurred = fmi3True</code>, then an event handling has to be done by the Co-Simulation master.
 In order to start event handling the Co-Simulation master has to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> for that FMU to push the FMU into <strong>Event Mode</strong>.
-In this mode the Co-Simulation master is supposed to catch all events through the <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> function and the <a href="#fmi3EventInfo"><code>fmi3EventInfo</code></a> structure.</p>
+In this mode the Co-Simulation master is supposed to catch all events through the <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> function.</p>
 </div>
 <div class="paragraph">
 <p>If the early-return request of the Co-Simulation master is ignored by the FMU, then <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <code>earlyReturn = fmi3False</code>.
 The master can start a resynchronization of FMUs at an event time, if the <code>currentCommunicationPoint</code> has passed the event time, the master can roll-back the FMU and repeat the step with a suitable <code>communicationStepSize</code> (if the FMU supports the roll-back).</p>
 </div>
 <div class="paragraph">
-<p>In <strong>Event Mode</strong> and only after <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <code>earlyReturn = fmi3True</code> a <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> call returns <a href="#fmi3EventInfo"><code>fmi3EventInfo</code></a> structure as a return argument.
-Not all elements of <a href="#fmi3EventInfo"><code>fmi3EventInfo</code></a> are relevant and only the following elements may be considered:</p>
+<p>In <strong>Event Mode</strong> and only after <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returned with <code>earlyReturn = fmi3True</code> the function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> may be called.
+Only the following output arguments may be considered:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>when <code>newDiscreteStatesNeeded = true</code> it means that the master should stay in <strong>Event Mode</strong> and another call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is required.</p>
+<p>When <code>newDiscreteStatesNeeded = true</code>, the master should stay in <strong>Event Mode</strong> and another call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is required.</p>
 </li>
 <li>
-<p>when <code>nextEventTimeDefined = true</code> it means that an event time is available and the value is given by the <code>nextEventTime</code> value.
+<p>When <code>nextEventTimeDefined = fmi3True</code>, an event time is available and the value is given by <code>nextEventTime</code>.
 This is the case when the model can report in advance the accurate time of the next predictable time event.</p>
 </li>
 <li>
-<p>when <code>terminateSimulation = true</code> it means that the model wants to stop integration and the Co-Simulation master should call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
+<p>When <code>terminateSimulation = fmi3True</code>, the model requested to stop integration and the Co-Simulation master should call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>In <strong>Event Mode</strong> it is allowed to <code>fmi3Get{VariableType}</code> variable values of the FMU after the call of <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> and it is allowed to <code>fmi3Set{VariableType}</code> variable values before calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.
-The FMU leaves <strong>Event Mode</strong> when the master calls <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for that FMU.</p>
+<p>In <strong>Event Mode</strong> it is allowed to call <code>fmi3Get{VariableType}</code> after <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> has been called and it is allowed to call <code>fmi3Set{VariableType}</code> before calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.
+The FMU leaves <strong>Event Mode</strong> when the master calls <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>It is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for an FMU with interface <code>fmi3CoSimulation</code> or <code>fmi3ScheduledCoSimulation</code>.</p>
+<p>It is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for an FMU with interface type Basic Co-Simulation and Scheduled Co-Simulation.</p>
 </div>
 </div>
 <div class="sect3">
@@ -11524,9 +11595,8 @@ Note, even if no <a href="#clock"><code>clock</code></a> is defined by an FMU in
 <h5 id="transfer-of-input-output-and-parameters-clocked-co-simulation">5.2.3.1. Transfer of Input / Output Values and Parameters in fmi3HybridCoSimulation</h5>
 <div class="paragraph">
 <p>If the Co-Simulation master supports <a href="#clock"><code>clocks</code></a>, all <a href="#inputClock"><code>input clocks</code></a> of the model should be handled and <a href="#inputClock"><code>input clock</code></a> events should be scheduled by the master.
-If an <a href="#outputClock"><code>output clock</code></a> ticks, the FMU invokes the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback and sets <code>intermediateUpdateInfo.clocksTicked</code> to <code>fmi3True</code>.
-Then the master must call <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> to do an early return from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
-Then the master should push the FMU into <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
+If an <a href="#outputClock"><code>output clock</code></a> ticks, the FMU calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <code>clocksTicked = fmi3True</code>.
+Then the master must call <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> to do an early return from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> and push the FMU into <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
 Once the FMU is in <strong>Event Mode</strong>, the activation status of <a href="#outputClock"><code>output clocks</code></a> are retrieved by <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function.
 Then <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> (and <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> if necessary) should be invoked to enable the ticked <a href="#inputClock"><code>input clocks</code></a>.
 Each <a href="#clock"><code>clock</code></a>, that ticks outside of the FMU (i.e. <a href="#inputClock"><code>input clock</code></a>), is activated for an FMU based on its <a href="#clockReference"><code>clockReference</code></a> and an associated <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <strong>Event Mode</strong>.
@@ -11544,7 +11614,7 @@ Note that <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may not reach the ne
 <h5 id="computation-clocked-co-simulation">5.2.3.2. Computation in fmi3HybridCoSimulation</h5>
 <div class="paragraph">
 <p>Similar to FMI for Model Exchange, in order to activate <a href="#inputClock"><code>input clocks</code></a> of an FMU, it is required to push the FMU into <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
-If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <code>earlyReturn = fmi3True</code> and <code>intermediateUpdateInfo.eventOccurred</code> or <code>intermediateUpdateInfo.clocksTicked</code> is <code>fmi3True</code>, the FMU must be pushed into the <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.</p>
+If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <code>earlyReturn = fmi3True</code> and <code>eventOccurred = fmi3True</code> or <code>clocksTicked = fmi3True</code>, the FMU must be pushed into the <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>In order to retrieve the status of <a href="#outputClock"><code>output clocks</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> and <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> or <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a> need to be called in the <strong>Event Mode</strong>.
@@ -11558,9 +11628,9 @@ Function calls of this call order can be omitted.</p>
 <p>The handling of return values of function calls is identical to <code>fmi3CoSimulation</code>.</p>
 </div>
 <div class="paragraph">
-<p>If <code>eventInfo.terminateSimulation</code> becomes <code>fmi3True</code> after calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> then the co-simulation should be terminated by calling <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.
+<p>If <code>terminateSimulation</code> becomes <code>fmi3True</code> after calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> then the co-simulation should be terminated by calling <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.
 Once handling of the <a href="#clock"><code>clock</code></a> events finished, the master calls <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for that FMU to push it into <strong>Step Mode</strong>.
-Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> in <code>fmi3CoSimulation</code> or <code>fmi3ScheduledCoSimulation</code>.</p>
+Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> in Basic and Scheduled Co-Simulation.</p>
 </div>
 <div class="paragraph">
 <p><em>[Usually the Co-Simulation master should be able to derive (but is not forced to do so) the correct communication point times for <a href="#inputClock"><code>input clocks</code></a> in advance and thus it should be able to set the proper <code>communicationStepSize</code> for <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</em>
@@ -11633,7 +11703,7 @@ In order to handle discrete events and <a href="#clock"><code>clock</code></a> t
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1"><a href="#fmi3Terminate"><code>fmi3Terminate</code></a></dt>
 <dd>
-<p>Upon return of <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, if <code>fmi3EventInfo&#8594;terminateSimulation = fmi3True</code>, the master should finish the Co-Simulation by calling <code>fmi3Terminate</code> on all FMUs.</p>
+<p>Upon return of <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, if <code>terminateSimulation = fmi3True</code>, the master should finish the Co-Simulation by calling <code>fmi3Terminate</code> on all FMU instances.</p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
 <dd>
@@ -11643,13 +11713,11 @@ This function must not be called if the FMU contains no <a href="#tunable"><code
 <dt class="hdlist1"><a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a></dt>
 <dd>
 <p>In order to handle discrete events <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is called.
-This function returns the <code>fmi3EventInfo* eventInfo</code> structure.
-When <code>eventInfo.newDiscreteStatesNeeded = true</code>, the FMU should stay in <strong>Event Mode</strong> and another call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is required.</p>
+When the output argument <code>newDiscreteStatesNeeded = fmi3True</code>, the FMU should stay in <strong>Event Mode</strong> and another call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is required.</p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></dt>
 <dd>
-<p>Once all events are handled and <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> returns with <code>eventInfo.newDiscreteStatesNeeded = false</code>, the FMU should return back to the <strong>Step Mode</strong>, unless the FMU requests to terminate the Co-Simulation by setting  <code>fmi3EventInfo&#8594;terminateSimulation</code> to <code>true</code>.
-In order to push the FMU into the <strong>Step Mode</strong>, the <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> function is used.
+<p>Once all events are handled and <code>newDiscreteStatesNeeded = fmi3False</code>, the FMU should be pushed to <strong>Step Mode</strong> by calling <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, unless it requests to terminate the Co-Simulation by setting  <code>terminateSimulation</code> to <code>fmi3True</code>.
 In this case, a new step can be started from the current communication point time.</p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
@@ -11689,7 +11757,7 @@ For <a href="#input"><code>input</code></a> periodic <a href="#clock"><code>cloc
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1"><a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></dt>
 <dd>
-<p><code>intermediateUpdateInfo&#8594;canReturnEarly</code> is <code>fmi3True</code>, the Co-Simulation master can request the FMU to end the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> and to do an early return by calling this function.</p>
+<p>If <code>canReturnEarly = fmi3True</code>, the Co-Simulation master can request the FMU to end the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> and to do an early return by calling this function.</p>
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
@@ -12556,10 +12624,10 @@ The activation of such a <a href="#outputClock"><code>output clock</code></a> is
 <div class="paragraph">
 <p>The direct scheduling of model partitions based on <a href="#clock"><code>clock</code></a> ticks requires an additional handling mode for FMUs.
 The FMU signals its support for direct model partition scheduling in the <code>modelDescription.xml</code> via the flag <code>providesScheduledCoSimulation = true</code>.
-The Co-Simulation master signals to the FMU that it supports and has recognized the <a href="#clock"><code>clock</code></a> and model partition scheduling capabilities of the FMU via setting the Co-Simulation interface in <code>fmi3CoSimulationMode</code> to <code>fmi3ScheduledCoSimulation</code> in the struct <code>fmi3CoSimulationConfiguration</code> function <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a>.</p>
+The Co-Simulation master signals to the FMU that it supports and has recognized the <a href="#clock"><code>clock</code></a> and model partition scheduling capabilities of the FMU by instantiating it as Scheduled Co-Simulation.</p>
 </div>
 <div class="paragraph">
-<p>If the flag <code>providesScheduledCoSimulation = false</code>, it is not allowed to set the Co-Simulation interface to <code>fmi3ScheduledCoSimulation</code>.</p>
+<p>If the flag <code>providesScheduledCoSimulation = false</code>, it is not allowed to use the Scheduled Co-Simulation interface.</p>
 </div>
 <div class="paragraph">
 <p>If no <a href="#inputClock"><code>input clocks</code></a> are defined by the FMU it is not allowed to set <code>providesScheduledCoSimulation</code> to <code>true</code> in the <code>modelDescription.xml</code>.</p>
@@ -12570,7 +12638,7 @@ If e.g. an function returns <code>fmi3Discard</code> or <code>fmi3Error</code> t
 In case of <code>fmi3Discard</code> or <code>fmi3Error</code> no repetition of the step is possible, the only possible way to go forward is to enter the <strong>Terminated</strong> state and to end or to reset the simulation or - if supported - to set the FMU back to a former state.</p>
 </div>
 <div class="sect3">
-<h4 id="_transfer_of_input_output_values_and_parameters_in_fmi3scheduledcosimulation">6.2.1. Transfer of Input / Output Values and Parameters in fmi3ScheduledCoSimulation</h4>
+<h4 id="_transfer_of_input_output_values_and_parameters_in_scheduled_co_simulation">6.2.1. Transfer of Input / Output Values and Parameters in Scheduled Co-Simulation</h4>
 <div class="paragraph">
 <p>The simulation master sets and gets variable values as defined in section <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
 </div>
@@ -12585,14 +12653,14 @@ Set/get operations have to be atomic for a single variable.</p>
 <div class="paragraph">
 <p>The computational effort has to be predictable, thus all computationally expensive operations needed to calculate a model partition have to be contained within the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function.
 The simulation master can assume that <code>fmi3Get{VariableType} and fmi3Set{VariableType}</code> operations are not computationally expensive.
-In <code>fmi3ScheduledCoSimulation</code> the handling of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks is the same as in section <a href="#fmi-for-hybrid-co-simulation">Section 5</a>.
+In Scheduled Co-Simulation the handling of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks is the same as in section <a href="#fmi-for-hybrid-co-simulation">Section 5</a>.
 The only difference is that an early return has no meaning in this mode and  no additional event handling based on <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is conducted.
 All internal events that shall be handled by the Co-Simulation master are signaled via <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
 <em>[In this mode it is recommended to restrict such updates by the FMU to <a href="#outputClock"><code>output clock</code></a> ticks for reducing the computational load in real-time simulations.]</em></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_computation_in_fmi3scheduledcosimulation">6.2.2. Computation in fmi3ScheduledCoSimulation</h4>
+<h4 id="_computation_in_scheduled_co_simulation">6.2.2. Computation in Scheduled Co-Simulation</h4>
 <div class="paragraph">
 <p>If this mode is set, the master has to directly control the time of computation of model partitions associated to <a href="#inputClock"><code>input clocks</code></a>.
 The activation states of <a href="#outputClock"><code>output clocks</code></a> are transported via <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.</p>
@@ -12651,7 +12719,7 @@ Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<
 </div>
 </div>
 <div class="sect3">
-<h4 id="_state_machine_for_fmi3scheduledcosimulation">6.2.3. State Machine for fmi3ScheduledCoSimulation</h4>
+<h4 id="_state_machine_for_scheduled_co_simulation">6.2.3. State Machine for Scheduled Co-Simulation</h4>
 <div class="paragraph">
 <p>This section summarizes the available states and the allowed function calls in the respective states.
 All states must not be entered or exited concurrently for model partitions of an FMU but only for the whole FMU instance.</p>
@@ -12666,10 +12734,10 @@ All states must not be entered or exited concurrently for model partitions of an
 <p>In Scheduled Co-Simulation the following functions must not be called: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> including all functions that are specific to the Model Exchange interface.</p>
 </div>
 <div class="paragraph">
-<p>The states <strong>Configuration Mode</strong>, <strong>Instantiated</strong>, <strong>Initialization Mode</strong>, and <strong>Terminated</strong> are handled in the same way as in <code>fmi3CoSimulation</code>, with the exception that the generally not allowed functions of <code>fmi3ScheduledCoSimulation</code> must not be called.</p>
+<p>The states <strong>Configuration Mode</strong>, <strong>Instantiated</strong>, <strong>Initialization Mode</strong>, and <strong>Terminated</strong> are handled in the same way as in Co-Simulation, with the exception that the generally not allowed functions of Scheduled Co-Simulation must not be called.</p>
 </div>
 <div class="sect4">
-<h5 id="_state_slave_setable_fmu_state_2">6.2.3.1. State: Slave Setable FMU State</h5>
+<h5 id="_state_slave_settable_fmu_state">6.2.3.1. State: Slave Settable FMU State</h5>
 <div class="paragraph">
 <p>In all states of this super state it is allowed to call <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <code>fmi3SetFMUState</code>, <code>fmi3FreeFMUState</code>, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a>, <a href="#fmi3Reset"><code>fmi3Reset</code></a>, <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a>, <code>fmi3SetDebugLogging</code> and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a>.</p>
 </div>
@@ -12839,8 +12907,8 @@ Also intermediate variable access is allowed as defined in <a href="#state-inter
 </div>
 <div class="paragraph">
 <p><em>[Based on the FMI standard it cannot be determined which part of the code of an FMU has called the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</em>
-<em>This is especially the case for <code>fmi3ScheduledCoSimulation</code> in which multiple model partitions can be active at the same time.</em>
-<em>This causes no issues since all function call prerequisites are connected to the activation state of <a href="#clock"><code>clocks</code></a>, <code>modelDescription.xml</code> information and additionally available information of the struct <a href="#fmi3IntermediateUpdateInfo"><code>fmi3IntermediateUpdateInfo</code></a>]</em></p>
+<em>This is especially the case for Scheduled Co-Simulation where multiple model partitions can be active at the same time.</em>
+<em>This causes no issues since all function call prerequisites are connected to the activation state of <a href="#clock"><code>clocks</code></a>, <code>modelDescription.xml</code> information and additionally available information from <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>]</em></p>
 </div>
 </div>
 <div class="sect4">
@@ -13354,7 +13422,7 @@ typedef void       (*fmi3CallbackUnlockPreemption) ();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Even if the Co-Simulation master does not support preemption and the mode <code>fmi3ScheduledCoSimulation</code>, at least an empty implementation of these callback functions is required.</p>
+<p>Even if the Co-Simulation master does not support preemption and Scheduled Co-Simulation, at least an empty implementation of these callback functions is required.</p>
 </div>
 <div class="paragraph">
 <p>Example for the use of <code>fmi3CallbackLockPreemption</code> and <code>fmi3CallbackUnlockPreemption</code> callback functions in the FMU code:</p>
@@ -13392,7 +13460,7 @@ void Task2(void) //high priority
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pseudo_code_example_for_fmi3scheduledcosimulation">6.2.5. Pseudo-code Example for fmi3ScheduledCoSimulation</h4>
+<h4 id="_pseudo_code_example_for_scheduled_co_simulation">6.2.5. Pseudo-code Example for Scheduled Co-Simulation</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 The example is given in a mix of pseudo-code and C, in order to keep it small and understandable.
@@ -13573,8 +13641,8 @@ fmi3Status GlobalTerminate(status)
 There is a direct one-to-one relation for a <a href="#clock"><code>clock</code></a> and a model partition.</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#clock"><code>clocks</code></a> are defined and the flag <code>providesScheduledCoSimulation = true</code>, the Co-Simulation master can set the fmuType to <code>fmi3ScheduledCoSimulation</code>.
-If no <a href="#inputClock"><code>input clocks</code></a> are defined the flag <code>providesScheduledCoSimulation</code> shall not be set to <code>true</code>.</p>
+<p>If <a href="#clock"><code>clocks</code></a> are defined and the flag <code>providesScheduledCoSimulation = true</code>, the Co-Simulation master can use the Scheduled Co-Simulation interface.
+If no <a href="#inputClock"><code>input clocks</code></a> are defined, the flag <code>providesScheduledCoSimulation</code> shall not be set to <code>true</code>.</p>
 </div>
 <div class="sect3">
 <h4 id="_example_xml_description_file_2">6.3.1. Example XML Description File</h4>
