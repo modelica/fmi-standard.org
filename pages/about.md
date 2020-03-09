@@ -24,7 +24,7 @@ Current Members of the Steering Committee:
 AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, Siemens PLM, Synopsys
 
 Current Members of the Advisory Committee:
-ABB, DLR, Fraunhofer (IIS/EAS First, SCAI), ITK Engineering, Open Modelica Consortium, PMSF, TLK Thermo, TWT, University of Halle, Wolfram MathCore AB
+ABB, DLR, ETAS, Fraunhofer (IIS/EAS First, SCAI), ITK Engineering, Open Modelica Consortium, PMSF, TLK Thermo, TWT, University of Halle, Wolfram MathCore AB
 
 ## How to contribute to the development of the FMI standard
 
