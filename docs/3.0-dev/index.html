@@ -3402,13 +3402,10 @@ h_2(u_1, u_2)
 </div>
 <div class="paragraph">
 <p>This function returns the number of event indicators.
-The dependency of the number of event indicators on <a href="#structuralParameter"><code>structural parameters</code></a> must be specified in the <code>ModelStructure</code> in the element <code>NumberOfEventIndicators</code>.
-This element is optional but necessary if the number of event indicators depends on <a href="#structuralParameter"><code>structural parameters</code></a>.
-The attribute <code>dependencies</code> of this element holds a list of <code>valueReferences</code> of <a href="#structuralParameter"><code>structural parameters</code></a> having an influence on the number of event indicators.
-If the <code>NumberOfEventIndicators</code> element is not present or its <a href="#dependencies"><code>dependencies</code></a> list is empty, the number of event indicators does not depend on <a href="#structuralParameter"><code>structural parameters</code></a>, i.e. it is constant.</p>
-</div>
-<div class="paragraph">
-<p>The <code>numberOfEventIndicators</code> attribute of the <code>fmiModelDescription</code> element holds the number of event indicators if all <a href="#structuralParameter"><code>structural parameters</code></a> are unchanged, i.e. set to their <a href="#start"><code>start</code></a> value.</p>
+The dependency of the number of event indicators on <a href="#structuralParameter"><code>structural parameters</code></a> is implicitly given in the <code>modelDescription.xml</code> file.
+<em>[All event indicator variables are listed as elements <code>EventIndicator</code> in <code>ModelStructure</code>.</em>
+<em>If the event indicator variable is an array variable and the <code>Dimension</code> element maps to a dependent variable than this dependent variable is a dependency for the number of event indicators.]</em>
+If all <a href="#structuralParameter"><code>structural parameters</code></a> are unchanged then this dependency information can be used to calculate the initial number of states just using information given in the XML file without the need to call this C-API function.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3431,11 +3428,10 @@ If the <code>NumberOfEventIndicators</code> element is not present or its <a hre
 <div class="paragraph">
 <p>This function returns the number of <a href="#state"><code>states</code></a>.
 The dependency of the number of states on <a href="#structuralParameter"><code>structural parameters</code></a> is implicitly given in the <code>modelDescription.xml</code> file.
-<em>[All state derivative variables are listed as elements <code>Derivative</code> in <code>ModelStrcture</code>.</em>
+<em>[All state derivative variables are listed as elements <code>Derivative</code> in <code>ModelStructure</code>.</em>
 <em>Each state derivative variable maps to the corresponding state variable by the <code>derivative</code> attribute.</em>
 <em>If the state variable is an array variable and the <code>Dimension</code> element maps to a dependent variable than this dependent variable is a dependency for the number of states.]</em>
-If all <a href="#structuralParameter"><code>structural parameters</code></a> are unchanged then this dependency information can be used to calculate the initial number of states just using information given in the XML file without the need to call this C-API function.
-<em>[Therefore their is no <code>numberOfStates</code> attribute as it is for <code>numberOfEventIndicators</code>.]</em></p>
+If all <a href="#structuralParameter"><code>structural parameters</code></a> are unchanged then this dependency information can be used to calculate the initial number of states just using information given in the XML file without the need to call this C-API function.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3769,10 +3765,12 @@ These definitions are used in the XML element <code>ModelVariables</code>.</p></
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModelStructure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines the structure of the model.
-Especially, the ordered lists of <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and initial unknowns (the unknowns during <strong>Initialization Mode</strong>) are defined here.
+Especially, the ordered lists of <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a>, initial unknowns (the unknowns during <strong>Initialization Mode</strong>) and the event indicators are defined here.
 For more details on ModelStructure, see <a href="#ModelStructure">Section 2.2.11</a>.
-Furthermore, the dependency of the unkowns from the knowns can be optionally defined.
-<em>[This information can be, for example, used to compute efficiently a sparse Jacobian for simulation, or to utilize the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> dependency in order to detect that in some cases there are actually no algebraic loops when connecting FMUs together]</em>.</p></td>
+Furthermore, the dependency of the unknowns from the knowns can be optionally defined for <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and initial unknowns.
+<em>[This information can be, for example, used to compute efficiently a sparse Jacobian for simulation, or to utilize the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> dependency in order to detect that in some cases there are actually no algebraic loops when connecting FMUs together]</em>.
+Dependencies for event indicators are not provided.
+<em>[The calculation of derivatives of event indicators is not provided.]</em>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -3854,10 +3852,6 @@ The format is a subset of <code>dateTime</code> and should be: <code>YYYY-MM-DDT
 For the details, see <a href="#variableNamingConvention">Section 2.2.12</a>. Currently standardized are:</p>
 <p class="tableblock">- <code>flat</code>: A list of strings (the default).</p>
 <p class="tableblock">- <code>structured</code>: Hierarchical names with <code>.</code> as hierarchy separator, and with array elements and derivative characterization.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numberOfEventIndicators</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The (fixed) number of event indicators for an FMU based on FMI for Model Exchange. For Co-Simulation, this value is ignored.</p></td>
 </tr>
 </tbody>
 </table>
@@ -5413,7 +5407,7 @@ The algebraic relationship to the <a href="#input"><code>inputs</code></a> is de
 <div id="local" class="ulist">
 <ul>
 <li>
-<p><code>local</code>: Local variable that is calculated from other variables or is a continuous-time <a href="#state"><code>state</code></a> (see <a href="#ModelStructure">Section 2.2.11</a>).
+<p><code>local</code>: Local variable that is calculated from other variables or is a continuous-time <a href="#state"><code>state</code></a> or an event indicator (see <a href="#ModelStructure">Section 2.2.11</a>).
 It is not allowed to use the variable value in another model or slave.</p>
 </li>
 </ul>
@@ -5478,7 +5472,7 @@ Only a variable of type <code>Clock</code> can have this <a href="#causality"><c
 </div>
 <div class="paragraph">
 <p>The default of <a href="#causality"><code>causality</code></a> is <a href="#local"><code>local</code></a>.<br>
-A continuous-time <a href="#state"><code>state</code></a> must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure">Section 2.2.11</a>.</p>
+A continuous-time <a href="#state"><code>state</code></a> or a event indicator must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure">Section 2.2.11</a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[<a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> and <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a> are similar.</em>
@@ -6339,14 +6333,14 @@ This structure is with respect to the underlying model equations, independently 
 <em>In the second case the internal implementation is a discrete-time system, but from the outside this is still a continuous-time model that is solved with an integration method.]</em></p>
 </div>
 <div class="paragraph">
-<p>The required part defines an ordering of the <a href="#output"><code>outputs</code></a> and of the (exposed) <a href="#derivative"><code>derivatives</code></a>, and defines the unknowns that are available during Initialization <em>[Therefore, when linearizing an FMU, every tool will use the same ordering for the <a href="#output"><code>outputs</code></a>, <a href="#state"><code>states</code></a>, and <a href="#derivative"><code>derivatives</code></a> for the linearized model.
+<p>The required part defines an ordering of the <a href="#output"><code>outputs</code></a>, the (exposed) <a href="#derivative"><code>derivatives</code></a>, the event indicators and defines the unknowns that are available during Initialization <em>[Therefore, when linearizing an FMU, every tool will use the same ordering for the <a href="#output"><code>outputs</code></a>, <a href="#state"><code>states</code></a>, and <a href="#derivative"><code>derivatives</code></a> for the linearized model.
 The ordering of the <a href="#input"><code>inputs</code></a> should be performed in this case according to the ordering in <code>ModelVariables</code>.]</em>
-A Model Exchange FMU must expose all <a href="#derivative"><code>derivatives</code></a> of its continuous-time <a href="#state"><code>states</code></a> in element <code>Derivatives</code>.
-A Co- Simulation FMU does not need to expose these state derivatives.
+A Model Exchange FMU must expose all <a href="#derivative"><code>derivatives</code></a> of its continuous-time <a href="#state"><code>states</code></a> in element <code>Derivatives</code> and must expose all event indicators in elements <code>EventIndicator</code>.
+A Co- Simulation FMU does not need to expose these state derivatives and event indicators.
 <em>[If a Co-Simulation FMU exposes its state derivatives, they are usually not utilized for the co-simulation, but, for example, to linearize the FMU at a communication point.]</em></p>
 </div>
 <div class="paragraph">
-<p>The optional part defines in which way <a href="#derivative"><code>derivatives</code></a> and <a href="#output"><code>outputs</code></a> depend on <a href="#input"><code>inputs</code></a>, and continuous-time <a href="#state"><code>states</code></a> at the current super-dense time instant (Model Exchange) or at the current communication point (Co-Simulation).
+<p>The optional part defines in which way <a href="#derivative"><code>derivatives</code></a>, <a href="#output"><code>outputs</code></a> and unitial unknowns depend on <a href="#input"><code>inputs</code></a>, and continuous-time <a href="#state"><code>states</code></a> at the current super-dense time instant (Model Exchange) or at the current communication point (Co-Simulation).
 <em>[The listed <a href="#dependencies"><code>dependencies</code></a> declare the dependencies between whole (multi-dimensional-)variables and not individual elements of the variables.]</em>
 <em>[A simulation environment can utilize this information to improve the efficiency, for example, when connecting FMUs together, or when computing the partial derivative of the <a href="#derivative"><code>derivatives</code></a> with respect to the <a href="#state"><code>states</code></a> in the simulation engine.]</em></p>
 </div>
@@ -6473,7 +6467,19 @@ The functional dependency is defined as:</p>
 </div></div></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EventIndicator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="EventIndicator"></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of all event indicators, in other words, a list of value references where every corresponding variable must be a event indicator.
+<em>[Note that only <a href="#continuous"><code>continuous</code></a> floating point variables are listed here.</em>
+<em>If an event indicator shall not be exposed from the FMU, or if event indicators are not statically associated with a variable (due to dynamic event indicator selection), then dummy variables have to be introduced, for example, <code>eventIndocator[4]</code>.</em>
+<em>The ordering of the variables in this list is defined by the exporting tool.]</em></p>
+<p class="tableblock">For Co-Simulation, elements <code>EventIndicator</code> are ignored.
+<em>[If an FMU supports both Model Exchange and Co-Simulation, then the <code>EventIndicator</code> elements might be present, since it is needed for Model Exchange.]</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Unknown</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="Unknown"></a>
 An element of one of the lists above defining the unknown with a reference to the corresponding variable element.
 It is assumed that at a super-dense time instant \(\color{blue}{t = (t_R, t_I)}\) (Model Exchange) and at a communication point (Co-Simulation) the following relationship holds:</p>
@@ -6484,11 +6490,7 @@ It is assumed that at a super-dense time instant \(\color{blue}{t = (t_R, t_I)}\
 <p class="tableblock">- \(\color{blue}{\mathbf{v}_{freeze}}\) is the set of input arguments of function <code>h</code> that do not change their values in this mode, but change their values in other modes <em>[for example, <a href="#fixed"><code>fixed</code></a> <a href="#parameter"><code>parameters</code></a> in <strong>Continuous-Time Mode</strong>]</em>.</p>
 <p class="tableblock">Attribute <a href="#dependencies"><code>dependencies</code></a> of <a href="#Unknown"><code>Unknown</code></a> defines the dependency of \(\color{blue}{v_{unknown}}\) with respect to \(\color{blue}{\mathbf{v}_{known}}\).<br>
 <em>[If, for example, a continuous-time <a href="#output"><code>output</code></a></em> \(\color{blue}{y_{2}}\) <em>is a function of the continuous-time <a href="#input"><code>inputs</code></a></em> \(\color{blue}{u_{3}}\) <em>and</em> \(\color{blue}{u_{5}}\), <em>and these <a href="#input"><code>inputs</code></a> have changed, then</em> <code>fmi3Set{VariableType}</code> <em>on</em> \(\color{blue}{u_{3}}\) <em>and</em> \(\color{blue}{u_{5}}\) <em>must always be called before calling</em> <code>fmi3Get{VariableType}</code> <em>on</em> \(\color{blue}{y_{2}}\) <em>.]</em></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscreteStates</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of all exposed discrete <a href="#state"><code>states</code></a>, in other words a list of variable indices.
-Every corresponding variable may have attribute <a href="#previous"><code>previous</code></a> defined. Discrete <a href="#state"><code>states</code></a> must have a <a href="#clockReference"><code>clockReference</code></a> attribute.</p></td>
 </tr>
 </tbody>
 </table>
@@ -8077,7 +8079,9 @@ Variables of this type are defined with attribute <a href="#causality"><code>cau
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{z}(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables utilized to define state events, see below.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the event indicators utilized to define state events, see below.
+For notational convenience, an event indicator is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description below.
+In reality, event indicator is however part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{x}_c(t)\)</p></td>
@@ -8762,14 +8766,21 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 </div>
 <div class="paragraph">
 <p>Compute state derivatives and event indicators at the current time instant and for the current <a href="#state"><code>states</code></a>.
-The <a href="#derivative"><code>derivatives</code></a> are returned as a vector with <code>nx</code> elements.
+Note that <code>fmi3Status = fmi3Discard</code> is possible for both functions.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="#derivative"><code>derivatives</code></a> are returned as a vector with <code>nx</code> elements.
+The ordering of the elements of the <code>derivatives</code> vector is identical to the ordering of the state vector (for example, <code>derivatives[2]</code> is the <a href="#derivative"><code>derivative</code></a> of <code>x[2]</code>).
+The order of the states and derivatives is also the same as the ordered list of <code>Derivative</code> elements in <code>ModelStructure</code>.
+<em>[Array variables are serialized in "row major" order, as usual.]</em></p>
+</div>
+<div class="paragraph">
+<p>The event indicators are returned as a vector with <code>ni</code> elements.
+The order of event indicators in <code>eventIndicators</code> vector is the same as the ordered list of <code>EventIndicator</code> elements in <code>ModelStructure</code>.
+<em>[Array variables are serialized in "row major" order, as usual.]</em>
 A state event is triggered when the domain of an event indicator changes from \(z_j &gt; 0\) to \(z_j \leq 0\) or vice versa.
 The FMU must guarantee that at an event restart \(z_j \neq 0\), for example, by shifting \(z_j\) with a small value.
-Furthermore, \(z_j\) should be scaled in the FMU with its nominal value (so all elements of the returned vector <code>eventIndicators</code> should be in the order of "one").
-The event indicators are returned as a vector with <code>ni</code> elements.<br>
-The ordering of the elements of the derivatives vector is identical to the ordering of the state vector (for example, <code>derivatives[2]</code> is the <a href="#derivative"><code>derivative</code></a> of <code>x[2]</code>).
-Event indicators are not necessarily related to variables on the Model Description File.<br>
-Note that <code>fmi3Status = fmi3Discard</code> is possible for both functions.</p>
+Furthermore, \(z_j\) should be scaled in the FMU with its nominal value (so all elements of the returned vector <code>eventIndicators</code> should be in the order of "one").</p>
 </div>
 <div id="fmi3GetContinuousStates" class="listingblock">
 <div class="content">
@@ -9246,7 +9257,7 @@ As soon as an event occurrs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventM
 <strong>number</strong> means: call is allowed if the indicated condition holds:<br>
 <strong>1</strong> for a variable with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> that has <a href="#initial"><code>initial</code></a> =
 <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a><br>
-<strong>2</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>, or continuous-time states or state derivatives<br>
+<strong>2</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>, or continuous-time states, state derivatives or event indicators,
 <strong>3</strong> for a variable with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> that has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>,
 or <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> <br>
 <strong>4</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>,
