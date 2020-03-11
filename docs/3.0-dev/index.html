@@ -8493,13 +8493,6 @@ r2 = z2 &gt; 0</pre>
 <p><em>Furthermore, a hysteresis should be added for the event indicators.</em></p>
 </div>
 <div class="paragraph">
-<p><em>Remark 4 - pure discrete-time FMUs:</em></p>
-</div>
-<div class="paragraph">
-<p><em>If an FMU has only discrete-time equations (and no variables with <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>), then the environment need not to call <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> but can directly call <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> to set the value of the next event instant, before <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> is called.]</em>
-<em>This is an optional optimization for the master, the FMU must support all functions that are required for a continuous time FMU and should run in a master that treats it as such. If a pure discrete-time FMU has state events and uses event indicators, it has to enter <strong>Continuous-Time Mode</strong> to evaluate these. In fact, it is no longer a pure discrete-time FMU but this was not clearly defined in 2.0 so this clarification is needed for 2.0.1]</em></p>
-</div>
-<div class="paragraph">
 <p>An FMU is initialized in <strong>Initialization Mode</strong> with \(\mathbf{f}_{init}(\ldots)\).
 The input arguments to this function consist of the <a href="#input"><code>input</code></a> variables (= variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>), of the <a href="#independent"><code>independent</code></a> variable (= variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>; usually the default value <code>time</code>), and of all variables that have a <a href="#start"><code>start</code></a> value with (explicitly or implicitly) <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> in order to compute the continuous-time <a href="#state"><code>states</code></a> and the output variables at the initial time \(t_0\).
 In the above table, the variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> are collected together in variable \(\mathbf{v}_{initial=exact}\).
@@ -9195,7 +9188,7 @@ As soon as an event occurrs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventM
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -9263,8 +9256,7 @@ or <a href="#causality"><code>causality</code></a> = <a href="#input"><code>inpu
 <strong>4</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>,
 or (<a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>)<br>
 <strong>5</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a><br>
-<strong>7</strong> always, but retrieved values are usable for debugging only
-<strong>8</strong> only for a pure discrete-time FMU. This exits the current event mode and sets the time for the next event instant. <code>fmi3NewDiscreteStates</code> must have been called with <code>newDiscreteStatesNeeded = fmi3False</code> at least once before this can be done.</p>
+<strong>7</strong> always, but retrieved values are usable for debugging only</p>
 </div>
 </div>
 <div class="sect3">
