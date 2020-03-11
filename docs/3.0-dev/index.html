@@ -686,11 +686,7 @@ document.addEventListener('keydown', (event) => {
 </ul>
 </li>
 <li><a href="#_definition_of_vendor_annotations_vendorannotations">2.2.9. Definition of Vendor Annotations (VendorAnnotations)</a></li>
-<li><a href="#definition-of-model-variables">2.2.10. Definition of Model Variables (ModelVariables)</a>
-<ul class="sectlevel4">
-<li><a href="#aliasing-of-variables">2.2.10.1. Aliasing of Variables</a></li>
-</ul>
-</li>
+<li><a href="#definition-of-model-variables">2.2.10. Definition of Model Variables (ModelVariables)</a></li>
 <li><a href="#ModelStructure">2.2.11. Definition of the Model Structure (ModelStructure)</a></li>
 <li><a href="#variableNamingConvention">2.2.12. Variable Naming Conventions (variableNamingConvention)</a></li>
 </ul>
@@ -2060,9 +2056,6 @@ If the character <code>#</code> shall be included in the message, it has to be p
 </div>
 <div class="paragraph">
 <p><em>[Example: The message <code>#1365# must be larger than zero (used in IO channel ##4)</code> might be changed by the <a href="#logMessage"><code>logMessage</code></a> function to <code>body.m must be larger than zero (used in IO channel #4)</code> if <code>body.m</code> is the name of the variable with value reference 1365.]</em></p>
-</div>
-<div class="paragraph">
-<p>In case <code>#&lt;ValueReference&gt;#</code> points to an alias set of variables, the environment is free to pick any, or all, of the variable names in the alias set to replace the <a href="#valueReference"><code>valueReference</code></a>.</p>
 </div>
 </dd>
 </dl>
@@ -4526,7 +4519,7 @@ The quantity names are not standardized]</em></p></td>
 <em>[Giving an empty string as a <code>unit</code> attribute specifies a valid unit that needs to be defined among the unit definitions.]</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>displayUnit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="displayUnit"></a> displayUnit</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Default display unit. The conversion to the <code>unit</code> is defined with the element <code>&lt;fmiModelDescription&gt;&lt;UnitDefinitions&gt;</code>.
 If the corresponding <code>displayUnit</code> is not defined under <code>&lt;UnitDefinitions&gt; &lt;Unit&gt; &lt;DisplayUnit&gt;</code>, then <code>displayUnit</code> is ignored.
 It is an error if <code>displayUnit</code> is defined as variable type element, but <code>unit</code> is not, or unit is not defined under <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code>.</p></td>
@@ -4566,7 +4559,7 @@ If not defined and no other information about the nominal value is available, th
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>unbounded</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, indicates that during time integration, the variable gets a value much larger than its nominal value <code>nominal</code>.
 <em>[Typical examples are the monotonically increasing rotation angles of crank shafts and the longitudinal position of a vehicle along the track in long distance simulations.</em>
-<em>This information can, for example, be used to increase numerical stability and accuracy by setting the corresponding bound for the relative error to zero (relative tolerance = 0.0), if the corresponding variable or an alias of it is a continuous <a href="#state"><code>state</code></a> variable.]</em></p></td>
+<em>This information can, for example, be used to increase numerical stability and accuracy by setting the corresponding bound for the relative error to zero (relative tolerance = 0.0), if the corresponding variable is a continuous <a href="#state"><code>state</code></a> variable.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Item</p></td>
@@ -4941,7 +4934,7 @@ The member name has to be unique in a terminal.</p>
 <em>An importing tool may use the <code>variableName</code> attribute to identify a specific alias to get additional information, such as minimum, maximum, and nominal values.]</em></p>
 </div>
 <div class="paragraph">
-<p>One variable can be part of several terminals, which is considered aliasing according to the rules of <a href="#aliasing-of-variables">Section 2.2.10.1</a>.</p>
+<p>One variable can be part of several terminals.</p>
 </div>
 <div class="paragraph">
 <p><em>[Tools which apply sequence based matching should also provide unique member names, so that all importing tools which use name based matching use the same member names.</em></p>
@@ -5320,6 +5313,22 @@ It should be noted that changing a <a href="#structuralParameter"><code>structur
 <p>It is not possible to use a variable of type <code>Clock</code> in arrays, since array elements do not have individual <a href="#valueReference"><code>valueReference</code></a> and the access to <a href="#clock"><code>clocks</code></a> requires a unique <a href="#valueReference"><code>valueReference</code></a> information.</p>
 </div>
 <div class="paragraph">
+<p>A variable can have any number of <code>&lt;Alias&gt;</code> elements that define a variable alias.
+Each variable alias has a required attribute <code>name</code> whose value must be unique among all variables and variable aliases and an optional attribute <code>description</code>.
+Variable aliases of floating point variables may additionally have a <a href="#displayUnit"><code>displayUnit</code></a> that follows the same rules as for variables.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs"> &lt;Float64 name="engine.torque" valueReference="1" unit="N.m"&gt;
+   &lt;Alias name="engine.torqueLbfFt" description="Engine torque in pound-foot"
+     displayUnit="lbf.ft"/&gt;
+ &lt;/Float64&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The attributes of variables are:</p>
 </div>
 <div class="imageblock text-center">
@@ -5351,7 +5360,7 @@ Every variable is uniquely identified within an FMU instance by this name.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="valueReference" class="paragraph">
 <p>A handle of the variable to efficiently identify the variable value in the model interface and for references within the <code>modelDescription.xml</code>.
 This handle is a secret of the tool that generated the C functions.
-It is required to be unique for an FMU with exception of variables that have identical values (such variables are also called alias variables). <code>Clock</code> type variables do not have alias variables and are therefore unique.
+It is required to be unique for an FMU.
 This attribute is <code>required</code>.</p>
 </div></div></td>
 </tr>
@@ -6176,51 +6185,6 @@ This attribute is only used for Co-Simulation. The default value of this attribu
 <em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <code>fmi3Set{VariableType}</code>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <strong>Initialization Mode</strong>).</em>
 <em>The FMU internally carries out event handling if necessary.]</em></p>
 </div>
-<div class="sect4">
-<h5 id="aliasing-of-variables">2.2.10.1. Aliasing of Variables</h5>
-<div class="paragraph">
-<p>Variables with the same <a href="#valueReference"><code>valueReference</code></a> are called "alias variables".
-The variables that share the same <a href="#valueReference"><code>valueReference</code></a> are called "alias set".
-The main purpose of alias variables is to enhance efficiency.
-If two variables <code>a</code> and <code>b</code> are alias variables, then this is only allowed if the behavior of the FMU would be exactly the same if <code>a</code> and <code>b</code> were not treated as alias variables (that is, had different <a href="#valueReference"><code>valueReference</code></a>s).
-This requirement leads naturally to the following restrictions:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Variables <code>a</code> and <code>b</code> that can both be set with <code>fmi3Set{VariableType}</code>, or variable <code>a</code> that can be set with <code>fmi3Set{VariableType}</code> and variable <code>b</code> that is defined with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, cannot be alias variables <em>[since these variables are <a href="#independent"><code>independent</code></a> variables and alias means that there is a constraint equation between variables (= the values are the same), these variables are no longer <a href="#independent"><code>independent</code></a>.</em><br>
-<em>For example, if variables <code>a</code> and <code>b</code> have <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>, then the value references of <code>a</code> and <code>b</code> must be different.</em>
-<em>However, if variable a has <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <code>b</code> has <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> and <code>b := a</code>, then <code>a</code> and <code>b</code> can have the same value reference.]</em></p>
-</li>
-<li>
-<p>At most one variable of the same alias set of variables with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> can have a <a href="#start"><code>start</code></a> attribute <em>[since <a href="#start"><code>start</code></a> variables are independent initial values.]</em></p>
-</li>
-<li>
-<p>A variable with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a> can only be aliased to another variable with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>.
-It is then required that the <a href="#start"><code>start</code></a> values of all aliased (constant) variables are identical.</p>
-</li>
-<li>
-<p>All variables of the same alias set must all have either no <code>&lt;Unit&gt;</code> element defined, or all of them must have the same <code>&lt;Unit name&gt;</code> and the same <code>&lt;Unit&gt;&lt;BaseUnit&gt;</code> definitions.</p>
-</li>
-<li>
-<p>All variables of the same alias set must have the same dimensions.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>The aliasing of variables only means that the <code>value</code> of the variables is always identical.
-However, aliased variables may have different attributes, such as <code>min/max/nominal</code> values or description texts.
-<em>[For example, if <code>v1</code>, <code>v2</code> are two alias variables with <code>v1 = v2</code> and <code>v1.max = 10</code> and <code>v2.max = 5</code>, then the FMU will trigger an error if either <code>v1</code> or <code>v2</code> becomes larger than 5.]</em></p>
-</div>
-<div class="paragraph">
-<p><em>[The dependency definition in <code>fmiModelDescription.ModelStructure</code> is completely unrelated to the alias definition.</em>
-<em>In particular, the "direct dependency" definition can be a superset of the "real" direct dependency definition, even if the alias information shows that this is too conservative.</em>
-<em>For example, if it is stated that the <a href="#output"><code>output</code></a> <code>y1</code> depends on <a href="#input"><code>input</code></a> <code>u1</code> and the <a href="#output"><code>output</code></a> <code>y2</code> depends on <a href="#input"><code>input</code></a> <code>u2</code>, and <code>y1</code> is an alias to <code>y2</code>, then this definition is fine, although it can be deduced that in reality neither <code>y1</code> nor <code>y2</code> depend on any <a href="#input"><code>input</code></a>.].</em></p>
-</div>
-<div class="paragraph">
-<p><em>[In case of different variability among the set of alias variables, and if that set of aliases does not contain an input or parameter, the variability should be the highest of the variables in the set, e.g. continuous &gt; discrete &gt; tunable &gt; fixed.</em>
-<em>If the set includes a parameter or input the aliases will have the stated variability of that parameter or input.]</em></p>
-</div>
 <div class="paragraph">
 <p>Type specific properties are defined in the required choice element, where exactly one of the numeric types or an Enumeration must be present in the XML file:</p>
 </div>
@@ -6362,7 +6326,6 @@ The <code>min/max</code> definitions are information from the FMU to the environ
 The <code>any</code> element can be an arbitrary XML data structure defined by the tool.
 <em>[Typically, additional data is defined here how to build up the menu for the variable, including the graphical layout and enabling/disabling an input field based on the values of other <a href="#parameter"><code>parameters</code></a>.]</em>
 The attribute <code>name</code> must be unique with respect to all other elements of the <code>Annotations</code> list.</p>
-</div>
 </div>
 </div>
 <div class="sect3">
