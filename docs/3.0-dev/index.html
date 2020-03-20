@@ -3547,8 +3547,15 @@ The dependency information must change only if <a href="#structuralParameter"><c
 <h3 id="fmi-description-schema">2.2. FMI Description Schema</h3>
 <div class="paragraph">
 <p>All static information related to an FMU is stored in the text file <code>modelDescription.xml</code> in XML format.
-Especially, the FMU variables and their attributes such as name, unit, default <a href="#initial"><code>initial</code></a> value, etc. are stored in this file.
-The structure of this XML file is defined with the schema file <code>fmi3ModelDescription.xsd</code>.
+Especially, the FMU variables and their attributes such as name, unit, default <a href="#initial"><code>initial</code></a> value, etc. are stored in this file.</p>
+</div>
+<div class="paragraph">
+<p>It is not allowed to change the <code>modelDescription.xml</code> file.
+<em>[Reason: The <code>modelDescription.xml</code> file has to be consistent with the binary or source code implementations.</em>
+<em>Specifically, changes to the start values are not allowed.]</em></p>
+</div>
+<div class="paragraph">
+<p>The structure of this XML file is defined with the schema file <code>fmi3ModelDescription.xsd</code>.
 This schema file utilizes several helper schema files.</p>
 </div>
 <div class="paragraph">
@@ -6209,9 +6216,10 @@ For <code>Enumeration</code> it is required, because the Enumeration items are d
 <td class="tableblock halign-left valign-top"><div class="content"><div id="start" class="paragraph">
 <p>Initial or guess value of variable.
 <strong>This value is also stored in the C functions</strong>.
-<em>[Therefore, calling</em> <code>fmi3Set{VariableType}</code> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.]</em>
-<em>WARNING: It is not recommended to change the start values in the <code>modelDescription.xml</code> file of an FMU, as this would break the consistency with the hard-coded start values in the C-Code.</em>
-<em>This could lead to unpredictable behavior of the FMU in different importing tools, as it is not mandatory to call <code>fmi3Set{VariableType}</code> to set start values during initialization. Instead it is recommended to use the SSP Standard (<a href="https://ssp-standard.org/" class="bare">https://ssp-standard.org/</a>) to handle modified parameters of FMUs or different parameter sets.</em></p>
+<em>[Therefore, calling</em> <code>fmi3Set{VariableType}</code> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.</em>
+<em>It is not allowed to change the start values in the <code>modelDescription.xml</code> file of an FMU, as this would break the consistency with the hard-coded start values in the C-Code.</em>
+<em>This could lead to unpredictable behavior of the FMU in different importing tools, as it is not mandatory to call <code>fmi3Set{VariableType}</code> to set start values during initialization.</em>
+<em>Instead it is recommended to use the SSP Standard (<a href="https://ssp-standard.org/" class="bare">https://ssp-standard.org/</a>) to handle modified parameters of FMUs or different parameter sets.]</em></p>
 </div>
 <div class="paragraph">
 <p>The interpretation of <a href="#start"><code>start</code></a> is defined by variable attribute <a href="#initial"><code>initial</code></a>.
