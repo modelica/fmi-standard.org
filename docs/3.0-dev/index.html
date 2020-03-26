@@ -692,7 +692,7 @@ document.addEventListener('keydown', (event) => {
 </ul>
 </li>
 <li><a href="#fmu-distribution">2.3. FMU Distribution</a></li>
-<li><a href="#common-concepts-cosim">2.4. Common Concepts for Co-Simulation Interfaces</a>
+<li><a href="#common-concepts-cosim">2.4. Common Concepts for Co-Simulation</a>
 <ul class="sectlevel3">
 <li><a href="#math-intermediate-variable-access">2.4.1. Intermediate Variable Access Support</a></li>
 <li><a href="#_overview_of_different_co_simulation_interfaces">2.4.2. Overview of Different Co-Simulation Interfaces</a></li>
@@ -779,7 +779,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#xml-example-co-simulation">4.3.1. Example XML Description File</a></li>
 <li><a href="#_early_return_from_current_communication_step_2">4.3.2. Early Return from Current Communication Step</a>
 <ul class="sectlevel4">
-<li><a href="#_co_simulation_fmu_cosimulation">4.3.2.1. Co-Simulation FMU (CoSimulation)</a></li>
+<li><a href="#_co_simulation_fmu">4.3.2.1. Co-Simulation FMU</a></li>
 <li><a href="#_example_xml_description_file">4.3.2.2. Example XML Description File</a></li>
 </ul>
 </li>
@@ -1009,12 +1009,12 @@ version 3.0 to (a) exchange dynamic models between tools and (b) define tool
 coupling for dynamic system simulation environments.</p>
 </div>
 <div class="paragraph">
-<p><em>FMI for Co-Simulation (CS) (<a href="#fmi-for-basic-co-simulation">Section 4</a>)</em></p>
+<p><em>FMI for Basic Co-Simulation (BCS) (<a href="#fmi-for-basic-co-simulation">Section 4</a>)</em></p>
 </div>
 <div class="paragraph">
 <p>The intention is to provide an interface standard for coupling
 of simulation models or tools in a co-simulation environment.
-The data exchange between subsystems is restricted to discrete communication points.
+The data exchange between subsystems is largely restricted to discrete communication points.
 In the time between two communication points,
 the subsystems are solved independently by internal means, see below.
 Master algorithms control the data exchange and the
@@ -1024,7 +1024,7 @@ synchronization between subsystems (FMUs).</p>
 <p>Note that the master algorithm itself is not part of the FMI standard.</p>
 </div>
 <div class="paragraph">
-<p><em>FMI for Hybrid Co-Simulation (HCS)</em></p>
+<p><em>FMI for Hybrid Co-Simulation (HCS) (<a href="#fmi-for-hybrid-co-simulation">Section 5</a>)</em></p>
 </div>
 <div class="paragraph">
 <p>The Hybrid Co-Simulation interface adds a number of features primarily to allow for more sophisticated master algorithms that aim at more efficient and robust simulations.
@@ -1035,8 +1035,8 @@ The master algorithm is responsible for:
 * handling events (e.g. clock ticks) signaled by the FMUs.</p>
 </div>
 <div class="paragraph">
-<p>For both Co-Simulation and Hybrid Co-Simulation the master algorithm is shielded from how the subsystem FMU advances time internally.
-For example, FMUs containing ODEs and exposing either of the Co-Simulation interfaces require to include an ODE solver inside the FMU to internally advance time between the communication points.
+<p>For both Basic Co-Simulation and Hybrid Co-Simulation the master algorithm is shielded from how the subsystem FMU advances time internally.
+For example, FMUs containing ODEs and exposing either of the co-simulation interfaces require to include an ODE solver inside the FMU to internally advance time between the communication points.
 Or, for controller code packaged as FMU, an internal scheduling algorithm will trigger tasks at the correct time and order while advancing time to the next communication point or event.</p>
 </div>
 <div class="paragraph">
@@ -1048,7 +1048,7 @@ Models are described by differential, algebraic and discrete equations with time
 That master algorithm, usually a DAE solver, is responsible to advance time, set states and handle events etc.</p>
 </div>
 <div class="paragraph">
-<p><em>FMI for Scheduled Co-Simulation (SCS)</em></p>
+<p><em>FMI for Scheduled Co-Simulation (SCS) (<a href="#fmi-for-scheduled-co-simulation">Section 6</a>)</em></p>
 </div>
 <div class="paragraph">
 <p>The Scheduled Co-Simulation interface exposes individual parts of a model or tasks of a control algorithm to be called from an external scheduler of an importing tool&#8217;s master algorithm.
@@ -1066,14 +1066,21 @@ The master algorithm is responsible for:
 </div>
 </div>
 <div class="paragraph">
+<p><em>FMI for Co-Simulation (xCS)</em></p>
+</div>
+<div class="paragraph">
+<p>Any reference to all three Co-Simulation interfaces (BCS, HCS and SCS) are referred to as Co-Simulation interface, or xCS.
+Writing lower-case co-simulation refers to the general concept of co-simulation.</p>
+</div>
+<div class="paragraph">
 <p><em>FMI Common Concepts (<a href="#fmi-common-concepts">Section 2</a>)</em></p>
 </div>
 <div class="paragraph">
-<p>The two interface standards have many parts in common.
+<p>The four interface standards have many parts in common.
 In particular, it is possible to utilize several instances of a model and/or a co-simulation tool and to connect them together.
 The interfaces are independent of the target environment because no header files are used that depend on the target environment (with exception of the data types of the target platform).
 This allows generating one dynamic link library that can be utilized in any environment on the same platform.
-A model, a cosimulation slave or the coupling part of a tool, is distributed in one ZIP file called FMU (Functional Mockup Unit) that contains several files:</p>
+A model, a co-simulation slave or the coupling part of a tool, is distributed in one ZIP file called FMU (Functional Mockup Unit) that contains several files:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1192,7 +1199,7 @@ The FMI functions are used (called) by a simulation environment to
 create one or more instances of the FMU and to simulate them,
 typically together with other models.
 An FMU may either have its own solvers
-(FMI for Co-Simulation, <a href="#fmi-for-basic-co-simulation">Section 4</a>)
+(FMI for Basic Co-Simulation, <a href="#fmi-for-basic-co-simulation">Section 4</a>)
 or require the simulation environment to perform numerical integration
 (FMI for Model Exchange, <a href="#fmi-for-model-exchange">Section 3</a>).
 The goal of this interface is that the calling of an FMU
@@ -1211,7 +1218,7 @@ The interface is designed to allow the
 description of large models.</p>
 </div>
 <div class="paragraph">
-<p>The FMI for Co-Simulation interface is designed both for the coupling of simulation tools
+<p>The FMI for Basic Co-Simulation interface is designed both for the coupling of simulation tools
 (simulator coupling, tool coupling),
 and coupling with subsystem models,
 which have been exported by their
@@ -1511,14 +1518,13 @@ Properties that might be additionally needed for trajectory optimization, for ex
 <h2 id="fmi-common-concepts">2. Common Concepts</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The concepts defined in this chapter are defined that are common for Model Exchange and Co-Simulation.
+<p>The concepts defined in this chapter are defined that are common for Model Exchange and Co-Simulation interface types.
 In both cases, FMI defines an input/output block of a dynamic model where the distribution of the block, the platform dependent header file, several access functions, as well as the schema files are identical.
-The definitions that are specific to the particular cases are defined in <a href="#fmi-for-model-exchange">Section 3</a> and <a href="#fmi-for-basic-co-simulation">Section 4</a>.
-.</p>
+The definitions that are specific to the particular cases are defined in <a href="#fmi-for-model-exchange">Section 3</a> and <a href="#fmi-for-basic-co-simulation">Section 4</a>.</p>
 </div>
 <div class="paragraph">
-<p>Below, the term <em>FMU</em> (Functional Mock-up Unit) will be used as common term for a model in the FMI for Model Exchange format, or a co-simulation slave in the FMI for Co-Simulation format.
-Note that the interface supports several instances of one FMU.</p>
+<p>Below, the term <em>FMU</em> (Functional Mock-up Unit) will be used as common term for a model following the interface type FMI for Model Exchange, or a co-simulation slave following all or any subset of the Co-Simulation interface types (Basic Co-Simulation, Hybrid Co-Simulation or Scheduled Co-Simulation).
+Note that the standard supports several interface types to co-exist inside one FMU.</p>
 </div>
 <div class="sect2">
 <h3 id="fmi-application-programming-interface">2.1. FMI Application Programming Interface</h3>
@@ -1689,7 +1695,7 @@ It is required to use this definition for all binary FMUs.
 </div>
 </div>
 <div class="paragraph">
-<p>This is a pointer to an FMU specific data structure that contains the information needed to process the model equations or to process the Co-Simulation of the respective slave.
+<p>This is a pointer to an FMU specific data structure that contains the information needed to process the model equations or to process the co-simulation of the respective slave.
 This data structure is implemented by the environment that provides the FMU; in other words, the calling environment does not know its content, and the code to process it must be provided by the FMU generation environment and must be shipped with the FMU.</p>
 </div>
 <div class="listingblock">
@@ -1960,7 +1966,7 @@ The modelDescription has to include the Element with name <code>ModelExchange</c
 </dd>
 <dt class="hdlist1"><code>fmi3CoSimulation</code></dt>
 <dd>
-<p>Black box interface for Co-Simulation (see <a href="#fmi-for-basic-co-simulation">Section 4</a>).
+<p>Black box interface for Basic Co-Simulation (see <a href="#fmi-for-basic-co-simulation">Section 4</a>).
 The modelDescription has to include the Element with name <code>CoSimulation</code> to be allowed to set the <code>fmuType</code> to <code>fmi3CoSimulation</code>.</p>
 </dd>
 </dl>
@@ -2536,7 +2542,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 <p>In the following section the operations on <a href="#clock"><code>clocks</code></a> are described.
 Clocks are defined for the evaluation of <strong>clocked model partitions</strong> and the related definition of suitable <strong>communication points</strong>.
 Two types of <a href="#clock"><code>clocks</code></a> are available, designed to address similar use cases with differences in details.
-One <a href="#clock"><code>clock</code></a> type (Synchronous Clocks) complies with the limitations imposed by the synchronous clock theory, the other clock type (Communication Point Clocks) is a general purpose Co-Simulation clock for providing suitable communication points for the timed evaluation of model partitions.
+One <a href="#clock"><code>clock</code></a> type (Synchronous Clocks) complies with the limitations imposed by the synchronous clock theory, the other clock type (Communication Point Clocks) is a general purpose co-simulation clock for providing suitable communication points for the timed evaluation of model partitions.
 The term <a href="#clock"><code>clock</code></a> and clocked is therefore used for both <a href="#clock"><code>clock</code></a> types.
 Both clock types can handle two different variants, the <a href="#inputClock"><code>input clocks</code></a> and the <a href="#outputClock"><code>output clocks</code></a>.
 First the two different clock types are presented with the mathematical definition of their use cases.
@@ -2597,7 +2603,7 @@ States get updated.</p>
 <div class="sect5">
 <h6 id="_communication_point_clocks">2.1.8.1.2. Communication Point Clocks</h6>
 <div class="paragraph">
-<p>In addition to the above definition also a simplified <a href="#clock"><code>clock</code></a> definition used only in FMI for Co-Simulation is available that can be used to define the communication points of model partitions of the model (in the following such partitions are called model partitions).
+<p>In addition to the above definition also a simplified <a href="#clock"><code>clock</code></a> definition used only in FMI for Basic Co-Simulation is available that can be used to define the communication points of model partitions of the model (in the following such partitions are called model partitions).
 Such <a href="#clock"><code>clocks</code></a> are called Communication Point Clocks.
 These <a href="#clock"><code>clocks</code></a> are not compatible to synchronous clocks theory and must not be used together with synchronous clocks in one model.</p>
 </div>
@@ -2922,7 +2928,7 @@ The FMU state copy can be set as actual FMU state, in order to continue the simu
 <p><em>[Examples for using this feature:</em></p>
 </div>
 <div class="paragraph">
-<p><em>For variable step-size control of Co-Simulation master algorithms (get the FMU state for every accepted communication step; if the follow-up step is not accepted, restart Co-Simulation from this FMU state).</em></p>
+<p><em>For variable step-size control of co-simulation master algorithms (get the FMU state for every accepted communication step; if the follow-up step is not accepted, restart co-simulation from this FMU state).</em></p>
 </div>
 <div class="paragraph">
 <p><em>For nonlinear Kalman filters (get the FMU state just before initialization; in every sample period, set new continuous states from the Kalman filter algorithm based on measured values; integrate to the next sample instant and inquire the predicted continuous states that are used in the Kalman filter algorithm as basis to set new continuous states).</em></p>
@@ -3018,7 +3024,7 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 <div class="paragraph">
 <p>It is optionally possible to provide evaluation of partial derivatives for an FMU.
 For Model Exchange, this means computing the partial derivatives at a particular time instant.
-For Co-Simulation, this means to compute the partial derivatives at a particular communication point.</p>
+For co-simulation, this means to compute the partial derivatives at a particular communication point.</p>
 </div>
 <div class="paragraph">
 <p>The partial derivatives refer are defined as partial derivatives of certain variables of the FMU w.r.t. to other variables:</p>
@@ -3052,7 +3058,7 @@ In every state, the general form of the FMU equations are:</p>
 <p><strong>Event Mode</strong> (Model Exchange): The same variables as in the <strong>Continuous-Time Mode</strong> and additionally variables listed as elements <code>&lt;ModelStructure&gt;&lt;Output&gt;</code> with a floating point type and <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a>.</p>
 </li>
 <li>
-<p><strong>Step Mode</strong> (Co-Simulation): The variables listed as elements <code>&lt;ModelStructure&gt;&lt;Output&gt;</code> with a floating point type and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a> or <a href="#discrete"><code>discrete</code></a>.
+<p><strong>Step Mode</strong> (Basic Co-Simulation and Hybrid Co-Simulation): The variables listed as elements <code>&lt;ModelStructure&gt;&lt;Output&gt;</code> with a floating point type and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a> or <a href="#discrete"><code>discrete</code></a>.
 Each state derivative variable listed as elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>, if present.</p>
 </li>
 </ul>
@@ -3713,8 +3719,20 @@ Data is defined by attributes to these elements):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If present, the FMU is based on FMI for Model Exchange <em>[(in other words, the FMU includes the model or the communication to a tool that provides the model, and the environment provides the simulation engine)]</em>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CoSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If present, the FMU is based on FMI for Co-Simulation <em>[(in other words, the FMU includes the model and the simulation engine, or a communication to a tool that provides the model and the simulation engine, and the environment provides the master algorithm to run coupled FMU Co-Simulation slaves together)]</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BasicCoSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, the FMU is based on FMI for Basic Co-Simulation <em>[(in other words, the FMU includes the model and the simulation engine, or a communication to a tool that provides the model and the simulation engine, and the environment provides the master algorithm to run coupled FMU Co-Simulation slaves together)]</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HybridCoSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, the FMU is based on FMI for Hybrid Co-Simulation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ScheduledCoSimulation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, the FMU is based on FMI for Scheduled Co-Simulation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BuildConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, instructs how to compile sources of a C-code FMU.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>UnitDefinitions</code></p></td>
@@ -3732,6 +3750,14 @@ These definitions are used in the XML element <code>ModelVariables</code>.</p></
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DefaultExperiment</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Providing default settings for the integrator, such as stop time and relative tolerance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Terminals</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining input and output signals into logical groups to ease connections on a system level.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GraphicalRepresentation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, contains information for authoring tools to draw graphical representations of the FMU in a system view.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>VendorAnnotations</code></p></td>
@@ -3780,7 +3806,7 @@ The details of these elements are defined in <a href="#ModelExchange">Section 3.
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmiVersion</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Version of FMI for Model Exchange or FMI for Co-Simulation that was used to generate the XML file.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version of FMI that was used to generate the XML file.
 The value for this version is <code>3.0</code>.
 Future minor revisions are denoted as <code>3.1</code>, <code>3.2</code> &#8230;&#8203;</p>
 <p class="tableblock"><em>[During development prototype FMU implementations can indicate compliance with a certain development version based on the tags available at <a href="https://github.com/modelica/fmi-standard/tags" class="bare">https://github.com/modelica/fmi-standard/tags</a>.</em>
@@ -4603,7 +4629,7 @@ The variable sub type <code>fmi3Clock</code> provides additional attributes for 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>clockType</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The type of <a href="#clock"><code>clocks</code></a> is defined based on the mandatory attribute <code>clockType</code>.
 If the properties of a <a href="#clock"><code>clock</code></a> adhere to synchronous clock theory it is defined with <code>clockType = synchronousTime</code>.
-As an additional option for FMI for Co-Simulation discrete parts (that do not necessarily apply to synchronous clock theory) or continuous parts of the FMU can be associated to model partitions via <a href="#clock"><code>clocks</code></a> whose ticks define the sampling points (i.e. communication points) for the variables of these model partitions.
+As an additional option for FMI for Hybrid Co-Simulation and FMI for Scheduled Co-Simulation discrete parts (that do not necessarily apply to synchronous clock theory) or continuous parts of the FMU can be associated to model partitions via <a href="#clock"><code>clocks</code></a> whose ticks define the sampling points (i.e. communication points) for the variables of these model partitions.
 Clocks that are defined for such cases have <code>clockType = communicationPoint</code> and have to be ignored for Model Exchange.
 It is not allowed to include <a href="#clock"><code>clocks</code></a> of different <code>clockType</code> in one FMU.
 <code>clockType</code> is a required attribute.</p></td>
@@ -4755,7 +4781,7 @@ If a tool supports one of these log categories and wants to expose it, then an e
 <p><code>DefaultExperiment</code> consists of the optional default start time, stop time, relative tolerance, and step size for the first simulation run.
 A tool may ignore this information.
 However, it is convenient for a user that <code>startTime</code>, <code>stopTime</code>, <code>tolerance</code> and <code>stepSize</code> have already a meaningful default value for the model at hand.
-Furthermore, for Co-Simulation the <code>stepSize</code> defines the preferred <code>communicationStepSize</code>.</p>
+Furthermore, for Co-Simulation FMUs the <code>stepSize</code> defines the preferred <code>communicationStepSize</code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -4787,7 +4813,7 @@ Predefined variable kinds are used to describe how the member variables have to 
 Domain specific connection rules, terminals and their member variables can be provided by other standards.</p>
 </div>
 <div class="paragraph">
-<p><em>[Co-Simulation errors are not addressed by the terminals.</em>
+<p><em>[Co-simulation errors are not addressed by the terminals.</em>
 <em>The co-simulation algorithm has to be chosen and implemented by the importing tool.</em>
 <em>Features that might be required for specific co-simulation algorithms had to be implemented by the FMU exporting tool.</em></p>
 </div>
@@ -5401,7 +5427,7 @@ At most one variable of an FMU can be defined as <a href="#independent"><code>in
 If no variable is defined as <a href="#independent"><code>independent</code></a>, it is implicitly present with name = <code>time</code> and <code>unit = s</code>.
 If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined with a floating point type without a <a href="#start"><code>start</code></a> attribute.
 It is not allowed to call function <code>fmi3Set{VariableType}</code> on an <a href="#independent"><code>independent</code></a> variable.
-Instead, its value is initialized with <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <code>currentCommunicationPoint</code> and <code>communicationStepSize</code> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation.
+Instead, its value is initialized with <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <code>currentCommunicationPoint</code> and <code>communicationStepSize</code> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation FMUs.
 <em>[The actual value can be inquired with <code>fmi3Get{VariableType}</code>.]</em></p>
 </li>
 </ul>
@@ -5464,7 +5490,7 @@ A continuous-time <a href="#state"><code>state</code></a> or a event indicator m
 <td class="tableblock halign-left valign-top"><div class="content"><div id="variability" class="paragraph">
 <p>Enumeration that defines the time dependency of the variable, in other words, it defines the time instants when a variable can change its value.
 <em>[The purpose of this attribute is to define when a result value needs to be inquired and to be stored.</em>
-<em>For example, <a href="#discrete"><code>discrete</code></a> variables change their values only at event instants (Model Exchange) or at a communication point (Co-Simulation) and it is therefore only necessary to inquire them with <code>fmi3Get{VariableType}</code> and store them at event times.]</em>
+<em>For example, <a href="#discrete"><code>discrete</code></a> variables change their values only at event instants (ME) or at a communication point (xCS) and it is therefore only necessary to inquire them with <code>fmi3Get{VariableType}</code> and store them at event times.]</em>
 Allowed values of this enumeration:</p>
 </div>
 <div id="constant" class="ulist">
@@ -5484,8 +5510,8 @@ Allowed values of this enumeration:</p>
 <div id="tunable" class="ulist">
 <ul>
 <li>
-<p><code>tunable</code>: The value of the variable is constant between external events (Model Exchange) and between communication points (Co-Simulation) due to changing variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.
-Whenever a <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a> signal with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> changes, an event is triggered externally (Model Exchange), or the change is performed at the next communication point (Co-Simulation) and the variables with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> and <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> or <a href="#output"><code>output</code></a> must be newly computed.</p>
+<p><code>tunable</code>: The value of the variable is constant between external events (ME) and between communication points (xCS) due to changing variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.
+Whenever a <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a> signal with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> changes, an event is triggered externally (ME), or the change is performed at the next communication point (xCS) and the variables with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> and <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> or <a href="#output"><code>output</code></a> must be newly computed.</p>
 </li>
 </ul>
 </div>
@@ -5575,8 +5601,8 @@ The master can nevertheless choose different <a href="#start"><code>start</code>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canHandleMultipleSetPerTimeInstant</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="canHandleMultipleSetPerTimeInstant" class="paragraph">
-<p>Only for Model Exchange (if only Co-Simulation FMU, this attribute must not be present.
-If both Model Exchange and Co-Simulation FMU, this attribute is ignored for Co-Simulation):<br>
+<p>Only for Model Exchange (if only a Co-Simulation FMU, this attribute must not be present.
+If both Model Exchange and Co-Simulation FMU, this attribute is ignored for co-simulation):<br>
 Only for variables with <a href="#variability"><code>variability</code></a> = <a href="#input"><code>input</code></a> :<br>
 If present with value equals <code>false</code>, then only one <code>fmi3Set{VariableType}</code> call is allowed at one super-dense time instant (model evaluation) on this variable.
 That is, this <a href="#input"><code>input</code></a> is not allowed to appear in a (real) algebraic loop requiring multiple calls of <code>fmi3Set{VariableType}</code> on this variable <em>[for example, due to a Newton iteration]</em>.<br>
@@ -5625,7 +5651,7 @@ The <a href="#previous"><code>previous</code></a> variable must have <a href="#i
 <td class="tableblock halign-left valign-top"><div class="content"><div id="intermediateAccess" class="paragraph">
 <p>If this boolean attribute is <code>true</code>, the variable can be accessed during a communication step.
 Variables with <a href="#causality"><code>causality</code></a> <a href="#parameter"><code>parameter</code></a> must not be marked with <a href="#intermediateAccess"><code>intermediateAccess</code></a> = <code>true</code>.
-This attribute is only used for Co-Simulation. The default value of this attribute is <code>false</code>.</p>
+This attribute is only used for Basic Co-Simulation and Hybrid Co-Simulation. The default value of this attribute is <code>false</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -6028,7 +6054,7 @@ This attribute is only used for Co-Simulation. The default value of this attribu
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(2)</span></em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameter</code></a> (changing such a <a href="#parameter"><code>parameter</code></a> triggers an external event (Model Exchange) or takes effect at the next communication point (Co-Simulation), and <a href="#tunable"><code>tunable</code></a> <a href="#calculatedParameter"><code>calculatedParameter</code></a>/<a href="#output"><code>output</code></a>/<a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameter</code></a> (changing such a <a href="#parameter"><code>parameter</code></a> triggers an external event (ME) or takes effect at the next communication point (xCS), and <a href="#tunable"><code>tunable</code></a> <a href="#calculatedParameter"><code>calculatedParameter</code></a>/<a href="#output"><code>output</code></a>/<a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(3)</span></em></p></td>
@@ -6038,7 +6064,7 @@ This attribute is only used for Co-Simulation. The default value of this attribu
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(4)</span></em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameter</code></a></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameter</code></a> (changing an <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameter</code></a> triggers an external event (Model Exchange) or takes effect at the next communication point (Co-Simulation), and <a href="#tunable"><code>tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameters</code></a> and <a href="#tunable"><code>tunable</code></a> <a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameter</code></a> (changing an <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameter</code></a> triggers an external event (ME) or takes effect at the next communication point (xCS), and <a href="#tunable"><code>tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameters</code></a> and <a href="#tunable"><code>tunable</code></a> <a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(5)</span></em></p></td>
@@ -6154,7 +6180,7 @@ This attribute is only used for Co-Simulation. The default value of this attribu
 <em>With this interpretation, changing <a href="#parameter"><code>parameters</code></a> online is "clean", as long as these changes appear at an event instant.</em></p>
 </div>
 <div class="paragraph">
-<p><em>FMI for Co-Simulation:</em>
+<p><em>FMI for Basic Co-Simulation and FMI for Hybrid Co-Simulation:</em>
 <em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <code>fmi3Set{VariableType}</code>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <strong>Initialization Mode</strong>).</em>
 <em>The FMU internally carries out event handling if necessary.]</em></p>
 </div>
@@ -6270,8 +6296,8 @@ All variables listed in this element must have attribute <code>derivative</code>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>reinit</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Only for Model Exchange (if only Co-Simulation FMU, this attribute must not be present.
-If both Model Exchange and Co-Simulation FMU, this attribute is ignored for Co-Simulation):<br>
+<p>Only for Model Exchange (if only a Co-Simulation FMU, this attribute must not be present.
+If both Model Exchange and a Co-Simulation FMU, this attribute is ignored for co-simulation):<br>
 Can only be present for a continuous-time <a href="#state"><code>state</code></a>.<br>
 If <code>true</code>, <a href="#state"><code>state</code></a> can be reinitialized at an event by the FMU.<br>
 If <code>false</code>, <a href="#state"><code>state</code></a> will not be reinitialized at an event by the FMU.</p>
@@ -6307,20 +6333,20 @@ The attribute <code>name</code> must be unique with respect to all other element
 <div class="paragraph">
 <p>The structure of the model is defined in element <code>ModelStructure</code> within <code>fmiModelDescription</code>.
 This structure is with respect to the underlying model equations, independently how these model equations are solved.
-<em>[For example, when exporting a model both in Model Exchange and Co-Simulation format; then the model structure is identical in both cases.</em>
-<em>The Co-Simulation FMU has either an integrator included that solves the model equations, or the discretization formula of the integrator and the model equations are solved together ("inline integration").</em>
-<em>In both cases the model has the same continuous-time <a href="#state"><code>states</code></a>.</em>
-<em>In the second case the internal implementation is a discrete-time system, but from the outside this is still a continuous-time model that is solved with an integration method.]</em></p>
+<em>[For example, when exporting a model in more than one FMI format; then the model structure is identical in all cases.</em>
+<em>E.g. a Basic Co-Simulation FMU has either an integrator included that solves the model equations, or the discretization formula of the integrator and the model equations are solved together ("inline integration").</em>
+<em>In all cases the model has the same continuous-time <a href="#state"><code>states</code></a>.</em>
+<em>In the case of a Model-Exchange FMU, the internal implementation is a discrete-time system, but from the outside this is still a continuous-time model that is solved with an integration method.]</em></p>
 </div>
 <div class="paragraph">
 <p>The required part defines an ordering of the <a href="#output"><code>outputs</code></a>, the (exposed) <a href="#derivative"><code>derivatives</code></a>, the event indicators and defines the unknowns that are available during Initialization <em>[Therefore, when linearizing an FMU, every tool will use the same ordering for the <a href="#output"><code>outputs</code></a>, <a href="#state"><code>states</code></a>, and <a href="#derivative"><code>derivatives</code></a> for the linearized model.
 The ordering of the <a href="#input"><code>inputs</code></a> should be performed in this case according to the ordering in <code>ModelVariables</code>.]</em>
 A Model Exchange FMU must expose all <a href="#derivative"><code>derivatives</code></a> of its continuous-time <a href="#state"><code>states</code></a> in elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code> and must expose all event indicators in elements <code>EventIndicator</code>.
 A Co- Simulation FMU does not need to expose these state derivatives and event indicators.
-<em>[If a Co-Simulation FMU exposes its state derivatives, they are usually not utilized for the co-simulation, but, for example, to linearize the FMU at a communication point.]</em></p>
+<em>[If a Basic Co-Simulation FMU exposes its state derivatives, they are usually not utilized for the co-simulation, but, for example, to linearize the FMU at a communication point.]</em></p>
 </div>
 <div class="paragraph">
-<p>The optional part defines in which way <a href="#derivative"><code>derivatives</code></a>, <a href="#output"><code>outputs</code></a> and unitial unknowns depend on <a href="#input"><code>inputs</code></a>, and continuous-time <a href="#state"><code>states</code></a> at the current super-dense time instant (Model Exchange) or at the current communication point (Co-Simulation).
+<p>The optional part defines in which way <a href="#derivative"><code>derivatives</code></a>, <a href="#output"><code>outputs</code></a> and unitial unknowns depend on <a href="#input"><code>inputs</code></a>, and continuous-time <a href="#state"><code>states</code></a> at the current super-dense time instant (ME) or at the current communication point (xCS).
 <em>[The listed <a href="#dependencies"><code>dependencies</code></a> declare the dependencies between whole (multi-dimensional-)variables and not individual elements of the variables.]</em>
 <em>[A simulation environment can utilize this information to improve the efficiency, for example, when connecting FMUs together, or when computing the partial derivative of the <a href="#derivative"><code>derivatives</code></a> with respect to the <a href="#state"><code>states</code></a> in the simulation engine.]</em></p>
 </div>
@@ -6365,7 +6391,7 @@ A Co- Simulation FMU does not need to expose these state derivatives and event i
 <em>The ordering of the variables in this list is defined by the exporting tool.</em>
 <em>Usually, it is best to order according to the declaration order in the source model, since then the <code>&lt;Output&gt;</code> list does not change if the declaration order of <a href="#output"><code>outputs</code></a> in the source model is not changed.</em>
 <em>This is for example, important for linearization, in order that the interpretation of the output vector does not change for a re-exported FMU.]</em>
-Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (Model Exchange) and at the current communication point (Co-Simulation).
+Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (ME) and at the current communication point (xCS).
 Beside the knowns the <a href="#output"><code>outputs</code></a> also depend on the freeze variables (= variables which cannot be changed in the current mode) but these freeze variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as (dependencies of variables that are fixed in Event and <strong>Continuous-Time Mode</strong> and at communication points are not shown):<br>
 <span class="blue">\(\color{blue}{(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{output}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{tune})}\)</span></p></td>
@@ -6383,10 +6409,10 @@ The functional dependency is defined as (dependencies of variables that are fixe
 <em>Example: if</em> \(\color{blue}{\frac{\text{ds}}{\text{dt}} = v,\ \frac{\text{dv}}{\text{dt}} =f(..)}\) <em>,then</em> \(\color{blue}{\left\{ v,\ \frac{\text{dv}}{\text{dt}} \right\}}\) <em>is the vector of state derivatives and attribute <a href="#derivative"><code>derivative</code></a> of</em> \(\color{blue}{v}\) <em>references</em> \(\color{blue}{s}\) <em>, and attribute <a href="#derivative"><code>derivative</code></a> of</em> \(\color{blue}{\frac{\text{dv}}{\text{dt}}}\) <em>references</em> \(\color{blue}{v}\) <em>.]</em><br>
 For Co-Simulation, elements <code>Derivative</code> are ignored if capability flag <code>providesDirectionalDerivative</code> has a value of <code>false</code>, in other words, it cannot be computed.
 <em>[This is the default.</em>
-<em>If an FMU supports both Model Exchange and Co-Simulation, then the <code>Derivative</code> elements might be present, since it is needed for Model Exchange.</em>
-<em>If the above flag is set to <code>false</code> for the Co-Simulation case, then the <code>Derivative</code> elements are ignored for Co-Simulation.</em>
-<em>If "inline integration" is used for a Co-Simulation slave, then the model still has continuous-time <a href="#state"><code>states</code></a> and just a special solver is used (internally the implementation results in a discrete-time system, but from the outside, it is still a continuous-time system).]</em><br>
-Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the state derivatives from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (Model Exchange) and at the current communication point (Co-Simulation).
+<em>If an FMU supports more than Model Exchange , then the <code>Derivative</code> elements might be present, since it is needed for Model Exchange.</em>
+<em>If the above flag is set to <code>false</code> for the Co-Simulation cases, then the <code>Derivative</code> elements are ignored for Co-Simulation.</em>
+<em>If "inline integration" is used for a co-simulation slave, then the model still has continuous-time <a href="#state"><code>states</code></a> and just a special solver is used (internally the implementation results in a discrete-time system, but from the outside, it is still a continuous-time system).]</em><br>
+Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the state derivatives from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (ME) and at the current communication point (xCS).
 Beside the knowns the derivatives also depend on the freeze variables (= variables which cannot be changed in the current mode) but these freeze variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as (dependencies of variables that are fixed in Event and <strong>Continuous-Time Mode</strong> and at communication points are not shown):<br>
 <span class="blue">\(\color{blue}{\dot{\mathbf{x}_c} := \mathbf{f}_{der}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{tune})}\)</span></p></td>
@@ -6406,7 +6432,7 @@ This list consists of all variables with</p>
 <p><a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> and</p>
 </li>
 <li>
-<p>all continuous-time <a href="#state"><code>states</code></a> and all state derivatives (defined with elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a> <em>[if a Co-Simulation FMU does not define the <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code> elements, (3) cannot be present]</em>.</p>
+<p>all continuous-time <a href="#state"><code>states</code></a> and all state derivatives (defined with elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a> <em>[if a Basic Co-Simulation FMU does not define the <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code> elements, (3) cannot be present]</em>.</p>
 </li>
 </ol>
 </div>
@@ -6468,7 +6494,7 @@ Optional attribute defining the dependencies of the unknown \(\color{blue}{v_{\t
 If not present, it must be assumed that the unknown depends on all knowns.
 If present as empty list, the unknown depends on none of the knowns.
 Otherwise the unknown depends on the knowns defined by the given value references.<br>
-Knowns \(\color{blue}{\mathbf{v}_{\text{known}}}\) in <strong>Event Mode</strong> and <strong>Continuous-Time Mode</strong> (Model Exchange) and at communication points (Co-Simulation) for <code>Output</code> and <code>Derivative</code> elements:</p>
+Knowns \(\color{blue}{\mathbf{v}_{\text{known}}}\) in <strong>Event Mode</strong> and <strong>Continuous-Time Mode</strong> (ME) and at communication points (xCS) for <code>Output</code> and <code>Derivative</code> elements:</p>
 <p class="tableblock">- inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>)</p>
 <p class="tableblock">- continuous-time states</p>
 <p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).
@@ -6490,10 +6516,10 @@ Otherwise, the corresponding known \(\color{blue}{v_{known,i}}\) enters the equa
 <p class="tableblock"><code>= dependent</code>: no particular structure, \(\color{blue}{{h(..,\ v}_{known,i}}\),..)</p>
 <p class="tableblock">Only for floating point type unknowns \(\color{blue}{v_{\text{unknown}}}\):</p>
 <p class="tableblock"><code>=</code> <a href="#constant"><code>constant</code></a>: constant factor, \(\color{blue}{c \cdot v_{known,i}}\) where \(\color{blue}{c}\) is an expression that is evaluated before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.</p>
-<p class="tableblock">Only for floating point type unknowns \(\color{blue}{v_{\text{unknown}}}\) in Event and <strong>Continuous-Time Mode</strong> (Model Exchange) and at communication points (Co-Simulation), and not for <a href="#InitialUnknown"><code>InitialUnknown</code></a> for <strong>Initialization Mode</strong>:</p>
+<p class="tableblock">Only for floating point type unknowns \(\color{blue}{v_{\text{unknown}}}\) in Event and <strong>Continuous-Time Mode</strong> (ME) and at communication points (xCS), and not for <a href="#InitialUnknown"><code>InitialUnknown</code></a> for <strong>Initialization Mode</strong>:</p>
 <p class="tableblock"><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \(\color{blue}{p \cdot v_{known,i}}\) where \(\color{blue}{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
-<p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \(\color{blue}{p \cdot v_{known,i}}\) where \(\color{blue}{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external event (Model Exchange) or at a communication point (Co-Simulation)</p>
-<p class="tableblock"><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \(\color{blue}{d \cdot v_{known,i}}\) where \(\color{blue}{d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external or internal event or at a communication point (Co-Simulation).</p></td>
+<p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \(\color{blue}{p \cdot v_{known,i}}\) where \(\color{blue}{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external event (ME) or at a communication point (xCS)</p>
+<p class="tableblock"><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \(\color{blue}{d \cdot v_{known,i}}\) where \(\color{blue}{d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external or internal event or at a communication point (xCS).</p></td>
 </tr>
 </tbody>
 </table>
@@ -6673,7 +6699,7 @@ The definition of the model structure is then:</p>
 <em>If an FMU is imported in an environment and such an iteration is set up, then the tool can figure out that the resulting algebraic system of equations is structurally singular and therefore can reject such a definition.</em></p>
 </li>
 <li>
-<p><em>For standard Co-Simulation FMUs, it is common that no algebraic loops over the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> variables nor over start-values is supported.</em>
+<p><em>For Basic Co-Simulation FMUs, it is common that no algebraic loops over the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> variables nor over start-values is supported.</em>
 <em>In such a case, all <a href="#dependencies"><code>dependencies</code></a> lists for <a href="#output"><code>output</code></a> variables under the <a href="#InitialUnknown"><code>InitialUnknown</code></a> element should be defined as empty lists defining that the setting of <a href="#input"><code>inputs</code></a> and/or of <a href="#start"><code>start</code></a> values does not influence the <a href="#output"><code>outputs</code></a>.</em>
 <em>As a result, it is not possible to formulate algebraic loops of connected FMUs during <strong>Initialization Mode</strong>.]</em></p>
 </li>
@@ -6830,8 +6856,8 @@ If they are present, they are given in consecutive order in the XML file.</p>
 <p>An FMU description consists of several files.
 An FMU implementation may be distributed in source code and/or in binary format.
 All relevant files are stored in a ZIP file with a pre-defined structure.
-The implementation must either implement all the functions of FMI for Model Exchange or all the functions of FMI for Co-Simulation or both.
-Specifically it is required that all functions specified for Model Exchange and/or Co-Simulation are present, even if they are only needed for capabilities that the FMU does not support.
+The implementation must implement all the functions for at least one of the FMI interface types.
+Specifically it is required that all functions specified for the specified FMI interface type are present, even if they are only needed for capabilities that the FMU does not support.
 The behavior of those functions is unspecified, so while calling environments can rely on the functions being present, they cannot rely on any particular behavior for functions only needed for capabilities the FMU does not support.
 The extension of the ZIP file must be <code>.fmu</code> <em>[, for example, <code>HybridVehicle.fmu</code>]</em>.
 The compression method used for the ZIP file must be <code>deflate</code> <em>[(most free tools, such as zlib, offer only the common compression method <code>deflate</code>)]</em>.</p>
@@ -6890,7 +6916,7 @@ extra                         // Additional (meta-)data of the FMU (optional)
 </div>
 <div class="paragraph">
 <p>An FMU has to implement all common functions (according to tables in <a href="#state-machine-model-exchange">Section 3.2.3</a> and <a href="#state-machine-co-simulation">Section 4.2.4</a>).
-Model Exchange FMUs have to provide additionally the respective Model Exchange function, Co-Simulation FMUs the Co-Simulation functions.</p>
+Additionally, all FMUs have to provide the respective FMU interface-type function they implement.</p>
 </div>
 <div class="paragraph">
 <p>The FMU must be distributed with at least one implementation, in other words, either sources or one of the binaries for a particular machine.
@@ -7101,7 +7127,7 @@ If run-time libraries cannot be shipped due to licensing, special handling is ne
 In the first case a tool specific wrapper DLL/SharedObject has to be provided as the binary, in the second a compiled or source code version of the model with its solver is stored (see <a href="#fmi-for-basic-co-simulation">Section 4</a> for details).</p>
 </div>
 <div class="paragraph">
-<p>In an FMU both a version for ModelExchange and for CoSimulation might be present.
+<p>In an FMU multiple interface types might be present.
 If in both cases the executable part is provided as a shared library, then two different or only one library can be provided.
 The library names are defined in the <code>modelIdentifier</code> attribute of elements <code>fmiModelDescription.ModelExchange</code> and <code>fmiModelDescription.CoSimulation</code>:</p>
 </div>
@@ -7139,7 +7165,7 @@ In case information beyond <code>BuildConfiguration</code> is required to compil
 This data must be read into the model at the latest during initialization (that is, before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called).
 The actual file names in the ZIP file to access the data files can either be hard-coded in the generated FMU functions, or the file names can be provided as string parameters via the <code>fmi3SetString</code> function.
 <em>[Note that the absolute file name of the resource directory is provided by the initialization functions.]</em>
-In the case of a Co-Simulation implementation of <code>needsExecutionTool = true</code> type, the <code>resources</code> directory can contain the model file in the tool specific file format.</p>
+In the case of a Basic Co-Simulation implementation of <code>needsExecutionTool = true</code> type, the <code>resources</code> directory can contain the model file in the tool specific file format.</p>
 </div>
 <div class="paragraph">
 <p><em>[Note that the header files <code>fmi3PlatformTypes.h</code> and <code>fmi3FunctionTypes.h/fmi3Functions.h</code> are not included in the FMU due to the following reasons:</em></p>
@@ -7164,16 +7190,16 @@ Specifically all validation or digital signature schemes used to protect the con
 </div>
 </div>
 <div class="sect2">
-<h3 id="common-concepts-cosim">2.4. Common Concepts for Co-Simulation Interfaces</h3>
+<h3 id="common-concepts-cosim">2.4. Common Concepts for Co-Simulation</h3>
 <div class="paragraph">
-<p>Co-Simulation exploits the modular structure of coupled problems in all stages of the simulation process beginning with the separate model setup and preprocessing for the individual subsystems in different simulation tools (which can be powerful simulators as well as simple C programs).
+<p>Co-simulation exploits the modular structure of coupled problems in all stages of the simulation process beginning with the separate model setup and preprocessing for the individual subsystems in different simulation tools (which can be powerful simulators as well as simple C programs).
 During time integration, the simulation is again performed independently for all subsystems restricting the data exchange between subsystems to discrete communication points \(tc_i\).
 For simulator coupling, also the visualization and post-processing of simulation data is done individually for each subsystem in its own native simulation tool.
 In different contexts, the communication points \(tc_i\), the communication steps \(tc_i \rightarrow tc_{i+1}\) and the communication step sizes \(hc_i := tc_{i+1} - tc_i\) are also known as sampling points (synchronization points), macro steps and sampling rates, respectively.
 The term "communication point" in FMI for Co-Simulation refers to the communication between subsystems in a co-simulation environment and should not be mixed with the output points for saving simulation results to file.</p>
 </div>
 <div class="paragraph">
-<p>FMI for Co-Simulation provides an interface standard for the solution of time-dependent coupled systems consisting of subsystems that are continuous in time (model components that are described by instationary differential equations) or time-discrete (model components that are described by difference equations such as discrete controllers).
+<p>FMI for Co-Simulation provides 3 interface standards for the solution of time-dependent coupled systems consisting of subsystems that are continuous in time (model components that are described by non-stationary differential equations) or time-discrete (model components that are described by difference equations such as discrete controllers).
 In a block representation of the coupled system, the subsystems are represented by blocks with (internal) <a href="#state"><code>state</code></a> variables \(x(t)\) that are connected to other subsystems (blocks) of the coupled problem by <em>subsystem <a href="#input"><code>inputs</code></a></em> \(u(t)\) and <em>subsystem <a href="#output"><code>outputs</code></a></em> \(y(t)\).
 In this framework, the physical connections between subsystems are represented by mathematical coupling conditions between the inputs \(u(t)\) and the <a href="#output"><code>outputs</code></a> \(y(t)\) of all subsystems, <a href="#KS00">[KS00]</a>.</p>
 </div>
@@ -7184,7 +7210,7 @@ In this framework, the physical connections between subsystems are represented b
 <div class="title">Figure 2. Data flow at communication points.</div>
 </div>
 <div class="paragraph">
-<p>For Co-Simulation two basic groups of functions have to be implemented:</p>
+<p>For co-simulation, two basic groups of functions have to be implemented:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -7207,7 +7233,7 @@ In its most general form, the coupled system may be simulated in nested co-simul
 <p>FMI for Co-Simulation defines interface routines for the communication between the master and all slaves (subsystems) in a co-simulation environment.
 The most common master algorithm stops at each communication point \(tc_i\) the simulation (time integration) of all slaves, collects the outputs \(y(tc_i)\) from all subsystems, evaluates the subsystem inputs \(u(tc_i)\), distributes these subsystem inputs to the slaves and continues the (co-)simulation with the next communication step \(tc_i \rightarrow tc_{i+1} = tc_i + hc\) with fixed communication step size \(hc\).
 In each slave, an appropriate solver is used to integrate one of the subsystems for a given communication step \(tc_i \rightarrow tc_{i+1}\).
-The most simple Co-Simulation algorithms approximate the (unknown) subsystem inputs \(u(t), (t &gt; tc_i))\) by frozen data \(u(tc_i)\) for \(tc_i \leq t &lt; tc_{i+1}\).
+The most simple co-simulation algorithms approximate the (unknown) subsystem inputs \(u(t), (t &gt; tc_i))\) by frozen data \(u(tc_i)\) for \(tc_i \leq t &lt; tc_{i+1}\).
 FMI for Co-Simulation supports this classical brute force approach as well as more sophisticated master algorithms.
 FMI for Co-Simulation is designed to support a very general class of master algorithms but it does not define the master algorithm itself.</p>
 </div>
@@ -7344,8 +7370,8 @@ Whenever the internal solver in the FMU needs updated intermediate <a href="#inp
 <dl>
 <dt class="hdlist1">Basic Co-Simulation</dt>
 <dd>
-<p>Basic Co-Simulation is a rather general approach to the simulation of coupled technical systems and coupled physical phenomena in engineering with focus on instationary (time-dependent) problems.
-The basic Co-Simulation interface is similar to the feature set of FMI 2.0 for Co-Simulation.
+<p>Basic Co-Simulation is a rather general approach to the simulation of coupled technical systems and coupled physical phenomena in engineering with focus on non-stationary (time-dependent) problems.
+The Basic Co-Simulation interface is similar to the feature set of FMI 2.0 for Co-Simulation.
 The asynchronous mode for FMUs has been removed since this mode was not supported by tools and it can be suitably replaced by Co-Simulation master implementations that control the asynchronous computation of FMUs via separate tasks/threads created for each FMU.</p>
 </dd>
 </dl>
@@ -7367,7 +7393,7 @@ In this way multiple event types and also <a href="#outputClock"><code>output cl
 <dt class="hdlist1">Hybrid Co-Simulation</dt>
 <dd>
 <p>The <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a> interface provides functionalities to control and observe the ticking of <a href="#clock">clocks</a>.
-For FMI for Co-Simulation, the ticking of a clock is interpreted as an activity of the associated model partition.
+For FMI for Hybrid Co-Simulation, the ticking of a clock is interpreted as an activity of the associated model partition.
 During simulation, the Co-Simulation master updates and manages values of inputs and outputs of FMUs and further models at communication points for each model partition.
 The ratio between communication points created for a model partition and time can be seen as a model rate.
 In that sense multiple model partitions of a model define multiple model rates in a model.</p>
@@ -7428,8 +7454,8 @@ For that a preemptive multitasking regime is intended (cooperative multitasking 
 <dl>
 <dt class="hdlist1">Intermediate Variable Access</dt>
 <dd>
-<p>An FMU shall be able to inform a Co-Simulation master that is able to provide intermediate output variables and/or receive intermediate input variables at any time, i.e. not only at the end of a current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function call.
-It shall be possible for the FMU to inform the master whether the internal solver is in a temporary state or if it has just completed an internal integration step.
+<p>An FMU can inform a Co-Simulation master that is able to provide intermediate output variables and/or receive intermediate input variables at any time, i.e. not only at the end of a current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function call.
+It is possible for the FMU to inform the master whether the internal solver is in a temporary state or if it has just completed an internal integration step.
 If the internal solver is in a temporary state, intermediate output variables shall only be used for directly computing intermediate input variables.
 If the internal integration step is completed, the master can forward intermediate outputs to interconnected simulation units.</p>
 </dd>
@@ -7472,7 +7498,7 @@ These data are not transferred via the FMI API.</p>
 </dl>
 </div>
 <div class="paragraph">
-<p>For all Co-Simulation interfaces intermediate variable access can be activated, if the FMU and the master supports this.
+<p>For all Co-Simulation interface types intermediate variable access can be activated, if the FMU and the master supports this.
 More information can be found in <a href="#intermediate-variable-access">[intermediate-variable-access]</a>.</p>
 </div>
 <div class="paragraph">
@@ -7590,7 +7616,7 @@ If that is not possible for an FMU <em>[(e.g. if the FMU cannot provide an emula
 </div>
 <div class="paragraph">
 <p><em>[Wrapping towards other Co-Simulation interfaces can influence the simulation results.</em>
-<em>Depending on the model especially wrapping towards the (basic) Co-Simulation interface may result in divergent simulation results.</em>
+<em>Depending on the model especially wrapping towards the (Basic) Co-Simulation interface may result in divergent simulation results.</em>
 <em>Especially aperiodic <a href="#inputClock"><code>input clocks</code></a> can not always be sufficiently emulated in modes that do not directly support <a href="#clock"><code>clocks</code></a>.</em>
 <em>Therefore it is recommended that the FMU provides logging information to the user about the influence of the current mode on simulation results, if non-optimal modes are used by the simulation environment.]</em></p>
 </div>
@@ -9620,13 +9646,13 @@ unsignedInt: 0</p>
 <h2 id="fmi-for-basic-co-simulation">4. FMI for Basic Co-Simulation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter defines the Functional Mock-up Interface (FMI) for the coupling of two or more simulation models in a co-simulation environment (FMI for Co-Simulation).
+<p>This chapter defines the Functional Mock-up Interface (FMI) for the coupling of two or more simulation models in a co-simulation environment (FMI for Basic Co-Simulation).
 It is designed both for coupling with subsystem models, which have been exported by their simulator together with its solver as runnable code (<a href="#figure-co-simulation-with-generated-code">Figure 3</a>), and for coupling of simulation tools on a single machine (<a href="#figure-co-simulation-with-tool-coupling">Figure 4</a>) or as part of a distributed co-simulation (<a href="#figure-distributed-co-simulation">Figure 5</a>).</p>
 </div>
 <div class="sect2">
 <h3 id="math-basic-co-simulation">4.1. Mathematical Description</h3>
 <div class="paragraph">
-<p>This section contains a formal mathematical model of a Co-Simulation FMU.</p>
+<p>This section contains a formal mathematical model of Co-Simulation FMUs.</p>
 </div>
 <div class="paragraph">
 <p>_[The following fundamental assumptions are made:</p>
@@ -11165,7 +11191,7 @@ If set to <code>true</code> also <code>canReturnEarlyAfterIntermediateUpdate</co
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseBasicCoSimulation</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>false</code>, the slave can be set to <code>fmi3CoSimulation</code> during instantiation of the FMU.
-<em>[the support of basic co-simulation should be possible for most Co-Simulation FMUs, thus the default value is <code>false</code>.]</em></p></td>
+<em>[the support of Basic Co-Simulation should be possible for most Co-Simulation FMUs, thus the default value is <code>false</code>.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixedInternalStepSize</code></p></td>
@@ -11258,7 +11284,7 @@ The XML file may have the following content:</p>
 <p>The simulation master collects the information about the capability of an FMU to perform an early return by analyzing the <code>modelDescription.xml</code> as defined in section <a href="#fmi-description-schema">Section 2.2</a> and <a href="#fmi-for-basic-co-simulation">Section 4</a>.</p>
 </div>
 <div class="sect4">
-<h5 id="_co_simulation_fmu_cosimulation">4.3.2.1. Co-Simulation FMU (CoSimulation)</h5>
+<h5 id="_co_simulation_fmu">4.3.2.1. Co-Simulation FMU</h5>
 <div class="paragraph">
 <p>In order to support the early return in <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> the capability flag  <code>canReturnEarlyAfterIntermediateUpdate</code> in the XML should be <code>true</code>.</p>
 </div>
@@ -11442,7 +11468,7 @@ If the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with t
 <div class="paragraph">
 <p>If an FMU provides the early-return capability that includes the handling of events in <strong>Event Mode</strong>, the FMU signals this via <code>canReturnEarlyAfterIntermediateUpdate</code> and <code>providesHybridCoSimulation = true</code> in the modelDescription.
 The master should indicate to the FMU that this early-return feature is also supported by the master.
-The Co-Simulation master signals to the FMU that it supports and has recognized the early return Co-Simulation capabilities of the FMU by setting the CoSimulation interface to <code>fmi3HybridCoSimulation</code> in the <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> function.</p>
+The Co-Simulation master signals to the FMU that it supports and has recognized the early return Co-Simulation capabilities of the FMU by setting the Co-Simulation interface to <code>fmi3HybridCoSimulation</code> in the <a href="#fmi3Instantiate"><code>fmi3Instantiate</code></a> function.</p>
 </div>
 <div class="paragraph">
 <p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through <code>intermediateUpdateTime</code>.
@@ -11570,37 +11596,37 @@ Each state of the state machine corresponds to a certain phase of a simulation a
 <div class="sect4">
 <h5 id="_state_slave_setable_fmu_state">5.2.4.1. State: Slave Setable FMU State</h5>
 <div class="paragraph">
-<p>This super state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-slave-setable-fmu-state-co-simulation">Section 4.2.4.1</a>.</p>
+<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-slave-setable-fmu-state-co-simulation">Section 4.2.4.1</a>.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_state_slave_under_evaluation">5.2.4.2. State: Slave Under Evaluation</h5>
 <div class="paragraph">
-<p>This super state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-slave-under-evaluation-co-simulation">Section 4.2.4.2</a>.</p>
+<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-slave-under-evaluation-co-simulation">Section 4.2.4.2</a>.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_state_slave_initialized">5.2.4.3. State: Slave Initialized</h5>
 <div class="paragraph">
-<p>This super state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-slave-initialized-co-simulation">Section 4.2.4.3</a>.</p>
+<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-slave-initialized-co-simulation">Section 4.2.4.3</a>.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_state_instantiated">5.2.4.4. State: Instantiated</h5>
 <div class="paragraph">
-<p>This super state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-instantiated-co-simulation">Section 4.2.4.4</a>.</p>
+<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-instantiated-co-simulation">Section 4.2.4.4</a>.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_state_configuration_mode">5.2.4.5. State: Configuration Mode</h5>
 <div class="paragraph">
-<p>This state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-configuration-mode-co-simulation">Section 4.2.4.11</a>.</p>
+<p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-configuration-mode-co-simulation">Section 4.2.4.11</a>.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_state_initialization_mode">5.2.4.6. State: Initialization Mode</h5>
 <div class="paragraph">
-<p>This state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-initialization-mode-co-simulation">Section 4.2.4.5</a>.</p>
+<p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-initialization-mode-co-simulation">Section 4.2.4.5</a>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -11655,13 +11681,13 @@ For <a href="#input"><code>input</code></a> periodic <a href="#clock"><code>cloc
 <div class="sect4">
 <h5 id="_state_step_mode">5.2.4.8. State: Step Mode</h5>
 <div class="paragraph">
-<p>This state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-step-mode-co-simulation">Section 4.2.4.6</a>.</p>
+<p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-step-mode-co-simulation">Section 4.2.4.6</a>.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_state_intermediate_update_mode">5.2.4.9. State: Intermediate Update Mode</h5>
 <div class="paragraph">
-<p>This state in Hybrid Co-Simulation differ from Co-Simulation described in section <a href="#state-step-mode-co-simulation">Section 4.2.4.6</a> as following:</p>
+<p>This state in Hybrid Co-Simulation differ from Basic Co-Simulation described in section <a href="#state-step-mode-co-simulation">Section 4.2.4.6</a> as following:</p>
 </div>
 <div class="dlist">
 <dl>
@@ -11680,19 +11706,19 @@ For <a href="#input"><code>input</code></a> periodic <a href="#clock"><code>cloc
 <div class="sect4">
 <h5 id="_state_reconfiguration_mode">5.2.4.10. State: Reconfiguration Mode</h5>
 <div class="paragraph">
-<p>This state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-reconfiguration-mode-co-simulation">Section 4.2.4.8</a>.</p>
+<p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-reconfiguration-mode-co-simulation">Section 4.2.4.8</a>.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_state_step_discarded">5.2.4.11. State: Step Discarded</h5>
 <div class="paragraph">
-<p>This state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-step-discarded-co-simulation">Section 4.2.4.9</a>.</p>
+<p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-step-discarded-co-simulation">Section 4.2.4.9</a>.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_state_terminated">5.2.4.12. State: Terminated</h5>
 <div class="paragraph">
-<p>This state in Hybrid Co-Simulation does not differ from Co-Simulation described in section <a href="#state-terminated-co-simulation">Section 4.2.4.10</a>.</p>
+<p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-terminated-co-simulation">Section 4.2.4.10</a>.</p>
 </div>
 <div class="paragraph">
 <p><em><span class="The allowed function calls in the respective states are summarized in the following table (functions marked in [yellow-background">"yellow"</span> are only available for Co-Simulation, the other functions are available both for Model Exchange and Co-Simulation):</em></p>
@@ -12472,7 +12498,7 @@ We consider &#8230;&#8203;</p>
 </div>
 <div class="paragraph">
 <p>For FMI for Co-Simulation, variables that are assigned to a model partition of the model based on <a href="#clockReference"><code>clockReference</code></a> are not necessarily <code>clocked</code>.
-Such variables can be Continuous-time or Discrete-time variables if the <a href="#clock"><code>clock</code></a> is of <code>clockType = communicationPoint</code>.</p>
+Such variables can be continuous-time or discrete-time variables if the <a href="#clock"><code>clock</code></a> is of <code>clockType = communicationPoint</code>.</p>
 </div>
 <div class="sect3">
 <h4 id="xml-flags-clocked-co-simulation">5.3.1. Capability Flags</h4>
@@ -12505,7 +12531,7 @@ The XML file may have the following content:</p>
 <div class="sect2">
 <h3 id="math-scheduled-co-simulation">6.1. Mathematical Description</h3>
 <div class="paragraph">
-<p>The Scheduled Co-Simulation interface has a different timing concept compared to both Co-Simulation interfaces.
+<p>The Scheduled Co-Simulation interface has a different timing concept compared to the other two Co-Simulation interfaces.
 This is required to cover <a href="#clock"><code>clock</code></a> ticks for aperiodic <a href="#inputClock"><code>input clocks</code></a> which may tick at time instances that are not predictable in advance for the simulation master.
 Typically, hardware I/O or virtual ECU software events belong to this category.</p>
 </div>
