@@ -1,5 +1,5 @@
 ---
-title: New FMI logo
+title: New FMI Logo
 categories: [news]
 layout: post
 ---
@@ -7,6 +7,6 @@ layout: post
 
 The Modelica Association has published new logos for the organization and its projects, especially for the FMI standard.
 
-They can be accessed here: https://github.com/modelica/MA-Logos, where also the usage conditions are available.
+The files and usage conditions can be found on the [modelica/MA-Logos](https://github.com/modelica/MA-Logos) GitHub project.
 
-The old FMU logo will be discontinued; please use the FMI logo instead.
+![New MA-project logos](https://github.com/modelica/MA-Logos/raw/master/HighRes/Modelica_Association_Projects.png)
