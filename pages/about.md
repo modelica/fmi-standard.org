@@ -36,7 +36,7 @@ Therefore, the first step is getting your company to agree and sign the CCLA.
 The CCLA ensures that all IP contributed to the FMI standard will be licensed to the Modelica Association (MA) which in turn will sublicense the FMI standard to tool vendors implementing it and end users using it, free of charge.
 
 With the CCLA signed by your company, we will grant you access to our IT infrastructure.
-We will add you to the [FMI design mailing list](mailto:design@fmi-standard.org).
+We will add you to the [FMI design mailing list](mailto:fmi-design@googlegroups.com).
 There you will be invited to our regular FMI design meetings.
 You will get access to the FMI github repositories.
 They are the central information hubs for the Modelica Association Project FMI.
