@@ -2645,8 +2645,10 @@ A clocked partition is mathematically defined as:</p>
 Variables \(u_j\) are the (external or <a href="#local"><code>local</code></a>) <a href="#input"><code>inputs</code></a> and \(y_j\) are the (external or <a href="#local"><code>local</code></a>) <a href="#output"><code>outputs</code></a> of a clocked partition.
 A discrete-time <a href="#state"><code>state</code></a> can be from any type of a variable (with exception of a <a href="#clock"><code>clock</code></a>) such as of type <code>fmi3Float64</code> or <code>fmi3Boolean</code>.
 A clocked partition is not executed during <strong>Initialization Mode</strong>, but it is executed the first time at its first <a href="#clock"><code>clock</code></a> tick.
-The associated <a href="#clock"><code>clock</code></a> of the model partion is synchronous to its discrete-time <a href="#state"><code>states</code></a>.
-Discrete-time <a href="#state"><code>states</code></a> are listed in the <code>&lt;ModelStructure&gt;</code> and have the variable xml-attribute <a href="#previous"><code>previous</code></a> referring to the variable holding the previous value of the <a href="#state"><code>state</code></a>.
+The associated <a href="#clock"><code>clock</code></a> of the model partion is synchronous to its discrete-time <a href="#state"><code>states</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>Discrete-time <a href="#state"><code>states</code></a> are listed in the <code>&lt;ModelStructure&gt;</code>.
 They can have initial values defined by xml-attributes <a href="#initial"><code>initial</code></a> and <a href="#start"><code>start</code></a>, or the initial values are computed internally as a function of parameters.</p>
 </div>
 <div class="paragraph">
@@ -5707,15 +5709,6 @@ It is not allowed to combine <a href="#outputClock"><code>output clocks</code></
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>previous</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div id="previous" class="paragraph">
-<p>If present, this variable is a discrete-time <a href="#state"><code>state</code></a> <code>xd</code>.
-The value of <code>xd</code> at the previous super-dense time instant is stored in the variable with <a href="#valueReference"><code>valueReference</code></a> <a href="#previous"><code>previous</code></a>.
-The <a href="#previous"><code>previous</code></a> variable must have <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and a <a href="#start"><code>start</code></a> value defined.
-<em>[For example, if there are 10 variables and <a href="#previous"><code>previous</code></a> equals 3 for variable 8, then at a super-dense time instant variable 8 holds the value of this discrete <a href="#state"><code>state</code></a> at the actual time instant and variable 3 holds the value of this <a href="#state"><code>state</code></a> from the previous super-dense time instant.]</em></p>
-</div></div></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>intermediateAccess</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="intermediateAccess" class="paragraph">
 <p>If this boolean attribute is <code>true</code>, the variable can be accessed during a communication step.
@@ -6240,7 +6233,7 @@ This attribute is only used for Basic Co-Simulation and Hybrid Co-Simulation. Th
 <p><em>Compute all <a href="#parameter"><code>parameters</code></a> (and sizes of variables, <a href="#state"><code>states</code></a>, <a href="#derivative"><code>derivatives</code></a>, event indicators, &#8230;&#8203;) that depend on the <a href="#tunable"><code>tunable</code></a> (structural) <a href="#parameter"><code>parameters</code></a>.</em></p>
 </li>
 <li>
-<p><em>Newly start the simulation using as initial values the current values of all <a href="#previous"><code>previous</code></a> variables and the new values of the <a href="#parameter"><code>parameters</code></a>.</em></p>
+<p><em>Newly start the simulation using as initial values previously stored values and the new values of the <a href="#parameter"><code>parameters</code></a>.</em></p>
 </li>
 </ol>
 </div>
@@ -7967,7 +7960,7 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation below
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(^{\bullet}v\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(v(^{\bullet}t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#previous"><code>previous</code></a> value (= either left limit or value from the previous event)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">previous value (= either left limit or value from the previous event)</p></td>
 </tr>
 </tbody>
 </table>
@@ -8135,7 +8128,7 @@ In reality, a continuous-time <a href="#state"><code>state</code></a> is however
 \(^{\bullet}\mathbf{x}_d(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\) is a vector of (internal) discrete-time variables (of any type) representing the discrete <a href="#state"><code>states</code></a>.<br>
 \({}^{\bullet}\mathbf{x}_d(t)\) a is the value of \(\mathbf{x}_d(t)\) at the previous super-dense time instant, so \({}^{\bullet}\mathbf{x}_d(t)=\mathbf{x}_d({}^{\bullet}t)\).
-Given the <a href="#previous"><code>previous</code></a> values of the discrete-time <a href="#state"><code>states</code></a>, \({}^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t)\), can be computed.<br>
+Given the previous values of the discrete-time <a href="#state"><code>states</code></a>, \({}^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t)\), can be computed.<br>
 Discrete <a href="#state"><code>states</code></a> are not visible in the interface of an FMU and are only introduced here to clarify the mathematical description.
 Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
@@ -8164,7 +8157,7 @@ The phases can be categorized according to the following modes:</p>
 <div class="sect4">
 <h5 id="_initialization_mode">3.1.2.1. Initialization Mode</h5>
 <div class="paragraph">
-<p>This mode is used to compute at the start time stem[t_0] initial values for continuous-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_c(t_0)\), and for the <a href="#previous"><code>previous</code></a> (internal) discrete-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_d(t_0)\), by utilizing extra equations not present in the other modes (for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state"><code>state</code></a> or for the derivative of a <a href="#state"><code>state</code></a>).</p>
+<p>This mode is used to compute at the start time stem[t_0] initial values for continuous-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_c(t_0)\), and for the previous (internal) discrete-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_d(t_0)\), by utilizing extra equations not present in the other modes (for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state"><code>state</code></a> or for the derivative of a <a href="#state"><code>state</code></a>).</p>
 </div>
 </div>
 <div class="sect4">
@@ -8177,7 +8170,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 <div class="sect4">
 <h5 id="_event_mode">3.1.2.3. Event Mode</h5>
 <div class="paragraph">
-<p>This mode is used to compute new values for all continuous-time variables, as well as for all discrete-time variables that are activated at the current event instant \(t\), given the values of the variables from the <a href="#previous"><code>previous</code></a> instant \({}^{\bullet}t\).
+<p>This mode is used to compute new values for all continuous-time variables, as well as for all discrete-time variables that are activated at the current event instant \(t\), given the values of the variables from the previous instant \({}^{\bullet}t\).
 This is performed by solving algebraic equations consisting of all continuous-time and all active discrete-time equations.
 In FMI 2.0 there is no mechanism that the FMU can provide the information whether a discrete-time variable is active or is not active (is not computed) at an event instant.
 Therefore, the environment has to assume that at an event instant always all discrete-time variables are computed, although internally in the FMU only a subset might be newly computed.</p>
@@ -8444,9 +8437,9 @@ y2 := w2</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><em>At an event instant, the discrete system is described by algebraic equations as function of the <a href="#previous"><code>previous</code></a> (internal) discrete-time <a href="#state"><code>states</code></a></em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>and the discrete-time <a href="#input"><code>inputs</code></a></em> \(\mathbf{u}_{d}\).
+<p><em>At an event instant, the discrete system is described by algebraic equations as function of the previous (internal) discrete-time <a href="#state"><code>states</code></a></em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>and the discrete-time <a href="#input"><code>inputs</code></a></em> \(\mathbf{u}_{d}\).
 <em>If FMUs are connected in a loop, these algebraic equations are called iteratively, until the solution is found.</em>
-<em>If the actual discrete-time <a href="#state"><code>states</code></a></em> \(\mathbf{x}_{d}\) <em>and the <a href="#previous"><code>previous</code></a> discrete-time <a href="#state"><code>states</code></a></em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>are not identical, the discrete-time <a href="#state"><code>states</code></a> are updated, the integer part of the time is incremented and a new event iteration is performed.</em>
+<em>If the actual discrete-time <a href="#state"><code>states</code></a></em> \(\mathbf{x}_{d}\) <em>and the previous discrete-time <a href="#state"><code>states</code></a></em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>are not identical, the discrete-time <a href="#state"><code>states</code></a> are updated, the integer part of the time is incremented and a new event iteration is performed.</em>
 <em>Other discrete-time models must be mapped to this description form.</em>
 <em>Examples:</em></p>
 </div>
@@ -9801,7 +9794,7 @@ However, at a communication point, a continuous-time <a href="#state"><code>stat
 \(^{\bullet}\mathbf{x}_d(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\) is a vector of (internal) discrete-time variables (of any type) representing the (internal) discrete <a href="#state"><code>states</code></a>.<br>
 \(^{\bullet}\mathbf{x}_d(t)\) is the value of \(\mathbf{x}_d(t)\) at the previous sample time instant, so \(^{\bullet}\mathbf{x}_d(t) = \mathbf{x}_d(^{\bullet}t)\).<br>
-Given the <a href="#previous"><code>previous</code></a> values of the discrete-time <a href="#state"><code>states</code></a>, \(^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t)\), can be computed.<br>
+Given the previous values of the discrete-time <a href="#state"><code>states</code></a>, \(^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t)\), can be computed.<br>
 Discrete <a href="#state"><code>states</code></a> are not visible in the interface of an FMU and are only introduced here to clarify the mathematical description.
 Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
