@@ -74,7 +74,8 @@ layout: default
     {% raw %}
     <div v-for="item in items" class="d-flex">
       <div class="flex-shrink">
-        <span class="badge badge-light">{{ item.start.dateTime.substring(0,10) }}</span>
+        <span class="badge badge-light" v-if="item.start.dateTime">{{ item.start.dateTime.substring(0,10) }}</span>
+        <span class="badge badge-light" v-if="item.start.date">{{ item.start.date }}</span>
       </div>
       <div>
         <a v-bind:href="item.htmlLink">{{ item.summary }}</a> <a href="#" data-toggle="tooltip" data-original-title="Teleconference"><i v-if="!item.location" class="fas fa-phone ml-1"></i></a>
