@@ -822,8 +822,7 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#hybrid-co-simulation-schema">5.3. Description Schema</a>
 <ul class="sectlevel3">
-<li><a href="#xml-flags-clocked-co-simulation">5.3.1. Capability Flags</a></li>
-<li><a href="#xml-example-clocked-co-simulation">5.3.2. Example XML Description File</a></li>
+<li><a href="#xml-example-clocked-co-simulation">5.3.1. Example XML Description File</a></li>
 </ul>
 </li>
 </ul>
@@ -7804,39 +7803,6 @@ typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
 </div>
 </div>
 <div class="paragraph">
-<p>The master can only select a certain Co-Simulation interface for an FMU if the following attributes are set in the <code>modelDescription.xml</code>.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Co-Simulation interface</th>
-<th class="tableblock halign-left valign-top">Required attributes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Basic Co-Simulation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseBasicCoSimulation = false</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Hybrid Co-Simulation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesHybridCoSimulation = true</code>, <code>canReturnEarlyAfterIntermediateUpdate = true</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Scheduled Co-Simulation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesScheduledCoSimulation = true</code></p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>Generally it is assumed, that a Hybrid or Scheduled Co-Simulation FMU also supports Basic Co-Simulation.
-If that is not possible for an FMU <em>[(e.g. if the FMU cannot provide an emulation of <a href="#inputClock"><code>input clock</code></a> tick occurrences)]</em>, it has to include the capability flag <code>canNotUseBasicCoSimulation = true</code> in the <code>modelDescription.xml</code>.</p>
-</div>
-<div class="paragraph">
 <p>If the FMU does not support the Co-Simulation interface selected in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> it has to return <code>NULL</code>.</p>
 </div>
 <div class="dlist">
@@ -7844,17 +7810,18 @@ If that is not possible for an FMU <em>[(e.g. if the FMU cannot provide an emula
 <dt class="hdlist1">Multiple Co-Simulation Interface Support in one FMU</dt>
 <dd>
 <p>Exporters are encouraged to support multiple Co-Simulation interfaces in one FMU, so it can be used in differently capable Co-Simulation master implementations and for different use cases.
-<em>[That improves the reusability of FMUs.</em>
+To indicate support for a specific Co-Simulation interface, the <code>&lt;fmiModelDescription&gt;</code> must have the respective Co-Simulation element present.</p>
+<div class="paragraph">
+<p><em>[That improves the reusability of FMUs.</em>
 <em>A common application of this multiple mode support is the reuse of FMUs for real-time and non-real-time simulations.]</em></p>
-<div class="paragraph">
-<p>The described multi mode support is based on wrapping functionality into the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function by emulating missing features of the Co-Simulation interface, the FMU has been originally exported for.</p>
 </div>
 <div class="paragraph">
-<p>An FMU that supports <a href="#scheduled-co-simulation-api">Scheduled Co-Simulation</a> will in most cases also support <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a>.</p>
+<p>The described multi-mode support is based on wrapping functionality into the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function by emulating missing features of the Co-Simulation interface, the FMU has been specifically exported for.</p>
 </div>
 <div class="paragraph">
-<p><em>[Wrapping towards other Co-Simulation interfaces can influence the simulation results.</em>
-<em>Depending on the model especially wrapping towards the (Basic) Co-Simulation interface may result in divergent simulation results.</em>
+<p><em>[An FMU that supports <a href="#scheduled-co-simulation-api">Scheduled Co-Simulation</a> will in most cases also support <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a>.</em>
+<em>Wrapping towards other Co-Simulation interfaces can influence the simulation results.</em>
+<em>Depending on the model especially wrapping towards the Basic Co-Simulation interface may result in divergent simulation results.</em>
 <em>Especially aperiodic <a href="#inputClock"><code>input clocks</code></a> can not always be sufficiently emulated in modes that do not directly support <a href="#clock"><code>clocks</code></a>.</em>
 <em>Therefore it is recommended that the FMU provides logging information to the user about the influence of the current mode on simulation results, if non-optimal modes are used by the simulation environment.]</em></p>
 </div>
@@ -11482,23 +11449,9 @@ The accessible variables are marked with attribute <a href="#intermediateAccess"
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canReturnEarlyAfterIntermediateUpdate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if master calls <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> during callback function call <code>intermediateUpdate</code> and <code>canReturnEarly = true</code> in <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
-<em>[If set to <code>true</code> and <code>providesHybridCoSimulation</code> is set to <code>false</code>, the FMU supports the basic functionality of ending DoSteps before the planned next communication point time.</em>
-<em>This is controlled by the simulation master for avoiding unnecessary computations and roll backs of the FMU due to external events known by the simulation master]</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesHybridCoSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave can be set to Hybrid Co-Simulation during instantiation of FMU.
-If set to <code>true</code> also <code>canReturnEarlyAfterIntermediateUpdate</code> must be set to <code>true</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesScheduledCoSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave can instantiated as Scheduled Co-Simulation.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseBasicCoSimulation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>false</code>, the slave can be set to Basic Co-Simulation during instantiation of the FMU.
-<em>[The support of Basic Co-Simulation should be possible for most Co-Simulation FMUs, thus the default value is <code>false</code>.]</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the master calls <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a> in callback <code>intermediateUpdate</code> and <code>canReturnEarly = true</code>.
+<em>[If set to <code>true</code>, a Co-Simulation FMU supports ending <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> before the planned next communication point.</em>
+<em>This can be used by the simulation master to avoid unnecessary computations and roll backs of the FMU due to external events known by the simulation master.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixedInternalStepSize</code></p></td>
@@ -11673,9 +11626,6 @@ Note that, since output events time instants are not known in advance, at output
 </div>
 <div class="sect2">
 <h3 id="hybrid-co-simulation-api">5.2. Application Programming Interface</h3>
-<div class="paragraph">
-<p>If the Boolean capability flag <code>providesHybridCoSimulation</code> and <code>canReturnEarlyAfterIntermediateUpdate = true</code> the Co-Simulation master can use the interface type Hybrid Co-Simulation.</p>
-</div>
 <div class="sect3">
 <h4 id="_communication_of_event_time_and_inputoutput_values">5.2.1. Communication of event time and input/output values</h4>
 <div class="paragraph">
@@ -11773,9 +11723,8 @@ If the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with t
 <p>The Co-Simulation master can also call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> at communication instants to handle input events, as will be discussed in following sections.</p>
 </div>
 <div class="paragraph">
-<p>If an FMU provides the early-return capability that includes the handling of events in <strong>Event Mode</strong>, the FMU signals this via <code>canReturnEarlyAfterIntermediateUpdate</code> and <code>providesHybridCoSimulation = true</code> in the <code>modelDescription.xml</code>.
-The master should indicate to the FMU that this early-return feature is also supported by the master.
-The Co-Simulation master signals to the FMU that it supports and has recognized the early return Co-Simulation capabilities of the FMU by calling the Co-Simulation interface type instantiate function <a href="#fmi3InstantiateHybridCoSimulation"><code>fmi3InstantiateHybridCoSimulation</code></a>.</p>
+<p>If an FMU provides the early-return capability that includes the handling of events in <strong>Event Mode</strong>,
+the FMU signals this via <code>canReturnEarlyAfterIntermediateUpdate</code> in the <code>modelDescription.xml</code>.</p>
 </div>
 <div class="paragraph">
 <p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through <code>intermediateUpdateTime</code>.
@@ -12808,19 +12757,10 @@ We consider &#8230;&#8203;</p>
 Such variables can be continuous-time or discrete-time variables if the <a href="#clock"><code>clock</code></a> is of <code>clockType = communicationPoint</code>.</p>
 </div>
 <div class="sect3">
-<h4 id="xml-flags-clocked-co-simulation">5.3.1. Capability Flags</h4>
-<div class="paragraph">
-<p>If the XML file defines an FMU for Hybrid Co-Simulation, element <code>CoSimulation</code> must be present as described in section <a href="#fmi-for-basic-co-simulation">Section 4</a>.</p>
-</div>
-<div class="paragraph">
-<p>In order to provide a Hybrid Co-Simulation, the attribute <code>providesHybridCoSimulation</code> has set to be set to <code>true</code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="xml-example-clocked-co-simulation">5.3.2. Example XML Description File</h4>
+<h4 id="xml-example-clocked-co-simulation">5.3.1. Example XML Description File</h4>
 <div class="paragraph">
 <p>The example below is the same one as shown in <a href="#xml-example-co-simulation">Section 4.3.1</a> for a Co-Simulation FMU.
-The only differences are, that <code>providesHybridCoSimulation</code> is set to <code>true</code> and <a href="#clock"><code>clocks</code></a> are defined in the <code>modelDescription.xml</code>. <mark>[TODO]: Recheck later</mark>
+The only differences are, that the element <code>&lt;fmiModelDescription&gt;&lt;HybridCoSimulation&gt;</code> is present and <a href="#clock"><code>clocks</code></a> are defined in the <code>modelDescription.xml</code>.
 The XML file may have the following content:</p>
 </div>
 <div class="listingblock">
@@ -12867,14 +12807,8 @@ The activation of such a <a href="#outputClock"><code>output clock</code></a> is
 </div>
 <div class="paragraph">
 <p>The direct scheduling of model partitions based on <a href="#clock"><code>clock</code></a> ticks requires an additional handling mode for FMUs.
-The FMU signals its support for direct model partition scheduling in the <code>modelDescription.xml</code> via the flag <code>providesScheduledCoSimulation = true</code>.
+The FMU signals its support for direct model partition scheduling in the <code>modelDescription.xml</code> via the element <code>&lt;fmiModelDescription&gt;&lt;ScheduledCoSimulation&gt;</code>.
 The Co-Simulation master signals to the FMU that it supports and has recognized the <a href="#clock"><code>clock</code></a> and model partition scheduling capabilities of the FMU by instantiating it as Scheduled Co-Simulation.</p>
-</div>
-<div class="paragraph">
-<p>If the flag <code>providesScheduledCoSimulation = false</code>, it is not allowed to use the Scheduled Co-Simulation interface.</p>
-</div>
-<div class="paragraph">
-<p>If no <a href="#inputClock"><code>input clocks</code></a> are defined by the FMU it is not allowed to set <code>providesScheduledCoSimulation</code> to <code>true</code> in the <code>modelDescription.xml</code>.</p>
 </div>
 <div class="paragraph">
 <p>Error, reset or terminate information is a global state of the FMU.
@@ -13652,7 +13586,6 @@ The exporting tool has to consider external events i.e. interrupts (if <a href="
 </div>
 <div class="paragraph">
 <p>To provide more options to secure the code against unwanted preemption new callback functions are defined that can be used to prevent preemption for certain code parts.
-If <code>providesScheduledCoSimulation = true</code> the default setting is that preemption is permitted.
 The preemption lock has to be actively locked and unlocked in the FMU&#8217;s code.
 Such locks should be used with care and only for securing very short code parts that cannot be secured otherwise.</p>
 </div>
@@ -13885,8 +13818,7 @@ fmi3Status GlobalTerminate(status)
 There is a direct one-to-one relation for a <a href="#clock"><code>clock</code></a> and a model partition.</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#clock"><code>clocks</code></a> are defined and the flag <code>providesScheduledCoSimulation = true</code>, the Co-Simulation master can use the Scheduled Co-Simulation interface.
-If no <a href="#inputClock"><code>input clocks</code></a> are defined, the flag <code>providesScheduledCoSimulation</code> shall not be set to <code>true</code>.</p>
+<p>A Scheduled Co-Simulation FMU must have at least one <a href="#inputClock"><code>input clock</code></a>.</p>
 </div>
 <div class="sect3">
 <h4 id="_example_xml_description_file_2">6.3.1. Example XML Description File</h4>
