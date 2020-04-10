@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<fmiModelDescription fmiVersion="3.0-alpha.3" modelName="LinearTransform" instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f000}">
+
+  <ModelExchange modelIdentifier="LinearTransform"/>
+
+  <BasicCoSimulation modelIdentifier="LinearTransform" canHandleVariableCommunicationStepSize="true"/>
+
+  <BuildConfiguration modelIdentifier="LinearTransform">
+    <SourceFileSet language="C99">
+      <SourceFile name="fmi3Functions.c"/>
+      <SourceFile name="model.c"/>
+      <SourceFile name="slave.c"/>
+      <PreprocessorDefinition name="FMI_VERSION" value="3"/>
+    </SourceFileSet>
+  </BuildConfiguration>
+
+  <LogCategories>
+    <Category name="logEvents" description="Log events"/>
+    <Category name="logStatusError" description="Log error messages"/>
+  </LogCategories>
+
+  <DefaultExperiment startTime="0" stopTime="10"/>
+
+  <ModelVariables>
+    <Float64 name="m" valueReference="0" description="" causality="parameter" variability="constant" start="2"/>
+    <Float64 name="n" valueReference="1" description="" causality="parameter" variability="constant" start="3"/>
+    <Float64 name="u" valueReference="2" description="" causality="input" start="1">
+      <Dimension start="3"/>
+    </Float64>
+    <Float64 name="A" valueReference="3" causality="parameter" variability="fixed" initial="calculated">
+      <Dimension start="3"/>
+      <Dimension start="2"/>
+    </Float64>
+    <Float64 name="y" valueReference="4" causality="output">
+      <Dimension start="2"/>
+    </Float64>
+  </ModelVariables>
+
+  <ModelStructure>
+    <Output valueReference="0"/>
+    <Derivative valueReference="1"/>
+    <InitialUnknown valueReference="1"/>
+  </ModelStructure>
+
+</fmiModelDescription>
