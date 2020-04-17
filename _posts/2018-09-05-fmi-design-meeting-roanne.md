@@ -1,6 +1,6 @@
 ---
 title: FMI Design Meeting at Siemens Industry Software in Roanne (France)
-categories: [news]
+categories: [events]
 layout: post
 ---
 

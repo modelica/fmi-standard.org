@@ -212,8 +212,8 @@ function filterRows() {
       if (
         (showCCode   && !platforms.includes("c-code"))   ||
         (showMacOS   && !platforms.includes("darwin64")) ||
-        (showLinux   && !platforms.includes("linux64"))  ||
-        (showWindows && !platforms.includes("win64"))    ||
+        (showLinux   && !platforms.includes("linux32") && !platforms.includes("linux64")) ||
+        (showWindows && !platforms.includes("win32")   && !platforms.includes("win64"))   ||
         (showCommercial && !commercial) ||
         (showOpenSource && commercial)  ||
         (showPassed && !passed)  ||
@@ -236,4 +236,12 @@ filterRows();
 <script src="https://unpkg.com/sticky-table-headers"></script>
 <script>
 $("#tbl-results").stickyTableHeaders({fixedOffset: 60});
+</script>
+
+<script>
+/* enable popovers and tooltips */
+$(document).ready(function() {
+  $('[data-toggle="popover"]').popover();
+  $('[data-toggle="tooltip"]').tooltip()
+});
 </script>

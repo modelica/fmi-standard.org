@@ -1,6 +1,6 @@
 ---
 title: FMI Design Meeting at ESI-ITI in Dresden (Germany)
-categories: [news]
+categories: [events]
 layout: post
 ---
 
