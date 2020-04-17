@@ -3017,16 +3017,16 @@ If this is not possible, an explicit cast of one <a href="#clock"><code>clock</c
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>valueReferences[]</code> points to an array of value references of clocks to be activated or deactivated at the current time instant depending on</p>
+<p>Argument <code>valueReferences</code> points to an array of value references of clocks to be activated or deactivated at the current time instant depending on</p>
 </li>
 <li>
-<p>argument <code>values[]</code> content: if the nth element is <code>fmi3ClockActive</code> the nth clock is activated, otherwise deactivated.</p>
+<p>argument <code>values</code> content: if the nth element is <code>fmi3ClockActive</code> the nth clock is activated, otherwise deactivated.</p>
 </li>
 <li>
-<p>Argument <code>nValueReferences</code> indicates the size of the parallel arrays <code>valueReferences[]</code> and <code>values[]</code> (and potentially <code>subactive[]</code>).</p>
+<p>Argument <code>nValueReferences</code> indicates the size of the parallel arrays <code>valueReferences</code> and <code>values</code> (and potentially <code>subactive</code>).</p>
 </li>
 <li>
-<p>Argument <code>subactive[]</code> requires evaluation of a clocked partition in subactive mode (only output equations) if the argument subactive is non NULL and <code>subactive[i] = fmi3True</code>. <code>subactive[i]</code> has no meaning for Communication Point Clocks and is ignored for such <a href="#clock"><code>clocks</code></a>.
+<p>Argument <code>subactive</code> requires evaluation of a clocked partition in subactive mode (only output equations) if the argument subactive is non NULL and <code>subactive[i] = fmi3True</code>. <code>subactive[i]</code> has no meaning for Communication Point Clocks and is ignored for such <a href="#clock"><code>clocks</code></a>.
 It is not allowed to call this function within the callback function <code>fmi3IntermediateUpdate</code>.</p>
 </li>
 </ul>
@@ -3045,13 +3045,13 @@ It is not allowed to call this function within the callback function <code>fmi3I
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>valueReferences[]</code> contains a list of value references to <a href="#clock"><code>clocks</code></a> of the size indicated by</p>
+<p>Argument <code>valueReferences</code> contains a list of value references to <a href="#clock"><code>clocks</code></a> of the size indicated by</p>
 </li>
 <li>
 <p>argument <code>nValueReferences</code>.</p>
 </li>
 <li>
-<p>Argument <code>values[]</code> will return the activation status at the current time instant of the <a href="#clock"><code>clocks</code></a> referenced by <code>valueReferences[]</code>.
+<p>Argument <code>values</code> will return the activation status at the current time instant of the <a href="#clock"><code>clocks</code></a> referenced by <code>valueReferences</code>.
 If <code>values[i] = fmi3ClockActive</code> the <a href="#clock"><code>clock</code></a> is currently active, otherwise the <a href="#clock"><code>clock</code></a> is not active.</p>
 </li>
 </ul>
@@ -3396,28 +3396,28 @@ The functions may only be called if their availability is indicated by the attri
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>unknowns[]</code> contains value references to the unknowns.</p>
+<p>Argument <code>unknowns</code> contains value references to the unknowns.</p>
 </li>
 <li>
-<p>Argument <code>nUnknowns</code> contains the length of argument <code>unknowns[]</code>.</p>
+<p>Argument <code>nUnknowns</code> contains the length of argument <code>unknowns</code>.</p>
 </li>
 <li>
-<p>Argument <code>knowns[]</code> contains value references of the knowns.</p>
+<p>Argument <code>knowns</code> contains value references of the knowns.</p>
 </li>
 <li>
-<p>Argument <code>nKnowns</code> contains the length of argument <code>knowns[]</code>.</p>
+<p>Argument <code>nKnowns</code> contains the length of argument <code>knowns</code>.</p>
 </li>
 <li>
-<p>Argument <code>seed[]</code> contains the components of the seed vector.</p>
+<p>Argument <code>seed</code> contains the components of the seed vector.</p>
 </li>
 <li>
-<p>Argument <code>nSeed</code> contains the length of <code>seed[]</code>.</p>
+<p>Argument <code>nSeed</code> contains the length of <code>seed</code>.</p>
 </li>
 <li>
-<p>Argument <code>sensitivity[]</code> contains the components of the sensitivity vector.</p>
+<p>Argument <code>sensitivity</code> contains the components of the sensitivity vector.</p>
 </li>
 <li>
-<p>Argument <code>nSensitivity</code> contains the length of <code>sensitivity[]</code>.</p>
+<p>Argument <code>nSensitivity</code> contains the length of <code>sensitivity</code>.</p>
 </li>
 </ul>
 </div>
@@ -8752,7 +8752,7 @@ This is unproblematic for time and states, but is more involved for <a href="#pa
 <p>Argument <code>nx</code> is the length of</p>
 </li>
 <li>
-<p>argument <code>x[]</code></p>
+<p>argument <code>x</code></p>
 </li>
 </ul>
 </div>
@@ -8810,13 +8810,13 @@ Before one of these functions can be called, the appropriate functions from the 
 <p>Argument <code>stepEvent</code> signals with <code>fmi3True</code> that a step event occurred.</p>
 </li>
 <li>
-<p>Argument <code>rootsFound[]</code> is an array of length <code>nEventIndicators</code>. For <code>i = 1, &#8230;&#8203;, nEventIndicators, rootsFound[i-1]</code> \(\neq\) <code>0</code> if the event indicator \(z_i\) has a root, and <code>rootsFound[i-1] == 0</code> if not.
+<p>Argument <code>rootsFound</code> is an array of length <code>nEventIndicators</code>. For <code>i = 1, &#8230;&#8203;, nEventIndicators, rootsFound[i-1]</code> \(\neq\) <code>0</code> if the event indicator \(z_i\) has a root, and <code>rootsFound[i-1] == 0</code> if not.
 For the components \(z_i\) for which a root was found, the sign of <code>rootsFound[i-1]</code> indicates the direction of the zero-crossing.
 A value of <code>+1</code> indicates that \(z_i\) is increasing, while a value of <code>-1</code> indicates a decreasing \(z_i\).
 If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is not defined.</p>
 </li>
 <li>
-<p>Argument <code>nEventIndicators</code> contains the number of event indicators (length of <code>rootsFound[]</code>) or <code>0</code> if the caller cannot provide this information.</p>
+<p>Argument <code>nEventIndicators</code> contains the number of event indicators (length of <code>rootsFound</code>) or <code>0</code> if the caller cannot provide this information.</p>
 </li>
 <li>
 <p>Argument <code>timeEvent</code> signals with <code>fmi3True</code> that a time event occurred.</p>
@@ -9504,6 +9504,8 @@ stateEvent       = fmi3False;
 
 // initialize previous event indicators
 CHECK_STATUS(M_fmi3GetEventIndicators(m, previous_z, NUMBER_OF_EVENT_INDICATORS));
+
+initialEventMode = fmi3False;
 
 CHECK_STATUS(M_fmi3EnterContinuousTimeMode(m));
 
@@ -10293,19 +10295,19 @@ Whether the slave is able to handle the <a href="#derivative"><code>derivatives<
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>valueReferences[]</code> is a vector of value references that define the variables whose <a href="#derivative"><code>derivatives</code></a> shall be set or get.</p>
+<p>Argument <code>valueReferences</code> is a vector of value references that define the variables whose <a href="#derivative"><code>derivatives</code></a> shall be set or get.</p>
 </li>
 <li>
-<p>Argument <code>nValueReferences</code> is the dimension of the arguments <code>valueReferences[]</code> and <code>orders[]</code>.</p>
+<p>Argument <code>nValueReferences</code> is the dimension of the arguments <code>valueReferences</code> and <code>orders</code>.</p>
 </li>
 <li>
-<p>Argument <code>orders[]</code> contains the orders of the respective <a href="#derivative"><code>derivative</code></a> (1 means the first <a href="#derivative"><code>derivative</code></a>, 0 is not allowed).</p>
+<p>Argument <code>orders</code> contains the orders of the respective <a href="#derivative"><code>derivative</code></a> (1 means the first <a href="#derivative"><code>derivative</code></a>, 0 is not allowed).</p>
 </li>
 <li>
-<p>Argument <code>values[]</code> is a vector with the values of the <a href="#derivative"><code>derivatives</code></a>.</p>
+<p>Argument <code>values</code> is a vector with the values of the <a href="#derivative"><code>derivatives</code></a>.</p>
 </li>
 <li>
-<p>Argument <code>nValues</code> is the size of the argument <code>values[]</code>.</p>
+<p>Argument <code>nValues</code> is the size of the argument <code>values</code>.</p>
 </li>
 </ul>
 </div>
