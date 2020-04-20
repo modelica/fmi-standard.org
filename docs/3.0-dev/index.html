@@ -754,7 +754,17 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel3">
 <li><a href="#providing-independent-variables-and-re-initialization">4.2.1. Providing Independent Variables and Re-initialization of Caching</a></li>
 <li><a href="#evaluation-of-model-equations">4.2.2. Evaluation of Model Equations</a></li>
-<li><a href="#state-machine-model-exchange">4.2.3. State Machine of Calling Sequence</a></li>
+<li><a href="#state-machine-model-exchange">4.2.3. State Machine for Model Exchange</a>
+<ul class="sectlevel4">
+<li><a href="#_state_instantiated">4.2.3.1. State: instantiated</a></li>
+<li><a href="#_state_configuration_mode">4.2.3.2. State: Configuration Mode</a></li>
+<li><a href="#_state_initialization_mode">4.2.3.3. State: Initialization Mode</a></li>
+<li><a href="#_state_continuous_time_mode">4.2.3.4. State: Continuous-Time Mode</a></li>
+<li><a href="#_state_event_mode">4.2.3.5. State: Event Mode</a></li>
+<li><a href="#_state_reconfiguration_mode">4.2.3.6. State: Reconfiguration Mode</a></li>
+<li><a href="#_state_terminated">4.2.3.7. State: Terminated</a></li>
+</ul>
+</li>
 <li><a href="#_code_example">4.2.4. Code Example</a></li>
 <li><a href="#_clocks_api">4.2.5. Clocks API</a></li>
 <li><a href="#_handling_of_clock_events">4.2.6. Handling of clock events</a></li>
@@ -782,11 +792,11 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#transfer-of-input-output-and-parameters">5.2.1. Variables access in Co-Simulation interface types</a></li>
 <li><a href="#_computation_in_co_simulation_interface_types">5.2.2. Computation in Co-Simulation interface types</a></li>
 <li><a href="#retrieving-status-from-slave">5.2.3. Retrieving Status Information from the Slave in Co-Simulation Interface Types</a></li>
-<li><a href="#state-machine-co-simulation">5.2.4. State Machine of Calling Sequence from Master to Slave in Co-Simulation Interface Types</a>
+<li><a href="#state-machine-co-simulation">5.2.4. State Machine for Basic Co-Simulation</a>
 <ul class="sectlevel4">
-<li><a href="#state-slave-setable-fmu-state-co-simulation">5.2.4.1. State: Slave Setable FMU State</a></li>
-<li><a href="#state-slave-under-evaluation-co-simulation">5.2.4.2. State: Slave Under Evaluation</a></li>
-<li><a href="#state-slave-initialized-co-simulation">5.2.4.3. State: Slave Initialized</a></li>
+<li><a href="#state-fmu-state-setable-co-simulation">5.2.4.1. State: FMU State Setable</a></li>
+<li><a href="#state-under-evaluation-co-simulation">5.2.4.2. State: Under Evaluation</a></li>
+<li><a href="#state-initialized-co-simulation">5.2.4.3. State: Initialized</a></li>
 <li><a href="#state-instantiated-co-simulation">5.2.4.4. State: Instantiated</a></li>
 <li><a href="#state-initialization-mode-co-simulation">5.2.4.5. State: Initialization Mode</a></li>
 <li><a href="#state-step-mode-co-simulation">5.2.4.6. State: Step Mode</a></li>
@@ -827,20 +837,20 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#computation-clocked-co-simulation">6.2.3.2. Computation in Hybrid Co-Simulation</a></li>
 </ul>
 </li>
-<li><a href="#state-machine-calling-sequence-clocked-co-simulation">6.2.4. State Machine of Calling Sequence from Master to Slave in Hybrid Co-Simulation</a>
+<li><a href="#state-machine-calling-sequence-clocked-co-simulation">6.2.4. State Machine for Hybrid Co-Simulation</a>
 <ul class="sectlevel4">
-<li><a href="#_state_slave_setable_fmu_state">6.2.4.1. State: Slave Setable FMU State</a></li>
-<li><a href="#_state_slave_under_evaluation">6.2.4.2. State: Slave Under Evaluation</a></li>
-<li><a href="#_state_slave_initialized">6.2.4.3. State: Slave Initialized</a></li>
-<li><a href="#_state_instantiated">6.2.4.4. State: Instantiated</a></li>
-<li><a href="#_state_configuration_mode">6.2.4.5. State: Configuration Mode</a></li>
-<li><a href="#_state_initialization_mode">6.2.4.6. State: Initialization Mode</a></li>
-<li><a href="#_state_event_mode">6.2.4.7. State: Event Mode</a></li>
+<li><a href="#_state_fmu_state_setable">6.2.4.1. State: FMU State Setable</a></li>
+<li><a href="#_state_under_evaluation">6.2.4.2. State: Under Evaluation</a></li>
+<li><a href="#_state_initialized">6.2.4.3. State: Initialized</a></li>
+<li><a href="#_state_instantiated_2">6.2.4.4. State: Instantiated</a></li>
+<li><a href="#_state_configuration_mode_2">6.2.4.5. State: Configuration Mode</a></li>
+<li><a href="#_state_initialization_mode_2">6.2.4.6. State: Initialization Mode</a></li>
+<li><a href="#_state_event_mode_2">6.2.4.7. State: Event Mode</a></li>
 <li><a href="#_state_step_mode">6.2.4.8. State: Step Mode</a></li>
 <li><a href="#_state_intermediate_update_mode">6.2.4.9. State: Intermediate Update Mode</a></li>
-<li><a href="#_state_reconfiguration_mode">6.2.4.10. State: Reconfiguration Mode</a></li>
+<li><a href="#_state_reconfiguration_mode_2">6.2.4.10. State: Reconfiguration Mode</a></li>
 <li><a href="#_state_step_discarded">6.2.4.11. State: Step Discarded</a></li>
-<li><a href="#_state_terminated">6.2.4.12. State: Terminated</a></li>
+<li><a href="#_state_terminated_2">6.2.4.12. State: Terminated</a></li>
 </ul>
 </li>
 <li><a href="#code-example-clocked-co-simulation">6.2.5. Code Example for Hybrid Co-Simulation</a></li>
@@ -862,12 +872,12 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_computation_in_scheduled_co_simulation">7.2.2. Computation in Scheduled Co-Simulation</a></li>
 <li><a href="#state-machine-scheduled-co-simulation">7.2.3. State Machine for Scheduled Co-Simulation</a>
 <ul class="sectlevel4">
-<li><a href="#_state_slave_settable_fmu_state">7.2.3.1. State: Slave Settable FMU State</a></li>
-<li><a href="#_state_slave_under_evaluation_2">7.2.3.2. State: Slave Under Evaluation</a></li>
-<li><a href="#_state_slave_initialized_2">7.2.3.3. State: Slave Initialized</a></li>
+<li><a href="#_state_setable_fmu_state">7.2.3.1. State: Setable FMU State</a></li>
+<li><a href="#_state_under_evaluation_2">7.2.3.2. State: Under Evaluation</a></li>
+<li><a href="#_state_initialized_2">7.2.3.3. State: Initialized</a></li>
 <li><a href="#_state_clock_activation_mode">7.2.3.4. State: Clock Activation Mode</a></li>
 <li><a href="#_state_intermediate_update_mode_2">7.2.3.5. State: Intermediate Update Mode</a></li>
-<li><a href="#_state_reconfiguration_mode_2">7.2.3.6. State: Reconfiguration Mode</a></li>
+<li><a href="#_state_reconfiguration_mode_3">7.2.3.6. State: Reconfiguration Mode</a></li>
 </ul>
 </li>
 <li><a href="#preemption-support">7.2.4. Preemption Support</a></li>
@@ -8991,7 +9001,7 @@ Note that it is required that <code>x_nominal[i] &gt; 0.0</code>.
 </div>
 </div>
 <div class="sect3">
-<h4 id="state-machine-model-exchange">4.2.3. State Machine of Calling Sequence</h4>
+<h4 id="state-machine-model-exchange">4.2.3. State Machine for Model Exchange</h4>
 <div class="paragraph">
 <p>Every implementation of the FMI must support calling sequences of the functions according to the following state chart:</p>
 </div>
@@ -9013,47 +9023,56 @@ Note that the FMU can always determine in which state it is since every state is
 <p>The transition conditions <code>external event</code>, <code>time event</code>, and <code>state event</code> are defined in <a href="#math-model-exchange">Section 4.1</a>.
 Each state of the state machine corresponds to a certain phase of a simulation as follows:</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">instantiated</dt>
-<dd>
+<div class="sect4">
+<h5 id="_state_instantiated">4.2.3.1. State: instantiated</h5>
+<div class="paragraph">
 <p>In this state, <a href="#start"><code>start</code></a> and guess values (= variables that have <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>) set and <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> can be set, this does not include inputs as they do not have an <a href="#initial"><code>initial</code></a> attribute.</p>
-</dd>
-<dt class="hdlist1">Configuration Mode</dt>
-<dd>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_state_configuration_mode">4.2.3.2. State: Configuration Mode</h5>
+<div class="paragraph">
 <p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a> or <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
 This state is entered from state <strong>Instantiated</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Instantiated</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.
 <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> can only be called if the FMU contains at least one <a href="#structuralParameter"><code>structural parameter</code></a></p>
-</dd>
-<dt class="hdlist1">Initialization Mode</dt>
-<dd>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_state_initialization_mode">4.2.3.3. State: Initialization Mode</h5>
+<div class="paragraph">
 <p>In this state, equations are active to determine all continuous-time states, as well as all <a href="#output"><code>outputs</code></a> (and optionally other variables exposed by the exporting tool).
 The variables that can be retrieved by <code>fmi3Get{VariableType}</code> calls are (1) defined in the XML file as elements <code>&lt;ModelStructure&gt;&lt;InitialUnknown&gt;</code> and (2) variables with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.
 Variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a>, as well as variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> can be set.</p>
-</dd>
-<dt class="hdlist1">Continuous-Time Mode</dt>
-<dd>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_state_continuous_time_mode">4.2.3.4. State: Continuous-Time Mode</h5>
+<div class="paragraph">
 <p>In this state, the continuous-time model equations are active and integrator steps are performed.
 The event time of a state event may be determined if a domain change of at least one event indicator is detected at the end of a completed integrator step.</p>
-</dd>
-<dt class="hdlist1">Event Mode</dt>
-<dd>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_state_event_mode">4.2.3.5. State: Event Mode</h5>
+<div class="paragraph">
 <p>If an event is triggered in <strong>Continuous-Time Mode</strong>, <strong>Event Mode</strong> is entered by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
 In this mode all continuous-time and discrete-time equations are active and the unknowns at an event can be computed and retrieved.
 After an event is completely processed, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called and depending on the return argument, <code>newDiscreteStatesNeeded</code>, the state chart stays in <strong>Event Mode</strong> or switches to <strong>Continuous-Time Mode</strong>.
 When the <strong>Initialization Mode</strong> is terminated with <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, then <strong>Event Mode</strong> is directly entered, and the continuous-time and discrete-time variables at the initial time are computed based on the initial continuous-time states determined in the <strong>Initialization Mode</strong>.</p>
-</dd>
-<dt class="hdlist1">Reconfiguration Mode</dt>
-<dd>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_state_reconfiguration_mode">4.2.3.6. State: Reconfiguration Mode</h5>
+<div class="paragraph">
 <p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
 This state is entered from state <strong>Event Mode</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Event Mode</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.
 <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> can only be called if the FMU contains at least one <a href="#structuralParameter"><code>structural parameter</code></a></p>
-</dd>
-<dt class="hdlist1">Terminated</dt>
-<dd>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_state_terminated">4.2.3.7. State: Terminated</h5>
+<div class="paragraph">
 <p>In this state, the solution at the final time of a simulation can be retrieved.</p>
-</dd>
-</dl>
 </div>
 <div class="paragraph">
 <p>Note that simulation backward in time is only allowed over continuous time intervals.
@@ -9447,6 +9466,7 @@ or <a href="#causality"><code>causality</code></a> = <a href="#input"><code>inpu
 or (<a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>)<br>
 <strong>5</strong> for a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a><br>
 <strong>7</strong> always, but retrieved values are usable for debugging only</p>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -10426,7 +10446,7 @@ See <a href="#status-returned-by-functions">Section 3.1.3</a> for details.
 </div>
 </div>
 <div class="sect3">
-<h4 id="state-machine-co-simulation">5.2.4. State Machine of Calling Sequence from Master to Slave in Co-Simulation Interface Types</h4>
+<h4 id="state-machine-co-simulation">5.2.4. State Machine for Basic Co-Simulation</h4>
 <div class="paragraph">
 <p>The following state machine defines the supported calling sequences.</p>
 </div>
@@ -10440,7 +10460,7 @@ See <a href="#status-returned-by-functions">Section 3.1.3</a> for details.
 <p>In this Co-Simulation interface the following functions must not be called: <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> including all functions that are specific to Model Exchange.</p>
 </div>
 <div class="sect4">
-<h5 id="state-slave-setable-fmu-state-co-simulation">5.2.4.1. State: Slave Setable FMU State</h5>
+<h5 id="state-fmu-state-setable-co-simulation">5.2.4.1. State: FMU State Setable</h5>
 <div class="paragraph">
 <p>In all states of this super state it is allowed to call <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a>`, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <code>fmi3DeSerializeFMUState</code>, <a href="#fmi3Reset"><code>fmi3Reset</code></a>, <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a>, <code>fmi3SetDebugLogging</code> and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a>.</p>
 </div>
@@ -10449,14 +10469,14 @@ See <a href="#status-returned-by-functions">Section 3.1.3</a> for details.
 </div>
 </div>
 <div class="sect4">
-<h5 id="state-slave-under-evaluation-co-simulation">5.2.4.2. State: Slave Under Evaluation</h5>
+<h5 id="state-under-evaluation-co-simulation">5.2.4.2. State: Under Evaluation</h5>
 <div class="paragraph">
 <p>This super state is entered by the FMU when <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> is called.
 If any function returns <code>fmi3Error</code> the FMU enters state <strong>Terminated</strong>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="state-slave-initialized-co-simulation">5.2.4.3. State: Slave Initialized</h5>
+<h5 id="state-initialized-co-simulation">5.2.4.3. State: Initialized</h5>
 <div class="paragraph">
 <p>This super state is entered by the FMU when <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.
 If the function <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> is called, the FMU enters state <strong>Terminated</strong>.</p>
@@ -11819,7 +11839,7 @@ Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3Ente
 </div>
 </div>
 <div class="sect3">
-<h4 id="state-machine-calling-sequence-clocked-co-simulation">6.2.4. State Machine of Calling Sequence from Master to Slave in Hybrid Co-Simulation</h4>
+<h4 id="state-machine-calling-sequence-clocked-co-simulation">6.2.4. State Machine for Hybrid Co-Simulation</h4>
 <div class="paragraph">
 <p>The following state machine defines the supported calling sequences.</p>
 </div>
@@ -11837,43 +11857,43 @@ Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3Ente
 Each state of the state machine corresponds to a certain phase of a simulation as follows:</p>
 </div>
 <div class="sect4">
-<h5 id="_state_slave_setable_fmu_state">6.2.4.1. State: Slave Setable FMU State</h5>
+<h5 id="_state_fmu_state_setable">6.2.4.1. State: FMU State Setable</h5>
 <div class="paragraph">
-<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-slave-setable-fmu-state-co-simulation">Section 5.2.4.1</a>.</p>
+<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-fmu-state-setable-co-simulation">Section 5.2.4.1</a>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_slave_under_evaluation">6.2.4.2. State: Slave Under Evaluation</h5>
+<h5 id="_state_under_evaluation">6.2.4.2. State: Under Evaluation</h5>
 <div class="paragraph">
-<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-slave-under-evaluation-co-simulation">Section 5.2.4.2</a>.</p>
+<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-under-evaluation-co-simulation">Section 5.2.4.2</a>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_slave_initialized">6.2.4.3. State: Slave Initialized</h5>
+<h5 id="_state_initialized">6.2.4.3. State: Initialized</h5>
 <div class="paragraph">
-<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-slave-initialized-co-simulation">Section 5.2.4.3</a>.</p>
+<p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-initialized-co-simulation">Section 5.2.4.3</a>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_instantiated">6.2.4.4. State: Instantiated</h5>
+<h5 id="_state_instantiated_2">6.2.4.4. State: Instantiated</h5>
 <div class="paragraph">
 <p>This super state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-instantiated-co-simulation">Section 5.2.4.4</a>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_configuration_mode">6.2.4.5. State: Configuration Mode</h5>
+<h5 id="_state_configuration_mode_2">6.2.4.5. State: Configuration Mode</h5>
 <div class="paragraph">
 <p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-configuration-mode-co-simulation">Section 5.2.4.11</a>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_initialization_mode">6.2.4.6. State: Initialization Mode</h5>
+<h5 id="_state_initialization_mode_2">6.2.4.6. State: Initialization Mode</h5>
 <div class="paragraph">
 <p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-initialization-mode-co-simulation">Section 5.2.4.5</a>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_event_mode">6.2.4.7. State: Event Mode</h5>
+<h5 id="_state_event_mode_2">6.2.4.7. State: Event Mode</h5>
 <div class="paragraph">
 <p>The master and the FMU enter this state when the master calls <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> in state <strong>Initialization Mode</strong> or <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a> in state <strong>Reconfiguration Mode</strong> or <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> in state <strong>Step Mode</strong>.
 In order to handle discrete events and <a href="#clock"><code>clock</code></a> ticks, the FMU is pushed into the <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a></p>
@@ -11947,7 +11967,7 @@ For <a href="#input"><code>input</code></a> periodic <a href="#clock"><code>cloc
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_reconfiguration_mode">6.2.4.10. State: Reconfiguration Mode</h5>
+<h5 id="_state_reconfiguration_mode_2">6.2.4.10. State: Reconfiguration Mode</h5>
 <div class="paragraph">
 <p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-reconfiguration-mode-co-simulation">Section 5.2.4.8</a>.</p>
 </div>
@@ -11959,7 +11979,7 @@ For <a href="#input"><code>input</code></a> periodic <a href="#clock"><code>cloc
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_terminated">6.2.4.12. State: Terminated</h5>
+<h5 id="_state_terminated_2">6.2.4.12. State: Terminated</h5>
 <div class="paragraph">
 <p>This state in Hybrid Co-Simulation does not differ from Basic Co-Simulation described in section <a href="#state-terminated-co-simulation">Section 5.2.4.10</a>.</p>
 </div>
@@ -12736,7 +12756,7 @@ All states must not be entered or exited concurrently for model partitions of an
 <p>The states <strong>Configuration Mode</strong>, <strong>Instantiated</strong>, <strong>Initialization Mode</strong>, and <strong>Terminated</strong> are handled in the same way as in Co-Simulation, with the exception that the generally not allowed functions of Scheduled Co-Simulation must not be called.</p>
 </div>
 <div class="sect4">
-<h5 id="_state_slave_settable_fmu_state">7.2.3.1. State: Slave Settable FMU State</h5>
+<h5 id="_state_setable_fmu_state">7.2.3.1. State: Setable FMU State</h5>
 <div class="paragraph">
 <p>In all states of this super state it is allowed to call <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <code>fmi3SetFMUState</code>, <code>fmi3FreeFMUState</code>, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a>, <a href="#fmi3Reset"><code>fmi3Reset</code></a>, <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a>, <code>fmi3SetDebugLogging</code> and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a>.</p>
 </div>
@@ -12745,14 +12765,14 @@ All states must not be entered or exited concurrently for model partitions of an
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_slave_under_evaluation_2">7.2.3.2. State: Slave Under Evaluation</h5>
+<h5 id="_state_under_evaluation_2">7.2.3.2. State: Under Evaluation</h5>
 <div class="paragraph">
 <p>This super state is entered by the FMU when <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> is called.
 If any function returns <code>fmi3Error</code> or <code>fmi3Discard</code> the FMU enters state <strong>Terminated</strong>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_slave_initialized_2">7.2.3.3. State: Slave Initialized</h5>
+<h5 id="_state_initialized_2">7.2.3.3. State: Initialized</h5>
 <div class="paragraph">
 <p>This super state is entered by the FMU when <code>fmi3ExitInitializatoinMode</code> is called.
 If the function <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> is called, the FMU enters state <strong>Terminated</strong> from all states of this super state.
@@ -12911,7 +12931,7 @@ Also intermediate variable access is allowed as defined in <a href="#state-inter
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_reconfiguration_mode_2">7.2.3.6. State: Reconfiguration Mode</h5>
+<h5 id="_state_reconfiguration_mode_3">7.2.3.6. State: Reconfiguration Mode</h5>
 <div class="paragraph">
 <p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
 This state is entered from state <strong>Clock Activation Mode</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Clock Activation Mode</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.</p>
