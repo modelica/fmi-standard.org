@@ -683,7 +683,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#DefaultExperiment">2.2.6. Definition of a Default Experiment (DefaultExperiment)</a></li>
 <li><a href="#_definition_of_terminals_terminals">2.2.7. Definition of Terminals (Terminals)</a>
 <ul class="sectlevel4">
-<li><a href="#_rationale">2.2.7.1. Rationale</a></li>
+<li><a href="#_overview_2">2.2.7.1. Overview</a></li>
 <li><a href="#_terminals">2.2.7.2. Terminals</a></li>
 <li><a href="#_terminal_member_variable">2.2.7.3. Terminal Member Variable</a></li>
 <li><a href="#_general_remark_on_signal">2.2.7.4. General remark on signal</a></li>
@@ -693,7 +693,7 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#_definition_of_a_graphical_representation_graphicalrepresentation">2.2.8. Definition of a Graphical Representation (GraphicalRepresentation)</a>
 <ul class="sectlevel4">
-<li><a href="#_rationale_2">2.2.8.1. Rationale</a></li>
+<li><a href="#_overview_3">2.2.8.1. Overview</a></li>
 <li><a href="#_coordinatesystem">2.2.8.2. CoordinateSystem</a></li>
 <li><a href="#_icon">2.2.8.3. Icon</a></li>
 <li><a href="#_terminals_2">2.2.8.4. Terminals</a></li>
@@ -710,7 +710,16 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#common-concepts-cosim">2.4. Common Concepts for Co-Simulation</a>
 <ul class="sectlevel3">
 <li><a href="#math-intermediate-variable-access">2.4.1. Intermediate Variable Access Support</a></li>
-<li><a href="#_overview_of_different_co_simulation_interfaces">2.4.2. Overview of Different Co-Simulation Interfaces</a></li>
+<li><a href="#_overview_of_different_co_simulation_interfaces">2.4.2. Overview of Different Co-Simulation Interfaces</a>
+<ul class="sectlevel4">
+<li><a href="#_basic_co_simulation">2.4.2.1. Basic Co-Simulation</a></li>
+<li><a href="#_hybrid_co_simulation">2.4.2.2. Hybrid Co-Simulation</a></li>
+<li><a href="#_scheduled_co_simulation">2.4.2.3. Scheduled Co-Simulation</a></li>
+<li><a href="#intermediate-variable-access">2.4.2.4. Intermediate Variable Access</a></li>
+<li><a href="#_coupling_scenarios">2.4.2.5. Coupling Scenarios</a></li>
+<li><a href="#_multiple_co_simulation_interface_support_in_one_fmu">2.4.2.6. Multiple Co-Simulation Interface Support in one FMU::</a></li>
+</ul>
+</li>
 <li><a href="#_common_co_simulation_application_programming_interface">2.4.3. Common Co-Simulation Application Programming Interface</a>
 <ul class="sectlevel4">
 <li><a href="#api-early-return">2.4.3.1. Early Return</a></li>
@@ -1334,7 +1343,7 @@ The FMU itself does not implement any services to support this.]</em></p>
 <p>FMI functions must not change global settings which affect other processes/threads.
 An FMI function may change settings of the thread in which it is called (such as floating point control registers), provided these changes are restored before leaving the function or before a callback function is called.<br>
 <em>[This property ensures that functions of different FMU instances can be called safely in any order.</em>
-<em>Additionally, they can be called in parallel provided the functions are called in different process/threads.</em>
+<em>Additionally, they can be called in parallel provided the functions are called in different processes.</em>
 <em>If an FMI function changes for example the floating point control word of the CPU, it must restore the previous value before return of the function.</em>
 <em>For x86 CPUs, the floating point control word is set using the <code>fldcw</code> instruction.</em>
 <em>This can be used to switch on additional exceptions such as floating point division by zero.</em>
@@ -1405,9 +1414,9 @@ The header file version number for which the model was compiled, can be inquired
 </dl>
 </div>
 <div class="paragraph">
-<p>The goal is that both textual and binary representations of FMUs are supported and that several FMUs might be present at the same time in an executable (for example, FMU A may use an FMU B).
+<p>The goal is that both source code and binary representations of FMUs are supported and that several FMUs might be present at the same time in an executable (for example, FMU A may use an FMU B).
 In order for this to be possible, the names of the functions in different FMUs must be different, or function pointers must be used.
-To support the first variant, macros are provided in <code>fmi3Functions.h</code> to build the actual function names by using a function prefix that depends on how the FMU is shipped.</p>
+To support the source code representation of FMUs, macros are provided in <code>fmi3Functions.h</code> to build the actual function names by using a function prefix that depends on how the FMU is shipped.</p>
 </div>
 <div class="paragraph">
 <p><em>[These macros can be defined differently in a target specific variant of <code>fmi3Functions.h</code> to adjust them to the requirements of the supported compilers and platforms of the importing tool.]</em></p>
@@ -1474,8 +1483,7 @@ For example, the Windows API only supports full path-names of a file up to 260 c
 <div class="paragraph">
 <p>To simplify porting, no C types are used in the function interfaces, but the alias types are defined in this section.
 All definitions in this section are provided in the header file <code>fmi3PlatformTypes.h</code>.
-It is required to use this definition for all binary FMUs.
-<em>[Only for source code FMUs, a change might be useful in some cases.]</em>:</p>
+It is required to use this definition for all binary FMUs.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1682,9 +1690,7 @@ The standard header file as documented in this specification has version <code>"
     fmi3Boolean                visible,
     fmi3Boolean                loggingOn,
     fmi3InstanceEnvironment    instanceEnvironment,
-    fmi3CallbackLogMessage     logMessage,
-    fmi3CallbackAllocateMemory allocateMemory,
-    fmi3CallbackFreeMemory     freeMemory);
+    fmi3CallbackLogMessage     logMessage);
 
 typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
     fmi3String                     instanceName,
@@ -1697,8 +1703,6 @@ typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
     fmi3Boolean                    intermediateVariableSetRequired,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackAllocateMemory     allocateMemory,
-    fmi3CallbackFreeMemory         freeMemory,
     fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
@@ -1712,8 +1716,6 @@ typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
     fmi3Boolean                    intermediateVariableSetRequired,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackAllocateMemory     allocateMemory,
-    fmi3CallbackFreeMemory         freeMemory,
     fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
@@ -1727,8 +1729,6 @@ typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
     fmi3Boolean                    intermediateVariableSetRequired,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackAllocateMemory     allocateMemory,
-    fmi3CallbackFreeMemory         freeMemory,
     fmi3CallbackIntermediateUpdate intermediateUpdate,
     fmi3CallbackLockPreemption     lockPreemption,
     fmi3CallbackUnlockPreemption   unlockPreemption);</code></pre>
@@ -1739,9 +1739,6 @@ typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
 If a null pointer is returned, then instantiation failed.
 In that case, <code>logMessage</code> is called with detailed information about the reason.
 An FMU can be instantiated many times (provided capability flag <code>canBeInstantiatedOnlyOncePerProcess = false</code>).</p>
-</div>
-<div class="paragraph">
-<p>These instantiation functions must be called successfully before any of the following functions can be called.</p>
 </div>
 <div class="openblock">
 <div class="content">
@@ -1900,45 +1897,6 @@ If the character <code>#</code> shall be included in the message, it has to be p
 <div class="paragraph">
 <p><em>[Example: The message <code>#1365# must be larger than zero (used in IO channel ##4)</code> might be changed by the <a href="#logMessage"><code>logMessage</code></a> function to <code>body.m must be larger than zero (used in IO channel #4)</code> if <code>body.m</code> is the name of the variable with value reference 1365.]</em></p>
 </div>
-<div id="allocateMemory" class="dlist">
-<dl>
-<dt class="hdlist1">Function <code>allocateMemory</code></dt>
-</dl>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void* (*fmi3CallbackAllocateMemory) (fmi3InstanceEnvironment instanceEnvironment,
-                                             size_t nobj,
-                                             size_t size);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Pointer to a function that is called in the FMU if memory needs to be allocated.
-If attribute <code>canNotUseMemoryManagementFunctions = true</code> in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange|{Basic|Hybrid|Scheduled}CoSimulation&gt;</code>, then function <a href="#allocateMemory"><code>allocateMemory</code></a> is not used in the FMU and a null pointer can be provided.
-If this attribute has a value of <code>false</code> (which is the default), the FMU must not use <code>malloc</code>, <code>calloc</code> or other memory allocation functions.
-One reason is that these functions might not be available for embedded systems on the target machine.
-Another reason is that the environment may have optimized or specialized memory allocation functions.
-<a href="#allocateMemory"><code>allocateMemory</code></a> returns a pointer to space for a vector of <code>nobj</code> objects, each object of size <code>size</code> or a null pointer, if the request cannot be satisfied.
-The space is initialized to zero bytes.
-<em>[A simple implementation is to use <code>calloc</code> from the C standard library.]</em></p>
-</div>
-<div id="freeMemory" class="dlist">
-<dl>
-<dt class="hdlist1">Function <code>freeMemory</code></dt>
-</dl>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void  (*fmi3CallbackFreeMemory)     (fmi3InstanceEnvironment instanceEnvironment,
-                                             void* obj);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Pointer to a function that must be called in the FMU if memory is freed that has been allocated with <a href="#allocateMemory"><code>allocateMemory</code></a>.
-If attribute <code>canNotUseMemoryManagementFunctions = true</code> in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange|{Basic|Hybrid|Scheduled}CoSimulation&gt;</code>, then function <a href="#freeMemory"><code>freeMemory</code></a> is not used in the FMU and a null pointer can be provided.
-If a null pointer is provided as input argument <code>obj</code>, the function shall perform no action.
-<em>[A simple implementation is to use <code>free</code> from the C standard library; in ANSI C89 and C99, the null pointer handling is identical as defined here.]</em></p>
-</div>
 <div id="intermediateUpdate" class="dlist">
 <dl>
 <dt class="hdlist1">Function <code>intermediateUpdate</code></dt>
@@ -1959,8 +1917,8 @@ If a null pointer is provided as input argument <code>obj</code>, the function s
 </div>
 <div class="paragraph">
 <p>This callback allows internal events of different types (e.g. associated to <a href="#outputClock"><code>output clock</code></a> ticks or intermediate variable access) to be signaled from an FMU to the simulation environment.
-For Hybrid Co-Simulation and Scheduled Co-Simulation, or if any of the intermediate variable access modes is set to <code>true</code>, the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> must be passed to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
-In other cases a null pointer can be assigned to the <code>intermediateUpdate</code> callback.</p>
+For Hybrid Co-Simulation and Scheduled Co-Simulation, or if any of the intermediate variable access arguments (<code>intermediateVariableGetRequired</code>, <code>intermediateInternalVariableGetRequired</code>, or <code>intermediateVariableSetRequired</code>) in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> is set to <code>true</code>, the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> must be passed to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
+In other cases, a null pointer can be assigned to the <code>intermediateUpdate</code> callback.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2002,9 +1960,10 @@ typedef void       (*fmi3CallbackUnlockPreemption) ();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To provide more options to secure the code against unwanted preemption these callback functions are defined.
+<p>To provide more options to secure the model or controller code inside the FMU, against unwanted preemption, these callback functions are defined.
 They can be used to prevent preemption for certain code parts enclosed by <code>lockPreemption</code> and <code>unlockPreemption</code> in Scheduled Co-Simulation.
-Even if the Co-Simulation master does not support preemption, at least an empty implementation of these callback functions must be provided to allow the reuse of code for different modes together with an efficient preemption.</p>
+Even if the Co-Simulation master does not support preemption, at least an empty implementation of these callback functions must be provided to allow the reuse of code for different modes together with an efficient preemption.
+<em>[This is included to avoid having to check in the model or controller code if the function pointers are null pointers. A function call to a void-void function with an immediate return is hardly any overhead.]</em></p>
 </div>
 <div id="fmi3FreeInstance" class="listingblock">
 <div class="content">
@@ -2158,7 +2117,7 @@ Each variable must have a unique <a href="#valueReference"><code>valueReference<
 </div>
 <div class="paragraph">
 <p>A variable can be a scalar or an array.
-When getting or setting the values of array variables, the serialization of array variable values used in C-API function calls, as well as in the XML <a href="#start"><code>start</code></a> attributes, is defined as row major - i.e. dimension order from left to right for the C-API (e.g. <code>array[dim1][dim2]&#8230;&#8203;[dimN]</code>), and document order in the XML attributes.
+When getting or setting the values of array variables, the serialization of array variable values used in C-API function calls, as well as in the XML <a href="#start"><code>start</code></a> attributes, is defined as row major - i.e. dimension order from left to right for the C-API (e.g. <code>array[dim1][dim2]&#8230;&#8203;[dimN]</code>), and the document order in the XML attributes for the respective dimensions.
 For this serialization of array variables the sparsity pattern of the array is not taken into account.
 All elements of the array, including structural zeros, are serialized.</p>
 </div>
@@ -2555,8 +2514,8 @@ The events can be periodic or non-periodic.</p>
 <p><em>[Example: If</em> \(b = x &gt; 0\) <em>, and a state event is defined when b changes from <code>false</code> to <code>true</code>, and b is defined as <a href="#outputClock"><code>output clock</code></a>, then this <a href="#clock"><code>clock</code></a> is active whenever x changes from negative to positive values.]</em></p>
 </div>
 <div class="paragraph">
-<p>Since <a href="#outputClock"><code>output clocks</code></a> are ticking based on model internal information it is required in case of FMI for Co-Simulation to signal the ticking of an <a href="#outputClock"><code>output clock</code></a> to the simulation environment during a <code>fmi3DoStep</code> computation.
-In most cases the signaling of an <a href="#outputClock"><code>output clock</code></a> tick is a <code>strong event</code> that requires creating a communication point for exchanging additional information (i.e. variable values) with the simulation environment.
+<p>Since <a href="#outputClock"><code>output clocks</code></a> are ticking based on model internal information it is required in case of FMI for Co-Simulation to signal the ticking of an <a href="#outputClock"><code>output clock</code></a> to the simulation environment during a <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> or <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> computation.
+In most cases the signaling of an <a href="#outputClock"><code>output clock</code></a> tick requires creating a communication point for exchanging additional information (i.e. variable values) with the simulation environment.
 Additional cases need to be handled if a <a href="#clock"><code>clock</code></a> tick is not associated to an event that requires the creation of a communication point for the model partition that generated the event.</p>
 </div>
 <div class="paragraph">
@@ -2654,7 +2613,7 @@ It is not possible for an FMU exporting tool to know in advance the priorities o
 It is the task of the simulation master to derive a computational order for the computation of two or more distinct FMUs based on the local FMU clock priorities and input-output relationships of connected FMUs.]</em></p>
 </div>
 <div class="paragraph">
-<p><em>[For real-time computation use cases i.e. in Scheduled Co-Simulation the priority information is used also for task preemption configurations.
+<p><em>[For real-time computation use cases (e.g., in Scheduled Co-Simulation), the priority information is used also for task preemption configurations.
 It is therefore important to restrict the number of distinct priority levels for an FMU to available priority levels on the target platform and/or to avoid unnecessary computational overhead.
 A common number of different priority levels is, e.g., 100 (0 to 99), as defined in Linux based operating systems.]</em></p>
 </div>
@@ -2917,7 +2876,8 @@ In particular, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a> had
 <dt class="hdlist1"><a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a></dt>
 <dd>
 <p>copies the content of the previously copied <code>FMUState</code> back and uses it as actual new FMU state.
-The <code>FMUState</code> copy still exists.</p>
+The <code>FMUState</code> copy still exists.
+<em>[The simulation is restarted at this state, when calling <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> with <code>FMUState</code>.]</em></p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a></dt>
 <dd>
@@ -2974,9 +2934,6 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 </dl>
 </div>
 <div class="paragraph">
-<p><em>[The simulation is restarted at this state, when calling <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> with <code>FMUState</code>.]</em></p>
-</div>
-<div class="paragraph">
 <p>These functions are only supported by the FMU, if the optional capability flags <code>canGetAndSetFMUState</code> and <code>canSerializeFMUState</code> in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange|{Basic|Hybrid|Scheduled}CoSimulation&gt;</code> in the XML file are explicitly set to <code>true</code> (see <a href="#ModelExchange">Section 3.3.1</a>, <a href="#fmi-for-basic-co-simulation">Section 4</a>, <a href="#fmi-for-hybrid-co-simulation">Section 5</a>, <a href="#fmi-for-scheduled-co-simulation">Section 6</a>).</p>
 </div>
 </div>
@@ -2984,11 +2941,7 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 <h4 id="_getting_partial_derivatives">2.1.11. Getting Partial Derivatives</h4>
 <div class="paragraph">
 <p>It is optionally possible to provide evaluation of partial derivatives for an FMU.
-For Model Exchange, this means computing the partial derivatives at a particular time instant.
-For co-simulation, this means to compute the partial derivatives at a particular communication point.</p>
-</div>
-<div class="paragraph">
-<p>The partial derivatives refer are defined as partial derivatives of certain variables of the FMU w.r.t. to other variables:</p>
+For Model Exchange, this means computing the partial derivatives at any time instant, whereas for Co-Simulation, this means computing the partial derivatives at a communication point.</p>
 </div>
 <div class="paragraph">
 <p>An FMU has different states and in every state an FMU might be described by different equations and different unknowns.
@@ -3660,8 +3613,7 @@ Data is defined by attributes to these elements):</p>
 </div>
 <div class="paragraph">
 <p>On the top level, the schema consists of the following elements (see <a href="#system_overview">figure above</a>).
-<em>[Note that elements <code>&lt;ModelVariables&gt;</code> and <code>&lt;ModelStructure&gt;</code> are mandatory, whereas <code>&lt;UnitDefinitions&gt;</code>, <code>&lt;TypeDefinitions&gt;</code>, <code>&lt;LogCategories&gt;</code>, <code>&lt;DefaultExperiment&gt;</code>, and <code>&lt;VendorAnnotation&gt;</code> are optional.</em>
-<em>If an optional element is present and defines a list (such as <code>&lt;UnitDefinitions&gt;</code>), the list must have at least one element (such as <code>&lt;Unit&gt;</code>).]</em></p>
+<em>[If an optional element is present and defines a list (such as <code>&lt;UnitDefinitions&gt;</code>), the list must have at least one element (such as <code>&lt;Unit&gt;</code>).]</em></p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -4114,8 +4066,10 @@ The characters <code>&gt;</code> (greater-than) and <code>&lt;</code> (less-than
 <div class="sect3">
 <h4 id="_definition_of_units_unitdefinitions">2.2.3. Definition of Units (UnitDefinitions)</h4>
 <div class="paragraph">
-<p><em>[In this section, the units of the variables are (optionally) defined.</em>
-<em>Unit support is important for technical systems since otherwise it is very easy for errors to occur.</em>
+<p>In this section, the units of the variables are defined.</p>
+</div>
+<div class="paragraph">
+<p><em>[Unit support is important for technical systems since otherwise it is very easy for errors to occur.</em>
 <em>Unit handling is a difficult topic, and there seems to be no method available that is really satisfactory for all applications, such as unit check, unit conversion, unit propagation or dimensional analysis.</em>
 <em>In FMI, a pragmatic approach is used that takes into account that every software system supporting units has potentially its own specific technique to describe and utilize units.</em>
 <em>The approach used here is slightly different than FMI 1.0 to reduce the need for standardized string representations.]</em></p>
@@ -4130,9 +4084,11 @@ The characters <code>&gt;</code> (greater-than) and <code>&lt;</code> (less-than
 </div>
 <div class="paragraph">
 <p>It consists of zero or more <code>Unit</code> definitions.
-<em>[If no units are defined, element <code>&lt;UnitDefinitions&gt;</code> must not be present.</em>
-<em>If 1 or more units are defined, this element must be present.]</em>
-A <code>Unit</code> is defined by its <code>name</code> attribute such as <code>N.m</code> or <code>N*m</code> or <code>Nm</code>, which must be unique with respect to all other defined elements of the <code>&lt;UnitDefinitions&gt;</code> list.
+If no units are defined, element <code>&lt;UnitDefinitions&gt;</code> must not be present.
+If 1 or more units are defined, this element must be present.</p>
+</div>
+<div class="paragraph">
+<p>A <code>Unit</code> is defined by its <code>name</code> attribute such as <code>N.m</code> or <code>N*m</code> or <code>Nm</code>, which must be unique with respect to all other defined elements of the <code>&lt;UnitDefinitions&gt;</code> list.
 If a variable is associated with a <code>Unit</code>, then the value set (resp. get) with functions <code>fmi3Set{VariableType}</code> (resp. <code>fmi3Get{VariableType}</code>) has this <code>Unit</code>.
 <em>[The purpose of the name is to uniquely identify a unit and, for example, use it to display the unit in menus or in plots.</em>
 <em>Since there is no standard to represent units in strings, and there are different ways how this is performed in different tools, no specific format for the string representation of the unit is required.]</em></p>
@@ -4147,8 +4103,7 @@ If a variable is associated with a <code>Unit</code>, then the value set (resp. 
 </div>
 <div class="paragraph">
 <p>Besides <code>factor</code> and <code>offset</code>, the <code>&lt;BaseUnit&gt;</code> definition consists of the exponents of the 7 SI base units <code>kg</code>, <code>m</code>, <code>s</code>, <code>A</code>, <code>K</code>, <code>mol</code>, <code>cd</code>, and of the exponent of the SI derived unit <code>rad</code>.
-<em>[Depending on the analysis/operation carried out, the SI derived unit <code>rad</code> is or is not utilized, see discussion below.</em>
-<em>The additional <code>rad</code> base unit helps to handle the often occurring quantities in technical systems that depend on an angle.]</em></p>
+<em>[The additional <code>rad</code> base unit helps to handle the often occurring quantities in technical systems that depend on an angle.]</em></p>
 </div>
 <div class="paragraph">
 <p>A value with respect to <code>Unit</code> (abbreviated as <code>Unit_value</code>) is converted with respect to <code>&lt;BaseUnit&gt;</code> (abbreviated as <code>BaseUnit_value</code>) by the equation:</p>
@@ -4459,7 +4414,8 @@ The following are representative examples:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>These definitions are used as default values in variable elements <em>[in order that, say, the definition of a <code>Torque</code> type does not have to be repeated over and over again]</em>.
+<p>The type elements are referred to in variable elements to declare their type.
+<em>[The alternative would be to define a type per variable. However, this would lead to a situation where, e.g., the definition of a <code>Torque</code> type would have to be repeated over and over.]</em>
 The attributes and elements have the following meaning:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -4623,7 +4579,7 @@ If a computational order information is needed, different priorities have to be 
 If the optional attribute <code>strict</code> is set to <code>true</code>, then the FMU and the simulation master have to respect the predefined interval and offset.
 If the optional attribute <code>strict</code> is set to <code>false</code> another interval or offset can be used, derived from the current simulation setup.</p>
 <p class="tableblock"><code>strict</code> is an optional attribute. The default value is <code>false</code>.
-It is not allowed to set <code>strict</code> to <code>true</code> if <code>periodic = false</code>.</p></td>
+The FMU exporter is not allowed to set <code>strict</code> to <code>true</code> if <code>periodic = false</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>intervalCounter</code>, <code>shiftCounter</code>, <code>resolution</code></p></td>
@@ -4756,7 +4712,7 @@ Furthermore, for Co-Simulation FMUs the <code>stepSize</code> defines the prefer
 <div class="sect3">
 <h4 id="_definition_of_terminals_terminals">2.2.7. Definition of Terminals (Terminals)</h4>
 <div class="sect4">
-<h5 id="_rationale">2.2.7.1. Rationale</h5>
+<h5 id="_overview_2">2.2.7.1. Overview</h5>
 <div class="paragraph">
 <p>Terminals are fully optional and can be ignored by any importing tool.</p>
 </div>
@@ -5075,7 +5031,7 @@ q_{\textit{$i$, inStream}} &amp;\textit{if $\dot{m}$ is inflowing through termin
 <div class="sect3">
 <h4 id="_definition_of_a_graphical_representation_graphicalrepresentation">2.2.8. Definition of a Graphical Representation (GraphicalRepresentation)</h4>
 <div class="sect4">
-<h5 id="_rationale_2">2.2.8.1. Rationale</h5>
+<h5 id="_overview_3">2.2.8.1. Overview</h5>
 <div class="paragraph">
 <p>The graphical representation of the FMU and terminals are needed in order to more easily comprehend the meaning of connected FMUs and to help an importing tool to display the terminals and the FMU icon in the way the exporter intended.</p>
 </div>
@@ -5342,7 +5298,7 @@ Allowed values of this enumeration:</p>
 <div id="parameter" class="ulist">
 <ul>
 <li>
-<p><code>parameter</code>: <a href="#independent"><code>independent</code></a> parameter (a data value that is constant during the simulation and is provided by the environment and cannot be used in connections).
+<p><code>parameter</code>: independent parameter (a data value that is constant during the simulation and is provided by the environment and cannot be used in connections).
 <a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
 <a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).</p>
 </li>
@@ -5493,7 +5449,7 @@ Co-Simulation: By convention, the variable is from a real sampled data system an
 <li>
 <p><code>continuous</code>: Only a variable of <code>type = fmi3GetFloat32</code> or <code>type = fmi3GetFloat64</code> can be <a href="#continuous"><code>continuous</code></a>.<br>
 Model Exchange: No restrictions on value changes.<br>
-Co-Simulation: By convention, the variable is from a differential</p>
+Co-Simulation: By convention, the variable is part of a differential equation.</p>
 </li>
 </ul>
 </div>
@@ -7054,7 +7010,7 @@ When compiling a shared object on Linux, <code>RPATH="$ORIGIN"</code> has to be 
 </dl>
 </div>
 <div class="paragraph">
-<p>Typical scenarios are to provide binaries only for one machine type (for example, on the machine where the target simulator is running and for which licenses of run-time libraries are available) or to provide only sources (for example, for translation and download for a particular micro-processor).
+<p><em>[Typical scenarios are to provide binaries only for one machine type (for example, on the machine where the target simulator is running and for which licenses of run-time libraries are available) or to provide only sources (for example, for translation and download for a particular micro-processor).]</em>
 If run-time libraries cannot be shipped due to licensing, special handling is needed, for example, by providing the run-time libraries at appropriate places by the receiver.</p>
 </div>
 <div class="paragraph">
@@ -7079,7 +7035,7 @@ The library names are defined in the <code>modelIdentifier</code> attribute of e
 </div>
 </div>
 <div class="paragraph">
-<p>The usual distribution of an FMU will be with DLLs/SharedObjects because then further automatic processing <em>[(for example, importing into another tool)]</em> is possible.<br>
+<p><em>[The usual distribution of an FMU will be with DLLs/SharedObjects because then further automatic processing (for example, importing into another tool) is possible.]</em><br>
 If run-time libraries are needed by the FMU that have to be present on the target machine, then automatic processing is likely impossible.
 The requirements and the expected processing should be documented in the <code>documentation</code> directory in this case.<br>
 A source-based distribution might require manual interaction in order that it can be utilized.
@@ -7303,26 +7259,30 @@ Whenever the internal solver in the FMU needs updated intermediate <a href="#inp
 <div class="paragraph">
 <p>Please refer to the different sections for a more detailed explanation of the motivation and use of the new features.</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Basic Co-Simulation</dt>
-<dd>
+<div class="sect4">
+<h5 id="_basic_co_simulation">2.4.2.1. Basic Co-Simulation</h5>
+<div class="paragraph">
 <p>Basic Co-Simulation is a rather general approach to the simulation of coupled technical systems and coupled physical phenomena in engineering with focus on non-stationary (time-dependent) problems.
 The Basic Co-Simulation interface is similar to the feature set of FMI 2.0 for Co-Simulation.
 The asynchronous mode for FMUs has been removed since this mode was not supported by tools and it can be suitably replaced by Co-Simulation master implementations that control the asynchronous computation of FMUs via separate tasks/threads created for each FMU.</p>
-</dd>
-<dt class="hdlist1">Hybrid Co-Simulation</dt>
-<dd>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_hybrid_co_simulation">2.4.2.2. Hybrid Co-Simulation</h5>
+<div class="paragraph">
 <p>The <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a> interface provides functionalities to control and observe the ticking of <a href="#clock">clocks</a>.
 For FMI for Hybrid Co-Simulation, the ticking of a clock is interpreted as an activity of the associated model partition.
 During simulation, the Co-Simulation master updates and manages values of inputs and outputs of FMUs and further models at communication points for each model partition.
 The ratio between communication points created for a model partition and time can be seen as a model rate.
 In that sense multiple model partitions of a model define multiple model rates in a model.</p>
-</dd>
-<dt class="hdlist1">Scheduled Co-Simulation</dt>
-<dd>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_scheduled_co_simulation">2.4.2.3. Scheduled Co-Simulation</h5>
+<div class="paragraph">
 <p>The <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a> interface provides an indirect control over the computation of model partitions.
 With <a href="#scheduled-co-simulation-api">Scheduled Co-Simulation</a> a simulation master can directly control the time of computation (i.e. scheduling) for such model partitions.</p>
+</div>
 <div class="paragraph">
 <p>The Scheduled Co-Simulation interface addresses simulation use cases with the following requirements:</p>
 </div>
@@ -7353,43 +7313,40 @@ With <a href="#scheduled-co-simulation-api">Scheduled Co-Simulation</a> a simula
 <ul>
 <li>
 <p>Get/set operations must also be possible for the same activation time for different model partitions between the computation of these model partitions.</p>
-<div class="paragraph">
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>This Co-Simulation interface provides support for concurrent computation of model partitions (i.e. a support of multiple rates) on a single computational resource (e.g. CPU-core) of an FMU.
 For that a preemptive multitasking regime is intended (cooperative multitasking is not covered by this description).</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><em>[A parallel computation of model partitions is not part of the FMI 3.0 API.</em>
 <em>An FMU may still internally use parallel computation on multiple cores, but handling this is (currently) not part of the FMI standard. Such an internal parallel computation is not visible to the simulation master.</em>
 <em>It is a tool vendor specific solution that has ties to the used OS and the co-simulation environment.]</em></p>
 </div>
-</li>
-</ul>
 </div>
-</li>
-</ul>
-</div>
-</dd>
-</dl>
-</div>
-<div id="intermediate-variable-access" class="dlist">
-<dl>
-<dt class="hdlist1">Intermediate Variable Access</dt>
-<dd>
+<div class="sect4">
+<h5 id="intermediate-variable-access">2.4.2.4. Intermediate Variable Access</h5>
+<div class="paragraph">
 <p>An FMU can inform a Co-Simulation master that is able to provide intermediate output variables and/or receive intermediate input variables at any time, i.e. not only at the end of a current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function call.
 It is possible for the FMU to inform the master whether the internal solver is in a temporary state or if it has just completed an internal integration step.
 If the internal solver is in a temporary state, intermediate output variables shall only be used for directly computing intermediate input variables.
 If the internal integration step is completed, the master can forward intermediate outputs to interconnected simulation units.</p>
-</dd>
-</dl>
 </div>
 <div class="paragraph">
 <p>Intermediate variable access can be activated in all Co-Simulation interface types, if the FMU and the master supports it.
-More information can be found in <a href="#intermediate-variable-access">[intermediate-variable-access]</a>.</p>
+More information can be found in <a href="#intermediate-variable-access">Section 2.4.2.4</a>.</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Coupling Scenarios</dt>
-<dd>
+</div>
+<div class="sect4">
+<h5 id="_coupling_scenarios">2.4.2.5. Coupling Scenarios</h5>
+<div class="paragraph">
+<p><a href="#figure-co-simulation-with-generated-code">Figure 3</a> and <a href="#figure-co-simulation-with-tool-coupling">Figure 4</a> illustrate the most common Co-Simulation coupling scenarios.</p>
+</div>
 <div id="figure-co-simulation-with-generated-code" class="imageblock text-center">
 <div class="content">
 <img src="images/co-simulation-single-slave.svg" alt="co simulation single slave" width="50%">
@@ -7403,7 +7360,7 @@ More information can be found in <a href="#intermediate-variable-access">[interm
 <div class="title">Figure 4. Co-Simulation with tool coupling on a single computer (for simplicity shown for one slave only).</div>
 </div>
 <div class="paragraph">
-<p>In the tool coupling case the FMU implementation wraps the FMI function calls to API calls which are provided by the simulation tool (for example, a COM or CORBA API).
+<p>In the tool coupling case (<a href="#figure-co-simulation-with-tool-coupling">Figure 4</a>) the FMU implementation wraps the FMI function calls to API calls which are provided by the simulation tool (for example, a COM or CORBA API).
 Additionally to the FMU, the simulation tool is needed to run a co-simulation.</p>
 </div>
 <div class="paragraph">
@@ -7423,98 +7380,27 @@ However, distributed co-simulation scenarios can be implemented using FMI as sho
 Additional parameters for establishing the network communication (for example, identification of the remote computer, port numbers, user account) are to be set via the GUI of the master.
 This data is not transferred via the FMI API.</p>
 </div>
-</dd>
-</dl>
+<div class="paragraph">
+<p>The Co-Simulation master signals to the FMU which features shall be used for the current instance of the FMU in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The Co-Simulation master signals to the FMU which features shall be used for the current instance of the FMU in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Instance fmi3InstantiateModelExchangeTYPE(
-    fmi3String                 instanceName,
-    fmi3String                 instantiationToken,
-    fmi3String                 resourceLocation,
-    fmi3Boolean                visible,
-    fmi3Boolean                loggingOn,
-    fmi3InstanceEnvironment    instanceEnvironment,
-    fmi3CallbackLogMessage     logMessage,
-    fmi3CallbackAllocateMemory allocateMemory,
-    fmi3CallbackFreeMemory     freeMemory);
-
-typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
-    fmi3String                     instanceName,
-    fmi3String                     instantiationToken,
-    fmi3String                     resourceLocation,
-    fmi3Boolean                    visible,
-    fmi3Boolean                    loggingOn,
-    fmi3Boolean                    intermediateVariableGetRequired,
-    fmi3Boolean                    intermediateInternalVariableGetRequired,
-    fmi3Boolean                    intermediateVariableSetRequired,
-    fmi3InstanceEnvironment        instanceEnvironment,
-    fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackAllocateMemory     allocateMemory,
-    fmi3CallbackFreeMemory         freeMemory,
-    fmi3CallbackIntermediateUpdate intermediateUpdate);
-
-typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
-    fmi3String                     instanceName,
-    fmi3String                     instantiationToken,
-    fmi3String                     resourceLocation,
-    fmi3Boolean                    visible,
-    fmi3Boolean                    loggingOn,
-    fmi3Boolean                    intermediateVariableGetRequired,
-    fmi3Boolean                    intermediateInternalVariableGetRequired,
-    fmi3Boolean                    intermediateVariableSetRequired,
-    fmi3InstanceEnvironment        instanceEnvironment,
-    fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackAllocateMemory     allocateMemory,
-    fmi3CallbackFreeMemory         freeMemory,
-    fmi3CallbackIntermediateUpdate intermediateUpdate);
-
-typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
-    fmi3String                     instanceName,
-    fmi3String                     instantiationToken,
-    fmi3String                     resourceLocation,
-    fmi3Boolean                    visible,
-    fmi3Boolean                    loggingOn,
-    fmi3Boolean                    intermediateVariableGetRequired,
-    fmi3Boolean                    intermediateInternalVariableGetRequired,
-    fmi3Boolean                    intermediateVariableSetRequired,
-    fmi3InstanceEnvironment        instanceEnvironment,
-    fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackAllocateMemory     allocateMemory,
-    fmi3CallbackFreeMemory         freeMemory,
-    fmi3CallbackIntermediateUpdate intermediateUpdate,
-    fmi3CallbackLockPreemption     lockPreemption,
-    fmi3CallbackUnlockPreemption   unlockPreemption);</code></pre>
+<p>If the FMU does not support the Co-Simulation interface selected in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, it has to return a null pointer.</p>
 </div>
 </div>
+<div class="sect4">
+<h5 id="_multiple_co_simulation_interface_support_in_one_fmu">2.4.2.6. Multiple Co-Simulation Interface Support in one FMU::</h5>
 <div class="paragraph">
-<p>If the FMU does not support the Co-Simulation interface selected in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> it has to return a null pointer.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Multiple Co-Simulation Interface Support in one FMU</dt>
-<dd>
 <p>Exporters are encouraged to support multiple Co-Simulation interfaces in one FMU, so it can be used in differently capable Co-Simulation master implementations and for different use cases.
-To indicate support for a specific Co-Simulation interface, the <code>&lt;fmiModelDescription&gt;</code> must have the respective Co-Simulation element present.</p>
-<div class="paragraph">
-<p><em>[That improves the reusability of FMUs.</em>
-<em>A common application of this multiple mode support is the reuse of FMUs for real-time and non-real-time simulations.]</em></p>
-</div>
-<div class="paragraph">
-<p>The described multi-mode support is based on wrapping functionality into the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function by emulating missing features of the Co-Simulation interface, the FMU has been specifically exported for.</p>
-</div>
-<div class="paragraph">
-<p><em>[An FMU that supports <a href="#scheduled-co-simulation-api">Scheduled Co-Simulation</a> will in most cases also support <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a>.</em>
+To indicate support for a specific Co-Simulation interface, the <code>&lt;fmiModelDescription&gt;</code> must have the respective Co-Simulation element present.<br>
+<em>[That improves the reusability of FMUs.</em>
+<em>A common application of this multiple mode support is the reuse of FMUs for real-time and non-real-time simulations.]</em><br>
+The described multi-mode support is based on wrapping functionality into the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function by emulating missing features of the Co-Simulation interface, the FMU has been specifically exported for.<br>
+<em>[An FMU that supports <a href="#scheduled-co-simulation-api">Scheduled Co-Simulation</a> will in most cases also support <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a>.</em>
 <em>Wrapping towards other Co-Simulation interfaces can influence the simulation results.</em>
 <em>Depending on the model, wrapping towards the Basic Co-Simulation interface may result in divergent simulation results.</em>
 <em>Especially aperiodic <a href="#inputClock"><code>input clocks</code></a> can not always be sufficiently emulated in modes that do not directly support <a href="#clock"><code>clocks</code></a>.</em>
 <em>Therefore it is recommended that the FMU provides logging information to the user about the influence of the current mode on simulation results, if non-optimal modes are used by the simulation environment.]</em></p>
 </div>
-</dd>
-</dl>
 </div>
 </div>
 <div class="sect3">
@@ -7632,8 +7518,6 @@ fmi3Status intermediateUpdate(fmi3ComponentEnvironment componentEnvironment, fmi
 fmi3CallbackFunctions cbf;
 fmi3EventInfo eventInfo;
 cbf.logger = loggerFunction; // Logger function
-cbf.allocateMemory = calloc;
-cbf.freeMemory = free;
 // Signal that early return is supported by master
 cbf.intermediateUpdate = intermediateUpdate;
 
@@ -9459,11 +9343,6 @@ If <code>false</code> (the default), the function must be called after every com
 <td class="tableblock halign-left valign-top"><p class="tableblock">This flag indicates cases (especially for embedded code), where only one instance per FMU is possible (multiple instantiation is default = <code>false</code>; if multiple instances are needed and the flag <code>canBeInstantiatedOnlyOncePerProcess = true</code>, the FMUs must be instantiated in different processes).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseMemoryManagementFunctions</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU uses its own functions for memory allocation and freeing only.
-The callback functions <a href="#allocateMemory"><code>allocateMemory</code></a> and <a href="#freeMemory"><code>freeMemory</code></a> given in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> are ignored.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canGetAndSetFMUState</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the environment can inquire the internal FMU state and can restore it.
 That is, functions <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, and <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a> are supported by the FMU.</p></td>
@@ -11086,11 +10965,6 @@ The FMU just contains the communication to this tool (see <a href="#figure-co-si
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canBeInstantiatedOnlyOncePerProcess</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This flag indicates cases (especially for embedded code), where only one instance per FMU is possible.
 (For multiple instantiation the default is <code>false</code>; if multiple instances are needed, the FMUs must be instantiated in different processes.).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseMemoryManagementFunctions</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave uses its own functions for memory allocation and freeing only.
-The callback functions <a href="#allocateMemory"><code>allocateMemory</code></a> and <a href="#freeMemory"><code>freeMemory</code></a> given in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> are ignored.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canGetAndSetFMUState</code></p></td>
@@ -13184,8 +13058,6 @@ fmi3Status GlobalInitialize()
 {
 
 	cbf1.logger = loggerFunction; // Logger function
-	cbf1.allocateMemory = calloc;
-	cbf1.freeMemory = free;
 	cbf1.intermediateUpdate = s1_triggeredClock_intermediateUpdate;
 	cbf1.lockPreemption = lockPreemption(); // Preemption is OS specific
 	cbf1.unlockPreemption = unlockPreemption(); // Preemption is OS specific
@@ -13410,11 +13282,11 @@ There is a direct one-to-one relation for a <a href="#clock"><code>clock</code><
 Evolving standard of the automotive industry to define the implementation of embedded systems in vehicles including communication mechanisms. An important part is the standardization of C functions and macros to communicate between software components. AUTOSAR is targeted to built on top of the real-time operating system OSEK (<a href="http://www.osek-vdx.org/">www.osek-vdx.org</a>, <a href="http://de.wikipedia.org/wiki/OSEK">de.wikipedia.org/wiki/OSEK</a>). The use of the AUTOSAR standard requires AUTOSAR membership.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Basic Co-Simulation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>basic co-simulation</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Capability Flag</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>capability flag</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
@@ -13480,12 +13352,12 @@ Interface of a functional mock-up in form of a model. In analogy to the term dig
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for Co-Simulation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for co-simulation</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Co-Simulation:<br>
 One of the MODELISAR <em>functional mock-up interfaces.</em> It connects the <em>master solver</em> component with one or more <em>slave solvers</em>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for Model Exchange</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for model exchange</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Model Exchange:<br>
 One of the MODELISAR <em>functional mock-up interfaces.</em> It consists of the <em>model description interface</em> and the <em>model execution interface</em>.<br>
 It connects the <em>external model</em> component with the <em>solver</em> component.</p></td>
@@ -13497,10 +13369,10 @@ A "model class" following the interface type FMI for Model Exchange, or a co-sim
 An FMU is one ZIP file as defined in <a href="#fmu-distribution">Section 2.3</a>.
 The zip file comprises essentially an XML file that defines the model variables, and a set of C function implementations (see <a href="#fmi-application-programming-interface">Section 2.1</a>).
 The implementations can be in source or binary form.
-TODO: FMU also goes by "slave". Should we unify this?</p></td>
+TODO: FMU also goes by "slave". When "slave" is used, the intent is to focus on the communication architecture aspect, because an FMU can also act as a master to a sub-co-simulation.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMU Clock</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMU clock</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
@@ -13508,7 +13380,7 @@ TODO: FMU also goes by "slave". Should we unify this?</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Hybrid Co-Simulation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>hybrid co-simulation</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
 </tr>
 <tr>
@@ -13544,7 +13416,7 @@ TODO: FMU also goes by "slave". Should we unify this?</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> connected to the tick of an <a href="#inputClock"><code>input clock</code></a> of an FMU that is caused by an external potentially random process, i.e. hardware interrupt, software interrupt.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_Jacobian _</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">_jacobian _</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
@@ -13642,11 +13514,11 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Run-time Environment</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>run-time environment</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO. Synonyms: "co-simulation environment"</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Scheduled Co-Simulation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>scheduled co-simulation</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
 </tr>
 <tr>
@@ -13729,7 +13601,7 @@ This definition is slightly different from the usual standard definition of stat
 <td class="tableblock halign-left valign-top"><p class="tableblock">eXtensible Markup Language (<a href="http://www.w3.org/XML/">www.w3.org/XML</a>, <a href="http://en.wikipedia.org/wiki/Xml">en.wikipedia.org/wiki/XML</a>) - An open standard to store information in text files in a structured form.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">xCS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>xCS</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any reference to all three Co-Simulation interfaces (BCS, HCS and SCS) are referred to as Co-Simulation interface, or xCS.
 Writing lower-case co-simulation refers to the general concept of co-simulation.</p></td>
 </tr>
@@ -13738,7 +13610,7 @@ Writing lower-case co-simulation refers to the general concept of co-simulation.
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Zero-crossing function</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>zero-crossing function</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 </tbody>
