@@ -2330,24 +2330,41 @@ Depending on the generating modeling environment, none, some or all allowed valu
 <div class="paragraph">
 <p>This section documents functions that deal with configuration, initialization, termination, and resetting of an FMU.</p>
 </div>
-<div id="fmi3SetupExperiment" class="listingblock">
+<div id="fmi3EnterConfigurationMode" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetupExperimentTYPE(fmi3Instance instance,
-                                           fmi3Boolean toleranceDefined,
-                                           fmi3Float64 tolerance,
-                                           fmi3Float64 startTime,
-                                           fmi3Boolean stopTimeDefined,
-                                           fmi3Float64 stopTime);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterConfigurationModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This function call informs the FMU to setup the experiment.
-This function must be called after <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> and before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.</p>
+<p>Informs the FMU to enter the <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong>.</p>
+</div>
+<div id="fmi3ExitConfigurationMode" class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitConfigurationModeTYPE(fmi3Instance instance);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Informs the FMU to exit the <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong>.</p>
+</div>
+<div id="fmi3EnterInitializationMode" class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterInitializationModeTYPE(fmi3Instance instance,
+                                                   fmi3Boolean toleranceDefined,
+                                                   fmi3Float64 tolerance,
+                                                   fmi3Float64 startTime,
+                                                   fmi3Boolean stopTimeDefined,
+                                                   fmi3Float64 stopTime);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Informs the FMU to enter <strong>Initialization Mode</strong>.
+Before calling this function, all variables with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a> can be set with the <code>fmi3Set{VariableType}</code> functions (the variable attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 3.2.10</a>).
+Setting other variables is not allowed.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>toleranceDefined</code> and <code>tolerance</code> depend on the FMI interface type:</p>
+<p><code>toleranceDefined</code> and <code>tolerance</code> depend on the interface type:</p>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Model Exchange</dt>
@@ -2382,33 +2399,6 @@ If <code>stopTimeDefined = fmi3False</code>, then no final value of the <a href=
 </li>
 </ul>
 </div>
-<div id="fmi3EnterConfigurationMode" class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterConfigurationModeTYPE(fmi3Instance instance);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Informs the FMU to enter the <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong>.</p>
-</div>
-<div id="fmi3ExitConfigurationMode" class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitConfigurationModeTYPE(fmi3Instance instance);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Informs the FMU to exit the <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong>.</p>
-</div>
-<div id="fmi3EnterInitializationMode" class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterInitializationModeTYPE(fmi3Instance instance);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Informs the FMU to enter <strong>Initialization Mode</strong>.
-Before calling this function, all variables with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a> can be set with the <code>fmi3Set{VariableType}</code> functions (the variable attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 3.2.10</a>).
-Setting other variables is not allowed.
-Furthermore, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a> must be called at least once before calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, in order that <code>startTime</code> is defined.</p>
-</div>
 <div id="fmi3ExitInitializationMode" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitInitializationModeTYPE(fmi3Instance instance);</code></pre>
@@ -2437,7 +2427,7 @@ It is not allowed to call this function after one of the functions returned with
 <p>Is called by the environment to reset the FMU after a simulation run.
 The FMU goes into the same state as if <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> would have been called.
 All variables have their default values.
-Before starting a new run, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a> and <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> have to be called.</p>
+Before starting a new run <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> has to be called.</p>
 </div>
 </div>
 <div class="sect3">
@@ -5688,7 +5678,7 @@ At most one variable of an FMU can be defined as <a href="#independent"><code>in
 If no variable is defined as <a href="#independent"><code>independent</code></a>, it is implicitly present with <code>name = time</code> and <code>unit = s</code>.
 If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined with a floating point type without a <a href="#start"><code>start</code></a> attribute.
 It is not allowed to call function <code>fmi3Set{VariableType}</code> on an <a href="#independent"><code>independent</code></a> variable.
-Instead, its value is initialized with <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <code>currentCommunicationPoint</code> and <code>communicationStepSize</code> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation FMUs.
+Instead, its value is initialized with <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <code>currentCommunicationPoint</code> and <code>communicationStepSize</code> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation FMUs.
 <em>[The actual value can be inquired with <code>fmi3Get{VariableType}</code>.]</em></p>
 </li>
 </ul>
@@ -7497,7 +7487,7 @@ Typical examples are:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>All calculated values are time-dependent functions within an a priori defined time interval \(t_{start} \leq t \leq t_{stop}\) (provided <code>stopTimeDefined = fmi3True</code> when calling <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>).</p>
+<p>All calculated values are time-dependent functions within an a priori defined time interval \(t_{start} \leq t \leq t_{stop}\) (provided <code>stopTimeDefined = fmi3True</code> when calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>).</p>
 </li>
 <li>
 <p>All simulations are carried out with increasing time in general.
@@ -7960,8 +7950,7 @@ h = 0.01;
 fmi3SetReal/Integer/Boolean/String(s, ...);
 
 // Initialize slave
-fmi3SetupExperiment(s, fmi3False, 0.0, startTime, fmi3True, stopTime);
-fmi3EnterInitializationMode(s);
+fmi3EnterInitializationMode(s, fmi3False, 0.0, startTime, fmi3True, stopTime);
 
 // Set the input values at time = startTime
 fmi3SetReal/Integer/Boolean/String(s, ...);
@@ -8382,10 +8371,6 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations before <strong>Initialization Mode</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable time \(T_{R0}\) and define \(t_0 := (t_{R0},0)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{initial=exact}\) and \(\mathbf{v}_{initial=approx}\)  that have a <a href="#start"><code>start</code></a> value (<a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
@@ -8393,7 +8378,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Initialization Mode</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Initialization Mode</strong> at \(t=t_0\) (activate initialization, discrete-time and continuous-time equations)</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Initialization Mode</strong> at \(t=t_0\) (activate initialization, discrete-time and continuous-time equations). Set <a href="#independent"><code>independent</code></a> variable time \(T_{R0}\) and define \(t_0 := (t_{R0},0)\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterInitializationMode</span></code></p></td>
 </tr>
 <tr>
@@ -8420,7 +8405,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Event Mode</strong> at \(t = t_{i}\) with \({t_{i}\ : = (t}_{R},t_{I} + 1)\) <strong>if</strong>  externalEvent <strong>or</strong> nextMode \(\equiv\) EventMode <strong>or</strong> \(t_i=(T_{next}(t_{i-1}), 0)\) <strong>or</strong>  \(\min_{t&gt;t_{i-1}} t:\left\lbrack z_{j}\left( t \right) &gt; 0\  \neq \ z_{j}\left( t_{i - 1} \right) &gt; 0 \right\rbrack\)<br>
 (activate discrete-time equations)</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterInitializationMode</span></code> <span class="lime">(only from <strong>Continuous-Time Mode</strong> or after calling</span> <code><span class="lime">fmi3SetTime</span></code>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterEventMode</span></code> <span class="lime">(only from <strong>Continuous-Time Mode</strong> or after calling</span> <code><span class="lime">fmi3SetTime</span></code>
 <span class="lime">if FMU has no continuous-time equations)</span></p></td>
 </tr>
 <tr>
@@ -9151,16 +9136,6 @@ As soon as an event occurrs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventM
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a></p></td>
@@ -10136,10 +10111,6 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations before <strong>Initialization Mode</strong> (<strong>Instantiated</strong> in state machine)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set and set <a href="#start"><code>start</code></a> value of <a href="#independent"><code>independent</code></a> variable \(tc_{i=0}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set variables and that have a start value (<a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
@@ -10147,7 +10118,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Initialization Mode</strong> (<strong>Initialization Mode</strong> in state machine)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Initialization Mode</strong> at (activate initialization, discrete-time and continuous-time equations)</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Initialization Mode</strong> at (activate initialization, discrete-time and continuous-time equations). Set and set <a href="#start"><code>start</code></a> value of <a href="#independent"><code>independent</code></a> variable \(tc_{i=0}\).</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">fmi3EnterInitializationMode</span></p></td>
 </tr>
 <tr>
@@ -10385,7 +10356,7 @@ If the actual order is lower (because the order of integration algorithm is low)
 <em>It is up to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> how to achieve this.]</em></p>
 </div>
 <div class="paragraph">
-<p>At the first call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called <code>currentCommunicationPoint</code> must be equal to <code>startTime</code> as set with <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>.</p>
+<p>At the first call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called <code>currentCommunicationPoint</code> must be equal to <code>startTime</code> as set with <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Formally, argument <code>currentCommunicationPoint</code> is not needed.</em>
@@ -10492,7 +10463,7 @@ The FMU sets all variables to its <a href="#start"><code>start</code></a> values
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p><a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></p>
+<p><a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></p>
 </dd>
 <dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
 <dd>
@@ -10543,7 +10514,7 @@ In this way artificial or real algebraic loops over connected FMUs in <strong>In
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></p>
+<p><a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></p>
 </dd>
 </dl>
 </div>
@@ -10639,7 +10610,7 @@ This function must not be called if the FMU contains no <a href="#tunable"><code
 <dl>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></p>
+<p><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></p>
 </dd>
 </dl>
 </div>
@@ -10697,7 +10668,7 @@ This state is entered from state <strong>Step Mode</strong> by calling <a href="
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
 </dd>
 </dl>
 </div>
@@ -10732,7 +10703,7 @@ In this case, a new step may be started from <code>lastSuccessfulTime</code> whi
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a></p>
 </dd>
 </dl>
 </div>
@@ -10750,7 +10721,7 @@ In this case, a new step may be started from <code>lastSuccessfulTime</code> whi
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a></p>
 </dd>
 </dl>
 </div>
@@ -10775,7 +10746,7 @@ In this case, a new step may be started from <code>lastSuccessfulTime</code> whi
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
 </dd>
 </dl>
 </div>
@@ -10858,18 +10829,6 @@ In this case, a new step may be started from <code>lastSuccessfulTime</code> whi
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a></p></td>
@@ -12094,23 +12053,6 @@ For <a href="#input"><code>input</code></a> periodic <a href="#clock"><code>cloc
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
@@ -12893,7 +12835,7 @@ Thus these functions can not be called concurrently for model partitions of an F
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p>Additionally to the generally forbidden functions in Scheduled Co-Simulation as listed above, the following functions must not be called in this state: <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>.</p>
+<p>Additionally to the generally forbidden functions in Scheduled Co-Simulation as listed above, the following functions must not be called in this state: <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>.</p>
 </dd>
 </dl>
 </div>
@@ -12953,7 +12895,7 @@ This state is entered from state <strong>Clock Activation Mode</strong> by calli
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p>Additionally to the generally forbidden functions in Scheduled Co-Simulation listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,<code>fmi3SetInputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <code>fmi3GetOutputDerivatives</code>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
+<p>Additionally to the generally forbidden functions in Scheduled Co-Simulation listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,<code>fmi3SetInputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <code>fmi3GetOutputDerivatives</code>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
 </dd>
 </dl>
 </div>
@@ -13029,19 +12971,6 @@ This state is entered from state <strong>Clock Activation Mode</strong> by calli
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetupExperiment"><code>fmi3SetupExperiment</code></a></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -13570,10 +13499,7 @@ fmi3Status GlobalInitialize()
 	s1_fmi3SetReal/Integer/Boolean/String(s1, ...);
 
 	// Initialize slaves
-	s1_fmi3SetupExperiment(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
-
-	s1_fmi3EnterInitializationMode(s1);
-
+	s1_fmi3EnterInitializationMode(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
 
 	// Set the input values at time = startTime
 	s1_fmi3SetReal/Integer/Boolean/String(s1, ...);
