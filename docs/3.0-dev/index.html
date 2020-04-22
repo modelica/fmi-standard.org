@@ -1690,9 +1690,7 @@ The standard header file as documented in this specification has version <code>"
     fmi3Boolean                visible,
     fmi3Boolean                loggingOn,
     fmi3InstanceEnvironment    instanceEnvironment,
-    fmi3CallbackLogMessage     logMessage,
-    fmi3CallbackAllocateMemory allocateMemory,
-    fmi3CallbackFreeMemory     freeMemory);
+    fmi3CallbackLogMessage     logMessage);
 
 typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
     fmi3String                     instanceName,
@@ -1705,8 +1703,6 @@ typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
     fmi3Boolean                    intermediateVariableSetRequired,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackAllocateMemory     allocateMemory,
-    fmi3CallbackFreeMemory         freeMemory,
     fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
@@ -1720,8 +1716,6 @@ typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
     fmi3Boolean                    intermediateVariableSetRequired,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackAllocateMemory     allocateMemory,
-    fmi3CallbackFreeMemory         freeMemory,
     fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
@@ -1735,8 +1729,6 @@ typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
     fmi3Boolean                    intermediateVariableSetRequired,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackAllocateMemory     allocateMemory,
-    fmi3CallbackFreeMemory         freeMemory,
     fmi3CallbackIntermediateUpdate intermediateUpdate,
     fmi3CallbackLockPreemption     lockPreemption,
     fmi3CallbackUnlockPreemption   unlockPreemption);</code></pre>
@@ -1904,45 +1896,6 @@ If the character <code>#</code> shall be included in the message, it has to be p
 </div>
 <div class="paragraph">
 <p><em>[Example: The message <code>#1365# must be larger than zero (used in IO channel ##4)</code> might be changed by the <a href="#logMessage"><code>logMessage</code></a> function to <code>body.m must be larger than zero (used in IO channel #4)</code> if <code>body.m</code> is the name of the variable with value reference 1365.]</em></p>
-</div>
-<div id="allocateMemory" class="dlist">
-<dl>
-<dt class="hdlist1">Function <code>allocateMemory</code></dt>
-</dl>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void* (*fmi3CallbackAllocateMemory) (fmi3InstanceEnvironment instanceEnvironment,
-                                             size_t nobj,
-                                             size_t size);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Pointer to a function that is called in the FMU if memory needs to be allocated.
-If attribute <code>canNotUseMemoryManagementFunctions = true</code> in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange|{Basic|Hybrid|Scheduled}CoSimulation&gt;</code>, then function <a href="#allocateMemory"><code>allocateMemory</code></a> is not used in the FMU and a null pointer can be provided.
-If this attribute has a value of <code>false</code> (which is the default), the FMU must not use <code>malloc</code>, <code>calloc</code> or other memory allocation functions.
-One reason is that these functions might not be available for embedded systems on the target machine.
-Another reason is that the environment may have optimized or specialized memory allocation functions.
-<a href="#allocateMemory"><code>allocateMemory</code></a> returns a pointer to space for a vector of <code>nobj</code> objects, each object of size <code>size</code> or a null pointer, if the request cannot be satisfied.
-The space is initialized to zero bytes.
-<em>[A simple implementation is to use <code>calloc</code> from the C standard library.]</em></p>
-</div>
-<div id="freeMemory" class="dlist">
-<dl>
-<dt class="hdlist1">Function <code>freeMemory</code></dt>
-</dl>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void  (*fmi3CallbackFreeMemory)     (fmi3InstanceEnvironment instanceEnvironment,
-                                             void* obj);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Pointer to a function that must be called in the FMU if memory is freed that has been allocated with <a href="#allocateMemory"><code>allocateMemory</code></a>.
-If attribute <code>canNotUseMemoryManagementFunctions = true</code> in <code>&lt;fmiModelDescription&gt;&lt;ModelExchange|{Basic|Hybrid|Scheduled}CoSimulation&gt;</code>, then function <a href="#freeMemory"><code>freeMemory</code></a> is not used in the FMU and a null pointer can be provided.
-If a null pointer is provided as input argument <code>obj</code>, the function shall perform no action.
-<em>[A simple implementation is to use <code>free</code> from the C standard library; in ANSI C89 and C99, the null pointer handling is identical as defined here.]</em></p>
 </div>
 <div id="intermediateUpdate" class="dlist">
 <dl>
@@ -7565,8 +7518,6 @@ fmi3Status intermediateUpdate(fmi3ComponentEnvironment componentEnvironment, fmi
 fmi3CallbackFunctions cbf;
 fmi3EventInfo eventInfo;
 cbf.logger = loggerFunction; // Logger function
-cbf.allocateMemory = calloc;
-cbf.freeMemory = free;
 // Signal that early return is supported by master
 cbf.intermediateUpdate = intermediateUpdate;
 
@@ -9099,7 +9050,7 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">    m = M_fmi3InstantiateModelExchange("m", MODEL_GUID, NULL, fmi3False, fmi3False, NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory);
+<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">    m = M_fmi3InstantiateModelExchange("m", MODEL_GUID, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
 // "m" is the instance name
 // "M_" is the MODEL_IDENTIFIER
 
@@ -9117,8 +9068,7 @@ time  = tStart;
 
 // initialize
 // determine continuous and discrete states
-CHECK_STATUS(M_fmi3SetupExperiment(m, fmi3False, 0.0, tStart, fmi3True, tEnd));
-CHECK_STATUS(M_fmi3EnterInitializationMode(m));
+CHECK_STATUS(M_fmi3EnterInitializationMode(m, fmi3False, 0.0, tStart, fmi3True, tEnd));
 CHECK_STATUS(M_fmi3ExitInitializationMode(m));
 
 initialEventMode = fmi3True;
@@ -9390,11 +9340,6 @@ If <code>false</code> (the default), the function must be called after every com
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canBeInstantiatedOnlyOncePerProcess</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This flag indicates cases (especially for embedded code), where only one instance per FMU is possible (multiple instantiation is default = <code>false</code>; if multiple instances are needed and the flag <code>canBeInstantiatedOnlyOncePerProcess = true</code>, the FMUs must be instantiated in different processes).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseMemoryManagementFunctions</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU uses its own functions for memory allocation and freeing only.
-The callback functions <a href="#allocateMemory"><code>allocateMemory</code></a> and <a href="#freeMemory"><code>freeMemory</code></a> given in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> are ignored.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canGetAndSetFMUState</code></p></td>
@@ -10831,9 +10776,9 @@ The code demonstrates the simplest master algorithm as shown in <a href="#math-b
 // Initialization sub-phase
 
 // instantiate both slaves
-s1 = s1_fmi3InstantiateBasicCoSimulation("slave1", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory, NULL);
+s1 = s1_fmi3InstantiateBasicCoSimulation("slave1", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
 
-s2 = s2_fmi3InstantiateBasicCoSimulation("slave2", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory, NULL);
+s2 = s2_fmi3InstantiateBasicCoSimulation("slave2", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
 
 if (s1 == NULL || s2 == NULL)
     return EXIT_FAILURE;
@@ -10850,11 +10795,8 @@ h = 0.01;
 // s2_fmi3SetReal/Integer/Boolean/String(s2, ...);
 
 // initialize the slaves
-s1_fmi3SetupExperiment(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
-s2_fmi3SetupExperiment(s2, fmi3False, 0.0, startTime, fmi3True, stopTime);
-
-s1_fmi3EnterInitializationMode(s1);
-s2_fmi3EnterInitializationMode(s2);
+s1_fmi3EnterInitializationMode(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
+s2_fmi3EnterInitializationMode(s2, fmi3False, 0.0, startTime, fmi3True, stopTime);
 
 // set the input values at time = startTime
 // fmi3SetReal/Integer/Boolean/String(s1, ...);
@@ -11019,11 +10961,6 @@ The FMU just contains the communication to this tool (see <a href="#figure-co-si
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canBeInstantiatedOnlyOncePerProcess</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This flag indicates cases (especially for embedded code), where only one instance per FMU is possible.
 (For multiple instantiation the default is <code>false</code>; if multiple instances are needed, the FMUs must be instantiated in different processes.).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canNotUseMemoryManagementFunctions</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave uses its own functions for memory allocation and freeing only.
-The callback functions <a href="#allocateMemory"><code>allocateMemory</code></a> and <a href="#freeMemory"><code>freeMemory</code></a> given in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> are ignored.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canGetAndSetFMUState</code></p></td>
@@ -13117,8 +13054,6 @@ fmi3Status GlobalInitialize()
 {
 
 	cbf1.logger = loggerFunction; // Logger function
-	cbf1.allocateMemory = calloc;
-	cbf1.freeMemory = free;
 	cbf1.intermediateUpdate = s1_triggeredClock_intermediateUpdate;
 	cbf1.lockPreemption = lockPreemption(); // Preemption is OS specific
 	cbf1.unlockPreemption = unlockPreemption(); // Preemption is OS specific
