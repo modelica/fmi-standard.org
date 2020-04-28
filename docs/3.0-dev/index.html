@@ -667,29 +667,33 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#definition-of-log-categories">2.2.4. Definition of Log Categories (<code>LogCategories</code>)</a></li>
 <li><a href="#DefaultExperiment">2.2.5. Definition of a Default Experiment (DefaultExperiment)</a></li>
-<li><a href="#_definition_of_terminals_terminals">2.2.6. Definition of Terminals (Terminals)</a>
+<li><a href="#fmiTerminalsAndIcons">2.2.6. Definition of Terminals and Icons (fmiTerminalsAndIcons)</a>
 <ul class="sectlevel4">
-<li><a href="#_overview_2">2.2.6.1. Overview</a></li>
-<li><a href="#_terminals">2.2.6.2. Terminals</a></li>
-<li><a href="#_terminal_member_variable">2.2.6.3. Terminal Member Variable</a></li>
-<li><a href="#_general_remark_on_signal">2.2.6.4. General remark on signal</a></li>
-<li><a href="#_general_remark_on_inflow_and_outflow">2.2.6.5. General remark on inflow and outflow</a></li>
-<li><a href="#_terminal_stream_member_variable">2.2.6.6. Terminal Stream Member Variable</a></li>
+<li><a href="#graphicalRepresentation">2.2.6.1. Definition of a Graphical Representation (GraphicalRepresentation)</a>
+<ul class="sectlevel5">
+<li><a href="#_overview_2">2.2.6.1.1. Overview</a></li>
+<li><a href="#_coordinatesystem">2.2.6.1.2. CoordinateSystem</a></li>
+<li><a href="#_icon">2.2.6.1.3. Icon</a></li>
+<li><a href="#_placement_extent_and_painting_order_of_graphical_items">2.2.6.1.4. Placement, Extent, and Painting Order of Graphical Items</a></li>
 </ul>
 </li>
-<li><a href="#_definition_of_a_graphical_representation_graphicalrepresentation">2.2.7. Definition of a Graphical Representation (GraphicalRepresentation)</a>
-<ul class="sectlevel4">
-<li><a href="#_overview_3">2.2.7.1. Overview</a></li>
-<li><a href="#_coordinatesystem">2.2.7.2. CoordinateSystem</a></li>
-<li><a href="#_icon">2.2.7.3. Icon</a></li>
-<li><a href="#_terminals_2">2.2.7.4. Terminals</a></li>
-<li><a href="#_placement_extent_and_painting_order_of_graphical_items">2.2.7.5. Placement, Extent, and Painting Order of Graphical Items</a></li>
+<li><a href="#_definition_of_terminals_terminals">2.2.6.2. Definition of Terminals (Terminals)</a>
+<ul class="sectlevel5">
+<li><a href="#_overview_3">2.2.6.2.1. Overview</a></li>
+<li><a href="#_terminals">2.2.6.2.2. Terminals</a></li>
+<li><a href="#_terminal_member_variable">2.2.6.2.3. Terminal Member Variable</a></li>
+<li><a href="#_general_remark_on_signal">2.2.6.2.4. General remark on signal</a></li>
+<li><a href="#_general_remark_on_inflow_and_outflow">2.2.6.2.5. General remark on inflow and outflow</a></li>
+<li><a href="#_terminal_stream_member_variable">2.2.6.2.6. Terminal Stream Member Variable</a></li>
+<li><a href="#_graphical_representation_of_terminals">2.2.6.2.7. Graphical Representation of Terminals</a></li>
 </ul>
 </li>
-<li><a href="#_definition_of_vendor_annotations_vendorannotations">2.2.8. Definition of Vendor Annotations (VendorAnnotations)</a></li>
-<li><a href="#definition-of-model-variables">2.2.9. Definition of Model Variables (ModelVariables)</a></li>
-<li><a href="#ModelStructure">2.2.10. Definition of the Model Structure (ModelStructure)</a></li>
-<li><a href="#variableNamingConvention">2.2.11. Variable Naming Conventions (variableNamingConvention)</a></li>
+</ul>
+</li>
+<li><a href="#_definition_of_vendor_annotations_vendorannotations">2.2.7. Definition of Vendor Annotations (VendorAnnotations)</a></li>
+<li><a href="#definition-of-model-variables">2.2.8. Definition of Model Variables (ModelVariables)</a></li>
+<li><a href="#ModelStructure">2.2.9. Definition of the Model Structure (ModelStructure)</a></li>
+<li><a href="#variableNamingConvention">2.2.10. Variable Naming Conventions (variableNamingConvention)</a></li>
 </ul>
 </li>
 <li><a href="#fmu-distribution">2.3. FMU Distribution</a></li>
@@ -2145,7 +2149,7 @@ Depending on the generating modeling environment, none, some or all allowed valu
 </div>
 <div class="paragraph">
 <p>Informs the FMU to enter <strong>Initialization Mode</strong>.
-Before calling this function, all variables with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a> can be set with the <code>fmi3Set{VariableType}</code> functions (the variable attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 2.2.9</a>).
+Before calling this function, all variables with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a> can be set with the <code>fmi3Set{VariableType}</code> functions (the variable attributes are defined in the Model Description File, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 Setting other variables is not allowed.</p>
 </div>
 <div class="ulist">
@@ -2375,7 +2379,7 @@ typedef fmi3Status fmi3GetBinaryTYPE (fmi3Instance instance,
 <p>Get actual values of variables by providing their variable references.
 <em>[These functions are used to get the values of output variables if a model is connected with other models.
 Since state derivatives are also variables, it is also possible to get the value of a state derivative.
-Furthermore, the actual value of every variable defined in the <code>modelDescription.xml</code> file can be determined at the actually defined time instant (see <a href="#definition-of-model-variables">Section 2.2.9</a>).]</em></p>
+Furthermore, the actual value of every variable defined in the <code>modelDescription.xml</code> file can be determined at the actually defined time instant (see <a href="#definition-of-model-variables">Section 2.2.8</a>).]</em></p>
 </div>
 <div class="ulist">
 <ul>
@@ -2485,7 +2489,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 </div>
 </div>
 <div class="paragraph">
-<p>Set <a href="#parameter"><code>parameters</code></a>, <a href="#input"><code>inputs</code></a>, and <a href="#start"><code>start</code></a> values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.9</a> for the exact rules on which type of variables <code>fmi3Set{VariableType}</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of Model Exchange, and <a href="#state-machine-co-simulation">Section 4.2.4</a>/<a href="#state-machine-calling-sequence-clocked-co-simulation">Section 5.2.4</a>/<a href="#state-machine-scheduled-co-simulation">Section 6.2.3</a> in case of each co-simulation interface type).</p>
+<p>Set <a href="#parameter"><code>parameters</code></a>, <a href="#input"><code>inputs</code></a>, and <a href="#start"><code>start</code></a> values, and re-initialize caching of variables that depend on these variables (see <a href="#definition-of-model-variables">Section 2.2.8</a> for the exact rules on which type of variables <code>fmi3Set{VariableType}</code> can be called, as well as <a href="#state-machine-model-exchange">Section 3.2.3</a> in case of Model Exchange, and <a href="#state-machine-co-simulation">Section 4.2.4</a>/<a href="#state-machine-calling-sequence-clocked-co-simulation">Section 5.2.4</a>/<a href="#state-machine-scheduled-co-simulation">Section 6.2.3</a> in case of each co-simulation interface type).</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3093,7 +3097,7 @@ Each state derivative variable listed as elements <code>&lt;ModelStructure&gt;&l
 </ul>
 </div>
 <div class="paragraph">
-<p>Details are given in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.2.10</a>.
+<p>Details are given in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.2.9</a>.
 <em>[For example continuous-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>.</em>
 <em>If a variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> is explicitly defined under <code>&lt;ModelVariables&gt;</code>, a directional derivative with respect to this variable can be computed.</em>
 <em>If such a variable is not defined, the directional derivative with respect to the <a href="#independent"><code>independent</code></a> variable cannot be calculated].</em></p>
@@ -3575,8 +3579,9 @@ The dependency information must change only if <a href="#structuralParameter"><c
 <div class="sect2">
 <h3 id="fmi-description-schema">2.2. FMI Description Schema</h3>
 <div class="paragraph">
-<p>All static information related to an FMU is stored in the text file <code>modelDescription.xml</code> in XML format.
-Especially, the FMU variables and their attributes such as <code>name</code>, <code>unit</code>, default <a href="#initial"><code>initial</code></a> value, etc. are stored in this file.</p>
+<p>All static information related to the core functionality of an FMU is stored in the text file <code>modelDescription.xml</code> in XML format as specified by the XML schema file <code>fmi3ModelDescription.xsd</code>.
+Especially, the FMU variables and their attributes such as <code>name</code>, <code>unit</code>, default <a href="#initial"><code>initial</code></a> value, etc. are stored in this file.
+Additional optional information about the graphical representation and the grouping of FMU variables into terminals is stored in the optional text file <code>icon/terminalsAndIcons.xml</code> in XML format as specified by the XML schema file <code>fmi3TerminalsAndIcons.xsd</code>.</p>
 </div>
 <div class="paragraph">
 <p>It is not allowed to change the <code>modelDescription.xml</code> file.
@@ -3584,8 +3589,8 @@ Especially, the FMU variables and their attributes such as <code>name</code>, <c
 <em>Specifically, changes to the start values are not allowed.]</em></p>
 </div>
 <div class="paragraph">
-<p>The structure of this XML file is defined with the schema file <code>fmi3ModelDescription.xsd</code>.
-This schema file utilizes several helper schema files.</p>
+<p>The structure of the XML files is defined with the schema files <code>fmi3ModelDescription.xsd</code> and the optional <code>fmi3TerminalsAndIcons.xsd</code>.
+These schema files utilize several helper schema files.</p>
 </div>
 <div class="paragraph">
 <p>In this section these schema files are discussed.
@@ -3774,14 +3779,6 @@ These definitions are used in the XML element <code>&lt;ModelVariables&gt;</code
 <td class="tableblock halign-left valign-top"><p class="tableblock">Providing default settings for the integrator, such as stop time and relative tolerance.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;Terminals&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining input and output signals into logical groups to ease connections on a system level.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;GraphicalRepresentation&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If present, contains information for authoring tools to draw graphical representations of the FMU in a system view.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;VendorAnnotations&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Additional data that a vendor might want to store and that other vendors might ignore.</p></td>
 </tr>
@@ -3793,7 +3790,7 @@ These definitions are used in the XML element <code>&lt;ModelVariables&gt;</code
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;ModelStructure&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines the structure of the model.
 Especially, the ordered lists of <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a>, initial unknowns (the unknowns during <strong>Initialization Mode</strong>) and the event indicators are defined here.
-For more details on <code>&lt;ModelStructure&gt;</code>, see <a href="#ModelStructure">Section 2.2.10</a>.
+For more details on <code>&lt;ModelStructure&gt;</code>, see <a href="#ModelStructure">Section 2.2.9</a>.
 Furthermore, the dependency of the unknowns from the knowns can be optionally defined for <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and initial unknowns.
 <em>[This information can be, for example, used to compute efficiently a sparse Jacobian for simulation, or to utilize the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> dependency in order to detect that in some cases there are actually no algebraic loops when connecting FMUs together]</em>.
 Dependencies for event indicators are not provided.
@@ -3871,7 +3868,7 @@ The format is a subset of <code>dateTime</code> and should be: <code>YYYY-MM-DDT
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>variableNamingConvention</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether the variable names in <code>&lt;ModelVariables&gt;</code> and in <code>&lt;TypeDefinitions&gt;</code> follow a particular convention.
-For the details, see <a href="#variableNamingConvention">Section 2.2.11</a>. Currently standardized are:</p>
+For the details, see <a href="#variableNamingConvention">Section 2.2.10</a>. Currently standardized are:</p>
 <p class="tableblock">- <code>flat</code>: A list of strings (the default).</p>
 <p class="tableblock">- <code>structured</code>: Hierarchical names with <code>.</code> as hierarchy separator, and with array elements and derivative characterization.</p></td>
 </tr>
@@ -4525,9 +4522,147 @@ Furthermore, for Co-Simulation FMUs the <code>stepSize</code> defines the prefer
 </div>
 </div>
 <div class="sect3">
-<h4 id="_definition_of_terminals_terminals">2.2.6. Definition of Terminals (Terminals)</h4>
+<h4 id="fmiTerminalsAndIcons">2.2.6. Definition of Terminals and Icons (fmiTerminalsAndIcons)</h4>
+<div class="paragraph">
+<p>This is the root element of the XML file <code>icon/terminalsAndIcons.xml</code>, and is defined as:</p>
+</div>
+<div id="terminals_and_icons_overview" class="imageblock text-center">
+<div class="content">
+<img src="images/schema/fmiTerminalsAndIcons.png" alt="fmiTerminalsAndIcons" width="60%">
+</div>
+</div>
+<div class="paragraph">
+<p>On the top level, the schema consists of the following elements (see <a href="#terminals_and_icons_overview">figure above</a>).</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Element</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;GraphicalRepresentation&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, contains information for authoring tools to draw graphical representations of the FMU in a system view.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;Terminals&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining input and output signals into logical groups to ease connections on a system level.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="sect4">
-<h5 id="_overview_2">2.2.6.1. Overview</h5>
+<h5 id="graphicalRepresentation">2.2.6.1. Definition of a Graphical Representation (GraphicalRepresentation)</h5>
+<div class="sect5">
+<h6 id="_overview_2">2.2.6.1.1. Overview</h6>
+<div class="paragraph">
+<p>The graphical representation of the FMU and terminals are needed in order to more easily comprehend the meaning of connected FMUs and to help an importing tool to display the terminals and the FMU icon in the way the exporter intended.</p>
+</div>
+<div class="paragraph">
+<p>The graphical representation is fully optional.
+The graphical representation of terminals is separate from the terminal definitions in the <code>&lt;Terminals&gt;</code> element.</p>
+</div>
+<div class="paragraph">
+<p>There are two optional elements in the <code>&lt;GraphicalRepresentation&gt;</code>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>&lt;CoordinateSystem&gt;</code> defines the extent of the whole icon (graphical items may exceed that rectangle).</p>
+</li>
+<li>
+<p>The <code>&lt;Icon&gt;</code> defines an image source for the FMU.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/schema/GraphicalRepresentation.png" alt="GraphicalRepresentation" width="100%">
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_coordinatesystem">2.2.6.1.2. CoordinateSystem</h6>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/schema/CoordinateSystem.png" alt="CoordinateSystem" width="70%">
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>&lt;CoordinateSystem&gt;</code> element and its defined extent is used as reference for other graphical items. It also provides a scaling factor to millimeter.</p>
+</div>
+<div class="paragraph">
+<p>The coordinate system is defined by the coordinates of two points, the lower left (<code>x1</code>, <code>y1</code>) corner and the upper right (<code>x2</code>, <code>y2</code>) corner, where the coordinates of the first point shall be less than the coordinates of the second point <em>[a first quadrant coordinate system]</em>.
+The x-axis is directed to the right, the y-axis is directed upwards.</p>
+</div>
+<div class="paragraph">
+<p><em>[The exporting tool should define how the coordinate system unit relates to mm display or print out size.</em>
+<em>However, an importing tool might choose to use the factor from the default coordinate system extent to the actual coordinate system extent to calculate a scaling factor, to match the default icon size in the importing tool.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The area defined by the coordinate system is suggested to be used as "clickable icon size" in other tools.</em>
+<em>A <code>&lt;Terminal&gt;</code> might be placed outside of this area, so the visible bounding box has to be determined by the importing tool.]</em></p>
+</div>
+<div class="paragraph">
+<p>The coordinate system default is <code>x1=-100, y1=-100, x2=100, y2=100</code>. This extent is used if the <code>&lt;CoordinateSystem&gt;</code> element is missing.
+The default <code>suggestedScalingFactorTo_mm</code> is 0.1.
+So the default coordinate system display size should be 20 mm width and 20 mm height.</p>
+</div>
+<div class="paragraph">
+<p>The FMU icon and all graphical representations provide the position and extent with the attributes <code>x1</code>, <code>y1</code>, <code>x2</code>, <code>y2</code>.
+The values of these attributes directly relate to this coordinate system and are not normalized.
+Flipping of the FMU icon or a terminal can be realized by setting its attributes <code>x2 &lt; x1</code> or <code>y2 &lt; y1</code> without changing the coordinate system.</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_icon">2.2.6.1.3. Icon</h6>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/schema/Icon.png" alt="Icon" width="40%">
+</div>
+</div>
+<div class="paragraph">
+<p>The extent and position of the FMU icon are defined in the <code>&lt;Icon&gt;</code> element.
+The optional image file of the FMU icon is placed at the path <code>icon/icon.png</code> in the ZIP archive of the FMU. The terminals should not be visible in the image.
+Optionally an SVG file can be provided if also the PNG file is present.
+This enables high quality rendering and printing in importing tools.
+This SVG file has to be placed at the path <code>icon/icon.svg</code> in the ZIP archive.</p>
+</div>
+<div class="paragraph">
+<p>The point (<code>x1</code>, <code>y1</code>) maps to the left lower corner of the PNG image or SVG viewport.
+The point (<code>x2</code>, <code>y2</code>) maps to the right upper corner of the PNG image or SVG viewport.</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_placement_extent_and_painting_order_of_graphical_items">2.2.6.1.4. Placement, Extent, and Painting Order of Graphical Items</h6>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/GraphicalRepresentation.svg" alt="GraphicalRepresentation" width="70%">
+</div>
+</div>
+<div class="paragraph">
+<p>The clickable icon size is defined by the <code>&lt;CoordinateSystem&gt;</code> element.
+The FMU icon itself may exceed this extent (or bounding box).
+The bounding box of the terminals is given by the extent in the terminals element.
+Their location is neither limited to the extent of the icon nor the extent of the coordinate system.
+<em>[An importing tool has to determine the outer bounding box enclosing all graphical items.]</em></p>
+</div>
+<div class="paragraph">
+<p>Transparent SVG or PNG files are allowed and wanted. The order of the elements in the XML file defines the order of painting.
+The first element in the <code>&lt;GraphicalRepresentation&gt;</code> is painted first and therefore behind the others, the last element is painted on top of the others and because of that in front of them.
+<em>[So the FMU icon should be placed first in the XML file, terminal below.]</em></p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_definition_of_terminals_terminals">2.2.6.2. Definition of Terminals (Terminals)</h5>
+<div class="sect5">
+<h6 id="_overview_3">2.2.6.2.1. Overview</h6>
 <div class="paragraph">
 <p>Terminals are fully optional and can be ignored by any importing tool.</p>
 </div>
@@ -4566,10 +4701,10 @@ Domain specific connection rules, terminals and their member variables can be pr
 <em>This <code>connectorKind</code> is not related to the <code>terminalKind</code> or <code>variableKind</code> described in the following sections.]</em></p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_terminals">2.2.6.2. Terminals</h5>
+<div class="sect5">
+<h6 id="_terminals">2.2.6.2.2. Terminals</h6>
 <div class="paragraph">
-<p>Element <code>&lt;fmiModelDescription&gt;&lt;Terminals&gt;</code> is defined as:</p>
+<p>Element <code>&lt;fmiTerminalsAndIcons&gt;&lt;Terminals&gt;</code> is defined as:</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -4577,7 +4712,7 @@ Domain specific connection rules, terminals and their member variables can be pr
 </div>
 </div>
 <div class="paragraph">
-<p>All instances of <code>&lt;Terminal&gt;</code> have the type <code>fmi3Terminal</code> and are listed in the <code>&lt;Terminals&gt;</code> sequence:</p>
+<p>All instances of <code>&lt;Terminal&gt;</code> have the type <code>fmi3Terminal</code> and are listed in the <code>&lt;Terminals&gt;</code> sequence.</p>
 </div>
 <div class="paragraph">
 <p>The normalized string attribute <code>name</code> of the <code>&lt;Terminal&gt;</code> element is the instance name of the terminal. The terminal name must be unique on each level.</p>
@@ -4589,7 +4724,7 @@ Other standards may define new matching rules.
 <em>[It is recommended that vendor specific rules start with <code>_vendorName</code> or <code>_toolName</code> to avoid namespace clashes.]</em></p>
 </div>
 <div class="paragraph">
-<p>There is a sequence of terminal member variables, terminal stream member variables, and nested terminals in the <code>&lt;Terminal&gt;</code> element.
+<p>There is a sequence of terminal member variables, terminal stream member variables, nested terminals, and an optional <code>&lt;GraphicalRepresentation&gt;</code> element in the <code>&lt;Terminal&gt;</code> element.
 The member variables are the exchanged variables.
 The type of the nested terminals is <code>fmi3Terminal</code>, and they can be used to implement structured terminals.</p>
 </div>
@@ -4644,8 +4779,8 @@ It is intended that the <code>terminalKind</code> is used to define domain speci
 <p><em>A tool may choose to connect terminals with a different or unknown <code>terminalKind</code>, if the <code>matchingRule</code> matches.]</em></p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_terminal_member_variable">2.2.6.3. Terminal Member Variable</h5>
+<div class="sect5">
+<h6 id="_terminal_member_variable">2.2.6.2.3. Terminal Member Variable</h6>
 <div class="paragraph">
 <p>The <code>&lt;TerminalMemberVariable&gt;</code> is defined as:</p>
 </div>
@@ -4734,8 +4869,8 @@ Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><cod
 </tbody>
 </table>
 </div>
-<div class="sect4">
-<h5 id="_general_remark_on_signal">2.2.6.4. General remark on signal</h5>
+<div class="sect5">
+<h6 id="_general_remark_on_signal">2.2.6.2.4. General remark on signal</h6>
 <div class="paragraph">
 <p><em>[The signal <code>variableKind</code> can be applied for different use cases.</em>
 <em>The first use case is a signal flow from an <a href="#output"><code>output</code></a> of one FMU to an <a href="#input"><code>input</code></a> of another FMU. The <a href="#output"><code>output</code></a> value has to be forwarded to the <a href="#input"><code>input</code></a>.</em></p>
@@ -4760,8 +4895,8 @@ Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><cod
 <em>A change in the cross sectional flow area is relevant for the momentum equation, and therefore the connection has to be deemed incompatible if these variables are present and unequal.]</em></p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_general_remark_on_inflow_and_outflow">2.2.6.5. General remark on inflow and outflow</h5>
+<div class="sect5">
+<h6 id="_general_remark_on_inflow_and_outflow">2.2.6.2.5. General remark on inflow and outflow</h6>
 <div class="paragraph">
 <p><em>[Flow variables have a direction and must fulfill a zero sum constraint i.e. the sum of all flow variables connected together must be zero (Kirchhoff&#8217;s current law).</em>
 <em>In addition because different tools might have different direction definitions both, <code>inflow</code> and <code>outflow</code> are available as <code>variableKind</code>.</em>
@@ -4769,7 +4904,7 @@ Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><cod
 <em>For the sake of simplicity in the following \(\dot{m}_i\) denotes an inflowing quantity:</em></p>
 </div>
 <div class="paragraph">
-<p>\(0 = \sum{\dot{m}_i}\)</p>
+<p><em>\(0 = \sum{\dot{m}_i}\)</em></p>
 </div>
 <div class="paragraph">
 <p><em>[Connecting a single <a href="#output"><code>output</code></a> <code>outflow</code> to a single <a href="#input"><code>input</code></a> <code>inflow</code>, or vice versa automatically fulfills the flow constraint, while connecting two single signals of the same flow type requires a negation of the signal.</em></p>
@@ -4781,8 +4916,8 @@ Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><cod
 <em>Other definitions are beyond the scope of this terminal specification and need clear definition in other specifications on top of this.]</em></p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_terminal_stream_member_variable">2.2.6.6. Terminal Stream Member Variable</h5>
+<div class="sect5">
+<h6 id="_terminal_stream_member_variable">2.2.6.2.6. Terminal Stream Member Variable</h6>
 <div class="paragraph">
 <p>The <code>&lt;TerminalStreamMemberVariable&gt;</code> is defined as:</p>
 </div>
@@ -4842,109 +4977,34 @@ q_{\textit{$i$, inStream}} &amp;\textit{if $\dot{m}$ is inflowing through termin
 <em>E.g. if the outStream name is "h_outflow" then the inStream name should be "h_outflow_inStream".]</em></p>
 </div>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_definition_of_a_graphical_representation_graphicalrepresentation">2.2.7. Definition of a Graphical Representation (GraphicalRepresentation)</h4>
-<div class="sect4">
-<h5 id="_overview_3">2.2.7.1. Overview</h5>
-<div class="paragraph">
-<p>The graphical representation of the FMU and terminals are needed in order to more easily comprehend the meaning of connected FMUs and to help an importing tool to display the terminals and the FMU icon in the way the exporter intended.</p>
-</div>
-<div class="paragraph">
-<p>The graphical representation is fully optional.
-The graphical representation of terminals is separate from the terminal definitions in the <code>&lt;Terminals&gt;</code> element.</p>
-</div>
-<div class="paragraph">
-<p>There are three optional elements in the <code>&lt;GraphicalRepresentation&gt;</code>:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The <code>&lt;CoordinateSystem&gt;</code> defines the extent of the whole icon (graphical items may exceed that rectangle).</p>
-</li>
-<li>
-<p>The <code>&lt;Icon&gt;</code> defines an image source for the FMU.</p>
-</li>
-<li>
-<p>The <code>&lt;Terminal&gt;</code> sequence contains the graphical representation of the visible terminals.</p>
-</li>
-</ol>
-</div>
+<div class="sect5">
+<h6 id="_graphical_representation_of_terminals">2.2.6.2.7. Graphical Representation of Terminals</h6>
 <div class="imageblock text-center">
 <div class="content">
-<img src="images/schema/GraphicalRepresentation.png" alt="GraphicalRepresentation" width="100%">
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_coordinatesystem">2.2.7.2. CoordinateSystem</h5>
-<div class="paragraph">
-<p>The <code>&lt;CoordinateSystem&gt;</code> element and its defined extent is used as reference for other graphical items. It also provides a scaling factor to millimeter.</p>
-</div>
-<div class="paragraph">
-<p>The coordinate system is defined by the coordinates of two points, the lower left (<code>x1</code>, <code>y1</code>) corner and the upper right (<code>x2</code>, <code>y2</code>) corner, where the coordinates of the first point shall be less than the coordinates of the second point <em>[a first quadrant coordinate system]</em>.
-The x-axis directed to the right, the y-axis is directed upwards.</p>
-</div>
-<div class="paragraph">
-<p><em>[The exporting tool should define how the coordinate system unit relates to mm display or print out size.</em>
-<em>However, an importing tool might choose to use the factor from the default coordinate system extent to the actual coordinate system extent to calculate a scaling factor, to match the default icon size in the importing tool.</em></p>
-</div>
-<div class="paragraph">
-<p><em>The area defined by the coordinate system suggested to be used as "clickable icon size" in other tools.</em>
-<em>A <code>&lt;Terminal&gt;</code> might be placed outside of this area, so the visible bounding box has to be determined by the importing tool.]</em></p>
-</div>
-<div class="paragraph">
-<p>The coordinate system default is <code>x1=-100, y1=-100, x2=100, y2=100</code>. This extent is used if the <code>&lt;CoordinateSystem&gt;</code> element is missing.
-The default <code>suggestedScalingFactorTo_mm</code> is 0.1.
-So the default coordinate system display size should be 20 mm width and 20 mm height.</p>
-</div>
-<div class="paragraph">
-<p>The FMU icon and all graphical representations provide the position and extent with the attributes <code>x1</code>, <code>y1</code>, <code>x2</code>, <code>y2</code>.
-The values of these attributes directly relate to this coordinate system and are not normalized.
-Flipping of the FMU icon or a terminal can be realized by setting its attributes <code>x2 &lt; x1</code> or <code>y2 &lt; y1</code> without changing the coordinate system.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_icon">2.2.7.3. Icon</h5>
-<div class="imageblock text-center">
-<div class="content">
-<img src="images/schema/ModelStructure.png" alt="ModelStructure" width="80%">
+<img src="images/schema/TerminalGraphicalRepresentation.png" alt="TerminalGraphicalRepresentation" width="75%">
 </div>
 </div>
 <div class="paragraph">
-<p>The extent and position of the FMU icon are defined in the <code>&lt;Icon&gt;</code> element.
-The optional image file of the FMU icon is placed at the path <code>icon/icon.png</code> in ZIP archive of the FMU. The terminals should not be visible in the image.
-Optionally an SVG file can be provided if also the PNG file is present.
-This enables high quality rendering and printing in importing tools.
-This SVG file has to be placed at the path <code>icon/icon.svg</code> in the ZIP archive.</p>
-</div>
-<div class="paragraph">
-<p>The point (<code>x1</code>, <code>y1</code>) maps to the left lower corner of the PNG image or SVG viewport.
-The point (<code>x2</code>, <code>y2</code>) maps to the right upper corner of the PNG image or SVG viewport.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_terminals_2">2.2.7.4. Terminals</h5>
-<div class="paragraph">
-<p>For <code>fmi3Terminals</code> (terminals which are listed in the <code>&lt;Terminals&gt;</code> element) the name of the terminal in the <code>&lt;GraphicalRepresentation&gt;</code> is equal to the name of the terminal in the <code>&lt;Terminals&gt;</code> element (e.g. <code>port_a</code>).
-Only <code>Terminal</code> elements which are direct children of the <code>Terminals</code> element can have a graphical representation.
-<em>[If the graphical representation is used for an <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a> (e.g. a <code>fmi3Float64</code> <a href="#input"><code>input</code></a> <code>u</code>), then a <code>&lt;Terminal&gt;</code> has to be added to the <code>&lt;Terminals&gt;</code> element which has one <code>&lt;TerminalMemberVariable&gt;</code>.</em>
-<em>The name of the <code>&lt;Terminal&gt;</code> and the name of the <code>&lt;TerminalMemberVariable&gt;</code> should be equal to the name of the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a>.]</em></p>
-</div>
-<div class="paragraph">
-<p>The <code>iconBaseName</code> attribute is mandatory.
+<p>The description of the general attributes can be found in <a href="#graphicalRepresentation">Section 2.2.6.1</a>.
+The <code>iconBaseName</code> attribute is mandatory.
 This attribute defines the base name of the image file as a relative URI according to RFC 3986.
-The base URI that this relative URI is resolved against is the URI of the <code>icon</code> folder in the FMU ZIP archive.
+The base URI that this relative URI is resolved against is the URI of the <code>icon/terminalsAndIcons.xml</code> file in the FMU ZIP archive.
 Implementations are only REQUIRED to support relative URIs, excluding relative URIs that move beyond the baseURI (i.e. go "up" a level via ..).
 Implementations are NOT REQUIRED to support any absolute URIs and any specific URI schemes.
 The PNG file with the extension '.png' has to be provided. An additional SVG file with extension '.svg' is optional.</p>
 </div>
 <div class="paragraph">
-<p><em>[Note that this specification is functionally equivalent to looking up image sources from the icon folder of the FMU ZIP Archive after dot removal from the path as per section 5.2.4 of RFC 3986.]</em></p>
+<p><em>[Note that this specification is functionally equivalent to looking up image sources from the icon folder of the FMU ZIP archive after dot removal from the path as per section 5.2.4 of RFC 3986.]</em></p>
 </div>
 <div class="paragraph">
 <p>The default connection stroke size and color can be provided, to define the intended connection line layout in the importing tool. The stroke size is given relative to the coordinate system extent.
 The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</code>.</p>
+</div>
+<div class="paragraph">
+<p><em>[Nested terminals may have a <code>&lt;GraphicalRepresentation&gt;</code> element. However, if and how nested terminals are displayed, is up to the importing tool.]</em></p>
+</div>
+<div class="paragraph">
+<p><em>[The order of painting of the <code>&lt;GraphicalRepresentation&gt;</code> of terminals on each level is equal to the order of appearance in the <code>&lt;Terminal&gt;</code> element. So graphical representations appearing first, are painted first, are behind graphical representations which appear below.]</em></p>
 </div>
 <div class="paragraph">
 <p>The <code>&lt;VendorAnnotations&gt;</code> element can be used by vendors to store additional information for the graphical representation.
@@ -4952,33 +5012,13 @@ The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</co
 <em>The attribute <code>name</code> of the connector element is equal to the <code>name</code> attribute of the referenced <code>fmi3Terminal</code>.]</em></p>
 </div>
 <div class="paragraph">
-<p><em>[Only terminals from the <code>&lt;Terminals&gt;</code> element can have a graphical representation.</em>
-<em>For simple <a href="#input"><code>inputs</code></a> / <a href="#output"><code>outputs</code></a> a terminal with one member has to be added.]</em></p>
+<p><em>[If the graphical representation is used for an <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a> (e.g. a <code>fmi3Float64</code> <a href="#input"><code>input</code></a> <code>u</code>), then a <code>&lt;Terminal&gt;</code> has to be added to the <code>&lt;Terminals&gt;</code> element which has one <code>&lt;TerminalMemberVariable&gt;</code>.]</em></p>
 </div>
-</div>
-<div class="sect4">
-<h5 id="_placement_extent_and_painting_order_of_graphical_items">2.2.7.5. Placement, Extent, and Painting Order of Graphical Items</h5>
-<div class="imageblock text-center">
-<div class="content">
-<img src="images/GraphicalRepresentation.svg" alt="GraphicalRepresentation" width="70%">
-</div>
-</div>
-<div class="paragraph">
-<p>The clickable icon size is defined by the <code>&lt;CoordinateSystem&gt;</code> element.
-The FMU icon itself may exceed this extent (or bounding box).
-The bounding box of the terminals is given by the extent in the terminals element.
-Their location is neither limited to the extent of the icon nor the extent of the coordinate system.
-<em>[An importing tool has to determine the outer bounding box enclosing all graphical items.]</em></p>
-</div>
-<div class="paragraph">
-<p>Transparent SVG or PNG files are allowed and wanted. The order of the elements in the XML file defines the order of painting.
-The first element in the <code>&lt;GraphicalRepresentation&gt;</code> is painted first and therefore behind the others, the last element is painted on top of the others and because of that in front of them.
-<em>[So the FMU icon should be placed first in the XML file, terminal below.]</em></p>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_definition_of_vendor_annotations_vendorannotations">2.2.8. Definition of Vendor Annotations (VendorAnnotations)</h4>
+<h4 id="_definition_of_vendor_annotations_vendorannotations">2.2.7. Definition of Vendor Annotations (VendorAnnotations)</h4>
 <div class="paragraph">
 <p>Element <code>&lt;fmiModelDescription&gt;&lt;VendorAnnotations&gt;</code> is defined as:</p>
 </div>
@@ -4994,7 +5034,7 @@ The attribute <code>name</code> must be unique with respect to all other element
 </div>
 </div>
 <div class="sect3">
-<h4 id="definition-of-model-variables">2.2.9. Definition of Model Variables (ModelVariables)</h4>
+<h4 id="definition-of-model-variables">2.2.8. Definition of Model Variables (ModelVariables)</h4>
 <div class="paragraph">
 <p>The element of <code>&lt;fmiModelDescription&gt;&lt;ModelVariables&gt;</code> is the central part of the model description.
 It provides the static information of all exposed variables and is defined as follows.</p>
@@ -5147,7 +5187,7 @@ The algebraic relationship to the <a href="#input"><code>inputs</code></a> is de
 <div id="local" class="ulist">
 <ul>
 <li>
-<p><code>local</code>: Local variable that is calculated from other variables or is a continuous-time <a href="#state"><code>state</code></a> or an event indicator (see <a href="#ModelStructure">Section 2.2.10</a>).
+<p><code>local</code>: Local variable that is calculated from other variables or is a continuous-time <a href="#state"><code>state</code></a> or an event indicator (see <a href="#ModelStructure">Section 2.2.9</a>).
 It is not allowed to use the variable value in another model or slave.</p>
 </li>
 </ul>
@@ -5212,7 +5252,7 @@ Only a variable of type <code>&lt;Clock&gt;</code> can have this <a href="#causa
 </div>
 <div class="paragraph">
 <p>The default of <a href="#causality"><code>causality</code></a> is <a href="#local"><code>local</code></a>.<br>
-A continuous-time <a href="#state"><code>state</code></a> or a event indicator must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure">Section 2.2.10</a>.</p>
+A continuous-time <a href="#state"><code>state</code></a> or a event indicator must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure">Section 2.2.9</a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[<a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> and <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a> are similar.</em>
@@ -6056,7 +6096,7 @@ The attribute <code>name</code> must be unique with respect to all other element
 </div>
 </div>
 <div class="sect3">
-<h4 id="ModelStructure">2.2.10. Definition of the Model Structure (ModelStructure)</h4>
+<h4 id="ModelStructure">2.2.9. Definition of the Model Structure (ModelStructure)</h4>
 <div class="paragraph">
 <p>The structure of the model is defined in element <code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;</code>.
 This structure is with respect to the underlying model equations, independently how these model equations are solved.
@@ -6408,7 +6448,7 @@ The definition of the model structure is then:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="variableNamingConvention">2.2.11. Variable Naming Conventions (variableNamingConvention)</h4>
+<h4 id="variableNamingConvention">2.2.10. Variable Naming Conventions (variableNamingConvention)</h4>
 <div class="paragraph">
 <p>With attribute <code>variableNamingConvention</code> in <code>&lt;fmiModelDescription&gt;</code>, the convention is defined how the variable names have been constructed.
 If this information is known, the environment may be able to represent the names in a better way (for example, as a tree and not as a linear list).</p>
@@ -6584,6 +6624,7 @@ documentation                 // directory containing the documentation (optiona
       license.{txt|html}      // Entry point for license information
       &lt;license files&gt;         // For example BSD licenses
 icon                          // FMU and terminal icons (optional)
+   terminalsAndIcons.xml      // description of terminals and graphical representation (optional)
    icon.png                   // image file of icon without terminals (optional)
    icon.svg                   // if existing the icon.png is required (optional)
    // all terminal and fmu icons referenced in the graphical representation
@@ -7882,9 +7923,9 @@ Such an event is called step event.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(v\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.9</a>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 A subset of the variables is selected via a subscript.
-Example: \(\mathbf{v}_{initial=exact}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (see <a href="#definition-of-model-variables">Section 2.2.9</a>).
+Example: \(\mathbf{v}_{initial=exact}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 These are <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> and start values of other variables, such as initial values for <a href="#state"><code>states</code></a>, state derivatives or <a href="#output"><code>outputs</code></a>.</p></td>
 </tr>
 <tr>
@@ -7898,7 +7939,7 @@ Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a hr
 <td class="tableblock halign-left valign-top"><p class="tableblock">Input variables.
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
-Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.9</a>).</p></td>
+Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{y}(t)\)</p></td>
@@ -7906,12 +7947,12 @@ Whether the <a href="#input"><code>input</code></a> is a discrete-time or contin
 The values of these variables are computed in the FMU and they are designed to be used in a model connection.
 For instance, output variables might be used in the environment as input values to other FMUs or other submodels.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.
-Whether the <a href="#output"><code>output</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.9</a>).</p></td>
+Whether the <a href="#output"><code>output</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{w}(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Local variables of the FMU that cannot be used for FMU connections.
-Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a>, see <a href="#definition-of-model-variables">Section 2.2.9</a>.</p></td>
+Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a>, see <a href="#definition-of-model-variables">Section 2.2.8</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{z}(t)\)</p></td>
@@ -9564,10 +9605,10 @@ The communication step size is denoted as \(hc_i = tc_{i+1} - tc_i\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{v}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.9</a>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 A subset of the variables is selected via a subscript.
 Example:<br>
-\(\mathbf{v}_{initial=exact}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, see <a href="#definition-of-model-variables">Section 2.2.9</a>.
+\(\mathbf{v}_{initial=exact}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, see <a href="#definition-of-model-variables">Section 2.2.8</a>.
 These are <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> and <a href="#start"><code>start</code></a> values of other variables, such as initial values for <a href="#state"><code>states</code></a>, state derivatives or <a href="#output">outputs</a>.</p></td>
 </tr>
 <tr>
@@ -9581,7 +9622,7 @@ Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a hr
 <td class="tableblock halign-left valign-top"><p class="tableblock">Input variables.
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
-Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.9</a>).</p></td>
+Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(tc_i)\)</p></td>
@@ -9589,12 +9630,12 @@ Whether the <a href="#input"><code>input</code></a> is a discrete-time or contin
 The values of these variables are computed in the FMU and they are designed to be used in a model connection.
 So output variables might be used in the environment as input values to other FMUs or other submodels.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.
-Via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> it is defined whether the <a href="#output"><code>output</code></a> is a discrete-time or continuous-time variable, see <a href="#definition-of-model-variables">Section 2.2.9</a>.</p></td>
+Via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> it is defined whether the <a href="#output"><code>output</code></a> is a discrete-time or continuous-time variable, see <a href="#definition-of-model-variables">Section 2.2.8</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{w}(tc_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Local variables of the FMU that cannot be used for FMU connections.
-Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> (see <a href="#definition-of-model-variables">Section 2.2.9</a>).</p></td>
+Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{x}_c(t)\)</p></td>
