@@ -4,7 +4,6 @@
 #include "util.h"
 #include "config.h"
 
-
 #define CHECK_STATUS(S) status = S; if (status != fmi3OK) goto TERMINATE;
 
 static fmi3Status recordVariables(fmi3Instance s, fmi3Float64 time) {
@@ -28,16 +27,18 @@ static fmi3Status cb_intermediateUpdate(
     fmi3Status status = fmi3OK;
     
     if (clocksTicked) {
-        fmi3Instance *m = ((fmi3Instance *)instanceEnvironment);
-    
-        // ModelPartition 3 depends on inClock1
-        fmi3Clock outClock1;
-        fmi3ValueReference vr[1] = { vr_outClock1 };
         
-        status = fmi3GetClock(m, vr, 1, &outClock1);
+        fmi3Instance m = *((fmi3Instance *)instanceEnvironment);
+                
+        fmi3Clock outClock2;
+        
+        fmi3ValueReference vr[1] = { vr_outClock2 };
+        
+        status = fmi3GetClock(m, vr, 1, &outClock2);
+        
         if (status > fmi3OK) return status;
-        if (outClock1) {
-            // printf("############## Starting task for inClock3\n");
+        
+        if (outClock2) {
             status = fmi3ActivateModelPartition(m, vr_inClock3, intermediateUpdateTime);
         }
     }
@@ -72,6 +73,8 @@ int main(int argc, char* argv[]) {
                                               fmi3False,
                                               &m,
                                               cb_logMessage,
+                                              cb_allocateMemory,
+                                              cb_freeMemory,
                                               cb_intermediateUpdate,
                                               cb_lockPreemption,
                                               cb_unlockPreemption);
@@ -81,7 +84,9 @@ int main(int argc, char* argv[]) {
         goto TERMINATE;
     }
 
-    CHECK_STATUS(fmi3EnterInitializationMode(m, fmi3False, 0, 0, fmi3False, 0));
+    CHECK_STATUS(fmi3SetupExperiment(m, fmi3False, 0, 0, fmi3False, 0));
+
+    CHECK_STATUS(fmi3EnterInitializationMode(m));
     CHECK_STATUS(fmi3ExitInitializationMode(m));
     
     int time = 0;
@@ -92,10 +97,10 @@ int main(int argc, char* argv[]) {
     // simulation loop
     while (time < 10) {
         
-        // Model Partition 1 is active every second
-        CHECK_STATUS(fmi3ActivateModelPartition(m, vr_inClock1, time));
-                
-        // Model Partition 2 is active at 0, 1, 8, and 9
+        if (time % 4 == 0) {
+            CHECK_STATUS(fmi3ActivateModelPartition(m, vr_inClock1, time));
+        }
+        
         if (time % 8 == 0 || (time - 1) % 8 == 0) {
             CHECK_STATUS(fmi3ActivateModelPartition(m, vr_inClock2, time));
         }

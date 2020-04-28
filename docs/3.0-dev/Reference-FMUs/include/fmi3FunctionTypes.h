@@ -5,10 +5,10 @@
 
 /*
 This header file must be utilized when compiling an FMU or an FMI master.
-It declares data and function types for FMI 3.0-alpha.3.
+It declares data and function types for FMI 3.0-alpha.1.
 
 Copyright (C) 2011 MODELISAR consortium,
-              2012-2020 Modelica Association Project "FMI"
+              2012-2019 Modelica Association Project "FMI"
               All rights reserved.
 
 This file is licensed by the copyright holders under the 2-Clause BSD License
@@ -70,30 +70,35 @@ typedef enum {
 } fmi3DependencyKind;
 /* end::DependencyKind[] */
 
-/* tag::CallbackLogMessage[] */
+/* tag::CallbackFunctions[] */
 typedef void  (*fmi3CallbackLogMessage)     (fmi3InstanceEnvironment instanceEnvironment,
                                              fmi3String instanceName,
                                              fmi3Status status,
                                              fmi3String category,
                                              fmi3String message);
-/* end::CallbackLogMessage[] */
+typedef void* (*fmi3CallbackAllocateMemory) (fmi3InstanceEnvironment instanceEnvironment,
+                                             size_t nobj,
+                                             size_t size);
+typedef void  (*fmi3CallbackFreeMemory)     (fmi3InstanceEnvironment instanceEnvironment,
+                                             void* obj);
+/* end::CallbackFunctions[] */
 
 /* tag::CallbackIntermediateUpdate[] */
 typedef fmi3Status (*fmi3CallbackIntermediateUpdate) (
-                   fmi3InstanceEnvironment instanceEnvironment,
-                   fmi3Float64 intermediateUpdateTime,
-                   fmi3Boolean eventOccurred,
-                   fmi3Boolean clocksTicked,
-                   fmi3Boolean intermediateVariableSetAllowed,
-                   fmi3Boolean intermediateVariableGetAllowed,
-                   fmi3Boolean intermediateStepFinished,
-                   fmi3Boolean canReturnEarly);
+  fmi3InstanceEnvironment instanceEnvironment,
+  fmi3Float64 intermediateUpdateTime,
+  fmi3Boolean eventOccurred,
+  fmi3Boolean clocksTicked,
+  fmi3Boolean intermediateVariableSetAllowed,
+  fmi3Boolean intermediateVariableGetAllowed,
+  fmi3Boolean intermediateStepFinished,
+  fmi3Boolean canReturnEarly);
 /* end::CallbackIntermediateUpdate[] */
 
-/* tag::CallbackPreemptionLock[] */
+/* tag::PreemptionLock[] */
 typedef void       (*fmi3CallbackLockPreemption)   ();
 typedef void       (*fmi3CallbackUnlockPreemption) ();
-/* end::CallbackPreemptionLock[] */
+/* end::PreemptionLock[] */
 
 /* Define fmi3 function pointer types to simplify dynamic loading */
 
@@ -122,7 +127,9 @@ typedef fmi3Instance fmi3InstantiateModelExchangeTYPE(
     fmi3Boolean                visible,
     fmi3Boolean                loggingOn,
     fmi3InstanceEnvironment    instanceEnvironment,
-    fmi3CallbackLogMessage     logMessage);
+    fmi3CallbackLogMessage     logMessage,
+    fmi3CallbackAllocateMemory allocateMemory,
+    fmi3CallbackFreeMemory     freeMemory);
 
 typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
     fmi3String                     instanceName,
@@ -135,6 +142,8 @@ typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
     fmi3Boolean                    intermediateVariableSetRequired,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackAllocateMemory     allocateMemory,
+    fmi3CallbackFreeMemory         freeMemory,
     fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
@@ -148,6 +157,8 @@ typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
     fmi3Boolean                    intermediateVariableSetRequired,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackAllocateMemory     allocateMemory,
+    fmi3CallbackFreeMemory         freeMemory,
     fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
@@ -161,6 +172,8 @@ typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
     fmi3Boolean                    intermediateVariableSetRequired,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackAllocateMemory     allocateMemory,
+    fmi3CallbackFreeMemory         freeMemory,
     fmi3CallbackIntermediateUpdate intermediateUpdate,
     fmi3CallbackLockPreemption     lockPreemption,
     fmi3CallbackUnlockPreemption   unlockPreemption);
@@ -171,13 +184,17 @@ typedef void fmi3FreeInstanceTYPE(fmi3Instance instance);
 /* end::FreeInstance[] */
 
 /* Enter and exit initialization mode, enter event mode, terminate and reset */
+/* tag::SetupExperiment[] */
+typedef fmi3Status fmi3SetupExperimentTYPE(fmi3Instance instance,
+                                           fmi3Boolean toleranceDefined,
+                                           fmi3Float64 tolerance,
+                                           fmi3Float64 startTime,
+                                           fmi3Boolean stopTimeDefined,
+                                           fmi3Float64 stopTime);
+/* end::SetupExperiment[] */
+
 /* tag::EnterInitializationMode[] */
-typedef fmi3Status fmi3EnterInitializationModeTYPE(fmi3Instance instance,
-                                                   fmi3Boolean toleranceDefined,
-                                                   fmi3Float64 tolerance,
-                                                   fmi3Float64 startTime,
-                                                   fmi3Boolean stopTimeDefined,
-                                                   fmi3Float64 stopTime);
+typedef fmi3Status fmi3EnterInitializationModeTYPE(fmi3Instance instance);
 /* end::EnterInitializationMode[] */
 
 /* tag::ExitInitializationMode[] */

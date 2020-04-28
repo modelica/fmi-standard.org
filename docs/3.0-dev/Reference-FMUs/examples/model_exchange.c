@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     const fmi3Float64 tEnd = STOP_TIME;
     fmi3Float64 time = 0;
     const fmi3Float64 tStart = 0;
-    fmi3Boolean timeEvent, stateEvent, enterEventMode, terminateSimulation = fmi3False, initialEventMode;
+    fmi3Boolean timeEvent, stateEvent, enterEventMode, terminateSimulation = fmi3False, initialEventMode, valuesOfContinuousStatesChanged, nominalsOfContinuousStatesChanged;
     fmi3Int32 rootsFound[NUMBER_OF_EVENT_INDICATORS] = { 0 };
     fmi3Instance m = NULL;
     fmi3Float64 x[NUMBER_OF_STATES] = { 0 };
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
     fputs(OUTPUT_FILE_HEADER, outputFile);
     
 // tag::ModelExchange[]
-    m = M_fmi3InstantiateModelExchange("m", MODEL_GUID, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
+    m = M_fmi3InstantiateModelExchange("m", MODEL_GUID, NULL, fmi3False, fmi3False, NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory);
 // "m" is the instance name
 // "M_" is the MODEL_IDENTIFIER
     
@@ -77,7 +77,8 @@ time  = tStart;
 
 // initialize
 // determine continuous and discrete states
-CHECK_STATUS(M_fmi3EnterInitializationMode(m, fmi3False, 0.0, tStart, fmi3True, tEnd));
+CHECK_STATUS(M_fmi3SetupExperiment(m, fmi3False, 0.0, tStart, fmi3True, tEnd));
+CHECK_STATUS(M_fmi3EnterInitializationMode(m));
 CHECK_STATUS(M_fmi3ExitInitializationMode(m));
 
 initialEventMode = fmi3True;
@@ -87,8 +88,6 @@ stateEvent       = fmi3False;
 
 // initialize previous event indicators
 CHECK_STATUS(M_fmi3GetEventIndicators(m, previous_z, NUMBER_OF_EVENT_INDICATORS));
-    
-initialEventMode = fmi3False;
 
 CHECK_STATUS(M_fmi3EnterContinuousTimeMode(m));
 

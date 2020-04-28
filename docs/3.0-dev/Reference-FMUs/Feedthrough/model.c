@@ -1,8 +1,6 @@
 #include "config.h"
 #include "model.h"
-#include <stdlib.h>  // for free()
-#include <string.h>  // for strcmp()
-
+#include <string.h> // for strcmp()
 
 const char *STRING_START = "Set me!";
 const char *BINARY_START = "Set me, too!";
@@ -168,9 +166,9 @@ Status setString(ModelInstance* comp, ValueReference vr, const char *const *valu
     switch (vr) {
         case vr_string:
             if (M(string) != STRING_START) {
-                free((void *)M(string));
+                freeMemory(comp, (void *)M(string));
             }
-            M(string) = strdup(value[(*index)++]);
+            M(string) = duplicateString(comp, value[(*index)++]);
             return OK;
         default:
             return Error;
@@ -181,10 +179,10 @@ Status setBinary(ModelInstance* comp, ValueReference vr, const size_t size[], co
     switch (vr) {
         case vr_binary_in:
             if (M(binary) != BINARY_START) {
-                free((void *)M(binary));
+                freeMemory(comp, (void *)M(binary));
             }
             M(binary_size) = size[*index];
-            M(binary) = calloc(1, M(binary_size));
+            M(binary) = allocateMemory(comp, 1, M(binary_size));
             memcpy((void *)M(binary), value[(*index)++], M(binary_size));
             return OK;
         default:

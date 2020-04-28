@@ -145,16 +145,10 @@ class BuildTest(unittest.TestCase):
         subprocess.call(['cmake', '--build', '.', '--config', 'Release'], cwd=build_dir)
 
         # run examples
-        examples = ['co_simulation', 'cs_early_return', 'jacobian', 'scs_synchronous']
-
-        is_windows = os.name == 'nt'
-
-        if is_windows:
-            examples.append('scs_threaded')  # runs only on Windows
-
-        for example in examples:
+        for example in ['co_simulation', #'cs_clocked',
+            'cs_early_return', 'scs_synchronous', 'jacobian']:
             print("Running %s example..." % example)
-            if is_windows:
+            if os.name == 'nt':
                 filename = os.path.join(build_dir, 'Release', example + '.exe')
             else:
                 filename = os.path.join(build_dir, example)

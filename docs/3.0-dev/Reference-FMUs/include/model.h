@@ -65,9 +65,13 @@ typedef enum {
 } Status;
 
 #if FMI_VERSION < 3
-typedef void  (*loggerType) (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message, ...);
+typedef void  (*loggerType)         (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message, ...);
+typedef void* (*allocateMemoryType) (size_t nobj, size_t size);
+typedef void  (*freeMemoryType)     (void *obj);
 #else
-typedef void  (*loggerType) (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message);
+typedef void  (*loggerType)          (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message);
+typedef void* (*allocateMemoryType)  (void *componentEnvironment, size_t nobj, size_t size);
+typedef void  (*freeMemoryType)      (void *componentEnvironment, void *obj);
 #endif
 
 typedef void  (*lockPreemptionType)   ();
@@ -91,6 +95,8 @@ typedef struct {
 
     // callback functions
     loggerType logger;
+    allocateMemoryType allocateMemory;
+    freeMemoryType freeMemory;
     intermediateUpdateType intermediateUpdate;
     
     lockPreemptionType lockPreemtion;
@@ -130,6 +136,8 @@ typedef struct {
 
 ModelInstance *createModelInstance(
     loggerType logger,
+    allocateMemoryType allocateMemory,
+    freeMemoryType freeMemory,
     intermediateUpdateType intermediateUpdate,
     void *componentEnvironment,
     const char *instanceName,
@@ -170,6 +178,9 @@ void getEventIndicators(ModelInstance *comp, double z[], size_t nz);
 void eventUpdate(ModelInstance *comp);
 //void updateEventTime(ModelInstance *comp);
 
+void *allocateMemory(ModelInstance *comp, size_t num, size_t size);
+void freeMemory(ModelInstance *comp, void *obj);
+const char *duplicateString(ModelInstance *comp, const char *str1);
 bool invalidNumber(ModelInstance *comp, const char *f, const char *arg, size_t actual, size_t expected);
 bool invalidState(ModelInstance *comp, const char *f, int statesExpected);
 bool nullPointer(ModelInstance* comp, const char *f, const char *arg, const void *p);
@@ -185,7 +196,7 @@ void logError(ModelInstance *comp, const char *message, ...);
 size_t index = 0; \
 Status status = OK; \
 for (int i = 0; i < nvr; i++) { \
-    Status s = get ## T((ModelInstance *)instance, vr[i], value, &index); \
+    Status s = get ## T(comp, vr[i], value, &index); \
     status = max(status, s); \
     if (status > Warning) return status; \
 } \
@@ -195,11 +206,11 @@ return status;
 size_t index = 0; \
 Status status = OK; \
 for (int i = 0; i < nvr; i++) { \
-    Status s = set ## T((ModelInstance *)instance, vr[i], value, &index); \
+    Status s = set ## T(comp, vr[i], value, &index); \
     status = max(status, s); \
     if (status > Warning) return status; \
 } \
-if (nvr > 0) ((ModelInstance *)instance)->isDirtyValues = true; \
+if (nvr > 0) comp->isDirtyValues = true; \
 return status;
 
 // TODO: make this work with arrays
@@ -208,7 +219,7 @@ Status status = OK; \
 for (int i = 0; i < nvr; i++) { \
     bool v = false; \
     size_t index = 0; \
-    Status s = getBoolean((ModelInstance *)instance, vr[i], &v, &index); \
+    Status s = getBoolean(comp, vr[i], &v, &index); \
     value[i] = v; \
     status = max(status, s); \
     if (status > Warning) return status; \
@@ -221,7 +232,7 @@ Status status = OK; \
 for (int i = 0; i < nvr; i++) { \
     bool v = value[i]; \
     size_t index = 0; \
-    Status s = setBoolean((ModelInstance *)instance, vr[i], &v, &index); \
+    Status s = setBoolean(comp, vr[i], &v, &index); \
     status = max(status, s); \
     if (status > Warning) return status; \
 } \

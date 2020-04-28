@@ -29,9 +29,11 @@ int main(int argc, char* argv[]) {
 
     printf("Running Jacobian example... ");
 
-    m = fmi3InstantiateModelExchange("jacobian", "{8c4e810f-3da3-4a00-8276-176fa3c9f000}", NULL, fmi3False, fmi3False, NULL, cb_logMessage);
+    m = fmi3InstantiateModelExchange("jacobian", "{8c4e810f-3da3-4a00-8276-176fa3c9f000}", NULL, fmi3False, fmi3False, NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory);
 
-    fmi3EnterInitializationMode(m, fmi3False, 0, 0, fmi3False, 0);
+    fmi3SetupExperiment(m, fmi3False, 0, 0, fmi3False, 0);
+
+    fmi3EnterInitializationMode(m);
     fmi3ExitInitializationMode(m);
 
     fmi3EnterContinuousTimeMode(m);
