@@ -2801,35 +2801,41 @@ If this is not possible, an explicit cast of one <a href="#clock"><code>clock</c
                                     const fmi3ValueReference valueReferences[],
                                     size_t nValueReferences,
                                     const fmi3Clock values[],
-                                    const fmi3Boolean subactive[]);</code></pre>
+                                    const fmi3Boolean subactive[],
+                                    size_t nValues);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Sets <a href="#clock"><code>clocks</code></a> activation status by providing the value references of the corresponding <a href="#clock"><code>clock</code></a> variables and their values.</p>
+<p>Sets <a href="#clock"><code>clocks</code></a> activation status by providing the value references of the corresponding <a href="#clock"><code>clock</code></a> variables and their values.
+Note that <a href="#clock"><code>clock</code></a> variables, like any other variables can be scalar or array variables.
+When getting or setting the values of array variables, the serialization of array variable values used in C-API function calls is defined as row major - i.e. dimension order from left to right for the C-API (e.g. <code>array[dim1][dim2]&#8230;&#8203;[dimN]</code>).</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>valueReferences</code> points to an array of value references of clocks to be activated or deactivated at the current time instant depending on</p>
+<p><code>valueReferences</code> is a vector of <code>nValueReferences</code> value handles that define the clock variables that shall be set.</p>
 </li>
 <li>
-<p><code>values</code> content: if the nth element is <code>fmi3ClockActive</code> the nth clock is activated, otherwise deactivated.</p>
+<p><code>values</code> is a vector with the actual activation values of the clock variables, <code>fmi3ClockActive</code> specifying that the clock is activated, otherwise it is deactivated.</p>
 </li>
 <li>
-<p><code>nValueReferences</code> indicates the size of the parallel arrays <code>valueReferences</code> and <code>values</code> (and potentially <code>subactive</code>).</p>
+<p><code>subactive</code> is a vector of booleans for each actual clock specifying whether evaluation of a clocked partition should occur in subactive mode (only output equations are evaluated) or not. This value has no meaning for Communication Point Clocks and is ignored for such <a href="#clock"><code>clocks</code></a>.</p>
 </li>
 <li>
-<p><code>subactive</code> requires evaluation of a clocked partition in subactive mode (only output equations) if the argument subactive is not a null pointer and <code>subactive[i] = fmi3True</code>. <code>subactive[i]</code> has no meaning for Communication Point Clocks and is ignored for such <a href="#clock"><code>clocks</code></a>.
-It is not allowed to call this function within the callback function <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>.</p>
+<p><code>nValues</code> provides the number of values in the <code>values</code> and <code>subactive</code> vectors, which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar clock variables.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>It is not allowed to call this function within the callback function <code>fmi3IntermediateUpdate</code>.</p>
 </div>
 <div id="fmi3GetClock" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetClockTYPE(fmi3Instance instance,
                                     const fmi3ValueReference valueReferences[],
                                     size_t nValueReferences,
-                                    fmi3Clock values[]);</code></pre>
+                                    fmi3Clock values[],
+                                    size_t nValues);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2838,19 +2844,19 @@ It is not allowed to call this function within the callback function <a href="#i
 <div class="ulist">
 <ul>
 <li>
-<p><code>valueReferences</code> contains a list of value references to <a href="#clock"><code>clocks</code></a> of the size indicated by</p>
+<p><code>valueReferences</code> is a vector of <code>nValueReferences</code> value handles that define the clock variables that shall be inquired.</p>
 </li>
 <li>
-<p><code>nValueReferences</code>.</p>
-</li>
-<li>
-<p><code>values</code> will return the activation status at the current time instant of the <a href="#clock"><code>clocks</code></a> referenced by <code>valueReferences</code>.
+<p><code>values</code> will return the activation status at the current time instant of the <a href="#clock"><code>clocks</code></a> referenced by <code>valueReferences[]</code>.
 If <code>values[i] = fmi3ClockActive</code> the <a href="#clock"><code>clock</code></a> is currently active, otherwise the <a href="#clock"><code>clock</code></a> is not active.</p>
+</li>
+<li>
+<p><code>nValues</code> provides the number of values in the <code>values</code> vector, which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar clock variables.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>It is allowed to call this function within the callback function <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>.
+<p>It is allowed to call this function within the callback function <code>fmi3IntermediateUpdate</code>.
 It is required for an FMU to directly internally set back the activation <a href="#state"><code>state</code></a> of an output <a href="#clock">clock[i]</a> to <code>fmi3ClockInactive</code>, if the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> is called for a <a href="#clock"><code>clock[i]</code></a> and the interface is Scheduled Co-Simulation.
 <em>[This is required to allow preemption.]</em></p>
 </div>
@@ -2862,7 +2868,8 @@ It is required for an FMU to directly internally set back the activation <a href
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetIntervalDecimalTYPE(fmi3Instance instance,
                                               const fmi3ValueReference valueReferences[],
                                               size_t nValueReferences,
-                                              const fmi3Float64 interval[]);</code></pre>
+                                              const fmi3Float64 interval[],
+                                              size_t nValues);</code></pre>
 </div>
 </div>
 <div id="fmi3SetIntervalFraction" class="listingblock">
@@ -2871,7 +2878,8 @@ It is required for an FMU to directly internally set back the activation <a href
                                                const fmi3ValueReference valueReferences[],
                                                size_t nValueReferences,
                                                const fmi3UInt64 intervalCounter[],
-                                               const fmi3UInt64 resolution[]);</code></pre>
+                                               const fmi3UInt64 resolution[],
+                                               size_t nValues);</code></pre>
 </div>
 </div>
 <div id="fmi3GetIntervalDecimal" class="listingblock">
@@ -2879,7 +2887,8 @@ It is required for an FMU to directly internally set back the activation <a href
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetIntervalDecimalTYPE(fmi3Instance instance,
                                               const fmi3ValueReference valueReferences[],
                                               size_t nValueReferences,
-                                              fmi3Float64 interval[]);</code></pre>
+                                              fmi3Float64 interval[],
+                                              size_t nValues);</code></pre>
 </div>
 </div>
 <div id="fmi3GetIntervalFraction" class="listingblock">
@@ -2888,7 +2897,8 @@ It is required for an FMU to directly internally set back the activation <a href
                                                const fmi3ValueReference valueReferences[],
                                                size_t nValueReferences,
                                                fmi3UInt64 intervalCounter[],
-                                               fmi3UInt64 resolution[]);</code></pre>
+                                               fmi3UInt64 resolution[],
+                                               size_t nValues);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5084,9 +5094,6 @@ For these reasons implementations must take platform-specific constraints into a
 It should be noted that changing a <a href="#structuralParameter"><code>structural parameter</code></a> might affect dimension sizes of several variables.</p>
 </div>
 <div class="paragraph">
-<p>It is not possible to use a variable of type <code>&lt;Clock&gt;</code> in arrays, since array elements do not have individual <a href="#valueReference"><code>valueReference</code></a> and the access to <a href="#clock"><code>clocks</code></a> requires a unique <a href="#valueReference"><code>valueReference</code></a> information.</p>
-</div>
-<div class="paragraph">
 <p>A variable can have any number of <code>&lt;Alias&gt;</code> elements that define a variable alias.
 Each variable alias has a required attribute <code>name</code> whose value must be unique among all variables and variable aliases, and an optional attribute <code>description</code>.
 Variable aliases of floating point variables may additionally have a <a href="#displayUnit"><code>displayUnit</code></a> that follows the same rules as for variables.</p>
@@ -5389,7 +5396,7 @@ That is, this <a href="#input"><code>input</code></a> is not allowed to appear i
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>clockReference</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="clockReference" class="paragraph">
-<p>The optional attribute <a href="#clockReference"><code>clockReference</code></a> is used to define the <a href="#clock"><code>clocks</code></a> this variable is assigned to.
+<p>The optional attribute <a href="#clockReference"><code>clockReference</code></a> is used, in conjunction with the <a href="#clockElementIndex"><code>clockElementIndex</code></a> attribute, to define the <a href="#clock"><code>clocks</code></a> this variable is assigned to.
 This attribute can be used in all variable sub types with restrictions based on the <code>clockType</code>  attribute.
 The <a href="#clockReference"><code>clockReference</code></a> holds only <a href="#valueReference"><code>valueReference</code></a> information for variables with base type <code>fmi3Clock</code>.</p>
 </div>
@@ -5410,6 +5417,14 @@ It is not allowed to combine <a href="#outputClock"><code>output clocks</code></
 </div>
 <div class="paragraph">
 <p>The attribute <a href="#clockReference"><code>clockReference</code></a> must not be used if <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> for a variable.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clockElementIndex</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div id="clockElementIndex" class="paragraph">
+<p>The optional attribute <a href="#clockElementIndex"><code>clockElementIndex</code></a> is used in conjuction with the <a href="#clockReference"><code>clockReference</code></a> attribute to define the element index of the <a href="#clock"><code>clocks</code></a> this variable is assigned to for array clock variables.
+The element index is the 1-based index of the element (with serialization of indices for multi-dimensional arrays in the usual row-major order).
+For scalar clock variables this attribute must not be specified or must be specified as 0.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -12308,7 +12323,7 @@ In case of <code>fmi3Discard</code> or <code>fmi3Error</code> no repetition of t
 </div>
 <div class="paragraph">
 <p>Before scheduling a model partition it is allowed to set all variables assigned to that model partition via its associated <a href="#clock"><code>clock</code></a> (including all global variables that are not associated to a <a href="#clock"><code>clock</code></a>) via <code>fmi3Set{VariableType}</code>.
-After the computation of a model partition (call of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> with the <a href="#clockReference"><code>clockReference</code></a> of the <a href="#clock"><code>clock</code></a> that is associated to the model partition) all variables that are assigned to this model partition (including all global variables that are not associated to a <a href="#clock"><code>clock</code></a>) can be retrieved via <code>fmi3Get{VariableType}</code>.
+After the computation of a model partition (call of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> with the <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> of the <a href="#clock"><code>clock</code></a> that is associated to the model partition) all variables that are assigned to this model partition (including all global variables that are not associated to a <a href="#clock"><code>clock</code></a>) can be retrieved via <code>fmi3Get{VariableType}</code>.
 Set/get operations have to be atomic for a single variable.</p>
 </div>
 <div class="paragraph">
@@ -12336,6 +12351,7 @@ The activation states of <a href="#outputClock"><code>output clocks</code></a> a
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ActivateModelPartitionTYPE(fmi3Instance instance,
                                                   fmi3ValueReference clockReference,
+                                                  size_t clockElementIndex,
                                                   fmi3Float64 activationTime);</code></pre>
 </div>
 </div>
@@ -12348,7 +12364,13 @@ The activation states of <a href="#outputClock"><code>output clocks</code></a> a
 <p><code>fmi3Instance instance</code>: same meaning as for other <code>fmi3*</code> functions</p>
 </li>
 <li>
-<p><code>fmi3ValueReference</code> <a href="#clockReference"><code>clockReference</code></a>: <a href="#valueReference"><code>valueReference</code></a> of an <a href="#inputClock"><code>input clock</code></a> defined in the <code>modelDescription.xml</code> which shall be activated</p>
+<p><code>fmi3ValueReference</code> <a href="#clockReference"><code>clockReference</code></a>: <a href="#valueReference"><code>valueReference</code></a> of an <a href="#inputClock"><code>input clock</code></a> variable defined in the <code>modelDescription.xml</code> which shall be activated</p>
+</li>
+<li>
+<p><code>size_t</code> <a href="#clockElementIndex"><code>clockElementIndex</code></a>:: The element index of the <a href="#inputClock"><code>input clock</code></a> variable which shall be activated.
+For a scalar <a href="#clock"><code>clock</code></a> variable this must be 0; for array <a href="#clock"><code>clock</code></a> variables the element clock to activate is specified using the 1-based element index.
+Using the element index 0 means all elements of the <a href="#clock"><code>clock</code></a> variable.
+(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values).</p>
 </li>
 <li>
 <p><code>fmi3Float64 activationTime</code>: simulation (i.e. virtual) time of the <a href="#clock"><code>clock</code></a> tick</p>
@@ -12369,17 +12391,17 @@ The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code
 </div>
 <div class="paragraph">
 <p>This is a different timing concept compared to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> calls.
-A <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call will compute the results of the model partition defined by <a href="#clockReference"><code>clockReference</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of the variable that defines a <a href="#clock"><code>clock</code></a>) for the current <a href="#clock"><code>clock</code></a> tick \(t_i\).</p>
+A <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call will compute the results of the model partition defined by <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of the variable that defines a <a href="#clock"><code>clock</code></a> and an element index into that for arrays) for the current <a href="#clock"><code>clock</code></a> tick \(t_i\).</p>
 </div>
 <div class="paragraph">
 <p>The value for the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> argument <code>activationTime</code> is the <a href="#clock"><code>clock</code></a> tick time \(t_i\) from the assigned <a href="#inputClock"><code>input clock</code></a> (which is known to the Co-Simulation master).
 Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>) for periodic <a href="#clock"><code>clocks</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>If required, the FMU can internally derive the <a href="#clock"><code>clock</code></a> interval \(\Delta T_i\) based on the last <a href="#clock"><code>clock</code></a> tick time \(t_{i-1}\) i.e. last activationTime for this <a href="#clockReference"><code>clockReference</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).</p>
+<p>If required, the FMU can internally derive the <a href="#clock"><code>clock</code></a> interval \(\Delta T_i\) based on the last <a href="#clock"><code>clock</code></a> tick time \(t_{i-1}\) i.e. last activationTime for this <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).</p>
 </div>
 <div class="paragraph">
-<p>It is not allowed to call <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#clock"><code>clock</code></a> variable) more than once for the same activationTime \(t_i\).</p>
+<p>It is not allowed to call <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#clock"><code>clock</code></a> variable and element index into that for arrays) more than once for the same activationTime \(t_i\).</p>
 </div>
 </div>
 <div class="sect3">
