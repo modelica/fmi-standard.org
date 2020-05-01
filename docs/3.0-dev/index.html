@@ -4783,7 +4783,7 @@ It is intended that the <code>terminalKind</code> is used to define domain speci
 <p><em>Examples for <code>terminalKind</code>: <code>StandardXXX_Mechanical_Translational</code>, <code>Modelica.Mechanics.Translational.Interfaces.Flange_a</code>, <code>vendorNameA_customTypeA</code>, <code>_vendorNameB_customLibrary_customTypeB</code>.</em></p>
 </div>
 <div class="paragraph">
-<p><em>The structured naming convention of the <code>&lt;ModelVariables&gt;</code> is <a href="#independent"><code>independent</code></a> from the terminal names and member variable names.</em></p>
+<p><em>The structured naming convention of the <code>&lt;ModelVariables&gt;</code> is independent from the terminal names and member variable names.</em></p>
 </div>
 <div class="paragraph">
 <p><em>A tool may choose to connect terminals with a different or unknown <code>terminalKind</code>, if the <code>matchingRule</code> matches.]</em></p>
@@ -5160,8 +5160,9 @@ Allowed values of this enumeration:</p>
 <div id="parameter" class="ulist">
 <ul>
 <li>
-<p><code>parameter</code>: independent parameter (a data value that is constant during the simulation and is provided by the environment and cannot be used in connections).
+<p><code>parameter</code>: A data value that is constant during the simulation and is provided by the environment and cannot be used in connections.
 <a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
+These parameters can be changed independently, unlike <a href="#calculatedParameter">calculated parameters</a>.
 <a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).</p>
 </li>
 </ul>
@@ -5830,12 +5831,12 @@ This attribute is only used for Basic Co-Simulation and Hybrid Co-Simulation. Th
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(1)</span></em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#fixed"><code>fixed</code></a> <a href="#parameter"><code>parameter</code></a></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Non-<a href="#tunable"><code>tunable</code></a> <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameter</code></a></em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Non-<a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a></em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(2)</span></em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameter</code></a> (changing such a <a href="#parameter"><code>parameter</code></a> triggers an external event (ME) or takes effect at the next communication point (xCS), and <a href="#tunable"><code>tunable</code></a> <a href="#calculatedParameter"><code>calculatedParameter</code></a>/<a href="#output"><code>output</code></a>/<a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#parameter"><code>parameter</code></a> (changing such a <a href="#parameter"><code>parameter</code></a> triggers an external event (ME) or takes effect at the next communication point (xCS), and <a href="#tunable"><code>tunable</code></a> <a href="#calculatedParameter"><code>calculatedParameter</code></a>/<a href="#output"><code>output</code></a>/<a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(3)</span></em></p></td>
@@ -5845,7 +5846,7 @@ This attribute is only used for Basic Co-Simulation and Hybrid Co-Simulation. Th
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(4)</span></em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameter</code></a></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameter</code></a> (changing an <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameter</code></a> triggers an external event (ME) or takes effect at the next communication point (xCS), and <a href="#tunable"><code>tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameters</code></a> and <a href="#tunable"><code>tunable</code></a> <a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameter</code></a> (changing a <a href="#parameter"><code>parameter</code></a> triggers an external event (ME) or takes effect at the next communication point (xCS), and <a href="#tunable"><code>tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameters</code></a> and <a href="#tunable"><code>tunable</code></a> <a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(5)</span></em></p></td>
@@ -5912,7 +5913,7 @@ This attribute is only used for Basic Co-Simulation and Hybrid Co-Simulation. Th
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(16)</span></em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#fixed"><code>fixed</code></a> <a href="#structuralParameter"><code>structuralParameter</code></a></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#parameter"><code>Paramter</code></a> used in  <code>&lt;Dimension&gt;</code> element;  can be changed before initialization in <strong>Configuration Mode</strong>.</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#parameter"><code>Parameter</code></a> used in  <code>&lt;Dimension&gt;</code> element;  can be changed before initialization in <strong>Configuration Mode</strong>.</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em><span class="green">(17)</span></em></p></td>
@@ -6257,7 +6258,7 @@ If an <a href="#independent"><code>independent</code></a> variable is not explic
 <p class="tableblock"><em>[<a href="#parameter"><code>parameters</code></a> and <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> must not be listed as knowns in this mode. This may change in a future FMI version which implies the possibility to calculate derivatives with respect to parameters.]</em></p>
 <p class="tableblock"><code>Knowns</code> \(\color{blue}{\mathbf{v}_{\text{known}}}\) in <strong>Initialization Mode</strong> (for elements <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>):</p>
 <p class="tableblock">- inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>)</p>
-<p class="tableblock">- variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> <em>[for example, <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> or initial <a href="#state"><code>states</code></a>]</em></p>
+<p class="tableblock">- variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> <em>[for example, <a href="#parameter"><code>parameters</code></a> or initial <a href="#state"><code>states</code></a>]</em></p>
 <p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).
 If an <a href="#independent"><code>independent</code></a> variable is not explicitly defined under variables, it is assumed that the unknown depends explicitly on the <a href="#independent"><code>independent</code></a> variable.</p>
 <p class="tableblock">For Co-Simulation, if the capability flag <code>providesDirectionalDerivative</code> has a value of <code>false</code>, then <a href="#dependencies"><code>dependencies</code></a> does not list the dependency on continuous-time.
@@ -7943,12 +7944,12 @@ Such an event is called step event.
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 A subset of the variables is selected via a subscript.
 Example: \(\mathbf{v}_{initial=exact}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).
-These are <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> and start values of other variables, such as initial values for <a href="#state"><code>states</code></a>, state derivatives or <a href="#output"><code>outputs</code></a>.</p></td>
+These are <a href="#parameter"><code>parameters</code></a> and start values of other variables, such as initial values for <a href="#state"><code>states</code></a>, state derivatives or <a href="#output"><code>outputs</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{p}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Parameters that are constant during simulation.
-The symbol without a subscript references <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>).
+The symbol without a subscript references <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>).
 Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>) are denoted as \(\mathbf{p}_{calculated}\).</p></td>
 </tr>
 <tr>
@@ -8111,7 +8112,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{initial=exact}\) that have a <a href="#start"><code>start</code></a> value with
-<a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (<a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}\) and
+<a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (<a href="#parameter"><code>parameters</code></a> \(\mathbf{p}\) and
 continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><code>start</code></a> values \(\mathbf{x}_{c,initial=exact}\) are included here)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
@@ -8137,7 +8138,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <span class="lime">if FMU has no continuous-time equations)</span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{tune}\)<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{tune}\)<br>
 (and do not set other <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{other}\))</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
@@ -8473,7 +8474,7 @@ Note that <code>fmi3Status = fmi3Discard</code> is possible.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Set new values for (<a href="#independent"><code>independent</code></a>) <a href="#parameter"><code>parameters</code></a>, <a href="#start"><code>start</code></a> values and <a href="#input"><code>inputs</code></a> and re-initialize caching of variables that depend on these variables.
+<p>Set new values for <a href="#parameter"><code>parameters</code></a>, <a href="#start"><code>start</code></a> values and <a href="#input"><code>inputs</code></a> and re-initialize caching of variables that depend on these variables.
 The details of these functions are defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
 </div>
 <div class="paragraph">
@@ -9626,12 +9627,12 @@ The communication step size is denoted as \(hc_i = tc_{i+1} - tc_i\)</p></td>
 A subset of the variables is selected via a subscript.
 Example:<br>
 \(\mathbf{v}_{initial=exact}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, see <a href="#definition-of-model-variables">Section 2.2.8</a>.
-These are <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> and <a href="#start"><code>start</code></a> values of other variables, such as initial values for <a href="#state"><code>states</code></a>, state derivatives or <a href="#output">outputs</a>.</p></td>
+These are <a href="#parameter"><code>parameters</code></a> and <a href="#start"><code>start</code></a> values of other variables, such as initial values for <a href="#state"><code>states</code></a>, state derivatives or <a href="#output">outputs</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{p}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Parameters that are constant during simulation.
-The symbol without a subscript references <a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>).
+The symbol without a subscript references <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>).
 Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>) are denoted as \(\mathbf{p}_{calculated}\) and <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>) are denoted as \(\mathbf{p}_{tune}\).</p></td>
 </tr>
 <tr>
@@ -9843,7 +9844,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">fmi3EnterInitializationMode</span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(v_{initial=exact}\) and \(v_{initial=approx}\) that have a <a href="#start"><code>start</code></a> value with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (<a href="#independent"><code>independent</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}\) and continuous-time <a href="#state"><code>states</code></a> with start values \(\mathbf{x}_{c,initial=exact}\) are included here)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(v_{initial=exact}\) and \(v_{initial=approx}\) that have a <a href="#start"><code>start</code></a> value with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (<a href="#parameter"><code>parameters</code></a> \(\mathbf{p}\) and continuous-time <a href="#state"><code>states</code></a> with start values \(\mathbf{x}_{c,initial=exact}\) are included here)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
@@ -9864,7 +9865,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Step Mode</strong> (<code>stepComplete</code>, <code>stepInProgress</code> in state machine)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{tune}\) (and do not set other <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{other}\))</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{tune}\) (and do not set other <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{other}\))</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
@@ -13639,7 +13640,7 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>parameter</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A quantity within a <em>model</em>, which remains constant during <em>simulation (<a href="#fixed"><code>fixed</code></a> <a href="#parameter"><code>parameter</code></a>) or may change at event instances (<a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a>)</em>. Examples are a mass, stiffness, etc.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A quantity within a <em>model</em>, which remains constant during <em>simulation (<a href="#fixed"><code>fixed</code></a> <a href="#parameter"><code>parameter</code></a>) or may change at event instances (<a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a>)</em>. Examples are a mass, stiffness, etc. These parameters are different from <a href="#calculatedParameter">calculated parameters</a>, because they can be changed independently (according to their <a href="#variability"><code>variability</code></a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>rate monotonic scheduling</em></p></td>
