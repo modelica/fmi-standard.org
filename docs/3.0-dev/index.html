@@ -3425,7 +3425,22 @@ h_2(u_1, u_2)
 </div>
 <div class="paragraph">
 <p><em>and \(\left( w_1,  w_2 \right)^T \cdot \mathbf{ \frac{\partial h}{\partial u} }\) for some vector \(\left( w_1,  w_2 \right)^T\) is needed.</em>
-<em>Then one can get this with one function call of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (with arguments</em> \(\mathbf{v}_{unknown} = \text{valueReferences of} \left \{ y_1, y_2 \right \},  \mathbf{v}_{knwon} = \text{valueReferences of} \left \{ u_1, u_2 \right \},  \mathbf{v}_{seed} = \left( w_1, w_2 \right)^T\) <em>), while with <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> at least two calls would be necessary to first construct the Jacobian column-wise and then multiplying from the right with</em> \(\left( w_1,  w_2 \right)^T\) <em>]</em></p>
+<em>Then one can get this with one function call of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (with arguments</em> \(\mathbf{v}_{unknown} = \text{valueReferences of} \left \{ y_1, y_2 \right \},  \mathbf{v}_{knwon} = \text{valueReferences of} \left \{ u_1, u_2 \right \},  \mathbf{v}_{seed} = \left( w_1, w_2 \right)^T\) <em>), while with <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> at least two calls would be necessary to first construct the Jacobian column-wise and then multiplying from the right with</em> \(\left( w_1,  w_2 \right)^T\) <em>.</em></p>
+</div>
+<div class="paragraph">
+<p><em>If a dense matrix shall be computed, the rows of the matrix can be easily constructed by successive calls of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a>.</em>
+<em>For example, constructing the system Jacobian \({\mathbf{A} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}}}\) as a dense matrix can be performed in the following way:</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">    for (i = 0; i &lt; nx; i++) {
+        // construct the Jacobian matrix column wise
+        CHECK_STATUS(fmi3GetAdjointDerivative(m, &amp;vr_dx[i], 1, vr_x, nx, &amp;dk, 1, &amp;J[i][0], nx))
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>]</em></p>
 </div>
 </div>
 </div>
