@@ -1,6 +1,8 @@
 #include "config.h"
 #include "model.h"
-#include <string.h> // for strcmp()
+#include <stdlib.h>  // for free()
+#include <string.h>  // for strcmp()
+
 
 const char *STRING_START = "Set me!";
 const char *BINARY_START = "Set me, too!";
@@ -99,8 +101,8 @@ Status setFloat64(ModelInstance* comp, ValueReference vr, const double *value, s
         case vr_fixed_real_parameter:
 #if FMI_VERSION > 1
             if (comp->type == ModelExchange &&
-                comp->state != modelInstantiated &&
-                comp->state != modelInitializationMode) {
+                comp->state != Instantiated &&
+                comp->state != InitializationMode) {
                 logError(comp, "Variable fixed_real_parameter can only be set after instantiation or in initialization mode.");
                 return Error;
             }
@@ -111,9 +113,9 @@ Status setFloat64(ModelInstance* comp, ValueReference vr, const double *value, s
         case vr_tunable_real_parameter:
 #if FMI_VERSION > 1
             if (comp->type == ModelExchange &&
-                comp->state != modelInstantiated &&
-                comp->state != modelInitializationMode &&
-                comp->state != modelEventMode) {
+                comp->state != Instantiated &&
+                comp->state != InitializationMode &&
+                comp->state != EventMode) {
                 logError(comp, "Variable tunable_real_parameter can only be set after instantiation, in initialization mode or event mode.");
                 return Error;
             }
@@ -128,8 +130,8 @@ Status setFloat64(ModelInstance* comp, ValueReference vr, const double *value, s
         case vr_discrete_real_in:
 #if FMI_VERSION > 1
             if (comp->type == ModelExchange &&
-                comp->state != modelInitializationMode &&
-                comp->state != modelEventMode) {
+                comp->state != InitializationMode &&
+                comp->state != EventMode) {
                 logError(comp, "Variable real_in can only be set in initialization mode or event mode.");
                 return Error;
             }
@@ -166,9 +168,9 @@ Status setString(ModelInstance* comp, ValueReference vr, const char *const *valu
     switch (vr) {
         case vr_string:
             if (M(string) != STRING_START) {
-                freeMemory(comp, (void *)M(string));
+                free((void *)M(string));
             }
-            M(string) = duplicateString(comp, value[(*index)++]);
+            M(string) = strdup(value[(*index)++]);
             return OK;
         default:
             return Error;
@@ -179,10 +181,10 @@ Status setBinary(ModelInstance* comp, ValueReference vr, const size_t size[], co
     switch (vr) {
         case vr_binary_in:
             if (M(binary) != BINARY_START) {
-                freeMemory(comp, (void *)M(binary));
+                free((void *)M(binary));
             }
             M(binary_size) = size[*index];
-            M(binary) = allocateMemory(comp, 1, M(binary_size));
+            M(binary) = calloc(1, M(binary_size));
             memcpy((void *)M(binary), value[(*index)++], M(binary_size));
             return OK;
         default:

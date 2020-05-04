@@ -2,11 +2,8 @@
 #include <math.h>
 #include <assert.h>
 #include "fmi3Functions.h"
-#include "callbacks.h"
 #include "config.h"
-
-
-#define CHECK_STATUS(S) status = S; if (status != fmi3OK) goto out;
+#include "util.h"
 
 
 typedef struct {
@@ -75,7 +72,7 @@ int main(int argc, char* argv[]) {
     // Initialization sub-phase
     
     // Instantiate slave
-    fmi3Instance s = fmi3InstantiateBasicCoSimulation("slave1", MODEL_GUID, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory, NULL);
+    fmi3Instance s = fmi3InstantiateHybridCoSimulation("slave1", MODEL_GUID, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
     
     if (s == NULL) {
         puts("Failed to instantiate FMU.");
@@ -90,8 +87,7 @@ int main(int argc, char* argv[]) {
     fmi3Status status = fmi3OK;
 
     // Initialize slave
-    CHECK_STATUS(fmi3SetupExperiment(s, fmi3False, 0.0, startTime, fmi3True, stopTime))
-    CHECK_STATUS(fmi3EnterInitializationMode(s))
+    CHECK_STATUS(fmi3EnterInitializationMode(s, fmi3False, 0.0, startTime, fmi3True, stopTime))
     // Set the input values at time = startTime
     // fmi3SetReal/Integer/Boolean/String(s, ...);
     CHECK_STATUS(fmi3ExitInitializationMode(s))
@@ -156,7 +152,8 @@ int main(int argc, char* argv[]) {
     //////////////////////////
     // Shutdown sub-phase
     fmi3Status terminateStatus;
-out:
+    
+TERMINATE:
     
     if (s && status != fmi3Error && status != fmi3Fatal) {
         terminateStatus = fmi3Terminate(s);

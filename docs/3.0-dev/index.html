@@ -715,7 +715,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#api-early-return">2.4.3.1. Early Return</a></li>
 <li><a href="#api-intermediate-variable-access">2.4.3.2. Intermediate Variable Access</a>
 <ul class="sectlevel5">
-<li><a href="#_pseudo_code_example_for_intermediate_variable_access">2.4.3.2.1. Pseudo-code Example for Intermediate Variable Access</a></li>
+<li><a href="#_example_for_intermediate_variable_access">2.4.3.2.1. Example for Intermediate Variable Access</a></li>
 </ul>
 </li>
 </ul>
@@ -3291,27 +3291,21 @@ g_2(x, u_1)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">// from the XML file:
-//   nx       number of states
-//   vr_x[]   value references of continuous states
-//   vr_xd[]  value references of state derivatives
-//
-// variables:
-//   m        model instance
-//   x[]      continuous states
-//   dk = 1   delta knowns
-//   J[][]    Jacobian (transposed for simplicity)
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">    //   c[]      column vector
 
-// set time, states and inputs
-fmi3SetTime(m, time);
-fmi3SetContinuousStates(m, x, nx);
-// fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
+    // set time, states and inputs
+    CHECK_STATUS(fmi3SetTime(m, time))
+    CHECK_STATUS(fmi3SetContinuousStates(m, x, nx))
+    // fmi3Set{VariableType}(m, ...)
 
-// if required at this step, compute the Jacobian as a dense matrix
-for (i = 0; i &lt; nx; i++) {
-    // construct the Jacobian matrix column wise
-    fmi3GetDirectionalDerivative(m, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, &amp;J[i][0], nx);
-}</code></pre>
+    // if required at this step, compute the Jacobian as a dense matrix
+    for (i = 0; i &lt; nx; i++) {
+        // construct the Jacobian matrix column wise
+        CHECK_STATUS(fmi3GetDirectionalDerivative(m, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, c, nx))
+        for (j = 0; j &lt; nx; j++) {
+            J[j][i] = c[j];
+        }
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7333,134 +7327,76 @@ It is not allowed to call <a href="#intermediateUpdate"><code>intermediateUpdate
 </div>
 <div id="figure-intermediate-variable-access" class="imageblock text-center">
 <div class="content">
-<img src="images/intermediatevariableaccess.svg" alt="intermediatevariableaccess" width="400%">
+<img src="images/intermediatevariableaccess.svg" alt="intermediatevariableaccess" width="65%">
 </div>
 <div class="title">Figure 6. Overview of solver states and intermediate variable access during a communication step</div>
 </div>
 <div class="sect5">
-<h6 id="_pseudo_code_example_for_intermediate_variable_access">2.4.3.2.1. Pseudo-code Example for Intermediate Variable Access</h6>
+<h6 id="_example_for_intermediate_variable_access">2.4.3.2.1. Example for Intermediate Variable Access</h6>
 <div class="paragraph">
-<p>In the following example, the usage of the intermediate variable access is illustrated in order to clarify the typical calling sequence of the functions:</p>
+<p>The following code example shows an implementation of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that uses intermediate variable access to record a set of variables at every internal solver step.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">//////////////////////////
-// Define callback
-
-// Global variables
-fmi3IntermediateInfo s_intermediateInfo;
-
-// Callback
-fmi3Status intermediateUpdate(fmi3ComponentEnvironment componentEnvironment, fmi3IntermediateInfo* info, fmi3Boolean* earlyReturn)
-{
-  intermediateTime = info-&gt;intermediateTime;
-
-  //If getting intermediate output variables allowed
-  if (info-&gt;intermediateVariableGetAllowed) then {
-    //Get the output variables at time = intermediateTime
-    fmi3GetReal/Integer/Boolean/String(s, ...);
-
-    //If integration step in FMU solver is finished
-    if (info-&gt;intermediateStepFinished) then {
-      //Forward output variables to other FMUs or write to result files
-    }
-  }
-
-  //If setting intermediate output variables allowed
-  if (info-&gt;intermediateVariableSetAllowed) then {
-    //Compute intermediate input variables from output variables and
-    //variables from other FMUs. Use latest available output
-    //variables, possibly from get functions above
-    inputVariables = ...
-
-    //Set the input variables at time = intermediateTime
-    fmi3SetReal/Integer/Boolean/String(s, ...);
-  }
-
-  //Internal execution in FMU will now continue
+<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">fmi3Status recordVariables(InstanceEnvironment *instanceEnvironment, fmi3Float64 time) {
+    fmi3ValueReference outputsVRs[2] = { vr_h, vr_v };
+    fmi3Float64 y[2];
+    fmi3Status status = fmi3GetFloat64(instanceEnvironment-&gt;instance, outputsVRs, 2, y, 2);
+    fprintf(instanceEnvironment-&gt;outputFile, "%g,%g,%g\n", time, y[0], y[1]);
+    return status;
 }
 
-//////////////////////////
-// Initialization sub-phase
+fmi3Status cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
+                                 fmi3Float64 intermediateUpdateTime,
+                                 fmi3Boolean eventOccurred,
+                                 fmi3Boolean clocksTicked,
+                                 fmi3Boolean intermediateVariableSetAllowed,
+                                 fmi3Boolean intermediateVariableGetAllowed,
+                                 fmi3Boolean intermediateStepFinished,
+                                 fmi3Boolean canReturnEarly) {
 
-// Set callback functions,
-fmi3CallbackFunctions cbf;
-fmi3EventInfo eventInfo;
-cbf.logger = loggerFunction; // Logger function
-// Signal that early return is supported by master
-cbf.intermediateUpdate = intermediateUpdate;
+    if (!instanceEnvironment) {
+        return fmi3Error;
+    }
 
-// Create pointer to information for identifying the FMU in callbacks
-// (note: this is pseudo code, no correct pointer handling)
-cbf.componentEnvironment = GUID;
+    InstanceEnvironment* env = (InstanceEnvironment*)instanceEnvironment;
 
-//set Co-Simulation mode
-fmi3CoSimulationConfiguration coSimulationConfiguration;
-coSimulationConfiguration.intermediateVariableGetRequired = true;
-coSimulationConfiguration.intermediateInternalVariableGetRequired = false;
-coSimulationConfiguration.intermediateVariableSetRequired = true;
-coSimulationConfiguration.coSimulationMode = fmi3ModeHybridCoSimulation;
+    // remember the intermediateUpdateTime
+    env-&gt;intermediateUpdateTime = intermediateUpdateTime;
 
-// Instantiate slave
-fmi3Component s = fmi3Instantiate("Tool1" , fmi3CoSimulation, GUID, "", fmi3False, fmi3False, &amp;cbf, fmi3True, fmi3False, &amp;coSimulationConfiguration);
+    fmi3Status status = fmi3OK;
 
-if (s == NULL) then return FAILURE;
+    if (eventOccurred) {
+        return fmi3OK; // don't record events
+    }
 
-// Start and stop time
-startTime = 0;
-stopTime = 10;
-// Communication constant step size
-h = 0.01;
+    // if getting intermediate output variables is allowed
+    if (intermediateVariableGetAllowed) {
 
-// Set all variable start values (of "ScalarVariable / &lt;type&gt; / start")
-fmi3SetReal/Integer/Boolean/String(s, ...);
+        // Get the output variables at time == intermediateUpdateTime
+        // fmi3Get{VariableType}();
+        status = recordVariables(env, intermediateUpdateTime);
 
-// Initialize slave
-fmi3EnterInitializationMode(s, fmi3False, 0.0, startTime, fmi3True, stopTime);
+        // If integration step in FMU solver is finished
+        if (intermediateStepFinished) {
+            //Forward output variables to other FMUs or write to result files
+        }
+    }
 
-// Set the input values at time = startTime
-fmi3SetReal/Integer/Boolean/String(s, ...);
+    // if setting intermediate output variables is allowed
+    if (intermediateVariableSetAllowed) {
+        // Compute intermediate input variables from output variables and
+        // variables from other FMUs. Use latest available output
+        // variables, possibly from get functions above.
+        // inputVariables = ...
 
-fmi3ExitInitializationMode(s);
+        // Set the input variables at time == intermediateUpdateTime
+        // fmi3Set{VariableType}();
+    }
 
-//////////////////////////
-// Simulation sub-phase
-tc = startTime; // Starting master time
-step = h;       // Starting non-zero step size
-while (tc &lt; tStop) do
-{
-  if (step &gt; 0) then
-  { // Continuous mode (default mode)
-    fmi3Bolean earlyReturn = fmi3False;
-    status = fmi3DoStep(s,tc,step,...);
-    switch () {
-      case (status == fmi3OK):
-        tc +=step;
-      case (status == fmi3Warning):
-        // Simplified code
-      case (status == fmi3Error or status == fmi3Fatal or status == fmi3Discard):
-        // Simplified code
-    };
-  }
-  else
-  { // Event mode
-    fmi3NewDiscreteStates(s, s_eventInfo);
-    if not(s_eventInfo.newDiscreteStatesNeeded) then {
-      fmi3EnterContinuousMode(s);
-      step = h;
-    };
-  };
-  // Get outputs
-  fmi3GetReal/Integer/Boolean/String(s, ...);
-  // Set inputs
-  fmi3SetReal/Integer/Boolean/String(s, ...);
-};
-
-//////////////////////////
-// Shutdown sub-phase
-if ((status != fmi3Error) and (status != fmi3Fatal)) then fmi3Terminate(s);
-
-if (status != fmi3Fatal) then fmi3FreeInstance(s1);</code></pre>
+    // Internal execution in FMU will now continue
+    return status;
+}</code></pre>
 </div>
 </div>
 </div>
@@ -9184,13 +9120,13 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">    m = M_fmi3InstantiateModelExchange("m", MODEL_GUID, NULL, fmi3False, fmi3False, NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory);
+<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">    m = M_fmi3InstantiateModelExchange("m", MODEL_GUID, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
 // "m" is the instance name
 // "M_" is the MODEL_IDENTIFIER
 
     if (m == NULL) {
         status = fmi3Error;
-        goto TERMINATE_MODEL;
+        goto TERMINATE;
     }
 
 // set the start time
@@ -9202,8 +9138,7 @@ time  = tStart;
 
 // initialize
 // determine continuous and discrete states
-CHECK_STATUS(M_fmi3SetupExperiment(m, fmi3False, 0.0, tStart, fmi3True, tEnd));
-CHECK_STATUS(M_fmi3EnterInitializationMode(m));
+CHECK_STATUS(M_fmi3EnterInitializationMode(m, fmi3False, 0.0, tStart, fmi3True, tEnd));
 CHECK_STATUS(M_fmi3ExitInitializationMode(m));
 
 initialEventMode = fmi3True;
@@ -9212,14 +9147,16 @@ timeEvent        = fmi3False;
 stateEvent       = fmi3False;
 
 // initialize previous event indicators
-CHECK_STATUS(M_fmi3GetEventIndicators(m, previous_z, NUMBER_OF_EVENT_INDICATORS));
+CHECK_STATUS(M_fmi3GetEventIndicators(m, previous_z, NZ));
+
+initialEventMode = fmi3False;
 
 CHECK_STATUS(M_fmi3EnterContinuousTimeMode(m));
 
 // retrieve initial state x and
 // nominal values of x (if absolute tolerance is needed)
-CHECK_STATUS(M_fmi3GetContinuousStates(m, x, NUMBER_OF_STATES));
-CHECK_STATUS(M_fmi3GetNominalsOfContinuousStates(m, x_nominal, NUMBER_OF_STATES));
+CHECK_STATUS(M_fmi3GetContinuousStates(m, x, NX));
+CHECK_STATUS(M_fmi3GetNominalsOfContinuousStates(m, x_nominal, NX));
 
 // retrieve solution at t=Tstart, for example, for outputs
 // M_fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
@@ -9232,7 +9169,7 @@ while (!terminateSimulation) {
     if (enterEventMode || stateEvent || timeEvent) {
 
         if (!initialEventMode) {
-            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, fmi3False, NUMBER_OF_EVENT_INDICATORS, rootsFound, timeEvent));
+            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, fmi3False, rootsFound, NZ, timeEvent));
         }
 
         // event iteration
@@ -9260,7 +9197,7 @@ while (!terminateSimulation) {
             nominalsOfContinuousStatesChanged |= nominalsChanged;
             valuesOfContinuousStatesChanged   |= statesChanged;
 
-            if (terminateSimulation) goto TERMINATE_MODEL;
+            if (terminateSimulation) goto TERMINATE;
         }
 
         // enter Continuous-Time Mode
@@ -9271,12 +9208,12 @@ while (!terminateSimulation) {
 
         if (initialEventMode || valuesOfContinuousStatesChanged) {
             // the model signals a value change of states, retrieve them
-            CHECK_STATUS(M_fmi3GetContinuousStates(m, x, NUMBER_OF_STATES));
+            CHECK_STATUS(M_fmi3GetContinuousStates(m, x, NX));
         }
 
         if (initialEventMode || nominalsOfContinuousStatesChanged) {
             // the meaning of states has changed; retrieve new nominal values
-            CHECK_STATUS(M_fmi3GetNominalsOfContinuousStates(m, x_nominal, NUMBER_OF_STATES));
+            CHECK_STATUS(M_fmi3GetNominalsOfContinuousStates(m, x_nominal, NX));
         }
 
         if (nextEventTimeDefined) {
@@ -9289,11 +9226,11 @@ while (!terminateSimulation) {
     }
 
     if (time &gt;= tEnd) {
-        goto TERMINATE_MODEL;
+        goto TERMINATE;
     }
 
     // compute derivatives
-    CHECK_STATUS(M_fmi3GetDerivatives(m, der_x, NUMBER_OF_STATES));
+    CHECK_STATUS(M_fmi3GetDerivatives(m, der_x, NX));
 
     // advance time
     h = min(fixedStep, tNext - time);
@@ -9304,18 +9241,18 @@ while (!terminateSimulation) {
     // M_fmi3SetFloat*(m, ...)
 
     // set states at t = time and perform one step
-    for (size_t i = 0; i &lt; NUMBER_OF_STATES; i++) {
+    for (size_t i = 0; i &lt; NX; i++) {
         x[i] += h * der_x[i]; // forward Euler method
     }
 
-    CHECK_STATUS(M_fmi3SetContinuousStates(m, x, NUMBER_OF_STATES));
+    CHECK_STATUS(M_fmi3SetContinuousStates(m, x, NX));
 
     // get event indicators at t = time
-    CHECK_STATUS(M_fmi3GetEventIndicators(m, z, NUMBER_OF_EVENT_INDICATORS));
+    CHECK_STATUS(M_fmi3GetEventIndicators(m, z, NZ));
 
     stateEvent = fmi3False;
 
-    for (size_t i = 0; i &lt; NUMBER_OF_EVENT_INDICATORS; i++) {
+    for (size_t i = 0; i &lt; NZ; i++) {
 
         // check for zero crossings
         if (previous_z[i] &lt; 0 &amp;&amp; z[i] &gt;= 0) {
@@ -9339,12 +9276,13 @@ while (!terminateSimulation) {
     CHECK_STATUS(recordVariables(outputFile, m, time));
 }
 
-TERMINATE_MODEL:
+TERMINATE:
 
     if (m &amp;&amp; status != fmi3Error &amp;&amp; status != fmi3Fatal) {
         // retrieve final values and terminate simulation
         CHECK_STATUS(recordVariables(outputFile, m, time));
-        status = max(status, M_fmi3Terminate(m));
+		fmi3Status s = M_fmi3Terminate(m);
+        status = max(status, s);
     }
 
     if (m &amp;&amp; status != fmi3Fatal) {
@@ -9358,7 +9296,7 @@ TERMINATE_MODEL:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">#define CHECK_STATUS(S) status = S; if (status != fmi3OK) goto TERMINATE_MODEL;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">#define CHECK_STATUS(S) status = S; if (status != fmi3OK) goto TERMINATE;</code></pre>
 </div>
 </div>
 </div>
@@ -10913,9 +10851,9 @@ The code demonstrates the simplest master algorithm as shown in <a href="#math-b
 // Initialization sub-phase
 
 // instantiate both slaves
-s1 = s1_fmi3InstantiateBasicCoSimulation("slave1", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory, NULL);
+s1 = s1_fmi3InstantiateBasicCoSimulation("slave1", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
 
-s2 = s2_fmi3InstantiateBasicCoSimulation("slave2", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, cb_allocateMemory, cb_freeMemory, NULL);
+s2 = s2_fmi3InstantiateBasicCoSimulation("slave2", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
 
 if (s1 == NULL || s2 == NULL)
     return EXIT_FAILURE;
@@ -10932,11 +10870,8 @@ h = 0.01;
 // s2_fmi3SetReal/Integer/Boolean/String(s2, ...);
 
 // initialize the slaves
-s1_fmi3SetupExperiment(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
-s2_fmi3SetupExperiment(s2, fmi3False, 0.0, startTime, fmi3True, stopTime);
-
-s1_fmi3EnterInitializationMode(s1);
-s2_fmi3EnterInitializationMode(s2);
+s1_fmi3EnterInitializationMode(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
+s2_fmi3EnterInitializationMode(s2, fmi3False, 0.0, startTime, fmi3True, stopTime);
 
 // set the input values at time = startTime
 // fmi3SetReal/Integer/Boolean/String(s1, ...);

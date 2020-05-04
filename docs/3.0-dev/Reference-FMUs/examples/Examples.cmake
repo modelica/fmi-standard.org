@@ -13,34 +13,49 @@ set(MODEL_SOURCES
   VanDerPol/sources/slave.c
 )
 
-# cs_clocked
-# add_executable(cs_clocked
-#   ${EXAMPLE_SOURCES}
-#   Clocks/config.h
-#   Clocks/model.c
-#   src/fmi3Functions.c
-#   src/slave.c
-#   examples/cs_clocked.c
-# )
-# set_target_properties(cs_clocked PROPERTIES FOLDER examples)
-# target_include_directories(cs_clocked PRIVATE include Clocks)
-# if(UNIX AND NOT APPLE)
-#   target_link_libraries(cs_clocked m)
-# endif()
-
-# cs_early_return
-add_executable(cs_early_return
+# bcs_early_return
+add_executable(bcs_early_return
   ${EXAMPLE_SOURCES}
   BouncingBall/config.h
   BouncingBall/model.c
   src/fmi3Functions.c
   src/slave.c
-  examples/cs_early_return.c
+  examples/bcs_early_return.c
 )
-set_target_properties(cs_early_return PROPERTIES FOLDER examples)
-target_include_directories(cs_early_return PRIVATE include BouncingBall)
+set_target_properties(bcs_early_return PROPERTIES FOLDER examples)
+target_include_directories(bcs_early_return PRIVATE include BouncingBall)
 if(UNIX AND NOT APPLE)
-  target_link_libraries(cs_early_return m)
+  target_link_libraries(bcs_early_return m)
+endif()
+
+# bcs_intermediate_variable_access
+add_executable(bcs_intermediate_variable_access
+  ${EXAMPLE_SOURCES}
+  BouncingBall/config.h
+  BouncingBall/model.c
+  src/fmi3Functions.c
+  src/slave.c
+  examples/bcs_intermediate_variable_access.c
+)
+set_target_properties(bcs_intermediate_variable_access PROPERTIES FOLDER examples)
+target_include_directories(bcs_intermediate_variable_access PRIVATE include BouncingBall)
+if(UNIX AND NOT APPLE)
+  target_link_libraries(bcs_intermediate_variable_access m)
+endif()
+
+# hcs_early_return
+add_executable(hcs_early_return
+  ${EXAMPLE_SOURCES}
+  BouncingBall/config.h
+  BouncingBall/model.c
+  src/fmi3Functions.c
+  src/slave.c
+  examples/hcs_early_return.c
+)
+set_target_properties(hcs_early_return PROPERTIES FOLDER examples)
+target_include_directories(hcs_early_return PRIVATE include BouncingBall)
+if(UNIX AND NOT APPLE)
+  target_link_libraries(hcs_early_return m)
 endif()
 
 # co_simulation
@@ -82,3 +97,10 @@ add_executable(scs_synchronous ${EXAMPLE_SOURCES} src/fmi3Functions.c Clocks/mod
 set_target_properties(scs_synchronous PROPERTIES FOLDER examples)
 target_include_directories(scs_synchronous PRIVATE include Clocks)
 target_compile_definitions(scs_synchronous PRIVATE DISABLE_PREFIX)
+
+if (WIN32)
+  add_executable(scs_threaded ${EXAMPLE_SOURCES} src/fmi3Functions.c Clocks/model.c src/slave.c examples/scs_threaded.c Clocks/FMI3.xml Clocks/config.h)
+  set_target_properties(scs_threaded PROPERTIES FOLDER examples)
+  target_include_directories(scs_threaded PRIVATE include Clocks)
+  target_compile_definitions(scs_threaded PRIVATE DISABLE_PREFIX)
+endif ()
