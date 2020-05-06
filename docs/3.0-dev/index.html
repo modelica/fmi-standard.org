@@ -3892,8 +3892,8 @@ The format is a subset of <code>dateTime</code> and should be: <code>YYYY-MM-DDT
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>variableNamingConvention</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether the variable names in <code>&lt;ModelVariables&gt;</code> and in <code>&lt;TypeDefinitions&gt;</code> follow a particular convention.
 For the details, see <a href="#variableNamingConvention">Section 2.2.10</a>. Currently standardized are:</p>
-<p class="tableblock">- <code>flat</code>: A list of strings (the default).</p>
-<p class="tableblock">- <code>structured</code>: Hierarchical names with <code>.</code> as hierarchy separator, and with array elements and derivative characterization.</p></td>
+<p class="tableblock"><code>= flat</code>: A list of strings (the default).</p>
+<p class="tableblock"><code>= structured</code>: Hierarchical names with <code>.</code> as hierarchy separator, and with array elements and derivative characterization.</p></td>
 </tr>
 </tbody>
 </table>
@@ -4389,20 +4389,12 @@ The variable sub type <code>fmi3Clock</code> provides additional attributes for 
 <td class="tableblock halign-left valign-top"><div class="content"><div id="clockType" class="paragraph">
 <p>The type of <a href="#clock"><code>clocks</code></a> is defined based on the mandatory attribute <code>clockType</code> with the following two values:</p>
 </div>
-<div id="synchronousTime" class="ulist">
-<ul>
-<li>
-<p><code>synchronousTime</code> is used, if the properties of the <a href="#clock"><code>clock</code></a> adhere to synchronous clock theory.</p>
-</li>
-</ul>
+<div id="synchronousTime" class="paragraph">
+<p><code>= synchronousTime</code> is used, if the properties of the <a href="#clock"><code>clock</code></a> adhere to synchronous clock theory.</p>
 </div>
-<div id="communicationPoint" class="ulist">
-<ul>
-<li>
-<p><code>communicationPoint</code> <a href="#clock"><code>clocks</code></a> define sampling points (i.e. communication points) for the variables of model partitions and are used in Hybrid Co-Simulation and FMI for Scheduled Co-Simulation.
+<div id="communicationPoint" class="paragraph">
+<p><code>= communicationPoint</code> <a href="#clock"><code>clocks</code></a> define sampling points (i.e. communication points) for the variables of model partitions and are used in Hybrid Co-Simulation and FMI for Scheduled Co-Simulation.
 These clocks are ignored by Model Exchange.</p>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <p>It is not allowed to include <a href="#clock"><code>clocks</code></a> of different <code>clockType</code> in one FMU.
@@ -5195,55 +5187,32 @@ This attribute is <code>required</code>.</p>
 <p>Enumeration that defines the causality of the variable.
 Allowed values of this enumeration:</p>
 </div>
-<div id="parameter" class="ulist">
-<ul>
-<li>
-<p><code>parameter</code>: A data value that is constant during the simulation and is provided by the environment and cannot be used in connections.
+<div id="parameter" class="paragraph">
+<p><code>= parameter</code>: A data value that is constant during the simulation and is provided by the environment and cannot be used in connections.
 <a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
 These parameters can be changed independently, unlike <a href="#calculatedParameter">calculated parameters</a>.
 <a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).</p>
-</li>
-</ul>
 </div>
-<div id="calculatedParameter" class="ulist">
-<ul>
-<li>
-<p><code>calculatedParameter</code>: A data value that is constant during the simulation and is computed during initialization or when <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> change.
+<div id="calculatedParameter" class="paragraph">
+<p><code>= calculatedParameter</code>: A data value that is constant during the simulation and is computed during initialization or when <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> change.
 <a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
 <a href="#initial"><code>initial</code></a> must be <a href="#approx"><code>approx</code></a>, <a href="#calculated"><code>calculated</code></a> or not present (meaning <a href="#calculated"><code>calculated</code></a>).</p>
-</li>
-</ul>
 </div>
-<div id="input" class="ulist">
-<ul>
-<li>
-<p><code>input</code>: The variable value can be provided from another model or slave.
-<a id="inputClock"></a> If <a href="#variability"><code>variability</code></a> = <a href="#clock"><code>clock</code></a> the variable defines an <a href="#inputClock"><code>input clock</code></a> that is controlled by the master.
-It is not allowed to define <a href="#initial"><code>initial</code></a>.</p>
-</li>
-</ul>
+<div id="input" class="paragraph">
+<p><code>= input</code>: The variable value can be provided from another FMU.
+<a id="inputClock"></a> If <a href="#variability"><code>variability</code></a> = <a href="#clock"><code>clock</code></a> the variable defines an <a href="#inputClock"><code>input clock</code></a> that is controlled by the master.</p>
 </div>
-<div id="output" class="ulist">
-<ul>
-<li>
-<p><code>output</code>: The variable value can be used by another model or slave.
+<div id="output" class="paragraph">
+<p><code>= output</code>: The variable value can be used by another FMU.
 The algebraic relationship to the <a href="#input"><code>inputs</code></a> is defined via the <a href="#dependencies"><code>dependencies</code></a> attribute of <code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;&lt;Output&gt;</code>.
 <a id="outputClock"></a> If <a href="#variability"><code>variability</code></a> = <a href="#clock"><code>clock</code></a> the variable defines an <a href="#outputClock"><code>output clock</code></a> that is controlled  by the FMU..</p>
-</li>
-</ul>
 </div>
-<div id="local" class="ulist">
-<ul>
-<li>
-<p><code>local</code>: Local variable that is calculated from other variables or is a continuous-time <a href="#state"><code>state</code></a> or an event indicator (see <a href="#ModelStructure">Section 2.2.9</a>).
+<div id="local" class="paragraph">
+<p><code>= local</code>: Local variable that is calculated from other variables or is a continuous-time <a href="#state"><code>state</code></a> or an event indicator (see <a href="#ModelStructure">Section 2.2.9</a>).
 It is not allowed to use the variable value in another model or slave.</p>
-</li>
-</ul>
 </div>
-<div id="independent" class="ulist">
-<ul>
-<li>
-<p><code>independent</code>: The independent variable (usually <code>time</code>).
+<div id="independent" class="paragraph">
+<p><code>= independent</code>: The independent variable (usually <code>time</code>).
 All variables are a function of this <a href="#independent"><code>independent</code></a> variable.
 <a href="#variability"><code>variability</code></a> must be <a href="#continuous"><code>continuous</code></a>.
 At most one variable of an FMU can be defined as <a href="#independent"><code>independent</code></a>.
@@ -5252,16 +5221,10 @@ If one variable is defined as <a href="#independent"><code>independent</code></a
 It is not allowed to call function <code>fmi3Set{VariableType}</code> on an <a href="#independent"><code>independent</code></a> variable.
 Instead, its value is initialized with <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <code>currentCommunicationPoint</code> and <code>communicationStepSize</code> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation FMUs.
 <em>[The actual value can be inquired with <code>fmi3Get{VariableType}</code>.]</em></p>
-</li>
-</ul>
 </div>
-<div id="structuralParameter" class="ulist">
-<ul>
-<li>
-<p><code>structuralParameter</code>: parameter (a data value that is constant during the simulation and is provided by the environment and cannot be used in connections). <a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>. <a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).
+<div id="structuralParameter" class="paragraph">
+<p><code>= structuralParameter</code>: parameter (a data value that is constant during the simulation and is provided by the environment and cannot be used in connections). <a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>. <a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).
 This <a href="#causality"><code>causality</code></a> requires the variable not to have a <code>&lt;Dimension&gt;</code> element.</p>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <p><em>[</em>
@@ -5298,52 +5261,28 @@ A continuous-time <a href="#state"><code>state</code></a> or a event indicator m
 <em>For example, <a href="#discrete"><code>discrete</code></a> variables change their values only at event instants (ME) or at a communication point (xCS) and it is therefore only necessary to inquire them with <code>fmi3Get{VariableType}</code> and store them at event times.]</em>
 Allowed values of this enumeration:</p>
 </div>
-<div id="constant" class="ulist">
-<ul>
-<li>
-<p><code>constant</code>: The value of the variable never changes.</p>
-</li>
-</ul>
+<div id="constant" class="paragraph">
+<p><code>= constant</code>: The value of the variable never changes.</p>
 </div>
-<div id="fixed" class="ulist">
-<ul>
-<li>
-<p><code>fixed</code>: The value of the variable is fixed after initialization, in other words, after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called the variable value does not change anymore.</p>
-</li>
-</ul>
+<div id="fixed" class="paragraph">
+<p><code>= fixed</code>: The value of the variable is fixed after initialization, in other words, after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called the variable value does not change anymore.</p>
 </div>
-<div id="tunable" class="ulist">
-<ul>
-<li>
-<p><code>tunable</code>: The value of the variable is constant between external events (ME) and between communication points (xCS) due to changing variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.
+<div id="tunable" class="paragraph">
+<p><code>= tunable</code>: The value of the variable is constant between external events (ME) and between communication points (xCS) due to changing variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.
 Whenever a <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a> signal with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> changes, an event is triggered externally (ME), or the change is performed at the next communication point (xCS) and the variables with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> and <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> or <a href="#output"><code>output</code></a> must be newly computed.</p>
-</li>
-</ul>
 </div>
-<div id="discrete" class="ulist">
-<ul>
-<li>
-<p><code>discrete</code>:<br>
+<div id="discrete" class="paragraph">
+<p><code>= discrete</code>:<br>
 Model Exchange: The value of the variable is constant between external and internal events (= time, state, step events defined implicitly in the FMU).<br>
 Co-Simulation: By convention, the variable is from a real sampled data system and its value is only changed at communication points (also inside the slave).</p>
-</li>
-</ul>
 </div>
-<div id="continuous" class="ulist">
-<ul>
-<li>
-<p><code>continuous</code>: Only a variable of <code>type == fmi3GetFloat32</code> or <code>type == fmi3GetFloat64</code> can be <a href="#continuous"><code>continuous</code></a>.<br>
+<div id="continuous" class="paragraph">
+<p><code>= continuous</code>: Only a variable of <code>type == fmi3GetFloat32</code> or <code>type == fmi3GetFloat64</code> can be <a href="#continuous"><code>continuous</code></a>.<br>
 Model Exchange: No restrictions on value changes.<br>
 Co-Simulation: By convention, the variable is part of a differential equation.</p>
-</li>
-</ul>
 </div>
-<div id="clock" class="ulist">
-<ul>
-<li>
-<p><code>clock</code>: Only a variable of type <code>&lt;Clock&gt;</code> can have this variability.</p>
-</li>
-</ul>
+<div id="clock" class="paragraph">
+<p><code>= clock</code>: Only a variable of type <code>&lt;Clock&gt;</code> can have this variability.</p>
 </div>
 <div class="paragraph">
 <p>The default is <a href="#continuous"><code>continuous</code></a> for variables of type <code>&lt;Float32&gt;</code> and <code>&lt;Float64&gt;</code>, and <a href="#discrete"><code>discrete</code></a> for all other types.</p>
@@ -5358,27 +5297,15 @@ Co-Simulation: By convention, the variable is part of a differential equation.</
 <p>Enumeration that defines how the variable is initialized.
 It is not allowed to provide a value for <a href="#initial"><code>initial</code></a> if <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> or <a href="#independent"><code>independent</code></a>:</p>
 </div>
-<div id="exact" class="ulist">
-<ul>
-<li>
-<p>= <code>exact</code>: The variable is initialized with the <a href="#start"><code>start</code></a> value (provided under the variable type element).</p>
-</li>
-</ul>
+<div id="exact" class="paragraph">
+<p><code>= exact</code>: The variable is initialized with the <a href="#start"><code>start</code></a> value (provided under the variable type element).</p>
 </div>
-<div id="approx" class="ulist">
-<ul>
-<li>
-<p>= <code>approx</code>: The variable is an iteration variable of an algebraic loop and the iteration at initialization starts with the <a href="#start"><code>start</code></a> value.</p>
-</li>
-</ul>
+<div id="approx" class="paragraph">
+<p><code>= approx</code>: The variable is an iteration variable of an algebraic loop and the iteration at initialization starts with the <a href="#start"><code>start</code></a> value.</p>
 </div>
-<div id="calculated" class="ulist">
-<ul>
-<li>
-<p>= <code>calculated</code>: The variable is calculated from other variables during initialization.
+<div id="calculated" class="paragraph">
+<p><code>= calculated</code>: The variable is calculated from other variables during initialization.
 It is not allowed to provide a <a href="#start"><code>start</code></a> value.</p>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <p>If <a href="#initial"><code>initial</code></a> is not present, it is defined by the table below based on <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a>.
@@ -6178,9 +6105,9 @@ The functional dependency is defined as (dependencies of variables that are fixe
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="InitialUnknown"></a>
 Ordered list of all exposed unknowns in <strong>Initialization Mode</strong>.
 This list consists of all variables with</p>
-<p class="tableblock">. <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> and (<a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), and</p>
-<p class="tableblock">. <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> and</p>
-<p class="tableblock">. all continuous-time <a href="#state"><code>states</code></a> and all state derivatives (defined with elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a> <em>[if a Basic Co-Simulation FMU does not define the <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code> elements, (3) cannot be present]</em>.</p>
+<p class="tableblock">- <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> and (<a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), and</p>
+<p class="tableblock">- <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> and</p>
+<p class="tableblock">- all continuous-time <a href="#state"><code>states</code></a> and all state derivatives (defined with elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a> <em>[if a Basic Co-Simulation FMU does not define the <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code> elements, (3) cannot be present]</em>.</p>
 <p class="tableblock">The resulting list is not allowed to have duplicates (for example, if a <a href="#state"><code>state</code></a> is also an <a href="#output"><code>output</code></a>, it is included only once in the list).<br>
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the unknowns from the knowns in <strong>Initialization Mode</strong> at the initial time.
 Beside the knowns the initial unknowns also depend on the freeze variables (= variables which cannot be changed in the current mode) but these freeze variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
