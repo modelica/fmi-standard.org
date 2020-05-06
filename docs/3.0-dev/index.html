@@ -5333,10 +5333,11 @@ The master can nevertheless choose different <a href="#start"><code>start</code>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canHandleMultipleSetPerTimeInstant</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="canHandleMultipleSetPerTimeInstant" class="paragraph">
-<p>Only for Model Exchange (if only a Co-Simulation FMU, this attribute must not be present.
-If both Model Exchange and Co-Simulation FMU, this attribute is ignored for co-simulation):<br>
+<p>Only useful for Model Exchange FMUs, if only a Co-Simulation FMU, this attribute must not be present.
+If Model Exchange and Co-Simulation are combined in one FMU, this attribute is ignored for Co-Simulation:<br>
 Only for variables with <a href="#variability"><code>variability</code></a> = <a href="#input"><code>input</code></a> :<br>
-If present with value equals <code>false</code>, then only one <code>fmi3Set{VariableType}</code> call is allowed at one super-dense time instant (model evaluation) on this variable.
+If not present, the default value is assumed to be <code>true</code>.
+If <code>canHandleMultipleSetPerTimeInstant = false</code>, then only one <code>fmi3Set{VariableType}</code> call is allowed at one super-dense time instant (model evaluation) on this variable.
 That is, this <a href="#input"><code>input</code></a> is not allowed to appear in a (real) algebraic loop requiring multiple calls of <code>fmi3Set{VariableType}</code> on this variable <em>[for example, due to a Newton iteration]</em>.<br>
 <em>[This flag must be set by FMUs where (internal) discrete-time <a href="#state"><code>states</code></a> are directly updated when assigned (xd := f(xd) instead of xd = f(previous(xd)), and at least one <a href="#output"><code>output</code></a> depends on this <a href="#input"><code>input</code></a> and on discrete <a href="#state"><code>states</code></a>.</em><br>
 <em>It is strongly recommended that such an FMU checks the fulfillment of the requirement by itself during run-time, because an environment might not be able to check it; usually, there is a generic mechanism to import an FMU in an environment, but the mechanism to connect FMUs together is unrelated to the import mechanism.</em>
