@@ -6998,7 +6998,7 @@ Whenever the internal solver in the FMU needs updated intermediate <a href="#inp
 <div class="ulist">
 <ul>
 <li>
-<p>Advanced interpolation/extrapolation techniques,</p>
+<p>Advanced interpolation/extrapolation techniques <em>[especially enabling the same input approximation that was possible in FMI 2.0 with <code>fmi2SetInputDerivatives</code>, now evaluating the approximation polynomial in the master compared to within the FMU in FMI 2.0]</em>,</p>
 </li>
 <li>
 <p>Asynchronous communication,</p>
@@ -9701,9 +9701,8 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}(tc_0)\) and optionally the <a href="#derivative"><code>derivatives</code></a> of continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}^{(j)}(tc_0)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code><br>
-<code>fmi3SetInputDerivatives</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}(tc_0)\) of continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}^{(j)}(tc_0)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{v}_{InitialUnknowns} := \mathbf{f}_{init}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{initial=exact})\)</span></p></td>
@@ -9722,9 +9721,8 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d+c}(tc_i)\) and optionally the <a href="#derivative"><code>derivatives</code></a> of continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}^{(j)}(tc_i)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code><br>
-<code>fmi3SetInputDerivatives</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d+c}(tc_i)\) of continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}^{(j)}(tc_i)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\begin{matrix} tc_{i+1} := tc_i + hc_i \\ (\mathbf{y}_{c+d}, \mathbf{y}_c^{(j)}, \mathbf{w}_{c+d}) := \mathbf{f}_{doStep}(\mathbf{u}_{c+d}, \mathbf{u}_{c}^{(j)}, tc_i, hc_i, \mathbf{p}_{tune}, \mathbf{p}_{other})_{tc_i} \\ tc_i := tc_{i+1} \end{matrix}\)</span><br>
@@ -9752,7 +9750,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <em>In reality, every variable output argument is computed by one</em> <code>fmi3Get{VariableType}</code> <em>function call.</em></p>
 </div>
 <div class="paragraph">
-<p><em>In <strong>Step Mode</strong> the input arguments to</em> \(\mathbf{f}_{doStep}\) <em>are defined by calls to</em> <code>fmi3Set{VariableType}</code> <em>and</em> <code>fmi3SetInputDerivatives</code> <em>functions.</em>
+<p><em>In <strong>Step Mode</strong> the input arguments to</em> \(\mathbf{f}_{doStep}\) <em>are defined by calls to</em> <code>fmi3Set{VariableType}</code> <em>functions.</em>
 <em>The variables computed by</em> \(\mathbf{f}_{doStep}\) <em>can be inquired by</em>  <code>fmi3Get{VariableType}</code> <em>function calls.]</em></p>
 </div>
 </div>
@@ -9812,19 +9810,10 @@ Afterwards, a new step integration done on the FMU returns and signals the prema
 <p><a href="#input"><code>Input</code></a> and <a href="#output"><code>output</code></a> variables and other variables are accessed via the <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> functions, defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
 </div>
 <div class="paragraph">
-<p>In order to enable the slave to interpolate the <a href="#continuous"><code>continuous</code></a> floating point <a href="#input"><code>inputs</code></a> between communication steps, the <a href="#derivative"><code>derivatives</code></a> of the <a href="#input"><code>inputs</code></a> with respect to time can be provided.
-Also, higher <a href="#derivative"><code>derivatives</code></a> can be set to allow higher order interpolation.
-Whether the slave is able to handle the <a href="#derivative"><code>derivatives</code></a> of <a href="#input"><code>inputs</code></a> is given by the unsigned integer capability flag <code>MaxInputDerivativeOrder</code>. It delivers the maximum order of the input <a href="#derivative"><code>derivative</code></a>.</p>
+<p>In order to enable the master to interpolate the <a href="#continuous"><code>continuous</code></a> floating point <a href="#input"><code>inputs</code></a> between communication steps, the <a href="#derivative"><code>derivatives</code></a> of the <a href="#output"><code>outputs</code></a> with respect to time at the end of a communication step can be enquired by the master. This is also possible for higher <a href="#derivative"><code>derivatives</code></a> with respect to time.</p>
 </div>
-<div id="fmi3SetInputDerivatives" class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetInputDerivativesTYPE(fmi3Instance instance,
-                                               const fmi3ValueReference valueReferences[],
-                                               size_t nValueReferences,
-                                               const fmi3Int32 orders[],
-                                               const fmi3Float64 values[],
-                                               size_t nValues);</code></pre>
-</div>
+<div class="paragraph">
+<p><em>[The master is then able to extrapolate inputs using this information using <a href="#api-intermediate-variable-access">Section 2.4.3.2</a>. This enables the same functionality as with <code>fmi2SetInputDerivatives</code> in FMI1.0 and FMI2.0]</em></p>
 </div>
 <div id="fmi3GetOutputDerivatives" class="listingblock">
 <div class="content">
@@ -9837,26 +9826,28 @@ Whether the slave is able to handle the <a href="#derivative"><code>derivatives<
 </div>
 </div>
 <div class="paragraph">
-<p>Both functions have the same arguments:</p>
+<p>With the arguments:</p>
 </div>
 <div class="openblock">
 <div class="content">
 <div class="ulist">
 <ul>
 <li>
-<p><code>valueReferences</code> is a vector of value references that define the variables whose <a href="#derivative"><code>derivatives</code></a> shall be set or get.</p>
+<p><code>valueReferences</code> is a vector of value references that define the variables whose <a href="#derivative"><code>derivatives</code></a> shall be retrieved.
+If multiple derivatives of a variable shall be retrieved, list the value reference multiple times.</p>
 </li>
 <li>
 <p><code>nValueReferences</code> is the dimension of the arguments <code>valueReferences</code> and <code>orders</code>.</p>
 </li>
 <li>
-<p><code>orders</code> contains the orders of the respective <a href="#derivative"><code>derivative</code></a> (1 means the first <a href="#derivative"><code>derivative</code></a>, 0 is not allowed).</p>
+<p><code>orders</code> contains the orders of the respective <a href="#derivative"><code>derivative</code></a> (1 means the first <a href="#derivative"><code>derivative</code></a>, 2 means the second <a href="#derivative"><code>derivative</code></a>, &#8230;&#8203;, 0 is not allowed).
+If multiple derivatives of a variable shall be retrieved, provide a list of them in the <code>orders</code> array, corresponding to a multiply occurring value reference in the <code>valueReferences</code> array.</p>
 </li>
 <li>
-<p><code>values</code> is a vector with the values of the <a href="#derivative"><code>derivatives</code></a>.</p>
+<p><code>values</code> is a vector with the values of the <a href="#derivative"><code>derivatives</code></a>. The order of the <code>values</code> elements is derived from a twofold serialization: the outer level corresponds to the combination of a value reference (e.g., <code>valueReferences[k]</code>) and order (e.g., <code>orders[k]</code>), and the inner level to the serialization of variables. The inner level does not exist for scalar variables.</p>
 </li>
 <li>
-<p><code>nValues</code> is the size of the argument <code>values</code>.</p>
+<p><code>nValues</code> is the size of the argument <code>values</code>. <code>nValues</code> only equals <code>nValueReferences</code> if all corresponding output variables are scalar variables.</p>
 </li>
 </ul>
 </div>
@@ -9864,13 +9855,6 @@ Whether the slave is able to handle the <a href="#derivative"><code>derivatives<
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a></dt>
-<dd>
-<p>Sets the n-th time <a href="#derivative"><code>derivative</code></a> of <a href="#input"><code>input</code></a> variables.
-Restrictions on using the function are the same as for the <code>fmi3Set{VariableType}</code> function.
-Different input variables may have different interpolation order.
-<a href="#input"><code>Inputs</code></a> and their <a href="#derivative"><code>derivatives</code></a> are set with respect to the beginning of a communication time step.</p>
-</dd>
 <dt class="hdlist1"><a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
 <dd>
 <p>Retrieves the n-th <a href="#derivative"><code>derivative</code></a> of <a href="#output"><code>output</code></a> values.
@@ -9881,13 +9865,17 @@ E.g. after a successful call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a
 </dl>
 </div>
 <div class="paragraph">
-<p>To allow interpolation/approximation of the floating point output variables between communication steps (if they are used as inputs for other slaves), the <a href="#derivative"><code>derivatives</code></a> of the <a href="#output"><code>outputs</code></a> with respect to time can be read.
+<p>To allow interpolation/approximation of the floating point output variables between communication steps by the master, the <a href="#derivative"><code>derivatives</code></a> of the <a href="#output"><code>outputs</code></a> with respect to time can be read.
 Whether the slave is able to provide the <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>output</code></a> is given by the unsigned integer capability flag <code>maxOutputDerivativeOrder</code>.
 It delivers the maximum order of the <a href="#output"><code>output</code></a> <a href="#derivative"><code>derivatives</code></a>.
 If the actual order is lower (because the order of integration algorithm is low), the retrieved value is 0.</p>
 </div>
 <div class="paragraph">
-<p><em>[Example: If the internal polynomial is of order 1 and the master inquires the second <a href="#derivative"><code>derivative</code></a> of an <a href="#output"><code>output</code></a>, the slave will return zero.]</em></p>
+<p><em>[ Example:</em><br>
+<em>Assuming an FMU has outputs \(y_1\)[2*3] with value reference 1, \(y_2\) with value reference 2, \( y_3\)[2] value reference 3, \(y_4\) with value reference 4 and <code>maxOutputDerivativeOrder</code>=2.</em><br>
+<em>With <code>valueReferences</code>= [1, 1, 3, 3, 4, 4], and <code>orders</code>= [1, 2, 1, 2, 1, 2], <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> will provide first and second time derivatives of the outputs y1, y3, y4, which in <code>values</code> are serialized in the following way:</em>
+<em>((array serialization of \(\dot y_1\)), (array serialization of \(\ddot y_1\)), (array serialization of \(\dot y_3\)), (array serialization of \(\ddot y_3\)), \(\dot y_4\), \(\ddot y_4\))</em><br>
+<em>If the internal polynomial is of order 1 and the master inquires the second <a href="#derivative"><code>derivative</code></a> of an <a href="#output"><code>output</code></a>, the slave will return zero.]</em></p>
 </div>
 </div>
 <div class="sect3">
@@ -10042,7 +10030,7 @@ The FMU sets all variables to its <a href="#start"><code>start</code></a> values
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></p>
+<p><a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, &lt;fmi3EnterConfigurationMode&gt;&gt;</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
 <dd>
@@ -10068,7 +10056,7 @@ In this way artificial or real algebraic loops over connected FMUs in <strong>In
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p><a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></p>
+<p><a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></p>
 </dd>
 <dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
 <dd>
@@ -10107,7 +10095,7 @@ In this way artificial or real algebraic loops over connected FMUs in <strong>In
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p><a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a></p>
+<p><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a></p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
 <dd>
@@ -10211,7 +10199,7 @@ If the function returns <code>fmi3Fatal</code> the FMU enters the terminal state
 <dd>
 <p><a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
 </dd>
-<dt class="hdlist1"><code>fmi3Set{VariableType}</code>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a></dt>
+<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>If <a href="#intermediateVariableSetAllowed"><code>intermediateVariableSetAllowed == fmi3True</code></a>, the value of intermediate variables can be set.
 Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess == fmi3True</code></a> in the <code>modelDescription.xml</code>.</p>
@@ -10224,7 +10212,7 @@ Intermediate variables are variables that are marked with attribute <a href="#in
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
 <p>The same functions which are not allowed to be called in <strong>Step Mode</strong> must not be called in this state.
-Additionally the following functions must not be called  <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</p>
+Additionally the following functions must not be called <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</p>
 </dd>
 </dl>
 </div>
@@ -10247,7 +10235,7 @@ This state is entered from state <strong>Step Mode</strong> by calling <a href="
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
 </dd>
 </dl>
 </div>
@@ -10282,7 +10270,7 @@ In this case, a new step may be started from <a href="#lastSuccessfulTime"><code
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
 </dd>
 </dl>
 </div>
@@ -10300,7 +10288,7 @@ In this case, a new step may be started from <a href="#lastSuccessfulTime"><code
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
 </dd>
 </dl>
 </div>
@@ -10325,7 +10313,7 @@ In this case, a new step may be started from <a href="#lastSuccessfulTime"><code
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
 </dd>
 </dl>
 </div>
@@ -10636,18 +10624,6 @@ In this case, a new step may be started from <a href="#lastSuccessfulTime"><code
 <td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock"><a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>  </p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock"><a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> </p></td>
@@ -10965,11 +10941,6 @@ If this is the case, then flag <code>canGetAndSetFMUState</code> must be <code>t
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the directional derivative of the equations at communication points can be computed with <code>fmi3GetDirectionalDerivative</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canInterpolateInputs</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The slave is able to interpolate <a href="#continuous"><code>continuous</code></a> <a href="#input"><code>inputs</code></a>.
-Calling of <code>fmi3SetInputDerivatives</code> has an effect for the slave.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxOutputDerivativeOrder</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The slave is able to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> with maximum order.
 Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defined by <code>maxOutputDerivativeOrder</code>.</p></td>
@@ -11027,8 +10998,7 @@ The XML file may have the following content:</p>
   variableNamingConvention="structured"&gt;
   &lt;BasicCoSimulation
     modelIdentifier="MyLibrary_SpringMassDamper"
-    canHandleVariableCommunicationStepSize="true"
-    canInterpolateInputs="true"/&gt;
+    canHandleVariableCommunicationStepSize="true"/&gt;
   &lt;UnitDefinitions&gt;
     &lt;Unit name="rad"&gt;
       &lt;BaseUnit rad="1"/&gt;
@@ -11964,23 +11934,6 @@ For <a href="#input"><code>input</code></a> <a href="#periodic"><code>periodic</
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock"><a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>      </p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock"><a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>     </p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -12318,7 +12271,7 @@ In case of <code>fmi3Discard</code> or <code>fmi3Error</code> the master must wa
 <p>It is recommended to call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for setting and retrieving variable values associated to a <a href="#clock"><code>clock</code></a> activation.</p>
 </div>
 </dd>
-<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Set{VariableType}</a>, <code>fmi3SetInputDerivatives</code></dt>
+<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Set{VariableType}</a></dt>
 <dd>
 <p>Is called before the start of the computation of a model partition (i.e. before call of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>inputClock</code></a> assigned to the model partition.</p>
 <div class="paragraph">
@@ -12473,7 +12426,7 @@ This state is entered from state <strong>Clock Activation Mode</strong> by calli
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
-<p>Additionally to the generally forbidden functions in Scheduled Co-Simulation listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,<code>fmi3SetInputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <code>fmi3GetOutputDerivatives</code>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
+<p>Additionally to the generally forbidden functions in Scheduled Co-Simulation listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDoStepDiscardedStatus"><code>fmi3GetDoStepDiscardedStatus</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <code>fmi3GetOutputDerivatives</code>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3DoEarlyReturn"><code>fmi3DoEarlyReturn</code></a></p>
 </dd>
 </dl>
 </div>
@@ -12796,19 +12749,6 @@ This state is entered from state <strong>Clock Activation Mode</strong> by calli
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: yellow;"><p class="tableblock"><a href="#fmi3SetInputDerivatives"><code>fmi3SetInputDerivatives</code></a>      </p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
