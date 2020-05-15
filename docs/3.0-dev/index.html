@@ -929,7 +929,7 @@ Concrete features to support vECU export are:</p>
 <p>introduction of more integer types and a 32-bit float type (see <a href="#fmi-description-schema">Section 2.2</a>) to communicate native controller types to the outside,</p>
 </li>
 <li>
-<p>introduction of two types of clocks to more tightly control timing of events and execution of model partitions,</p>
+<p>introduction of two types of clocks to more tightly control timing of events and evaluation of model partitions,</p>
 </li>
 <li>
 <p>introduction of a binary type to support non-numeric data handling, such as complex sensor data interfaces,</p>
@@ -1089,10 +1089,10 @@ As another example, for FMU that represent controller code, an internal scheduli
 <div class="sect3">
 <h4 id="_fmi_for_scheduled_co_simulation_scs">1.2.4. FMI for Scheduled Co-Simulation (SCS)</h4>
 <div class="paragraph">
-<p>The Scheduled Co-Simulation interface exposes individual parts of a model or tasks of a control algorithm, to be called by a master algorithm that acts as external scheduler.
+<p>The Scheduled Co-Simulation interface exposes individual model partitions (e.g. tasks of a control algorithm), to be called by a master algorithm that acts as external scheduler.
 The master algorithm is responsible for:
 * advancing the overall simulation time,
-* triggering execution of synchronous and asynchronous external events for all exposed model parts of a set of FMUs (e.g. tasks of a controller model), and
+* triggering execution of synchronous and asynchronous external events for all exposed model parts of a set of FMUs, and
 * handling events (e.g. clock ticks) signaled by the FMUs.</p>
 </div>
 <div class="paragraph">
@@ -2652,7 +2652,7 @@ A common number of different priority levels is, e.g., 100 (0 to 99), as defined
 <h6 id="clock-relationships-for-communication-point-clocks">2.1.8.3.3. Clock Relationships for Communication Point Clocks</h6>
 <div class="paragraph">
 <p>If <a href="#outputClock"><code>output clocks</code></a> and <a href="#inputClock"><code>input clocks</code></a> are defined, it is possible to define a tick relationship from an <a href="#outputClock"><code>outputClock</code></a> to an <a href="#inputClock"><code>inputClock</code></a>.
-This is needed to allow for an external resource management to achieve an optimal control of model partitions.
+This is needed to allow for an external scheduler to achieve an optimal control of model partitions.
 The <a href="#outputClock"><code>output clocks</code></a> and the associated <a href="#inputClock"><code>input clocks</code></a> define a union of <a href="#clock"><code>clocks</code></a>.
 In that sense, if an <a href="#outputClock"><code>outputClock</code></a> ticks the associated <a href="#inputClock"><code>inputClock</code></a> ticks at the same time instant in such a union.
 It is only meaningful to combine an <a href="#outputClock"><code>output clock</code></a> with an <a href="#periodic">aperiodic</a> <a href="#inputClock"><code>inputClock</code></a> in such a union.
@@ -5296,54 +5296,6 @@ Variables with <a href="#causality"><code>causality</code></a> <a href="#paramet
 </tbody>
 </table>
 <div class="paragraph">
-<p><strong>fmi3Set{VariableType}</strong> can be called on any variable with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> <strong>before initialization</strong> (before calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>)</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a> <em>[in order to set the corresponding <a href="#start"><code>start</code></a> value.]</em>
-<em>[Note that this prevents any changes to the input before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.]</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>fmi3Set{VariableType}</strong> can be called on any variable with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> <strong>during initialization</strong> (after calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called)</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> <em>[in order to set the corresponding <a href="#start"><code>start</code></a> value]</em>, or</p>
-</li>
-<li>
-<p>if <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> <em>[in order to provide new values for <a href="#input"><code>inputs</code></a>]</em>,</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>fmi3Set{VariableType}</strong> can be called on any variable for <strong>Model Exchange at an event instant</strong> (after calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> and before <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> is called), and <strong>for Co-Simulation at every communication point</strong>,</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>if <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> <em>[in order to change the value of the <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a> at an event instant or at a communication point]</em>, or</p>
-</li>
-<li>
-<p>if <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> <em>[in order to provide new values for <a href="#input"><code>inputs</code></a>]</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>fmi3Set{VariableType}</strong> can be called on any variable for <strong>Model Exchange in Continuous-Time Mode</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>if <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a><br>
-<em>[in order to provide new values for <a href="#input"><code>inputs</code></a> during continuous integration]</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
 <p>If <a href="#initial"><code>initial</code></a> is not present, its value is defined by the following tables based on the values of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -6915,14 +6867,14 @@ With <a href="#scheduled-co-simulation-api">Scheduled Co-Simulation</a> a simula
 <p>At any time (even for unpredictable events), an event can be signaled to an FMU;</p>
 </li>
 <li>
-<p>If multiple FMUs share (execution) resources, the time requirements (e.g. execution time, communication deadlines) of all model partitions have to be observed and respected;</p>
+<p>If multiple FMUs share resources (e.g. control tasks), the time requirements (e.g. execution time, communication deadlines) of all model partitions have to be observed and respected;</p>
 <div class="ulist">
 <ul>
 <li>
 <p>Time requirements may exist due to communication constraints (that are not apparent at FMU simulation level) which have to be fulfilled by the simulation master;</p>
 </li>
 <li>
-<p>That requires a global execution order and preemption policy for all model partitions of the multiple FMUs</p>
+<p>That requires a global evaluation order and preemption policy for all model partitions of the multiple FMUs</p>
 </li>
 <li>
 <p>Priority information provided by the FMUs has to be evaluated and merged to an overall priority for available model partitions</p>
@@ -12494,10 +12446,10 @@ Set/get calls for each task are only allowed for variables that are associated t
 <div class="ulist">
 <ul>
 <li>
-<p>Same priority: Tasks cannot preempt each other. Arbitrary execution order is possible for tasks of the same priority.</p>
+<p>Same priority: Model partitions (e.g. tasks) cannot preempt each other. Arbitrary evaluation order is possible for model partitions of the same priority.</p>
 </li>
 <li>
-<p>Different priorities: Tasks of a higher priority preempt tasks of a lower priority as soon as the higher priority task needs to be computed.</p>
+<p>Different priorities: Model partitions of a higher priority preempt partitions of a lower priority as soon as the higher priority partition needs to be computed.</p>
 </li>
 </ul>
 </div>
@@ -12518,8 +12470,8 @@ Set/get calls for each task are only allowed for variables that are associated t
 </ul>
 </div>
 <div class="paragraph">
-<p>Based on the period and priority definitions the exporting tool can restrict the code execution order.
-It nevertheless has to secure its code against concurrent execution <em>[not against parallel execution, as this is not supported for model partitions of an FMU in the interface description of this mode]</em> along the defined priority restrictions.
+<p>Based on the period and priority definitions the exporting tool can restrict the code evaluation order.
+It nevertheless has to secure its code against concurrent evaluation <em>[not against parallel evaluation, as this is not supported for model partitions of an FMU in the interface description of this mode]</em> along the defined priority restrictions.
 Mostly this is required for internal inter-model-partition communication and in general for the joint use of global variables within the FMU.
 The exporting tool has to consider external events i.e. interrupts (if <a href="#input"><code>input</code></a> <a href="#periodic">aperiodic</a> <a href="#clock"><code>clocks</code></a> are defined) and the influences of computing speed, so the exact preemption occurrence points cannot be foreseen (within the given priority and period restrictions).</p>
 </div>
@@ -12925,6 +12877,10 @@ External events occur outside the FMU and should be signaled to the FMU without 
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>external scheduler</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <em>scheduler</em>.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface:<br>
 Interface of a functional mock-up in form of a model. In analogy to the term digital mock-up (see <em>mock-up</em>), functional mock-up describes a computer-based representation of the functional behaviour of a system for all kinds of analyses.</p></td>
@@ -12936,13 +12892,12 @@ Interface of a functional mock-up in form of a model. In analogy to the term dig
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for co-simulation</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Co-Simulation:<br>
-One of the MODELISAR <em>functional mock-up interfaces.</em> It connects the <em>master solver</em> component with one or more <em>slave solvers</em>.</p></td>
+One of the MODELISAR <em>functional mock-up interface types.</em> It connects the <em>importer</em> with one or more <em>FMU</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for model exchange</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Model Exchange:<br>
-One of the MODELISAR <em>functional mock-up interfaces.</em> It consists of the <em>model description interface</em> and the <em>model execution interface</em>.<br>
-It connects the <em>external model</em> component with the <em>solver</em> component.</p></td>
+One of the MODELISAR <em>functional mock-up interface types.</em> It consists of the <em>model description</em> and the <em>C API</em>.<br></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMU</em></p></td>
@@ -13027,6 +12982,10 @@ TODO: FMU also goes by "slave". When "slave" is used, the intent is to focus on 
 It can be used to compute its expected behavior under specified conditions.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>model partition</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>model predictive control</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
@@ -13104,6 +13063,10 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>scheduler</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>slave</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">see <em>master/slave</em></p></td>
 </tr>
@@ -13165,6 +13128,10 @@ This definition is slightly different from the usual standard definition of stat
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>target simulator</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO (The terms "simulation environment", "calling environment", "target environment", "target platform", "environment" are also used. We should unify these. Maybe distinguish between the software and the platform executing it.)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>task</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Special kind of <em>model partition</em> that is used in control code.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>time event</em></p></td>
