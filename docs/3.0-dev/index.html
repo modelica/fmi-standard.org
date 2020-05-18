@@ -2474,7 +2474,7 @@ A clocked partition is mathematically defined as:</p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[\text{with } j=0,1,2,...;x_{-1}=x_{start}\]
+\[\text{with } j=0,1,2,...;x_{-1}=x_{\mathit{start}}\]
 </div>
 </div>
 <div class="paragraph">
@@ -2587,7 +2587,7 @@ Mathematically, the next <a href="#clock"><code>clock</code></a> tick at time in
 <div class="stemblock">
 <div class="content">
 \[\begin{align*}
-t_0 &amp;:= t_{start} + t_{offset} \\
+t_0 &amp;:= t_{\mathit{start}} + t_{\mathit{offset}} \\
 t_i &amp;:= t_{i-1} + \Delta T, i = 1,2,3,{...}
 \end{align*}\]
 </div>
@@ -2603,7 +2603,7 @@ t_i &amp;:= t_{i-1} + \Delta T, i = 1,2,3,{...}
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(t_0\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The time instant in seconds at which the <a href="#clock"><code>clock</code></a> ticks the first time (= the base <a href="#clock"><code>clock</code></a> starts at the start of the simulation \(t_{start}\) or when the controller is switched on plus an offset time \(t_{offset}\) (xml-attributes <code>shiftCounter</code> and <code>resolution</code> in <a href="#clock-type-definition">Section 2.2.3.1</a>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time instant in seconds at which the <a href="#clock"><code>clock</code></a> ticks the first time (= the base <a href="#clock"><code>clock</code></a> starts at the start of the simulation \(t_{\mathit{start}}\) or when the controller is switched on plus an offset time \(t_{\mathit{offset}}\) (xml-attributes <code>shiftCounter</code> and <code>resolution</code> in <a href="#clock-type-definition">Section 2.2.3.1</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(t_{i-1}\)</p></td>
@@ -2617,7 +2617,7 @@ It is defined as a rational number based on <code>intervalCounter</code> and <co
 </tbody>
 </table>
 <div class="paragraph">
-<p>The interval \(\Delta T\) and \(t_{offset}\) must be defined for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a> in the XML file.
+<p>The interval \(\Delta T\) and \(t_{\mathit{offset}}\) must be defined for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a> in the XML file.
 In case of <a href="#periodic"><code>periodic</code></a> <a href="#inputClock"><code>input clocks</code></a> these values are the start interval values if they are not given by the simulation master.
 <em>[This information can be used for emulating <a href="#periodic"><code>periodic</code></a> <a href="#inputClock"><code>input clocks</code></a> in the Co-Simulation interface types.]</em>.</p>
 </div>
@@ -2993,7 +2993,7 @@ In every state, the general form of the FMU equations are:</p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[\mathbf{v}_{unknown} = \mathbf{h}(\mathbf{v}_{known}, \mathbf{v}_{rest}),\]
+\[\mathbf{v}_{\mathit{unknown}} = \mathbf{h}(\mathbf{v}_{\mathit{known}}, \mathbf{v}_{\mathit{rest}}),\]
 </div>
 </div>
 <div class="paragraph">
@@ -3002,7 +3002,7 @@ In every state, the general form of the FMU equations are:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>\(\mathbf{v}_{unknonwn}\) is the vector of unknown floating point variables computed in the actual state:</p>
+<p>\(\mathbf{v}_{\mathit{unknonwn}}\) is the vector of unknown floating point variables computed in the actual state:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -3022,7 +3022,7 @@ Each state derivative variable listed as elements <code>&lt;ModelStructure&gt;&l
 </div>
 </li>
 <li>
-<p>\(\mathbf{v}_{known}\) is the vector of known floating point <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that changes its value in the actual state.</p>
+<p>\(\mathbf{v}_{\mathit{known}}\) is the vector of known floating point <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that changes its value in the actual state.</p>
 </li>
 </ul>
 </div>
@@ -3035,7 +3035,7 @@ Each state derivative variable listed as elements <code>&lt;ModelStructure&gt;&l
 <div class="ulist">
 <ul>
 <li>
-<p>\({\mathbf{v}_{rest}}\) is the set of <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that either changes its value in the actual state but are non-floating point variables, or do not change their values in this state, but change their values in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>]</em>.</p>
+<p>\({\mathbf{v}_{\mathit{rest}}}\) is the set of <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that either changes its value in the actual state but are non-floating point variables, or do not change their values in this state, but change their values in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>]</em>.</p>
 </li>
 </ul>
 </div>
@@ -3051,10 +3051,10 @@ Each state derivative variable listed as elements <code>&lt;ModelStructure&gt;&l
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> to compute the directional derivatives \(\mathbf{v}_{sensitivity} = \mathbf{J} \cdot \mathbf{v}_{seed}\), and</p>
+<p><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> to compute the directional derivatives \(\mathbf{v}_{\mathit{sensitivity}} = \mathbf{J} \cdot \mathbf{v}_{\mathit{seed}}\), and</p>
 </li>
 <li>
-<p><a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> to calculate the adjoint derivatives \(\mathbf{v}_{sensitivity}^T = \mathbf{v}_{seed}^T \cdot \mathbf{J}\)</p>
+<p><a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> to calculate the adjoint derivatives \(\mathbf{v}_{\mathit{sensitivity}}^T = \mathbf{v}_{\mathit{seed}}^T \cdot \mathbf{J}\)</p>
 </li>
 </ul>
 </div>
@@ -3066,14 +3066,14 @@ Each state derivative variable listed as elements <code>&lt;ModelStructure&gt;&l
 \[\mathbf{J}
 =
 \begin{bmatrix}
-\frac{\partial h_1}{\partial v_{knwon,1}} &amp; \cdots &amp; \frac{\partial h_1}{\partial v_{knwon, n}} \\
+\frac{\partial h_1}{\partial v_{\mathit{known},1}} &amp; \cdots &amp; \frac{\partial h_1}{\partial v_{\mathit{known},n}} \\
 \vdots &amp; \ddots &amp; \vdots \\
-\frac{\partial h_m}{\partial v_{known, 1}} &amp; \cdots &amp; \frac{\partial h_m}{\partial v_{known, n}}
+\frac{\partial h_m}{\partial v_{\mathit{known},1}} &amp; \cdots &amp; \frac{\partial h_m}{\partial v_{\mathit{known},n}}
 \end{bmatrix}\]
 </div>
 </div>
 <div class="paragraph">
-<p>where \(\mathbf{v}_{known}\) are the \(n\) knowns, and \(\mathbf{h}\) are the \(m\) functions to calculate the \(m\) unknwon variables \(\mathbf{v}_{unknwon}\)  from the knowns.</p>
+<p>where \(\mathbf{v}_{\mathit{known}}\) are the \(n\) knowns, and \(\mathbf{h}\) are the \(m\) functions to calculate the \(m\) unknwon variables \(\mathbf{v}_{\mathit{unknwon}}\)  from the knowns.</p>
 </div>
 <div class="paragraph">
 <p>Both functions can also be used to construct the partial derivative matrices.
@@ -3167,10 +3167,10 @@ g_2(x, u_1)
 <em>Depending on the environment where the FMUs are connected, these <a href="#derivative"><code>derivatives</code></a> can be provided:</em></p>
 </div>
 <div class="paragraph">
-<p>(a) <em>with one wrapper function around function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> to compute the directional derivatives with respect to these two variables (in other words, \({v_{unknown} = y_1}\), \({v_{known} = \left \{ u_1, u_3 \right \}}\)), and then the environment calls this wrapper function with \({v_{seed} = \left \{ 1, 0 \right \}}\) to compute the partial derivative with respect to \({u_1}\) and \({v_{seed} = \left \{ 0, 1 \right \}}\) to compute the partial derivative with respect to \({u_3}\), or</em></p>
+<p>(a) <em>with one wrapper function around function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> to compute the directional derivatives with respect to these two variables (in other words, \({v_{\mathit{unknown}} = y_1}\), \({v_{\mathit{known}} = \left \{ u_1, u_3 \right \}}\)), and then the environment calls this wrapper function with \({v_{\mathit{seed}} = \left \{ 1, 0 \right \}}\) to compute the partial derivative with respect to \({u_1}\) and \({v_{\mathit{seed}} = \left \{ 0, 1 \right \}}\) to compute the partial derivative with respect to \({u_3}\), or</em></p>
 </div>
 <div class="paragraph">
-<p>(b) <em>with two direct function calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> (in other words, \({v_{unknown} = y_1, v_{known} = u_1, v_{seed} = 1}\); and \({v_{unknown} = y_1, v_{known} = u_3, v_{seed} = 1}\)).</em></p>
+<p>(b) <em>with two direct function calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> (in other words, \({v_{\mathit{unknown}} = y_1, v_{\mathit{known}} = u_1, v_{\mathit{seed}} = 1}\); and \({v_{\mathit{unknown}} = y_1, v_{\mathit{known}} = u_3, v_{\mathit{seed}} = 1}\)).</em></p>
 </div>
 <div class="paragraph">
 <p><em>Note that a direct implementation of this function with analytic derivatives:</em></p>
@@ -3182,7 +3182,7 @@ g_2(x, u_1)
 <p>(b) <em>Initializes all seed-values to zero; so in the above example: \({\Delta x = \Delta u_1 = \Delta u_3 = \Delta u_4 = 0}\)</em></p>
 </div>
 <div class="paragraph">
-<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the above example: \({v_{sensitivity} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 0, \Delta u_4 = 0)}\)] and \({v_{sensitivity} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 0, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
+<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the above example: \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 0, \Delta u_4 = 0)}\)] and \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 0, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
 </div>
 <div class="paragraph">
 <p><em>[Note, function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> can be utilized for the following purposes:</em></p>
@@ -3343,7 +3343,7 @@ h_2(u_1, u_2)
 </div>
 <div class="paragraph">
 <p><em>and \(\left( w_1,  w_2 \right)^T \cdot \mathbf{ \frac{\partial h}{\partial u} }\) for some vector \(\left( w_1,  w_2 \right)^T\) is needed.</em>
-<em>Then one can get this with one function call of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (with arguments</em> \(\mathbf{v}_{unknown} = \text{valueReferences of} \left \{ y_1, y_2 \right \},  \mathbf{v}_{knwon} = \text{valueReferences of} \left \{ u_1, u_2 \right \},  \mathbf{v}_{seed} = \left( w_1, w_2 \right)^T\) <em>), while with <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> at least two calls would be necessary to first construct the Jacobian column-wise and then multiplying from the right with</em> \(\left( w_1,  w_2 \right)^T\) <em>.</em></p>
+<em>Then one can get this with one function call of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (with arguments</em> \(\mathbf{v}_{\mathit{unknown}} = \text{valueReferences of} \left \{ y_1, y_2 \right \},  \mathbf{v}_{\mathit{known}} = \text{valueReferences of} \left \{ u_1, u_2 \right \},  \mathbf{v}_{\mathit{seed}} = \left( w_1, w_2 \right)^T\) <em>), while with <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> at least two calls would be necessary to first construct the Jacobian column-wise and then multiplying from the right with</em> \(\left( w_1,  w_2 \right)^T\) <em>.</em></p>
 </div>
 <div class="paragraph">
 <p><em>If a dense matrix shall be computed, the rows of the matrix can be easily constructed by successive calls of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a>.</em>
@@ -3863,10 +3863,10 @@ If a variable is associated with a <code>Unit</code>, then the value set (resp. 
 <p><code>BaseUnit_value = factor * Unit_value + offset</code></p>
 </div>
 <div class="paragraph">
-<p><em>[For example, if</em> \(\color{blue}{p_{bar}}\) <em>is a pressure value in unit <code>bar</code>, and</em> \(\color{blue}{p_{Pa}}\) <em>is the pressure value in <code>&lt;BaseUnit&gt;</code>, then</em></p>
+<p><em>[For example, if</em> \(\color{blue}{p_{\mathit{bar}}}\) <em>is a pressure value in unit <code>bar</code>, and</em> \(\color{blue}{p_{\mathit{Pa}}}\) <em>is the pressure value in <code>&lt;BaseUnit&gt;</code>, then</em></p>
 </div>
 <div class="paragraph">
-<p>\(\color{blue}{p_{Pa} = 10^5 p_{bar}}\)</p>
+<p>\(\color{blue}{p_{\mathit{Pa}} = 10^5 p_{\mathit{bar}}}\)</p>
 </div>
 <div class="paragraph">
 <p><em>and therefore, <code>factor = 1.0e5</code> and <code>offset = 0.0</code>.</em></p>
@@ -4911,13 +4911,13 @@ The <code>inStreamMemberName</code> and <code>outStreamMemberName</code> describ
 <div class="paragraph">
 <p><em>\(0 = \sum{\dot{m}_i}\cdot
 \left\{\begin{array}{ll}
-q_{\textit{$i$, outStream}} &amp;\textit{if $\dot{m}$ is outflowing through terminal $i$}\\
-q_{\textit{$i$, inStream}} &amp;\textit{if $\dot{m}$ is inflowing through terminal $i$}
+q_{i, \mathit{outStream}} &amp;\textit{if $\dot{m}$ is outflowing through terminal $i$}\\
+q_{i, \mathit{inStream}} &amp;\textit{if $\dot{m}$ is inflowing through terminal $i$}
 \end{array}\right.\)</em></p>
 </div>
 <div class="paragraph">
-<p><em>The</em> \(q_\textit{$i$, outStream}\) <em>is the convective quantity in case the matter flows out of the FMU.</em>
-\(q_\textit{$i$, inStream}\) <em>is the convective quantity in case the matter flows into the FMU. Both variables are present in the terminal.</em>
+<p><em>The</em> \(q_{i,\mathit{outStream}}\) <em>is the convective quantity in case the matter flows out of the FMU.</em>
+\(q_{i,\mathit{inStream}}\) <em>is the convective quantity in case the matter flows into the FMU. Both variables are present in the terminal.</em>
 <em>The outStream variable has the <a href="#causality"><code>causality</code></a> <a href="#output"><code>output</code></a> or <a href="#calculatedParameter"><code>calculatedParameter</code></a> because this information has to be provided by each FMU.</em>
 <em>The inStream variable has the <a href="#causality"><code>causality</code></a> <a href="#input"><code>input</code></a> or <a href="#parameter"><code>parameter</code></a>.</em>
 <em>To display the actual value in an importing tool, this actual value has to be selected depending on the sign of the terminal member variable with <code>variableKind</code> <code>inflow</code> or <code>outflow</code>.</em>
@@ -5950,7 +5950,7 @@ A Co-Simulation FMU does not need to expose these state derivatives and event in
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (ME) and at the current communication point (xCS).
 Beside the knowns, the <a href="#output"><code>outputs</code></a> also depend on the freeze variables (= variables which cannot be changed in the current mode) but these freeze variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as (dependencies of variables that are fixed in Event and <strong>Continuous-Time Mode</strong> and at communication points are not shown):<br>
-<span class="blue">\(\color{blue}{(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{output}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{tune})}\)</span></p></td>
+<span class="blue">\(\color{blue}{(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{\mathit{output}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{\mathit{tune}})}\)</span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Derivative</code></p></td>
@@ -5971,7 +5971,7 @@ For Co-Simulation, elements <code>&lt;Derivative&gt;</code> are ignored if capab
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the state derivatives from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (ME) and at the current communication point (xCS).
 Beside the knowns the derivatives also depend on the freeze variables (= variables which cannot be changed in the current mode) but these freeze variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as (dependencies of variables that are fixed in Event and <strong>Continuous-Time Mode</strong> and at communication points are not shown):<br>
-<span class="blue">\(\color{blue}{\dot{\mathbf{x}_c} := \mathbf{f}_{der}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{tune})}\)</span></p></td>
+<span class="blue">\(\color{blue}{\dot{\mathbf{x}_c} := \mathbf{f}_{\mathit{der}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{\mathit{tune}})}\)</span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>InitialUnknown</code></p></td>
@@ -5985,11 +5985,11 @@ This list consists of all variables with</p>
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the unknowns from the knowns in <strong>Initialization Mode</strong> at the initial time.
 Beside the knowns the initial unknowns also depend on the freeze variables (= variables which cannot be changed in the current mode) but these freeze variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as:</p>
-<p class="tableblock"><span class="blue">\(\color{blue}{\mathbf{v}_{initialUnknowns} := \mathbf{f}_{init}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{initial=exact})}\)</span></p>
+<p class="tableblock"><span class="blue">\(\color{blue}{\mathbf{v}_{\mathit{initialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{\mathit{initial=exact}})}\)</span></p>
 <p class="tableblock">Since, <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <code>fmi3Get{VariableType}</code> in <strong>Initialization Mode</strong>.</p>
 <p class="tableblock"><em>[Example: Assume an FMU is defined in the following way:</em></p>
-<p class="tableblock">\(\color{blue}{(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{init}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_0, \mathbf{p})}\)<br></p>
-<p class="tableblock">\(\color{blue}{(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{sim}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_i, \mathbf{p})}\)<br></p>
+<p class="tableblock">\(\color{blue}{(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{init}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_0, \mathbf{p})}\)<br></p>
+<p class="tableblock">\(\color{blue}{(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{sim}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_i, \mathbf{p})}\)<br></p>
 <p class="tableblock"><em>Therefore, the initial state \(\color{blue}{\mathbf{x}_c(t_0)}\) has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and the initial state derivative \(\color{blue}{\dot{\mathbf{x}}_c(t_0)}\) has <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>.</em>
 <em>The environment can still initialize this FMU in steady-state, by using \(\color{blue}{\mathbf{x}_c(t_0)}\) as iteration variables and adding the equations \(\color{blue}{\dot{\mathbf{x}}_c(t_0) = \mathbf{0}}\) in the environment.]</em></p></td>
 </tr>
@@ -6022,22 +6022,22 @@ Ordered list of all event indicators, in other words, a list of value references
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>valueReference</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value reference of the unknown \(\color{blue}{v_{\text{unknown}}}\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value reference of the unknown \(\color{blue}{v_{\mathit{unknown}}}\).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dependencies</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="dependencies"></a>
-Optional attribute defining the dependencies of the unknown \(\color{blue}{v_{\text{unknown}}}\) (directly or indirectly via auxiliary variables) with respect to \(\color{blue}{\mathbf{v}_{\text{known}}}\).
+Optional attribute defining the dependencies of the unknown \(\color{blue}{v_{\mathit{unknown}}}\) (directly or indirectly via auxiliary variables) with respect to \(\color{blue}{\mathbf{v}_{\mathit{known}}}\).
 If not present, it must be assumed that the unknown depends on all knowns.
 If present as empty list, the unknown depends on none of the knowns.
 Otherwise the unknown depends on the knowns defined by the given value references.<br>
-Knowns \(\color{blue}{\mathbf{v}_{\text{known}}}\) in <strong>Event Mode</strong> and <strong>Continuous-Time Mode</strong> (ME) and at communication points (xCS) for <code>&lt;Output&gt;</code> and <code>&lt;Derivative&gt;</code> elements:</p>
+Knowns \(\color{blue}{\mathbf{v}_{\mathit{known}}}\) in <strong>Event Mode</strong> and <strong>Continuous-Time Mode</strong> (ME) and at communication points (xCS) for <code>&lt;Output&gt;</code> and <code>&lt;Derivative&gt;</code> elements:</p>
 <p class="tableblock">- inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>)</p>
 <p class="tableblock">- continuous-time states</p>
 <p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).
 If an <a href="#independent"><code>independent</code></a> variable is not explicitly defined under variables, it is assumed that the unknown depends explicitly on the <a href="#independent"><code>independent</code></a> variable.</p>
 <p class="tableblock"><em>[<a href="#parameter"><code>parameters</code></a> and <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> must not be listed as knowns in this mode. This may change in a future FMI version which implies the possibility to calculate derivatives with respect to parameters.]</em></p>
-<p class="tableblock"><code>Knowns</code> \(\color{blue}{\mathbf{v}_{\text{known}}}\) in <strong>Initialization Mode</strong> (for elements <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>):</p>
+<p class="tableblock"><code>Knowns</code> \(\color{blue}{\mathbf{v}_{\mathit{known}}}\) in <strong>Initialization Mode</strong> (for elements <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>):</p>
 <p class="tableblock">- inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>)</p>
 <p class="tableblock">- variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> <em>[for example, <a href="#parameter"><code>parameters</code></a> or initial <a href="#state"><code>states</code></a>]</em></p>
 <p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).
@@ -6049,15 +6049,15 @@ In other words, the respective partial derivatives cannot be computed.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dependenciesKind</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="dependenciesKind"></a>
 If <a href="#dependenciesKind"><code>dependenciesKind</code></a> is present, <a href="#dependencies"><code>dependencies</code></a> must be present and must have the same number of list elements.
-If not present, it must be assumed that the unknown \(\color{blue}{v_{\text{unknown}}}\) depends on the knowns \(\color{blue}{\mathbf{v}_{\text{known}}}\) without a particular structure.
-Otherwise, the corresponding known \(\color{blue}{v_{known,i}}\) enters the equation as:</p>
-<p class="tableblock"><code>= dependent</code>: no particular structure, \(\color{blue}{{h(..,\ v}_{known,i}}\),..)</p>
-<p class="tableblock">Only for floating point type unknowns \(\color{blue}{v_{\text{unknown}}}\):</p>
-<p class="tableblock"><code>=</code> <a href="#constant"><code>constant</code></a>: constant factor, \(\color{blue}{c \cdot v_{known,i}}\) where \(\color{blue}{c}\) is an expression that is evaluated before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.</p>
-<p class="tableblock">Only for floating point type unknowns \(\color{blue}{v_{\text{unknown}}}\) in Event and <strong>Continuous-Time Mode</strong> (ME) and at communication points (xCS), and not for <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> for <strong>Initialization Mode</strong>:</p>
-<p class="tableblock"><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \(\color{blue}{p \cdot v_{known,i}}\) where \(\color{blue}{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
-<p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \(\color{blue}{p \cdot v_{known,i}}\) where \(\color{blue}{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external event (ME) or at a communication point (xCS)</p>
-<p class="tableblock"><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \(\color{blue}{d \cdot v_{known,i}}\) where \(\color{blue}{d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external or internal event or at a communication point (xCS).</p></td>
+If not present, it must be assumed that the unknown \(\color{blue}{v_{\mathit{unknow}}}}\) depends on the knowns \(\color{blue}{\mathbf{v}_{\mathit{known}}}\) without a particular structure.
+Otherwise, the corresponding known \(\color{blue}{v_{\mathit{known},i}}\) enters the equation as:</p>
+<p class="tableblock"><code>= dependent</code>: no particular structure, \(\color{blue}{{h(..,\ v}_{\mathit{known},i}}\),..)</p>
+<p class="tableblock">Only for floating point type unknowns \(\color{blue}{v_{\mathit{unknown}}}\):</p>
+<p class="tableblock"><code>=</code> <a href="#constant"><code>constant</code></a>: constant factor, \(\color{blue}{c \cdot v_{\mathit{known},i}}\) where \(\color{blue}{c}\) is an expression that is evaluated before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.</p>
+<p class="tableblock">Only for floating point type unknowns \(\color{blue}{v_{\mathit{unknown}}}\) in Event and <strong>Continuous-Time Mode</strong> (ME) and at communication points (xCS), and not for <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> for <strong>Initialization Mode</strong>:</p>
+<p class="tableblock"><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \(\color{blue}{p \cdot v_{\mathit{known},i}}\) where \(\color{blue}{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
+<p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \(\color{blue}{p \cdot v_{\mathit{known},i}}\) where \(\color{blue}{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external event (ME) or at a communication point (xCS)</p>
+<p class="tableblock"><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \(\color{blue}{d \cdot v_{\mathit{known},i}}\) where \(\color{blue}{d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external or internal event or at a communication point (xCS).</p></td>
 </tr>
 </tbody>
 </table>
@@ -6760,7 +6760,7 @@ In this framework, the physical connections between subsystems are represented b
 <p>functions for the data exchange between subsystems</p>
 </li>
 <li>
-<p>functions to synchronize the simulation of all subsystems and to proceed in communication steps \(tc_i \rightarrow tc_{i+1}\) from initial time \(tc_0 := t_{start}\) to end time \(tc_N := t_{stop}\)</p>
+<p>functions to synchronize the simulation of all subsystems and to proceed in communication steps \(tc_i \rightarrow tc_{i+1}\) from initial time \(tc_0 := t_{\mathit{start}}\) to end time \(tc_N := t_{\mathit{stop}}\)</p>
 </li>
 </ol>
 </div>
@@ -6805,15 +6805,15 @@ Typical examples are:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>All calculated values are time-dependent functions within an a priori defined time interval \(t_{start} \leq t \leq t_{stop}\) (provided <code>stopTimeDefined == fmi3True</code> when calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>).</p>
+<p>All calculated values are time-dependent functions within an a priori defined time interval \(t_{\mathit{start}} \leq t \leq t_{\mathit{stop}}\) (provided <code>stopTimeDefined == fmi3True</code> when calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>).</p>
 </li>
 <li>
 <p>All simulations are carried out with increasing time in general.
-The current time \(t\) is running step by step from \(t_{start}\) to \(t_{stop}\).
-The algorithm of the slave may have the property to be able to repeat the simulation of parts of \([t_{start}, t_{stop}\)] or the whole time interval \([t_{start}, t_{stop}\)].</p>
+The current time \(t\) is running step by step from \(t_{\mathit{start}}\) to \(t_{\mathit{stop}}\).
+The algorithm of the slave may have the property to be able to repeat the simulation of parts of \([t_{\mathit{start}}, t_{\mathit{stop}}\)] or the whole time interval \([t_{\mathit{start}}, t_{\mathit{stop}}\)].</p>
 </li>
 <li>
-<p>The slave can be given a time value \(tc_i, t_{start} \leq tc_i \leq t_{stop}\).</p>
+<p>The slave can be given a time value \(tc_i, t_{\mathit{start}} \leq tc_i \leq t_{\mathit{stop}}\).</p>
 </li>
 <li>
 <p>The slave is able to interrupt the simulation when \(tc_i\) is reached.</p>
@@ -6822,7 +6822,7 @@ The algorithm of the slave may have the property to be able to repeat the simula
 <p>During the interrupted simulation, the slave (and its individual solver) can receive values for <a href="#input"><code>inputs</code></a> \(u(tc_i)\) and send values of outputs \(y(tc_i)\).</p>
 </li>
 <li>
-<p>Whenever the simulation in a slave is interrupted, a new time value \(tc_{i+1}, tc_i \leq tc_{i+1} \leq t_{stop}\), can be given to simulate the time subinterval \(tc_i &lt; t \leq tc_{i+1}\)</p>
+<p>Whenever the simulation in a slave is interrupted, a new time value \(tc_{i+1}, tc_i \leq tc_{i+1} \leq t_{\mathit{stop}}\), can be given to simulate the time subinterval \(tc_i &lt; t \leq tc_{i+1}\)</p>
 </li>
 <li>
 <p>The subinterval length \(hc_i\) is the communication step size of the \(i^{th}\) communication step, \(hc_i = tc_{i+1} - tc_i\).</p>
@@ -7512,7 +7512,7 @@ A schematic view of a model in FMI for Model Exchange format is shown in <a href
 <div class="paragraph">
 <p><strong class="blue">Blue</strong> arrows: Information provided by the FMU.<br>
 <strong class="red">Red</strong> arrows : Information provided to the FMU.<br>
-\(\mathbf{v}_{start}\), \(\mathbf{u}\), \(\mathbf{y}\), \(\mathbf{w}\), \(\mathbf{x}_d\) are of a numeric type or string;
+\(\mathbf{v}_{\mathit{start}}\), \(\mathbf{u}\), \(\mathbf{y}\), \(\mathbf{w}\), \(\mathbf{x}_d\) are of a numeric type or string;
 \(\mathbf{t}\), \(\mathbf{x}_c\), \(\mathbf{z}\) are of floating point type.</p>
 </div>
 <div class="sect2">
@@ -7548,23 +7548,23 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation below
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(t_1 &lt; t_2\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((t_{R1},t_{I1}) &lt; (t_{R2}, t_{I2})\ \Leftrightarrow \ t_{R1} &lt; t_{R2}\ \textbf{or} \ t_{R1}= t_{R2} \ \textbf{and} \ t_{I1} &lt; t_{I2}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((t_{\mathit{R1}},t_{\mathit{I1}}) &lt; (t_{\mathit{R2}}, t_{\mathit{I2}})\ \Leftrightarrow \ t_{\mathit{R1}} &lt; t_{\mathit{R2}}\ \textbf{or} \ t_{\mathit{R1}}= t_{\mathit{R2}} \ \textbf{and} \ t_{\mathit{I1}} &lt; t_{\mathit{I2}}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(t_1\) is before \(t_2\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(t_1 = t_2\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((t_{R1},t_{I1}) = (t_{R2},t_{I2}) \ \Leftrightarrow  t_{R1}= t_{R2}\ \textbf{and} \ t_{I1} = t_{I2}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((t_{\mathit{R1}},t_{\mathit{I1}}) = (t_{\mathit{R2}},t_{\mathit{I2}}) \ \Leftrightarrow  t_{\mathit{R1}}= t_{\mathit{R2}}\ \textbf{and} \ t_{\mathit{I1}} = t_{\mathit{I2}}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(t_1\) is identical to \(t_2\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(t^{+}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\({{(t}_{R},t_{I})}^{+} \Leftrightarrow (\lim_{\epsilon \rightarrow 0}{\left(t_{R} + \varepsilon \right),t_{Imax})}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\({{(t}_{R},t_{I})}^{+} \Leftrightarrow (\lim_{\mathit{\epsilon \rightarrow 0}}{\left(t_{R} + \varepsilon \right),t_{\mathit{Imax}})}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">right limit at \(t\).
-\(t_{Imax}\) is the largest occurring integer index of super-dense time</p></td>
+\(t_{\mathit{Imax}}\) is the largest occurring integer index of super-dense time</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(^-t\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(^{-}{{(t}_{R},t_{I})} \Leftrightarrow (\lim_{\epsilon \rightarrow 0}{\left( t_{R} - \varepsilon \right),0)}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(^{-}{{(t}_{R},t_{I})} \Leftrightarrow (\lim_{\mathit{\epsilon \rightarrow 0}}{\left( t_{R} - \varepsilon \right),0)}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">left limit at \(t\)</p></td>
 </tr>
 <tr>
@@ -7656,7 +7656,7 @@ Such an event is called external event.
 All the following events are internal events.</p>
 </li>
 <li>
-<p>At a predefined time instant \(t_i=(T_{next}(t_{i-1}, 0)\) that was defined at the previous event instant \(t_{i-1}\) by the FMU.
+<p>At a predefined time instant \(t_i=(T_{\mathit{next}}(t_{i-1}, 0)\) that was defined at the previous event instant \(t_{i-1}\) by the FMU.
 Such an event is called time event.</p>
 </li>
 <li>
@@ -7707,14 +7707,14 @@ Such an event is called step event.
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(v\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 A subset of the variables is selected via a subscript.
-Example: \(\mathbf{v}_{initial=exact}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).
+Example: \(\mathbf{v}_{\mathit{initial=exact}}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 These are <a href="#parameter"><code>parameters</code></a> and start values of other variables, such as initial values for <a href="#state"><code>states</code></a>, state derivatives or <a href="#output"><code>outputs</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{p}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Parameters that are constant during simulation.
 The symbol without a subscript references <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>).
-Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>) are denoted as \(\mathbf{p}_{calculated}\).</p></td>
+Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>) are denoted as \(\mathbf{p}_{\mathit{calculated}}\).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{u}(t)\)</p></td>
@@ -7758,9 +7758,9 @@ Discrete <a href="#state"><code>states</code></a> are not visible in the interfa
 Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{next}(t_{i})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">At initialization or at an event insant, an FMU can define the next time instant \(T_{next}\), at which the next event occurs (see also the definition of events above).
-Every event removes automatically a previous definition of \(T_{next}\), and it must be explicitly defined again, if a previously defined \(T_{next}\) was not triggered at the current event instant.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{next}}(t_{i})\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">At initialization or at an event insant, an FMU can define the next time instant \(T_{\mathit{next}}\), at which the next event occurs (see also the definition of events above).
+Every event removes automatically a previous definition of \(T_{\mathit{next}}\), and it must be explicitly defined again, if a previously defined \(T_{\mathit{next}}\) was not triggered at the current event instant.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{r}(t_i)\)</p></td>
@@ -7864,20 +7864,20 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations before <strong>Initialization Mode</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{initial=exact}\) and \(\mathbf{v}_{initial=approx}\)  that have a <a href="#start"><code>start</code></a> value (<a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{\mathit{initial=exact}}\) and \(\mathbf{v}_{\mathit{initial=approx}}\)  that have a <a href="#start"><code>start</code></a> value (<a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Initialization Mode</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Initialization Mode</strong> at \(t=t_0\) (activate initialization, discrete-time and continuous-time equations). Set <a href="#independent"><code>independent</code></a> variable time \(T_{R0}\) and define \(t_0 := (t_{R0},0)\)</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Initialization Mode</strong> at \(t=t_0\) (activate initialization, discrete-time and continuous-time equations). Set <a href="#independent"><code>independent</code></a> variable time \(T_{\mathit{R0}}\) and define \(t_0 := (t_{\mathit{R0}},0)\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterInitializationMode</span></code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{initial=exact}\) that have a <a href="#start"><code>start</code></a> value with
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{\mathit{initial=exact}}\) that have a <a href="#start"><code>start</code></a> value with
 <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (<a href="#parameter"><code>parameters</code></a> \(\mathbf{p}\) and
-continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><code>start</code></a> values \(\mathbf{x}_{c,initial=exact}\) are included here)</p></td>
+continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><code>start</code></a> values \(\mathbf{x}_{\mathit{c,initial=exact}}\) are included here)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
@@ -7885,7 +7885,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{v}_{initialUnknowns}:=f_{init}(\mathbf{u_c}, \mathbf{u_d}, \color{grey}t_{\color{grey} 0}, \mathbf{v}_{initial=exact}\))</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{v}_{\mathit{initialUnknowns}}:=f_{\mathit{init}}(\mathbf{u_c}, \mathbf{u_d}, \color{grey}t_{\color{grey} 0}, \mathbf{v}_{\mathit{initial=exact}}\))</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3Get{VariableType}</span></code>, <code><span class="blue">fmi3GetContinuousStates</span></code></p></td>
 </tr>
 <tr>
@@ -7896,14 +7896,14 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Event Mode</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Event Mode</strong> at \(t = t_{i}\) with \({t_{i}\ : = (t}_{R},t_{I} + 1)\) <strong>if</strong>  externalEvent <strong>or</strong> nextMode \(\equiv\) EventMode <strong>or</strong> \(t_i=(T_{next}(t_{i-1}), 0)\) <strong>or</strong>  \(\min_{t&gt;t_{i-1}} t:\left\lbrack z_{j}\left( t \right) &gt; 0\  \neq \ z_{j}\left( t_{i - 1} \right) &gt; 0 \right\rbrack\)<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Event Mode</strong> at \(t = t_{i}\) with \({t_{i}\ : = (t}_{R},t_{I} + 1)\) <strong>if</strong>  externalEvent <strong>or</strong> nextMode \(\equiv\) EventMode <strong>or</strong> \(t_i=(T_{\mathit{next}}(t_{i-1}), 0)\) <strong>or</strong>  \(\min_{t&gt;t_{i-1}} t:\left\lbrack z_{j}\left( t \right) &gt; 0\  \neq \ z_{j}\left( t_{i-1} \right) &gt; 0 \right\rbrack\)<br>
 (activate discrete-time equations)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterEventMode</span></code> <span class="lime">(only from <strong>Continuous-Time Mode</strong> or after calling</span> <code><span class="lime">fmi3SetTime</span></code>
 <span class="lime">if FMU has no continuous-time equations)</span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{tune}\)<br>
-(and do not set other <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{other}\))</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{tune}}\)<br>
+(and do not set other <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{other}}\))</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
@@ -7915,8 +7915,8 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{w}_{c+d}, \mathbf{z}, \mathbf{x}_{c, reinit})=\mathbf{f}_{sim}(\mathbf{x_c}, \mathbf{u_{c+d}}, \color{grey}t_{\color{grey} i}, \mathbf{p}_{tune}, \color{grey}{\mathbf{p}_{other})}\)</span> <br>
-\(\mathbf{f}_{sim}\)is also a function of the internal variables \({}^\bullet\mathbf{x}_d\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{w}_{c+d}, \mathbf{z}, \mathbf{x}_{c,\mathit{reinit}})=\mathbf{f}_{\mathit{sim}}(\mathbf{x_c}, \mathbf{u_{c+d}}, \color{grey}t_{\color{grey} i}, \mathbf{p}_{\mathit{tune}}, \color{grey}{\mathbf{p}_{\mathit{other}})}\)</span> <br>
+\(\mathbf{f}_{\mathit{sim}}\)is also a function of the internal variables \({}^\bullet\mathbf{x}_d\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3Get{VariableType}</span></code>,
 <code><span class="blue">fmi3GetContinuousStates</span></code>,
 <code><span class="blue">fmi3GetDerivatives</span></code>
@@ -7926,14 +7926,14 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Increment super-dense time and define with</span>
 <code><span class="lime">newDiscreteStatesNeeded</span></code> <span class="lime">whether a new event iteration is required.</span><br>
 <span class="blue">\(\qquad\)<strong>if not</strong></span> <code><span class="blue">newDiscreteStatesNeeded</span></code><span class="blue"><strong>then</strong><br>
-\(\qquad \qquad T_{next}=T_{next}(\mathbf{x}_c,{}^\bullet\mathbf{x}_d, \mathbf{u_{c+d}}, \color{grey}t_{\color{grey} i}, \mathbf{p}_{tune}, \color{grey}{\mathbf{p}_{other})}\)</span><br>
+\(\qquad \qquad T_{\mathit{next}}=T_{\mathit{next}}(\mathbf{x}_c,{}^\bullet\mathbf{x}_d, \mathbf{u_{c+d}}, \color{grey}t_{\color{grey} i}, \mathbf{p}_{\mathit{tune}}, \color{grey}{\mathbf{p}_{\mathit{other}})}\)</span><br>
 <span class="blue">\(\qquad\)<strong>end if</strong></span><br>
 <span class="blue">\(\qquad t:=t(t_R, t_i+1)\)</span><br>
 <span class="blue">\(\qquad {}^\bullet\mathbf{x}_d:=\mathbf{x}_d\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3NewDiscreteState</span></code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable time \(t_i := (T_{next},0)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable time \(t_i := (T_{\mathit{next}},0)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetTime"><code>fmi3SetTime</code></a> + (if no continuous-time equations)</p></td>
 </tr>
 <tr>
@@ -7948,7 +7948,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterContinuousTimeMode</span></code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable time \(t(&gt;t_{enter  mode}): t:=(t_R, 0)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable time \(t(&gt;t_{\mathit{enter  mode}}): t:=(t_R, 0)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetTime"><code>fmi3SetTime</code></a></p></td>
 </tr>
 <tr>
@@ -7961,8 +7961,8 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="blue">\((\mathbf{y}_{c}\mathbf{,} \color{grey}{\mathbf{y}_{d}}\mathbf{,\ }{\dot{\mathbf{x}}}_{c}\mathbf{,}_{}\mathbf{w}_{c}\mathbf{,}\color{grey}{\mathbf{w}_{d}}\mathbf{,z,}\color{grey}{\mathbf{x}_{c,reinit}}):=\mathbf{f}_{sim}(\mathbf{x}_{c},\ \mathbf{u}_{c}\mathbf{,} \color{grey}{\mathbf{\ u}_{d}}, t,\color{grey}{\mathbf{p}_{tune},\mathbf{p}_{other}})\)</span><br>
-<span class="blue">\(\qquad \mathbf{f}_{sim}\) is also a function of the internal variables</span> <span class="silver">\({}^\bullet\mathbf{x}_{d},\mathbf{r}\).</span></p>
+<p><span class="blue">\((\mathbf{y}_{c}\mathbf{,} \color{grey}{\mathbf{y}_{d}}\mathbf{,\ }{\dot{\mathbf{x}}}_{c}\mathbf{,}_{}\mathbf{w}_{c}\mathbf{,}\color{grey}{\mathbf{w}_{d}}\mathbf{,z,}\color{grey}{\mathbf{x}_{c,\mathit{reinit}}}):=\mathbf{f}_{\mathit{sim}}(\mathbf{x}_{c},\ \mathbf{u}_{c}\mathbf{,} \color{grey}{\mathbf{\ u}_{d}}, t,\color{grey}{\mathbf{p}_{\mathit{tune}},\mathbf{p}_{\mathit{other}}})\)</span><br>
+<span class="blue">\(\qquad \mathbf{f}_{\mathit{sim}}\) is also a function of the internal variables</span> <span class="silver">\({}^\bullet\mathbf{x}_{d},\mathbf{r}\).</span></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code><span class="blue">fmi3Get{VariableType},</span></code>
@@ -7980,7 +7980,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">\(t \in \mathbb{R}, \mathbf{p} \in \mathbb{P}^{np},  \mathbf{u}(t) \in \mathbb{P}^{nu},\mathbf{y}(t) \in \mathbb{P}^{ny}, \mathbf{x}_c(t) \in \mathbb{R}^{nxc}, \mathbf{x}_d(t) \in \mathbb{P}^{nxd}, \mathbf{w}(t) \in \mathbb{P}^{nw}, \mathbf{z}(t) \in \mathbb{R}^{nz}\)<br>
 \(\qquad \mathbb{R}\): floating point variable, \(\mathbb{P}\): floating point <strong>or</strong> Boolean <strong>or</strong> integer <strong>or</strong> enumeration <strong>or</strong> string variable<br>
-\(\mathbf{f}_{init}, \mathbf{f}_{sim} \in C^0\) (=continuous functions with respect to all input parameters inside the respective mode).</p></td>
+\(\mathbf{f}_{\mathit{init}}, \mathbf{f}_{\mathit{sim}} \in C^0\) (=continuous functions with respect to all input parameters inside the respective mode).</p></td>
 </tr>
 </tbody>
 </table>
@@ -7991,7 +7991,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <p><em>In the table above, for notational convenience in every mode one function call is defined to compute all output arguments from all inputs arguments.</em>
 <em>In reality, every scalar output argument is computed by one <code>fmi3Get{VariableType}</code> function call.</em>
 <em>Additionally, the output argument need not be a function of all input arguments, but of only a subset from it, as defined in the XML file under <code>&lt;ModelStructure&gt;</code>.</em>
-<em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 10</a>. For example, since</em> \(y_{2a}\) <em>depends only on</em> \(u_{1a}\) <em>, but not on</em> \(u_{1b}\)<em>, it is possible to call</em> <code>fmi3Set{VariableType}</code> <em>to set</em> \(u_{1a}\) <em>, and then inquire</em> \(y_{2a}\) <em>with</em> <code>fmi3Get{VariableType}</code> <em>without setting</em> \(u_{1b}\) <em>beforehand.</em></p>
+<em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 10</a>. For example, since</em> \(y_{\mathit{2a}}\) <em>depends only on</em> \(u_{\mathit{1a}}\) <em>, but not on</em> \(u_{\mathit{1b}}\)<em>, it is possible to call</em> <code>fmi3Set{VariableType}</code> <em>to set</em> \(u_{\mathit{1a}}\) <em>, and then inquire</em> \(y_{\mathit{2a}}\) <em>with</em> <code>fmi3Get{VariableType}</code> <em>without setting</em> \(u_{\mathit{1b}}\) <em>beforehand.</em></p>
 </div>
 <div class="paragraph">
 <p><em>It is non-trivial to provide code for <code>fmi3Set{VariableType}</code>, <code>fmi3Get{VariableType}</code>, if the environment can call</em> <code>fmi3Set{VariableType}</code> <em>on the <a href="#input"><code>inputs</code></a> in quite different orders.</em>
@@ -8144,10 +8144,10 @@ r2 = z2 &gt; 0</pre>
 <p><em>Furthermore, a hysteresis should be added for the event indicators.</em></p>
 </div>
 <div class="paragraph">
-<p>An FMU is initialized in <strong>Initialization Mode</strong> with \(\mathbf{f}_{init}(\ldots)\).
+<p>An FMU is initialized in <strong>Initialization Mode</strong> with \(\mathbf{f}_{\mathit{init}}(\ldots)\).
 The input arguments to this function consist of the <a href="#input"><code>input</code></a> variables (= variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>), of the <a href="#independent"><code>independent</code></a> variable (= variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>; usually the default value <code>time</code>), and of all variables that have a <a href="#start"><code>start</code></a> value with (explicitly or implicitly) <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> in order to compute the continuous-time <a href="#state"><code>states</code></a> and the output variables at the initial time \(t_0\).
-In the above table, the variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> are collected together in variable \(\mathbf{v}_{initial=exact}\).
-For example, initialization might be defined by providing initial <a href="#start"><code>start</code></a> values for the <a href="#state"><code>states</code></a>, \(\mathbf{x}_{c0}\), or by stating that the state derivatives are zero (\(\dot{\mathbf{x}}_{c} = \mathbf{0}\)).
+In the above table, the variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> are collected together in variable \(\mathbf{v}_{\mathit{initial=exact}}\).
+For example, initialization might be defined by providing initial <a href="#start"><code>start</code></a> values for the <a href="#state"><code>states</code></a>, \(\mathbf{x}_{\mathit{c0}}\), or by stating that the state derivatives are zero (\(\dot{\mathbf{x}}_{c} = \mathbf{0}\)).
 Initialization is a difficult topic by itself, and it is required that an FMU solves a well-defined initialization problem inside the FMU in <strong>Initialization Mode</strong>.<br>
 After calling <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, the FMU is implicitly in <strong>Event Mode</strong>, and all discrete-time and continuous-time variables at the initial time instant \((t_R, 0)\) can be calculated.
 If these variables are present in an algebraic loop, iteration can be used to compute them.
@@ -9027,14 +9027,14 @@ The communication step size is denoted as \(hc_i = tc_{i+1} - tc_i\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.8</a>).
 A subset of the variables is selected via a subscript.
 Example:<br>
-\(\mathbf{v}_{initial=exact}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, see <a href="#definition-of-model-variables">Section 2.2.8</a>.
+\(\mathbf{v}_{\mathit{initial=exact}}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, see <a href="#definition-of-model-variables">Section 2.2.8</a>.
 These are <a href="#parameter"><code>parameters</code></a> and <a href="#start"><code>start</code></a> values of other variables, such as initial values for <a href="#state"><code>states</code></a>, state derivatives or <a href="#output">outputs</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{p}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Parameters that are constant during simulation.
 The symbol without a subscript references <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>).
-Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>) are denoted as \(\mathbf{p}_{calculated}\) and <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>) are denoted as \(\mathbf{p}_{tune}\).</p></td>
+Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>) are denoted as \(\mathbf{p}_{\mathit{calculated}}\) and <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>) are denoted as \(\mathbf{p}_{\mathit{tune}}\).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{u}(tc_i)\)</p></td>
@@ -9083,11 +9083,11 @@ Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a h
 
 \begin{Bmatrix}
 
-\mathbf{x}_{i+1} = \Phi_i \left( \mathbf{x}_i \left\{ \mathbf{u}_i^{(j)} \right\}_{j=0,\cdots,m_{ido}}, \mathbf{p}_{tune,i}, hc_i  \right)
+\mathbf{x}_{i+1} = \Phi_i \left( \mathbf{x}_i \left\{ \mathbf{u}_i^{(j)} \right\}_{j=0,\cdots,m_{ido}}, \mathbf{p}_{\mathit{tune},i}, hc_i  \right)
 
 \\
 
-\left( \left\{ \mathbf{y}^{(j)}_{i+1} \right\}_{j=0,\cdots,m_{odo}}, \mathbf{w}_{i+1}\right) = \Gamma_i \left( \mathbf{x}_i, \left\{ \mathbf{u}^{(j)}_i \right\}_{j=0,\cdots,m_{ido}}, \mathbf{p}_{tune}, hc_i \right)
+\left( \left\{ \mathbf{y}^{(j)}_{i+1} \right\}_{j=0,\cdots,m_{odo}}, \mathbf{w}_{i+1}\right) = \Gamma_i \left( \mathbf{x}_i, \left\{ \mathbf{u}^{(j)}_i \right\}_{j=0,\cdots,m_{ido}}, \mathbf{p}_{\mathit{tune}}, hc_i \right)
 
 \end{Bmatrix}\]
 </div>
@@ -9102,7 +9102,7 @@ with \(tc_i = tc_0 + \sum_{k=0}^{i-1}hc_k\).</p>
 <div class="stemblock">
 <div class="content">
 \[\dot{\mathbf{x}}_c = \mathbf{\varphi} \left( \mathbf{x}_c(t), \mathbf{u}_c(t),
-\mathbf{p}_{tune} \right)\]
+\mathbf{p}_{\mathit{tune}} \right)\]
 </div>
 </div>
 <div class="paragraph">
@@ -9113,8 +9113,8 @@ with \(tc_i = tc_0 + \sum_{k=0}^{i-1}hc_k\).</p>
 \[\frac{\partial\mathbf{\Phi_i}}{\partial hc_i}
 =
 \boldsymbol{\varphi} \left( \mathbf{x}_{c,i+1},
-\sum^{m_{ido}}_{j=0} \mathbf{u}^{(j)}_{c,i} \frac{hc^j_i}{j!},
-\mathbf{p}_{tune,i}  \right)\]
+\sum^{m_{\mathit{ido}}}_{j=0} \mathbf{u}^{(j)}_{c,i} \frac{hc^j_i}{j!},
+\mathbf{p}_{\mathit{tune},i}  \right)\]
 </div>
 </div>
 <div class="paragraph">
@@ -9123,10 +9123,10 @@ with \(tc_i = tc_0 + \sum_{k=0}^{i-1}hc_k\).</p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[\mathbf{\Phi}_i \left( \mathbf{x}_{c,i}, \left\{ \mathbf{u}_{c,i}^{(j)} \right\}_{= 0,\cdots,m_{ido}},\ \mathbf{p}_{tune,i}, tc_i \right)
+\[\mathbf{\Phi}_i \left( \mathbf{x}_{c,i}, \left\{ \mathbf{u}_{c,i}^{(j)} \right\}_{j = 0,\cdots,m_{ido}},\ \mathbf{p}_{\mathit{tune},i}, tc_i \right)
 =
-\mathbf{x}_{ci} + \left( \mathbf{I} -
-hc_i \frac{\partial \mathbf{\varphi}}{\partial \mathbf{x}_c} \right)^{- 1}  hc_i \mathbf{\phi} \left( \mathbf{x}_{c,i}, \mathbf{u}_{c,i}, \mathbf{p}_{tune,i} \right) +
+\mathbf{x}_{c,i} + \left( \mathbf{I} -
+hc_i \frac{\partial \mathbf{\varphi}}{\partial \mathbf{x}_c} \right)^{- 1}  hc_i \mathbf{\phi} \left( \mathbf{x}_{c,i}, \mathbf{u}_{c,i}, \mathbf{p}_{\mathit{tune},i} \right) +
 O(hc_i^{2}).\]
 </div>
 </div>
@@ -9143,10 +9143,10 @@ O(hc_i^{2}).\]
 <div class="ulist">
 <ul>
 <li>
-<p>The current <a href="#input"><code>input</code></a> variables \(\mathbf{u}_i^{(0)}\) of the subsystem (in other words, the <a href="#input"><code>input</code></a> variables of the model contained in the slave simulator, in the sense of system-level simulation), along with some of their successive <a href="#derivative"><code>derivatives</code></a> \(\left\{ \mathbf{u}_i^{(j)} \right\}_{j=1,\cdots,m_{ido}}\) (in case of continuous-time variables), where \(m_{ido}\) stands for the model input derivative order.</p>
+<p>The current <a href="#input"><code>input</code></a> variables \(\mathbf{u}_i^{(0)}\) of the subsystem (in other words, the <a href="#input"><code>input</code></a> variables of the model contained in the slave simulator, in the sense of system-level simulation), along with some of their successive <a href="#derivative"><code>derivatives</code></a> \(\left\{ \mathbf{u}_i^{(j)} \right\}_{j=1,\cdots,m_{ido}}\) (in case of continuous-time variables), where \(m_{\mathit{ido}}\) stands for the model input derivative order.</p>
 </li>
 <li>
-<p>Varying <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{tune,i}\), also known as <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a>.</p>
+<p>Varying <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{tune},i}\), also known as <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -9245,7 +9245,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">fmi3EnterInitializationMode</span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(v_{initial=exact}\) and \(v_{initial=approx}\) that have a <a href="#start"><code>start</code></a> value with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (<a href="#parameter"><code>parameters</code></a> \(\mathbf{p}\) and continuous-time <a href="#state"><code>states</code></a> with start values \(\mathbf{x}_{c,initial=exact}\) are included here)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(v_{\mathit{initial=exact}}\) and \(v_{\mathit{initial=approx}}\) that have a <a href="#start"><code>start</code></a> value with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (<a href="#parameter"><code>parameters</code></a> \(\mathbf{p}\) and continuous-time <a href="#state"><code>states</code></a> with start values \(\mathbf{x}_{c,\mathit{initial=exact}}\) are included here)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
@@ -9253,7 +9253,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{v}_{InitialUnknowns} := \mathbf{f}_{init}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{initial=exact})\)</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{v}_{\mathit{InitialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{\mathit{initial=exact}})\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3Get{VariableType}</span></code><br>
 <code><span class="blue">fmi3GetDirectionalDerivative</span></code></p></td>
 </tr>
@@ -9265,7 +9265,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Step Mode</strong> (<code>stepComplete</code>, <code>stepInProgress</code> in state machine)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{tune}\) (and do not set other <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{other}\))</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{tune}}\) (and do not set other <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{other}}\))</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
@@ -9273,8 +9273,8 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\begin{matrix} tc_{i+1} := tc_i + hc_i \\ (\mathbf{y}_{c+d}, \mathbf{y}_c^{(j)}, \mathbf{w}_{c+d}) := \mathbf{f}_{doStep}(\mathbf{u}_{c+d}, \mathbf{u}_{c}^{(j)}, tc_i, hc_i, \mathbf{p}_{tune}, \mathbf{p}_{other})_{tc_i} \\ tc_i := tc_{i+1} \end{matrix}\)</span><br>
-<span class="blue">\(\mathbf{f}_{doStep}\) is also a function of the internal variables \(\mathbf{x}_c\), \(^{\bullet}\mathbf{x}_d\)</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\begin{matrix} tc_{i+1} := tc_i + hc_i \\ (\mathbf{y}_{c+d}, \mathbf{y}_c^{(j)}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{doStep}}(\mathbf{u}_{c+d}, \mathbf{u}_{c}^{(j)}, tc_i, hc_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})_{tc_i} \\ tc_i := tc_{i+1} \end{matrix}\)</span><br>
+<span class="blue">\(\mathbf{f}_{\mathit{doStep}}\) is also a function of the internal variables \(\mathbf{x}_c\), \(^{\bullet}\mathbf{x}_d\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3DoStep</span></code><br>
 <code>fmi3Get{VariableType}</code><br>
 <code><span class="blue">fmi3GetOutputDerivatives</span></code><br>
@@ -9286,7 +9286,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">\(t, tc, hc \in \mathbb{R}, \mathbf{p} \in \mathbb{P}^{np}, \mathbf{u}(tc) \in \mathbb{P}^{nu}, \mathbf{y}(tc) \in \mathbb{P}^{ny}, \mathbf{x}_c(t) \in \mathbb{R}^{nxc}, \mathbf{x}_d(t) \in \mathbb{P}^{nxd}, \mathbf{w}(tc) \in \mathbb{P}^{nw}\)<br>
 \(\mathbb{R}\): floating point variable, \(\mathbb{R}\): floating point or Boolean or integer or enumeration or string variable<br>
-\(\mathbf{f}_{init}, \mathbf{f}_{out} \in C^0\) (=continuous functions with respect to all input parameters inside the respective mode).</p></td>
+\(\mathbf{f}_{\mathit{init}}, \mathbf{f}_{\mathit{out}} \in C^0\) (=continuous functions with respect to all input parameters inside the respective mode).</p></td>
 </tr>
 </tbody>
 </table>
@@ -9298,8 +9298,8 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <em>In reality, every variable output argument is computed by one</em> <code>fmi3Get{VariableType}</code> <em>function call.</em></p>
 </div>
 <div class="paragraph">
-<p><em>In <strong>Step Mode</strong> the input arguments to</em> \(\mathbf{f}_{doStep}\) <em>are defined by calls to</em> <code>fmi3Set{VariableType}</code> <em>functions.</em>
-<em>The variables computed by</em> \(\mathbf{f}_{doStep}\) <em>can be inquired by</em>  <code>fmi3Get{VariableType}</code> <em>function calls.]</em></p>
+<p><em>In <strong>Step Mode</strong> the input arguments to</em> \(\mathbf{f}_{\mathit{doStep}}\) <em>are defined by calls to</em> <code>fmi3Set{VariableType}</code> <em>functions.</em>
+<em>The variables computed by</em> \(\mathbf{f}_{\mathit{doStep}}\) <em>can be inquired by</em>  <code>fmi3Get{VariableType}</code> <em>function calls.]</em></p>
 </div>
 </div>
 <div class="sect3">
