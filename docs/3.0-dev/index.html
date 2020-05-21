@@ -7483,13 +7483,56 @@ The default is <code>false</code>.</p>
 <div class="listingblock">
 <div class="title">A minimal build configuration</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">include::examples/simple_build_configuration.xml</code></pre>
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;fmiBuildDescription fmiVersion="3.0-alpha.4"&gt;
+
+  &lt;BuildConfiguration modelIdentifier="PIDContoller"&gt;
+    &lt;SourceFileSet&gt;
+      &lt;SourceFile name="all.c"/&gt;
+    &lt;/SourceFileSet&gt;
+  &lt;/BuildConfiguration&gt;
+
+&lt;/fmiBuildDescription&gt;</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Multiple complex build configurations</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">include::examples/complex_build_configuration.xml</code></pre>
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;fmiBuildDescription fmiVersion="3.0-alpha.4"&gt;
+
+  &lt;BuildConfiguration modelIdentifier="PlantModel" description="Build configuration for desktop platforms"&gt;
+    &lt;SourceFileSet language="C99"&gt;
+      &lt;SourceFile name="fmi3Functions.c"/&gt;
+      &lt;SourceFile name="solver.c"/&gt;
+    &lt;/SourceFileSet&gt;
+    &lt;SourceFileSet language="C++11"&gt;
+      &lt;SourceFile name="model.c"/&gt;
+      &lt;SourceFile name="logging/src/logger.c"/&gt;
+      &lt;PreprocessorDefinition name="FMI_VERSION" value="3"/&gt;
+      &lt;PreprocessorDefinition name="LOG_TO_FILE" optional="true"/&gt;
+      &lt;PreprocessorDefinition name="LOG_LEVEL" value="0" optional="true"&gt;
+        &lt;Option value="0" description="Log infos, warnings and errors"/&gt;
+        &lt;Option value="1" description="Log warnings and errors"/&gt;
+        &lt;Option value="2" description="Log only errors"/&gt;
+      &lt;/PreprocessorDefinition&gt;
+      &lt;IncludeDirectory name="logging/include"/&gt;
+    &lt;/SourceFileSet&gt;
+    &lt;Library name="hdf5" version="&amp;gt;=1.8,!=1.8.17,&amp;lt;1.10" external="true" description="HDF5"/&gt;
+  &lt;/BuildConfiguration&gt;
+
+  &lt;BuildConfiguration modelIdentifier="PlantModel" platform="aarch64-linux"&gt;
+    &lt;SourceFileSet language="C99"&gt;
+      &lt;SourceFile name="fmi3Functions.c"/&gt;
+    &lt;/SourceFileSet&gt;
+    &lt;SourceFileSet language="C++11" compiler="clang++" compilerOptions="-fno-rtti"&gt;
+      &lt;SourceFile name="model.c"/&gt;
+      &lt;PreprocessorDefinition name="NO_FILE_SYSTEM"/&gt;
+    &lt;/SourceFileSet&gt;
+    &lt;Library name="libm.a" description="OpenLibm math library"/&gt;
+  &lt;/BuildConfiguration&gt;
+
+&lt;/fmiBuildDescription&gt;</code></pre>
 </div>
 </div>
 </div>
