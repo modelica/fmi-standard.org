@@ -6840,7 +6840,7 @@ In this framework, the physical connections between subsystems are represented b
 </ol>
 </div>
 <div class="paragraph">
-<p>In FMI for Co-Simulation, both functions are implemented in one software component, the Co-Simulation master.
+<p>In FMI for Co-Simulation, both groups of functions are implemented in one software component, the Co-Simulation master.
 The data exchange between the subsystems (slaves) is handled via the master only.
 There is no direct communication between the slaves.
 The master functionality can be implemented by a special software tool (a separate simulation backplane) or by one of the involved simulation tools.
@@ -7770,8 +7770,10 @@ is a continuous function of time inside each interval \(t_i^+ &lt; \ ^-t_{i+1}\)
 Such an event is called external event.
 <em>[Note that if an FMU A is connected to an FMU B, and an event is triggered for A, then potentially all <a href="#output"><code>outputs</code></a> of A will be discontinuous at this time instant.</em>
 <em>It is therefore adviceable to trigger an external event for B at this time instant too, if an <a href="#output"><code>output</code></a> of A is connected to B.</em>
-<em>This means to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> on B.]</em><br>
-All the following events are internal events.</p>
+<em>This means to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> on B.]</em><br></p>
+<div class="paragraph">
+<p>All the following events are internal events:</p>
+</div>
 </li>
 <li>
 <p>At a predefined time instant \(t_i=(T_{\mathit{next}}(t_{i-1}, 0)\) that was defined at the previous event instant \(t_{i-1}\) by the FMU.
@@ -7900,7 +7902,7 @@ The phases can be categorized according to the following modes:</p>
 <div class="sect4">
 <h5 id="_initialization_mode">3.1.2.1. Initialization Mode</h5>
 <div class="paragraph">
-<p>This mode is used to compute at the start time stem[t_0] initial values for continuous-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_c(t_0)\), and for the previous (internal) discrete-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_d(t_0)\), by utilizing extra equations not present in the other modes (for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state"><code>state</code></a> or for the derivative of a <a href="#state"><code>state</code></a>).</p>
+<p>This mode is used to compute at the start time \(t_0\) initial values for continuous-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_c(t_0)\), and for the previous (internal) discrete-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_d(t_0)\), by utilizing extra equations not present in the other modes (for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state"><code>state</code></a> or for the derivative of a <a href="#state"><code>state</code></a>).</p>
 </div>
 </div>
 <div class="sect4">
@@ -8200,9 +8202,9 @@ y2 := w2</pre>
 <p><em>Remark 3 - Event Indicators / Freezing Relations:</em></p>
 </div>
 <div class="paragraph">
-<p><em>In the above table, vector</em> <strong>r</strong> <em>is used to collect all relations together that are utilized in the event indicators</em> <strong>z</strong> <em>.
-_In <strong>Continuous-Time Mode</strong> all these relations are <code>frozen</code> and do not change during the evaluations in the respective mode.</em>
-<em>This is indicated in the table above by computing</em> <strong>r</strong> <em>when entering the <strong>Continuous-Time Mode</strong> and providing</em> <strong>r</strong> <em>as (internal) input argument to the evaluation functions.</em>
+<p><em>In the above table, vector</em> \(\mathbf{r}\) <em>is used to collect all relations together that are utilized in the event indicators</em> \(\mathbf{z}\) <em>.</em>
+<em>In <strong>Continuous-Time Mode</strong> all these relations are <code>frozen</code> and do not change during the evaluations in the respective mode.</em>
+<em>This is indicated in the table above by computing</em> \(\mathbf{r}\) <em>when entering the <strong>Continuous-Time Mode</strong> and providing</em> \(\mathbf{r}\) <em>as (internal) input argument to the evaluation functions.</em>
 <em>Example:</em></p>
 </div>
 <div class="paragraph">
@@ -8259,7 +8261,7 @@ r2 = z2 &gt; 0</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><em>Furthermore, a hysteresis should be added for the event indicators.</em></p>
+<p><em>Furthermore, a hysteresis should be added for the event indicators.]</em></p>
 </div>
 <div class="paragraph">
 <p>An FMU is initialized in <strong>Initialization Mode</strong> with \(\mathbf{f}_{\mathit{init}}(\ldots)\).
@@ -8670,7 +8672,7 @@ When the <strong>Initialization Mode</strong> is terminated with <a href="#fmi3E
 <div class="paragraph">
 <p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
 This state is entered from state <strong>Event Mode</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Event Mode</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.
-<a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> can only be called if the FMU contains at least one <a href="#structuralParameter"><code>structural parameter</code></a></p>
+<a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> can only be called if the FMU contains at least one <a href="#structuralParameter"><code>structural parameter</code></a>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -9008,10 +9010,8 @@ If this is the case, then flag <code>canGetAndSetFMUState</code> must be <code>t
 </tbody>
 </table>
 <div class="paragraph">
-<p>The flags have the following default values.</p>
-</div>
-<div class="paragraph">
-<p>boolean: <code>false</code><br>
+<p>The flags have the following default values:<br>
+boolean: <code>false</code><br>
 unsignedInt: 0</p>
 </div>
 </div>
@@ -9102,7 +9102,7 @@ It is designed both for coupling with subsystem models, which have been exported
 <p>This section contains a formal mathematical model of Co-Simulation FMUs.</p>
 </div>
 <div class="paragraph">
-<p>_[The following fundamental assumptions are made:</p>
+<p><em>[The following fundamental assumptions are made:</em></p>
 </div>
 <div class="paragraph">
 <p><em>The slave simulators are seen by the master simulator as purely sampled-data systems.</em></p>
@@ -10142,7 +10142,7 @@ The accessible variables are marked with attribute <a href="#intermediateAccess"
 </tbody>
 </table>
 <div class="paragraph">
-<p>The flags have the following default values.<br>
+<p>The flags have the following default values:<br>
 boolean: <code>false</code><br>
 unsignedInt: <code>0</code><br></p>
 </div>
@@ -10858,7 +10858,7 @@ In case of <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3
 <p>It is recommended to call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for setting and retrieving variable values associated to a <a href="#clock"><code>clock</code></a> activation.</p>
 </div>
 </dd>
-<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Set{VariableType}</a></dt>
+<dt class="hdlist1"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
 <p>Is called before the start of the computation of a model partition (i.e. before call of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>inputClock</code></a> assigned to the model partition.</p>
 <div class="paragraph">
@@ -10870,7 +10870,7 @@ In case the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the
 In case the function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> the master must wait until all other tasks related to the computation of the model partitions of this FMU have ended, but new tasks must not be started (e.g. related to <a href="#outputClock"><code>outputClock</code></a> ticks) and all other function calls for this FMU must also return <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> until the state <strong>Terminated</strong> is reached.</p>
 </div>
 </dd>
-<dt class="hdlist1"><a href="#get-and-set-variable-values">fmi3Get{VariableType}</a>, <code>fmi3GetOutputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>`</dt>
+<dt class="hdlist1"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</a></code>, <code>fmi3GetOutputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>`</dt>
 <dd>
 <p>Is called after the end of the computation of a model partition (i.e. after return of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>inputClock</code></a> assigned to the model partition.</p>
 <div class="paragraph">
