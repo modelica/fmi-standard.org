@@ -6,7 +6,7 @@ layout: default
 
 ## Purpose of the Modelica Association Project Functional Mockup Interface
 
-Development and promotion of the Functional Mock-up Interface (FMI) standard. The intention is to simplify the creation, storage, exchange and (re-) use of dynamic system models of different simluation systems for model/software/hardware-in-the-loop simulation, for cyber physical systems, and other applications.
+Development and promotion of the Functional Mock-up Interface (FMI) standard. The intention is to simplify the creation, storage, exchange and (re-) use of dynamic system models of different simulation systems for model/software/hardware-in-the-loop simulation, for cyber physical systems, and other applications.
 
 The FMI specifications are published under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode) (Creative Common Attribution-ShareAlike 4.0 International) license.
 Source code, such as C-header and XML-schema files, that accompany the specification documents, are provided under the [2-Clause BSD License](https://www.opensource.org/licenses/bsd-license.html).
