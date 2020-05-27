@@ -6848,7 +6848,7 @@ In its most general form, the coupled system may be simulated in nested co-simul
 </div>
 <div class="paragraph">
 <p>FMI for Co-Simulation defines interface routines for the communication between the master and all slaves (subsystems) in a co-simulation environment.
-The most common master algorithm stops at each communication point \(tc_i\) the simulation (time integration) of all slaves, collects the outputs \(y(tc_i)\) from all subsystems, evaluates the subsystem inputs \(u(tc_i)\), distributes these subsystem inputs to the slaves and continues the (co-)simulation with the next communication step \(tc_i \rightarrow tc_{i+1} = tc_i + hc\) with fixed communication step size \(hc\).
+The most common master algorithm stops at each communication point \(tc_i\) the simulation (time integration) of all slaves, collects the outputs \(y(tc_i)\) from all subsystems, determines the subsystem inputs \(u(tc_i)\), distributes these subsystem inputs to the slaves and continues the (co-)simulation with the next communication step \(tc_i \rightarrow tc_{i+1} = tc_i + hc\) with fixed communication step size \(hc\).
 In each slave, an appropriate solver is used to integrate one of the subsystems for a given communication step \(tc_i \rightarrow tc_{i+1}\).
 The most simple co-simulation algorithms approximate the (unknown) subsystem inputs \(u(t), (t &gt; tc_i))\) by frozen data \(u(tc_i)\) for \(tc_i \leq t &lt; tc_{i+1}\).
 FMI for Co-Simulation supports this classical brute force approach as well as more sophisticated master algorithms.
@@ -6867,7 +6867,7 @@ Typical examples are:</p>
 <p>the ability to repeat a rejected communication step \(tc_i \rightarrow tc_{i+1}\) with reduced communication step size,</p>
 </li>
 <li>
-<p>the ability to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> w.r.t. time, to allow interpolation (<a href="#transfer-of-input-output-and-parameters">Section 4.2.1</a>),</p>
+<p>the ability to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> w.r.t. time, to allow input approximation (<a href="#transfer-of-input-output-and-parameters">Section 4.2.1</a>),</p>
 </li>
 <li>
 <p>or the ability to provide Jacobians.</p>
@@ -7016,7 +7016,7 @@ The described multi-mode support is based on wrapping functionality into the <a 
 <div class="title">Figure 4. Co-Simulation with tool coupling on a single computer (for simplicity shown for one slave only).</div>
 </div>
 <div class="paragraph">
-<p>In the tool coupling case (<a href="#figure-co-simulation-with-tool-coupling">Figure 4</a>) the FMU implementation wraps the FMI function calls to API calls which are provided by the simulation tool (for example, a COM or CORBA API).
+<p>In the tool coupling case (<a href="#figure-co-simulation-with-tool-coupling">Figure 4</a>) the FMU implementation wraps the FMI function calls to API calls which are provided by the simulation tool (for example, a COM, CORBA or DCP API).
 Additionally to the FMU, the simulation tool is needed to run a co-simulation.</p>
 </div>
 <div class="paragraph">
@@ -7071,7 +7071,7 @@ To exploit such efficiency gains, the Co-Simulation master can command the FMU t
 </div>
 <div class="paragraph">
 <p>Early return is even helpful if the FMU or the Co-Simulation master do not support the advanced handling of events based on the <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a> functionalities.
-In this way, multiple event types and also <a href="#outputClock"><code>outputClock</code></a> ticks or interrupts can be supported based on the early-return functionality and additional functionalities provided by <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a>.</p>
+Multiple event types and also <a href="#outputClock"><code>outputClock</code></a> ticks or interrupts can be supported based on the early-return functionality and additional functionalities provided by <a href="#hybrid-co-simulation-api">Hybrid Co-Simulation</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -11705,6 +11705,10 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A simulator can include one or more <em>simulation programs</em>, which solve a common simulation task.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>simulator coupling</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <em>tool coupling</em>.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>singular solution</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
@@ -11753,6 +11757,10 @@ This definition is slightly different from the usual standard definition of stat
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>tick relationshipt</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> that is defined by a predefined time instant. Since the time instant is known in advance, the integrator can select its step size so that the event point is directly reached. Therefore, this event can be handled efficiently.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>tool coupling</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>user interface</em></p></td>
