@@ -759,6 +759,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_event_mode">3.1.2.3. Event Mode</a></li>
 </ul>
 </li>
+<li><a href="#_model_evaluations_dependencies_and_call_sequence">3.1.3. Model evaluations, dependencies and call sequence</a></li>
 </ul>
 </li>
 <li><a href="#_application_programming_interface">3.2. Application Programming Interface</a>
@@ -7761,7 +7762,7 @@ is a continuous function of time inside each interval \(t_i^+ &lt; \ ^-t_{i+1}\)
 <div class="title">Figure 8. Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
 </div>
 <div class="paragraph">
-<p>An event instant \(t_i\) is defined by one of the following conditions that give the smallest time instant:</p>
+<p>The next event instance t_i is defined by the earliest occurance of one of the following conditions:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -7920,6 +7921,10 @@ This is performed by solving algebraic equations consisting of all continuous-ti
 In FMI 2.0 there is no mechanism that the FMU can provide the information whether a discrete-time variable is active or is not active (is not computed) at an event instant.
 Therefore, the environment has to assume that at an event instant always all discrete-time variables are computed, although internally in the FMU only a subset might be newly computed.</p>
 </div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_model_evaluations_dependencies_and_call_sequence">3.1.3. Model evaluations, dependencies and call sequence</h4>
 <div class="paragraph">
 <p>When connecting FMUs together, loop structures can occur that lead to particular difficulties because linear or non-linear algebraic systems of equations in floating point variables but also in Boolean or Integer variables might be present.
 In order to solve such systems of equations over FMUs efficiently, the dependency information is needed stating, for example, which <a href="#output"><code>outputs</code></a> depend directly on <a href="#input"><code>inputs</code></a>.
@@ -8109,12 +8114,12 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 </div>
 <div class="paragraph">
 <p><em>In the table above, for notational convenience in every mode one function call is defined to compute all output arguments from all inputs arguments.</em>
-<em>In reality, every scalar output argument is computed by one <code>fmi3Get{VariableType}</code> function call.</em>
+<em>In reality, every scalar output argument can be computed by one <code>fmi3Get{VariableType}</code> function call.</em>
 <em>Additionally, the output argument need not be a function of all input arguments, but of only a subset from it, as defined in the XML file under <code>&lt;ModelStructure&gt;</code>.</em>
 <em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 10</a>. For example, since</em> \(y_{\mathit{2a}}\) <em>depends only on</em> \(u_{\mathit{1a}}\) <em>, but not on</em> \(u_{\mathit{1b}}\)<em>, it is possible to call</em> <code>fmi3Set{VariableType}</code> <em>to set</em> \(u_{\mathit{1a}}\) <em>, and then inquire</em> \(y_{\mathit{2a}}\) <em>with</em> <code>fmi3Get{VariableType}</code> <em>without setting</em> \(u_{\mathit{1b}}\) <em>beforehand.</em></p>
 </div>
 <div class="paragraph">
-<p><em>It is non-trivial to provide code for <code>fmi3Set{VariableType}</code>, <code>fmi3Get{VariableType}</code>, if the environment can call</em> <code>fmi3Set{VariableType}</code> <em>on the <a href="#input"><code>inputs</code></a> in quite different orders.</em>
+<p><em>It is non-trivial to provide code for <code>fmi3Set{VariableType}</code>, <code>fmi3Get{VariableType}</code>, if the environment can call <code>fmi3Set{VariableType}</code> on the <a href="#input"><code>inputs</code></a> in quite different orders.</em>
 <em>A simple remedy is to provide the dependency information, not according to the real functional dependency, but according to the sorted equations in the generated code.</em>
 <em>Example:</em></p>
 </div>
@@ -8294,7 +8299,6 @@ This technique is discussed in detail in <a href="#providing-independent-variabl
 <em>With the C functions in the right column of the table above, the internal function is called in such a way that only the minimum needed equations are evaluated.</em>
 <em>Hereby, variable values calculated from previous calls can be reused.</em>
 <em>This technique is called "caching" and can significantly enhance the simulation efficiency of real-world models.]</em></p>
-</div>
 </div>
 </div>
 </div>
@@ -11532,6 +11536,10 @@ TODO: FMU also goes by "slave". When "slave" is used, the intent is to focus on 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>hybrid co-simulation</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>impure function</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>independent variable</em></p></td>
