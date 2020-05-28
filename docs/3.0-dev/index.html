@@ -1904,14 +1904,25 @@ The following schemes must be understood by the FMU:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Mandatory&#8201;&#8212;&#8201;<code>file</code> with absolute path (either including or omitting the authority component);</p>
+<p>Mandatory&#8201;&#8212;&#8201;<code>file</code> with absolute path (either including or omitting the authority component);<br></p>
 </li>
 <li>
 <p>Optional&#8201;&#8212;&#8201;<code>http</code>, <code>https</code>, <code>ftp</code>.</p>
-<div class="paragraph">
-<p><em>[Example: An FMU is unzipped in directory <code>C:\temp\MyFMU</code>, then <code>resourceLocation</code> = <code><a href="file:///C:/temp/MyFMU/resources" class="bare">file:///C:/temp/MyFMU/resources</a></code> or <code>file:/C:/temp/MyFMU/resources</code>.</em>
-<em>The <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> functions are then able to read all needed resources from this directory, for example maps or tables used by the FMU.]</em></p>
+</li>
+</ul>
 </div>
+<div class="paragraph">
+<p><em>[Example: An FMU is unzipped in directory <code>C:\temp\MyFMU</code>, then <code>resourceLocation</code> = <code><a href="file:///C:/temp/MyFMU/resources" class="bare">file:///C:/temp/MyFMU/resources</a></code> or <code>file:/C:/temp/MyFMU/resources</code>.</em><br>
+<em>The <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> functions are then able to read all needed resources from this directory, for example maps or tables used by the FMU.]</em><br>
+A NULL pointer is supplied for <code>resourceLocation</code>, if no resource location can be provided to the FMU, which may occur</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>if the FMU does not contain a resources folder, or</p>
+</li>
+<li>
+<p>if the environment is not able to provide an URI to the resources folder <em>[e.g., if the environment does not have a file system. If the FMU in such a case cannot be sinmulated, as it depends on the resources folder, it shall terminate with an error.]</em></p>
 </li>
 </ul>
 </div>
@@ -6485,12 +6496,12 @@ binaries                      // directory containing the binaries (optional)
    // folder are recommended to be unpacked at the same location as the binary
    // &lt; modelIdentifier &gt;.* is unpacked. If not it is likely that, if the FMU
    // has dependencies on those items, it will not be able to find them.
-resources                     // resources needed by the FMU
+resources                     // resources used by the FMU (optional)
    // data in FMU specific files which will be read during initialization;
    // also more folders can be added under resources (tool/model specific).
    // In order for the FMU to access these resource files, the resource directory
-   // must be available in unzipped form and the absolute path to this directory
-   // must be reported via argument "resourceLocation" of fmi3InstantiateXXX.
+   // shall be available in unzipped form and the absolute path to this directory
+   // should be reported via argument "resourceLocation" of fmi3InstantiateXXX.
 extra                         // Additional (meta-)data of the FMU (optional)
    // additional (meta-)data that is supposed to travel with the FMU;
    // see below for structure and content definition.</pre>
@@ -6785,10 +6796,10 @@ All source file names that need to be defined in a compiler directive have to be
 <div class="sect3">
 <h4 id="resources-directory">2.3.5. Resources directory</h4>
 <div class="paragraph">
-<p>In the mandatory directory <code>resources</code>, additional data can be provided in FMU specific formats, typically for tables and maps used in the FMU.
+<p>In the optional directory <code>resources</code>, additional data can be provided in FMU specific formats, typically for tables and maps used in the FMU.
 This data must be read into the model at the latest during initialization (that is, before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called).
 The actual file names in the ZIP file to access the data files can either be hard-coded in the generated FMU functions, or the file names can be provided as string arguments via the <code>fmi3SetString</code> function.
-<em>[Note that the absolute file name of the resource directory is provided by the initialization functions.]</em>
+<em>[Note that an URI pointing to the resources directory is provided by the initialization functions. If the environment is not able to do so, a NULL pointer will be provided instead, and the FMU can react with an error, if it requires access to the content of the resources folder.]</em>
 In the case of an FMU implementation of <code>needsExecutionTool = true</code> type, the <code>resources</code> directory can contain the model file in the tool specific file format.</p>
 </div>
 </div>
