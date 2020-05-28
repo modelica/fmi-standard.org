@@ -10314,8 +10314,7 @@ Note that, since output events time instants are not known in advance, at output
 <div class="paragraph">
 <p>The <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback described in <a href="#intermediate-variable-access">Section 2.4.3</a> is also used in order to communicate the <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a> and, in particular, the event and <a href="#clock"><code>clock</code></a> time from the FMU to the Co-Simulation master.
 The <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback allows internal events (e.g. associated to <a href="#outputClock"><code>outputClock</code></a> ticks) to be signaled from an FMU to the Co-Simulation master.
-If the interface type is Hybrid Co-Simulation, the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback must be defined in the instantiate function.
-In other cases a null pointer can be assigned to the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback, for instance when the interface type is Model Exchange.</p>
+For the interface type Hybrid Co-Simulation, the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback must be defined in the instantiate function, i.e. NULL is not allowed.</p>
 </div>
 <div class="paragraph">
 <p>The arguments of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> are used to signal <a href="#outputClock"><code>outputClock</code></a> ticks and internal events to the master.
@@ -10338,7 +10337,7 @@ See <a href="#intermediate-variable-access">Section 2.4.3</a> for details of the
 </div>
 <div class="paragraph">
 <p>Only the first discontinuity event at a Newtonian time instant shall be signaled using this function.
-There may be an event iteration in <strong>Event Mode</strong> at a Newtonian time instant and have super-dense time instants.</p>
+There may be an event iteration in <strong>Event Mode</strong> at a Newtonian time instant causing super-dense time instants.</p>
 </div>
 <div class="paragraph">
 <p>Based on the information provided by <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, additional information about the discontinuity at that time instant can be obtained by the master from the FMU by calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> and <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.</p>
@@ -10374,7 +10373,7 @@ In order to start event handling the Co-Simulation master has to call <a href="#
 In this mode the Co-Simulation master is supposed to catch all events through the <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> function.</p>
 </div>
 <div class="paragraph">
-<p>If the early-return request of the Co-Simulation master is ignored by the FMU, then <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#earlyReturn"><code>earlyReturn == fmi3False</code></a>.
+<p>If an early-return request of the Co-Simulation master is ignored by the FMU, then <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#earlyReturn"><code>earlyReturn == fmi3False</code></a>.
 The master can start a resynchronization of FMUs at an event time, if the <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> has passed the event time, the master can roll-back the FMU and repeat the step with a suitable <a href="#communicationStepSize"><code>communicationStepSize</code></a> (if the FMU supports the roll-back).</p>
 </div>
 <div class="paragraph">
@@ -10403,20 +10402,18 @@ This is the case when the model can report in advance the accurate time of the n
 <p>In <strong>Event Mode</strong> it is allowed to call <code>fmi3Get{VariableType}</code> after <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> has been called and it is allowed to call <code>fmi3Set{VariableType}</code> before calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.
 The FMU leaves <strong>Event Mode</strong> when the master calls <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>.</p>
 </div>
-<div class="paragraph">
-<p>It is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for an FMU with interface type Basic Co-Simulation and Scheduled Co-Simulation.</p>
-</div>
 </div>
 <div class="sect3">
 <h4 id="api-clocked-co-simulation">5.2.3. Co-Simulation with Clock Support in Hybrid Co-Simulation</h4>
 <div class="paragraph">
 <p>In this section, signaling and retrieving <a href="#clock"><code>clock</code></a> ticks as well as the interface for supporting <a href="#clock"><code>clocks</code></a> in FMI for Co-Simulation will be discussed.
 If an FMU for Co-Simulation declares <a href="#clock"><code>clocks</code></a> and clocked variables in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file, it supports <a href="#clock"><code>clocks</code></a>.
-The Co-Simulation master should indicate the FMU that the master has recognized the <a href="#clock"><code>clock</code></a> capabilities of the FMU and supports the <a href="#clock"><code>clock</code></a> handling by calling the Hybrid Co-Simulation interface instantiation function <a href="#fmi3InstantiateHybridCoSimulation"><code>fmi3InstantiateHybridCoSimulation</code></a>.
 Note, even if no <a href="#clock"><code>clock</code></a> is defined by an FMU in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>, the master can instantiate a Hybrid Co-Simulation FMU to be able to use early return with event handling in <strong>Event Mode</strong>.</p>
 </div>
 <div class="paragraph">
-<p>If an FMU provides <a href="#clock"><code>clocks</code></a>, but the Co-Simulation master does not support or does not want to support early-return or <a href="#clock"><code>clocks</code></a>, by setting the interface to Hybrid Co-Simulation, the activation of model partitions inside of the FMU has to be handled internally within <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
+<p>If an FMU provides <a href="#clock"><code>clocks</code></a> and the Co-Simulation master is using the interface type Hybrid Co-Simulation, the Co-Simulation master must handle these <a href="#clock"><code>clocks</code></a> and early return requests by the FMU.
+If the Co-Simulation master does not support or does not want to support early-return or <a href="#clock"><code>clocks</code></a>, it must set the interface type to Basic Co-Simulation if supported by the FMU.
+If the FMU provides the Basic Co-Simulation interface type and is instantiated with it, the FMU must internally handle all events during <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Remark: Wrapping towards other Co-Simulation interfaces can influence the simulation results.</em>
@@ -11638,6 +11635,10 @@ The computation of model partitions can be externally controlled based on <a hre
 Nevertheless, it is assumed that the activation of all exposed <a href="#inputClock"><code>input clocks</code></a> results in the computation of the complete FMU.</p>
 <p class="tableblock">As stated above, continuous parts of the FMU are also associated to model partitions that define the sampling points (i.e. communication points) for the <a href="#continuous"><code>continuous</code></a> values.
 Please note that this is only possible for <code>CommunicationPointClocks</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Newtonian time instant</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>non-linear system</em></p></td>
