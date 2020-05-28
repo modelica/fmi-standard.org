@@ -10795,10 +10795,10 @@ A <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code><
 Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>) for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>If required, the FMU can internally derive the <a href="#clock"><code>clock</code></a> interval \(\Delta T_i\) based on the last <a href="#clock"><code>clock</code></a> tick time \(t_{i-1}\) i.e. last activationTime for this <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).</p>
+<p>If required, the FMU can internally derive the <a href="#clock"><code>clock</code></a> interval \(\Delta T_i\) based on the last <a href="#clock"><code>clock</code></a> tick time \(t_{i-1}\) i.e. last <code>activationTime</code> for this <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).</p>
 </div>
 <div class="paragraph">
-<p>It is not allowed to call <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#clock"><code>clock</code></a> variable and element index into that for arrays) more than once for the same activationTime \(t_i\).</p>
+<p>Consecutive calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#clock"><code>clock</code></a> variable and element index into that for arrays) must have strictly monotonically increasing <code>activationTime</code> \(t_i\).</p>
 </div>
 </div>
 <div class="sect3">
