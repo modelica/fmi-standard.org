@@ -3127,7 +3127,7 @@ Each state derivative variable listed as elements <code>&lt;ModelStructure&gt;&l
 </div>
 <div class="paragraph">
 <p>Both functions can also be used to construct the partial derivative matrices.
-The functions may only be called if their availability is indicated by the attributes <code>providesDirectionalDerivative</code> and <code>providesAdjointDerivative</code> respectively.</p>
+The functions may only be called if their availability is indicated by the attributes <code>providesDirectionalDerivatives</code> and <code>providesAdjointDerivatives</code> respectively.</p>
 </div>
 <div id="fmi3GetDirectionalDerivative" class="listingblock">
 <div class="content">
@@ -6011,7 +6011,7 @@ The functional dependency is defined as (dependencies of variables that are fixe
 <p class="tableblock">The corresponding continuous-time <a href="#state"><code>states</code></a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding variable state derivative element.
 <em>[Note that higher order derivatives must be mapped to first order derivatives but the mapping definition can be preserved due to attribute <a href="#derivative"><code>derivative</code></a>.</em>
 <em>Example: if</em> \({\frac{\text{ds}}{\text{dt}} = v,\ \frac{\text{dv}}{\text{dt}} =f(..)}\) <em>,then</em> \({\left\{ v,\ \frac{\text{dv}}{\text{dt}} \right\}}\) <em>is the vector of state derivatives and attribute <a href="#derivative"><code>derivative</code></a> of</em> \({v}\) <em>references</em> \({s}\) <em>, and attribute <a href="#derivative"><code>derivative</code></a> of</em> \({\frac{\text{dv}}{\text{dt}}}\) <em>references</em> \({v}\) <em>.]</em><br>
-For Co-Simulation, elements <code>&lt;Derivative&gt;</code> are ignored if capability flag <code>providesDirectionalDerivative</code> has a value of <code>false</code>, in other words, it cannot be computed.
+For Co-Simulation, elements <code>&lt;Derivative&gt;</code> are ignored if capability flag <code>providesDirectionalDerivatives</code> has a value of <code>false</code>, in other words, it cannot be computed.
 <em>[This is the default.</em>
 <em>If an FMU supports more than Model Exchange , then the <code>&lt;Derivative&gt;</code> elements might be present, since it is needed for Model Exchange.</em>
 <em>If the above flag is set to <code>false</code> for the Co-Simulation cases, then the <code>&lt;Derivative&gt;</code> elements are ignored for Co-Simulation.</em>
@@ -6090,7 +6090,7 @@ If an <a href="#independent"><code>independent</code></a> variable is not explic
 <p class="tableblock">- variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> <em>[for example, <a href="#parameter"><code>parameters</code></a> or initial <a href="#state"><code>states</code></a>]</em></p>
 <p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).
 If an <a href="#independent"><code>independent</code></a> variable is not explicitly defined under variables, it is assumed that the unknown depends explicitly on the <a href="#independent"><code>independent</code></a> variable.</p>
-<p class="tableblock">For Co-Simulation, if the capability flag <code>providesDirectionalDerivative</code> has a value of <code>false</code>, then <a href="#dependencies"><code>dependencies</code></a> does not list the dependency on continuous-time.
+<p class="tableblock">For Co-Simulation, if the capability flag <code>providesDirectionalDerivatives</code> has a value of <code>false</code>, then <a href="#dependencies"><code>dependencies</code></a> does not list the dependency on continuous-time.
 In other words, the respective partial derivatives cannot be computed.</p></td>
 </tr>
 <tr>
@@ -9015,8 +9015,8 @@ That is, functions <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, 
 If this is the case, then flag <code>canGetAndSetFMUState</code> must be <code>true</code> as well.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesDirectionalDerivative</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the directional derivative of the equations can be computed with <code>fmi3GetDirectionalDerivative</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesDirectionalDerivatives</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the directional derivative of the equations can be computed with <code>fmi3GetDirectionalDerivative</code>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -10120,8 +10120,12 @@ That is, <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#
 If this is the case, then flag <code>canGetAndSetFMUState</code> must be <code>true</code> as well.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesDirectionalDerivative</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesDirectionalDerivatives</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the directional derivative of the equations at communication points can be computed with <code>fmi3GetDirectionalDerivative</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesAdjointDerivatives</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the adjoint derivatives of the equations can be computed with <code>fmi3GetAdjointDerivative</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxOutputDerivativeOrder</code></p></td>
@@ -10669,6 +10673,9 @@ The XML file may have the following content:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">//include::examples/co_simulation_clocked_cosimulation.xml[]</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>TODO: Add capabilities</p>
 </div>
 </div>
 </div>
@@ -11336,6 +11343,9 @@ There is a direct one-to-one relation for a <a href="#clock"><code>clock</code><
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">//include::examples/co_simulation_scheduled_execution.xml[]</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>TODO: describe capabilities</p>
 </div>
 </div>
 </div>
