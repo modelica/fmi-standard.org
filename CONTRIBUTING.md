@@ -176,14 +176,25 @@ Linking to a PDF for readers to download:
 
 3. Build the site and make it available on a local server
 
+   Linux, Mac:
    ```
    docker run --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll jekyll serve
+   ```
+   
+   Windows:
+   ```
+   docker run --volume="%cd%:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll jekyll serve
    ```
 
    Now browse to [http://localhost:4000](http://localhost:4000)
 
 4. Before you push your changes, build and check your commit for syntax errors and broken links:
 
+   Linux, Mac:
    ```
    docker run -v $PWD/_site:/site 18fgsa/html-proofer /site --only-4xx
+   ```
+   Windows:
+   ```
+   docker run -v %cd%/_site:/site 18fgsa/html-proofer /site --only-4xx
    ```
