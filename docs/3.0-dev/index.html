@@ -680,9 +680,9 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_definition_of_terminals_terminals">2.2.6.2. Definition of Terminals (Terminals)</a>
 <ul class="sectlevel5">
 <li><a href="#_overview_3">2.2.6.2.1. Overview</a></li>
-<li><a href="#_terminals">2.2.6.2.2. Terminals</a></li>
-<li><a href="#_terminal_member_variable">2.2.6.2.3. Terminal Member Variable</a></li>
-<li><a href="#GeneralRemarkOnSignal">2.2.6.2.4. General remark on signal</a></li>
+<li><a href="#section-terminals">2.2.6.2.2. Terminals</a></li>
+<li><a href="#section-terminalvars">2.2.6.2.3. Terminal Member Variable</a></li>
+<li><a href="#section-terminals-remarksignal">2.2.6.2.4. General remark on signal</a></li>
 <li><a href="#_general_remark_on_inflow_and_outflow">2.2.6.2.5. General remark on inflow and outflow</a></li>
 <li><a href="#_terminal_stream_member_variable">2.2.6.2.6. Terminal Stream Member Variable</a></li>
 <li><a href="#_graphical_representation_of_terminals">2.2.6.2.7. Graphical Representation of Terminals</a></li>
@@ -1148,9 +1148,10 @@ The master algorithm is responsible for:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The following table gives an overview of the features of the different interfaces.</p>
+<p><a href="#table-overview-features">Table 1</a> gives an overview of the features of the different interfaces.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table id="table-overview-features" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Overview of features per interface.</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1636,9 +1637,10 @@ Extracting concrete information about a variable can be done by reading the <a h
 If a function in the following sections is called with a wrong <code>fmi3ValueReference</code> value <em>[for example, setting a constant with a call to <code>fmi3SetFloat64</code>]</em>, then the function must return with an error ( <a href="#fmi3Error"><code>fmi3Status == fmi3Error</code></a>, see <a href="#status-returned-by-functions">Section 2.1.3</a>).</p>
 </div>
 <div class="paragraph">
-<p>The following data types are the base types used in the interfaces of the C functions.</p>
+<p>Listing <a href="#code-base-types">Base types</a> shows the base types used in the interfaces of the C functions.</p>
 </div>
-<div class="listingblock">
+<div id="code-base-types" class="listingblock">
+<div class="title">Base types</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef           float fmi3Float32;  /* Single precision floating point (32-bit) */
 typedef          double fmi3Float64;  /* Double precision floating point (64-bit) */
@@ -1965,7 +1967,7 @@ The function <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a>
 </ul>
 </div>
 <div class="paragraph">
-<p>The arguments below are function pointers provided by the simulation environment to be used by the FMU.
+<p>The arguments <a href="#logMessage"><code>logMessage</code></a>, <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>, <a href="#lockUnlockPreemption"><code>lockPreemption</code></a>, and <a href="#lockUnlockPreemption"><code>unlockPreemption</code></a>, are function pointers provided by the simulation environment to be used by the FMU.
 It is not allowed to change these functions between <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> and <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> calls.
 Additionally, a pointer to the environment is provided (<code>instanceEnvironment</code>) that needs to be passed to all of the callback functions, in order that those functions can utilize data from the environment, such as mapping a <a href="#valueReference"><code>valueReference</code></a> to a string, or assigning memory to a certain FMU instance.</p>
 </div>
@@ -3192,8 +3194,8 @@ The functions may only be called if their availability is indicated by the attri
 </div>
 <div class="sect4">
 <h5 id="_directional_derivatives">2.1.11.1. Directional derivatives</h5>
-<div class="paragraph">
-<p><em>[Example 1</em><br>
+<div id="example-directional-derivatives" class="paragraph">
+<p><em>[Example:</em><br>
 <em>Assume an FMU has the output equations</em></p>
 </div>
 <div class="stemblock">
@@ -3226,13 +3228,13 @@ g_2(x, u_1)
 <p><em>Note that a direct implementation of this function with analytic derivatives:</em></p>
 </div>
 <div class="paragraph">
-<p>(a) <em>Provides the directional derivative for all <a href="#input"><code>input</code></a> variables; so in the above example: \({\Delta y_1 = \frac{\partial g_1}{\partial x} \cdot \Delta x + \frac{\partial g_1}{\partial u_1} \cdot \Delta u_1 + \frac{\partial g_1}{\partial u_3} \cdot \Delta u_3 + \frac{\partial g_1}{\partial u_4} \cdot \Delta u_4}\)</em></p>
+<p>(a) <em>Provides the directional derivative for all <a href="#input"><code>input</code></a> variables; so in the <a href="#example-directional-derivatives">above example</a>: \({\Delta y_1 = \frac{\partial g_1}{\partial x} \cdot \Delta x + \frac{\partial g_1}{\partial u_1} \cdot \Delta u_1 + \frac{\partial g_1}{\partial u_3} \cdot \Delta u_3 + \frac{\partial g_1}{\partial u_4} \cdot \Delta u_4}\)</em></p>
 </div>
 <div class="paragraph">
-<p>(b) <em>Initializes all seed-values to zero; so in the above example: \({\Delta x = \Delta u_1 = \Delta u_3 = \Delta u_4 = 0}\)</em></p>
+<p>(b) <em>Initializes all seed-values to zero; so in the <a href="#example-directional-derivatives">above example</a>: \({\Delta x = \Delta u_1 = \Delta u_3 = \Delta u_4 = 0}\)</em></p>
 </div>
 <div class="paragraph">
-<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the above example: \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 0, \Delta u_4 = 0)}\)] and \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 0, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
+<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the <a href="#example-directional-derivatives">above example</a>: \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 0, \Delta u_4 = 0)}\)] and \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 0, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
 </div>
 <div class="paragraph">
 <p><em>[Note, function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> can be utilized for the following purposes:</em></p>
@@ -3299,7 +3301,7 @@ g_2(x, u_1)
 <p><em>More details and implementational notes are available from <a href="#ABL12">[ABL12]</a>.</em></p>
 </div>
 <div class="paragraph">
-<p><em>Example 2</em></p>
+<p><em>Example:</em></p>
 </div>
 <div class="paragraph">
 <p><em>Directional derivatives for higher dimension variables are almost treated in the same way.
@@ -3589,7 +3591,7 @@ These schema files utilize several helper schema files.</p>
 <div class="paragraph">
 <p>In this section these schema files are discussed.
 The normative definition are the above mentioned schema files.
-Below, optional elements are marked with a dashed box.
+In the graphical representation of the schema, optional elements are marked with a dashed box (e.g., see <a href="#figure-schema-Annotations">Figure 2</a>).
 The required data types (like: <code>xs:normalizedString</code>) are defined in <a href="https://www.w3.org/TR/xmlschema-2/">XML Schema Part 2: Datatypes Second Edition</a>.
 The types used in the FMI schema files are:</p>
 </div>
@@ -3679,7 +3681,7 @@ In order to not loose precision, either an appropriate minimal printer algorithm
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dateTime</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Date, time and time zone (for details see the link above).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Date, time and time zone (for details see <a href="https://www.w3.org/TR/xmlschema-2/">XML Schema Part 2: Datatypes Second Edition</a>).
 Example: <code>2002-10-23T12:00:00Z</code> (noon on October 23, 2002, Greenwich Mean Time)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">tool specific</p></td>
 </tr>
@@ -3712,10 +3714,11 @@ It is required that the encoding scheme is always UTF-8:</p>
 <p>All XML-based file formats defined in this standard allow optional <code>Annotation</code> elements to be inserted in all XML elements that represent entities of the underlying data model.
 This is achieved through the <code>Annotations</code> element:</p>
 </div>
-<div class="imageblock">
+<div id="figure-schema-Annotations" class="imageblock">
 <div class="content">
 <img src="images/schema/Annotations.png" alt="Annotations" width="80%">
 </div>
+<div class="title">Figure 2. Annotations Element.</div>
 </div>
 <div class="paragraph">
 <p>Each <code>Annotation</code> element contains a required <code>type</code> attribute, which contains the namespace for that annotation.
@@ -3738,19 +3741,21 @@ All annotations can safely be ignored by implementations that just implement the
 <div class="sect3">
 <h4 id="fmiModelDescription">2.2.1. Definition of an FMU (fmiModelDescription)</h4>
 <div class="paragraph">
-<p>This is the root-level schema file and contains the following definition (the figure below contains all elements in the schema file.
-Data is defined by attributes to these elements):</p>
+<p>This is the root-level schema file and is illustrated in <a href="#system_overview">Figure 3</a>. The figure contains all elements in the schema file.
+Data is defined by attributes to these elements.</p>
 </div>
 <div id="system_overview" class="imageblock">
 <div class="content">
 <img src="images/schema/fmiModelDescription.png" alt="fmiModelDescription" width="70%">
 </div>
+<div class="title">Figure 3. fmiModelDescription element.</div>
 </div>
 <div class="paragraph">
-<p>On the top level, the schema consists of the following elements (see <a href="#system_overview">figure above</a>).
+<p>On the top level, the schema consists of the elements detailed in <a href="#table-schema-fmiModelDescription">Table 2</a>.
 <em>[If an optional element is present and defines a list (such as <code>&lt;UnitDefinitions&gt;</code>), the list must have at least one element (such as <code>&lt;Unit&gt;</code>).]</em></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table id="table-schema-fmiModelDescription" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. fmiModelDescription element details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -4215,32 +4220,37 @@ Furthermore, <code>name</code> of a <code>&lt;TypeDefinition&gt;</code> must be 
 <div class="paragraph">
 <p>Additionally, one variable type element must be present.
 Each variable type has its own attributes which can be consulted in the schema.
-The following are representative examples:</p>
+<a href="#figure-schema-Float64">Figure 4</a>, <a href="#figure-schema-Int32">Figure 5</a>, <a href="#figure-schema-Boolean">Figure 6</a>, <a href="#figure-schema-Binary">Figure 7</a>, and <a href="#figure-schema-Enumeration">Figure 8</a>, are representative examples.</p>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Float64" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Float64.png" alt="Float64" width="60%">
 </div>
+<div class="title">Figure 4. Float64 element.</div>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Int32" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Int32.png" alt="Int32" width="50%">
 </div>
+<div class="title">Figure 5. Int32 element.</div>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Boolean" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Boolean.png" alt="Boolean" width="50%">
 </div>
+<div class="title">Figure 6. Boolean element.</div>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Binary" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Binary.png" alt="Binary" width="70%">
 </div>
+<div class="title">Figure 7. Binary element.</div>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Enumeration" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Enumeration.png" alt="Enumeration" width="75%">
 </div>
+<div class="title">Figure 8. Enumeration element.</div>
 </div>
 <div class="paragraph">
 <p>The type elements are referred to in variable elements to declare their type.
@@ -4463,10 +4473,13 @@ A tool is free to use any <code>normalizedString</code> for a category value.
 The <code>name</code> attribute of <code>&lt;Category&gt;</code> must be unique with respect to all other elements of the <code>&lt;LogCategories&gt;</code> list.</p>
 </div>
 <div class="paragraph">
-<p>There are the following standardized names for <code>&lt;Category&gt;</code> and these names should be used if a tool supports the corresponding log category.
-If a tool supports one of these log categories and wants to expose it, then an element <code>&lt;Category&gt;</code> with this name should be added to <code>&lt;LogCategories&gt;</code> <em>[To be clear, only the <code>&lt;Category&gt;</code> names listed under <code>&lt;LogCategories&gt;</code> in the XML file are known to the importer of the FMU.]</em></p>
+<p><a href="#table-standard-categories">Table 3</a> shows the standardized names for <code>&lt;Category&gt;</code>.
+These names should be used if a tool supports the corresponding log category.
+If a tool supports one of these log categories and wants to expose it, then an element <code>&lt;Category&gt;</code> with this name should be added to <code>&lt;LogCategories&gt;</code>.
+<em>[To be clear, only the <code>&lt;Category&gt;</code> names listed under <code>&lt;LogCategories&gt;</code> in the XML file are known to the importer of the FMU.]</em></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table id="table-standard-categories" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Standard names for <code>&lt;Category&gt;</code>.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -4563,9 +4576,10 @@ Furthermore, for Co-Simulation FMUs the <code>stepSize</code> defines the prefer
 <div class="content">
 <img src="images/schema/fmiTerminalsAndIcons.png" alt="fmiTerminalsAndIcons" width="60%">
 </div>
+<div class="title">Figure 9. Overview of fmiTerminalsAndIcons.</div>
 </div>
 <div class="paragraph">
-<p>On the top level, the schema consists of the following elements (see <a href="#terminals_and_icons_overview">figure above</a>).</p>
+<p>On the top level, the schema consists of the following elements (see <a href="#terminals_and_icons_overview">Figure 9</a>).</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -4716,7 +4730,7 @@ The first element in the <code>&lt;GraphicalRepresentation&gt;</code> is painted
 </ul>
 </div>
 <div class="paragraph">
-<p>Predefined rules for variable matching in a connection are given below.
+<p>Predefined rules for variable matching in a connection are given in <a href="#table-predefined-matching-rules">Table 4</a>.
 Predefined variable kinds are used to describe how the member variables have to be handled.
 Domain specific connection rules, terminals and their member variables can be provided by other standards.</p>
 </div>
@@ -4731,11 +4745,11 @@ Domain specific connection rules, terminals and their member variables can be pr
 </div>
 <div class="paragraph">
 <p><em>The SSP standard refers to a <code>connectorKind</code>.</em>
-<em>This <code>connectorKind</code> is not related to the <code>terminalKind</code> or <code>variableKind</code> described in the following sections.]</em></p>
+<em>This <code>connectorKind</code> is not related to the <code>terminalKind</code> or <code>variableKind</code> described in <a href="#section-terminals">Section 2.2.6.2.2</a> and <a href="#section-terminalvars">Section 2.2.6.2.3</a>.]</em></p>
 </div>
 </div>
 <div class="sect5">
-<h6 id="_terminals">2.2.6.2.2. Terminals</h6>
+<h6 id="section-terminals">2.2.6.2.2. Terminals</h6>
 <div class="paragraph">
 <p>Element <code>&lt;fmiTerminalsAndIcons&gt;&lt;Terminals&gt;</code> is defined as:</p>
 </div>
@@ -4752,7 +4766,7 @@ Domain specific connection rules, terminals and their member variables can be pr
 </div>
 <div class="paragraph">
 <p>The normalized string attribute <code>matchingRule</code> describes the rules for variable matching in a connection.
-There are three predefined matching rules: plug, bus, and sequence.
+As detailed in <a href="#table-predefined-matching-rules">Table 4</a>, there are three predefined matching rules: plug, bus, and sequence.
 Other standards may define new matching rules.
 <em>[It is recommended that vendor specific rules start with <code>_vendorName</code> or <code>_toolName</code> to avoid namespace clashes.]</em></p>
 </div>
@@ -4761,7 +4775,8 @@ Other standards may define new matching rules.
 The member variables are the exchanged variables.
 The type of the nested terminals is <code>fmi3Terminal</code>, and they can be used to implement structured terminals.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table id="table-predefined-matching-rules" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Predefined matching rules.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -4813,7 +4828,7 @@ It is intended that the <code>terminalKind</code> is used to define domain speci
 </div>
 </div>
 <div class="sect5">
-<h6 id="_terminal_member_variable">2.2.6.2.3. Terminal Member Variable</h6>
+<h6 id="section-terminalvars">2.2.6.2.3. Terminal Member Variable</h6>
 <div class="paragraph">
 <p>The <code>&lt;TerminalMemberVariable&gt;</code> is defined as:</p>
 </div>
@@ -4903,7 +4918,7 @@ Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><cod
 </table>
 </div>
 <div class="sect5">
-<h6 id="GeneralRemarkOnSignal">2.2.6.2.4. General remark on signal</h6>
+<h6 id="section-terminals-remarksignal">2.2.6.2.4. General remark on signal</h6>
 <div class="paragraph">
 <p><em>[The signal <code>variableKind</code> can be applied for different use cases.</em>
 <em>The first use case is a signal flow from an <a href="#output"><code>output</code></a> of one FMU to an <a href="#input"><code>input</code></a> of another FMU. The <a href="#output"><code>output</code></a> value has to be forwarded to the <a href="#input"><code>input</code></a>.</em></p>
@@ -5056,13 +5071,14 @@ The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</co
 <p>The element of <code>&lt;fmiModelDescription&gt;&lt;ModelVariables&gt;</code> is the central part of the model description.
 It provides the static information of all exposed variables and is defined as follows.</p>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-ModelVariables" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/ModelVariables.png" alt="ModelVariables" width="60%">
 </div>
+<div class="title">Figure 10. ModelVariables element.</div>
 </div>
 <div class="paragraph">
-<p>The <code>&lt;ModelVariables&gt;</code> element consists of an ordered set of variable elements (see figure above).
+<p>The <code>&lt;ModelVariables&gt;</code> element consists of an ordered set of variable elements (see <a href="#figure-schema-ModelVariables">Figure 10</a>).
 Variable elements can uniformly represent variables of primitive (atomic) types, like single floating point or integer variables, or as well as arrays of an arbitrary (but fixed) number of dimensions. The schema definition is present in a separate file <code>fmi3Variable.xsd</code>.</p>
 </div>
 <div class="paragraph">
@@ -5168,7 +5184,7 @@ This attribute is <code>required</code>.</p>
 Allowed values of this enumeration:</p>
 </div>
 <div id="parameter" class="paragraph">
-<p><code>= parameter</code>: A data value that is constant during the simulation (except for <a href="#tunable"><code>tunable</code></a> parameters, see there) and is provided by the environment and cannot be used in connections, except for parameter propagation in terminals as described in <a href="#GeneralRemarkOnSignal">Section 2.2.6.2.4</a>.
+<p><code>= parameter</code>: A data value that is constant during the simulation (except for <a href="#tunable"><code>tunable</code></a> parameters, see there) and is provided by the environment and cannot be used in connections, except for parameter propagation in terminals as described in <a href="#section-terminals-remarksignal">Section 2.2.6.2.4</a>.
 <a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
 These parameters can be changed independently, unlike <a href="#calculatedParameter">calculated parameters</a>.
 <a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).</p>
@@ -5288,7 +5304,7 @@ It is not allowed to provide a value for <a href="#initial"><code>initial</code>
 It is not allowed to provide a <a href="#start"><code>start</code></a> value.</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#initial"><code>initial</code></a> is not present, it is defined by the table below based on <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a>.
+<p>If <a href="#initial"><code>initial</code></a> is not present, it is defined by <a href="#table-definition-initial">Table 5</a> based on <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a>.
 If <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>, or <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, a <a href="#start"><code>start</code></a> value must be provided.
 If <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>, or <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, it is not allowed to provide a <a href="#start"><code>start</code></a> value.</p>
 </div>
@@ -5362,9 +5378,10 @@ Variables with <a href="#causality"><code>causality</code></a> <a href="#paramet
 </tbody>
 </table>
 <div class="paragraph">
-<p>If <a href="#initial"><code>initial</code></a> is not present, its value is defined by the following tables based on the values of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a>:</p>
+<p>If <a href="#initial"><code>initial</code></a> is not present, its value is defined by <a href="#table-definition-initial">Table 5</a> based on the values of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a>:</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table id="table-definition-initial" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Definition of <a href="#initial"><code>initial</code></a>.</caption>
 <colgroup>
 <col style="width: 10%;">
 <col style="width: 10%;">
@@ -5522,9 +5539,10 @@ Variables with <a href="#causality"><code>causality</code></a> <a href="#paramet
 <em>(3) If (C) and <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, then the variable is explicitly defined by its <a href="#start"><code>start</code></a> value in <strong>Initialization Mode</strong> (so directly after calling <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, the value of the variable is either the <a href="#start"><code>start</code></a> value stored in a variable element <code>&lt;XXX start=YYY/&gt;</code> or the value provided by <code>fmi3Set{VariableType}</code>, if this function was called on this variable).]</em></p>
 </div>
 <div class="paragraph">
-<p>The following combinations of <a href="#variability"><code>variability</code></a>/<a href="#causality"><code>causality</code></a> settings are allowed:</p>
+<p><a href="#table-allowed-variability-causality-combinations">Table 6</a> shows the combinations of <a href="#variability"><code>variability</code></a>/<a href="#causality"><code>causality</code></a> settings that are allowed.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table id="table-allowed-variability-causality-combinations" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Allowed combinations of <a href="#variability"><code>variability</code></a>/<a href="#causality"><code>causality</code></a>.</caption>
 <colgroup>
 <col style="width: 10%;">
 <col style="width: 10%;">
@@ -5811,32 +5829,37 @@ Variables with <a href="#causality"><code>causality</code></a> <a href="#paramet
 </div>
 <div class="paragraph">
 <p>Type specific properties are defined in the required choice element, where exactly one of the numeric types or an <code>&lt;Enumeration&gt;</code> must be present in the XML file:
-The following are representative examples:</p>
+<a href="#figure-schema-Variable_Float64">Figure 11</a>, <a href="#figure-schema-Variable_Int32">Figure 12</a>, <a href="#figure-schema-Variable_Boolean">Figure 13</a>, <a href="#figure-schema-Variable_Binary">Figure 14</a>, and <a href="#figure-schema-Variable_Enumeration">Figure 15</a>, are representative examples.</p>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Variable_Float64" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Variable_Float64.png" alt="Variable Float64" width="70%">
 </div>
+<div class="title">Figure 11. Float64 element.</div>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Variable_Int32" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Variable_Int32.png" alt="Variable Int32" width="70%">
 </div>
+<div class="title">Figure 12. Int32 element.</div>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Variable_Boolean" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Variable_Boolean.png" alt="Variable Boolean" width="70%">
 </div>
+<div class="title">Figure 13. Boolean element.</div>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Variable_Binary" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Variable_Binary.png" alt="Variable Binary" width="70%">
 </div>
+<div class="title">Figure 14. Binary element.</div>
 </div>
-<div class="imageblock text-center">
+<div id="figure-schema-Variable_Enumeration" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Variable_Enumeration.png" alt="Variable Enumeration" width="70%">
 </div>
+<div class="title">Figure 15. Enumeration element.</div>
 </div>
 <div class="paragraph">
 <p>The attributes are defined in <a href="#definition-of-types">Section 2.2.3</a> (<code>&lt;TypeDefinitions&gt;</code>), except:</p>
@@ -5963,20 +5986,22 @@ A Co-Simulation FMU does not need to expose these state derivatives and event in
 <em>[A simulation environment can utilize this information to improve the efficiency, for example, when connecting FMUs together, or when computing the partial derivative of the <a href="#derivative"><code>derivatives</code></a> with respect to the <a href="#state"><code>states</code></a> in the simulation engine.]</em></p>
 </div>
 <div class="paragraph">
-<p><code>&lt;ModelStructure&gt;</code> has the following definition:</p>
+<p><a href="#figure-schema-ModelStructure">Figure 16</a> shows the definition of <code>&lt;ModelStructure&gt;</code>.</p>
 </div>
-<div class="imageblock">
+<div id="figure-schema-ModelStructure" class="imageblock">
 <div class="content">
 <img src="images/schema/ModelStructure.png" alt="ModelStructure" width="90%">
 </div>
+<div class="title">Figure 16. ModelStructure element.</div>
 </div>
 <div class="paragraph">
-<p>Note that attribute <a href="#dependenciesKind"><code>dependenciesKind</code></a> for element <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> has less enumeration values as <a href="#dependenciesKind"><code>dependenciesKind</code></a> in the other lists, see below.</p>
+<p>Note that attribute <a href="#dependenciesKind"><code>dependenciesKind</code></a> for element <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> has less enumeration values as <a href="#dependenciesKind"><code>dependenciesKind</code></a> in the other lists, as detailed in <a href="#table-model-structure-elements">Table 7</a>.</p>
 </div>
 <div class="paragraph">
-<p><code>&lt;ModelStructure&gt;</code> consists of the following elements (see also figures above; the symbols of the mathematical equations describing the dependency are defined in <a href="#math-model-exchange">Section 3.1</a>):</p>
+<p><code>&lt;ModelStructure&gt;</code> consists of the elements detailed in <a href="#table-model-structure-elements">Table 7</a> (see also <a href="#figure-schema-ModelStructure">Figure 16</a>; the symbols of the mathematical equations describing the dependency are defined in <a href="#math-model-exchange">Section 3.1</a>):</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table id="table-model-structure-elements" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. ModelStructure elements.</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 83.3334%;">
@@ -6832,7 +6857,7 @@ In this framework, the physical connections between subsystems are represented b
 <div class="content">
 <img src="images/co-simulation-data-flow.svg" alt="co simulation data flow" width="80%">
 </div>
-<div class="title">Figure 2. Data flow at communication points.</div>
+<div class="title">Figure 17. Data flow at communication points.</div>
 </div>
 <div class="paragraph">
 <p>For co-simulation, two basic groups of functions have to be implemented:</p>
@@ -7009,35 +7034,35 @@ The described multi-mode support is based on wrapping functionality into the <a 
 <div class="sect4">
 <h5 id="_coupling_scenarios">2.4.1.5. Coupling Scenarios</h5>
 <div class="paragraph">
-<p><a href="#figure-co-simulation-with-generated-code">Figure 3</a> and <a href="#figure-co-simulation-with-tool-coupling">Figure 4</a> illustrate the most common Co-Simulation coupling scenarios.</p>
+<p><a href="#figure-co-simulation-with-generated-code">Figure 18</a> and <a href="#figure-co-simulation-with-tool-coupling">Figure 19</a> illustrate the most common Co-Simulation coupling scenarios.</p>
 </div>
 <div id="figure-co-simulation-with-generated-code" class="imageblock text-center">
 <div class="content">
 <img src="images/co-simulation-single-slave.svg" alt="co simulation single slave" width="50%">
 </div>
-<div class="title">Figure 3. Co-Simulation with generated code on a single computer (for simplicity shown for one slave only).</div>
+<div class="title">Figure 18. Co-Simulation with generated code on a single computer (for simplicity shown for one slave only).</div>
 </div>
 <div id="figure-co-simulation-with-tool-coupling" class="imageblock text-center">
 <div class="content">
 <img src="images/co-simulation-tool-coupling.svg" alt="co simulation tool coupling" width="70%">
 </div>
-<div class="title">Figure 4. Co-Simulation with tool coupling on a single computer (for simplicity shown for one slave only).</div>
+<div class="title">Figure 19. Co-Simulation with tool coupling on a single computer (for simplicity shown for one slave only).</div>
 </div>
 <div class="paragraph">
-<p>In the tool coupling case (<a href="#figure-co-simulation-with-tool-coupling">Figure 4</a>) the FMU implementation wraps the FMI function calls to API calls which are provided by the simulation tool (for example, a COM, CORBA or DCP API).
+<p>In the tool coupling case (<a href="#figure-co-simulation-with-tool-coupling">Figure 19</a>) the FMU implementation wraps the FMI function calls to API calls which are provided by the simulation tool (for example, a COM, CORBA or DCP API).
 Additionally to the FMU, the simulation tool is needed to run a co-simulation.</p>
 </div>
 <div class="paragraph">
 <p>In its most general form, a tool coupling based co-simulation is implemented on distributed hardware with subsystems being handled by different computers with different operating systems (cluster computer, computer farm, computers at different locations).
 The data exchange and communication between the subsystems is typically performed using one of the network communication technologies (for example, MPI, TCP/IP).
 The definition of this communication layer is not part of the FMI standard.
-However, distributed co-simulation scenarios can be implemented using FMI as shown in <a href="#figure-distributed-co-simulation">Figure 5</a>.</p>
+However, distributed co-simulation scenarios can be implemented using FMI as shown in <a href="#figure-distributed-co-simulation">Figure 20</a>.</p>
 </div>
 <div id="figure-distributed-co-simulation" class="imageblock text-center">
 <div class="content">
 <img src="images/co-simulation-distributed-infrastructure.svg" alt="co simulation distributed infrastructure" width="90%">
 </div>
-<div class="title">Figure 5. Distributed co-simulation infrastructure (for simplicity shown for one slave only).</div>
+<div class="title">Figure 20. Distributed co-simulation infrastructure (for simplicity shown for one slave only).</div>
 </div>
 <div class="paragraph">
 <p>The master has to implement the communication layer.
@@ -7085,7 +7110,7 @@ Multiple event types and also <a href="#outputClock"><code>outputClock</code></a
 <div class="sect3">
 <h4 id="intermediate-variable-access">2.4.3. Intermediate Variable Access</h4>
 <div class="paragraph">
-<p>Intermediate variable access has three main uses:</p>
+<p>Intermediate variable access has three main use cases:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -7109,7 +7134,7 @@ Whenever the internal solver in the FMU needs updated intermediate <a href="#inp
 </ul>
 </div>
 <div class="paragraph">
-<p>Combinations of the above methods are also allowed.</p>
+<p>Combinations of the above use cases are also allowed.</p>
 </div>
 <div class="paragraph">
 <p>Access to intermediate variables enables several features such as:</p>
@@ -7235,17 +7260,17 @@ Note that <strong>Event Mode</strong> is not supported in Basic Co-Simulation an
 </div>
 <div class="paragraph">
 <p>It is important to distinguish intermediate output from successful internal integration steps from intermediate outputs valid only for temporary solver states.
-<a href="#figure-intermediate-variable-access">Figure 6</a> shows an overview of the solver states and the intended use of intermediate variable access.
+<a href="#figure-intermediate-variable-access">Figure 21</a> shows an overview of the solver states and the intended use of intermediate variable access.
 It is not allowed to call <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> for a simulation time point prior to a previous call with <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a>.</p>
 </div>
 <div id="figure-intermediate-variable-access" class="imageblock text-center">
 <div class="content">
 <img src="images/intermediatevariableaccess.svg" alt="intermediatevariableaccess" width="65%">
 </div>
-<div class="title">Figure 6. Overview of solver states and intermediate variable access during a communication step</div>
+<div class="title">Figure 21. Overview of solver states and intermediate variable access during a communication step</div>
 </div>
 <div class="paragraph">
-<p>The following code example shows an implementation of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that uses intermediate variable access to record a set of variables at every internal solver step.</p>
+<p>The following code example shows an implementation of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that uses intermediate variable access to record a set of variables at every internal solver step:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7627,13 +7652,13 @@ The default is <code>false</code>.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter contains the interface description to access the equations of a dynamic system from a C program.
-A schematic view of a model in FMI for Model Exchange format is shown in <a href="#figure-model-exchange-data-flow">Figure 7</a>:</p>
+A schematic view of a model in FMI for Model Exchange format is shown in <a href="#figure-model-exchange-data-flow">Figure 22</a>:</p>
 </div>
 <div id="figure-model-exchange-data-flow" class="imageblock text-center">
 <div class="content">
 <img src="images/model-exchange-data-flow.svg" alt="model exchange data flow" width="80%">
 </div>
-<div class="title">Figure 7. Data flow between the environment and an FMU for Model Exchange</div>
+<div class="title">Figure 22. Data flow between the environment and an FMU for Model Exchange</div>
 </div>
 <div class="paragraph">
 <p><strong class="blue">Blue</strong> arrows: Information provided by the FMU.<br>
@@ -7657,10 +7682,11 @@ The real part \(t_R\) of this tuple is the <a href="#independent"><code>independ
 In this phase \(t_I = 0\).
 The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).
 This time definition is also called "super-dense time" in literature, see, for example, <a href="#LZ07">[LZ07]</a>.
-An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation below.
+An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a href="#table-model-exchange-math-notation">Table 8</a>.
 <em>[The notation \(^{\bullet}t\) is from <a href="#BCP10">BCP10</a>, adapted from non-standard analysis to super-dense time, in order to precisely define the value from the previous event iteration.]</em></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table id="table-model-exchange-math-notation" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Conventions and notation used.</caption>
 <colgroup>
 <col style="width: 8.3333%;">
 <col style="width: 58.3333%;">
@@ -7728,7 +7754,7 @@ Between events, variables are either <a href="#continuous"><code>continuous</cod
 A variable is called discrete-time, if it changes its value only at an event instant.
 Otherwise the variable is called continuous-time.
 Only floating point variables can be continuous-time.
-The following variable indices are used to describe the timing behavior of the corresponding variable (for example, \(v_d\) is a discrete-time variable).</p>
+The following variable indices are used to describe the timing behavior of the corresponding variable (for example, \(v_d\) is a discrete-time variable):</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -7760,13 +7786,13 @@ is a continuous function of time inside each interval \(t_i^+ &lt; \ ^-t_{i+1}\)
 </tbody>
 </table>
 <div class="paragraph">
-<p>At every event instant \(t_i\), variables might be discontinuous (see <a href="#figure-piecwise-continuous-variables">Figure 8</a>).</p>
+<p>At every event instant \(t_i\), variables might be discontinuous (see <a href="#figure-piecwise-continuous-variables">Figure 23</a>).</p>
 </div>
 <div id="figure-piecwise-continuous-variables" class="imageblock">
 <div class="content">
 <img src="images/PieceWiseContinuousVariables.svg" alt="PieceWiseContinuousVariables" width="60%">
 </div>
-<div class="title">Figure 8. Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
+<div class="title">Figure 23. Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
 </div>
 <div class="paragraph">
 <p>The next event instance t_i is defined by the earliest occurance of one of the following conditions:</p>
@@ -7788,7 +7814,7 @@ Such an event is called external event.
 Such an event is called time event.</p>
 </li>
 <li>
-<p>At a time instant, where an event indicator \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 9</a> below).
+<p>At a time instant, where an event indicator \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 24</a>).
 More precisely: An event \(t = t_i\) occurs at the smallest time instant "min t" with \(t&gt;t_{i-1}\) where "\((z_j(t)&gt;0) \neq (z_j(t_{i-1}) &gt;0)\)".
 Such an event is called state event.
 <em>[This definition is slightly different from the standard definition of state events: "</em> \(z_j(t) \cdot z_j(t_{i-1}) \leq 0\) <em>".</em>
@@ -7801,7 +7827,7 @@ All event indicators are piecewise continuous and are collected together in one 
 <div class="content">
 <img src="images/Event.svg" alt="Event" width="60%">
 </div>
-<div class="title">Figure 9. An event occurs when the event indicator changes its domain from \(z&gt;0\) to \(z\leq 0\) or vice versa.</div>
+<div class="title">Figure 24. An event occurs when the event indicator changes its domain from \(z&gt;0\) to \(z\leq 0\) or vice versa.</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="4">
@@ -7866,14 +7892,14 @@ Variables of this type are defined with attribute <a href="#causality"><code>cau
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{z}(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the event indicators utilized to define state events, see below.
-For notational convenience, an event indicator is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description below.
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the event indicators used to define state events (recall <a href="#figure-events">Figure 24</a>).
+For notational convenience, an event indicator is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description in <a href="#table-math-model-exchange">Table 9</a>.
 In reality, event indicator is however part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_c(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the continuous-time <a href="#state"><code>states</code></a>.
-For notational convenience, a continuous-time <a href="#state"><code>state</code></a> is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description below.
+For notational convenience, a continuous-time <a href="#state"><code>state</code></a> is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description in <a href="#table-math-model-exchange">Table 9</a>.
 In reality, a continuous-time <a href="#state"><code>state</code></a> is however part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
 <tr>
@@ -7939,13 +7965,13 @@ This data is optionally provided in the XML file under element <code>&lt;ModelSt
 If this data is not provided, the worst case must be assumed (for example, all output variables depend algebraically on all <a href="#input"><code>input</code></a> variables).</p>
 </div>
 <div class="paragraph">
-<p><em>[Example: In <a href="#figure-connected-fmus">Figure 10</a> two different types of connected FMUs are shown (the "dotted lines" characterize the dependency information):</em></p>
+<p><em>[Example: In <a href="#figure-connected-fmus">Figure 25</a> two different types of connected FMUs are shown (the "dotted lines" characterize the dependency information):</em></p>
 </div>
 <div id="figure-connected-fmus" class="imageblock text-center">
 <div class="content">
 <img src="images/ArtificialAlgebraicLoop.svg" alt="ArtificialAlgebraicLoop" width="80%">
 </div>
-<div class="title">Figure 10. Calling sequences for FMUs that are connected in a loop.</div>
+<div class="title">Figure 25. Calling sequences for FMUs that are connected in a loop.</div>
 </div>
 <div class="paragraph">
 <p><em>In the upper diagram, FMU1 and FMU2 are connected in such a way that by an appropriate sequence of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> calls, the FMU variables can be computed.</em>
@@ -7958,7 +7984,7 @@ If this data is not provided, the worst case must be assumed (for example, all o
 <em>Since different variables are computed in every mode and the causality of variable computation can be different in <strong>Initialization Mode</strong> as with respect to the other two modes, it might be necessary to solve different kinds of loops in the different modes.]</em></p>
 </div>
 <div class="paragraph">
-<p>In <a href="#table-math-model-exchange">Table 1</a> the equations are defined that can be evaluated in the respective mode.
+<p>In <a href="#table-math-model-exchange">Table 9</a> the equations are defined that can be evaluated in the respective mode.
 The following color coding is used in the table:</p>
 </div>
 <div class="ulist">
@@ -7977,12 +8003,12 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 </ul>
 </div>
 <div class="paragraph">
-<p><em>[In the following table the setting of the super-dense time, (\(t_R\), \(t_I\)), is precisely described.</em>
+<p><em>[In <a href="#table-math-model-exchange">Table 9</a>, the setting of the super-dense time, (\(t_R\), \(t_I\)), is precisely described.</em>
 <em>Tools will usually not have such a representation of time.</em>
 <em>However, super-dense time defines precisely when a new "model evaluation" starts and therefore which variable values belong to the same "model evaluation" at the same (super-dense) time instant and should be stored together.]</em></p>
 </div>
 <table id="table-math-model-exchange" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Mathematical description of an FMU for Model Exchange.</caption>
+<caption class="title">Table 9. Mathematical description of an FMU for Model Exchange.</caption>
 <colgroup>
 <col style="width: 62.5%;">
 <col style="width: 37.5%;">
@@ -8120,10 +8146,10 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <p><em>[Remark 1 - Calling Sequences:</em></p>
 </div>
 <div class="paragraph">
-<p><em>In the table above, for notational convenience in every mode one function call is defined to compute all output arguments from all inputs arguments.</em>
+<p><em>In <a href="#table-math-model-exchange">Table 9</a>, for notational convenience in every mode one function call is defined to compute all output arguments from all inputs arguments.</em>
 <em>In reality, every scalar output argument can be computed by one <code>fmi3Get{VariableType}</code> function call.</em>
 <em>Additionally, the output argument need not be a function of all input arguments, but of only a subset from it, as defined in the XML file under <code>&lt;ModelStructure&gt;</code>.</em>
-<em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 10</a>. For example, since</em> \(y_{\mathit{2a}}\) <em>depends only on</em> \(u_{\mathit{1a}}\) <em>, but not on</em> \(u_{\mathit{1b}}\)<em>, it is possible to call</em> <code>fmi3Set{VariableType}</code> <em>to set</em> \(u_{\mathit{1a}}\) <em>, and then inquire</em> \(y_{\mathit{2a}}\) <em>with</em> <code>fmi3Get{VariableType}</code> <em>without setting</em> \(u_{\mathit{1b}}\) <em>beforehand.</em></p>
+<em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 25</a>. For example, since</em> \(y_{\mathit{2a}}\) <em>depends only on</em> \(u_{\mathit{1a}}\) <em>, but not on</em> \(u_{\mathit{1b}}\)<em>, it is possible to call</em> <code>fmi3Set{VariableType}</code> <em>to set</em> \(u_{\mathit{1a}}\) <em>, and then inquire</em> \(y_{\mathit{2a}}\) <em>with</em> <code>fmi3Get{VariableType}</code> <em>without setting</em> \(u_{\mathit{1b}}\) <em>beforehand.</em></p>
 </div>
 <div class="paragraph">
 <p><em>It is non-trivial to provide code for <code>fmi3Set{VariableType}</code>, <code>fmi3Get{VariableType}</code>, if the environment can call <code>fmi3Set{VariableType}</code> on the <a href="#input"><code>inputs</code></a> in quite different orders.</em>
@@ -8214,9 +8240,9 @@ y2 := w2</pre>
 <p><em>Remark 3 - Event Indicators / Freezing Relations:</em></p>
 </div>
 <div class="paragraph">
-<p><em>In the above table, vector</em> \(\mathbf{r}\) <em>is used to collect all relations together that are utilized in the event indicators</em> \(\mathbf{z}\) <em>.</em>
+<p><em>In <a href="#table-math-model-exchange">Table 9</a>, vector</em> \(\mathbf{r}\) <em>is used to collect all relations together that are utilized in the event indicators</em> \(\mathbf{z}\) <em>.</em>
 <em>In <strong>Continuous-Time Mode</strong> all these relations are <code>frozen</code> and do not change during the evaluations in the respective mode.</em>
-<em>This is indicated in the table above by computing</em> \(\mathbf{r}\) <em>when entering the <strong>Continuous-Time Mode</strong> and providing</em> \(\mathbf{r}\) <em>as (internal) input argument to the evaluation functions.</em>
+<em>This is indicated in <a href="#table-math-model-exchange">Table 9</a> by computing</em> \(\mathbf{r}\) <em>when entering the <strong>Continuous-Time Mode</strong> and providing</em> \(\mathbf{r}\) <em>as (internal) input argument to the evaluation functions.</em>
 <em>Example:</em></p>
 </div>
 <div class="paragraph">
@@ -8278,7 +8304,7 @@ r2 = z2 &gt; 0</pre>
 <div class="paragraph">
 <p>An FMU is initialized in <strong>Initialization Mode</strong> with \(\mathbf{f}_{\mathit{init}}(\ldots)\).
 The input arguments to this function consist of the <a href="#input"><code>input</code></a> variables (= variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>), of the <a href="#independent"><code>independent</code></a> variable (= variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>; usually the default value <code>time</code>), and of all variables that have a <a href="#start"><code>start</code></a> value with (explicitly or implicitly) <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> in order to compute the continuous-time <a href="#state"><code>states</code></a> and the output variables at the initial time \(t_0\).
-In the above table, the variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> are collected together in variable \(\mathbf{v}_{\mathit{initial=exact}}\).
+In <a href="#table-math-model-exchange">Table 9</a>, the variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> are collected together in variable \(\mathbf{v}_{\mathit{initial=exact}}\).
 For example, initialization might be defined by providing initial <a href="#start"><code>start</code></a> values for the <a href="#state"><code>states</code></a>, \(\mathbf{x}_{\mathit{c0}}\), or by stating that the state derivatives are zero (\(\dot{\mathbf{x}}_{c} = \mathbf{0}\)).
 Initialization is a difficult topic by itself, and it is required that an FMU solves a well-defined initialization problem inside the FMU in <strong>Initialization Mode</strong>.<br>
 After calling <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, the FMU is implicitly in <strong>Event Mode</strong>, and all discrete-time and continuous-time variables at the initial time instant \((t_R, 0)\) can be calculated.
@@ -8297,13 +8323,13 @@ In this mode, systems of equations over connected FMUs might be solved (similari
 Once convergence is reached, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called to increment super-dense time (and conceptually update the discrete-time <a href="#state"><code>states</code></a> defined internally in the FMU by \(^{\bullet}\mathbf{x}_d := \mathbf{x}_d\)).
 Depending on the discrete-time model, a new event iteration might be needed (for example, because the FMU describes internally a state machine
 and transitions are still able to fire, but new <a href="#input"><code>inputs</code></a> shall be taken into account).<br>
-The function calls in the table above describe precisely which input arguments are needed to compute the desired output argument(s).
+The function calls in <a href="#table-math-model-exchange">Table 9</a> describe precisely which input arguments are needed to compute the desired output argument(s).
 There is no 1:1 mapping of these mathematical functions to C functions.
-Instead, all input arguments are set with <code>fmi3Set{VariableType}</code> C function calls, and then the result argument(s) can be determined with the C functions defined in the right column of the above table.
+Instead, all input arguments are set with <code>fmi3Set{VariableType}</code> C function calls, and then the result argument(s) can be determined with the C functions defined in the right column of <a href="#table-math-model-exchange">Table 9</a>.
 This technique is discussed in detail in <a href="#providing-independent-variables-and-re-initialization">Section 3.2.1</a>.
-<em>[In short: For efficiency reasons, all equations from the table above will usually be available in one (internal) C function.</em>
+<em>[In short: For efficiency reasons, all equations from <a href="#table-math-model-exchange">Table 9</a> will usually be available in one (internal) C function.</em>
 <em>With the C functions described in the next sections, input arguments are copied into the internal model data structure only when their value has changed in the environment.</em>
-<em>With the C functions in the right column of the table above, the internal function is called in such a way that only the minimum needed equations are evaluated.</em>
+<em>With the C functions in the right column of <a href="#table-math-model-exchange">Table 9</a>, the internal function is called in such a way that only the minimum needed equations are evaluated.</em>
 <em>Hereby, variable values calculated from previous calls can be reused.</em>
 <em>This technique is called "caching" and can significantly enhance the simulation efficiency of real-world models.]</em></p>
 </div>
@@ -8620,13 +8646,13 @@ Note that it is required that <code>x_nominal[i] &gt; 0.0</code>.
 <div class="sect3">
 <h4 id="state-machine-model-exchange">3.2.3. State Machine for Model Exchange</h4>
 <div class="paragraph">
-<p>Every implementation of the FMI must support calling sequences of the functions according to the following state chart:</p>
+<p>Every implementation of the FMI must support calling sequences of the functions according to the state chart in <a href="#figure-model-exchange-state-machine">Figure 26</a>.</p>
 </div>
 <div id="figure-model-exchange-state-machine" class="imageblock text-center">
 <div class="content">
 <img src="images/state-machine-model-exchange.svg" alt="state machine model exchange" width="80%">
 </div>
-<div class="title">Figure 11. Calling sequence of Model Exchange C functions in form of an UML 2.0 state machine.</div>
+<div class="title">Figure 26. Calling sequence of Model Exchange C functions in form of an UML 2.0 state machine.</div>
 </div>
 <div class="paragraph">
 <p>The objective of the start chart is to define the allowed calling sequences for functions of the FMI: Calling sequences not accepted by the state chart are not supported by the FMI.
@@ -9105,7 +9131,7 @@ unsignedInt: 0</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter defines the Functional Mock-up Interface (FMI) for the coupling of two or more simulation models in a co-simulation environment (FMI for Basic Co-Simulation).
-It is designed both for coupling with subsystem models, which have been exported by their simulator together with its solver as runnable code (<a href="#figure-co-simulation-with-generated-code">Figure 3</a>), and for coupling of simulation tools on a single machine (<a href="#figure-co-simulation-with-tool-coupling">Figure 4</a>) or as part of a distributed co-simulation (<a href="#figure-distributed-co-simulation">Figure 5</a>).</p>
+It is designed both for coupling with subsystem models, which have been exported by their simulator together with its solver as runnable code (<a href="#figure-co-simulation-with-generated-code">Figure 18</a>), and for coupling of simulation tools on a single machine (<a href="#figure-co-simulation-with-tool-coupling">Figure 19</a>) or as part of a distributed co-simulation (<a href="#figure-distributed-co-simulation">Figure 20</a>).</p>
 </div>
 <div class="sect2">
 <h3 id="math-basic-co-simulation">4.1. Mathematical Description</h3>
@@ -9321,7 +9347,7 @@ If the slave is connected in loops with other models, no iterations over the FMU
 <p><em>[Note that for a Co-Simulation FMU, no super-dense time description is used at communication points.]</em></p>
 </div>
 <div class="paragraph">
-<p>The equations are defined in <a href="#table-math-basic-co-simulation">Table 2</a> can be evaluated in the respective mode.
+<p>The equations are defined in <a href="#table-math-basic-co-simulation">Table 10</a> can be evaluated in the respective mode.
 The following color coding is used in the table:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -9347,7 +9373,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 </tbody>
 </table>
 <table id="table-math-basic-co-simulation" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Mathematical description of an FMU for Basic Co-Simulation.</caption>
+<caption class="title">Table 10. Mathematical description of an FMU for Basic Co-Simulation.</caption>
 <colgroup>
 <col style="width: 66.6666%;">
 <col style="width: 33.3334%;">
@@ -9423,7 +9449,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <p><em>[Remark - Calling Sequences:</em></p>
 </div>
 <div class="paragraph">
-<p><em>In the table above, for notational convenience in <strong>Initialization Mode</strong> one function call is defined to compute all output arguments from all inputs arguments.</em>
+<p><em>In <a href="#table-math-basic-co-simulation">Table 10</a>, for notational convenience in <strong>Initialization Mode</strong> one function call is defined to compute all output arguments from all inputs arguments.</em>
 <em>In reality, every variable output argument is computed by one</em> <code>fmi3Get{VariableType}</code> <em>function call.</em></p>
 </div>
 <div class="paragraph">
@@ -9438,13 +9464,13 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 If an FMU prematurely stops its current step integration computation due to an unpredictable internal event before the normal end of the step calculation, all other concurrently running FMUs may be stopped as soon as possible in order to minimize the time needed for the Co-Simulation master to resynchronize all the FMUs at the same event time.</p>
 </div>
 <div class="paragraph">
-<p>In this context based on parallel multi-FMU calculations, the following figure illustrates different possibilities to synchronize FMUs at the same event time.</p>
+<p>In this context based on parallel multi-FMU calculations, <a href="#figure-early-return">Figure 27</a> illustrates different possibilities to synchronize FMUs at the same event time.</p>
 </div>
-<div class="imageblock text-center">
+<div id="figure-early-return" class="imageblock text-center">
 <div class="content">
 <img src="images/earlyReturnFigure.png" alt="earlyReturnFigure" width="100%">
 </div>
-<div class="title">Figure 12: Different possibilities to synchronize parallel FMUs at the same event time.</div>
+<div class="title">Figure 27. Different possibilities to synchronize parallel FMUs at the same event time.</div>
 </div>
 <div class="paragraph">
 <p>Each FMU starts integration from communication point \(t_{i}\) to reach the next communication point \(t_{i+1}\).
@@ -9640,13 +9666,13 @@ However, even when the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</
 <div class="sect3">
 <h4 id="state-machine-basic-co-simulation">4.2.3. State Machine for Basic Co-Simulation</h4>
 <div class="paragraph">
-<p>The following state machine defines the supported calling sequences.</p>
+<p>The state machine in <a href="#figure-co-simulation-state-machine">Figure 28</a> defines the supported calling sequences.</p>
 </div>
 <div id="figure-co-simulation-state-machine" class="imageblock text-center">
 <div class="content">
 <img src="images/state-machine-basic-co-simulation.svg" alt="state machine basic co simulation" width="80%">
 </div>
-<div class="title">Figure 12. Calling sequence of Co-Simulation C functions in form of an UML 2.0 state machine.</div>
+<div class="title">Figure 28. Calling sequence of Co-Simulation C functions in form of an UML 2.0 state machine.</div>
 </div>
 <div class="paragraph">
 <p>In this Co-Simulation interface the following functions must not be called: <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> including all functions that are specific to Model Exchange.</p>
@@ -9945,7 +9971,7 @@ We consider two slaves, where both have one <a href="#continuous"><code>continuo
 <div class="content">
 <img src="images/co-simulation-connection-of-slaves.svg" alt="co simulation connection of slaves" width="30%">
 </div>
-<div class="title">Figure 13. Connection graph of the slaves.</div>
+<div class="title">Figure 29. Connection graph of the slaves.</div>
 </div>
 <div class="paragraph">
 <p>We assume no algebraic dependency between input and <a href="#output"><code>output</code></a> of each slave.
@@ -10099,7 +10125,7 @@ See also <a href="#header-files-and-naming-of-functions">Section 2.1.1</a>.</p><
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>needsExecutionTool</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, a tool is needed to execute the model.
-The FMU just contains the communication to this tool (see <a href="#figure-co-simulation-with-tool-coupling">Figure 4</a>).
+The FMU just contains the communication to this tool (see <a href="#figure-co-simulation-with-tool-coupling">Figure 19</a>).
 <em>[Typically, this information is only utilized for information purposes.</em>
 <em>For example, a Co-Simulation master can inform the user that a tool has to be available on the computer where the slave is instantiated.</em>
 <em>The name of the tool can be taken from the attribute <code>generationTool</code> in <code>&lt;fmiModelDescription&gt;</code>.]</em></p></td>
@@ -10168,11 +10194,12 @@ If <code>needsExecutionTool = false</code>, the slave is completely contained in
 <div class="sect3">
 <h4 id="xml-example-co-simulation">4.3.1. Example XML Description File</h4>
 <div class="paragraph">
-<p>The example below is the same as shown in <a href="#xml-example-model-exchange">Section 3.3.2</a> for a Model Exchange FMU.
+<p>The <a href="#xml-example-fmimodeldescription-cosimulation">Example fmiModelDescription</a> below is the same as shown in <a href="#xml-example-model-exchange">Section 3.3.2</a> for a Model Exchange FMU.
 The only difference is the replacement of the element <code>&lt;ModelExchange&gt;</code> with the element <code>&lt;BasicCoSimulation&gt;</code> (with additional attributes) and the removal of <a href="#local"><code>local</code></a> variables, which are associated with continuous <a href="#state"><code>states</code></a> and their <a href="#derivative"><code>derivatives</code></a>.
 The XML file may have the following content:</p>
 </div>
-<div class="listingblock">
+<div id="xml-example-fmimodeldescription-cosimulation" class="listingblock">
+<div class="title">Example fmiModelDescription</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;fmiModelDescription
@@ -10487,15 +10514,15 @@ Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3Ente
 <div class="sect3">
 <h4 id="state-machine-calling-sequence-clocked-co-simulation">5.2.4. State Machine for Hybrid Co-Simulation</h4>
 <div class="paragraph">
-<p>The following state machine defines the supported calling sequences.</p>
+<p>The state machine in <a href="#figure-hybrid-co-simulation-state-machine">Figure 30</a> defines the supported calling sequences.</p>
 </div>
-<div class="imageblock text-center">
+<div id="figure-hybrid-co-simulation-state-machine" class="imageblock text-center">
 <div class="content">
 <img src="images/state-machine-hybrid-co-simulation.svg" alt="state machine hybrid co simulation" width="80%">
 </div>
-<div class="title">Figure 14. Calling sequence of Hybrid Co-Simulation interface.</div>
+<div class="title">Figure 30. Calling sequence of Hybrid Co-Simulation interface.</div>
 </div>
-<div id="figure-hybrid-co-simulation-state-machine" class="paragraph">
+<div class="paragraph">
 <p>In this Co-Simulation interface the following functions must not be called: <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> including all functions that are specific to Model Exchange.</p>
 </div>
 <div class="paragraph">
@@ -10596,7 +10623,7 @@ For <a href="#input"><code>input</code></a> <a href="#periodic"><code>periodic</
 <div class="sect4">
 <h5 id="_state_intermediate_update_mode">5.2.4.9. State: Intermediate Update Mode</h5>
 <div class="paragraph">
-<p>This state in Hybrid Co-Simulation differ from Basic Co-Simulation described in <a href="#state-step-mode-co-simulation">Section 4.2.3.6</a> as following:</p>
+<p>This state in Hybrid Co-Simulation differ from Basic Co-Simulation described in <a href="#state-step-mode-co-simulation">Section 4.2.3.6</a> as follows:</p>
 </div>
 <div class="dlist">
 <dl>
