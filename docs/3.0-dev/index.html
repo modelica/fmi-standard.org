@@ -759,7 +759,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_event_mode">3.1.2.3. Event Mode</a></li>
 </ul>
 </li>
-<li><a href="#_model_evaluations_dependencies_and_call_sequence">3.1.3. Model evaluations, dependencies and call sequence</a></li>
+<li><a href="#_model_evaluations_dependencies_and_call_sequence">3.1.3. Model Evaluations, Dependencies, and Call Sequence</a></li>
 </ul>
 </li>
 <li><a href="#_application_programming_interface">3.2. Application Programming Interface</a>
@@ -3474,7 +3474,7 @@ If all <a href="#structuralParameter"><code>structural parameters</code></a> are
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>nz</code> points to the <code>size_t</code> variable that will receive the number of <a href="#state"><code>states</code></a>.</p>
+<p>Argument <code>nx</code> points to the <code>size_t</code> variable that will receive the number of <a href="#state"><code>states</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -5958,7 +5958,7 @@ All variables listed in this element must have attribute <code>derivative</code>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>reinit</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<td class="tableblock halign-left valign-top"><div class="content"><div id="reinit" class="paragraph">
 <p>Only for Model Exchange (if only a Co-Simulation FMU, this attribute must not be present.
 If both Model Exchange and a Co-Simulation FMU, this attribute is ignored for co-simulation):<br>
 Can only be present for a continuous-time <a href="#state"><code>state</code></a>.<br>
@@ -7677,7 +7677,7 @@ A schematic view of a model in FMI for Model Exchange format is shown in <a href
 <div class="paragraph">
 <p><strong class="blue">Blue</strong> arrows: Information provided by the FMU.<br>
 <strong class="red">Red</strong> arrows : Information provided to the FMU.<br>
-\(\mathbf{v}_{\mathit{start}}\), \(\mathbf{u}\), \(\mathbf{y}\), \(\mathbf{w}\), \(\mathbf{x}_d\) are of a numeric type or string;
+\(\mathbf{v}_{\mathit{start}}\), \(\mathbf{u}\), \(\mathbf{y}\), and \(\mathbf{w}\), are of a numeric type or string;
 \(\mathbf{t}\), \(\mathbf{x}_c\), \(\mathbf{z}\) are of floating point type.</p>
 </div>
 <div class="sect2">
@@ -7809,7 +7809,7 @@ is a continuous function of time inside each interval \(t_i^+ &lt; \ ^-t_{i+1}\)
 <div class="title">Figure 23. Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
 </div>
 <div class="paragraph">
-<p>The next event instance t_i is defined by the earliest occurance of one of the following conditions:</p>
+<p>The next event instance \(t_i\) is defined by the earliest occurance of one of the following conditions:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -7872,7 +7872,7 @@ Such an event is called step event.
 (Variable defined with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(v\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{v}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.2.7</a>).
 A subset of the variables is selected via a subscript.
 Example: \(\mathbf{v}_{\mathit{initial=exact}}\) are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).
@@ -7920,14 +7920,14 @@ In reality, a continuous-time <a href="#state"><code>state</code></a> is however
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\)<br>
 \(^{\bullet}\mathbf{x}_d(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\) is a vector of (internal) discrete-time variables (of any type) representing the discrete <a href="#state"><code>states</code></a>.<br>
-\({}^{\bullet}\mathbf{x}_d(t)\) a is the value of \(\mathbf{x}_d(t)\) at the previous super-dense time instant, so \({}^{\bullet}\mathbf{x}_d(t)=\mathbf{x}_d({}^{\bullet}t)\).
+\({}^{\bullet}\mathbf{x}_d(t)\) is the value of \(\mathbf{x}_d(t)\) at the previous super-dense time instant, so \({}^{\bullet}\mathbf{x}_d(t)=\mathbf{x}_d({}^{\bullet}t)\).
 Given the previous values of the discrete-time <a href="#state"><code>states</code></a>, \({}^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t)\), can be computed.<br>
 Discrete <a href="#state"><code>states</code></a> are not visible in the interface of an FMU and are only introduced here to clarify the mathematical description.
-Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
+In reality, a discrete <a href="#state"><code>state</code></a> is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{next}}(t_{i})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">At initialization or at an event insant, an FMU can define the next time instant \(T_{\mathit{next}}\), at which the next event occurs (see also the definition of events above).
+<td class="tableblock halign-left valign-top"><p class="tableblock">At initialization or at an event instant, an FMU can define the next time instant \(T_{\mathit{next}}\), at which the next event occurs (see also the definition of events above).
 Every event removes automatically a previous definition of \(T_{\mathit{next}}\), and it must be explicitly defined again, if a previously defined \(T_{\mathit{next}}\) was not triggered at the current event instant.</p></td>
 </tr>
 <tr>
@@ -7935,7 +7935,7 @@ Every event removes automatically a previous definition of \(T_{\mathit{next}}\)
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of Boolean variables with \(r_{i} := z_{i} &gt; 0\).
 When entering <strong>Continuous-Time Mode</strong> all relations reported via the event indicators \(\mathbf{z}\) are fixed and during this mode these relations are replaced by \(\mathbf{r}\).
 Only during <strong>Initialization Mode</strong> or <strong>Event Mode</strong> the domains \(z_{i} &gt; 0\) can be changed.
-For notational convenience, \(\mathbf{r} := \mathbf{z} &gt; 0\)is an abbreviation for \(\mathbf{r}:=\{z_1&gt;0, z_2&gt;0, \ldots \}\).
+For notational convenience, \(\mathbf{r} := \mathbf{z} &gt; 0\) is an abbreviation for \(\mathbf{r}:=\{z_1&gt;0, z_2&gt;0, \ldots \}\).
 <em>[For more details, see "Remark 3" below.]</em></p></td>
 </tr>
 </tbody>
@@ -7950,7 +7950,7 @@ The phases can be categorized according to the following modes:</p>
 <div class="sect4">
 <h5 id="_initialization_mode">3.1.2.1. Initialization Mode</h5>
 <div class="paragraph">
-<p>This mode is used to compute at the start time \(t_0\) initial values for continuous-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_c(t_0)\), and for the previous (internal) discrete-time <a href="#state"><code>states</code></a>, \(\mathbf{x}_d(t_0)\), by utilizing extra equations not present in the other modes (for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state"><code>state</code></a> or for the derivative of a <a href="#state"><code>state</code></a>).</p>
+<p>This mode is used to compute at the start time \(t_0\) initial values for continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_c(t_0)\), and for the previous (internal) discrete-time <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t_0)\), by utilizing extra equations not present in the other modes (for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state"><code>state</code></a> or for the derivative of a <a href="#state"><code>state</code></a>).</p>
 </div>
 </div>
 <div class="sect4">
@@ -7965,18 +7965,18 @@ All discrete-time variables are fixed during this phase and the corresponding di
 <div class="paragraph">
 <p>This mode is used to compute new values for all continuous-time variables, as well as for all discrete-time variables that are activated at the current event instant \(t\), given the values of the variables from the previous instant \({}^{\bullet}t\).
 This is performed by solving algebraic equations consisting of all continuous-time and all active discrete-time equations.
-In FMI 2.0 there is no mechanism that the FMU can provide the information whether a discrete-time variable is active or is not active (is not computed) at an event instant.
-Therefore, the environment has to assume that at an event instant always all discrete-time variables are computed, although internally in the FMU only a subset might be newly computed.</p>
+In FMI 2.0, there is no mechanism that the FMU can provide the information whether a discrete-time variable is active or is not active (is not computed) at an event instant.
+With clocked variables, FMI 3.0 helps the environment to determine, which variables are newly computed by the FMU.</p>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_model_evaluations_dependencies_and_call_sequence">3.1.3. Model evaluations, dependencies and call sequence</h4>
+<h4 id="_model_evaluations_dependencies_and_call_sequence">3.1.3. Model Evaluations, Dependencies, and Call Sequence</h4>
 <div class="paragraph">
 <p>When connecting FMUs together, loop structures can occur that lead to particular difficulties because linear or non-linear algebraic systems of equations in floating point variables but also in Boolean or Integer variables might be present.
 In order to solve such systems of equations over FMUs efficiently, the dependency information is needed stating, for example, which <a href="#output"><code>outputs</code></a> depend directly on <a href="#input"><code>inputs</code></a>.
 This data is optionally provided in the XML file under element <code>&lt;ModelStructure&gt;</code>.
-If this data is not provided, the worst case must be assumed (for example, all output variables depend algebraically on all <a href="#input"><code>input</code></a> variables).</p>
+If this data is not provided, the worst case must be assumed, that is, all <a href="#output"><code>output</code></a> variables depend algebraically on all <a href="#input"><code>input</code></a> variables.</p>
 </div>
 <div class="paragraph">
 <p><em>[Example: In <a href="#figure-connected-fmus">Figure 25</a> two different types of connected FMUs are shown (the "dotted lines" characterize the dependency information):</em></p>
@@ -8102,7 +8102,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <span class="blue">\(\qquad\)<strong>end if</strong></span><br>
 <span class="blue">\(\qquad t:=t(t_R, t_i+1)\)</span><br>
 <span class="blue">\(\qquad {}^\bullet\mathbf{x}_d:=\mathbf{x}_d\)</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3NewDiscreteState</span></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3NewDiscreteStates</span></code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable time \(t_i := (T_{\mathit{next}},0)\)</p></td>
@@ -8316,10 +8316,14 @@ r2 = z2 &gt; 0</pre>
 <p><em>Furthermore, a hysteresis should be added for the event indicators.]</em></p>
 </div>
 <div class="paragraph">
-<p>An FMU is initialized in <strong>Initialization Mode</strong> with \(\mathbf{f}_{\mathit{init}}(\ldots)\).
-The input arguments to this function consist of the <a href="#input"><code>input</code></a> variables (= variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>), of the <a href="#independent"><code>independent</code></a> variable (= variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>; usually the default value <code>time</code>), and of all variables that have a <a href="#start"><code>start</code></a> value with (explicitly or implicitly) <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> in order to compute the continuous-time <a href="#state"><code>states</code></a> and the output variables at the initial time \(t_0\).
-In <a href="#table-math-model-exchange">Table 9</a>, the variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> are collected together in variable \(\mathbf{v}_{\mathit{initial=exact}}\).
-For example, initialization might be defined by providing initial <a href="#start"><code>start</code></a> values for the <a href="#state"><code>states</code></a>, \(\mathbf{x}_{\mathit{c0}}\), or by stating that the state derivatives are zero (\(\dot{\mathbf{x}}_{c} = \mathbf{0}\)).
+<p>An FMU is initialized in <strong>Initialization Mode</strong> with \(\mathbf{f}_{\mathit{init}}(\ldots)\).</p>
+</div>
+<div class="paragraph">
+<p>The input arguments to this function consist of the <a href="#input"><code>input</code></a> variables (= variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>), of the <a href="#independent"><code>independent</code></a> variable (= variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>; usually the default value <code>time</code>), and of all variables that have a <a href="#start"><code>start</code></a> value with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> in order to compute the continuous-time <a href="#state"><code>states</code></a> and the output variables at the initial time \(t_0\).
+In <a href="#table-math-model-exchange">Table 9</a>, the variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> are collected together in variable \(\mathbf{v}_{\mathit{initial=exact}}\).</p>
+</div>
+<div class="paragraph">
+<p>For example, initialization might be defined by providing initial <a href="#start"><code>start</code></a> values for the <a href="#state"><code>states</code></a>, \(\mathbf{x}_{\mathit{c0}}\), or by stating that the state derivatives are zero (\(\dot{\mathbf{x}}_{c} = \mathbf{0}\)).
 Initialization is a difficult topic by itself, and it is required that an FMU solves a well-defined initialization problem inside the FMU in <strong>Initialization Mode</strong>.<br>
 After calling <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, the FMU is implicitly in <strong>Event Mode</strong>, and all discrete-time and continuous-time variables at the initial time instant \((t_R, 0)\) can be calculated.
 If these variables are present in an algebraic loop, iteration can be used to compute them.
@@ -8478,7 +8482,7 @@ If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is no
 </div>
 <div class="paragraph">
 <p>The FMU is in <strong>Event Mode</strong> and the super-dense time is incremented by this call.<br>
-If the super-dense time before a call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> was \((t_R,t_I)\), then the time instant after the call is \((t_R,t_I)\).<br></p>
+If the super-dense time before a call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> was \((t_R,t_I)\), then the time instant after the call is \((t_R,t_I + 1)\).<br></p>
 </div>
 <div class="ulist">
 <ul>
@@ -8516,7 +8520,7 @@ When the FMU is terminated, it is assumed that an appropriate message is printed
 </ul>
 </div>
 <div id="state" class="paragraph">
-<p>The new values of the <a href="#state"><code>states</code></a> can be inquired with <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a> or individually for each state for which <code>reinit = true</code> by calling <code>fmi3GetFloat*</code>.
+<p>The new values of the <a href="#state"><code>states</code></a> can be inquired with <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a> or individually for each state for which <a href="#reinit"><code>reinit = true</code></a> by calling <code>fmi3GetFloat*</code>.
 If no element of the continuous state vector has changed its value, <code>valuesOfContinuousStatesChanged</code> must return <code>fmi3False</code>.
 <em>[If <code>fmi3True</code> would be returned in this case, an infinite event loop may occur.]</em></p>
 </div>
@@ -8568,8 +8572,8 @@ This function has to be called when changing from <strong>Event Mode</strong> (a
 <div class="paragraph">
 <p>This function must be called by the environment after every completed step of the integrator provided the capability flag <code>completedIntegratorStepNotNeeded = false</code>.
 Argument <code>noSetFMUStatePriorToCurrentPoint == fmi3True</code> if <code>fmi3SetFMUState</code> will no longer be called for time instants prior to current time in this simulation run [the FMU can use this flag to flush a result buffer].<br>
-The function returns <code>enterEventMode</code> to signal to the environment if the FMU shall call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, and it returns <a href="#terminateSimulation"><code>terminateSimulation</code></a> to signal if the simulation shall be terminated.
-If <code>enterEventMode == fmi3False</code> and <a href="#terminateSimulation"><code>terminateSimulation == fmi3False</code></a> the FMU stays in <strong>Continuous-Time Mode</strong> without calling <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> again.
+The function returns <code>enterEventMode</code> to signal to the environment that the environment shall call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, and it returns <a href="#terminateSimulation"><code>terminateSimulation</code></a> to signal if the simulation shall be terminated.
+If <code>enterEventMode == fmi3False</code> and <a href="#terminateSimulation"><code>terminateSimulation == fmi3False</code></a> the FMU stays in <strong>Continuous-Time Mode</strong> without the environment having to call <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> again.
 When the integrator step is completed and the <a href="#state"><code>states</code></a> are modified by the integrator afterwards (for example, correction by a BDF method),
 then <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a> has to be called with the updated states before <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> is called.<br>
 When the integrator step is completed and one or more event indicators change sign (with respect to the previously completed integrator step), then the integrator or the environment has to determine the time instant of the sign change that is closest to the previous completed step up to a certain precision (usually a small multiple of the machine epsilon).
@@ -8660,7 +8664,7 @@ Note that it is required that <code>x_nominal[i] &gt; 0.0</code>.
 <div class="sect3">
 <h4 id="state-machine-model-exchange">3.2.3. State Machine for Model Exchange</h4>
 <div class="paragraph">
-<p>Every implementation of the FMI must support calling sequences of the functions according to the state chart in <a href="#figure-model-exchange-state-machine">Figure 26</a>.</p>
+<p>Every implementation of the FMI must support calling sequences of the functions according to the state machine in <a href="#figure-model-exchange-state-machine">Figure 26</a>.</p>
 </div>
 <div id="figure-model-exchange-state-machine" class="imageblock text-center">
 <div class="content">
@@ -8669,10 +8673,9 @@ Note that it is required that <code>x_nominal[i] &gt; 0.0</code>.
 <div class="title">Figure 26. Calling sequence of Model Exchange C functions in form of an UML 2.0 state machine.</div>
 </div>
 <div class="paragraph">
-<p>The objective of the start chart is to define the allowed calling sequences for functions of the FMI: Calling sequences not accepted by the state chart are not supported by the FMI.
+<p>The objective of the state machine is to define the allowed calling sequences for functions of the FMI: Calling sequences not accepted by the state machine are not supported by the FMI.
 The behavior of an FMU is undefined for such a calling sequence.
-For example, the state chart indicates that when an FMU for Model Exchange is in state <strong>Continuous-Time Mode</strong>, a call to <code>fmi3Set{VariableType}</code> for a <a href="#discrete"><code>discrete</code></a> <a href="#input"><code>input</code></a> is not supported.
-The state chart is given here as UML 2.0 state machine.
+The state machine is given here as UML 2.0 state machine.
 If a transition is labelled with one or more function names (for example, <code>fmi3GetFloat64</code>, <code>fmi3GetUInt8</code>), this means that the transition is taken if any of these functions is successfully called.
 Note that the FMU can always determine in which state it is since every state is entered by a particular function call (such as <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>), or a particular return value (such as <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>).</p>
 </div>
@@ -8714,7 +8717,7 @@ The event time of a state event may be determined if a domain change of at least
 <div class="paragraph">
 <p>If an event is triggered in <strong>Continuous-Time Mode</strong>, <strong>Event Mode</strong> is entered by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
 In this mode all continuous-time and discrete-time equations are active and the unknowns at an event can be computed and retrieved.
-After an event is completely processed, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called and depending on the return argument, <code>newDiscreteStatesNeeded</code>, the state chart stays in <strong>Event Mode</strong> or switches to <strong>Continuous-Time Mode</strong>.
+After an event is completely processed, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called and depending on the return argument, <code>newDiscreteStatesNeeded</code>, the state machine stays in <strong>Event Mode</strong> or switches to <strong>Continuous-Time Mode</strong>.
 When the <strong>Initialization Mode</strong> is terminated with <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, then <strong>Event Mode</strong> is directly entered, and the continuous-time and discrete-time variables at the initial time are computed based on the initial continuous-time states determined in the <strong>Initialization Mode</strong>.</p>
 </div>
 </div>
@@ -8736,7 +8739,7 @@ This state is entered from state <strong>Event Mode</strong> by calling <a href=
 As soon as an event occurrs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is forbidden, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
 </div>
 <div class="paragraph">
-<p>Note that during <strong>Initialization</strong>, <strong>Event</strong>, and <strong>Continuous-Time Mode</strong> <a href="#input"><code>input</code></a> variables can be set with <code>fmi3Set{VariableType}</code> and output variables can be retrieved with <code>fmi3Get{VariableType}</code> interchangeably according to the model structure defined under element <code>&lt;ModelStructure&gt;</code> in the XML file.
+<p>Note that during <strong>Initialization</strong>, <strong>Event</strong>, and <strong>Continuous-Time Mode</strong>, <a href="#input"><code>input</code></a> variables can be set with <code>fmi3Set{VariableType}</code> and output variables can be retrieved with <code>fmi3Get{VariableType}</code> interchangeably according to the model structure defined under element <code>&lt;ModelStructure&gt;</code> in the XML file.
 <em>[For example, if one <a href="#output"><code>output</code></a> <code>y1</code> depends on two <a href="#input"><code>inputs</code></a> <code>u1</code>, <code>u2</code>, then these two <a href="#input"><code>inputs</code></a> must be set, before <code>y1</code> can be retrieved.</em>
 <em>If additionally an <a href="#output"><code>output</code></a> <code>y2</code> depends on an <a href="#input"><code>input</code></a> <code>u3</code>, then <code>u3</code> can be set and <code>y2</code> can be retrieved afterwards.</em>
 <em>As a result, artificial or <code>real</code> algebraic loops over connected FMUs in any of these three modes can be handled by using appropriate numerical algorithms.]</em></p>
@@ -9060,11 +9063,6 @@ If this is the case, then flag <code>canGetAndSetFMUState</code> must be <code>t
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>The flags have the following default values:<br>
-boolean: <code>false</code><br>
-unsignedInt: 0</p>
-</div>
 </div>
 <div class="sect3">
 <h4 id="xml-example-model-exchange">3.3.2. Example XML Description File</h4>
@@ -10196,11 +10194,6 @@ The accessible variables are marked with attribute <a href="#intermediateAccess"
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>The flags have the following default values:<br>
-boolean: <code>false</code><br>
-unsignedInt: <code>0</code><br></p>
-</div>
 <div class="paragraph">
 <p>Note that if <code>needsExecutionTool = true</code>, then it is required that the original tool is available to be executed during co-simulation.
 If <code>needsExecutionTool = false</code>, the slave is completely contained inside the FMU in source code or binary format (DLL/SharedObject).</p>
@@ -11469,6 +11462,10 @@ There is a direct one-to-one relation for a <a href="#clock"><code>clock</code><
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>algebraic equation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>algebraic loop</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
@@ -11483,6 +11480,10 @@ There is a direct one-to-one relation for a <a href="#clock"><code>clock</code><
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>argument</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO: Refers to a function parameter. Not to be confused with <em>parameter</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>artificial algebraic loop</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>asynchronous co-simulation</em></p></td>
@@ -11536,6 +11537,18 @@ TODO: When used capitalized, this refers to (xCS).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Software used for coupling several <em>simulation programs</em> for <em>co-simulation.</em></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>DAEs</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <em>Differential Algebraic System of Equations</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Differential Algebraic System of Equations</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A system of equations that may contain differential equations and algebraic equations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>direct feedthrough</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Direct feedthrough describes that values of output variables depend directly on values of input variables.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>directional derivative</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
@@ -11559,8 +11572,16 @@ External events occur outside the FMU and should be signaled to the FMU without 
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>exporter</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>external scheduler</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <em>scheduler</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>feedthrough</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <em>direct feedthrough</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI</em></p></td>
@@ -11600,7 +11621,15 @@ TODO: FMU also goes by "slave". When "slave" is used, the intent is to focus on 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>hybrid co-simulation</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>hybrid ODE</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>importer</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO a.k.a target simulator, simulation environment, environment, calling environment, master, Co-Simulation master algorithm, integrator (in ME)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>impure function</em></p></td>
@@ -11621,6 +11650,10 @@ TODO: FMU also goes by "slave". When "slave" is used, the intent is to focus on 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>integrator</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A <em>software component</em>, which implements an <em>integration algorithm</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>integrator step</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>interface</em></p></td>
@@ -11648,6 +11681,10 @@ TODO: FMU also goes by "slave". When "slave" is used, the intent is to focus on 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>linear system</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>machine epsilon</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
@@ -11719,6 +11756,14 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>numerical solver</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">see <em>solver</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>ODE</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">see <em>Ordinary Differential Equation</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Ordinary Differential Equation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Differential equation containing one or more functions of one independent variable (typically time) and the derivatives of those functions.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>output points</em></p></td>
@@ -11794,6 +11839,10 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Software component,</em> which includes algorithms to solve <em>models</em>, for example, <em>integration algorithms</em> and <em>event handling</em> methods. TODO: Synonims: "simulation engine".</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>sparse matrix</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>state</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The continuous <a href="#state"><code>states</code></a> of a model are all variables that appear differentiated in the model and are independent from each other.<br>
 The discrete <a href="#state"><code>states</code></a> of a model are time-discrete variables that have two values in a model: The value of the variable from the previous <em>event</em> instant, and the value of the variable at the actual event instant.</p></td>
@@ -11802,6 +11851,14 @@ The discrete <a href="#state"><code>states</code></a> of a model are time-discre
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>state event</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> that is defined by the time instant where the domain \(z &gt; 0\) of an event indicator variable <code>z</code> is changed to \(z \leq 0\), or vice versa.<br>
 This definition is slightly different from the usual standard definition of state events: "\(z(t)*z(t_{i-1}) \leq 0\)" which has the severe drawback that the value of the event indicator at the previous event instant, \(z(t_{i-1}) \neq 0\), must be non-zero and this condition cannot be guaranteed. The often used term "zero crossing function" for <code>z</code> is misleading (and is therefore not used in this document), since a state event is defined by a change of a domain and not by a zero crossing of a variable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>state machine</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>state-space form</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>step event</em></p></td>
