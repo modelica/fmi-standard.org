@@ -839,7 +839,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#hybrid-co-simulation-api">5.2. Application Programming Interface</a>
 <ul class="sectlevel3">
 <li><a href="#_communication_of_event_time_and_inputoutput_values">5.2.1. Communication of event time and input/output values</a></li>
-<li><a href="#_handling_a_successful_early_return_by_the_co_simulation_master_in_hybrid_co_simulation">5.2.2. Handling a Successful Early-Return by the Co-Simulation Master in Hybrid Co-Simulation</a></li>
+<li><a href="#_handling_early_return_and_events_in_hybrid_co_simulation">5.2.2. Handling Early Return and Events in Hybrid Co-Simulation</a></li>
 <li><a href="#api-clocked-co-simulation">5.2.3. Co-Simulation with Clock Support in Hybrid Co-Simulation</a>
 <ul class="sectlevel4">
 <li><a href="#transfer-of-input-output-and-parameters-clocked-co-simulation">5.2.3.1. Transfer of Input / Output Values and Parameters in Hybrid Co-Simulation</a></li>
@@ -10396,7 +10396,7 @@ There may be an event iteration in <strong>Event Mode</strong> at a Newtonian ti
 </div>
 </div>
 <div class="sect3">
-<h4 id="_handling_a_successful_early_return_by_the_co_simulation_master_in_hybrid_co_simulation">5.2.2. Handling a Successful Early-Return by the Co-Simulation Master in Hybrid Co-Simulation</h4>
+<h4 id="_handling_early_return_and_events_in_hybrid_co_simulation">5.2.2. Handling Early Return and Events in Hybrid Co-Simulation</h4>
 <div class="paragraph">
 <p>If the FMU is successful in conducting an early return, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a>.
 If the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a>, the Co-Simulation master has to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> for that FMU.</p>
@@ -10419,18 +10419,29 @@ If the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <
 the FMU signals this via <a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a>.
-If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> and an event has happened, i.e. <a href="#eventOccurred"><code>eventOccurred == fmi3True</code></a>, then an event handling has to be done by the Co-Simulation master.
-In order to start event handling the Co-Simulation master has to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> for that FMU to push the FMU into <strong>Event Mode</strong>.
+<p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through the argument <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> when calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, along with the reason <a href="#eventOccurred"><code>eventOccurred == fmi3True</code></a>.
+The Co-Simulation master can signal back to the FMU if and when to return early with the output arguments <a href="#earlyReturnRequested"><code>earlyReturnRequested</code></a> and <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
+If the FMU returns with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, the Co-Simulation master will start event handling by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> for that FMU to push the FMU into <strong>Event Mode</strong>.
 In this mode the Co-Simulation master is supposed to catch all events through the <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> function.</p>
 </div>
 <div class="paragraph">
 <p>If an early-return request of the Co-Simulation master is ignored by the FMU, then <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#earlyReturn"><code>earlyReturn == fmi3False</code></a>.
 The master can start a resynchronization of FMUs at an event time, if the <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> has passed the event time, the master can roll-back the FMU and repeat the step with a suitable <a href="#communicationStepSize"><code>communicationStepSize</code></a> (if the FMU supports the roll-back).</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3NewDiscreteStatesTYPE(fmi3Instance instance,
+                                             fmi3Boolean *newDiscreteStatesNeeded,
+                                             fmi3Boolean *terminateSimulation,
+                                             fmi3Boolean *nominalsOfContinuousStatesChanged,
+                                             fmi3Boolean *valuesOfContinuousStatesChanged,
+                                             fmi3Boolean *nextEventTimeDefined,
+                                             fmi3Float64 *nextEventTime);</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>In <strong>Event Mode</strong> and only after <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returned with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> the function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> may be called.
-Only the following output arguments may be considered:</p>
+<p>In <strong>Event Mode</strong> and only after <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returned with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a>, and <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called, the function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> may be called.
+Only the following output arguments are defined by the FMU:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -10441,14 +10452,13 @@ Only the following output arguments may be considered:</p>
 <p>When <a href="#nextEventTime"><code>nextEventTimeDefined == fmi3True</code></a>, an event time is available and the value is given by <a href="#nextEventTime"><code>nextEventTime</code></a>.
 This is the case when the model can report in advance the accurate time of the next predictable time event.</p>
 </li>
-</ul>
-</div>
-<div id="terminateSimulation_cs" class="ulist">
-<ul>
 <li>
-<p>When <a href="#terminateSimulation_cs"><code>terminateSimulation == fmi3True</code></a>, the model requested to stop integration and the Co-Simulation master should call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
+<p>When <a href="#terminateSimulation"><code>terminateSimulation == fmi3True</code></a>, the model requested to stop integration and the Co-Simulation master should call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>All other output arguments of <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> are undefined and have no meaning in Hybrid Co-Simulation.</p>
 </div>
 <div class="paragraph">
 <p>In <strong>Event Mode</strong> it is allowed to call <code>fmi3Get{VariableType}</code> after <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> has been called and it is allowed to call <code>fmi3Set{VariableType}</code> before calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.
@@ -10515,7 +10525,7 @@ Function calls of this call order can be omitted.</p>
 <p>The handling of return values of function calls is identical to Basic Co-Simulation.</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#terminateSimulation_cs"><code>terminateSimulation</code></a> becomes <code>fmi3True</code> after calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> then the co-simulation should be terminated by calling <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.
+<p>If <a href="#terminateSimulation"><code>terminateSimulation</code></a> becomes <code>fmi3True</code> after calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> then the co-simulation should be terminated by calling <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.
 Once handling of the <a href="#clock"><code>clock</code></a> events finished, the master calls <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for that FMU to push it into <strong>Step Mode</strong>.
 Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> in Basic and Scheduled Co-Simulation.</p>
 </div>
@@ -10590,7 +10600,7 @@ In order to handle discrete events and <a href="#clock"><code>clock</code></a> t
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1"><a href="#fmi3Terminate"><code>fmi3Terminate</code></a></dt>
 <dd>
-<p>Upon return of <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, if <a href="#terminateSimulation_cs"><code>terminateSimulation == fmi3True</code></a>, the master should finish the Co-Simulation by calling <code>fmi3Terminate</code> on all FMU instances.</p>
+<p>Upon return of <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, if <a href="#terminateSimulation"><code>terminateSimulation == fmi3True</code></a>, the master should finish the Co-Simulation by calling <code>fmi3Terminate</code> on all FMU instances.</p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
 <dd>
@@ -10604,7 +10614,7 @@ When the output argument <code>newDiscreteStatesNeeded == fmi3True</code>, the F
 </dd>
 <dt class="hdlist1"><a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></dt>
 <dd>
-<p>Once all events are handled and <code>newDiscreteStatesNeeded == fmi3False</code>, the FMU should be pushed to <strong>Step Mode</strong> by calling <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, unless it requests to terminate the Co-Simulation by setting  &lt;&lt;terminateSimulation_cs,<code>terminateSimulation</code>&gt; to <code>fmi3True</code>.
+<p>Once all events are handled and <code>newDiscreteStatesNeeded == fmi3False</code>, the FMU should be pushed to <strong>Step Mode</strong> by calling <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, unless it requests to terminate the Co-Simulation by setting  &lt;&lt;terminateSimulation,<code>terminateSimulation</code>&gt; to <code>fmi3True</code>.
 In this case, a new step can be started from the current communication point time.</p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
