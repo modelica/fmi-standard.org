@@ -158,7 +158,7 @@ Other FMI related conference papers:
 
 ### [EOOLT 2011](http://www.eoolt.org/)
 
-* [A Generic FMU Interface for Modelica](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=056;article=003)
+* [A Generic FMU Interface for Modelica](https://ep.liu.se/ecp/056/003/ecp1105603.pdf)
 
 ### [8th International Modelica Conference 2011](https://www.modelica.org/events/modelica2011)
 
