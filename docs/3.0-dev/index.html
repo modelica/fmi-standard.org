@@ -1388,7 +1388,7 @@ For example, in the <a href="#modelDescription.xml"><code>modelDescription.xml</
 <li>
 <p>In the implementation view, one-dimensional C arrays are used.
 In order to access an array element the C convention is used.
-For example, the first element of input argument <code>x</code> for function <code>setContinuousStates</code> is <code>x[0]</code>.</p>
+For example, the first element of input argument <code>continuousStates</code> for function <code>setContinuousStates</code> is <code>continuousStates[0]</code>.</p>
 </li>
 </ul>
 </div>
@@ -3436,7 +3436,8 @@ h_2(u_1, u_2)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfEventIndicatorsTYPE(fmi3Instance instance, size_t* nz);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfEventIndicatorsTYPE(fmi3Instance instance,
+                                                      size_t* nEventIndicators);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3449,7 +3450,7 @@ If all <a href="#structuralParameter"><code>structural parameters</code></a> are
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>nz</code> points to the <code>size_t</code> variable that will receive the number of event indicators.</p>
+<p>Argument <code>nEventIndicators</code> points to the <code>size_t</code> variable that will receive the number of event indicators.</p>
 </li>
 </ul>
 </div>
@@ -3461,11 +3462,12 @@ If all <a href="#structuralParameter"><code>structural parameters</code></a> are
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfContinuousStatesTYPE(fmi3Instance instance, size_t* nx);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfContinuousStatesTYPE(fmi3Instance instance,
+                                                       size_t* nContinuousStates);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This function returns the number of <a href="#state"><code>states</code></a>.
+<p>This function returns the number of <a href="#state"><code>continuous states</code></a>.
 The dependency of the number of states on <a href="#structuralParameter"><code>structural parameters</code></a> is implicitly given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file.
 <em>[All state derivative variables are listed as elements <code>&lt;Derivative&gt;</code> in <code>&lt;ModelStructure&gt;</code>.</em>
 <em>Each state derivative variable maps to the corresponding state variable by the <code>derivative</code> attribute.</em>
@@ -3475,7 +3477,7 @@ If all <a href="#structuralParameter"><code>structural parameters</code></a> are
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>nx</code> points to the <code>size_t</code> variable that will receive the number of <a href="#state"><code>states</code></a>.</p>
+<p>Argument <code>nContinuousStates</code> points to the <code>size_t</code> variable that will receive the number of <a href="#state"><code>states</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -8413,8 +8415,8 @@ This is unproblematic for time and states, but is more involved for <a href="#pa
 <div id="fmi3SetContinuousStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetContinuousStatesTYPE(fmi3Instance instance,
-                                               const fmi3Float64 x[],
-                                               size_t nx);</code></pre>
+                                               const fmi3Float64 continuousStates[],
+                                               size_t nContinuousStates);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8423,10 +8425,10 @@ This is unproblematic for time and states, but is more involved for <a href="#pa
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>nx</code> is the length of</p>
+<p>Argument <code>nContinuousStates</code> is the length of</p>
 </li>
 <li>
-<p>argument <code>x</code></p>
+<p>argument <code>continuousStates</code></p>
 </li>
 </ul>
 </div>
@@ -8636,14 +8638,14 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDerivativesTYPE(fmi3Instance instance,
                                           fmi3Float64 derivatives[],
-                                          size_t nx);</code></pre>
+                                          size_t nCcontinuousStates);</code></pre>
 </div>
 </div>
 <div id="fmi3GetEventIndicators" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetEventIndicatorsTYPE(fmi3Instance instance,
                                               fmi3Float64 eventIndicators[],
-                                              size_t ni);</code></pre>
+                                              size_t nEventIndicators);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8651,13 +8653,13 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 Note that <a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> is possible for both functions.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#derivative"><code>derivatives</code></a> are returned as a vector with <code>nx</code> elements.
-The ordering of the elements of the <code>derivatives</code> vector is identical to the ordering of the state vector (for example, <code>derivatives[2]</code> is the <a href="#derivative"><code>derivative</code></a> of <code>x[2]</code>).
+<p>The <a href="#derivative"><code>derivatives</code></a> are returned as a vector with <code>nContinuousStates</code> elements.
+The ordering of the elements of the <code>derivatives</code> vector is identical to the ordering of the state vector (for example, <code>derivatives[2]</code> is the <a href="#derivative"><code>derivative</code></a> of <code>continuousStates[2]</code>).
 The order of the states and derivatives is also the same as the ordered list of elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>.
 <em>[Array variables are serialized in "row major" order, as usual.]</em></p>
 </div>
 <div class="paragraph">
-<p>The event indicators are returned as a vector with <code>ni</code> elements.
+<p>The event indicators are returned as a vector with <code>nEventIndicators</code> elements.
 The order of event indicators in <code>eventIndicators</code> vector is the same as the ordered list of <code>&lt;EventIndicator&gt;</code> elements in <code>&lt;ModelStructure&gt;</code>.
 <em>[Array variables are serialized in "row major" order, as usual.]</em>
 A state event is triggered when the domain of an event indicator changes from \(z_j &gt; 0\) to \(z_j \leq 0\) or vice versa.
@@ -8666,27 +8668,29 @@ Furthermore, \(z_j\) should be scaled in the FMU with its nominal value (so all 
 </div>
 <div id="fmi3GetContinuousStates" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetContinuousStatesTYPE(fmi3Instance instance, fmi3Float64 x[], size_t nx);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetContinuousStatesTYPE(fmi3Instance instance,
+                                               fmi3Float64 continuousStates[],
+                                               size_t nContinuousStates);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Return the new (continuous) state vector <code>x</code>.</p>
+<p>Return the new continuous state vector <code>continuousStates</code>.</p>
 </div>
 <div id="fmi3GetNominalsOfContinuousStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNominalsOfContinuousStatesTYPE(fmi3Instance instance,
                                                          fmi3Float64 nominals[],
-                                                         size_t nx);</code></pre>
+                                                         size_t nContinuousStates);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Return the nominal values of the continuous <a href="#state"><code>states</code></a>.
 This function should always be called after calling function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged == fmi3True</code>, since then the nominal values of the continuous <a href="#state"><code>states</code></a> have changed <em>[for example, because the association of the continuous <a href="#state"><code>states</code></a> to variables has changed due to internal dynamic state selection]</em>.
-If the FMU does not have information about the nominal value of a continuous <a href="#state"><code>state</code></a> i, a nominal value <code>x_nominal[i] == 1.0</code> should be returned.
-Note that it is required that <code>x_nominal[i] &gt; 0.0</code>.
+If the FMU does not have information about the nominal value of a continuous <a href="#state"><code>state</code></a> i, a nominal value <code>nominals[i] == 1.0</code> should be returned.
+Note that it is required that <code>nominals[i] &gt; 0.0</code>.
 <em>[Typically, the nominal values of the continuous <a href="#state"><code>states</code></a> are used to compute the absolute tolerance required by the integrator.</em>
 <em>Example:</em><br>
-<code>absoluteTolerance[i] = 0.01 * tolerance * x_nominal[i];</code> <em>]</em></p>
+<code>absoluteTolerance[i] = 0.01 * tolerance * nominals[i];</code> <em>]</em></p>
 </div>
 </div>
 <div class="sect3">
