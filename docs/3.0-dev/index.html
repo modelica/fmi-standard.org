@@ -6244,10 +6244,10 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
    &lt;Float64 name="x1"      valueReference= "5"/&gt;
    &lt;Float64 name="x2"      valueReference= "6"/&gt;
    &lt;Float64 name="x3"      valueReference= "7"/&gt;
-   &lt;Float64 name="der(x1)" valueReference= "8"/&gt;
-   &lt;Float64 name="der(x2)" valueReference= "9"/&gt;
-   &lt;Float64 name="der(x3)" valueReference="10"/&gt;
-   &lt;Float64 name="y"       valueReference="11"/&gt;
+   &lt;Float64 name="der(x1)" valueReference= "8" derivative="5"/&gt;
+   &lt;Float64 name="der(x2)" valueReference= "9" derivative="6"/&gt;
+   &lt;Float64 name="der(x3)" valueReference="10" derivative="7"/&gt;
+   &lt;Float64 name="y"       valueReference="11" causality="output"/&gt;
 &lt;/ModelVariables&gt;
 &lt;ModelStructure&gt;
    &lt;Output valueReference="11" dependencies="6 7"/&gt;
@@ -6258,6 +6258,7 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
    &lt;InitialUnknown valueReference="7" dependencies="2 4 5 11"/&gt;
    &lt;InitialUnknown valueReference="8"/&gt;
    &lt;InitialUnknown valueReference="10"/&gt;
+   &lt;InitialUnknown valueReference="11"/&gt;
 &lt;/ModelStructure&gt;</code></pre>
 </div>
 </div>
@@ -6280,6 +6281,7 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelStructure&gt;
   &lt;Output valueReference="2" dependencies="1" dependenciesKind="discrete"/&gt;
+  &lt;InitialUnknown valueReference="2"/&gt;
 &lt;/ModelStructure&gt;</code></pre>
 </div>
 </div>
@@ -6306,6 +6308,7 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelStructure&gt;
   &lt;Output valueReference="2" dependencies="1" dependenciesKind="dependent"/&gt;
+  &lt;InitialUnknown valueReference="2"/&gt;
 &lt;/ModelStructure&gt;</code></pre>
 </div>
 </div>
@@ -6329,7 +6332,7 @@ The definition of the model structure is then:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelVariables&gt;
    &lt;Float64 name="u" valueReference= "1"/&gt;
-   &lt;Float64 name="y" valueReference= "2"/&gt;
+   &lt;Float64 name="y" valueReference= "2" causality="output"/&gt;
    &lt;Float64 name="x" valueReference= "3"/&gt;
    &lt;Float64 name="dxdt" valueReference= "4"/&gt;
 &lt;/ModelVariables&gt;
@@ -6337,7 +6340,6 @@ The definition of the model structure is then:</p>
   &lt;Output valueReference="2" dependencies="3" dependenciesKind="constant"/&gt;
   &lt;Derivative valueReference="4" dependencies="1" dependenciesKind="constant"/&gt;
   &lt;InitialUnknown valueReference="2" dependencies="3"/&gt;
-  &lt;InitialUnknown valueReference="4" dependencies="1"/&gt;
 &lt;/ModelStructure&gt;</code></pre>
 </div>
 </div>
@@ -9149,8 +9151,8 @@ If this is the case, then flag <code>canGetAndSetFMUState</code> must be <code>t
     &lt;Float64 name="inertia1.w" valueReference="805306369"
       description="Absolute angular velocity of component (= der(phi))" causality="output"
       declaredType="Modelica.SIunits.AngularVelocity"/&gt;
-    &lt;Float64 name="x[1]" valueReference="0" initial="exact"/&gt;
-    &lt;Float64 name="x[2]" valueReference="1" initial="exact"/&gt;
+    &lt;Float64 name="x[1]" valueReference="0" initial="exact" start="0"/&gt;
+    &lt;Float64 name="x[2]" valueReference="1" initial="exact" start="0"/&gt;
     &lt;Float64 name="der(x[1])" valueReference="2" derivative="0"/&gt;
     &lt;Float64 name="der(x[2])" valueReference="3" derivative="1"/&gt;
   &lt;/ModelVariables&gt;
@@ -10330,6 +10332,27 @@ The XML file may have the following content:</p>
     modelIdentifier="MyLibrary_SpringMassDamper"
     canHandleVariableCommunicationStepSize="true"
     canReturnEarlyAfterIntermediateUpdate="true"/&gt;
+  &lt;UnitDefinitions&gt;
+    &lt;Unit name="rad"&gt;
+      &lt;BaseUnit rad="1"/&gt;
+      &lt;DisplayUnit name="deg" factor="57.2957795130823"/&gt;
+    &lt;/Unit&gt;
+    &lt;Unit name="rad/s"&gt;
+      &lt;BaseUnit s="-1" rad="1"/&gt;
+    &lt;/Unit&gt;
+    &lt;Unit name="kg.m2"&gt;
+      &lt;BaseUnit kg="1" m="2"/&gt;
+    &lt;/Unit&gt;
+    &lt;Unit name="N.m"&gt;
+      &lt;BaseUnit kg="1" m="2" s="-2"/&gt;
+    &lt;/Unit&gt;
+  &lt;/UnitDefinitions&gt;
+  &lt;TypeDefinitions&gt;
+    &lt;Float64Type name="Modelica.SIunits.Inertia" quantity="MomentOfInertia" unit="kg.m2" min="0.0"/&gt;
+    &lt;Float64Type name="Modelica.SIunits.Torque" quantity="Torque" unit="N.m"/&gt;
+    &lt;Float64Type name="Modelica.SIunits.AngularVelocity" quantity="AngularVelocity" unit="rad/s"/&gt;
+    &lt;Float64Type name="Modelica.SIunits.Angle" quantity="Angle" unit="rad"/&gt;
+  &lt;/TypeDefinitions&gt;
   &lt;DefaultExperiment startTime="0.0" stopTime="3.0" tolerance="0.0001"/&gt;
   &lt;ModelVariables&gt;
     &lt;Float64 name="inertia1.J" valueReference="1073741824"
