@@ -1,5 +1,5 @@
 ---
-title: FMI newsletter
+title: FMI Newsletter
 categories: [news]
 layout: post
 ---
