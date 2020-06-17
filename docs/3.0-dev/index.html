@@ -5148,8 +5148,15 @@ The <a href="#variability"><code>variability</code></a> of the dimension size is
 However different dimension sizes can be specified using different mechanisms and can have differing <a href="#variability"><code>variability</code></a> attributes.</p>
 </div>
 <div class="paragraph">
-<p>All initial dimension sizes (i.e. prior to any configuration or reconfiguration) must be positive integers (i.e. not zero), so that no dimension is initially vanished.
-Changes to dimension sizes are constrained by the <code>min</code>/<code>max</code> attributes of the referenced <a href="#structuralParameter"><code>structural parameters</code></a>, which can be any non-negative integer, including zero.
+<p>All initial dimension sizes (i.e. prior to any configuration or reconfiguration) must be positive integers (i.e. not zero), so that no dimension is initially vanished.</p>
+</div>
+<div class="paragraph">
+<p><em>[This allows importing tools to ignore <a href="#structuralParameter"><code>structural parameters</code></a> because that <a href="#start"><code>start</code></a> value reflects the internal default setting of that <a href="#structuralParameter"><code>structural parameter</code></a>.</em>
+<em>The rationale for requiring positive start values for <a href="#structuralParameter"><code>structural parameters</code></a> is that this avoids importers having to deal with vanishing dimensions if they do not want to deal with them (or even with changing sizes at all).</em>
+<em>If we allowed 0 dimension sizes for initial values, tools that do not even care about changing dimension sizes must be prepared to handle vanishing dimensions.]</em></p>
+</div>
+<div class="paragraph">
+<p>Changes to dimension sizes are constrained by the <code>min</code>/<code>max</code> attributes of the referenced <a href="#structuralParameter"><code>structural parameters</code></a>, which can be any non-negative integer, including zero.
 Specifying a minimum size of zero on a <a href="#structuralParameter"><code>structural parameter</code></a> allows any related dimension sizes to be changed to zero in <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong>, thus causing the respective array size to go to zero, which leaves the respective array variable without any active elements.</p>
 </div>
 <div class="paragraph">
@@ -5282,7 +5289,7 @@ This <a href="#causality"><code>causality</code></a> requires the variable not t
 <p><em>]</em></p>
 </div>
 <div class="paragraph">
-<p><a href="#structuralParameter"><code>structural parameters</code></a> that are referenced in <code>&lt;Dimension&gt;</code> elements may have a <code>min</code> attribute with 0 but the <a href="#start"><code>start</code></a> attribute, which is mandatory for <a href="#structuralParameter"><code>structural parameters</code></a>, must have a value larger than 0 for <a href="#structuralParameter"><code>structural parameters</code></a> used in <code>&lt;Dimension&gt;</code> elements. <em>[This allows importing tools to ignore <a href="#structuralParameter"><code>structural parameters</code></a> because that <a href="#start"><code>start</code></a> value reflects the internal default setting of that <a href="#structuralParameter"><code>structural parameter</code></a>]</em>.</p>
+<p><a href="#structuralParameter"><code>structural parameters</code></a> that are referenced in <code>&lt;Dimension&gt;</code> elements may have a <code>min</code> attribute with 0 but the <a href="#start"><code>start</code></a> attribute, which is mandatory for <a href="#structuralParameter"><code>structural parameters</code></a>, must have a value larger than 0 for <a href="#structuralParameter"><code>structural parameters</code></a> used in <code>&lt;Dimension&gt;</code> elements.</p>
 </div>
 <div class="paragraph">
 <p>The default of <a href="#causality"><code>causality</code></a> is <a href="#local"><code>local</code></a>.<br>
