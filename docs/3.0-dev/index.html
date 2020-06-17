@@ -2565,7 +2565,7 @@ They can have initial values defined by xml-attributes <a href="#initial"><code>
 States get updated.</p>
 </li>
 <li>
-<p>Partial evaluation for a subactive <a href="#clock"><code>clock</code></a>: <a href="#state"><code>states</code></a> are left unmodified.</p>
+<p>Partial evaluation for a subactive <a href="#clock"><code>clock</code></a>: <a href="#state"><code>states</code></a> are left unmodified, only outputs are computed.</p>
 <div class="paragraph">
 <p><em>[Modelica uses this mode for the first tick in clocked continuous equations.</em>
 <em>This mode can also be requested by the calling environment with <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, e.g. to form partial derivatives</em> \(\partial y_j / \partial x_{j-1}\) <em>.]</em></p>
@@ -2805,11 +2805,11 @@ When getting or setting the values of array variables, the serialization of arra
 <p><code>values</code> is a vector with the actual activation values of the clock variables, <code>fmi3ClockActive</code> specifying that the clock is activated, otherwise it is deactivated.</p>
 </li>
 <li>
-<p><code>subactive</code> requires evaluation of a clocked partition in subactive mode (only output equations) if the argument subactive is not a null pointer and <code>subactive[i] = fmi3True</code>.
+<p><code>subactive</code> requires evaluation of a clocked partition in subactive mode (only output equations, no states change) if the argument subactive is not a null pointer and <code>subactive[i] = fmi3True</code>.
 <code>subactive[i]</code> has no meaning for Communication Point Clocks and is ignored for such <a href="#clock"><code>clocks</code></a>.</p>
 </li>
 <li>
-<p><code>nValues</code> provides the number of values in the <code>values</code> and <code>subactive</code> vectors, which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar clock variables.</p>
+<p><code>nValues</code> provides the number of values in the <code>values</code> and <code>subactive</code> (if not null) vectors, which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReferences</code></a> point to scalar clock variables.</p>
 </li>
 </ul>
 </div>
