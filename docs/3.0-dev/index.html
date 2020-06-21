@@ -797,12 +797,11 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel3">
 <li><a href="#_initialization_mode_2">4.1.1. Initialization Mode</a></li>
 <li><a href="#_step_mode">4.1.2. Step Mode</a></li>
-<li><a href="#_early_return_from_current_communication_step">4.1.3. Early Return From Current Communication Step</a></li>
 </ul>
 </li>
 <li><a href="#_application_programming_interface_2">4.2. Application Programming Interface</a>
 <ul class="sectlevel3">
-<li><a href="#transfer-of-input-output-and-parameters">4.2.1. Variables Access in Co-Simulation Interface Types</a></li>
+<li><a href="#transfer-of-input-output-and-parameters">4.2.1. Variables Access</a></li>
 <li><a href="#_computation_in_co_simulation_interface_types">4.2.2. Computation in Co-Simulation Interface Types</a></li>
 <li><a href="#state-machine-basic-co-simulation">4.2.3. State Machine for Basic Co-Simulation</a>
 <ul class="sectlevel4">
@@ -823,13 +822,8 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#basic-co-simulation-schema">4.3. Description Schema</a>
 <ul class="sectlevel3">
-<li><a href="#xml-example-co-simulation">4.3.1. Example XML Description File</a></li>
-<li><a href="#_early_return_from_current_communication_step_2">4.3.2. Early Return From Current Communication Step</a>
-<ul class="sectlevel4">
-<li><a href="#_co_simulation_fmu">4.3.2.1. Co-Simulation FMU</a></li>
-<li><a href="#_example_xml_description_file">4.3.2.2. Example XML Description File</a></li>
-</ul>
-</li>
+<li><a href="#_basic_co_simulation_fmu">4.3.1. Basic Co-Simulation FMU</a></li>
+<li><a href="#xml-example-co-simulation">4.3.2. Example XML Description File (with Early Return)</a></li>
 </ul>
 </li>
 </ul>
@@ -895,7 +889,7 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#scheduled-co-simulation-schema">6.3. Description Schema</a>
 <ul class="sectlevel3">
-<li><a href="#_example_xml_description_file_2">6.3.1. Example XML Description File</a></li>
+<li><a href="#_example_xml_description_file">6.3.1. Example XML Description File</a></li>
 </ul>
 </li>
 </ul>
@@ -7135,7 +7129,48 @@ This data is not transferred via the FMI API.</p>
 <div class="sect3">
 <h4 id="early-return">2.4.2. Early Return</h4>
 <div class="paragraph">
-<p>An FMU is allowed to stop the execution of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> and return without reaching the predefined communication time, i.e. <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <code>+</code> <a href="#communicationStepSize"><code>communicationStepSize</code></a>.
+<p><em>[ In the particular context of multi-FMU architectures, significant co-simulation speed-up may be obtained if the master can avoid waiting until the end of the slowest FMU step integration.</em>
+<em>If an FMU prematurely stops its current step integration computation due to an unpredictable internal event before the normal end of the step calculation, all other concurrently running FMUs may be stopped as soon as possible in order to minimize the time needed for the Co-Simulation master to resynchronize all the FMUs at the same event time.</em></p>
+</div>
+<div class="paragraph">
+<p><em>In this context based on parallel multi-FMU calculations, <a href="#figure-early-return">Figure 21</a> illustrates different possibilities to synchronize FMUs at the same event time.</em></p>
+</div>
+<div id="figure-early-return" class="imageblock text-center">
+<div class="content">
+<img src="images/earlyReturnFigure.png" alt="earlyReturnFigure" width="100%">
+</div>
+<div class="title">Figure 21. Different possibilities to synchronize parallel FMUs at the same event time.</div>
+</div>
+<div class="paragraph">
+<p><em>Each FMU starts integration from communication point \(t_{i}\) to reach the next communication point \(t_{i+1}\).</em>
+<em>Assuming an unexpected internal event is detected at</em> \(t^{'}_{i+1}&lt; t_{i+1}\) <em>during FMU<sub>1</sub> integration, the master is informed of this early return.</em>
+<em>So now the master would like to avoid other FMUs exceed the event time, since all FMUs should be resynchronized at the event time which will be the next new communication point.</em></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>In the case of FMU<sub>1</sub>, the internal event time becomes the new</em> \(t_{i+1}\) <em>time, i.e. this is the source of the event.</em></p>
+</li>
+<li>
+<p><em>In the case of FMU<sub>2</sub>, a complete rollback from</em> \(t_{i}\) <em>to</em> \(t^{'}_{i+1}\) <em>is necessary.</em></p>
+</li>
+<li>
+<p><em>In the case of FMU<sub>3</sub>, computation is immediately interrupted and only a partial rollback is necessary to reach \(t^{'}_{i+1}\) time.</em></p>
+</li>
+<li>
+<p><em>In the case of FMU<sub>4</sub>, the current step integration has been interrupted at</em> \(t^{'}_{i+1}\) <em>and no rollback is necessary.</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>Each ongoing FMU stops its integration either exactly at the broken time given by the master or immediately after its current intermediate step if this time is already out-of-date.</em>
+<em>Afterwards, a new step integration done on the FMU returns and signals the premature stop (early-return) to the master.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Due to the early-return mechanism, the overall execution time of the simulation is reduced.]</em></p>
+</div>
+<div class="paragraph">
+<p>A Basic Co-simulation or Hybrid Co-Simulation FMU is allowed to stop the execution of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> and return without reaching the predefined communication time, i.e. <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <code>+</code> <a href="#communicationStepSize"><code>communicationStepSize</code></a>.
 This mechanism is called "early return".</p>
 </div>
 <div id="canReturnEarlyAfterIntermediateUpdate" class="paragraph">
@@ -7315,14 +7350,14 @@ Note that <strong>Event Mode</strong> is not supported in Basic Co-Simulation an
 </div>
 <div class="paragraph">
 <p>It is important to distinguish intermediate output from successful internal integration steps from intermediate outputs valid only for temporary solver states.
-<a href="#figure-intermediate-variable-access">Figure 21</a> shows an overview of the solver states and the intended use of intermediate variable access.
+<a href="#figure-intermediate-variable-access">Figure 22</a> shows an overview of the solver states and the intended use of intermediate variable access.
 It is not allowed to call <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> for a simulation time point prior to a previous call with <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a>.</p>
 </div>
 <div id="figure-intermediate-variable-access" class="imageblock text-center">
 <div class="content">
 <img src="images/intermediatevariableaccess.svg" alt="intermediatevariableaccess" width="65%">
 </div>
-<div class="title">Figure 21. Overview of solver states and intermediate variable access during a communication step</div>
+<div class="title">Figure 22. Overview of solver states and intermediate variable access during a communication step</div>
 </div>
 <div class="paragraph">
 <p>The following code example shows an implementation of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that uses intermediate variable access to record a set of variables at every internal solver step:</p>
@@ -7707,13 +7742,13 @@ The default is <code>false</code>.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter contains the interface description to access the equations of a dynamic system from a C program.
-A schematic view of a model in FMI for Model Exchange format is shown in <a href="#figure-model-exchange-data-flow">Figure 22</a>:</p>
+A schematic view of a model in FMI for Model Exchange format is shown in <a href="#figure-model-exchange-data-flow">Figure 23</a>:</p>
 </div>
 <div id="figure-model-exchange-data-flow" class="imageblock text-center">
 <div class="content">
 <img src="images/model-exchange-data-flow.svg" alt="model exchange data flow" width="80%">
 </div>
-<div class="title">Figure 22. Data flow between the environment and an FMU for Model Exchange</div>
+<div class="title">Figure 23. Data flow between the environment and an FMU for Model Exchange</div>
 </div>
 <div class="paragraph">
 <p><strong class="blue">Blue</strong> arrows: Information provided by the FMU.<br>
@@ -7841,13 +7876,13 @@ is a continuous function of time inside each interval \(t_i^+ &lt; \ ^-t_{i+1}\)
 </tbody>
 </table>
 <div class="paragraph">
-<p>At every event instant \(t_i\), variables might be discontinuous (see <a href="#figure-piecwise-continuous-variables">Figure 23</a>).</p>
+<p>At every event instant \(t_i\), variables might be discontinuous (see <a href="#figure-piecwise-continuous-variables">Figure 24</a>).</p>
 </div>
 <div id="figure-piecwise-continuous-variables" class="imageblock">
 <div class="content">
 <img src="images/PieceWiseContinuousVariables.svg" alt="PieceWiseContinuousVariables" width="60%">
 </div>
-<div class="title">Figure 23. Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
+<div class="title">Figure 24. Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
 </div>
 <div class="paragraph">
 <p>The next event instance \(t_i\) is defined by the earliest occurance of one of the following conditions:</p>
@@ -7869,7 +7904,7 @@ Such an event is called external event.
 Such an event is called time event.</p>
 </li>
 <li>
-<p>At a time instant, where an event indicator \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 24</a>).
+<p>At a time instant, where an event indicator \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 25</a>).
 More precisely: An event \(t = t_i\) occurs at the smallest time instant "min t" with \(t&gt;t_{i-1}\) where "\((z_j(t)&gt;0) \neq (z_j(t_{i-1}) &gt;0)\)".
 Such an event is called state event.
 <em>[This definition is slightly different from the standard definition of state events: "</em> \(z_j(t) \cdot z_j(t_{i-1}) \leq 0\) <em>".</em>
@@ -7882,7 +7917,7 @@ All event indicators are piecewise continuous and are collected together in one 
 <div class="content">
 <img src="images/Event.svg" alt="Event" width="60%">
 </div>
-<div class="title">Figure 24. An event occurs when the event indicator changes its domain from \(z&gt;0\) to \(z\leq 0\) or vice versa.</div>
+<div class="title">Figure 25. An event occurs when the event indicator changes its domain from \(z&gt;0\) to \(z\leq 0\) or vice versa.</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="4">
@@ -7947,7 +7982,7 @@ Variables of this type are defined with attribute <a href="#causality"><code>cau
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{z}(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the event indicators used to define state events (recall <a href="#figure-events">Figure 24</a>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the event indicators used to define state events (recall <a href="#figure-events">Figure 25</a>).
 For notational convenience, an event indicator is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description in <a href="#table-math-model-exchange">Table 9</a>.
 In reality, event indicator is however part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
@@ -8020,13 +8055,13 @@ This data is optionally provided in the XML file under element <code>&lt;ModelSt
 If this data is not provided, the worst case must be assumed, that is, all <a href="#output"><code>output</code></a> variables depend algebraically on all <a href="#input"><code>input</code></a> variables.</p>
 </div>
 <div class="paragraph">
-<p><em>[Example: In <a href="#figure-connected-fmus">Figure 25</a> two different types of connected FMUs are shown (the "dotted lines" characterize the dependency information):</em></p>
+<p><em>[Example: In <a href="#figure-connected-fmus">Figure 26</a> two different types of connected FMUs are shown (the "dotted lines" characterize the dependency information):</em></p>
 </div>
 <div id="figure-connected-fmus" class="imageblock text-center">
 <div class="content">
 <img src="images/ArtificialAlgebraicLoop.svg" alt="ArtificialAlgebraicLoop" width="80%">
 </div>
-<div class="title">Figure 25. Calling sequences for FMUs that are connected in a loop.</div>
+<div class="title">Figure 26. Calling sequences for FMUs that are connected in a loop.</div>
 </div>
 <div class="paragraph">
 <p><em>In the upper diagram, FMU1 and FMU2 are connected in such a way that by an appropriate sequence of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> calls, the FMU variables can be computed.</em>
@@ -8204,7 +8239,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <p><em>In <a href="#table-math-model-exchange">Table 9</a>, for notational convenience in every mode one function call is defined to compute all output arguments from all inputs arguments.</em>
 <em>In reality, every scalar output argument can be computed by one <code>fmi3Get{VariableType}</code> function call.</em>
 <em>Additionally, the output argument need not be a function of all input arguments, but of only a subset from it, as defined in the XML file under <code>&lt;ModelStructure&gt;</code>.</em>
-<em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 25</a>. For example, since</em> \(y_{\mathit{2a}}\) <em>depends only on</em> \(u_{\mathit{1a}}\) <em>, but not on</em> \(u_{\mathit{1b}}\)<em>, it is possible to call</em> <code>fmi3Set{VariableType}</code> <em>to set</em> \(u_{\mathit{1a}}\) <em>, and then inquire</em> \(y_{\mathit{2a}}\) <em>with</em> <code>fmi3Get{VariableType}</code> <em>without setting</em> \(u_{\mathit{1b}}\) <em>beforehand.</em></p>
+<em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 26</a>. For example, since</em> \(y_{\mathit{2a}}\) <em>depends only on</em> \(u_{\mathit{1a}}\) <em>, but not on</em> \(u_{\mathit{1b}}\)<em>, it is possible to call</em> <code>fmi3Set{VariableType}</code> <em>to set</em> \(u_{\mathit{1a}}\) <em>, and then inquire</em> \(y_{\mathit{2a}}\) <em>with</em> <code>fmi3Get{VariableType}</code> <em>without setting</em> \(u_{\mathit{1b}}\) <em>beforehand.</em></p>
 </div>
 <div class="paragraph">
 <p><em>It is non-trivial to provide code for <code>fmi3Set{VariableType}</code>, <code>fmi3Get{VariableType}</code>, if the environment can call <code>fmi3Set{VariableType}</code> on the <a href="#input"><code>inputs</code></a> in quite different orders.</em>
@@ -8707,13 +8742,13 @@ Note that it is required that <code>nominals[i] &gt; 0.0</code>.
 <div class="sect3">
 <h4 id="state-machine-model-exchange">3.2.3. State Machine for Model Exchange</h4>
 <div class="paragraph">
-<p>Every implementation of the FMI must support calling sequences of the functions according to the state machine in <a href="#figure-model-exchange-state-machine">Figure 26</a>.</p>
+<p>Every implementation of the FMI must support calling sequences of the functions according to the state machine in <a href="#figure-model-exchange-state-machine">Figure 27</a>.</p>
 </div>
 <div id="figure-model-exchange-state-machine" class="imageblock text-center">
 <div class="content">
 <img src="images/state-machine-model-exchange.svg" alt="state machine model exchange" width="80%">
 </div>
-<div class="title">Figure 26. Calling sequence of Model Exchange C functions in form of an UML 2.0 state machine.</div>
+<div class="title">Figure 27. Calling sequence of Model Exchange C functions in form of an UML 2.0 state machine.</div>
 </div>
 <div class="paragraph">
 <p>The objective of the state machine is to define the allowed calling sequences for functions of the FMI: Calling sequences not accepted by the state machine are not supported by the FMI.
@@ -9399,7 +9434,7 @@ Algebraic equations are solved in this mode.</p>
 If the slave is connected in loops with other models, no iterations over the FMU equations are possible.</p>
 </div>
 <div class="paragraph">
-<p><em>[Note that for a Co-Simulation FMU, no super-dense time description is used at communication points.]</em></p>
+<p><em>[Note that for a Basic Co-Simulation FMU, no super-dense time description is used at communication points.]</em></p>
 </div>
 <div class="paragraph">
 <p>The equations are defined in <a href="#table-math-basic-co-simulation">Table 10</a> can be evaluated in the respective mode.
@@ -9512,50 +9547,6 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <em>The variables computed by</em> \(\mathbf{f}_{\mathit{doStep}}\) <em>can be inquired by</em>  <code>fmi3Get{VariableType}</code> <em>function calls.]</em></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_early_return_from_current_communication_step">4.1.3. Early Return From Current Communication Step</h4>
-<div class="paragraph">
-<p>In the particular context of multi-FMU architectures, significant co-simulation speed-up may be obtained if the master can avoid waiting until the end of the slowest FMU step integration.
-If an FMU prematurely stops its current step integration computation due to an unpredictable internal event before the normal end of the step calculation, all other concurrently running FMUs may be stopped as soon as possible in order to minimize the time needed for the Co-Simulation master to resynchronize all the FMUs at the same event time.</p>
-</div>
-<div class="paragraph">
-<p>In this context based on parallel multi-FMU calculations, <a href="#figure-early-return">Figure 27</a> illustrates different possibilities to synchronize FMUs at the same event time.</p>
-</div>
-<div id="figure-early-return" class="imageblock text-center">
-<div class="content">
-<img src="images/earlyReturnFigure.png" alt="earlyReturnFigure" width="100%">
-</div>
-<div class="title">Figure 27. Different possibilities to synchronize parallel FMUs at the same event time.</div>
-</div>
-<div class="paragraph">
-<p>Each FMU starts integration from communication point \(t_{i}\) to reach the next communication point \(t_{i+1}\).
-Assuming an unexpected internal event is detected at \(t^{'}_{i+1}&lt; t_{i+1}\) during FMU<sub>1</sub> integration, the master is informed of this early return.
-So now the master would like to avoid other FMUs exceed the event time, since all FMUs should be resynchronized at the event time which will be the next new communication point.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>In the case of FMU<sub>1</sub>, the internal event time becomes the new \(t_{i+1}\) time, i.e. this is the source of the event.</p>
-</li>
-<li>
-<p>In the case of FMU<sub>2</sub>, a complete rollback from \(t_{i}\) to \(t^{'}_{i+1}\) is necessary.</p>
-</li>
-<li>
-<p>In the case of FMU<sub>3</sub>, computation is immediately interrupted and only a partial rollback is necessary to reach \(t^{'}_{i+1}\) time.</p>
-</li>
-<li>
-<p>In the case of FMU<sub>4</sub>, the current step integration has been interrupted at \(t^{'}_{i+1}\) and no rollback is necessary.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Each ongoing FMU stops its integration either exactly at the broken time given by the master or immediately after its current intermediate step if this time is already out-of-date.
-Afterwards, a new step integration done on the FMU returns and signals the premature stop (early-return) to the master.</p>
-</div>
-<div class="paragraph">
-<p>Due to the early-return mechanism, the overall execution time of the simulation is reduced.</p>
-</div>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_application_programming_interface_2">4.2. Application Programming Interface</h3>
@@ -9563,7 +9554,7 @@ Afterwards, a new step integration done on the FMU returns and signals the prema
 <p>This section contains the interface description to access the input/output data and status information of a Co-Simulation slave from a C program.</p>
 </div>
 <div class="sect3">
-<h4 id="transfer-of-input-output-and-parameters">4.2.1. Variables Access in Co-Simulation Interface Types</h4>
+<h4 id="transfer-of-input-output-and-parameters">4.2.1. Variables Access</h4>
 <div class="paragraph">
 <p><a href="#input"><code>Input</code></a> and <a href="#output"><code>output</code></a> variables and other variables are accessed via the <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> functions, defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
 </div>
@@ -10032,8 +10023,8 @@ We consider two slaves, where both have one <a href="#continuous"><code>continuo
 <p>We assume no algebraic dependency between input and <a href="#output"><code>output</code></a> of each slave.
 The code demonstrates the simplest master algorithm as shown in <a href="#math-basic-co-simulation">Section 4.1</a>:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic" start="8">
+<div class="ulist">
+<ul>
 <li>
 <p>Constant communication step size.</p>
 </li>
@@ -10041,12 +10032,9 @@ The code demonstrates the simplest master algorithm as shown in <a href="#math-b
 <p>No repeating of communication steps.</p>
 </li>
 <li>
-<p>The slaves do not support asynchronous execution of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
 <p>The error handling is implemented in a very rudimentary way.</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10146,6 +10134,8 @@ if (status != fmi3Fatal) {
 <p>This is defined in <a href="#fmi-description-schema">Section 2.2</a>.
 Additionally, the Co-Simulation specific element <code>Implementation</code> is defined in the next section.</p>
 </div>
+<div class="sect3">
+<h4 id="_basic_co_simulation_fmu">4.3.1. Basic Co-Simulation FMU</h4>
 <div class="paragraph">
 <p>If the XML file defines an FMU for Basic Co-Simulation, element <code>BasicCoSimulation</code> must be present.
 It is defined as:</p>
@@ -10214,7 +10204,7 @@ If this is the case, then flag <code>canGetAndSetFMUState</code> must be <code>t
 Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defined by <code>maxOutputDerivativeOrder</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canHandleVariableCommunicationStepSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canHandleVariableCommunicationStepSize"></a><code>canHandleVariableCommunicationStepSize</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The slave can handle variable communication step size.
 The communication step size (argument <a href="#communicationStepSize"><code>communicationStepSize</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>) has not to be constant for each call.</p></td>
 </tr>
@@ -10241,91 +10231,15 @@ The accessible variables are marked with attribute <a href="#intermediateAccess"
 <p>Note that if <code>needsExecutionTool = true</code>, then it is required that the original tool is available to be executed during co-simulation.
 If <code>needsExecutionTool = false</code>, the slave is completely contained inside the FMU in source code or binary format (DLL/SharedObject).</p>
 </div>
+</div>
 <div class="sect3">
-<h4 id="xml-example-co-simulation">4.3.1. Example XML Description File</h4>
+<h4 id="xml-example-co-simulation">4.3.2. Example XML Description File (with Early Return)</h4>
 <div class="paragraph">
 <p>The <a href="#xml-example-fmimodeldescription-cosimulation">Example fmiModelDescription</a> below is the same as shown in <a href="#xml-example-model-exchange">Section 3.3.2</a> for a Model Exchange FMU.
-The only difference is the replacement of the element <code>&lt;ModelExchange&gt;</code> with the element <code>&lt;BasicCoSimulation&gt;</code> (with additional attributes) and the removal of <a href="#local"><code>local</code></a> variables, which are associated with continuous <a href="#state"><code>states</code></a> and their <a href="#derivative"><code>derivatives</code></a>.
-The XML file may have the following content:</p>
+The only differences are the replacement of the element <code>&lt;ModelExchange&gt;</code> with the element <code>&lt;BasicCoSimulation&gt;</code> (with additional attributes),  and the removal of <a href="#local"><code>local</code></a> variables, which are associated with continuous <a href="#state"><code>states</code></a> and their <a href="#derivative"><code>derivatives</code></a> and presence of the capability flags <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCommunicationStepSize</code></a> and <a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate</code></a> with value <code>true</code>.</p>
 </div>
 <div id="xml-example-fmimodeldescription-cosimulation" class="listingblock">
 <div class="title">Example fmiModelDescription</div>
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiModelDescription
-  fmiVersion="3.0-alpha.3"
-  modelName="MyLibrary.SpringMassDamper"
-  instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f9e0}"
-  description="Rotational Spring Mass Damper System"
-  version="1.0"
-  generationDateAndTime="2011-09-23T16:57:33Z"
-  variableNamingConvention="structured"&gt;
-  &lt;BasicCoSimulation
-    modelIdentifier="MyLibrary_SpringMassDamper"
-    canHandleVariableCommunicationStepSize="true"/&gt;
-  &lt;UnitDefinitions&gt;
-    &lt;Unit name="rad"&gt;
-      &lt;BaseUnit rad="1"/&gt;
-      &lt;DisplayUnit name="deg" factor="57.2957795130823"/&gt;
-    &lt;/Unit&gt;
-    &lt;Unit name="rad/s"&gt;
-      &lt;BaseUnit s="-1" rad="1"/&gt;
-    &lt;/Unit&gt;
-    &lt;Unit name="kg.m2"&gt;
-      &lt;BaseUnit kg="1" m="2"/&gt;
-    &lt;/Unit&gt;
-    &lt;Unit name="N.m"&gt;
-      &lt;BaseUnit kg="1" m="2" s="-2"/&gt;
-    &lt;/Unit&gt;
-  &lt;/UnitDefinitions&gt;
-  &lt;TypeDefinitions&gt;
-    &lt;Float64Type name="Modelica.Units.SI.Inertia" quantity="MomentOfInertia" unit="kg.m2" min="0.0"/&gt;
-    &lt;Float64Type name="Modelica.Units.SI.Torque" quantity="Torque" unit="N.m"/&gt;
-    &lt;Float64Type name="Modelica.Units.SI.AngularVelocity" quantity="AngularVelocity" unit="rad/s"/&gt;
-    &lt;Float64Type name="Modelica.Units.SI.Angle" quantity="Angle" unit="rad"/&gt;
-  &lt;/TypeDefinitions&gt;
-  &lt;DefaultExperiment startTime="0.0" stopTime="3.0" tolerance="0.0001"/&gt;
-  &lt;ModelVariables&gt;
-    &lt;Float64 name="inertia1.J" valueReference="1073741824"
-      description="Moment of load inertia" causality="parameter" variability="fixed"
-      declaredType="Modelica.Units.SI.Inertia" start="1"/&gt;
-    &lt;Float64 name="torque.tau" valueReference="536870912"
-      description="Accelerating torque acting at flange (= -flange.tau)" causality="input"
-      declaredType="Modelica.Units.SI.Torque" start="0"/&gt;
-    &lt;Float64 name="inertia1.phi" valueReference="805306368"
-      description="Absolute rotation angle of component" causality="output"
-      declaredType="Modelica.Units.SI.Angle"/&gt;
-    &lt;Float64 name="inertia1.w" valueReference="805306369"
-      description="Absolute angular velocity of component (= der(phi))" causality="output"
-      declaredType="Modelica.Units.SI.AngularVelocity"/&gt;
-  &lt;/ModelVariables&gt;
-  &lt;ModelStructure&gt;
-    &lt;Output valueReference="805306368"/&gt;
-    &lt;Output valueReference="805306369"/&gt;
-    &lt;InitialUnknown valueReference="805306368"/&gt;
-    &lt;InitialUnknown valueReference="805306369"/&gt;
-  &lt;/ModelStructure&gt;
-&lt;/fmiModelDescription&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_early_return_from_current_communication_step_2">4.3.2. Early Return From Current Communication Step</h4>
-<div class="paragraph">
-<p>The simulation master collects the information about the capability of an FMU to perform an early return by analyzing the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> as defined in <a href="#fmi-description-schema">Section 2.2</a> and <a href="#fmi-for-basic-co-simulation">Section 4</a>.</p>
-</div>
-<div class="sect4">
-<h5 id="_co_simulation_fmu">4.3.2.1. Co-Simulation FMU</h5>
-<div class="paragraph">
-<p>In order to support the early return in <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> the capability flag  <a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate</code></a> in the XML should be <code>true</code>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_example_xml_description_file">4.3.2.2. Example XML Description File</h5>
-<div class="paragraph">
-<p>Here is an example of an XML of an FMU supporting early return.</p>
-</div>
-<div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;fmiModelDescription
@@ -10383,7 +10297,6 @@ The XML file may have the following content:</p>
     &lt;InitialUnknown valueReference="805306369"/&gt;
   &lt;/ModelStructure&gt;
 &lt;/fmiModelDescription&gt;</code></pre>
-</div>
 </div>
 </div>
 </div>
@@ -10773,7 +10686,7 @@ Such variables can be continuous-time or discrete-time variables if the <a href=
 <div class="sect3">
 <h4 id="xml-example-clocked-co-simulation">5.3.1. Example XML Description File</h4>
 <div class="paragraph">
-<p>The example below is the same one as shown in <a href="#xml-example-co-simulation">Section 4.3.1</a> for a Co-Simulation FMU.
+<p>The example below is the same one as shown in <a href="#xml-example-co-simulation">Section 4.3.2</a> for a Co-Simulation FMU.
 The only differences are, that the element <code>&lt;fmiModelDescription&gt;&lt;HybridCoSimulation&gt;</code> is present and <a href="#clock"><code>clocks</code></a> are defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
 The XML file may have the following content:</p>
 </div>
@@ -11443,7 +11356,7 @@ There is a direct one-to-one relation for a <a href="#clock"><code>clock</code><
 <p>A Scheduled Co-Simulation FMU must have at least one <a href="#inputClock"><code>input clock</code></a>.</p>
 </div>
 <div class="sect3">
-<h4 id="_example_xml_description_file_2">6.3.1. Example XML Description File</h4>
+<h4 id="_example_xml_description_file">6.3.1. Example XML Description File</h4>
 <div class="paragraph">
 <p>The example below is the same one as shown in section [TBD] for a <code>fmi3ClockedCoSimulation</code> FMU.</p>
 </div>
