@@ -1,6 +1,6 @@
 ---
 title: FMI at the American Modelica Conference 2018
-categories: [news]
+categories: [events]
 layout: post
 ---
 

@@ -6,6 +6,48 @@ layout: default
 
 ## FMI Related Publications
 
+
+### [13th International Modelica Conference 2019](https://www.modelica.org/events/modelica2019)
+
+FMI User meeting ([Agenda](https://www.modelica.org/events/modelica2019/proceedings/html/userpres.html)):
+
+* [Overview of the FMI, DCP and SSP standards](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/001_Overview_FMI_SSP_DCP.pdf)
+* [Usage of FMI at Bosch - status and outlook](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/2808_Usage_FMI_Bosch.pdf)
+* [Co-Simulation scenarios in industrial production plants](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/Presentation_CoSimulatedPlants_ModelicaFMI_2019_final.pdf)
+* [Enhancing the Model Integration Workflow in Aircraft System Simulation using FMI & SSP](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/Saab_Eek_MC2019.pdf)
+
+FMI related conference papers:
+
+* [OMSimulator - Integrated FMI and TLM-based Co-simulation with Composite Model Editing and SSP](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1C1.pdf)
+* [FMU-proxy: A Framework for Distributed Access to Functional Mock-up Units](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1C2.pdf)
+* [Standardized Integration of Real-Time and Non-Real-Time Systems: The Distributed Co-Simulation Protocol](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1C3.pdf)
+* [Non Linear Dimension Reduction of Dynamic Model Outputs](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2C1.pdf)
+* [Relative Consistency and Robust Stability Measures for Sequential Co-simulatio](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2C2.pdf)
+* [Energy balance based Verification for Model Based Development](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2C3.pdf)
+* [A virtual test-bed for building Model Predictive Control developments](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1A1.pdf)
+* [BIM2Modelica - An open source toolchain for generating and simulating thermal multi-zone building models by using structured data from BIM models](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1A3.pdf)
+* [Dynamic Simulation of Residential Buildings Supporting the Development of Flexible Control in District Heating Systems](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2A1.pdf)
+* [An Extended Luenberger Observer for HVAC Application using FMI](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2A3.pdf)
+* [Model visualization for e-learning, Kidney simulator for medical students](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper3D4.pdf)
+* [Enhanced Motion Control of a Self-Driving Vehicle Using Modelica, FMI and ROS](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper4B2.pdf)
+* [Adaptive Step Size Control for Hybrid CT Simulation without Rollback](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper4D2.pdf)
+* [Co-Simulation Through Exchange of Time-Series Data Applied to an Energy System Model and Detailed Ground Heat Exchanger Model](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper5A1.pdf)
+* [The WaterHub Modules: Material and Energy Flow Analysis of Domestic Hot Water Systems](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper6A1.pdf)
+* [OMJulia: An OpenModelica API for Julia-Modelica Interaction](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper6C2.pdf)
+* [Integration and Analysis of EPAS and Chassis System in FMI-based co-simulation](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper6D1.pdf)
+* [Hierarchical Coupling Approach Utilizing Multi-Objective Optimization for Non-Iterative Co-Simulation](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper6D3.pdf)
+
+### [American Modelica Conference 2018](https://www.modelica.org/events/modelica2018Americas)
+
+FMI related conference papers ([link to proceedings](https://www.modelica.org/events/modelica2018Americas/preliminary-program/166522_Modelica_Proceedings_v2.pdf)):
+
+* ModestPy: An Open-Source Python Tool for Parameter Estimation in Functional Mock-up Units 
+* A Safe Regression Test Selection Technique for Modelica 
+* Functional Mockup Interface: An Empirical Survey  Identifies Research Challenges and Current Barriers 
+* A Method to Import FMU to Hardware Description Language
+* The OpenModelica Integrated Modeling, Simulation and Optimization Environment
+
+
 ### [Japanese Modelica Conference 2018](https://www.modelica.org/events/modelica2018japan)
 
 Keynote: [10 Years of FMI: Where are we now, where do we go?](https://www.modelica.org/events/modelica2018japan/presentation/10_Years_of_FMI.pdf)
@@ -39,8 +81,8 @@ FMI User meeting ([Agenda](https://svn.fmi-standard.org/fmi/branches/public/docs
 
 FMI related conference papers:
 
-* [ Improving Interoperability of FMI-supporting Tools with Reference FMUs](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132533_BertschMukbilJunghanns.pdf)
-* [ The Embedded Simulation via FMI and its Application to the Simulation of Lifetime Tests Including Wear](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132541_GundermannThieleFraulobWaltherTodtermuschkeSchnabel.pdf)
+* [Improving Interoperability of FMI-supporting Tools with Reference FMUs](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132533_BertschMukbilJunghanns.pdf)
+* [The Embedded Simulation via FMI and its Application to the Simulation of Lifetime Tests Including Wear](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132541_GundermannThieleFraulobWaltherTodtermuschkeSchnabel.pdf)
 * [Integration Modelica with Digital Mockup Tool using the FMI](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132547_MatsudaToriyaSuzukiOhtomi.pdf)
 * [FMI Go! A simulation runtime environment with a client server architecture over multiple protocols](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132653_LacoursiereHardin.pdf)
 * [Building Parallel FMUs (or Matryoshka Co-Simulations)](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132663_GaltierIanottoCaujolleCorniglionTavellaEvoragomezHernandezcabreraReinboldKremers.pdf)
@@ -86,45 +128,45 @@ Tutorial: [Functional Mockup Interface 2.0 and HiL Applications](https://svn.fmi
 
 Other FMI related conference papers:
 
-* [The Functional Mockup Interface - seen from an industrial perspective](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=002)
-* [An FMI-Based Tool for Robust Design of Dynamical Systems](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=003)
-* [Simulating Rhapsody SysML Blocks in Hybrid Models with FMI](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=004)
-* [Nonlinear State Estimation with an Extended FMI 2.0 Co-Simulation Interface](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=005)
-* [Implementing stabilized co-simulation of strongly coupled systems using the Functional Mock-up Interface 2.0](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=022)
-* [Context-based polynomial extrapolation and slackened synchronization for fast multi-core simulation using FMI](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=023)
-* [Model-Based Integration Platform for FMI Co-Simulation and Heterogeneous Simulations of Cyber-Physical Systems](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=024)
-* [Adapting Functional Mockup Units for HLA-compliant Distributed Simulation](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=025)
-* [Coupling occupant behaviour with a building energy model - A FMI application](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=033)
-* [Significant Reduction of Validation Efforts for Dynamic Light Functions with FMI for Multi-Domain Integration and Test Platform](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=041)
-* [Virtual Integration for hybrid powertrain development, using FMI and Modelica models](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=044)
-* [An FMI-based Framework for State and Parameter Estimation](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=068)
-* [Extending JGrafchart with Support for FMI for Co-Simulation](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=133)
-* [Consistent Simulation Environment with FMI based Tool Chain](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=096;article=136)
+* [The Functional Mockup Interface - seen from an industrial perspective](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP1409627_BertschAhleSchulmeister.pdf)
+* [An FMI-Based Tool for Robust Design of Dynamical Systems](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP1409635_HenningssonAkessonTummescheit.pdf)
+* [Simulating Rhapsody SysML Blocks in Hybrid Models with FMI](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP1409643_GreenbergFeldmanPalachi.pdf)
+* [Nonlinear State Estimation with an Extended FMI 2.0 Co-Simulation Interface](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP1409653_BrembeckPfeifferFlepsdezasseOtterWernerssonElmqvist.pdf)
+* [Implementing stabilized co-simulation of strongly coupled systems using the Functional Mock-up Interface 2.0](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP14096213_Viel.pdf)
+* [Context-based polynomial extrapolation and slackened synchronization for fast multi-core simulation using FMI](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP14096225_BenkhaledDuvalBengaidSimon.pdf)
+* [Model-Based Integration Platform for FMI Co-Simulation and Heterogeneous Simulations of Cyber-Physical Systems](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP14096235_NeemaGohlLattmannSztipanovitsKarsaiNeemaBaptyBattehTummescheitSureshkumar.pdf)
+* [Adapting Functional Mockup Units for HLA-compliant Distributed Simulation](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP14096247_YilmazDurakTaylanOguztuzun.pdf)
+* [Coupling occupant behaviour with a building energy model - A FMI application](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP14096321_PlessisAmourouxHaradji.pdf)
+* [Significant Reduction of Validation Efforts for Dynamic Light Functions with FMI for Multi-Domain Integration and Test Platform](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP14096395_SchneiderFrimbergerFolie.pdf)
+* [Virtual Integration for hybrid powertrain development, using FMI and Modelica models](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP14096419_Belmon.pdf)
+* [An FMI-based Framework for State and Parameter Estimation](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP14096647_BonviniWetterSohn.pdf)
+* [Extending JGrafchart with Support for FMI for Co-Simulation](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP140961257_TheorinJohnsson.pdf)
+* [Consistent Simulation Environment with FMI based Tool Chain](https://2014.international.conference.modelica.org/proceedings/html/submissions/ECP140961277_DrenthTormanenJohanssonAnderssonAnderssonTorstenssonAkesson.pdf)
 
 ### [9th International Modelica Conference 2012](https://www.modelica.org/events/modelica2012)
 
-* [Functional Mock-up Interface 2.0: The Standard for Tool independent Exchange of Simulation Models](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076173_BlochwitzOtter.pdf)
-* [Generation of Sparse Jacobians for the Function Mock-Up Interface 2.0](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076185_AkessonBraunLindholmBachmann.pdf)
-* [Designing models for online use with Modelica and FMI](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076197_KittilsenHaugerWasbo.pdf)
-* [Co-simulation with communication step size control in an FMI compatible master algorithm](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076205_SchierzArnoldClauss.pdf)
-* [FMI implementation in LMS Virtual.Lab Motion and application to a vehicle dynamics case](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076759_ErdelyiPrescottDondersAnthonis.pdf)
-* [Generating Functional Mock-up Units from Software Specifications](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076765_PohlmannSchaeferReddehaseRoeckemann.pdf)
-* [Functional Mock-up Interface in Mechatronic Gearshift Simulation for Commercial Vehicles](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076775_AbelBlochwitzEichbergerHamannRein.pdf)
-* [Using Functional Mock-up Units for Nonlinear Model Predictive Control](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076781_GraeberKirchesScharffTegethoff.pdf)
-* [Integration of Modelica models into an existing simulation software using FMI for Co-Simulation](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076949_PazoldBurhenneRadonHerkel.pdf)
-* [FMI Add-on for NI VeriStand for HiL Simulation](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2012/ecp12076963_PalmaRomanoni.pdf)
+* [Functional Mock-up Interface 2.0: The Standard for Tool independent Exchange of Simulation Models](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076173_BlochwitzOtter.pdf)
+* [Generation of Sparse Jacobians for the Function Mock-Up Interface 2.0](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076185_AkessonBraunLindholmBachmann.pdf)
+* [Designing models for online use with Modelica and FMI](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076197_KittilsenHaugerWasbo.pdf)
+* [Co-simulation with communication step size control in an FMI compatible master algorithm](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076205_SchierzArnoldClauss.pdf)
+* [FMI implementation in LMS Virtual.Lab Motion and application to a vehicle dynamics case](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076759_ErdelyiPrescottDondersAnthonis.pdf)
+* [Generating Functional Mock-up Units from Software Specifications](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076765_PohlmannSchaeferReddehaseRoeckemann.pdf)
+* [Functional Mock-up Interface in Mechatronic Gearshift Simulation for Commercial Vehicles](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076775_AbelBlochwitzEichbergerHamannRein.pdf)
+* [Using Functional Mock-up Units for Nonlinear Model Predictive Control](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076781_GraeberKirchesScharffTegethoff.pdf)
+* [Integration of Modelica models into an existing simulation software using FMI for Co-Simulation](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076949_PazoldBurhenneRadonHerkel.pdf)
+* [FMI Add-on for NI VeriStand for HiL Simulation](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076963_PalmaRomanoni.pdf)
 
 ### [EOOLT 2011](http://www.eoolt.org/)
 
-* [A Generic FMU Interface for Modelica](http://www.ep.liu.se/ecp_article/index.en.aspx?issue=056;article=003)
+* [A Generic FMU Interface for Modelica](https://ep.liu.se/ecp/056/003/ecp1105603.pdf)
 
 ### [8th International Modelica Conference 2011](https://www.modelica.org/events/modelica2011)
 
-* [The Functional Mock-up Interface for Tool independent Exchange of Simulation Models](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface_paper.pdf) (Slides: [PDF](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface.pdf), [PPT](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface.ppt))
-* [Master for Co-Simulation Using FMI](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/FMI_Master-for-CoSimulation.pdf)
-* [Import and Export of Functional Mock-up Units in JModelica.org](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/FMI_in_JModelica.pdf)
-* [Implementation of MODELISAR Functional Mock-up Interfaces in SimulationX](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/FMI_in_SimulationX.pdf)
-* [Using the Functional Mock-up Interface as an Intermediate Format in AUTOSAR Software Component Development](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/FMI_for_AUTOSAR.pdf)
-* [Combining Advantages of Specialized Simulation Tools and Modelica Models using Functional Mock-up Interface (FMI)](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/FMI_at_Siemens.pdf)
-* [Experiences with the new FMI Standard Selected Applications at Dresden University](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/FMI_at_Dresden-University.pdf)
-* [Nonlinear Observers based on the Functional Mock-up Interface with Applications to Electric Vehicles](https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/FMI_for_State_Estimation.pdf)
+* [The Functional Mock-up Interface for Tool independent Exchange of Simulation Models](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface_paper.pdf) (Slides: [PDF](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface.pdf), [PPT](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface.ppt))
+* [Master for Co-Simulation Using FMI](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_Master-for-CoSimulation.pdf)
+* [Import and Export of Functional Mock-up Units in JModelica.org](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_in_JModelica.pdf)
+* [Implementation of MODELISAR Functional Mock-up Interfaces in SimulationX](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_in_SimulationX.pdf)
+* [Using the Functional Mock-up Interface as an Intermediate Format in AUTOSAR Software Component Development](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_for_AUTOSAR.pdf)
+* [Combining Advantages of Specialized Simulation Tools and Modelica Models using Functional Mock-up Interface (FMI)](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_at_Siemens.pdf)
+* [Experiences with the new FMI Standard Selected Applications at Dresden University](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_at_Dresden-University.pdf)
+* [Nonlinear Observers based on the Functional Mock-up Interface with Applications to Electric Vehicles](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_for_State_Estimation.pdf)

@@ -1,6 +1,6 @@
 ---
 title: FMI User Meeting at the 11th Modelica Conference, Versailles (France)
-categories: [news]
+categories: [events]
 layout: post
 ---
 

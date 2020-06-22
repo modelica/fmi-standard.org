@@ -1,6 +1,6 @@
 ---
 title: FMI User Meeting at Modelica Conference in Prague (Czech Republic)
-categories: [news]
+categories: [events]
 layout: post
 ---
 

@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Validate _data/tools.csv
+          command: python _scripts/validate_tools_csv.py
+      - run:
+          name: Build site
+          command: |
+            chmod o+rw ~/project
+            docker run -v ~/project:/srv/jekyll jekyll/jekyll:3 jekyll build
+      - run:
+          name: Validate site
+          command: docker run -v ~/project/_site:/site 18fgsa/html-proofer /site --only-4xx --url-ignore "#"
+          no_output_timeout: 60m

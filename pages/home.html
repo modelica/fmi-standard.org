@@ -4,45 +4,54 @@ permalink: /
 layout: default
 ---
 
+<style>
+.lead {
+  padding-left: 15px;
+}
+
+.lead:before {
+  font-family: Georgia, serif;
+  display: block;
+  padding-left: 10px;
+  content: "\201C";
+  font-size: 80px;
+  position: absolute;
+  left: -20px;
+  top: -25px;
+  color: #7a7a7a;
+}
+</style>
+
 <img src="{{ "/assets/images/fmi-illustration-1920.png " | relative_url }}" class="img-fluid" alt="Functional Mock-up Interface illustration">
 
 <div class="row">
   <div class="col-lg-6">
     <h2>FMI</h2>
     <p>
-        Functional Mock-up Interface (FMI) is a tool independent standard to
-        support both model exchange and co-simulation of dynamic models
-        using a combination of xml-files and compiled C-code (see overview in
-        <a href="https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface.pdf" target="_blank">PDF</a>
-        or <a href="https://trac.fmi-standard.org/export/700/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface.ppt" target="_blank">PPT</a> format).
+      The Functional Mock-up Interface (FMI) is a free standard that defines a container and an interface to exchange dynamic models using a combination of XML files, binaries and C code zipped into a single file.
+      It is supported by <a href="http://fmi-standard.org/tools" target="_blank">100+</a> tools and maintained as a <a href="https://modelica.org/projects">Modelica Association Project</a> on <a href="https://github.com/modelica/fmi-standard">GitHub</a>.
+      <br>
+      Latest versions of the standard are here:
+      <br>
+      <a class="btn btn-outline-primary my-1" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Standard-2.0.1.zip"><i class="fa fa-download mr-2"></i>Complete Package 2.0.1</a>
+      <a class="btn btn-outline-primary my-1" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Specification-2.0.1.pdf"><i class="fa fa-file mr-2"></i> Specification Only 2.0.1</a>
+      <br/>
     </p>
+
     <p>
-        The first version, <a href="http://fmi-standard.org/downloads#version1" target="_blank">FMI 1.0</a>,
-        was published in 2010, followed by <a href="/downloads" target="_blank">FMI
-        2.0</a>
-        in July 2014. The FMI development was initiated by Daimler AG with
-        the goal to improve the exchange of simulation models between suppliers
-        and OEMs (see <a href="http://fmi-standard.org/history/">History</a>).
-        As of today, development of the standard continues
-        through the participation of <a href="/development">16
-        companies and research institutes</a> under the roof of the <a href="https://www.modelica.org/">Modelica Association</a>
-        as a <a href="https://modelica.org/projects">Modelica Association Project</a>.
-        FMI is supported by <a href="/tools">over 100 tools</a> and is
-        used by automotive and non-automotive
-        organizations throughout Europe, Asia and North America.
+      Code and documentation copyright © 2008-2011 the MODELISAR consortium and 2012-2019 the Modelica Association Project FMI.
+      Code released under the <a href="https://opensource.org/licenses/BSD-2-Clause">2-Clause BSD License</a>.
+      Docs released under <a href="https://creativecommons.org/licenses/by-sa/4.0/">Attribution-ShareAlike 4.0 International</a>.
     </p>
-    <p>
-        On the <a href="/downloads">Downloads</a> page, the official
-        standard texts are provided, as
-        well as supporting C-header and xml schema files, and an FMI compliance
-        checker. In addition, sample models (exported from different
-        tools in FMI format) are provided to assist tool vendors to ensure compatibility
-        with other tools.
-    </p>
+
   </div>
-  <div class="col-lg-6 news">
+  <div id="app" class="col-lg-6 news">
+
     <h2 class="title title-highlighted">News</h2>
-    {% for post in site.posts limit: 16 %}
+
+    {% assign counter = 0 %}
+    {% for post in site.posts limit: 100 %}
+      {% if post.categories contains "news" %}
     <div class="d-flex">
       <div class="flex-shrink">
         <span class="badge badge-light">{{ post.date | date: " %Y-%m-%d" }}</span>
@@ -51,7 +60,114 @@ layout: default
         <a href="{{ post.url }}">{{ post.title }}</a>
       </div>
     </div>
+      {% assign counter=counter | plus:1 %}
+      {% endif %}
+      {% if counter >= 5 %}
+        {% break %}
+      {% endif %}
     {% endfor %}
     <a href="{{ "/news/" | relative_url }}" class="more-link">more...</a>
+    <div class="mt-3">
+      <a class="btn btn-outline-primary btn-sm" href="https://creativeconnections.us12.list-manage.com/subscribe?u=0be901f875b69817eddd7e71b&id=0cb2cf5b72&group[20249][2]=true"><i class="fas fa-envelope mr-2"></i>Subscribe to Newletter</a>
+    </div>
+
+    <h2 class="title title-highlighted">Events</h2>
+
+    {% raw %}
+    <div v-for="item in items" class="d-flex">
+      <div class="flex-shrink">
+        <span class="badge badge-light" v-if="item.start.dateTime">{{ item.start.dateTime.substring(0,10) }}</span>
+        <span class="badge badge-light" v-if="item.start.date">{{ item.start.date }}</span>
+      </div>
+      <div>
+        <a v-bind:href="item.htmlLink">{{ item.summary }}</a> <a href="#" data-toggle="tooltip" data-original-title="Teleconference"><i v-if="!item.location" class="fas fa-phone ml-1"></i></a>
+        <a v-if="item.location" v-bind:href="'https://maps.google.com/?q=' + encodeURIComponent(item.location)"><i data-toggle="tooltip" title="" v-bind:data-original-title="item.location" class="fas fa-map-marker-alt ml-1"></i></a>
+      </div>
+    </div>
+    <div class="mt-3">
+      <a class="btn btn-outline-primary btn-sm mr-2" href="https://calendar.google.com/calendar/ical/obe72dhd3apjmipcpmr2asehjs%40group.calendar.google.com/public/basic.ics"><i class="far fa-calendar-alt mr-2"></i>iCal Calendar</a>
+      <a class="btn btn-outline-primary btn-sm mr-2" href="https://calendar.google.com/calendar/embed?src=obe72dhd3apjmipcpmr2asehjs%40group.calendar.google.com&ctz=Europe%2FBerlin"><i class="fab fa-google mr-2"></i>Google Calendar</a>
+    </div>
+    {% endraw %}
+
   </div>
 </div>
+
+<p class="text-muted mt-4">What users say about FMI:</p>
+
+<div class="row featurette justify-content-md-center p-4">
+  <div class="col-md-6 mt-4">
+    <p class="lead">FMI is the preferred model exchange and co-simulation format of Robert Bosch GmbH at system level enabling the exchange of models with internal and external partners using different modelling tools.</p>
+    <footer class="blockquote-footer">Robert Bosch GmbH on <a href="https://itea3.org/project/impact-stream/modelisar-impact-story.html">ITEA3 MODELISAR</a></footer>
+  </div>
+  <div class="col-md-6 text-center">
+    <div style="background-image: url(/assets/images/bosch-logo.png); background-position: center; /* Center the image */
+    background-repeat: no-repeat;
+    background-size: contain; height: 100%; min-height: 10em; max-width: 14em; margin: auto;"></div>
+  </div>
+</div>
+
+<div class="row featurette justify-content-md-center p-4">
+  <div class="col-md-6 text-center order-2 order-md-1">
+    <div style="background-image: url(/assets/images/haldex-logo.jpg); background-position: center; /* Center the image */
+    background-repeat: no-repeat;
+    background-size: contain; height: 100%; min-height: 10em; max-width: 12em; margin: auto;"></div>
+  </div>
+  <div class="col-md-6 mt-4 order-1 order-md-2">
+    <p class="lead">Driving our future is all about scalable solutions. The use of the FMI standard scales our capabilities to virtual integrate our scalable braking systems with customers’ and partners’ systems of systems.</p>
+    <footer class="blockquote-footer">Edo Drenth, VP Global Vehicle Dynamics, <a href="https://www.haldex.com">Haldex</a></footer>
+  </div>
+</div>
+
+<div class="row featurette justify-content-md-center p-4">
+  <div class="col-md-6 mt-4">
+    <p class="lead">Supported by Siemens from the beginning, FMI is becoming an important building block in the efficient creation of interdisciplinary, multi-level digital twins of our entire portfolio - from rail and gas turbine engineering to virtual commissioning in the process industry and operational support in manufacturing plants.</p>
+    <footer class="blockquote-footer">Virginie Maillard, Lead Technology Field Simulation & Digital Twin, <a href="https://siemens.com">Siemens</a></footer>
+  </div>
+  <div class="col-md-6 text-center">
+    <div style="background-image: url(/assets/images/siemens-logo.png); background-position: center; /* Center the image */
+    background-repeat: no-repeat;
+    background-size: contain; height: 100%; min-height: 10em; max-width: 14em; margin: auto;"></div>
+  </div>
+</div>
+
+<div class="row featurette justify-content-md-center p-4">
+  <div class="col-md-6 text-center order-2 order-md-1">
+    <div style="background-image: url(/assets/images/saab-logo.png); background-position: center; /* Center the image */
+    background-repeat: no-repeat;
+    background-size: contain; height: 100%; min-height: 10em; max-width: 14em; margin: auto;"></div>
+  </div>
+  <div class="col-md-6 mt-4 order-1 order-md-2">
+    <p class="lead">With the ever increasing use of models in aircraft system development, tool interoperability and model reuse are central challenges. At Saab we see the FMI standard as an enabler for scalable and tool neutral integration of simulation models from different technical disciplines, developed by different internal teams or by external partners.</p>
+    <footer class="blockquote-footer">Göran Ancker, Technical Fellow Aircraft System Simulation, <a href="https://saabgroup.com/">Saab AB</a></footer>
+  </div>
+</div>
+
+<!-- Vue.js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data () {
+      return {
+        items: null
+      }
+    },
+    mounted () {
+      var minDate = new Date();
+      minDate.setDate(minDate.getDate() - 7);  // today minus one week
+      axios
+        .get('https://www.googleapis.com/calendar/v3/calendars/obe72dhd3apjmipcpmr2asehjs@group.calendar.google.com/events?key=AIzaSyDo78g40_od26-CDjAs6qM21f34deK-GyU&timeMin=' + minDate.toISOString() + '&singleEvents=true&orderBy=startTime')
+        .then(response => (this.items = response.data.items.reverse()))
+        .finally(() => (
+            /* enable popovers and tooltips */
+            $(document).ready(function() {
+              $('[data-toggle="popover"]').popover();
+              $('[data-toggle="tooltip"]').tooltip();
+            })
+          )
+        )
+    }
+  })
+</script>

@@ -1,6 +1,6 @@
 ---
 title: FMI Strategy Meeting to be held
-categories: [news]
+categories: [events]
 layout: post
 ---
 

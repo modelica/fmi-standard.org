@@ -1,6 +1,6 @@
 ---
 title: FMI Forum 2018 Japan 2018
-categories: [news]
+categories: [events]
 layout: post
 ---
 

@@ -86,6 +86,7 @@ Optional fields may be empty.
 | homepage       | Link to the tool's homepage (optional)          | https://example.com/example-sim/
 | description    | A [description](#tool-description) of the tool  | Run simulations in the cloud in real time
 | license        | License (commercial or [OSI approved](https://opensource.org/licenses)) | `commercial`, `osi`
+| platforms      | List of supported platforms, space separated    | 'c-code win32 win64 linux64'
 | export_cs_fmi1 | FMI 1.0 Co-Simulation export (optional)         | `planned`, `available`
 | export_cs_fmi2 | FMI 2.0 Co-Simulation export (optional)         | `planned`, `available`
 | export_me_fmi1 | FMI 1.0 Model Exchange export (optional)        | `planned`, `available`
@@ -164,31 +165,36 @@ Linking to a PDF for readers to download:
 
 ## Building the website locally
 
-1. Install a full [Ruby development environment](https://www.ruby-lang.org/en/downloads/)
-
-2. Clone the repository, change into the directory and pull the changes
+1. Clone the repository, change into the directory and pull the changes
    ```
    git clone https://github.com/modelica/fmi-standard.org.git
    cd fmi-standard.org
    git pull
    ```
 
-3. Install the Jekyll and [bundler](https://jekyllrb.com/docs/ruby-101/#bundler) [gems](https://jekyllrb.com/docs/ruby-101/#gems) and install the dependencies
+2. Install [Docker](https://www.docker.com/get-started)
+
+3. Build the site and make it available on a local server
+
+   Linux, Mac:
    ```
-   gem install jekyll bundler
-   bundle install
+   docker run --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll jekyll serve
+   ```
+   
+   Windows:
+   ```
+   docker run --volume="%cd%:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll jekyll serve
    ```
 
-4. Build the site and make it available on a local server
+   Now browse to [http://localhost:4000](http://localhost:4000)
+
+4. Before you push your changes, build and check your commit for syntax errors and broken links:
+
+   Linux, Mac:
    ```
-   bundle exec jekyll serve
+   docker run -v $PWD/_site:/site 18fgsa/html-proofer /site --only-4xx
    ```
-
-5. Now browse to [http://localhost:4000](http://localhost:4000)
-
-Before you push you changes, build and check your commit for syntax errors and broken links:
-
-```
-bundle exec jekyll build
-bundle exec htmlproofer ./_site --only-4xx
-```
+   Windows:
+   ```
+   docker run -v %cd%/_site:/site 18fgsa/html-proofer /site --only-4xx
+   ```
