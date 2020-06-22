@@ -7200,53 +7200,41 @@ Multiple event types and also <a href="#outputClock"><code>outputClock</code></a
 <div class="sect3">
 <h4 id="intermediate-variable-access">2.4.3. Intermediate Variable Access</h4>
 <div class="paragraph">
-<p>Intermediate variable access has three main use cases:</p>
+<p>A Co-Simulation FMU can provide values for its <a href="#output"><code>output</code></a> variables at intermediate points between two consecutive communication points, and is able to accept new values for <a href="#input"><code>input</code></a> variables at these intermediate points.
+This is typically required when the FMU uses a numerical solver to integrate the FMU&#8217;s internal state between communication points in <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
+This numerical solver assumes that the inputs are continuous in the integration interval, dictacted by <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
+In FMI 2.0 Co-simulation, the intermediate inputs are provided by the use of extrapolations.
+The intermediate variable access functions allows the FMU to receive inputs, and provide outputs, directly to the master, in those intermediate time points.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>An FMU is able to produce valid output variables at intermediate points between two consecutive communication points.
-This is typically the result of an internal solver taking multiple integration steps between two consecutive communication points of a <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
-It is possible for the FMU to inform the master whether the internal solver is in a temporary state or if it has just completed an internal integration step.
-The FMU exposes intermediate output variables for the master whenever they are available.
-If the internal integration step is completed, the master can forward intermediate outputs to other FMUs, where they can be used, for e.g., for extrapolation, interpolation, filtering or asynchronous co-simulation.</p>
-</li>
-<li>
-<p>Intermediate <a href="#input"><code>input</code></a> variables for an FMU are available in the Co-Simulation master.
-The FMU requests updated intermediate <a href="#input"><code>input</code></a> variables every time they are required by the internal solver.
-This can be either at temporary solver states or after successful integration steps.</p>
-</li>
-<li>
-<p>Intermediate <a href="#output"><code>output</code></a> variables of the FMU can be computed for the Co-Simulation master.
-The computation requires intermediate output variables from the FMU.
-Whenever the internal solver in the FMU needs updated intermediate <a href="#input"><code>input</code></a> variables, it provides the intermediate output variables for and requests the intermediate <a href="#input"><code>input</code></a> variables from the master.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>Due to the way numerical solvers estimate and correct the approximation error, these intermediate <a href="#output"><code>output</code></a> values may be tentative or may be final.
+It is possible for the FMU to inform the master whether the internal solver is in a tentative state, meaning that the output values computed from that state are also tentative, or if the internal solver has successfully completed the integration step, meaning that the FMU&#8217;s internal state is final, and will never be change by the normal in the current execution of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
+If the internal integration step has successfully completed, the master can forward intermediate outputs to other FMUs, where they can be used, for e.g., for extrapolation, interpolation, filtering or asynchronous co-simulation.
+<em>[For tentative output values, the master must keep in mind that these values may change for the same time point.]</em></p>
+</div>
+<div class="paragraph">
+<p>The FMU requests updated intermediate <a href="#input"><code>input</code></a> values for continuous variables every time they are required by the internal solver.
+This can be either at tentative solver states or after successful integration steps.</p>
 </div>
 <div class="paragraph">
 <p>Combinations of the above use cases are also allowed.</p>
 </div>
 <div class="paragraph">
-<p>Access to intermediate variables enables several features such as:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Advanced interpolation/extrapolation techniques <em>[especially enabling the same input approximation that was possible in FMI 2.0 with <code>fmi2SetInputDerivatives</code>, now evaluating the approximation polynomial in the master compared to within the FMU in FMI 2.0]</em>,</p>
-</li>
-<li>
-<p>Asynchronous communication,</p>
-</li>
-<li>
-<p>Anti-alias filtering, and</p>
-</li>
-<li>
-<p>Smoothing of inputs.</p>
-</li>
-</ul>
+<p>Access to intermediate variables enables advanced Co-Simulation with interpolation/extrapolation techniques (such as polynomial extrapolation, TLM co-simulation, anti-alias filtering, smoothing of input)<br>
+Moreover, this enables the same input approximation that was possible in FMI 2.0 with <code>fmi2SetInputDerivatives</code>, now evaluating the approximation polynomial and not within the FMU as in FMI 2.0.</p>
 </div>
 <div class="paragraph">
-<p>Intermediate variable access can be activated in all Co-Simulation interface types, if both, the FMU and the master, support it.</p>
+<p>Intermediate variable access can be activated in all Co-Simulation interface types, if the FMU and the master, support it.</p>
+</div>
+<div class="paragraph">
+<p><a href="#figure-intermediate-variable-access">Figure 22</a> summarizes the above description.
+It illustrates that multiple intermediate internal solver steps, distinguishing between the final ones (with black-filled circles) and tentative ones (with white-filled circles). It distinguishes the level of trust that can be placed in the tentative outputs (with dashed arrows) and in final outputs (with solid arrows).</p>
+</div>
+<div id="figure-intermediate-variable-access" class="imageblock text-center">
+<div class="content">
+<img src="images/intermediatevariableaccess.svg" alt="intermediatevariableaccess" width="65%">
+</div>
+<div class="title">Figure 22. Overview of solver states and intermediate variable access during a communication step</div>
 </div>
 <div class="paragraph">
 <p>If the Co-Simulation master signals the support for intermediate variable access and an FMU has at least one variable with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>, the FMU can use the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to communicate information back to the Co-Simulation master:</p>
@@ -7278,7 +7266,7 @@ The FMU must not call the callback function <a href="#fmi3CallbackIntermediateUp
 </ul>
 </div>
 <div class="paragraph">
-<p>The following two <code>fmi3Boolean</code> variables define reasons for the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> call and can only be set to <code>fmi3True</code> in Hybrid Co-Simulation.</p>
+<p>In case of Hybrid Co-Simulation, the following two <code>fmi3Boolean</code> function arguments give reasons for the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> call.</p>
 </div>
 <div id="eventOccurred" class="ulist">
 <ul>
@@ -7299,7 +7287,7 @@ If this flag is <code>fmi3True</code> the master must return with <a href="#earl
 <div id="intermediateVariableSetAllowed" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateVariableSetAllowed"><code>intermediateVariableSetAllowed == fmi3True</code></a>, the Co-Simulation master may provide intermediate <a href="#input"><code>input</code></a> variables by calling <code>fmi3Set{VariableType}</code> for variables with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>.</p>
+<p>If <a href="#intermediateVariableSetAllowed"><code>intermediateVariableSetAllowed == fmi3True</code></a>, the Co-Simulation master may provide intermediate <a href="#input"><code>input</code></a> variables by calling <code>fmi3Set{VariableType}</code> for continuous variables with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -7313,7 +7301,25 @@ If this flag is <code>fmi3True</code> the master must return with <a href="#earl
 <div id="intermediateStepFinished" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3False</code></a>, the Co-Simulation master shall only use intermediate output variables to compute intermediate <a href="#input"><code>input</code></a> variables at the current state.</p>
+<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3False</code></a>, the intermediate outputs of the FMU that the master inquires with <code>fmi3Get{VariableTypes}</code> resulting from tentative interval solver states and may still change for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> (e.g., if the solver deems the tentative state to cause a too high approximation error, it may go back in time and try to re-estimate the state using smaller internal time steps).
+<em>[These outputs shall for example not be communicated to other connected FMUs.</em>
+<em>The use case for this is to let the Master do some calculations for the FMU even for unfinished solver steps.</em>
+<em>This is beneficial for example for Transmission Line (TLM) co-simulation, where this helps to keep the interface cleaner.</em>
+<em>Instead of FMUs exchanging hard-to-understand variables such as "wave variable" and "characteristic impedance", they can exchange intuitive variables like "force" and "speed".]</em></p>
+</li>
+<li>
+<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a>, intermediate outputs inquired by the master with <code>fmi3Get{VariableTypes}</code> correspond to accepted internal solver steps and will not change (if the master does not rollback the FMU). <br>
+<em>[So the master could for example</em></p>
+<div class="ulist">
+<ul>
+<li>
+<p><em>use the values  obtained with <code>fmi3Get{VariableTypes}</code> with <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a> to create an interpolation for the intermediate inputs of other FMUs.</em></p>
+</li>
+<li>
+<p><em>use this information for plotting.]</em></p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -7342,22 +7348,19 @@ If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater th
 </ul>
 </div>
 <div class="paragraph">
+<p>When providing intermediate inputs to the FMU, it is important that the master provides the same input value for the same variable, at the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a>. In other words, it is required that the calculation of inputs to the FMU be deterministic.
+This is assumed by the internal solver.
+If an input value changes for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a>, the internal numerical solver may deem that re-estimate a state multiple times, without ever being able to decrease the approximation error.</p>
+</div>
+<div class="paragraph">
+<p>Because the FMU intermediate outputs may be trusted when <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a>, the FMU is not allowed to call <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> for a simulation time point prior to or equal to a previous call whose argument <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a>.</p>
+</div>
+<div class="paragraph">
 <p>If the early return is conducted successfully by the FMU it must return with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, indicating the current FMU time with <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>The Co-Simulation master can decide if a rollback of the FMU to reach the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> time is required or it may continue the simulation from <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> for that FMU.
 Note that <strong>Event Mode</strong> is not supported in Basic Co-Simulation and Scheduled Co-Simulation.</p>
-</div>
-<div class="paragraph">
-<p>It is important to distinguish intermediate output from successful internal integration steps from intermediate outputs valid only for temporary solver states.
-<a href="#figure-intermediate-variable-access">Figure 22</a> shows an overview of the solver states and the intended use of intermediate variable access.
-It is not allowed to call <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> for a simulation time point prior to a previous call with <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a>.</p>
-</div>
-<div id="figure-intermediate-variable-access" class="imageblock text-center">
-<div class="content">
-<img src="images/intermediatevariableaccess.svg" alt="intermediatevariableaccess" width="65%">
-</div>
-<div class="title">Figure 22. Overview of solver states and intermediate variable access during a communication step</div>
 </div>
 <div class="paragraph">
 <p>The following code example shows an implementation of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that uses intermediate variable access to record a set of variables at every internal solver step:</p>
@@ -9226,24 +9229,35 @@ It is designed both for coupling with subsystem models, which have been exported
 <div class="sect2">
 <h3 id="math-basic-co-simulation">4.1. Mathematical Description</h3>
 <div class="paragraph">
-<p>This section contains a formal mathematical model of Co-Simulation FMUs.</p>
+<p>This section contains a formal mathematical model of Basic Co-Simulation FMUs.</p>
 </div>
 <div class="paragraph">
 <p><em>[The following fundamental assumptions are made:</em></p>
 </div>
 <div class="paragraph">
-<p><em>The slave simulators are seen by the master simulator as purely sampled-data systems.</em></p>
+<p><em>The slave simulators are seen by the master simulator as purely sampled-data systems, with the exception, that the master can provide input data of a defined level of smoothness (with the flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a>) within a communication interval via the intermediate variable access mechanism (see <a href="#intermediate-variable-access">Section 2.4.3</a>).</em></p>
 </div>
 <div class="paragraph">
-<p><em>Such a sampled-data system consists typically of a hybrid ODE that is integrated between communication points (known as "sampled access to time continuous systems") where internal events may occur and be handled, but events are not visible from the outside of the FMU.</em>
-<em>It is assumed here that all <a href="#input"><code>inputs</code></a> and all <a href="#output"><code>outputs</code></a> of this hybrid ODE are floating point signals (defined with <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>),</em></p>
+<p><em>Such a sampled-data system consists typically of a hybrid ODE that is integrated between communication points (known as "sampled access to time continuous systems") where internal events may occur and be handled, but events are not visible from the outside of the FMU.</em></p>
 </div>
 <div class="paragraph">
 <p><em>Co-Simulation FMUs can also be used for real sampled-data systems (so a sampled discrete controller; the <a href="#input"><code>inputs</code></a> and <a href="#output"><code>outputs</code></a> could be of type <code>&lt;Float{32|64}&gt;</code>, <code>&lt;[U]Int{8|16|32|64}&gt;</code>, <code>&lt;Boolean&gt;</code>, <code>&lt;String&gt;</code>, <code>&lt;Clock&gt;</code> or <code>&lt;Enumeration&gt;</code> with <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a>.)</em>
-<em>However, in FMI 3.0, Hybrid Co-Simulation (HCS) and Scheduled Co-Simulation (SCS) may likely be more suitable for this use-case.]</em></p>
+<em>However, in FMI 3.0, Hybrid Co-Simulation (HCS) and Scheduled Co-Simulation (SCS) may likely be more suitable for this use-case.</em><br>
+<em>And - at least without using intermediate variable access (see <a href="#intermediate-variable-access">Section 2.4.3</a>), which is untypical for sampled data systms - with Basic Co-Simulation there will always be a communication timestep delay for information going "through the FMU", so there cannot be an immediate reaction as in Hybrid Co-Simulation. (see <a href="#fmi-for-hybrid-co-simulation">Section 5</a></em>
+<em>]</em></p>
 </div>
 <div class="paragraph">
-<p>The communication between the master and a slave takes only place at a discrete set of time instants, called communication points.</p>
+<p>The communication between the master and a slave takes place at</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a discrete set of time instants, called communication points, where input variables may change in non-smooth or even non-continuous way.</p>
+</li>
+<li>
+<p>intermediate time instances, where the master may get and set variables using <a href="#intermediate-variable-access">Section 2.4.3</a>.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>An FMI Co-Simulation model is described by the following variables:</p>
@@ -9265,7 +9279,9 @@ It is designed both for coupling with subsystem models, which have been exported
 <td class="tableblock halign-left valign-top"><p class="tableblock">Independent variable time \(\in \mathbb{R}\).
 (Variable defined with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).<br>
 The i-th communication point is denoted as \(t = tc_i\)<br>
-The communication step size is denoted as \(hc_i = tc_{i+1} - tc_i\)</p></td>
+The communication step size is denoted as \(hc_i = tc_{i+1} - tc_i\)<br>
+Intermediate time points are denoted as \(t \in (tc_i, tc_{i+1})\) where the FMU exchanges information with the master.<br>
+An early return at time  \(tc^*_{i+1} \in (tc_i, tc_{i+1})\)  corresponds to a redefinition of \(hc^*_i = tc^*_{i+1} - tc_{i}\) and \(hc_i\) to a smaller value during the current timestep.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{v}\)</p></td>
@@ -9289,12 +9305,25 @@ Variables of this type are defined with attribute <a href="#causality"><code>cau
 Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(tc_i)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Output variables.
-The values of these variables are computed in the FMU and they are designed to be used in a model connection.
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{u}_{i, IU}(t)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Intermediate input variables corresponding to the input variables for intermediate update ("IU").
+The values of these variables are defined outside of the model.
+\(\mathbf{u}_{i, IU}\) are functions defined on the interval \( [tc_i, tc_{i+1}\) ] with \(\mathbf{u}_{i, IU}(tc_i)=\mathbf{u}(tc_i)\).<br>
+With the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> FMU can signal to the master that best convergence rates can be achieved if the these functions are of the smoothness (\(C^{k}([ tc_i, tc_{i+1}\)), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(tc_{i+1})\), \(\mathbf{y^{(j)}}(tc_{i+1})\),</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output variables \(\mathbf{y}(tc_{i+1})\).
+The values of these variables are computed in the FMU and they are designed to be used in a model connection at communication time steps.
 So output variables might be used in the environment as input values to other FMUs or other submodels.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.
-Via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> it is defined whether the <a href="#output"><code>output</code></a> is a discrete-time or continuous-time variable, see <a href="#definition-of-model-variables">Section 2.2.7</a>.</p></td>
+Via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> it is defined whether the <a href="#output"><code>output</code></a> is a discrete-time or continuous-time variable, see <a href="#definition-of-model-variables">Section 2.2.7</a>.
+Also j-th derivatives \(\mathbf{y}^{(j)}(tc_{i+1})\) can be provided if supported by the FMU.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}_{i, IU}(t)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Intermediate output variables corresponding to the output variables \(\mathbf{y}\).
+The values of these variables are computed in the FMU and they are designed to be used by the co-simulation master, for example for extrapolation</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{w}(tc_i)\)</p></td>
@@ -9328,11 +9357,11 @@ Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a h
 
 \begin{Bmatrix}
 
-\mathbf{x}_{i+1} = \Phi_i \left( \mathbf{x}_i \left\{ \mathbf{u}_i^{(j)} \right\}_{j=0,\cdots,m_{ido}}, \mathbf{p}_{\mathit{tune},i}, hc_i  \right)
+\mathbf{x}_{i+1} = \Phi_i \left( \mathbf{x}_i,  \mathbf{u}(tc_i), \mathbf{u}_{i,IU}, \mathbf{p}_{\mathit{tune},i}, hc_i  \right)
 
 \\
 
-\left( \left\{ \mathbf{y}^{(j)}_{i+1} \right\}_{j=0,\cdots,m_{odo}}, \mathbf{w}_{i+1}\right) = \Gamma_i \left( \mathbf{x}_i, \left\{ \mathbf{u}^{(j)}_i \right\}_{j=0,\cdots,m_{ido}}, \mathbf{p}_{\mathit{tune}}, hc_i \right)
+\left( \left\{ \mathbf{y}^{(j)}_{i+1} \right\}_{j=0,\cdots,m_{odo}}, \mathbf{w}_{i+1}\right) = \Gamma_i \left( \mathbf{x}_i,  \mathbf{u}(tc_i), \mathbf{u}_{i, IU}, \mathbf{p}_{\mathit{tune},i}, hc_i  \right)
 
 \end{Bmatrix}\]
 </div>
@@ -9351,28 +9380,30 @@ with \(tc_i = tc_0 + \sum_{k=0}^{i-1}hc_k\).</p>
 </div>
 </div>
 <div class="paragraph">
-<p><em>In this case, the following relationship should hold (note the use of</em> \(\mathbf{x}_{i+1}\) <em>here):</em></p>
+<p><em>If the master algorithm implements an extrapolation method of order</em> \(m_{extra}\) <em>, it can provide intermediate inputs of the form:</em></p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[\frac{\partial\mathbf{\Phi_i}}{\partial hc_i}
+\[\mathbf{u}_{i, IU}(t)
 =
-\boldsymbol{\varphi} \left( \mathbf{x}_{c,i+1},
-\sum^{m_{\mathit{ido}}}_{j=0} \mathbf{u}^{(j)}_{c,i} \frac{hc^j_i}{j!},
-\mathbf{p}_{\mathit{tune},i}  \right)\]
+\sum^{m_{\mathit{extra}}}_{j=0} \mathbf{C_{i, j}} \frac{(t-t_i)^j}{j!}\]
 </div>
 </div>
 <div class="paragraph">
-<p><em>This relation is in practice inexact due to using finite precision on machines and stopping iterations early.</em>
-<em>The slave simulators are responsible for implementing</em> \(\mathbf{\Phi}_i\) and \(\mathbf{\Gamma}_i\) <em>; for example, to handle stiff differential equations as:</em></p>
+<p><em>where</em> \(\mathbf{C}_{i, j}\) <em>are coefficients that can be equal to output derivatives of a connected FMU to realize a Taylor polynomial.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The function</em> \(\mathbf{\varphi}\)  <em>shall approximate the numerical integration of the underlying differential equation.</em></p>
+</div>
+<div class="paragraph">
+<p><em>For example, for a stiff differential equation one could use a linear implicit Euler method (neglecting intermediate variable information):</em></p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[\mathbf{\Phi}_i \left( \mathbf{x}_{c,i}, \left\{ \mathbf{u}_{c,i}^{(j)} \right\}_{j = 0,\cdots,m_{ido}},\ \mathbf{p}_{\mathit{tune},i}, tc_i \right)
+\[\mathbf{\Phi}_i \left( \mathbf{x}_{c,i}, \left\{ \mathbf{u}_{c,i} \right\}_{j = 0,\cdots,m_{ido}},\ \mathbf{p}_{\mathit{tune},i}, tc_i \right)
 =
 \mathbf{x}_{c,i} + \left( \mathbf{I} -
-hc_i \frac{\partial \mathbf{\varphi}}{\partial \mathbf{x}_c} \right)^{- 1}  hc_i \mathbf{\phi} \left( \mathbf{x}_{c,i}, \mathbf{u}_{c,i}, \mathbf{p}_{\mathit{tune},i} \right) +
-O(hc_i^{2}).\]
+hc_i \frac{\partial \mathbf{\varphi}}{\partial \mathbf{x}_c} \right)^{- 1}  hc_i \mathbf{\phi} \left( \mathbf{x}_{c,i}, \mathbf{u}_{c,i}, \mathbf{p}_{\mathit{tune},i} \right).\]
 </div>
 </div>
 <div class="paragraph">
@@ -9384,11 +9415,11 @@ O(hc_i^{2}).\]
 <div class="ulist">
 <ul>
 <li>
-<p>At the communication points, the master provides generalized inputs to the slave, which can be:</p>
+<p>At the communication points, the master provides generalized inputs to the slave:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The current <a href="#input"><code>input</code></a> variables \(\mathbf{u}_i^{(0)}\) of the subsystem (in other words, the <a href="#input"><code>input</code></a> variables of the model contained in the slave simulator, in the sense of system-level simulation), along with some of their successive <a href="#derivative"><code>derivatives</code></a> \(\left\{ \mathbf{u}_i^{(j)} \right\}_{j=1,\cdots,m_{ido}}\) (in case of continuous-time variables), where \(m_{\mathit{ido}}\) stands for the model input derivative order.</p>
+<p>The current <a href="#input"><code>input</code></a> variables \(\mathbf{u}_i\) of the subsystem (in other words, the <a href="#input"><code>input</code></a> variables of the model contained in the slave simulator, in the sense of system-level simulation).</p>
 </li>
 <li>
 <p>Varying <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{tune},i}\), also known as <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a>.</p>
@@ -9408,6 +9439,9 @@ O(hc_i^{2}).\]
 </li>
 </ul>
 </div>
+</li>
+<li>
+<p>At intermediate times \(t\in (tc_i, tc_{i+1})\) the master and slave exchange values for \(\mathbf{u}_{i, IU}(t)\) and \(\mathbf{y}_{i, IU}(t)\).</p>
 </li>
 <li>
 <p>Initialization: The slave being a sampled-data system, its internal states (which can be either continuous-time or discrete-time) need to be initialized at \(t = tc_0\).
@@ -9431,7 +9465,7 @@ Algebraic equations are solved in this mode.</p>
 <h4 id="_step_mode">4.1.2. Step Mode</h4>
 <div class="paragraph">
 <p>This mode is used to compute the values of all continuous-time and discrete-time variables at communication points by numerically solving ordinary differential, algebraic and discrete equations.
-If the slave is connected in loops with other models, no iterations over the FMU equations are possible.</p>
+If the slave is connected in loops with other models, no iterations over the FMU equations are possible for a given communication time point.</p>
 </div>
 <div class="paragraph">
 <p><em>[Note that for a Basic Co-Simulation FMU, no super-dense time description is used at communication points.]</em></p>
@@ -9476,14 +9510,14 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations before <strong>Initialization Mode</strong> (<strong>Instantiated</strong> in state machine)</p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations before <strong>Initialization Mode</strong> in state machine</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set variables and that have a start value (<a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Initialization Mode</strong> (<strong>Initialization Mode</strong> in state machine)</p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Initialization Mode</strong> in state machine</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Initialization Mode</strong> at (activate initialization, discrete-time and continuous-time equations). Set and set <a href="#start"><code>start</code></a> value of <a href="#independent"><code>independent</code></a> variable \(tc_{i=0}\).</span></p></td>
@@ -9507,23 +9541,35 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">fmi3ExitInitializationMode</span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Step Mode</strong> (<code>stepComplete</code>, <code>stepInProgress</code> in state machine)</p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Step Mode</strong> in state machine</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{tune}}\) (and do not set other <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{other}}\))</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d+c}(tc_i)\) of continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}^{(j)}(tc_i)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d+c}(tc_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\begin{matrix} tc_{i+1} := tc_i + hc_i \\ (\mathbf{y}_{c+d}, \mathbf{y}_c^{(j)}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{doStep}}(\mathbf{u}_{c+d}, \mathbf{u}_{c}^{(j)}, tc_i, hc_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})_{tc_i} \\ tc_i := tc_{i+1} \end{matrix}\)</span><br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\begin{matrix} tc_{i+1} := tc_i + hc_i \\ (\mathbf{y}_{c+d}, \mathbf{y}_c^{(j)}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{doStep}}(\mathbf{u}_{c+d}, \mathbf{u}_{i, IU},  tc_i, hc_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})_{tc_i} \\ tc_i := tc_{i+1} \end{matrix}\)</span><br>
 <span class="blue">\(\mathbf{f}_{\mathit{doStep}}\) is also a function of the internal variables \(\mathbf{x}_c\), \(^{\bullet}\mathbf{x}_d\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3DoStep</span></code><br>
-<code>fmi3Get{VariableType}</code><br>
+<code><span class="blue">fmi3Get{VariableType}</span></code><br>
 <code><span class="blue">fmi3GetOutputDerivatives</span></code><br>
-<code><span class="blue">fmi3GetDirectionalDerivative</span></code></p></td>
+<code><span class="blue">fmi3GetDirectionalDerivative</span></code><br>
+<code><span class="blue">fmi3CallbackIntermediateUpdate</span></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Intermediate update mode</strong> in state machine</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time  <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c, IU}(t)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{y}_{i, IU}(t):= \mathbf{f}_{\mathit{Intermediate}}(\mathbf{u}_{i, c+d}, \mathbf{u}_{i, IU} ( t \in [tc_i, t) ),  t, hc_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})\)</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3Get{VariableType}</span></code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>Data types</strong></p></td>
@@ -9924,7 +9970,7 @@ If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU 
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
 <dd>
-<p>If <a href="#intermediateVariableSetAllowed"><code>intermediateVariableSetAllowed == fmi3True</code></a>, the value of intermediate variables can be set.
+<p>If <a href="#intermediateVariableSetAllowed"><code>intermediateVariableSetAllowed == fmi3True</code></a>, the value of intermediate, continuous variables can be set.
 Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
@@ -10140,7 +10186,7 @@ Additionally, the Co-Simulation specific element <code>Implementation</code> is 
 <p>If the XML file defines an FMU for Basic Co-Simulation, element <code>BasicCoSimulation</code> must be present.
 It is defined as:</p>
 </div>
-<div class="imageblock text-center">
+<div id="recommendedIntermediateInputSmoothness" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/BasicCoSimulation.png" alt="BasicCoSimulation" width="80%">
 </div>
@@ -10218,6 +10264,11 @@ The accessible variables are marked with attribute <a href="#intermediateAccess"
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the slave is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the master returns <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a>.
 <em>[If set to <code>true</code>, a Co-Simulation FMU supports ending <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> before the planned next communication point.</em>
 <em>This can be used by the simulation master to avoid unnecessary computations and roll backs of the FMU due to external events known by the simulation master.]</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A value of \(k\) with \(k&gt;0\) signals to the master, that it is beneficial for the solver to receive intermediate inputs that are k-time continuously differentiable (\(C^k\)) on the current communication interval. \(k=0\) means continuous.
+<em>[If for example the FMU uses internally a variable step BDF solver of order 4, in order to fulfill the convergence rate, \(C^4\) is required for the inputs. If on the other hand, an FMU sub-samples the communication step with 10 fixed steps and uses a first order explicit Euler method as solver,</em> \(C^0\) <em>smoothness will be suffient.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixedInternalStepSize</code></p></td>
@@ -11870,8 +11921,16 @@ This definition is slightly different from the usual standard definition of stat
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> that is defined by a predefined time instant. Since the time instant is known in advance, the integrator can select its step size so that the event point is directly reached. Therefore, this event can be handled efficiently.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>see Transmission Line Method</em></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>tool coupling</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Transmission Line Method</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A mathematical method which uses physically motivated time delays to decouple an equation system into independent parts during a specified time frame without compromising numerical stability. Also known as the <em>bi-lateral delay line</em> method.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>user interface</em></p></td>
