@@ -1277,7 +1277,7 @@ Moreover, an FMU may contain nested FMUs.</p>
 </dd>
 <dt class="hdlist1">Numerical Robustness</dt>
 <dd>
-<p>The FMI standard allows problems which are numerically critical (for example, time and state events, multiple sample rates, stiff problems) to be treated in a robust way.</p>
+<p>The FMI standard allows problems which are numerically critical (for example, <a href="#time-event"><code>time</code></a> and <a href="#state-event"><code>state events</code></a>, multiple sample rates, stiff problems) to be treated in a robust way.</p>
 </dd>
 <dt class="hdlist1">Hide cache</dt>
 <dd>
@@ -2622,7 +2622,7 @@ These <a href="#clock"><code>clocks</code></a> are not compatible with synchrono
 The events can be <a href="#periodic"><code>periodic</code></a> or <a href="#periodic">aperiodic</a>.</p>
 </div>
 <div class="paragraph">
-<p><em>[Example: If</em> \(b = x &gt; 0\) <em>, and a state event is defined when b changes from <code>false</code> to <code>true</code>, and b is defined as <a href="#outputClock"><code>outputClock</code></a>, then this <a href="#clock"><code>clock</code></a> is active whenever x changes from negative to positive values.]</em></p>
+<p><em>[Example: If</em> \(b = x &gt; 0\) <em>, and a <a href="#state-event">state event</a> is defined when b changes from <code>false</code> to <code>true</code>, and b is defined as <a href="#outputClock"><code>outputClock</code></a>, then this <a href="#clock"><code>clock</code></a> is active whenever x changes from negative to positive values.]</em></p>
 </div>
 <div class="paragraph">
 <p>Since <a href="#outputClock"><code>output clocks</code></a> are ticking based on model internal information it is required in case of FMI for Co-Simulation to signal the ticking of an <a href="#outputClock"><code>outputClock</code></a> to the simulation environment during a <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> or <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> computation.
@@ -5333,7 +5333,7 @@ Whenever a <a href="#parameter"><code>parameter</code></a> or <a href="#input"><
 </div>
 <div id="discrete" class="paragraph">
 <p><code>= discrete</code>:<br>
-Model Exchange: The value of the variable is constant between external and internal events (= time, state, step events defined implicitly in the FMU).<br>
+Model Exchange: The value of the variable is constant between external and internal events (= <a href="#time-event"><code>time</code></a>, <a href="#state-event"><code>state</code></a>, <a href="#step-event"><code>step events</code></a> defined implicitly in the FMU).<br>
 Co-Simulation: By convention, the variable is from a real sampled data system and its value is only changed at communication points (also inside the slave).</p>
 </div>
 <div id="continuous" class="paragraph">
@@ -5869,7 +5869,7 @@ Variables with <a href="#causality"><code>causality</code></a> <a href="#paramet
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><em>Stop the simulation at an event instant (usually, a step event, in other words, after a successful integration step).</em></p>
+<p><em>Stop the simulation at an event instant (usually, a <a href="#step-event">step event</a>, in other words, after a successful integration step).</em></p>
 </li>
 <li>
 <p><em>Change the values of the <a href="#tunable"><code>tunable</code></a> (structural) <a href="#parameter"><code>parameters</code></a>. For <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a>, the <strong>Reconfiguration Mode</strong> must be entered before and left afterwards.</em></p>
@@ -7863,7 +7863,7 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a
 <p>The hybrid ODEs supported by FMI are described as piecewise continuous-time systems.
 Discontinuities can occur at time instants \(t_0, t_1, \ldots, t_n\) where \(t_i &lt; t_{i+1}\).
 These time instants are called <code>events</code>.
-Events can be known before hand (= time event), or are defined implicitly (= state and step events), see below.
+Events can be known before hand (= <a href="#time-event">time event</a>), or are defined implicitly (= <a href="#state-event"><code>state</code></a> and <a href="#step-event"><code>step events</code></a>), see below.
 Between events, variables are either <a href="#continuous"><code>continuous</code></a> or do not change their value.
 A variable is called discrete-time, if it changes its value only at an event instant.
 Otherwise the variable is called continuous-time.
@@ -7925,13 +7925,13 @@ Such an event is called external event.
 </li>
 <li>
 <p>At a predefined time instant \(t_i=(T_{\mathit{next}}(t_{i-1}, 0)\) that was defined at the previous event instant \(t_{i-1}\) by the FMU.
-Such an event is called time event.</p>
+Such an event is called <a href="#time-event">time event</a>.</p>
 </li>
 <li>
 <p>At a time instant, where an event indicator \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 25</a>).
 More precisely: An event \(t = t_i\) occurs at the smallest time instant "min t" with \(t&gt;t_{i-1}\) where "\((z_j(t)&gt;0) \neq (z_j(t_{i-1}) &gt;0)\)".
-Such an event is called state event.
-<em>[This definition is slightly different from the standard definition of state events: "</em> \(z_j(t) \cdot z_j(t_{i-1}) \leq 0\) <em>".</em>
+Such an event is called <a href="#state-event">state event</a>.
+<em>[This definition is slightly different from the standard definition of <a href="#state-event"><code>state events</code></a>: "</em> \(z_j(t) \cdot z_j(t_{i-1}) \leq 0\) <em>".</em>
 <em>This often used definition has the severe drawback that</em> \(z_j(t_{i-1}) \neq 0\) <em>is required in order to be well-defined and this condition cannot be guaranteed.].</em>
 All event indicators are piecewise continuous and are collected together in one vector of floating point numbers \(\mathbf{z(t)}\).<br></p>
 </li>
@@ -7948,8 +7948,8 @@ All event indicators are piecewise continuous and are collected together in one 
 <li>
 <p>At every completed step of an integrator, <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called (provided the capability flag <code>completedIntegratorStepNotNeeded</code> of <code>&lt;fmiModelDescription&gt;</code> is <code>false</code>).
 An event occurs at this time instant, if indicated by the return argument <code>enterEventMode == fmi3True</code>.
-Such an event is called step event.
-<em>[Step events are, for example, used to dynamically change the (continuous) <a href="#state"><code>states</code></a> of a model internally in the FMU, because the previous states are no longer suited numerically.]</em></p>
+Such an event is called <a href="#step-event">step event</a>.
+<em>[<a href="#step-event"><code>Step events</code></a> are, for example, used to dynamically change the (continuous) <a href="#state"><code>states</code></a> of a model internally in the FMU, because the previous states are no longer suited numerically.]</em></p>
 </li>
 </ol>
 </div>
@@ -8006,7 +8006,7 @@ Variables of this type are defined with attribute <a href="#causality"><code>cau
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{z}(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the event indicators used to define state events (recall <a href="#figure-events">Figure 25</a>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the event indicators used to define <a href="#state-event"><code>state events</code></a> (recall <a href="#figure-events">Figure 25</a>).
 For notational convenience, an event indicator is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description in <a href="#table-math-model-exchange">Table 9</a>.
 In reality, event indicator is however part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
@@ -8433,8 +8433,8 @@ Basically, in this phase the <a href="#derivative"><code>derivatives</code></a> 
 If FMUs and/or submodels are connected together, then the <a href="#input"><code>inputs</code></a> of these models are the <a href="#output"><code>outputs</code></a> of other models, and therefore, the corresponding FMU outputs must be computed.
 Whenever result values shall be stored, usually at output points defined before the start of the simulation, the <code>fmi3Get{VariableType}</code> function with respect to the desired variables must be called.<br>
 Continuous integration is stopped at an event instant.
-An event instant is determined by a time, state or step event, or by an external event triggered by the environment.
-In order to determine a state event, the event indicators <strong>z</strong> have to be inquired at every completed integrator step.
+An event instant is determined by a <a href="#time-event"><code>time</code></a>, <a href="#state-event"><code>state</code></a> or <a href="#step-event">step event</a>, or by an external event triggered by the environment.
+In order to determine a <a href="#state-event">state event</a>, the event indicators <strong>z</strong> have to be inquired at every completed integrator step.
 Once the event indicators signal a change of their domain, an iteration over time is performed between the previous and the actual completed integrator step, in order to determine the time instant of the domain change up to a certain precision.<br>
 After an event is triggered, the FMU needs to be switched to <strong>Event Mode</strong>.
 In this mode, systems of equations over connected FMUs might be solved (similarily as in <strong>Continuous-Time Mode</strong>).
@@ -8531,7 +8531,6 @@ Before one of these functions can be called, the appropriate functions from the 
 <div id="fmi3EnterEventMode" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
-                                          fmi3Boolean inputEvent,
                                           fmi3Boolean stepEvent,
                                           const fmi3Int32 rootsFound[],
                                           size_t nEventIndicators,
@@ -8542,21 +8541,19 @@ Before one of these functions can be called, the appropriate functions from the 
 <p>The model enters <strong>Event Mode</strong> from the <strong>Continuous-Time Mode</strong> and discrete-time equations may become active (and relations are not "frozen").</p>
 </div>
 <div class="paragraph">
-<p>The followings arguments can be set to <code>fmi3True</code> to inform the FMU why <strong>Event Mode</strong> was entered.</p>
+<p>The followings function arguments have to be given to inform the FMU why <strong>Event Mode</strong> was entered.</p>
 </div>
 <div class="paragraph">
-<p><em>[These arguments are not mutually exclusive and may all be <code>fmi3False</code> if the caller cannot provide this information.]</em></p>
+<p><em>[These arguments are not mutually exclusive.]</em></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>inputEvent</code> signals with <code>fmi3True</code> that an input event occurred.</p>
+<p><code>stepEvent</code> signals with <code>fmi3True</code> that a <a href="#step-event">step event</a> occurred.</p>
 </li>
 <li>
-<p><code>stepEvent</code> signals with <code>fmi3True</code> that a step event occurred.</p>
-</li>
-<li>
-<p><code>rootsFound</code> is an array of length <code>nEventIndicators</code>. For <code>i = 1, &#8230;&#8203;, nEventIndicators, rootsFound[i-1] != 0</code> if the event indicator \(z_i\) has a root, and <code>rootsFound[i-1] == 0</code> if not.
+<p><code>rootsFound</code> is an array of length <code>nEventIndicators</code> that signals if a <a href="#state-event">state event</a> occurred.
+For <code>i = 1, &#8230;&#8203;, nEventIndicators, rootsFound[i-1] != 0</code> if the event indicator \(z_i\) has a root, and <code>rootsFound[i-1] == 0</code> if not.
 For the components \(z_i\) for which a root was found, the sign of <code>rootsFound[i-1]</code> indicates the direction of the zero-crossing.
 A value of <code>+1</code> indicates that \(z_i\) is increasing, while a value of <code>-1</code> indicates a decreasing \(z_i\).
 If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is not defined.</p>
@@ -8565,9 +8562,12 @@ If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is no
 <p><code>nEventIndicators</code> contains the number of event indicators (length of <code>rootsFound</code>) or <code>0</code> if the caller cannot provide this information.</p>
 </li>
 <li>
-<p><code>timeEvent</code> signals with <code>fmi3True</code> that a time event occurred.</p>
+<p><code>timeEvent</code> signals with <code>fmi3True</code> that a <a href="#time-event">time event</a> occurred.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p><em>[An <a href="#input-event">input event</a> can be detected by the FMU by keeping track of the calls of <code>fmi3Set{VariableType}</code> in <strong>Event Mode</strong>.]</em></p>
 </div>
 <div id="fmi3NewDiscreteStates" class="listingblock">
 <div class="content">
@@ -8635,7 +8635,7 @@ If no element of the continuous state vector has changed its value, <code>values
 <ul>
 <li>
 <p>argument <a href="#nextEventTime"><code>nextEventTime</code></a>, and shall call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> at this time instant.
-If integration is stopped before <a href="#nextEventTime"><code>nextEventTime</code></a>, for example, due to a state event, the definition of <a href="#nextEventTime"><code>nextEventTime</code></a> becomes obsolete.</p>
+If integration is stopped before <a href="#nextEventTime"><code>nextEventTime</code></a>, for example, due to a <a href="#state-event">state event</a>, the definition of <a href="#nextEventTime"><code>nextEventTime</code></a> becomes obsolete.</p>
 </li>
 </ul>
 </div>
@@ -8678,7 +8678,7 @@ When the integrator step is completed and the <a href="#state"><code>states</cod
 then <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a> has to be called with the updated states before <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> is called.<br>
 When the integrator step is completed and one or more event indicators change sign (with respect to the previously completed integrator step), then the integrator or the environment has to determine the time instant of the sign change that is closest to the previous completed step up to a certain precision (usually a small multiple of the machine epsilon).
 This is usually performed by an iteration where time is varied and <a href="#state"><code>state</code></a> variables needed during the iteration are determined by interpolation.
-Function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after this state event location procedure and not after the successful computation of the time step by the integration algorithm.
+Function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after this <a href="#state-event">state event</a> location procedure and not after the successful computation of the time step by the integration algorithm.
 The intended purpose of the function call is to indicate to the FMU that at this stage all <a href="#input"><code>inputs</code></a> and <a href="#state"><code>state</code></a> variables have valid (accepted) values.
 After <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> is called, it is still allowed to go back in time (calling <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>) and inquire values of variables at previous time instants with <code>fmi3Get{VariableType}</code> <em>[for example, to determine values of non-state variables at output points]</em>.
 However, it is not allowed to go back in time over the previous <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> or the previous <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> call.</p>
@@ -8701,7 +8701,7 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 </ol>
 </div>
 <div class="paragraph">
-<p><em>Note that this function is not used to detect time or state events, for example, by comparing event indicators of the previous with the current call of <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a>.</em>
+<p><em>Note that this function is not used to detect time or <a href="#state-event"><code>state events</code></a>, for example, by comparing event indicators of the previous with the current call of <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a>.</em>
 <em>These types of events are detected in the environment, and the environment has to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> independently in these cases, whether the return argument <code>enterEventMode</code> of <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> is <code>fmi3True</code> or <code>fmi3False</code>.]</em></p>
 </div>
 <div id="fmi3GetDerivatives" class="listingblock">
@@ -8732,7 +8732,7 @@ The order of the states and derivatives is also the same as the ordered list of 
 <p>The event indicators are returned as a vector with <code>nEventIndicators</code> elements.
 The order of event indicators in <code>eventIndicators</code> vector is the same as the ordered list of <code>&lt;EventIndicator&gt;</code> elements in <code>&lt;ModelStructure&gt;</code>.
 <em>[Array variables are serialized in "row major" order, as usual.]</em>
-A state event is triggered when the domain of an event indicator changes from \(z_j &gt; 0\) to \(z_j \leq 0\) or vice versa.
+A <a href="#state-event">state event</a> is triggered when the domain of an event indicator changes from \(z_j &gt; 0\) to \(z_j \leq 0\) or vice versa.
 The FMU must guarantee that at an event restart \(z_j \neq 0\), for example, by shifting \(z_j\) with a small value.
 Furthermore, \(z_j\) should be scaled in the FMU with its nominal value (so all elements of the returned vector <code>eventIndicators</code> should be in the order of "one").</p>
 </div>
@@ -8782,7 +8782,7 @@ If a transition is labelled with one or more function names (for example, <code>
 Note that the FMU can always determine in which state it is since every state is entered by a particular function call (such as <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>), or a particular return value (such as <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>).</p>
 </div>
 <div class="paragraph">
-<p>The transition conditions <code>external event</code>, <code>time event</code>, and <code>state event</code> are defined in <a href="#math-model-exchange">Section 3.1</a>.
+<p>The transition conditions <code>external event</code>, <a href="#time-event">time event</a>, and <a href="#state-event">state event</a> are defined in <a href="#math-model-exchange">Section 3.1</a>.
 Each state of the state machine corresponds to a certain phase of a simulation as follows:</p>
 </div>
 <div class="sect4">
@@ -8811,7 +8811,7 @@ Variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><c
 <h5 id="_state_continuous_time_mode">3.2.3.4. State: Continuous-Time Mode</h5>
 <div class="paragraph">
 <p>In this state, the continuous-time model equations are active and integrator steps are performed.
-The event time of a state event may be determined if a domain change of at least one event indicator is detected at the end of a completed integrator step.</p>
+The event time of a <a href="#state-event">state event</a> may be determined if a domain change of at least one event indicator is detected at the end of a completed integrator step.</p>
 </div>
 </div>
 <div class="sect4">
@@ -9043,7 +9043,7 @@ TERMINATE:
 <dl>
 <dt class="hdlist1">Output Clocks</dt>
 <dd>
-<p>For a <a href="#outputClock"><code>outputClock</code></a>, the environment integrates until a continuous-time event occurs and calls <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>. Afterwards with function call <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> the <a href="#outputClock"><code>output clocks</code></a> that became active at this event instant can be inquired by the environment.</p>
+<p>For an <a href="#outputClock"><code>outputClock</code></a>, the environment integrates until a <a href="#time-event"><code>continuous-time event</code></a> occurs and calls <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>. Afterwards with function call <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> the <a href="#outputClock"><code>output clocks</code></a> that became active at this event instant can be inquired by the environment.</p>
 </dd>
 <dt class="hdlist1">Input Clocks</dt>
 <dd>
@@ -9085,9 +9085,9 @@ Before a new loop iteration is started, the environment must activate the <a hre
 <dd>
 <p>The function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> evaluates the discrete-time equations, provided the corresponding <a href="#clock"><code>clock</code></a> is active and the discrete-time equations have not already been evaluated with calls to <code>fmi3Get{VariableType}</code> functions.
 Clocks are automatically deactivated by <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> and by <a href="#fmi3Reset"><code>fmi3Reset</code></a>.
-<em>[This handling of discrete <a href="#state"><code>states</code></a> and time events is forward compatible with FMI 2.0 for any model that could be treated with FMI 2.0 and is exported again using the new features.</em>
+<em>[This handling of discrete <a href="#state"><code>states</code></a> and <a href="#time-event"><code>time events</a> is forward compatible with FMI 2.0 for any model that could be treated with FMI 2.0 and is exported again using the new features.</em>
 <em>The environment may ignore the new functions <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> and <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>.</em>
-<em>The new functions are needed for FMUs with input sample times and to set discrete-time <a href="#state"><code>states</code></a> in model-based control applications or if algebraic loops are present among discrete-time equations of multiple connected FMUs.]</em></p>
+<em>The new functions are needed for FMUs with input sample times and to set discrete-time <a href="#state">`states</code></a> in model-based control applications or if algebraic loops are present among discrete-time equations of multiple connected FMUs.]</em></p>
 </dd>
 </dl>
 </div>
@@ -10446,7 +10446,6 @@ If the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
-                                          fmi3Boolean inputEvent,
                                           fmi3Boolean stepEvent,
                                           const fmi3Int32 rootsFound[],
                                           size_t nEventIndicators,
@@ -10492,7 +10491,7 @@ Only the following output arguments are defined by the FMU:</p>
 </li>
 <li>
 <p>When <a href="#nextEventTime"><code>nextEventTimeDefined == fmi3True</code></a>, an event time is available and the value is given by <a href="#nextEventTime"><code>nextEventTime</code></a>.
-This is the case when the model can report in advance the accurate time of the next predictable time event.</p>
+This is the case when the model can report in advance the accurate time of the next predictable <a href="#time-event">time event</a>.</p>
 </li>
 <li>
 <p>When <a href="#terminateSimulation"><code>terminateSimulation == fmi3True</code></a>, the model requested to stop integration and the Co-Simulation master should call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
@@ -11693,6 +11692,10 @@ TODO: FMU also goes by "slave". When "slave" is used, the intent is to focus on 
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="input-event"></a><em>input event</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An input event occurrs when a discrete input variable changes or a continuous input variable has a discontinuity.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>integration algorithm</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The numerical algorithm to solve differential equations.</p></td>
 </tr>
@@ -11897,7 +11900,7 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 The discrete <a href="#state"><code>states</code></a> of a model are time-discrete variables that have two values in a model: The value of the variable from the previous <em>event</em> instant, and the value of the variable at the actual event instant.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>state event</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="state-event"></a><em>state event</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> that is defined by the time instant where the domain \(z &gt; 0\) of an event indicator variable <code>z</code> is changed to \(z \leq 0\), or vice versa.<br>
 This definition is slightly different from the usual standard definition of state events: "\(z(t)*z(t_{i-1}) \leq 0\)" which has the severe drawback that the value of the event indicator at the previous event instant, \(z(t_{i-1}) \neq 0\), must be non-zero and this condition cannot be guaranteed. The often used term "zero crossing function" for <code>z</code> is misleading (and is therefore not used in this document), since a state event is defined by a change of a domain and not by a zero crossing of a variable.</p></td>
 </tr>
@@ -11910,7 +11913,7 @@ This definition is slightly different from the usual standard definition of stat
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>step event</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="step-event"></a><em>step event</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> that might occur at a completed integrator step. Since this event type is not defined by a precise time or condition, it is usually not defined by a user. A program may use it, for example, to dynamically switch between different states. A step event is handled much more efficiently than a <em>state event</em>, because the event is just triggered after performing a check at a completed integrator step, whereas a search procedure is needed for a state event.</p></td>
 </tr>
 <tr>
@@ -11934,7 +11937,7 @@ This definition is slightly different from the usual standard definition of stat
 <td class="tableblock halign-left valign-top"><p class="tableblock">Special kind of <em>model partition</em> that is used in control code.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>time event</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="time-event"></a><em>time event</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> that is defined by a predefined time instant. Since the time instant is known in advance, the integrator can select its step size so that the event point is directly reached. Therefore, this event can be handled efficiently.</p></td>
 </tr>
 <tr>
