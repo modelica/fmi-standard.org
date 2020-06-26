@@ -2172,14 +2172,14 @@ An FMU for Co-Simulation might ignore this argument.</p>
 </li>
 <li>
 <p><code>startTime</code> and <code>stopTime</code> can be used to check whether the model is valid within the given boundaries, or to allocate the necessary memory for storing results.
-<code>startTime</code> is the <a href="#fixed"><code>fixed</code></a> <a href="#initial"><code>initial</code></a> value of the <a href="#independent"><code>independent</code></a> variable.</p>
+<code>startTime</code> is the <a href="#fixed"><code>fixed</code></a> <a href="#initial"><code>initial</code></a> value of the <a href="#independent"><code>independent</code></a> variable and inherits its unit.</p>
 <div class="paragraph">
 <p><em>[It is defined with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</em>
 <em>If the <a href="#independent"><code>independent</code></a> variable is <code>time</code>, <code>startTime</code> is the starting time of initialization.]</em></p>
 </div>
 </li>
 <li>
-<p>If <code>stopTimeDefined == fmi3True</code>, then <code>stopTime</code> is the final value of the <a href="#independent"><code>independent</code></a> variable.
+<p>If <code>stopTimeDefined == fmi3True</code>, then <code>stopTime</code> is the final value of the <a href="#independent"><code>independent</code></a> variable and inherits its unit.
 If the environment tries to compute past <code>stopTime</code>, the FMU has to return <a href="#fmi3Error"><code>fmi3Status == fmi3Error</code></a>.
 If <code>stopTimeDefined == fmi3False</code>, then no final value of the <a href="#independent"><code>independent</code></a> variable is defined and argument <code>stopTime</code> is meaningless.</p>
 <div class="paragraph">
@@ -3108,8 +3108,7 @@ Each state derivative variable listed as elements <code>&lt;ModelStructure&gt;&l
 <div class="paragraph">
 <p>Details are given in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.2.8</a>.
 <em>[For example continuous-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>.</em>
-<em>If a variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> is explicitly defined under <code>&lt;ModelVariables&gt;</code>, a directional derivative with respect to this variable can be computed.</em>
-<em>If such a variable is not defined, the directional derivative with respect to the <a href="#independent"><code>independent</code></a> variable cannot be calculated].</em></p>
+<em>A directional derivative with respect to the independent variable can be computed.].</em></p>
 </div>
 <div class="ulist">
 <ul>
@@ -5272,11 +5271,11 @@ The algebraic relationship to the <a href="#input"><code>inputs</code></a> is de
 It is not allowed to use the variable value in another model or slave.</p>
 </div>
 <div id="independent" class="paragraph">
-<p><code>= independent</code>: The independent variable (usually <code>time</code>).
+<p><code>= independent</code>: The independent variable (usually <code>time</code> <em>[but could also be, for example, <code>angle</code>]</em>).
 All variables are a function of this <a href="#independent"><code>independent</code></a> variable.
 <a href="#variability"><code>variability</code></a> must be <a href="#continuous"><code>continuous</code></a>.
-At most one variable of an FMU can be defined as <a href="#independent"><code>independent</code></a>.
-If no variable is defined as <a href="#independent"><code>independent</code></a>, it is implicitly present with <code>name = time</code> and <code>unit = s</code>.
+Exactly one variable of an FMU must be defined as <a href="#independent"><code>independent</code></a>.
+If the unit for the independent variable is not defined, it is implicitely`unit = s`.
 If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined with a floating point type without a <a href="#start"><code>start</code></a> attribute.
 It is not allowed to call function <code>fmi3Set{VariableType}</code> on an <a href="#independent"><code>independent</code></a> variable.
 Instead, its value is initialized with <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> and <a href="#communicationStepSize"><code>communicationStepSize</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation FMUs.
@@ -6171,14 +6170,12 @@ Otherwise the unknown depends on the knowns defined by the given value reference
 Knowns \({\mathbf{v}_{\mathit{known}}}\) in <strong>Event Mode</strong> and <strong>Continuous-Time Mode</strong> (ME) and at communication points (xCS) for <code>&lt;Output&gt;</code> and <code>&lt;Derivative&gt;</code> elements:</p>
 <p class="tableblock">- inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>)</p>
 <p class="tableblock">- continuous-time states</p>
-<p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).
-If an <a href="#independent"><code>independent</code></a> variable is not explicitly defined under variables, it is assumed that the unknown depends explicitly on the <a href="#independent"><code>independent</code></a> variable.</p>
+<p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).</p>
 <p class="tableblock"><em>[<a href="#parameter"><code>parameters</code></a> and <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> must not be listed as knowns in this mode. This may change in a future FMI version which implies the possibility to calculate derivatives with respect to parameters.]</em></p>
 <p class="tableblock"><code>Knowns</code> \({\mathbf{v}_{\mathit{known}}}\) in <strong>Initialization Mode</strong> (for elements <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>):</p>
 <p class="tableblock">- inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>)</p>
 <p class="tableblock">- variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> <em>[for example, <a href="#parameter"><code>parameters</code></a> or initial <a href="#state"><code>states</code></a>]</em></p>
-<p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).
-If an <a href="#independent"><code>independent</code></a> variable is not explicitly defined under variables, it is assumed that the unknown depends explicitly on the <a href="#independent"><code>independent</code></a> variable.</p>
+<p class="tableblock">- <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).</p>
 <p class="tableblock">For Co-Simulation, if the capability flag <code>providesDirectionalDerivatives</code> has a value of <code>false</code>, then <a href="#dependencies"><code>dependencies</code></a> does not list the dependency on continuous-time.
 In other words, the respective partial derivatives cannot be computed.</p></td>
 </tr>
@@ -7275,10 +7272,10 @@ It illustrates that multiple intermediate internal solver steps, distinguishing 
 <div id="intermediateUpdateTime" class="ulist">
 <ul>
 <li>
-<p><a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the internal simulation time of the FMU at which the callback has been called.
+<p><a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the internal value of the <a href="#independent"><code>independent</code></a> variable <em>[typically simulation time]</em> of the FMU at which the callback has been called.
 If an event happens or an <a href="#outputClock"><code>outputClock</code></a> ticks, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the time of event or <a href="#outputClock"><code>outputClock</code></a> tick.
 If the FMU returns with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> then <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the internal simulation time of the FMU of the last <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> call that signaled <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a>.
-<a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is also the time of intermediate steps of the internal FMU solver.
+<a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is also the value of the <a href="#independent"><code>independent</code></a> variable of intermediate steps of the internal FMU solver.
 The FMU must not call the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <code>intermediateStepFinished == fmi3True</code>.</p>
 </li>
 </ul>
@@ -7791,7 +7788,7 @@ Algebraic equation systems might be contained inside the FMU.
 Also, the FMU might consist of discrete-time equations only, for example, describing a sampled-data controller.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#independent"><code>independent</code></a> variable time \(t \in \mathbb{T}\) is a tuple \(t = (t_R,t_I)\), where \(t_R \in \mathbb{R},\ t_{I} \in \mathbb{N} = \{0, 1, 2, \ldots\}\).
+<p>The <a href="#independent"><code>independent</code></a> variable \(t \in \mathbb{T}\) <em>[typically: time]</em> is a tuple \(t = (t_R,t_I)\), where \(t_R \in \mathbb{R},\ t_{I} \in \mathbb{N} = \{0, 1, 2, \ldots\}\).
 The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
 In this phase \(t_I = 0\).
 The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).
@@ -7968,7 +7965,7 @@ Such an event is called <a href="#step-event">step event</a>.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(t\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#independent"><code>independent</code></a> variable time \(\in \mathbb{T}\).
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#independent"><code>independent</code></a> variable <em>[typically: time]</em> \(\in \mathbb{T}\).
 (Variable defined with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).</p></td>
 </tr>
 <tr>
@@ -8205,7 +8202,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3NewDiscreteStates</span></code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable time \(t_i := (T_{\mathit{next}},0)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable <em>[typically: time]</em> \(t_i := (T_{\mathit{next}},0)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetTime"><code>fmi3SetTime</code></a> + (if no continuous-time equations)</p></td>
 </tr>
 <tr>
@@ -8220,7 +8217,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterContinuousTimeMode</span></code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable time \(t(&gt;t_{\mathit{enter  mode}}): t:=(t_R, 0)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable <em>[typically: time]</em> \(t(&gt;t_{\mathit{enter  mode}}): t:=(t_R, 0)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetTime"><code>fmi3SetTime</code></a></p></td>
 </tr>
 <tr>
@@ -8419,7 +8416,7 @@ r2 = z2 &gt; 0</pre>
 <p>An FMU is initialized in <strong>Initialization Mode</strong> with \(\mathbf{f}_{\mathit{init}}(\ldots)\).</p>
 </div>
 <div class="paragraph">
-<p>The input arguments to this function consist of the <a href="#input"><code>input</code></a> variables (= variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>), of the <a href="#independent"><code>independent</code></a> variable (= variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>; usually the default value <code>time</code>), and of all variables that have a <a href="#start"><code>start</code></a> value with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> in order to compute the continuous-time <a href="#state"><code>states</code></a> and the output variables at the initial time \(t_0\).
+<p>The input arguments to this function consist of the <a href="#input"><code>input</code></a> variables (= variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>), of the <a href="#independent"><code>independent</code></a> variable (= variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a> <em>[typically: time]</em>), and of all variables that have a <a href="#start"><code>start</code></a> value with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> in order to compute the continuous-time <a href="#state"><code>states</code></a> and the output variables at the initial time \(t_0\).
 In <a href="#table-math-model-exchange">Table 9</a>, the variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> are collected together in variable \(\mathbf{v}_{\mathit{initial=exact}}\).</p>
 </div>
 <div class="paragraph">
@@ -8480,7 +8477,7 @@ This is unproblematic for time and states, but is more involved for <a href="#pa
 </div>
 </div>
 <div class="paragraph">
-<p>Set a new time instant and re-initialize caching of variables that depend on time, provided the newly provided time value is different to the previously set time value (variables that depend solely on <a href="#constant"><code>constants</code></a> or <a href="#parameter"><code>parameters</code></a> need not to be newly computed in the sequel, but the previously computed values can be reused).</p>
+<p>Set a new value for the independent variable (typically a time instant) and re-initialize caching of variables that depend on time, provided the newly provided time value is different to the previously set time value (variables that depend solely on <a href="#constant"><code>constants</code></a> or <a href="#parameter"><code>parameters</code></a> need not to be newly computed in the sequel, but the previously computed values can be reused).</p>
 </div>
 <div id="fmi3SetContinuousStates" class="listingblock">
 <div class="content">
@@ -8719,7 +8716,7 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 </div>
 </div>
 <div class="paragraph">
-<p>Compute state derivatives and event indicators at the current time instant and for the current <a href="#state"><code>states</code></a>.
+<p>Compute state derivatives (that is derivatives w.r.t. to the <a href="#independent"><code>independent</code></a> variable also taking into account its unit) and event indicators at the current instant of the <a href="#independent"><code>independent</code></a> variable <em>[typically: time]</em> and for the current <a href="#state"><code>states</code></a>.
 Note that <a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> is possible for both functions.</p>
 </div>
 <div class="paragraph">
@@ -9297,7 +9294,7 @@ It is designed both for coupling with subsystem models, which have been exported
 <tbody>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(t\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Independent variable time \(\in \mathbb{R}\).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Independent variable <em>[typically: time]</em> \(\in \mathbb{R}\).
 (Variable defined with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).<br>
 The i-th communication point is denoted as \(t = tc_i\)<br>
 The communication step size is denoted as \(hc_i = tc_{i+1} - tc_i\)<br>
@@ -9713,14 +9710,14 @@ If the actual order is lower (because the order of integration algorithm is low)
 <div id="currentCommunicationPoint" class="ulist">
 <ul>
 <li>
-<p><code>currentCommunicationPoint</code> is the current communication point of the master (\(tc_i\)) and</p>
+<p><code>currentCommunicationPoint</code> is the current communication point of the master (\(tc_i\)) with the unit of the <a href="#independent"><code>independent</code></a> variable and</p>
 </li>
 </ul>
 </div>
 <div id="communicationStepSize" class="ulist">
 <ul>
 <li>
-<p><code>communicationStepSize</code> is the communication step size (\(hc_i\)). <code>comunicationStepSize</code> must be \(&gt; 0.0\).</p>
+<p><code>communicationStepSize</code> is the communication step size (\(hc_i\)) with the unit of the <a href="#independent"><code>independent</code></a> variable. <code>comunicationStepSize</code> must be \(&gt; 0.0\).</p>
 </li>
 </ul>
 </div>
@@ -10873,7 +10870,7 @@ Using the element index 0 means all elements of the <a href="#clock"><code>clock
 (Note: If an array has more than one dimension the indices are serialized in the same order as defined for values).</p>
 </li>
 <li>
-<p><code>fmi3Float64 activationTime</code>: simulation (i.e. virtual) time of the <a href="#clock"><code>clock</code></a> tick</p>
+<p><code>fmi3Float64 activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the <a href="#clock"><code>clock</code></a> tick <em>[typically:  simulation (i.e. virtual) time]</em></p>
 </li>
 </ul>
 </div>
@@ -11685,7 +11682,7 @@ TODO: FMU also goes by "slave". When "slave" is used, the intent is to focus on 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>independent variable</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The numerical algorithm to solve differential equations.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All variables are a function of this <a href="#independent"><code>independent</code></a> variable, typically time.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>inline integration</em></p></td>
