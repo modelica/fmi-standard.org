@@ -1807,10 +1807,8 @@ typedef fmi3Instance fmi3InstantiateBasicCoSimulationTYPE(
     fmi3String                     resourceLocation,
     fmi3Boolean                    visible,
     fmi3Boolean                    loggingOn,
-    const fmi3ValueReference       intermediateVariablesGetRequired[],
-    size_t                         nIntermediateVariablesGetRequired,
-    const fmi3ValueReference       intermediateVariablesSetRequired[],
-    size_t                         nIntermediateVariablesSetRequired,
+    const fmi3ValueReference       requiredIntermediateVariables[],
+    size_t                         nRequiredIntermediateVariables,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
     fmi3CallbackIntermediateUpdate intermediateUpdate);
@@ -1821,10 +1819,8 @@ typedef fmi3Instance fmi3InstantiateHybridCoSimulationTYPE(
     fmi3String                     resourceLocation,
     fmi3Boolean                    visible,
     fmi3Boolean                    loggingOn,
-    const fmi3ValueReference       intermediateVariablesGetRequired[],
-    size_t                         nIntermediateVariablesGetRequired,
-    const fmi3ValueReference       intermediateVariablesSetRequired[],
-    size_t                         nIntermediateVariablesSetRequired,
+    const fmi3ValueReference       requiredIntermediateVariables[],
+    size_t                         nRequiredIntermediateVariables,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
     fmi3CallbackIntermediateUpdate intermediateUpdate);
@@ -1835,10 +1831,8 @@ typedef fmi3Instance fmi3InstantiateScheduledCoSimulationTYPE(
     fmi3String                     resourceLocation,
     fmi3Boolean                    visible,
     fmi3Boolean                    loggingOn,
-    const fmi3ValueReference       intermediateVariablesGetRequired[],
-    size_t                         nIntermediateVariablesGetRequired,
-    const fmi3ValueReference       intermediateVariablesSetRequired[],
-    size_t                         nIntermediateVariablesSetRequired,
+    const fmi3ValueReference       requiredIntermediateVariables[],
+    size_t                         nRequiredIntermediateVariables,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
     fmi3CallbackIntermediateUpdate intermediateUpdate,
@@ -1957,39 +1951,21 @@ The function <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a>
 </li>
 </ul>
 </div>
-<div id="intermediateVariablesGetRequired" class="ulist">
+<div id="requiredIntermediateVariables" class="ulist">
 <ul>
 <li>
-<p><code>intermediateVariablesGetRequired</code> is a vector of the value references of all variables that the master intends to get during intermediate updates.
-This set can be empty (indicated by this argument being <code>NULL</code> and  <a href="#nIntermediateVariablesGetRequired"><code>nIntermediateVariablesGetRequired</code></a> being zero) when the master does not intend to use intermediate variable read access at all.
-All variables referenced in this set must be marked with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the model description.
-It is an error if a master tries to access variables that have not been included in this set using <code>fmi3Get{VariableType}</code> during <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks.</p>
+<p><code>requiredIntermediateVariables</code> is an array of the value references of all <a href="#input"><code>input</code></a> variables that the master intends to set and all <a href="#output"><code>output</code></a> variables it intends to get during intermediate updates.
+This set may be empty (<a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables</code></a> == 0) when the master does not intend to use intermediate variable access.
+All variables referenced in this set must be marked with <a href="#intermediateAccess"><code>intermediateAccess="true"</code></a> in the model description.
+Only the variables in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> may be accessed by the master using <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> during <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks.</p>
 </li>
 </ul>
 </div>
-<div id="nIntermediateVariablesGetRequired" class="ulist">
+<div id="nRequiredIntermediateVariables" class="ulist">
 <ul>
 <li>
-<p><code>nIntermediateVariablesGetRequired</code> gives the number of entries in <a href="#intermediateVariablesGetRequired"><code>intermediateVariablesGetRequired</code></a>.
-If there are no entries, this argument is zero, and <a href="#intermediateVariablesGetRequired"><code>intermediateVariablesGetRequired</code></a> is <code>NULL</code>.</p>
-</li>
-</ul>
-</div>
-<div id="intermediateVariablesSetRequired" class="ulist">
-<ul>
-<li>
-<p><code>intermediateVariablesSetRequired</code> is a vector of the value references of all variables that the master intends to set during intermediate updates.
-This set can be empty (indicated by this argument being <code>NULL</code> and  <a href="#nIntermediateVariablesSetRequired"><code>nIntermediateVariablesSetRequired</code></a> being zero) when the master does not intend to use intermediate variable write access at all.
-All variables referenced in this set must be marked with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the model description.
-It is an error if a master tries to access variables that have not been included in this set using <code>fmi3Set{VariableType}</code> during <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks.</p>
-</li>
-</ul>
-</div>
-<div id="nIntermediateVariablesSetRequired" class="ulist">
-<ul>
-<li>
-<p><code>nIntermediateVariablesSetRequired</code> gives the number of entries in <a href="#intermediateVariablesSetRequired"><code>intermediateVariablesSetRequired</code></a>.
-If there are no entries, this argument is zero, and <a href="#intermediateVariablesSetRequired"><code>intermediateVariablesSetRequired</code></a> is <code>NULL</code>.</p>
+<p><code>nRequiredIntermediateVariables</code> gives the number of entries in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a>.
+If <a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables</code></a> is zero <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> is not defined.</p>
 </li>
 </ul>
 </div>
@@ -7303,7 +7279,7 @@ If this flag is <code>fmi3True</code> the master must return with <a href="#earl
 <ul>
 <li>
 <p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the Co-Simulation master should provide intermediate <a href="#input"><code>input</code></a> variables by calling <code>fmi3Set{VariableType}</code> for continuous variables with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>.
-The set of variables for which the master can provide intermediate values is the set supplied through the <a href="#intermediateVariablesSetRequired"><code>intermediateVariablesSetRequired</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
+The set of variables for which the master can provide intermediate values is supplied through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
 Note that if a master does not provide a new value for any of the variables contained in the set it registered, the last set value will be deemed to be the new value.</p>
 </li>
 </ul>
@@ -7312,7 +7288,7 @@ Note that if a master does not provide a new value for any of the variables cont
 <ul>
 <li>
 <p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the Co-Simulation master may collect intermediate output variables by calling <code>fmi3Get{VariableType}</code> for variables with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>.
-The set of variables for which the master can get values is the set supplied through the <a href="#intermediateVariablesGetRequired"><code>intermediateVariablesGetRequired</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+The set of variables for which the master can get values is supplied through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -9989,12 +9965,12 @@ If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU 
 <dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the value of intermediate, continuous variables should be set.
-Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#intermediateVariablesSetRequired"><code>intermediateVariablesSetRequired</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
 <dd>
 <p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the value of intermediate variables can be retrieved.
-Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#intermediateVariablesGetRequired"><code>intermediateVariablesGetRequired</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
