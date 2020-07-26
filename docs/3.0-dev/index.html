@@ -5251,12 +5251,16 @@ Whenever a <a href="#parameter"><code>parameter</code></a> or <a href="#input"><
 <div id="discrete" class="paragraph">
 <p><code>= discrete</code>:<br>
 Model Exchange: The value of the variable is constant between external and internal events (= <a href="#time-event"><code>time</code></a>, <a href="#state-event"><code>state</code></a>, <a href="#step-event"><code>step events</code></a> defined implicitly in the FMU).<br>
-Co-Simulation: By convention, the variable is from a real sampled data system and its value is only changed at communication points (also inside the slave).</p>
+Co-Simulation: By convention, the variable is from a real sampled data system and its value is only changed at communication points (including event handling).
+During <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>, <a href="#discrete"><code>discrete</code></a> variables are not allowed to change.
+<em>[If the master notices a change in a discrete variable during <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>, the master will delay the change, raise an event with early return and during the communication point it can change the <a href="#discrete"><code>discrete</code></a> variable, followed by event handling.]</em></p>
 </div>
 <div id="continuous" class="paragraph">
 <p><code>= continuous</code>: Only a variable of <code>type == fmi3GetFloat32</code> or <code>type == fmi3GetFloat64</code> can be <a href="#continuous"><code>continuous</code></a>.<br>
 Model Exchange: No restrictions on value changes.<br>
-Co-Simulation: By convention, the variable is part of a differential equation.</p>
+Co-Simulation: By convention, the variable is part of a differential equation.<br>
+Changes to <a href="#continuous"><code>continuous</code></a> variables are only considered discrete during event handling.
+Changes to <a href="#continuous"><code>continuous</code></a> variables during <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and normal communication points (communication points without event handling) are considered continuous.</p>
 </div>
 <div id="clock" class="paragraph">
 <p><code>= clock</code>: Only a variable of type <code>&lt;Clock&gt;</code> can have this variability.</p>
@@ -10063,16 +10067,24 @@ If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU 
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
-<dd>
-<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the value of intermediate, continuous variables should be set.
-Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
-</dd>
 <dt class="hdlist1"><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
 <dd>
 <p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the value of intermediate variables can be retrieved.
 Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </dd>
+<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
+<dd>
+<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the value of intermediate, continuous variables should be set.
+Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>There is a defined order of calling these functions: first all <code>fmi3Get{VariableType}</code> and <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> calls must be performed, then <code>fmi3Set{VariableType}</code> may be called.<br>
+<em>[This is analogous to the calling sequence of of</em> <code>fmi3Get{VariableType}</code> <em>and</em> <code>fmi3Set{VariableType}</code> <em>calls at communication points.]</em></p>
+</div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1">Forbidden Function Calls</dt>
 <dd>
 <p>The same functions which are not allowed to be called in <strong>Step Mode</strong> must not be called in this state.
