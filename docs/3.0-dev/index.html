@@ -843,7 +843,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_computation_in_scheduled_execution">5.2.2. Computation in Scheduled Execution</a></li>
 <li><a href="#state-machine-scheduled-execution">5.2.3. State Machine for Scheduled Execution</a>
 <ul class="sectlevel4">
-<li><a href="#_state_setable_fmu_state">5.2.3.1. State: Setable FMU State</a></li>
+<li><a href="#_state_fmu_state_setable">5.2.3.1. State: FMU State Setable</a></li>
 <li><a href="#_state_under_evaluation">5.2.3.2. State: Under Evaluation</a></li>
 <li><a href="#_state_initialized">5.2.3.3. State: Initialized</a></li>
 <li><a href="#_state_clock_activation_mode">5.2.3.4. State: Clock Activation Mode</a></li>
@@ -10576,7 +10576,7 @@ Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<
 </div>
 <div class="paragraph">
 <p>Model partitions that are associated to <a href="#outputClock"><code>output clocks</code></a> will accordingly provide the result values of the model partition&#8217;s variables for the current <a href="#outputClock"><code>outputClock</code></a> tick time \(t_i\) of the active <a href="#outputClock"><code>outputClock</code></a>.
-The activation of such a <a href="#outputClock"><code>outputClock</code></a> is not directly controlled by the Co-Simulation master but internally by the FMU.</p>
+The activation of such an <a href="#outputClock"><code>outputClock</code></a> is not controlled by the Co-Simulation master but internally by the FMU.</p>
 </div>
 </div>
 <div class="sect2">
@@ -10651,29 +10651,21 @@ Using the element index 0 means all elements of the <a href="#clock"><code>clock
 (Note: If an array has more than one dimension the indices are serialized in the same order as defined for values).</p>
 </li>
 <li>
-<p><code>fmi3Float64 activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the <a href="#clock"><code>clock</code></a> tick <em>[typically:  simulation (i.e. virtual) time]</em></p>
+<p><code>fmi3Float64 activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the assigned <a href="#inputClock"><code>inputClock</code></a> tick time \(t_i\) <em>[typically: simulation (i.e. virtual) time]</em> (which is known to the Co-Simulation master).</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>Scheduling of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> calls for each FMU is done by the simulation master.
 Calls are based on ticks of <a href="#periodic"><code>periodic</code></a> or <a href="#periodic">aperiodic</a> <a href="#inputClock"><code>input clocks</code></a>.
-These <a href="#inputClock"><code>inputClock</code></a> ticks can be based on <a href="#clock"><code>clock</code></a> ticks from FMU external sources (e.g. <a href="#outputClock"><code>output clocks</code></a> of other FMUs) or other external <a href="#clock"><code>clocks</code></a>/events/interrupts assigned via the simulation master configuration (such external events can be based on a potentially unpredictable process or can be just simulation time based events e.g. the planned communication point). The <a href="#inputClock"><code>inputClock</code></a> ticks can also be based on <a href="#outputClock"><code>output clock</code></a> ticks of the same FMU.
+These <a href="#inputClock"><code>inputClock</code></a> ticks can be based on <a href="#clock"><code>clock</code></a> ticks from FMU external sources (e.g. <a href="#outputClock"><code>output clocks</code></a> of other FMUs) or other external <a href="#clock"><code>clocks</code></a>/events/interrupts assigned via the simulation master configuration (such external events can be based on a potentially unpredictable process or can be just simulation time based events e.g. the planned communication point).
+The <a href="#inputClock"><code>inputClock</code></a> ticks can also be based on <a href="#outputClock"><code>output clock</code></a> ticks of the same FMU.
+Refer to <a href="#math-scheduled-execution">Section 5.1</a> and <a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>.
 The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function is not called for <a href="#outputClock"><code>output clocks</code></a> of an FMU.</p>
 </div>
 <div class="paragraph">
-<p>The value for the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> argument <code>activationTime</code> is the <a href="#clock"><code>clock</code></a> tick time \(t_i\) from the  assigned <a href="#inputClock"><code>inputClock</code></a> (which is known to the Co-Simulation master).</p>
-</div>
-<div class="paragraph">
-<p>Refer to <a href="#math-scheduled-execution">Section 5.1</a> and <a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>.</p>
-</div>
-<div class="paragraph">
-<p>This is a different timing concept compared to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> calls.
+<p>Note that this is a different timing concept compared to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> calls.
 A <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call will compute the results of the model partition defined by <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of the variable that defines a <a href="#clock"><code>clock</code></a> and an element index into that for arrays) for the current <a href="#clock"><code>clock</code></a> tick \(t_i\).</p>
-</div>
-<div class="paragraph">
-<p>The value for the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> argument <code>activationTime</code> is the <a href="#clock"><code>clock</code></a> tick time \(t_i\) from the assigned <a href="#inputClock"><code>inputClock</code></a> (which is known to the Co-Simulation master).
-Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>) for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>If required, the FMU can internally derive the <a href="#clock"><code>clock</code></a> interval \(\Delta T_i\) based on the last <a href="#clock"><code>clock</code></a> tick time \(t_{i-1}\) i.e. last <code>activationTime</code> for this <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).</p>
@@ -10685,8 +10677,7 @@ Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<
 <div class="sect3">
 <h4 id="state-machine-scheduled-execution">5.2.3. State Machine for Scheduled Execution</h4>
 <div class="paragraph">
-<p>This section summarizes the available states and the allowed function calls in the respective states.
-All states must not be entered or exited concurrently for model partitions of an FMU but only for the whole FMU instance.</p>
+<p>This section summarizes the available states and the allowed function calls in the respective states.</p>
 </div>
 <div id="figure-scheduled-execution-state-machine" class="imageblock text-center">
 <div class="content">
@@ -10695,18 +10686,21 @@ All states must not be entered or exited concurrently for model partitions of an
 <div class="title">Figure 27. Calling sequence of Scheduled Execution C functions in form of a UML 2.0 state machine.</div>
 </div>
 <div class="paragraph">
+<p>If the master intends to enter the state <strong>Terminated</strong> it must ensure that all tasks related to model partitions of the FMU have ended.
+Hence if in states <strong>Clock Activation Mode</strong>, <strong>Intermediate Update Mode</strong>, or <strong>Reconfiguration Mode</strong> a function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the master may prematurely end all tasks related to the computation of model partitions of this FMU.
+If in these states a function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> the master may wait until all other tasks of the model partitions of this FMU have ended, but new tasks must not be started.</p>
+</div>
+<div class="paragraph">
 <p>In Scheduled Execution the following functions must not be called: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> including all functions that are specific to the Model Exchange interface.</p>
 </div>
 <div class="paragraph">
 <p>The states <strong>Configuration Mode</strong>, <strong>Instantiated</strong>, <strong>Initialization Mode</strong>, and <strong>Terminated</strong> are handled in the same way as in Co-Simulation, with the exception that the generally not allowed functions of Scheduled Execution must not be called.</p>
 </div>
 <div class="sect4">
-<h5 id="_state_setable_fmu_state">5.2.3.1. State: Setable FMU State</h5>
+<h5 id="_state_fmu_state_setable">5.2.3.1. State: FMU State Setable</h5>
 <div class="paragraph">
-<p>In all states of this super state it is allowed to call <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <code>fmi3SetFMUState</code>, <code>fmi3FreeFMUState</code>, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a>, <a href="#fmi3Reset"><code>fmi3Reset</code></a>, <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a>, <code>fmi3SetDebugLogging</code> and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>If any function returns with <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU enters the terminal state.</p>
+<p>In all states of this super state it is allowed to call <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <code>fmi3SetFMUState</code>, <code>fmi3FreeFMUState</code>, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a>, <a href="#fmi3Reset"><code>fmi3Reset</code></a>, <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a>, <code>fmi3SetDebugLogging</code> and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a>.
+If any function returns with <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU enters the state <strong>Terminated</strong>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -10736,44 +10730,27 @@ In this state the master can create multiple concurrent tasks related to an FMU 
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1"><a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a></dt>
 <dd>
-<p>If the function returns with <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a> the FMU stays in this state.
-In case of <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the master can prematurely end all tasks related to the computation of model partitions of this FMU.
-In case of <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> the master must wait until all other tasks related to the computation of model partitions of this FMU have ended, but no new tasks can be started (e.g. related to <a href="#outputClock"><code>outputClock</code></a> tick) and all other function calls for this FMU must also return <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> until the state <strong>Terminated</strong> is reached.</p>
-<div class="paragraph">
-<p>It is recommended to call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for setting and retrieving variable values associated to a <a href="#clock"><code>clock</code></a> activation.</p>
-</div>
+<p>It is recommended to call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for setting and retrieving variable values associated with the same <a href="#clock"><code>clock</code></a> activation.</p>
 </dd>
 <dt class="hdlist1"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
-<p>Is called before the start of the computation of a model partition (i.e. before call of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>inputClock</code></a> assigned to the model partition.</p>
-<div class="paragraph">
-<p>The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <strong>Step Mode</strong> in Co-Simulation apply.</p>
-</div>
-<div class="paragraph">
-<p>If the function returns with <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a> the FMU stays in this state.
-In case the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the master can prematurely end all tasks related to the computation of model partitions of this FMU.
-In case the function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> the master must wait until all other tasks related to the computation of the model partitions of this FMU have ended, but new tasks must not be started (e.g. related to <a href="#outputClock"><code>outputClock</code></a> ticks) and all other function calls for this FMU must also return <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> until the state <strong>Terminated</strong> is reached.</p>
-</div>
+<p>This function can be called before the start of the computation of a model partition.</p>
 </dd>
-<dt class="hdlist1"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</a></code>, <code>fmi3GetOutputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>`</dt>
+<dt class="hdlist1"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</a></code>, <code>fmi3GetOutputDerivatives</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
 <dd>
-<p>Is called after the end of the computation of a model partition (i.e. after return of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>) and only for global variables and variables associated to the <a href="#inputClock"><code>inputClock</code></a> assigned to the model partition.</p>
-<div class="paragraph">
-<p>The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <strong>Step Mode</strong> in Co-Simulation apply.</p>
-</div>
-<div class="paragraph">
-<p>If the function returns with <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a> the FMU stays in this state.
-In case the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the master can prematurely end all tasks related to the computation of model partitions of this FMU.
-In case the function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> the master must wait until all other tasks related to the computation of model partitions of this FMU have ended, but new tasks must not be started (e.g. related to <a href="#outputClock"><code>outputClock</code></a> ticks) and all other function calls for this FMU have to also return <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> until the state <strong>Terminated</strong> is reached.</p>
-</div>
+<p>These functions can be called after the end of the computation of a model partition.</p>
 </dd>
 </dl>
+</div>
+<div class="paragraph">
+<p>For <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</a></code>, <code>fmi3GetOutputDerivatives</code> and <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> it is not allowed to access variables associated to clocks other than the model partition&#8217;s <a href="#inputClock"><code>inputClock</code></a>.
+The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <strong>Step Mode</strong> in <a href="#fmi-for-co-simulation"><code>Co-Simulation</code></a> apply.</p>
 </div>
 <div class="paragraph">
 <p>It is not allowed to call <code>fmi3Get{VariableType}</code> functions after <code>fmi3Set{VariableType}</code> functions without an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call in between.</p>
 </div>
 <div class="paragraph">
-<p><em>[The reason is to avoid different interpretations of the caching, since contrary to FMI for Model Exchange, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> will perform the actual calculation instead of <code>fmi3Get{VariableType}</code>, and therefore, dummy algebraic loops at communication points cannot be handled by an appropriate sequence of <code>fmi3Get{VariableType}</code> and, <code>fmi3Set{VariableType}</code> calls as for Model Exchange.</em></p>
+<p><em>[The reason is to avoid different interpretations of the caching, since contrary to <a href="#fmi-for-model-exchange"><code>FMI for Model Exchange</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will perform the actual calculation instead of <code>fmi3Get{VariableType}</code>, and therefore, dummy algebraic loops at communication points cannot be handled by an appropriate sequence of <code>fmi3Get{VariableType}</code> and, <code>fmi3Set{VariableType}</code> calls as for Model Exchange.</em></p>
 </div>
 <div class="paragraph">
 <p><em>Example:</em></p>
@@ -10785,8 +10762,8 @@ In case the function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top"><em>Correct calling sequence for a model partition of an FMU</em></th>
-<th class="tableblock halign-left valign-top"><em>Wrong calling sequence</em></th>
+<th class="tableblock halign-left valign-top"><em>Correct calling sequence for a model partition</em></th>
+<th class="tableblock halign-left valign-top"><em>Illegal calling sequence</em></th>
 </tr>
 </thead>
 <tbody>
@@ -10833,7 +10810,7 @@ If these functions are called while a model partition of an FMU is currently act
 </dd>
 <dt class="hdlist1"><a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a>,<a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a></dt>
 <dd>
-<p>Can be called if no other task related to the computation of model partitions of this FMU is currently active or preempted and the prerequisites defined for these functions in Co-Simulation are fulfilled.
+<p>These functions can be called if no other task related to the computation of model partitions of this FMU is currently active or preempted and the prerequisites defined for these functions in Co-Simulation are fulfilled.
 Thus these functions can not be called concurrently for model partitions of an FMU but only for the whole FMU instance.</p>
 </dd>
 <dt class="hdlist1">Forbidden Function Calls</dt>
@@ -10846,8 +10823,9 @@ Thus these functions can not be called concurrently for model partitions of an F
 <div class="sect4">
 <h5 id="_state_intermediate_update_mode">5.2.3.5. State: Intermediate Update Mode</h5>
 <div class="paragraph">
-<p>In this state the master can retrieve information from the FMU between communication points.
-Functions called in this state must not return <a href="#fmi3Discard"><code>fmi3Discard</code></a>.</p>
+<p>The FMU transports activation states of <a href="#outputClock"><code>output clocks</code></a> to the master by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and providing <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.
+The master provides the implementation of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
+If the master detects that an <a href="#outputClock"><code>output clocks</code></a> ticked and this <a href="#outputClock"><code>output clock</code></a> is configured to <a href="#triggeredBy"><code>trigger</code></a> an <a href="#inputClock"><code>input clock</code></a> the master schedules a task associated to this <a href="#inputClock"><code>input clock</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>The FMU enters this state by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>  within <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> and leaves the state towards state <strong>Clock Activation Mode</strong> if the function returns <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a>.
@@ -10862,12 +10840,15 @@ If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU 
 </dd>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dd>
-<p>For a <a href="#outputClock"><code>outputClock</code></a> only the first call of <code>fmi3GetClock</code> for a specific activation of this <a href="#clock"><code>clock</code></a> signals <code>fmi3True</code>.
-The FMU sets the reported activation state immediately back to <code>fmi3False</code> for the following <code>fmi3GetClock</code> calls for that <a href="#clock"><code>clock</code></a> (in the same or other model partitions of the FMU) until this <a href="#outputClock"><code>outputClock</code></a> is internally activated again.
+<p>For an <a href="#outputClock"><code>outputClock</code></a> only the first call of <code>fmi3GetClock</code> for a specific activation of this <a href="#clock"><code>clock</code></a> signals <code>fmi3ClockActive</code>.
+The FMU sets the reported activation state immediately back to <code>fmi3ClockInactive</code> for the following <code>fmi3GetClock</code> calls for that <a href="#clock"><code>clock</code></a> (in the same or other model partitions of the FMU) until this <a href="#outputClock"><code>outputClock</code></a> is internally activated again.
 The master can call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> during the callback for variables associated to a <a href="#outputClock"><code>outputClock</code></a> that is active during this callback.
 Also intermediate variable access is allowed as defined in <a href="#state-intermediate-update-mode-co-simulation">Section 4.2.8.9</a></p>
 </dd>
 </dl>
+</div>
+<div class="paragraph">
+<p>Functions called in this state must not return <a href="#fmi3Discard"><code>fmi3Discard</code></a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Based on the FMI standard it cannot be determined which part of the code of an FMU has called the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</em>
