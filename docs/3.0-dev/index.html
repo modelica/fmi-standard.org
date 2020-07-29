@@ -586,7 +586,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 3.0,</span>
+<span id="revnumber">version 3.0-alpha.5,</span>
 <span id="revdate">unreleased</span>
 </div>
 <div id="toc" class="toc2">
@@ -7093,7 +7093,7 @@ The default is <code>false</code>.</p>
 <div class="title">A minimal build configuration</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiBuildDescription fmiVersion="3.0-alpha.4"&gt;
+&lt;fmiBuildDescription fmiVersion="3.0-alpha.5"&gt;
 
   &lt;BuildConfiguration modelIdentifier="PIDContoller"&gt;
     &lt;SourceFileSet&gt;
@@ -7108,7 +7108,7 @@ The default is <code>false</code>.</p>
 <div class="title">Multiple complex build configurations</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiBuildDescription fmiVersion="3.0-alpha.4"&gt;
+&lt;fmiBuildDescription fmiVersion="3.0-alpha.5"&gt;
 
   &lt;BuildConfiguration modelIdentifier="PlantModel" description="Build configuration for desktop platforms"&gt;
     &lt;SourceFileSet language="C99"&gt;
@@ -8244,14 +8244,14 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">    m = M_fmi3InstantiateModelExchange("m", MODEL_GUID, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
+<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">m = M_fmi3InstantiateModelExchange("m", INSTANTIATION_TOKEN, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
 // "m" is the instance name
 // "M_" is the MODEL_IDENTIFIER
 
-    if (m == NULL) {
-        status = fmi3Error;
-        goto TERMINATE;
-    }
+if (m == NULL) {
+    status = fmi3Error;
+    goto TERMINATE;
+}
 
 // set the start time
 time  = tStart;
@@ -8293,7 +8293,7 @@ while (!terminateSimulation) {
     if (enterEventMode || stateEvent || timeEvent) {
 
         if (!initialEventMode) {
-            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, fmi3False, rootsFound, NZ, timeEvent));
+            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, rootsFound, NZ, timeEvent));
         }
 
         // event iteration
@@ -8402,17 +8402,17 @@ while (!terminateSimulation) {
 
 TERMINATE:
 
-    if (m &amp;&amp; status != fmi3Error &amp;&amp; status != fmi3Fatal) {
-        // retrieve final values and terminate simulation
-        CHECK_STATUS(recordVariables(outputFile, m, time));
-		fmi3Status s = M_fmi3Terminate(m);
-        status = max(status, s);
-    }
+if (m &amp;&amp; status != fmi3Error &amp;&amp; status != fmi3Fatal) {
+    // retrieve final values and terminate simulation
+    CHECK_STATUS(recordVariables(outputFile, m, time));
+    fmi3Status s = M_fmi3Terminate(m);
+    status = max(status, s);
+}
 
-    if (m &amp;&amp; status != fmi3Fatal) {
-        // clean up
-        M_fmi3FreeInstance(m);
-    }</code></pre>
+if (m &amp;&amp; status != fmi3Fatal) {
+    // clean up
+    M_fmi3FreeInstance(m);
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8562,7 +8562,7 @@ If this is the case, then flag <code>canGetAndSetFMUState</code> must be <code>t
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;fmiModelDescription
-  fmiVersion="3.0-alpha.3"
+  fmiVersion="3.0-alpha.5"
   modelName="MyLibrary.SpringMassDamper"
   instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f9e0}"
   description="Rotational Spring Mass Damper System"
@@ -9391,18 +9391,22 @@ Note that <strong>Event Mode</strong> is not supported in Scheduled Execution.</
     return status;
 }
 
-fmi3Status cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
-                                 fmi3Float64 intermediateUpdateTime,
-                                 fmi3Boolean eventOccurred,
-                                 fmi3Boolean clocksTicked,
-                                 fmi3Boolean intermediateVariableSetAllowed,
-                                 fmi3Boolean intermediateVariableGetAllowed,
-                                 fmi3Boolean intermediateStepFinished,
-                                 fmi3Boolean canReturnEarly) {
+void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
+                           fmi3Float64 intermediateUpdateTime,
+                           fmi3Boolean eventOccurred,
+                           fmi3Boolean clocksTicked,
+                           fmi3Boolean intermediateVariableSetAllowed,
+                           fmi3Boolean intermediateVariableGetAllowed,
+                           fmi3Boolean intermediateStepFinished,
+                           fmi3Boolean canReturnEarly,
+                           fmi3Boolean *earlyReturnRequested,
+                           fmi3Float64 *earlyReturnTime) {
 
     if (!instanceEnvironment) {
-        return fmi3Error;
+        return;
     }
+
+    *earlyReturnRequested = fmi3False;
 
     InstanceEnvironment* env = (InstanceEnvironment*)instanceEnvironment;
 
@@ -9412,7 +9416,7 @@ fmi3Status cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
     fmi3Status status = fmi3OK;
 
     if (eventOccurred) {
-        return fmi3OK; // don't record events
+        return; // don't record events
     }
 
     // if getting intermediate output variables is allowed
@@ -9440,7 +9444,6 @@ fmi3Status cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
     }
 
     // Internal execution in FMU will now continue
-    return status;
 }</code></pre>
 </div>
 </div>
@@ -10172,9 +10175,29 @@ The code demonstrates the simplest master algorithm as shown in <a href="#math-c
 // Initialization sub-phase
 
 // instantiate both slaves
-s1 = s1_fmi3InstantiateBasicCoSimulation("slave1", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
+s1 = s1_fmi3InstantiateCoSimulation("slave1",      // instanceName
+                                    guid,          // instantiationToken
+                                    NULL,          // resourceLocation
+                                    fmi3False,     // visible
+                                    fmi3False,     // loggingOn
+                                    fmi3False,     // eventModeRequired
+                                    NULL,          // requiredIntermediateVariables
+                                    0,             // nRequiredIntermediateVariables
+                                    NULL,          // instanceEnvironment
+                                    cb_logMessage, // logMessage
+                                    NULL);         // intermediateUpdate
 
-s2 = s2_fmi3InstantiateBasicCoSimulation("slave2", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
+s2 = s2_fmi3InstantiateCoSimulation("slave1",      // instanceName
+                                    guid,          // instantiationToken
+                                    NULL,          // resourceLocation
+                                    fmi3False,     // visible
+                                    fmi3False,     // loggingOn
+                                    fmi3False,     // eventModeRequired
+                                    NULL,          // requiredIntermediateVariables
+                                    0,             // nRequiredIntermediateVariables
+                                    NULL,          // instanceEnvironment
+                                    cb_logMessage, // logMessage
+                                    NULL);         // intermediateUpdate
 
 if (s1 == NULL || s2 == NULL)
     return EXIT_FAILURE;
@@ -10216,26 +10239,18 @@ while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
     // fmi3SetReal(s2, ..., 1, &amp;y1);
 
     // call slave s1 and check status
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True, NULL);
+    fmi3Boolean terminate, earlyReturn;
+    fmi3Float64 lastSuccessfulTime;
 
-    switch (status) {
-        case fmi3Discard:
-            s1_fmi3GetDoStepDiscardedStatus(s1, &amp;discard, &amp;lastSuccessfulTime);
-            if (discard == fmi3True)
-                printf("Slave s1 wants to terminate simulation.");
-        case fmi3Error:
-        case fmi3Fatal:
-            terminateSimulation = true;
-            break;
-        default:
-            break;
+    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
+
+    if (terminate) {
+        printf("Slave s1 wants to terminate simulation.");
+        break;
     }
 
-    if (terminateSimulation)
-        break;
-
     // call slave s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True, NULL);
+    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
     // ...
 
@@ -10428,7 +10443,7 @@ The only differences are the replacement of the element <code>&lt;ModelExchange&
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;fmiModelDescription
-  fmiVersion="3.0-alpha.3"
+  fmiVersion="3.0-alpha.5"
   modelName="MyLibrary.SpringMassDamper_Early_Return_example"
   instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f9e0}"
   description="Rotational Spring Mass Damper System"
