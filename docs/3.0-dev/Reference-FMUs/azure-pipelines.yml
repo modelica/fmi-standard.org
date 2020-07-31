@@ -1,25 +1,13 @@
 variables:
-  fmpy: https://github.com/CATIA-Systems/FMPy/archive/714219e0d8b12b0f1afab1d2c1d2190ab7cb194a.zip
+  fmpy: https://github.com/CATIA-Systems/FMPy/archive/b8a36e2dca4f4307d3c3f15abcf1c91c9f01a94a.zip
   conda.packages: python=3.7 dask lark-parser lxml numpy pathlib pip pytest requests scipy
 
 jobs:
-
-- job: lint_files
-  displayName: 'Lint Files'
-  pool:
-    vmImage: 'ubuntu-16.04'
-
-  steps:
-  - bash: |
-      python3 lint_files.py
-    displayName: Lint files
 
 - job: linux64
   displayName: 'Ubuntu 16.04'
   pool:
     vmImage: 'ubuntu-16.04'
-  dependsOn:
-  - lint_files
 
   steps:
 
@@ -54,8 +42,6 @@ jobs:
   displayName: 'macOS 10.15'
   pool:
     vmImage: 'macos-10.15'
-  dependsOn:
-  - lint_files
 
   steps:
 
@@ -95,8 +81,6 @@ jobs:
   displayName: 'Windows 2016'
   pool:
     vmImage: 'vs2017-win2016'
-  dependsOn:
-  - lint_files
 
   steps:
 

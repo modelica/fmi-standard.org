@@ -17,11 +17,13 @@
 
 int main(int argc, char* argv[]) {
 
-    fmi3Float64 startTime, stopTime, h, tc;
+    fmi3Float64 startTime, stopTime, h, tc, lastSuccessfulTime;
     fmi3Status status = fmi3OK;
-
+    fmi3Boolean discard;
+    bool terminateSimulation = false;
+    
     const char *guid = "{8c4e810f-3da3-4a00-8276-176fa3c9f000}";
-
+    
     fmi3Instance s1, s2;
 
     printf("Running CoSimulation example... ");
@@ -29,31 +31,11 @@ int main(int argc, char* argv[]) {
 // tag::CoSimulation[]
 ////////////////////////////
 // Initialization sub-phase
-
+    
 // instantiate both slaves
-s1 = s1_fmi3InstantiateCoSimulation("slave1",      // instanceName
-                                    guid,          // instantiationToken
-                                    NULL,          // resourceLocation
-                                    fmi3False,     // visible
-                                    fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeRequired
-                                    NULL,          // requiredIntermediateVariables
-                                    0,             // nRequiredIntermediateVariables
-                                    NULL,          // instanceEnvironment
-                                    cb_logMessage, // logMessage
-                                    NULL);         // intermediateUpdate
-
-s2 = s2_fmi3InstantiateCoSimulation("slave1",      // instanceName
-                                    guid,          // instantiationToken
-                                    NULL,          // resourceLocation
-                                    fmi3False,     // visible
-                                    fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeRequired
-                                    NULL,          // requiredIntermediateVariables
-                                    0,             // nRequiredIntermediateVariables
-                                    NULL,          // instanceEnvironment
-                                    cb_logMessage, // logMessage
-                                    NULL);         // intermediateUpdate
+s1 = s1_fmi3InstantiateBasicCoSimulation("slave1", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
+                                                  
+s2 = s2_fmi3InstantiateBasicCoSimulation("slave2", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
 
 if (s1 == NULL || s2 == NULL)
     return EXIT_FAILURE;
@@ -85,7 +67,7 @@ s2_fmi3ExitInitializationMode(s2);
 tc = startTime; // current master time
 
 while ((tc < stopTime) && (status == fmi3OK)) {
-
+    
     // retrieve outputs
     // fmi3GetReal(s1, ..., 1, &y1);
     // fmi3GetReal(s2, ..., 1, &y2);
@@ -95,18 +77,26 @@ while ((tc < stopTime) && (status == fmi3OK)) {
     // fmi3SetReal(s2, ..., 1, &y1);
 
     // call slave s1 and check status
-    fmi3Boolean terminate, earlyReturn;
-    fmi3Float64 lastSuccessfulTime;
+    status = s1_fmi3DoStep(s1, tc, h, fmi3True, NULL);
 
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &terminate, &earlyReturn, &lastSuccessfulTime);
-
-    if (terminate) {
-        printf("Slave s1 wants to terminate simulation.");
-        break;
+    switch (status) {
+        case fmi3Discard:
+            s1_fmi3GetDoStepDiscardedStatus(s1, &discard, &lastSuccessfulTime);
+            if (discard == fmi3True)
+                printf("Slave s1 wants to terminate simulation.");
+        case fmi3Error:
+        case fmi3Fatal:
+            terminateSimulation = true;
+            break;
+        default:
+            break;
     }
+    
+    if (terminateSimulation)
+        break;
 
     // call slave s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &terminate, &earlyReturn, &lastSuccessfulTime);
+    status = s2_fmi3DoStep(s2, tc, h, fmi3True, NULL);
 
     // ...
 

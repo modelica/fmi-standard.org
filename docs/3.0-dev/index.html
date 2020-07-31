@@ -8244,14 +8244,14 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">m = M_fmi3InstantiateModelExchange("m", INSTANTIATION_TOKEN, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
+<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">    m = M_fmi3InstantiateModelExchange("m", MODEL_GUID, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
 // "m" is the instance name
 // "M_" is the MODEL_IDENTIFIER
 
-if (m == NULL) {
-    status = fmi3Error;
-    goto TERMINATE;
-}
+    if (m == NULL) {
+        status = fmi3Error;
+        goto TERMINATE;
+    }
 
 // set the start time
 time  = tStart;
@@ -8293,7 +8293,7 @@ while (!terminateSimulation) {
     if (enterEventMode || stateEvent || timeEvent) {
 
         if (!initialEventMode) {
-            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, rootsFound, NZ, timeEvent));
+            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, fmi3False, rootsFound, NZ, timeEvent));
         }
 
         // event iteration
@@ -8402,17 +8402,17 @@ while (!terminateSimulation) {
 
 TERMINATE:
 
-if (m &amp;&amp; status != fmi3Error &amp;&amp; status != fmi3Fatal) {
-    // retrieve final values and terminate simulation
-    CHECK_STATUS(recordVariables(outputFile, m, time));
-    fmi3Status s = M_fmi3Terminate(m);
-    status = max(status, s);
-}
+    if (m &amp;&amp; status != fmi3Error &amp;&amp; status != fmi3Fatal) {
+        // retrieve final values and terminate simulation
+        CHECK_STATUS(recordVariables(outputFile, m, time));
+		fmi3Status s = M_fmi3Terminate(m);
+        status = max(status, s);
+    }
 
-if (m &amp;&amp; status != fmi3Fatal) {
-    // clean up
-    M_fmi3FreeInstance(m);
-}</code></pre>
+    if (m &amp;&amp; status != fmi3Fatal) {
+        // clean up
+        M_fmi3FreeInstance(m);
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8636,9 +8636,9 @@ It is designed both for coupling with subsystem models, which have been exported
 </div>
 <div class="paragraph">
 <p>Co-simulation exploits the modular structure of coupled problems in all stages of the simulation process beginning with the separate model setup and preprocessing for the individual subsystems in different simulation tools (which can be powerful simulators as well as simple C programs).
-During time integration, the simulation is again performed independently for all subsystems restricting the data exchange between subsystems to discrete communication points \(tc_i\).
+During time integration, the simulation is again performed independently for all subsystems restricting the data exchange between subsystems to discrete communication points \(t_i\).
 For simulator coupling, also the visualization and post-processing of simulation data is done individually for each subsystem in its own native simulation tool.
-In different contexts, the communication points \(tc_i\), the communication steps \(tc_i \rightarrow tc_{i+1}\) and the communication step sizes \(hc_i := tc_{i+1} - tc_i\) are also known as sampling points (synchronization points), macro steps and sampling rates, respectively.
+In different contexts, the communication points \(t_i\), the communication steps \(t_i \rightarrow t_{i+1}\) and the communication step sizes \(h_i := t_{i+1} - t_i\) are also known as sampling points (synchronization points), macro steps and sampling rates, respectively.
 The term "communication point" in FMI for Co-Simulation refers to the communication between subsystems in a co-simulation environment and should not be mixed with the output points for saving simulation results to file.</p>
 </div>
 <div class="paragraph">
@@ -8661,7 +8661,7 @@ In this framework, the physical connections between subsystems are represented b
 <p>functions for the data exchange between subsystems</p>
 </li>
 <li>
-<p>functions to synchronize the simulation of all subsystems and to proceed in communication steps \(tc_i \rightarrow tc_{i+1}\) from initial time \(tc_0 := t_{\mathit{start}}\) to end time \(tc_N := t_{\mathit{stop}}\)</p>
+<p>functions to synchronize the simulation of all subsystems and to proceed in communication steps \(t_i \rightarrow t_{i+1}\) from initial time \(t_0 := t_{\mathit{start}}\) to end time \(t_N := t_{\mathit{stop}}\)</p>
 </li>
 </ol>
 </div>
@@ -8674,9 +8674,9 @@ In its most general form, the coupled system may be simulated in nested co-simul
 </div>
 <div class="paragraph">
 <p>FMI for Co-Simulation defines interface routines for the communication between the master and all slaves (subsystems) in a co-simulation environment.
-The most common master algorithm stops at each communication point \(tc_i\) the simulation (time integration) of all slaves, collects the outputs \(y(tc_i)\) from all subsystems, determines the subsystem inputs \(u(tc_i)\), distributes these subsystem inputs to the slaves and continues the (co-)simulation with the next communication step \(tc_i \rightarrow tc_{i+1} = tc_i + hc\) with fixed communication step size \(hc\).
-In each slave, an appropriate solver is used to integrate one of the subsystems for a given communication step \(tc_i \rightarrow tc_{i+1}\).
-The most simple co-simulation algorithms approximate the (unknown) subsystem inputs \(u(t), (t &gt; tc_i))\) by frozen data \(u(tc_i)\) for \(tc_i \leq t &lt; tc_{i+1}\).
+The most common master algorithm stops at each communication point \(t_i\) the simulation (time integration) of all slaves, collects the outputs \(y(t_i)\) from all subsystems, determines the subsystem inputs \(u(t_i)\), distributes these subsystem inputs to the slaves and continues the (co-)simulation with the next communication step \(t_i \rightarrow t_{i+1} = t_i + h\) with fixed communication step size \(h\).
+In each slave, an appropriate solver is used to integrate one of the subsystems for a given communication step \(t_i \rightarrow t_{i+1}\).
+The most simple co-simulation algorithms approximate the (unknown) subsystem inputs \(u(t), (t &gt; t_i))\) by frozen data \(u(t_i)\) for \(t_i \leq t &lt; t_{i+1}\).
 FMI for Co-Simulation supports this classical brute force approach as well as more sophisticated master algorithms.
 FMI for Co-Simulation is designed to support a very general class of master algorithms but it does not define the master algorithm itself.</p>
 </div>
@@ -8687,10 +8687,10 @@ Typical examples are:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>the ability to handle variable communication step sizes \(hc_i\),</p>
+<p>the ability to handle variable communication step sizes \(h_i\),</p>
 </li>
 <li>
-<p>the ability to repeat a rejected communication step \(tc_i \rightarrow tc_{i+1}\) with reduced communication step size,</p>
+<p>the ability to repeat a rejected communication step \(t_i \rightarrow t_{i+1}\) with reduced communication step size,</p>
 </li>
 <li>
 <p>the ability to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> w.r.t. time, to allow input approximation (<a href="#transfer-of-input-output-and-parameters">Section 4.2.3</a>),</p>
@@ -8714,19 +8714,19 @@ The current time \(t\) is running step by step from \(t_{\mathit{start}}\) to \(
 The algorithm of the slave may have the property to be able to repeat the simulation of parts of \([t_{\mathit{start}}, t_{\mathit{stop}}\)] or the whole time interval \([t_{\mathit{start}}, t_{\mathit{stop}}\)].</p>
 </li>
 <li>
-<p>The slave can be given a time value \(tc_i, t_{\mathit{start}} \leq tc_i \leq t_{\mathit{stop}}\).</p>
+<p>The slave can be given a time value \(t_i, t_{\mathit{start}} \leq t_i \leq t_{\mathit{stop}}\).</p>
 </li>
 <li>
-<p>The slave is able to interrupt the simulation when \(tc_i\) is reached.</p>
+<p>The slave is able to interrupt the simulation when \(t_i\) is reached.</p>
 </li>
 <li>
-<p>During the interrupted simulation, the slave (and its individual solver) can receive values for <a href="#input"><code>inputs</code></a> \(u(tc_i)\) and send values of outputs \(y(tc_i)\).</p>
+<p>During the interrupted simulation, the slave (and its individual solver) can receive values for <a href="#input"><code>inputs</code></a> \(u(t_i)\) and send values of outputs \(y(t_i)\).</p>
 </li>
 <li>
-<p>Whenever the simulation in a slave is interrupted, a new time value \(tc_{i+1}, tc_i \leq tc_{i+1} \leq t_{\mathit{stop}}\), can be given to simulate the time subinterval \(tc_i &lt; t \leq tc_{i+1}\)</p>
+<p>Whenever the simulation in a slave is interrupted, a new time value \(t_{i+1}, t_i \leq t_{i+1} \leq t_{\mathit{stop}}\), can be given to simulate the time subinterval \(t_i &lt; t \leq t_{i+1}\)</p>
 </li>
 <li>
-<p>The subinterval length \(hc_i\) is the communication step size of the \(i^{th}\) communication step, \(hc_i = tc_{i+1} - tc_i\).</p>
+<p>The subinterval length \(h_i\) is the communication step size of the \(i^{th}\) communication step, \(h_i = t_{i+1} - t_i\).</p>
 </li>
 </ol>
 </div>
@@ -8818,10 +8818,10 @@ Note that, since output events time instants are not known in advance, at output
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(t\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Independent variable <em>[typically: time]</em> \(\in \mathbb{R}\).
 (Variable defined with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).<br>
-The i-th communication point is denoted as \(t = tc_i\)<br>
-The communication step size is denoted as \(hc_i = tc_{i+1} - tc_i\)<br>
-Intermediate time points are denoted as \(t \in (tc_i, tc_{i+1})\) where the FMU exchanges information with the master.<br>
-An early return at time  \(tc^*_{i+1} \in (tc_i, tc_{i+1})\)  corresponds to a redefinition of \(hc^*_i = tc^*_{i+1} - tc_{i}\) and \(hc_i\) to a smaller value during the current timestep.</p></td>
+The i-th communication point is denoted as \(t = t_i\)<br>
+The communication step size is denoted as \(h_i = t_{i+1} - t_i\)<br>
+Intermediate time points are denoted as \(t \in (t_i, t_{i+1})\) where the FMU exchanges information with the master.<br>
+An early return at time  \(t^*_{i+1} \in (t_i, t_{i+1})\)  corresponds to a redefinition of \(h^*_i = t^*_{i+1} - t_{i}\) and \(h_i\) to a smaller value during the current timestep.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{v}\)</p></td>
@@ -8838,7 +8838,7 @@ The symbol without a subscript references <a href="#parameter"><code>parameters<
 Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>) are denoted as \(\mathbf{p}_{\mathit{calculated}}\) and <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>) are denoted as \(\mathbf{p}_{\mathit{tune}}\).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{u}(tc_i)\)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{u}(t_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Input variables.
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
@@ -8848,17 +8848,17 @@ Whether the <a href="#input"><code>input</code></a> is a discrete-time or contin
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{u}_{i, IU}(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intermediate input variables corresponding to the input variables for intermediate update ("IU").
 The values of these variables are defined outside of the model.
-\(\mathbf{u}_{i, IU}\) are functions defined on the interval \( [tc_i, tc_{i+1}\) ] with \(\mathbf{u}_{i, IU}(tc_i)=\mathbf{u}(tc_i)\).<br>
-With the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> FMU can signal to the master that best convergence rates can be achieved if the these functions are of the smoothness (\(C^{k}([ tc_i, tc_{i+1}\)), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.</p></td>
+\(\mathbf{u}_{i, IU}\) are functions defined on the interval \( [t_i, t_{i+1}\) ] with \(\mathbf{u}_{i, IU}(t_i)=\mathbf{u}(t_i)\).<br>
+With the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> FMU can signal to the master that best convergence rates can be achieved if the these functions are of the smoothness (\(C^{k}([ t_i, t_{i+1}\)), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(tc_{i+1})\), \(\mathbf{y^{(j)}}(tc_{i+1})\),</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Output variables \(\mathbf{y}(tc_{i+1})\).
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(t_{i+1})\), \(\mathbf{y^{(j)}}(t_{i+1})\),</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output variables \(\mathbf{y}(t_{i+1})\).
 The values of these variables are computed in the FMU and they are designed to be used in a model connection at communication points.
 So output variables might be used in the environment as input values to other FMUs or other submodels.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.
 Via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> it is defined whether the <a href="#output"><code>output</code></a> is a discrete-time or continuous-time variable, see <a href="#definition-of-model-variables">Section 2.2.7</a>.
-Also j-th derivatives \(\mathbf{y}^{(j)}(tc_{i+1})\) can be provided if supported by the FMU.</p></td>
+Also j-th derivatives \(\mathbf{y}^{(j)}(t_{i+1})\) can be provided if supported by the FMU.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}_{i, IU}(t)\)</p></td>
@@ -8866,7 +8866,7 @@ Also j-th derivatives \(\mathbf{y}^{(j)}(tc_{i+1})\) can be provided if supporte
 The values of these variables are computed in the FMU and they are designed to be used by the co-simulation master, for example for extrapolation</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{w}(tc_i)\)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{w}(t_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Local variables of the FMU that cannot be used for FMU connections.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).</p></td>
 </tr>
@@ -8897,18 +8897,18 @@ Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a h
 
 \begin{Bmatrix}
 
-\mathbf{x}_{i+1} = \Phi_i \left( \mathbf{x}_i,  \mathbf{u}(tc_i), \mathbf{u}_{i,IU}, \mathbf{p}_{\mathit{tune},i}, hc_i  \right)
+\mathbf{x}_{i+1} = \Phi_i \left( \mathbf{x}_i,  \mathbf{u}(t_i), \mathbf{u}_{i,IU}, \mathbf{p}_{\mathit{tune},i}, h_i  \right)
 
 \\
 
-\left( \left\{ \mathbf{y}^{(j)}_{i+1} \right\}_{j=0,\cdots,m_{odo}}, \mathbf{w}_{i+1}\right) = \Gamma_i \left( \mathbf{x}_i,  \mathbf{u}(tc_i), \mathbf{u}_{i, IU}, \mathbf{p}_{\mathit{tune},i}, hc_i  \right)
+\left( \left\{ \mathbf{y}^{(j)}_{i+1} \right\}_{j=0,\cdots,m_{odo}}, \mathbf{w}_{i+1}\right) = \Gamma_i \left( \mathbf{x}_i,  \mathbf{u}(t_i), \mathbf{u}_{i, IU}, \mathbf{p}_{\mathit{tune},i}, h_i  \right)
 
 \end{Bmatrix}\]
 </div>
 </div>
 <div class="paragraph">
-<p>where \(\mathbf{\Phi}_i\) and \(\mathbf{\Gamma}_i\) define the system behavior for the time interval \(tc_i \leq t &lt; tc_{i+1}\),
-with \(tc_i = tc_0 + \sum_{k=0}^{i-1}hc_k\).</p>
+<p>where \(\mathbf{\Phi}_i\) and \(\mathbf{\Gamma}_i\) define the system behavior for the time interval \(t_i \leq t &lt; t_{i+1}\),
+with \(t_i = t_0 + \sum_{k=0}^{i-1}h_k\).</p>
 </div>
 <div class="paragraph">
 <p><em>[For the part of the Co-Simulation slave that is based on an ODE, a differential equation is solved between communication points:</em></p>
@@ -8940,10 +8940,10 @@ with \(tc_i = tc_0 + \sum_{k=0}^{i-1}hc_k\).</p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[\mathbf{\Phi}_i \left( \mathbf{x}_{c,i}, \left\{ \mathbf{u}_{c,i} \right\}_{j = 0,\cdots,m_{ido}},\ \mathbf{p}_{\mathit{tune},i}, tc_i \right)
+\[\mathbf{\Phi}_i \left( \mathbf{x}_{c,i}, \left\{ \mathbf{u}_{c,i} \right\}_{j = 0,\cdots,m_{ido}},\ \mathbf{p}_{\mathit{tune},i}, t_i \right)
 =
 \mathbf{x}_{c,i} + \left( \mathbf{I} -
-hc_i \frac{\partial \mathbf{\varphi}}{\partial \mathbf{x}_c} \right)^{- 1}  hc_i \mathbf{\phi} \left( \mathbf{x}_{c,i}, \mathbf{u}_{c,i}, \mathbf{p}_{\mathit{tune},i} \right).\]
+h_i \frac{\partial \mathbf{\varphi}}{\partial \mathbf{x}_c} \right)^{- 1}  h_i \mathbf{\phi} \left( \mathbf{x}_{c,i}, \mathbf{u}_{c,i}, \mathbf{p}_{\mathit{tune},i} \right).\]
 </div>
 </div>
 <div class="paragraph">
@@ -8975,16 +8975,16 @@ hc_i \frac{\partial \mathbf{\varphi}}{\partial \mathbf{x}_c} \right)^{- 1}  hc_i
 <p>The current output variables \(\mathbf{y}_{i+1}^{(0)}\)of the subsystem (same remark as above), along with some of their successive <a href="#derivative"><code>derivatives</code></a> \(\left\{ \mathbf{y}_{i+1}^{(j)} \right\}_{j=1,\cdots,m_{odo}}\)(in case of continuous-time variables).</p>
 </li>
 <li>
-<p>Observation variables and <a href="#calculated"><code>calculated</code></a> varying <a href="#parameter"><code>parameters</code></a> \(\mathbf{w}_{i+1}\), along with directional derivatives estimated at \(t = tc_{i+1}\) (in case of continuous-time variables).</p>
+<p>Observation variables and <a href="#calculated"><code>calculated</code></a> varying <a href="#parameter"><code>parameters</code></a> \(\mathbf{w}_{i+1}\), along with directional derivatives estimated at \(t = t_{i+1}\) (in case of continuous-time variables).</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>At intermediate times \(t\in (tc_i, tc_{i+1})\) the master and slave exchange values for \(\mathbf{u}_{i, IU}(t)\) and \(\mathbf{y}_{i, IU}(t)\).</p>
+<p>At intermediate times \(t\in (t_i, t_{i+1})\) the master and slave exchange values for \(\mathbf{u}_{i, IU}(t)\) and \(\mathbf{y}_{i, IU}(t)\).</p>
 </li>
 <li>
-<p>Initialization: The slave being a sampled-data system, its internal states (which can be either continuous-time or discrete-time) need to be initialized at \(t = tc_0\).
+<p>Initialization: The slave being a sampled-data system, its internal states (which can be either continuous-time or discrete-time) need to be initialized at \(t = t_0\).
 This is performed through an auxiliary function <em>[this relationship is defined in the XML file under elements <code>&lt;ModelStructure&gt;&lt;InitialUnknown&gt;</code>]</em>:</p>
 </li>
 </ul>
@@ -9060,7 +9060,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Initialization Mode</strong> in state machine</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Initialization Mode</strong> at (activate initialization, discrete-time and continuous-time equations). Set and set <a href="#start"><code>start</code></a> value of <a href="#independent"><code>independent</code></a> variable \(tc_{i=0}\).</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Initialization Mode</strong> at (activate initialization, discrete-time and continuous-time equations). Set and set <a href="#start"><code>start</code></a> value of <a href="#independent"><code>independent</code></a> variable \(t_{i=0}\).</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">fmi3EnterInitializationMode</span></p></td>
 </tr>
 <tr>
@@ -9068,7 +9068,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}(tc_0)\) of continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}^{(j)}(tc_0)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}(t_0)\) of continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}^{(j)}(t_0)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
@@ -9088,11 +9088,11 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d+c}(tc_i)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d+c}(t_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\begin{matrix} tc_{i+1} := tc_i + hc_i \\ (\mathbf{y}_{c+d}, \mathbf{y}_c^{(j)}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{doStep}}(\mathbf{u}_{c+d}, \mathbf{u}_{i, IU},  tc_i, hc_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})_{tc_i} \\ tc_i := tc_{i+1} \end{matrix}\)</span><br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\begin{matrix} t_{i+1} := t_i + h_i \\ (\mathbf{y}_{c+d}, \mathbf{y}_c^{(j)}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{doStep}}(\mathbf{u}_{c+d}, \mathbf{u}_{i, IU},  t_i, h_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})_{t_i} \\ t_i := t_{i+1} \end{matrix}\)</span><br>
 <span class="blue">\(\mathbf{f}_{\mathit{doStep}}\) is also a function of the internal variables \(\mathbf{x}_c\), \(^{\bullet}\mathbf{x}_d\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3DoStep</span></code><br>
 <code><span class="blue">fmi3Get{VariableType}</span></code><br>
@@ -9108,14 +9108,14 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{y}_{i, IU}(t):= \mathbf{f}_{\mathit{Intermediate}}(\mathbf{u}_{i, c+d}, \mathbf{u}_{i, IU} ( t \in [tc_i, t) ),  t, hc_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})\)</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{y}_{i, IU}(t):= \mathbf{f}_{\mathit{Intermediate}}(\mathbf{u}_{i, c+d}, \mathbf{u}_{i, IU} ( t \in [t_i, t) ),  t, h_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3Get{VariableType}</span></code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>Data types</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">\(t, tc, hc \in \mathbb{R}, \mathbf{p} \in \mathbb{P}^{np}, \mathbf{u}(tc) \in \mathbb{P}^{nu}, \mathbf{y}(tc) \in \mathbb{P}^{ny}, \mathbf{x}_c(t) \in \mathbb{R}^{nxc}, \mathbf{x}_d(t) \in \mathbb{P}^{nxd}, \mathbf{w}(tc) \in \mathbb{P}^{nw}\)<br>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">\(t, t_i, h_i \in \mathbb{R}, \mathbf{p} \in \mathbb{P}^{np}, \mathbf{u}(t) \in \mathbb{P}^{nu}, \mathbf{y}(t) \in \mathbb{P}^{ny}, \mathbf{x}_c(t) \in \mathbb{R}^{nxc}, \mathbf{x}_d(t) \in \mathbb{P}^{nxd}, \mathbf{w}(t) \in \mathbb{P}^{nw}\)<br>
 \(\mathbb{R}\): floating point variable, \(\mathbb{R}\): floating point or Boolean or integer or enumeration or string variable<br>
 \(\mathbf{f}_{\mathit{init}}, \mathbf{f}_{\mathit{out}} \in C^0\) (=continuous functions with respect to all input parameters inside the respective mode).</p></td>
 </tr>
@@ -9391,22 +9391,18 @@ Note that <strong>Event Mode</strong> is not supported in Scheduled Execution.</
     return status;
 }
 
-void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
-                           fmi3Float64 intermediateUpdateTime,
-                           fmi3Boolean eventOccurred,
-                           fmi3Boolean clocksTicked,
-                           fmi3Boolean intermediateVariableSetAllowed,
-                           fmi3Boolean intermediateVariableGetAllowed,
-                           fmi3Boolean intermediateStepFinished,
-                           fmi3Boolean canReturnEarly,
-                           fmi3Boolean *earlyReturnRequested,
-                           fmi3Float64 *earlyReturnTime) {
+fmi3Status cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
+                                 fmi3Float64 intermediateUpdateTime,
+                                 fmi3Boolean eventOccurred,
+                                 fmi3Boolean clocksTicked,
+                                 fmi3Boolean intermediateVariableSetAllowed,
+                                 fmi3Boolean intermediateVariableGetAllowed,
+                                 fmi3Boolean intermediateStepFinished,
+                                 fmi3Boolean canReturnEarly) {
 
     if (!instanceEnvironment) {
-        return;
+        return fmi3Error;
     }
-
-    *earlyReturnRequested = fmi3False;
 
     InstanceEnvironment* env = (InstanceEnvironment*)instanceEnvironment;
 
@@ -9416,7 +9412,7 @@ void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
     fmi3Status status = fmi3OK;
 
     if (eventOccurred) {
-        return; // don't record events
+        return fmi3OK; // don't record events
     }
 
     // if getting intermediate output variables is allowed
@@ -9444,6 +9440,7 @@ void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
     }
 
     // Internal execution in FMU will now continue
+    return status;
 }</code></pre>
 </div>
 </div>
@@ -9541,14 +9538,14 @@ If the actual order is lower (because the order of integration algorithm is low)
 <div id="currentCommunicationPoint" class="ulist">
 <ul>
 <li>
-<p><code>currentCommunicationPoint</code> is the current communication point of the master (\(tc_i\)) with the unit of the <a href="#independent"><code>independent</code></a> variable and</p>
+<p><code>currentCommunicationPoint</code> is the current communication point of the master (\(t_i\)) with the unit of the <a href="#independent"><code>independent</code></a> variable and</p>
 </li>
 </ul>
 </div>
 <div id="communicationStepSize" class="ulist">
 <ul>
 <li>
-<p><code>communicationStepSize</code> is the communication step size (\(hc_i\)) with the unit of the <a href="#independent"><code>independent</code></a> variable. <code>comunicationStepSize</code> must be \(&gt; 0.0\).</p>
+<p><code>communicationStepSize</code> is the communication step size (\(h_i\)) with the unit of the <a href="#independent"><code>independent</code></a> variable. <code>comunicationStepSize</code> must be \(&gt; 0.0\).</p>
 </li>
 </ul>
 </div>
@@ -9578,18 +9575,18 @@ This is not due to an error, but a natural limit to the simulation time has been
 </ul>
 </div>
 <div class="paragraph">
-<p>The slave is expected to compute until time \(tc_{i+1} = tc_i + hc_i\), or <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> <code>=</code> <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <code>+</code> <a href="#communicationStepSize"><code>communicationStepSize</code></a>.</p>
+<p>The slave is expected to compute until time \(t_{i+1} = t_i + h_i\), or <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> <code>=</code> <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <code>+</code> <a href="#communicationStepSize"><code>communicationStepSize</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>This is especially interesting, if <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a>.
-In this case, the step did not compute until \(tc_{i+1}\), but stopped computation error free until <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a>.
+In this case, the step did not compute until \(t_{i+1}\), but stopped computation error free until <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a>.
 However, even when the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#fmi3OK"><code>fmi3OK</code></a>, it is allowed that <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> deviates from the expected <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <code>+</code> <a href="#communicationStepSize"><code>communicationStepSize</code></a>.
 <em>[An example is a fixed-step integrator inside the FMU that cannot possibly stop at exactly the requested time.</em>
 <em>Advanced Co-Simulation master algorithms might be able to take this information into account.</em>
 <em>It is even possible that the <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> is still equal to <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> when <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> is returned (contrary to the possibly expected <a href="#fmi3Discard"><code>fmi3Discard</code></a>) to indicate a changed internal state of the FMU, e.g. steps in super-dense time.]</em></p>
 </div>
 <div class="paragraph">
-<p><em>[The calling environment defines the communication points and <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> must synchronize to these points by always integrating exactly to \(tc_i + hc_i\).</em>
+<p><em>[The calling environment defines the communication points and <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> must synchronize to these points by always integrating exactly to \(t_i + h_i\).</em>
 <em>It is up to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> how to achieve this.]</em></p>
 </div>
 <div class="paragraph">
@@ -9598,7 +9595,7 @@ However, even when the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</
 <div class="paragraph">
 <p><em>[Formally, argument <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> is not needed.</em>
 <em>It is present in order to handle a mismatch between the master and the FMU state of the slave: The <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> and the FMU state of the slaves defined by former</em> <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> <em>or</em> <code>fmi3SetFMUState</code> <em>calls have to be consistent with respect to each other.</em>
-<em>For example, if the slave does not use the update formula for the <a href="#independent"><code>independent</code></a> variable as required above,</em> \(tc_{i+1} = tc_i + hc_i\) <em>(using argument</em> \(tc_i\) = <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <em>of</em> <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>) <em>but uses internally an own update formula, such as</em> \(tc_{s,i+1} = tc_{s,i} + hc_{s,i}\) <em>then the slave could use as time increment</em> \(\text{hc}_{s,i} := (tc_i - tc_{s,i}) + hc_i\) <em>(instead of</em> \(\text{hc}_{s,i} := hc_i\) <em>) to avoid a mismatch between the master time</em> \(tc_{i+1}\) <em>and the slave internal time</em> \(tc_{s,i+1}\) <em>for large i.]</em></p>
+<em>For example, if the slave does not use the update formula for the <a href="#independent"><code>independent</code></a> variable as required above,</em> \(t_{i+1} = t_i + h_i\) <em>(using argument</em> \(t_i\) = <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <em>of</em> <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>) <em>but uses internally an own update formula, such as</em> \(t_{s,i+1} = t_{s,i} + h_{s,i}\) <em>then the slave could use as time increment</em> \(\text{h}_{s,i} := (t_i - t_{s,i}) + h_i\) <em>(instead of</em> \(\text{h}_{s,i} := h_i\) <em>) to avoid a mismatch between the master time</em> \(t_{i+1}\) <em>and the slave internal time</em> \(t_{s,i+1}\) <em>for large i.]</em></p>
 </div>
 <div class="paragraph">
 <p>It depends on the capabilities of the FMU which argument constellations and calling sequences are allowed (see <a href="#fmi-for-co-simulation">Section 4</a>).</p>
@@ -10175,29 +10172,9 @@ The code demonstrates the simplest master algorithm as shown in <a href="#math-c
 // Initialization sub-phase
 
 // instantiate both slaves
-s1 = s1_fmi3InstantiateCoSimulation("slave1",      // instanceName
-                                    guid,          // instantiationToken
-                                    NULL,          // resourceLocation
-                                    fmi3False,     // visible
-                                    fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeRequired
-                                    NULL,          // requiredIntermediateVariables
-                                    0,             // nRequiredIntermediateVariables
-                                    NULL,          // instanceEnvironment
-                                    cb_logMessage, // logMessage
-                                    NULL);         // intermediateUpdate
+s1 = s1_fmi3InstantiateBasicCoSimulation("slave1", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
 
-s2 = s2_fmi3InstantiateCoSimulation("slave1",      // instanceName
-                                    guid,          // instantiationToken
-                                    NULL,          // resourceLocation
-                                    fmi3False,     // visible
-                                    fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeRequired
-                                    NULL,          // requiredIntermediateVariables
-                                    0,             // nRequiredIntermediateVariables
-                                    NULL,          // instanceEnvironment
-                                    cb_logMessage, // logMessage
-                                    NULL);         // intermediateUpdate
+s2 = s2_fmi3InstantiateBasicCoSimulation("slave2", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
 
 if (s1 == NULL || s2 == NULL)
     return EXIT_FAILURE;
@@ -10239,18 +10216,26 @@ while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
     // fmi3SetReal(s2, ..., 1, &amp;y1);
 
     // call slave s1 and check status
-    fmi3Boolean terminate, earlyReturn;
-    fmi3Float64 lastSuccessfulTime;
+    status = s1_fmi3DoStep(s1, tc, h, fmi3True, NULL);
 
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
-
-    if (terminate) {
-        printf("Slave s1 wants to terminate simulation.");
-        break;
+    switch (status) {
+        case fmi3Discard:
+            s1_fmi3GetDoStepDiscardedStatus(s1, &amp;discard, &amp;lastSuccessfulTime);
+            if (discard == fmi3True)
+                printf("Slave s1 wants to terminate simulation.");
+        case fmi3Error:
+        case fmi3Fatal:
+            terminateSimulation = true;
+            break;
+        default:
+            break;
     }
 
+    if (terminateSimulation)
+        break;
+
     // call slave s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
+    status = s2_fmi3DoStep(s2, tc, h, fmi3True, NULL);
 
     // ...
 

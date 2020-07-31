@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 /*
-
+ 
 time        0 1 2 3 4 5 6 7 8 9
 inClock1    + + + + + + + + + +   t % 4 == 0
 inClock2    + +             + +   t % 8 == 0 || (t - 1) % 8 == 0
@@ -25,19 +25,16 @@ ModelPartition 1 does the following:
 static void activateModelPartition1(ModelInstance *comp, double time) {
 
     comp->lockPreemtion();
-
+    
     // increment the counters
     M(inClock1Ticks)++;
     M(totalInClockTicks)++;
-
+        
     // set the output clocks
     M(outClock1) = ((M(outClock1) == false) && (((int)time) == 4));
     M(outClock2) = ((M(outClock2) == false) && (M(totalInClockTicks) % 5 == 0));
-
+    
     comp->unlockPreemtion();
-
-    int earlyReturnRequested;
-    double earlyReturnTime;
 
     if (M(outClock1) || M(outClock2)) {
         comp->intermediateUpdate(
@@ -48,9 +45,7 @@ static void activateModelPartition1(ModelInstance *comp, double time) {
             0,    // intermediateVariableSetAllowed
             0,    // intermediateVariableGetAllowed
             1,    // intermediateStepFinished
-            0,     // canReturnEarly
-            &earlyReturnRequested,
-            &earlyReturnTime
+            0     // canReturnEarly
         );
     }
 }
@@ -78,9 +73,6 @@ static void activateModelPartition2(ModelInstance* comp, double time) {
     M(outClock2) = ((M(outClock2) == false) && (M(totalInClockTicks) % 5 == 0));
     comp->unlockPreemtion();
 
-    int earlyReturnRequested;
-    double earlyReturnTime;
-
     if (M(outClock2)) {
         comp->intermediateUpdate(
             comp,  // fmu instance
@@ -90,9 +82,7 @@ static void activateModelPartition2(ModelInstance* comp, double time) {
             0,     // intermediateVariableSetAllowed
             0,     // intermediateVariableGetAllowed
             1,     // intermediateStepFinished
-            0,     // canReturnEarly
-            &earlyReturnRequested,
-            &earlyReturnTime
+            0      // canReturnEarly
         );
     }
 }
@@ -111,7 +101,7 @@ static void activateModelPartition2(ModelInstance* comp, double time) {
     // increment the counters
     M(inClock3Ticks)++;
     comp->unlockPreemtion();
-
+   
     // This partition is supposed to consume a bit of time on a low prio ...
     unsigned long sum = 0;
     for (int loop = 1; loop < 1000000000; loop++) {
@@ -123,10 +113,6 @@ static void activateModelPartition2(ModelInstance* comp, double time) {
 
     M(outClock2) = ((M(outClock2) == false) && (M(totalInClockTicks) % 5 == 0));
     if (M(outClock2)) {
-
-        int earlyReturnRequested;
-        double earlyReturnTime;
-
         comp->intermediateUpdate(
             comp,  // fmu instance
             time,  // intermediateUpdateTime
@@ -135,9 +121,7 @@ static void activateModelPartition2(ModelInstance* comp, double time) {
             0,     // intermediateVariableSetAllowed
             0,     // intermediateVariableGetAllowed
             1,     // intermediateStepFinished
-            0,     // canReturnEarly
-            &earlyReturnRequested,
-            &earlyReturnTime
+            0      // canReturnEarly
         );
     }
 }
@@ -176,7 +160,7 @@ Status setInt32(ModelInstance* comp, ValueReference vr, const int* value, size_t
     }
 }
 Status getInt32(ModelInstance* comp, ValueReference vr, int *value, size_t *index) {
-
+    
     switch (vr) {
     case vr_inClock1Ticks:
         value[(*index)++] = M(inClock1Ticks);
@@ -217,7 +201,7 @@ Status getClock(ModelInstance* comp, ValueReference vr, int* value) {
 }
 
 Status activateModelPartition(ModelInstance* comp, ValueReference vr, double activationTime) {
-
+    
     switch (vr) {
         case vr_inClock1:
             activateModelPartition1(comp, activationTime);

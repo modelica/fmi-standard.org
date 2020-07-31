@@ -34,7 +34,7 @@ typedef enum {
     // ME states
     EventMode          = 1<<3,
     ContinuousTimeMode = 1<<4,
-
+    
     // CS states
     StepComplete       = 1<<5,
     StepInProgress     = 1<<6,
@@ -84,38 +84,36 @@ typedef enum {
 } Status;
 
 #if FMI_VERSION < 3
-typedef void (*loggerType) (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message, ...);
+typedef void  (*loggerType) (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message, ...);
 #else
-typedef void (*loggerType) (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message);
+typedef void  (*loggerType) (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message);
 #endif
 
-typedef void (*lockPreemptionType)   ();
-typedef void (*unlockPreemptionType) ();
+typedef void  (*lockPreemptionType)   ();
+typedef void  (*unlockPreemptionType) ();
 
-typedef void (*intermediateUpdateType) (void *instanceEnvironment,
-                                        double intermediateUpdateTime,
-                                        int eventOccurred,
-                                        int clocksTicked,
-                                        int intermediateVariableSetAllowed,
-                                        int intermediateVariableGetAllowed,
-                                        int intermediateStepFinished,
-                                        int canReturnEarly,
-                                        int *earlyReturnRequested,
-                                        double *earlyReturnTime);
-
+typedef Status (*intermediateUpdateType) (void *instanceEnvironment,
+                                          double intermediateUpdateTime,
+                                          int eventOccurred,
+                                          int clocksTicked,
+                                          int intermediateVariableSetAllowed,
+                                          int intermediateVariableGetAllowed,
+                                          int intermediateStepFinished,
+                                          int canReturnEarly);
+                                                      
 typedef struct {
-
+    
     double time;
     const char *instanceName;
     InterfaceType type;
     const char *resourceLocation;
 
     Status status;
-
+    
     // callback functions
     loggerType logger;
     intermediateUpdateType intermediateUpdate;
-
+    
     lockPreemptionType lockPreemtion;
     unlockPreemptionType unlockPreemtion;
 
@@ -124,7 +122,7 @@ typedef struct {
 
     void *componentEnvironment;
     ModelState state;
-
+    
     // event info
     bool newDiscreteStatesNeeded;
     bool terminateSimulation;
@@ -133,22 +131,22 @@ typedef struct {
     bool nextEventTimeDefined;
     double nextEventTime;
     bool clocksTicked;
-
+    
     bool isDirtyValues;
     bool isNewEventIteration;
-
+    
     ModelData *modelData;
 
     // event indicators
     double *z;
     double *prez;
-
+    
     // internal solver steps
     int nSteps;
-
+    
     // hybrid co-simulation
     bool returnEarly;
-
+    
 } ModelInstance;
 
 ModelInstance *createModelInstance(
@@ -156,7 +154,7 @@ ModelInstance *createModelInstance(
     intermediateUpdateType intermediateUpdate,
     void *componentEnvironment,
     const char *instanceName,
-    const char *instantiationToken,
+    const char *GUID,
     const char *resourceLocation,
     bool loggingOn,
     InterfaceType interfaceType,
@@ -165,7 +163,7 @@ void freeModelInstance(ModelInstance *comp);
 
 void setStartValues(ModelInstance *comp);
 void calculateValues(ModelInstance *comp);
-
+    
 Status getFloat64 (ModelInstance* comp, ValueReference vr, double      *value, size_t *index);
 Status getInt32   (ModelInstance* comp, ValueReference vr, int32_t     *value, size_t *index);
 Status getUInt16  (ModelInstance* comp, ValueReference vr, uint16_t    *value, size_t *index);
