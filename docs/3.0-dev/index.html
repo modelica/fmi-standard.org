@@ -618,41 +618,42 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#creation-destruction-and-logging">2.1.5. Creation, Destruction and Logging of FMU Instances</a></li>
 <li><a href="#_configuration_initialization_termination_and_resetting_an_fmu">2.1.6. Configuration, Initialization, Termination, and Resetting an FMU</a></li>
 <li><a href="#get-and-set-variable-values">2.1.7. Getting and Setting Variable Values</a></li>
-<li><a href="#operation-on-clocks">2.1.8. Operation on Clocks</a>
+<li><a href="#advancing-time">2.1.8. Advancing Time</a></li>
+<li><a href="#operation-on-clocks">2.1.9. Operation on Clocks</a>
 <ul class="sectlevel4">
-<li><a href="#clock-types-for-evaluation-of-clocked-model-partitions">2.1.8.1. Clock Types for Evaluation of Clocked Model Partitions</a>
+<li><a href="#clock-types-for-evaluation-of-clocked-model-partitions">2.1.9.1. Clock Types for Evaluation of Clocked Model Partitions</a>
 <ul class="sectlevel5">
-<li><a href="#_synchronous_clocks">2.1.8.1.1. Synchronous Clocks</a></li>
-<li><a href="#_communication_point_clocks">2.1.8.1.2. Communication Point Clocks</a></li>
+<li><a href="#_synchronous_clocks">2.1.9.1.1. Synchronous Clocks</a></li>
+<li><a href="#_communication_point_clocks">2.1.9.1.2. Communication Point Clocks</a></li>
 </ul>
 </li>
-<li><a href="#variants-of-clocks">2.1.8.2. Variants of Clocks</a>
+<li><a href="#variants-of-clocks">2.1.9.2. Variants of Clocks</a>
 <ul class="sectlevel5">
-<li><a href="#_output_clocks">2.1.8.2.1. Output Clocks</a></li>
-<li><a href="#_input_clocks">2.1.8.2.2. Input Clocks</a></li>
+<li><a href="#_output_clocks">2.1.9.2.1. Output Clocks</a></li>
+<li><a href="#_input_clocks">2.1.9.2.2. Input Clocks</a></li>
 </ul>
 </li>
-<li><a href="#additional-clock-properties">2.1.8.3. Additional Clock Properties</a>
+<li><a href="#additional-clock-properties">2.1.9.3. Additional Clock Properties</a>
 <ul class="sectlevel5">
-<li><a href="#_periodic_clock_ticks">2.1.8.3.1. Periodic Clock Ticks</a></li>
-<li><a href="#_clock_priority">2.1.8.3.2. Clock Priority</a></li>
-<li><a href="#clock-relationships-for-communication-point-clocks">2.1.8.3.3. Clock Relationships for Communication Point Clocks</a></li>
+<li><a href="#_periodic_clock_ticks">2.1.9.3.1. Periodic Clock Ticks</a></li>
+<li><a href="#_clock_priority">2.1.9.3.2. Clock Priority</a></li>
+<li><a href="#clock-relationships-for-communication-point-clocks">2.1.9.3.3. Clock Relationships for Communication Point Clocks</a></li>
 </ul>
 </li>
-<li><a href="#connecting-clocked-fmus">2.1.8.4. Connecting Clocked FMUs</a></li>
+<li><a href="#connecting-clocked-fmus">2.1.9.4. Connecting Clocked FMUs</a></li>
 </ul>
 </li>
-<li><a href="#fmi-api-setting-getting-clock-activation-state">2.1.9. FMI Application Programming Interface for Setting/Getting Clock Activation State</a></li>
-<li><a href="#get-set-fmu-state">2.1.10. Getting and Setting the Complete FMU State</a></li>
-<li><a href="#_getting_partial_derivatives">2.1.11. Getting Partial Derivatives</a>
+<li><a href="#fmi-api-setting-getting-clock-activation-state">2.1.10. FMI Application Programming Interface for Setting/Getting Clock Activation State</a></li>
+<li><a href="#get-set-fmu-state">2.1.11. Getting and Setting the Complete FMU State</a></li>
+<li><a href="#_getting_partial_derivatives">2.1.12. Getting Partial Derivatives</a>
 <ul class="sectlevel4">
-<li><a href="#_directional_derivatives">2.1.11.1. Directional Derivatives</a></li>
-<li><a href="#_adjoint_derivatives">2.1.11.2. Adjoint Derivatives</a></li>
+<li><a href="#_directional_derivatives">2.1.12.1. Directional Derivatives</a></li>
+<li><a href="#_adjoint_derivatives">2.1.12.2. Adjoint Derivatives</a></li>
 </ul>
 </li>
-<li><a href="#_getting_number_of_event_indicators">2.1.12. Getting Number of Event Indicators</a></li>
-<li><a href="#_getting_number_of_states">2.1.13. Getting Number of States</a></li>
-<li><a href="#_getting_number_of_variable_dependencies_and_variable_dependencies">2.1.14. Getting Number of Variable Dependencies and Variable Dependencies</a></li>
+<li><a href="#_getting_number_of_event_indicators">2.1.13. Getting Number of Event Indicators</a></li>
+<li><a href="#_getting_number_of_states">2.1.14. Getting Number of States</a></li>
+<li><a href="#_getting_number_of_variable_dependencies_and_variable_dependencies">2.1.15. Getting Number of Variable Dependencies and Variable Dependencies</a></li>
 </ul>
 </li>
 <li><a href="#fmi-description-schema">2.2. FMI Description Schema</a>
@@ -1128,6 +1129,12 @@ The master algorithm is responsible for:</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Advancing Time</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">call <a href="#fmi3SetTime"><code>fmi3SetTime</code></a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">call <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> and monitor argument <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">call <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Solver Included</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-times"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
@@ -1583,7 +1590,7 @@ Using this pointer, data from the <a href="#modelDescription.xml"><code>modelDes
 </div>
 <div class="paragraph">
 <p>This is a pointer to a data structure in the FMU that saves the internal FMU state of the actual or a previously saved time instant.
-This allows to restart a simulation from a saved FMU state (see <a href="#get-set-fmu-state">Section 2.1.10</a>).</p>
+This allows to restart a simulation from a saved FMU state (see <a href="#get-set-fmu-state">Section 2.1.11</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2441,7 +2448,34 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 </div>
 </div>
 <div class="sect3">
-<h4 id="operation-on-clocks">2.1.8. Operation on Clocks</h4>
+<h4 id="advancing-time">2.1.8. Advancing Time</h4>
+<div class="paragraph">
+<p>This section highlights the differences of the concept of time (in general the independent variable) for the three different FMI types, ME, CS and SE.</p>
+</div>
+<div class="paragraph">
+<p>In Model Exchange, time is under the sole control of the importer and its integration algorithm.
+The model itself receives the current time to be used in its computation with <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>.
+In fact, time is not necessarily advancing linearly as solvers might need to find zero-crossing points or the importer uses the Model Exchange FMU to find points of optimal control.</p>
+</div>
+<div class="paragraph">
+<p>In Co-Simulation, time advances in (possibly variable) steps negotiated between the co-simulation algorithm of the importer and the FMU.
+The importer calls <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with the <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> and a target <a href="#communicationStepSize"><code>communicationStepSize</code></a> (required to be larger than 0.0).
+During this <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, both importer and FMU might encounter events that will reduce the <a href="#communicationStepSize"><code>communicationStepSize</code></a> (potentially even down to 0.0).
+With the mechanisms of the callback <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and/or <a href="#earlyReturn"><code>earlyReturn</code></a>, both importer and FMU can determine if such a step-size reduction is required.
+The output argument <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> allows the FMU to signal the master its current internal time.</p>
+</div>
+<div class="paragraph">
+<p>In Scheduled Execution, time has a more discrete form.
+The scheduler of the importer activates specific tasks according to the time of the importer.
+The time itself is communicated to the FMU as <a href="#activationTime"><code>activationTime</code></a> argument of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>Depending on the instantiated FMI type, the importer is restricted in what functions it is allowed to call in order to drive the simulation.
+The following chapters will focus on what mechanisms are relevant for the interface type at hand, without trying to constantly declare which functions not to use because they belong to the other interface type mechanisms.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="operation-on-clocks">2.1.9. Operation on Clocks</h4>
 <div class="paragraph">
 <p>In the following section the operations on <a href="#clock"><code>clocks</code></a> are described.
 Clocks are defined for the evaluation of clocked model partitions and the related definition of suitable communication points.
@@ -2453,9 +2487,9 @@ First the two different clock types are presented with the mathematical definiti
 After that the two clock variants are described. The section ends with a short description of connecting clocked FMUs.</p>
 </div>
 <div class="sect4">
-<h5 id="clock-types-for-evaluation-of-clocked-model-partitions">2.1.8.1. Clock Types for Evaluation of Clocked Model Partitions</h5>
+<h5 id="clock-types-for-evaluation-of-clocked-model-partitions">2.1.9.1. Clock Types for Evaluation of Clocked Model Partitions</h5>
 <div class="sect5">
-<h6 id="_synchronous_clocks">2.1.8.1.1. Synchronous Clocks</h6>
+<h6 id="_synchronous_clocks">2.1.9.1.1. Synchronous Clocks</h6>
 <div class="paragraph">
 <p>A clocked partition is a set of equations that are associated to a <a href="#clock"><code>clock</code></a> and are executed when the corresponding <a href="#clock"><code>clock</code></a> is active.
 A clocked partition is mathematically defined as:</p>
@@ -2509,7 +2543,7 @@ States get updated.</p>
 </div>
 </div>
 <div class="sect5">
-<h6 id="_communication_point_clocks">2.1.8.1.2. Communication Point Clocks</h6>
+<h6 id="_communication_point_clocks">2.1.9.1.2. Communication Point Clocks</h6>
 <div class="paragraph">
 <p>Communication Point Clocks, introduced here, are used only in Co-Simulation and Scheduled Execution to define the communication points of model partitions (defined below).
 These <a href="#clock"><code>clocks</code></a> are not compatible with synchronous clocks theory and must not be used together with synchronous clocks in one model.</p>
@@ -2533,12 +2567,12 @@ These <a href="#clock"><code>clocks</code></a> are not compatible with synchrono
 </div>
 </div>
 <div class="sect4">
-<h5 id="variants-of-clocks">2.1.8.2. Variants of Clocks</h5>
+<h5 id="variants-of-clocks">2.1.9.2. Variants of Clocks</h5>
 <div class="paragraph">
 <p>This section gives a definition of the two clock variants.</p>
 </div>
 <div class="sect5">
-<h6 id="_output_clocks">2.1.8.2.1. Output Clocks</h6>
+<h6 id="_output_clocks">2.1.9.2.1. Output Clocks</h6>
 <div class="paragraph">
 <p>An <a href="#outputClock"><code>outputClock</code></a> is a general <a href="#clock"><code>clock</code></a> that ticks when a time-, state- or step-event occurs in the continuous-model partition of the FMU (for Communication Point Clocks these <a href="#outputClock"><code>outputClock</code></a> tick events can occur in all model partitions) and are identified based on their <a href="#valueReference"><code>valueReference</code></a>.
 The events can be <a href="#periodic"><code>periodic</code></a> or <a href="#periodic">aperiodic</a>.</p>
@@ -2560,7 +2594,7 @@ Additional cases need to be handled if a <a href="#clock"><code>clock</code></a>
 </div>
 </div>
 <div class="sect5">
-<h6 id="_input_clocks">2.1.8.2.2. Input Clocks</h6>
+<h6 id="_input_clocks">2.1.9.2.2. Input Clocks</h6>
 <div class="paragraph">
 <p>An <a href="#inputClock"><code>inputClock</code></a> is a <a href="#periodic"><code>periodic</code></a> or <a href="#periodic">aperiodic</a> <a href="#clock"><code>clock</code></a> that is defined by a <a href="#clock"><code>clock</code></a> outside of the FMU.
 Its interval is initialized by the environment.</p>
@@ -2575,12 +2609,12 @@ Its interval is initialized by the environment.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="additional-clock-properties">2.1.8.3. Additional Clock Properties</h5>
+<h5 id="additional-clock-properties">2.1.9.3. Additional Clock Properties</h5>
 <div class="paragraph">
 <p>This section gives a definition of additional clock properties.</p>
 </div>
 <div class="sect5">
-<h6 id="_periodic_clock_ticks">2.1.8.3.1. Periodic Clock Ticks</h6>
+<h6 id="_periodic_clock_ticks">2.1.9.3.1. Periodic Clock Ticks</h6>
 <div class="paragraph">
 <p>Either <a href="#output"><code>output</code></a> or <a href="#input"><code>input</code></a>, a <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clock</code></a> ticks at equidistant sample time points that are known a priori (defined in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>) or are alternatively determined by the environment in case of <a href="#inputClock"><code>input clocks</code></a>.
 Mathematically, the next <a href="#clock"><code>clock</code></a> tick at time instant \(t_i\) is defined as:</p>
@@ -2629,7 +2663,7 @@ The <a href="#clock"><code>clock</code></a> is <a href="#periodic">aperiodic</a>
 </div>
 </div>
 <div class="sect5">
-<h6 id="_clock_priority">2.1.8.3.2. Clock Priority</h6>
+<h6 id="_clock_priority">2.1.9.3.2. Clock Priority</h6>
 <div class="paragraph">
 <p>The <a href="#clock"><code>clocks</code></a> are ordered descending based on their priorities.
 It is nevertheless possible to define multiple <a href="#clock"><code>clocks</code></a> with the same priority.
@@ -2652,7 +2686,7 @@ A common number of different priority levels is, e.g., 100 (0 to 99), as defined
 </div>
 </div>
 <div class="sect5">
-<h6 id="clock-relationships-for-communication-point-clocks">2.1.8.3.3. Clock Relationships for Communication Point Clocks</h6>
+<h6 id="clock-relationships-for-communication-point-clocks">2.1.9.3.3. Clock Relationships for Communication Point Clocks</h6>
 <div class="paragraph">
 <p>If <a href="#outputClock"><code>output clocks</code></a> and <a href="#inputClock"><code>input clocks</code></a> are defined, it is possible to define a tick relationship from an <a href="#outputClock"><code>outputClock</code></a> to an <a href="#inputClock"><code>inputClock</code></a>.
 This is needed to allow for an external scheduler to achieve an optimal control of model partitions.
@@ -2696,7 +2730,7 @@ It is possible to define multiple unions of <a href="#clock"><code>clocks</code>
 </div>
 </div>
 <div class="sect4">
-<h5 id="connecting-clocked-fmus">2.1.8.4. Connecting Clocked FMUs</h5>
+<h5 id="connecting-clocked-fmus">2.1.9.4. Connecting Clocked FMUs</h5>
 <div class="paragraph">
 <p>When connecting imported FMUs together, <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a> variables can readily be connected together only when they are defined on a <a href="#clock"><code>clock</code></a> with identical properties.
 If this is not possible, an explicit cast of one <a href="#clock"><code>clock</code></a> to another <a href="#clock"><code>clock</code></a> is typically defined in the environment.</p>
@@ -2711,7 +2745,7 @@ If this is not possible, an explicit cast of one <a href="#clock"><code>clock</c
 </div>
 </div>
 <div class="sect3">
-<h4 id="fmi-api-setting-getting-clock-activation-state">2.1.9. FMI Application Programming Interface for Setting/Getting Clock Activation State</h4>
+<h4 id="fmi-api-setting-getting-clock-activation-state">2.1.10. FMI Application Programming Interface for Setting/Getting Clock Activation State</h4>
 <div class="paragraph">
 <p>A <a href="#clock"><code>clock</code></a> is activated by the environment for the current time instant by the function <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, and the status of a <a href="#clock"><code>clock</code></a> can be inquired with the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>:</p>
 </div>
@@ -2777,7 +2811,7 @@ If <code>values[i] == fmi3ClockActive</code> the <a href="#clock"><code>clock</c
 </ul>
 </div>
 <div class="paragraph">
-<p>It is allowed to call this function within the callback function <code>fmi3IntermediateUpdate</code>.
+<p>It is allowed to call this function within the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
 It is required for an FMU to directly internally set back the activation <a href="#state"><code>state</code></a> of an output <a href="#clock">clock[i]</a> to <code>fmi3ClockInactive</code>, if the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> is called for a <a href="#clock"><code>clock[i]</code></a> and the interface is Scheduled Execution.
 <em>[This is required to allow preemption.]</em></p>
 </div>
@@ -2867,7 +2901,7 @@ Repeated calls if recomputations of clock state are needed during <strong>Event 
 </table>
 </div>
 <div class="sect3">
-<h4 id="get-set-fmu-state">2.1.10. Getting and Setting the Complete FMU State</h4>
+<h4 id="get-set-fmu-state">2.1.11. Getting and Setting the Complete FMU State</h4>
 <div class="paragraph">
 <p>The FMU has an internal state consisting of all values that are needed to continue a simulation.
 This internal state consists especially of the values of the continuous-time states, iteration variables, <a href="#parameter"><code>parameter</code></a> values, <a href="#input"><code>input</code></a> values, delay buffers, file identifiers, and FMU internal status information.
@@ -2982,7 +3016,7 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_getting_partial_derivatives">2.1.11. Getting Partial Derivatives</h4>
+<h4 id="_getting_partial_derivatives">2.1.12. Getting Partial Derivatives</h4>
 <div class="paragraph">
 <p>It is optionally possible to provide evaluation of partial derivatives for an FMU.
 For Model Exchange, this means computing the partial derivatives at any time instant, whereas for Co-Simulation, this means computing the partial derivatives at a communication point.</p>
@@ -3141,7 +3175,7 @@ The functions may only be called if their availability is indicated by the attri
 <em>Likewise <code>nSensitivity</code> is only equal to <code>nUnknowns</code> (resp., <code>nKnowns</code>) if all value references of <code>unknowns</code> (resp., <code>knowns</code>) point to scalar variables.]</em></p>
 </div>
 <div class="sect4">
-<h5 id="_directional_derivatives">2.1.11.1. Directional Derivatives</h5>
+<h5 id="_directional_derivatives">2.1.12.1. Directional Derivatives</h5>
 <div id="example-directional-derivatives" class="paragraph">
 <p><em>[Example:</em><br>
 <em>Assume an FMU has the output equations</em></p>
@@ -3299,7 +3333,7 @@ e \Delta U(1,1)+f \Delta U(2,1), e \Delta U(1,2)+ f \Delta U(2,2)
 </div>
 </div>
 <div class="sect4">
-<h5 id="_adjoint_derivatives">2.1.11.2. Adjoint Derivatives</h5>
+<h5 id="_adjoint_derivatives">2.1.12.2. Adjoint Derivatives</h5>
 <div class="paragraph">
 <p><em>[Adjoint derivatives are beneficial in several contexts:</em></p>
 </div>
@@ -3363,7 +3397,7 @@ h_2(u_1, u_2)
 </div>
 </div>
 <div class="sect3">
-<h4 id="_getting_number_of_event_indicators">2.1.12. Getting Number of Event Indicators</h4>
+<h4 id="_getting_number_of_event_indicators">2.1.13. Getting Number of Event Indicators</h4>
 <div class="paragraph">
 <p>The number of event indicators can change during simulation if it depends on one or more <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> and can be retrieved after instantiating the FMU by calling:</p>
 </div>
@@ -3389,7 +3423,7 @@ If all <a href="#structuralParameter"><code>structural parameters</code></a> are
 </div>
 </div>
 <div class="sect3">
-<h4 id="_getting_number_of_states">2.1.13. Getting Number of States</h4>
+<h4 id="_getting_number_of_states">2.1.14. Getting Number of States</h4>
 <div class="paragraph">
 <p>The number of <a href="#state"><code>states</code></a> can change during simulation if it depends on one or more <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> and can be retrieved after instantiating the FMU by calling:</p>
 </div>
@@ -3416,7 +3450,7 @@ If all <a href="#structuralParameter"><code>structural parameters</code></a> are
 </div>
 </div>
 <div class="sect3">
-<h4 id="_getting_number_of_variable_dependencies_and_variable_dependencies">2.1.14. Getting Number of Variable Dependencies and Variable Dependencies</h4>
+<h4 id="_getting_number_of_variable_dependencies_and_variable_dependencies">2.1.15. Getting Number of Variable Dependencies and Variable Dependencies</h4>
 <div class="paragraph">
 <p>The sparseness information within arrays is not given in the xml description.
 The sparseness muss be retrieved during run-time using the C-API functions.
@@ -4370,7 +4404,7 @@ These clocks are ignored by Model Exchange.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>triggeredBy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="triggeredBy"></a>
-The optional attribute <a href="#triggeredBy"><code>triggeredBy</code></a> is used to define a tick relationship from an <a href="#outputClock"><code>outputClock</code></a> to an <a href="#periodic">aperiodic</a> <a href="#inputClock"><code>inputClock</code></a> (see <a href="#clock-relationships-for-communication-point-clocks">Section 2.1.8.3.3</a>).</p>
+The optional attribute <a href="#triggeredBy"><code>triggeredBy</code></a> is used to define a tick relationship from an <a href="#outputClock"><code>outputClock</code></a> to an <a href="#periodic">aperiodic</a> <a href="#inputClock"><code>inputClock</code></a> (see <a href="#clock-relationships-for-communication-point-clocks">Section 2.1.9.3.3</a>).</p>
 <p class="tableblock">Only <a href="#clock"><code>clocks</code></a> with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#clockType"><code>clockType</code></a> = <a href="#communicationPoint"><code>communicationPoint</code></a> can have this attribute.
 It is not allowed to combine <a href="#outputClock"><code>output clocks</code></a> with <a href="#periodic"><code>periodic</code></a> or <a href="#strict"><code>strict</code></a> <a href="#periodic"><code>periodic</code></a> <a href="#inputClock"><code>input clocks</code></a> based on <a href="#triggeredBy"><code>triggeredBy</code></a>.</p></td>
 </tr>
@@ -4406,7 +4440,7 @@ The FMU exporter is not allowed to set <code>strict</code> to <code>true</code> 
 <p class="tableblock">The initial tick of <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a> may be delayed by defining a <code>shiftCounter</code> (default value 0). This results in the actual</p>
 <p class="tableblock"><code>offset = interval * shiftCounter / resolution</code>.</p>
 <p class="tableblock">More information about clock intervals:
- <a href="#additional-clock-properties">Section 2.1.8.3</a>.</p>
+ <a href="#additional-clock-properties">Section 2.1.9.3</a>.</p>
 <p class="tableblock">The attributes <code>intervalCounter</code>, <code>shiftCounter</code> and <code>resolution</code> are interval <a href="#start"><code>start</code></a> values for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a> and must not be used together with <a href="#periodic">aperiodic</a> <a href="#clock"><code>clocks</code></a>.
 If <code>strict = true</code> it is required to provide values for <code>intervalCounter</code>, <code>shiftCounter</code> and <code>resolution</code>.</p>
 <p class="tableblock"><code>intervalCounter</code> and <code>resolution</code> have no default value.</p></td>
@@ -9600,6 +9634,9 @@ However, even when the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</
 <div class="paragraph">
 <p>It depends on the capabilities of the FMU which argument constellations and calling sequences are allowed (see <a href="#fmi-for-co-simulation">Section 4</a>).</p>
 </div>
+<div class="paragraph">
+<p>Only <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> can change the time of a Co-Simulation FMU from the outside (time advances internally during a communication interval).</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_communication_of_event_time_and_inputoutput_values">4.2.5. Communication of Event Time and Input/Output Values</h4>
@@ -9743,7 +9780,7 @@ In <strong>Step Mode</strong>, the Co-Simulation master can call <a href="#fmi3D
 Note that <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may not reach the next input event instant because an early return may occur.</p>
 </div>
 <div class="paragraph">
-<p>The simulation master sets and gets <a href="#clock"><code>clock</code></a> variable values similar to the FMI for Model Exchange, as defined in <a href="#fmi-api-setting-getting-clock-activation-state">Section 2.1.9</a>.</p>
+<p>The simulation master sets and gets <a href="#clock"><code>clock</code></a> variable values similar to the FMI for Model Exchange, as defined in <a href="#fmi-api-setting-getting-clock-activation-state">Section 2.1.10</a>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -9786,7 +9823,7 @@ Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3Ente
 <div class="title">Figure 25. Calling sequence of Co-Simulation C functions in form of a UML 2.0 state machine.</div>
 </div>
 <div class="paragraph">
-<p>In this Co-Simulation interface the following functions must not be called: <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> including all functions that are specific to Model Exchange.</p>
+<p>In this Co-Simulation interface the following functions must not be called: <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> including all functions that are specific to Model Exchange.</p>
 </div>
 <div class="sect4">
 <h5 id="state-fmu-state-setable-co-simulation">4.2.8.1. State: FMU State Setable</h5>
@@ -10566,7 +10603,7 @@ Typically, hardware I/O or virtual ECU software events belong to this category.<
 </div>
 <div class="paragraph">
 <p>The result values will be computed for the current <a href="#clock"><code>clock</code></a> tick time (activation time) \(t_i\) from the assigned <a href="#inputClock"><code>inputClock</code></a> (which is known to the Co-Simulation master).
-Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>) for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a>.</p>
+Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.9.1</a>) for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>If required, the FMU can internally derive the <a href="#clock"><code>clock</code></a> interval \(\Delta T_i\) based on the last <a href="#clock"><code>clock</code></a> tick time \(t_{i-1}\) i.e. last activation time for this model partition.</p>
@@ -10650,6 +10687,10 @@ For a scalar <a href="#clock"><code>clock</code></a> variable this must be 0; fo
 Using the element index 0 means all elements of the <a href="#clock"><code>clock</code></a> variable.
 (Note: If an array has more than one dimension the indices are serialized in the same order as defined for values).</p>
 </li>
+</ul>
+</div>
+<div id="activationTime" class="ulist">
+<ul>
 <li>
 <p><code>fmi3Float64 activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the assigned <a href="#inputClock"><code>inputClock</code></a> tick time \(t_i\) <em>[typically: simulation (i.e. virtual) time]</em> (which is known to the Co-Simulation master).</p>
 </li>
@@ -10660,11 +10701,11 @@ Using the element index 0 means all elements of the <a href="#clock"><code>clock
 Calls are based on ticks of <a href="#periodic"><code>periodic</code></a> or <a href="#periodic">aperiodic</a> <a href="#inputClock"><code>input clocks</code></a>.
 These <a href="#inputClock"><code>inputClock</code></a> ticks can be based on <a href="#clock"><code>clock</code></a> ticks from FMU external sources (e.g. <a href="#outputClock"><code>output clocks</code></a> of other FMUs) or other external <a href="#clock"><code>clocks</code></a>/events/interrupts assigned via the simulation master configuration (such external events can be based on a potentially unpredictable process or can be just simulation time based events e.g. the planned communication point).
 The <a href="#inputClock"><code>inputClock</code></a> ticks can also be based on <a href="#outputClock"><code>output clock</code></a> ticks of the same FMU.
-Refer to <a href="#math-scheduled-execution">Section 5.1</a> and <a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.8.1</a>.
+Refer to <a href="#math-scheduled-execution">Section 5.1</a> and <a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 2.1.9.1</a>.
 The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function is not called for <a href="#outputClock"><code>output clocks</code></a> of an FMU.</p>
 </div>
 <div class="paragraph">
-<p>Note that this is a different timing concept compared to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> calls.
+<p>Note that this is a different timing concept compared to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> calls for Co-Simulation FMUs or the <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange FMUs.
 A <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call will compute the results of the model partition defined by <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of the variable that defines a <a href="#clock"><code>clock</code></a> and an element index into that for arrays) for the current <a href="#clock"><code>clock</code></a> tick \(t_i\).</p>
 </div>
 <div class="paragraph">
@@ -10691,7 +10732,7 @@ Hence if in states <strong>Clock Activation Mode</strong>, <strong>Intermediate 
 If in these states a function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> the master may wait until all other tasks of the model partitions of this FMU have ended, but new tasks must not be started.</p>
 </div>
 <div class="paragraph">
-<p>In Scheduled Execution the following functions must not be called: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> including all functions that are specific to the Model Exchange interface.</p>
+<p>In Scheduled Execution the following functions must not be called: <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> including all functions that are specific to the Model Exchange interface.</p>
 </div>
 <div class="paragraph">
 <p>The states <strong>Configuration Mode</strong>, <strong>Instantiated</strong>, <strong>Initialization Mode</strong>, and <strong>Terminated</strong> are handled in the same way as in Co-Simulation, with the exception that the generally not allowed functions of Scheduled Execution must not be called.</p>
@@ -10936,7 +10977,7 @@ Set/get calls for each task are only allowed for variables that are associated t
 <p><em>[If multiple tasks are needed to be scheduled for computation at a certain time instant a master must schedule a task of a higher priority always before a task of a lower priority]</em></p>
 </div>
 <div class="paragraph">
-<p><a href="#input"><code>Input</code></a> <a href="#clock"><code>clock</code></a> ticks (see <a href="#variants-of-clocks">Section 2.1.8.2</a>):</p>
+<p><a href="#input"><code>Input</code></a> <a href="#clock"><code>clock</code></a> ticks (see <a href="#variants-of-clocks">Section 2.1.9.2</a>):</p>
 </div>
 <div class="ulist">
 <ul>
