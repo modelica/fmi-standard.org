@@ -786,6 +786,7 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel3">
 <li><a href="#_initialization_mode_2">4.1.1. Initialization Mode</a></li>
 <li><a href="#_step_mode">4.1.2. Step Mode</a></li>
+<li><a href="#_smoothness_continuity_and_discontinuity">4.1.3. Smoothness, Continuity and Discontinuity</a></li>
 </ul>
 </li>
 <li><a href="#co-simulation-api">4.2. Application Programming Interface</a>
@@ -1626,7 +1627,7 @@ typedef         int32_t fmi3Int32;    /* 32-bit signed integer */
 typedef        uint32_t fmi3UInt32;   /* 32-bit unsigned integer */
 typedef         int64_t fmi3Int64;    /* 64-bit signed integer */
 typedef        uint64_t fmi3UInt64;   /* 64-bit unsigned integer */
-typedef             int fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
+typedef            char fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
 typedef            char fmi3Char;     /* Data type for one character */
 typedef const fmi3Char* fmi3String;   /* Data type for character strings
                                          ('\0' terminated, UTF-8 encoded) */
@@ -8875,14 +8876,18 @@ Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a hr
 <td class="tableblock halign-left valign-top"><p class="tableblock">Input variables.
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
-Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).</p></td>
+Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).<br>
+If no event happens at the communication point \(tc_i\), <a href="#continuous"><code>continuous</code></a> input variables \(\mathbf{u}(tc_{i+1}\) must be consistent with the values of the smooth functions \(\mathbf{u}_{i, IU}\), that is \(\mathbf{u}_{i, IU}(tc_{i+1})= \mathbf{u}(tc_i)\).
+It is also recommended but not mandatory that the function defined by the continuation of \(\mathbf{u}_{i, IU}\) with \(\mathbf{u}_{i+1, IU}\) be of smoothness \(C^{k}([tc_i, tc_{i+2}\))]  with the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\).<br>
+<em>[This can increase simulation speed for higher order multi-step solvers that in this case do not have to reset even at communication points.]</em><br>
+If an event happens at the communication point, <a href="#continuous"><code>continuous</code></a> input variables may change discontinuously.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{u}_{i, IU}(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intermediate input variables corresponding to the input variables for intermediate update ("IU").
-The values of these variables are defined outside of the model.
-\(\mathbf{u}_{i, IU}\) are functions defined on the interval \( [t_i, t_{i+1}\) ] with \(\mathbf{u}_{i, IU}(t_i)=\mathbf{u}(t_i)\).<br>
-With the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> FMU can signal to the simulation algorithm that best convergence rates can be achieved if the these functions are of the smoothness (\(C^{k}([ t_i, t_{i+1}\)), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.</p></td>
+The values of these variables are defined outside of the model.</p>
+<p class="tableblock">\(\mathbf{u}_{i, IU}\) are functions defined on the interval \( [t_i, t_{i+1}\) ] with \(\mathbf{u}_{i, IU}(t_i)=\mathbf{u}(t_i)\).<br>
+With the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> with value \(k\) the FMU can signal to the co-simulation algorithm that best convergence rates can be achieved if the these functions are of the smoothness (\(C^{k}([ t_i, t_{i+1}\)), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(t_{i+1})\), \(\mathbf{y^{(j)}}(t_{i+1})\),</p></td>
@@ -9164,6 +9169,25 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <div class="paragraph">
 <p><em>In <strong>Step Mode</strong> the input arguments to</em> \(\mathbf{f}_{\mathit{doStep}}\) <em>are defined by calls to</em> <code>fmi3Set{VariableType}</code> <em>functions.</em>
 <em>The variables computed by</em> \(\mathbf{f}_{\mathit{doStep}}\) <em>can be inquired by</em>  <code>fmi3Get{VariableType}</code> <em>function calls.]</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_smoothness_continuity_and_discontinuity">4.1.3. Smoothness, Continuity and Discontinuity</h4>
+<div class="paragraph">
+<p>Since inputs will be set at specific communication points by the importing tool, the FMU must make assumptions about the values between these communication points, including points of intermediate updates.</p>
+</div>
+<div class="paragraph">
+<p>Between communication points, even when intermediate updates are called, all changes must be assumed to be continuous.</p>
+</div>
+<div class="paragraph">
+<p><a href="#continuous">Continuous</a> inputs may change between communication points in case of <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == true</code>.
+These intermediate values are provided by the co-simulation algorithm for example by an extrapolation polynomial build with the output derivatives of connected FMUs (see &lt;&lt;recommendedIntermediateInputSmoothness</a>).
+If a <a href="#continuous"><code>continuous</code></a> input changes <code>discontinuously</code> (e.g. the actual input value deviates too much from the extrapolation polynomial), the co-simulation algorithm must raise an event to indicate to the FMU a discontinuous change at an input.</p>
+</div>
+<div class="paragraph">
+<p><a href="#discrete"><code>Discrete</code></a> inputs keep their values between communication points.
+Furthermore, changing <a href="#discrete"><code>discrete</code></a> variables at communication points will likely require special handling within the FMU.
+Since the FMU itself can detect such changes, the co-simulation algorithm does not need to raise explicit events in such a case.</p>
 </div>
 </div>
 </div>
