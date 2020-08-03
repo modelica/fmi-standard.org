@@ -15,34 +15,33 @@ static fmi3Status recordVariables(fmi3Instance s, fmi3Float64 time) {
     return status;
 }
 
-static fmi3Status cb_intermediateUpdate(
-    fmi3InstanceEnvironment instanceEnvironment,
-    fmi3Float64 intermediateUpdateTime,
-    fmi3Boolean eventOccurred,
-    fmi3Boolean clocksTicked,
-    fmi3Boolean intermediateVariableSetAllowed,
-    fmi3Boolean intermediateVariableGetAllowed,
-    fmi3Boolean intermediateStepFinished,
-    fmi3Boolean canReturnEarly) {
-    
-    fmi3Status status = fmi3OK;
-    
+static void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
+                                  fmi3Float64 intermediateUpdateTime,
+                                  fmi3Boolean eventOccurred,
+                                  fmi3Boolean clocksTicked,
+                                  fmi3Boolean intermediateVariableSetAllowed,
+                                  fmi3Boolean intermediateVariableGetAllowed,
+                                  fmi3Boolean intermediateStepFinished,
+                                  fmi3Boolean canReturnEarly,
+                                  fmi3Boolean *earlyReturnRequested,
+                                  fmi3Float64 *earlyReturnTime) {
+
     if (clocksTicked) {
         fmi3Instance *m = ((fmi3Instance *)instanceEnvironment);
-    
+
         // ModelPartition 3 depends on inClock1
         fmi3Clock outClock1;
         fmi3ValueReference vr[1] = { vr_outClock1 };
-        
-        status = fmi3GetClock(m, vr, 1, &outClock1);
-        if (status > fmi3OK) return status;
+
+        fmi3Status status = fmi3GetClock(m, vr, 1, &outClock1, 1);
+
+        if (status > fmi3OK) return;
+
         if (outClock1) {
             // printf("############## Starting task for inClock3\n");
-            status = fmi3ActivateModelPartition(m, vr_inClock3, intermediateUpdateTime);
+            status = fmi3ActivateModelPartition(m, vr_inClock3, 0, intermediateUpdateTime);
         }
     }
-        
-    return status;
 }
 
 static void cb_lockPreemption() {
@@ -57,25 +56,24 @@ int main(int argc, char* argv[]) {
 
     printf("Running synchronous Scheduled Co-Simulation example... ");
     printf("\n");
-    
+
     fmi3Status status = fmi3OK;
-    
+
     fmi3Instance m;
 
-    m = fmi3InstantiateScheduledCoSimulation("instance1",
-                                              MODEL_GUID,
-                                              NULL,
-                                              fmi3False,
-                                              fmi3False,
-                                              fmi3False,
-                                              fmi3False,
-                                              fmi3False,
-                                              &m,
-                                              cb_logMessage,
-                                              cb_intermediateUpdate,
-                                              cb_lockPreemption,
-                                              cb_unlockPreemption);
-    
+    m = fmi3InstantiateScheduledExecution("instance1",           // instanceName
+                                          INSTANTIATION_TOKEN,   // instantiationToken
+                                          NULL,                  // resourceLocation
+                                          fmi3False,             // visible
+                                          fmi3False,             // loggingOn
+                                          NULL,                  // requiredIntermediateVariables
+                                          0,                     // nRequiredIntermediateVariables
+                                          &m,                    // instanceEnvironment
+                                          cb_logMessage,         // logMessage
+                                          cb_intermediateUpdate, // intermediateUpdate
+                                          cb_lockPreemption,     // lockPreemption
+                                          cb_unlockPreemption);  // unlockPreemption
+
     if (m == NULL) {
         status = fmi3Error;
         goto TERMINATE;
@@ -83,37 +81,37 @@ int main(int argc, char* argv[]) {
 
     CHECK_STATUS(fmi3EnterInitializationMode(m, fmi3False, 0, 0, fmi3False, 0));
     CHECK_STATUS(fmi3ExitInitializationMode(m));
-    
+
     int time = 0;
-    
+
     fmi3ValueReference outClockVRs[2] = { vr_outClock1, vr_outClock2 };
     fmi3Clock outClockValues[2];
 
     // simulation loop
     while (time < 10) {
-        
+
         // Model Partition 1 is active every second
-        CHECK_STATUS(fmi3ActivateModelPartition(m, vr_inClock1, time));
-                
+        CHECK_STATUS(fmi3ActivateModelPartition(m, vr_inClock1, 0, time));
+
         // Model Partition 2 is active at 0, 1, 8, and 9
         if (time % 8 == 0 || (time - 1) % 8 == 0) {
-            CHECK_STATUS(fmi3ActivateModelPartition(m, vr_inClock2, time));
+            CHECK_STATUS(fmi3ActivateModelPartition(m, vr_inClock2, 0, time));
         }
-        
-        CHECK_STATUS(fmi3GetClock(m, outClockVRs, 2, outClockValues));
-                
+
+        CHECK_STATUS(fmi3GetClock(m, outClockVRs, 2, outClockValues, 2));
+
         CHECK_STATUS(recordVariables(m, time));
 
         time++;
     }
 
     TERMINATE:
-    
+
     if (m && status != fmi3Error && status != fmi3Fatal) {
-		fmi3Status s = fmi3Terminate(m);
+        fmi3Status s = fmi3Terminate(m);
         status = max(status, s);
     }
-    
+
     if (m && status != fmi3Fatal) {
         // clean up
         fmi3FreeInstance(m);

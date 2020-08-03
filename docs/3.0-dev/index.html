@@ -792,7 +792,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#co-simulation-api">4.2. Application Programming Interface</a>
 <ul class="sectlevel3">
 <li><a href="#early-return">4.2.1. Early Return</a></li>
-<li><a href="#intermediate-variable-access">4.2.2. Intermediate Variable Access</a></li>
+<li><a href="#intermediate-update">4.2.2. Intermediate Update of Variables</a></li>
 <li><a href="#transfer-of-input-output-and-parameters">4.2.3. Variables Access</a></li>
 <li><a href="#_computation_in_co_simulation_interface_types">4.2.4. Computation in Co-Simulation Interface Types</a></li>
 <li><a href="#_communication_of_event_time_and_inputoutput_values">4.2.5. Communication of Event Time and Input/Output Values</a></li>
@@ -940,7 +940,7 @@ New features, like</p>
 <p><a href="#early-return">early return</a> from a <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> call,</p>
 </li>
 <li>
-<p>the <a href="#intermediate-variable-access">intermediate variable access</a>, or</p>
+<p>the <a href="#intermediate-update">intermediate update</a>, or</p>
 </li>
 <li>
 <p><a href="#connecting-clocked-fmus">clocked (synchronous) variables</a>,</p>
@@ -1160,7 +1160,7 @@ The scheduler is responsible for:</p>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-times"></i></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Intermediate Value Access</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Intermediate Update</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-times"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
@@ -1909,8 +1909,8 @@ The flag may only be <code>fmi3True</code>, if <code>hasEventMode == true</code>
 <ul>
 <li>
 <p><code>requiredIntermediateVariables</code> is an array of the value references of all <a href="#input"><code>input</code></a> variables that the simulation algorithm intends to set and all <a href="#output"><code>output</code></a> variables it intends to get during intermediate updates.
-This set may be empty (<a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables</code></a> == 0) when the simulation algorithm does not intend to use intermediate variable access.
-All variables referenced in this set must be marked with <a href="#intermediateAccess"><code>intermediateAccess="true"</code></a> in the model description.
+This set may be empty (<a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables</code></a> == 0) when the simulation algorithm does not intend to use intermediate update.
+All variables referenced in this set must be marked with the attribute <a href="#intermediateUpdateAttr"><code>intermediateUpdate = "true"</code></a> in the model description.
 Only the variables in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> may be accessed by the simulation algorithm using <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> during <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks.</p>
 </li>
 </ul>
@@ -5386,10 +5386,10 @@ For scalar clock variables this attribute must not be specified or must be speci
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>intermediateAccess</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div id="intermediateAccess" class="paragraph">
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>intermediateUpdate</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div id="intermediateUpdateAttr" class="paragraph">
 <p>If this boolean attribute is <code>true</code>, the variable can be accessed during a communication step.
-Variables with <a href="#causality"><code>causality</code></a> <a href="#parameter"><code>parameter</code></a> must not be marked with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>.</p>
+Variables with <a href="#causality"><code>causality</code></a> <a href="#parameter"><code>parameter</code></a> must not be marked with <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>This attribute is only used for Co-Simulation. The default value of this attribute is <code>false</code>.</p>
@@ -8278,14 +8278,14 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">    m = M_fmi3InstantiateModelExchange("m", MODEL_GUID, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
+<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">m = M_fmi3InstantiateModelExchange("m", INSTANTIATION_TOKEN, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
 // "m" is the instance name
 // "M_" is the MODEL_IDENTIFIER
 
-    if (m == NULL) {
-        status = fmi3Error;
-        goto TERMINATE;
-    }
+if (m == NULL) {
+    status = fmi3Error;
+    goto TERMINATE;
+}
 
 // set the start time
 time  = tStart;
@@ -8327,7 +8327,7 @@ while (!terminateSimulation) {
     if (enterEventMode || stateEvent || timeEvent) {
 
         if (!initialEventMode) {
-            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, fmi3False, rootsFound, NZ, timeEvent));
+            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, rootsFound, NZ, timeEvent));
         }
 
         // event iteration
@@ -8436,17 +8436,17 @@ while (!terminateSimulation) {
 
 TERMINATE:
 
-    if (m &amp;&amp; status != fmi3Error &amp;&amp; status != fmi3Fatal) {
-        // retrieve final values and terminate simulation
-        CHECK_STATUS(recordVariables(outputFile, m, time));
-		fmi3Status s = M_fmi3Terminate(m);
-        status = max(status, s);
-    }
+if (m &amp;&amp; status != fmi3Error &amp;&amp; status != fmi3Fatal) {
+    // retrieve final values and terminate simulation
+    CHECK_STATUS(recordVariables(outputFile, m, time));
+    fmi3Status s = M_fmi3Terminate(m);
+    status = max(status, s);
+}
 
-    if (m &amp;&amp; status != fmi3Fatal) {
-        // clean up
-        M_fmi3FreeInstance(m);
-    }</code></pre>
+if (m &amp;&amp; status != fmi3Fatal) {
+    // clean up
+    M_fmi3FreeInstance(m);
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8806,10 +8806,8 @@ Note that, since output events time instants are not known in advance, at output
 <p>This section contains a formal mathematical model of Co-Simulation FMUs.</p>
 </div>
 <div class="paragraph">
-<p><em>[The following fundamental assumptions are made:</em></p>
-</div>
-<div class="paragraph">
-<p><em>The FMUs are seen by the simulation algorithm as purely sampled-data systems, with the exception, that the simulation algorithm can provide input data of a defined level of smoothness (with the flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a>) within a communication interval via the intermediate variable access mechanism (see <a href="#intermediate-variable-access">Section 4.2.2</a>).</em></p>
+<p><em>[The following fundamental assumptions are made:</em>
+<em>The FMUs are seen by the co-simulation algorithm as purely sampled-data systems, with the exception, that the simulation algorithm can provide input data of a defined level of smoothness (with the flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a>) within a communication interval via the intermediate update mechanism (see <a href="#intermediate-update">Section 4.2.2</a>).</em></p>
 </div>
 <div class="paragraph">
 <p><em>Such a sampled-data system consists typically of a hybrid ODE that is integrated between communication points (known as "sampled access to time continuous systems") where internal events may occur and be handled, but events are not visible from the outside of the FMU.</em></p>
@@ -8817,7 +8815,7 @@ Note that, since output events time instants are not known in advance, at output
 <div class="paragraph">
 <p><em>Co-Simulation FMUs can also be used for real sampled-data systems (so a sampled discrete controller; the <a href="#input"><code>inputs</code></a> and <a href="#output"><code>outputs</code></a> could be of type <code>&lt;Float{32|64}&gt;</code>, <code>&lt;[U]Int{8|16|32|64}&gt;</code>, <code>&lt;Boolean&gt;</code>, <code>&lt;String&gt;</code>, <code>&lt;Clock&gt;</code> or <code>&lt;Enumeration&gt;</code> with <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a>.)</em>
 <em>However, in FMI 3.0, Co-Simulation (CS) and Scheduled Execution (SE) may likely be more suitable for this use-case.</em><br>
-<em>And - at least without using intermediate variable access (see <a href="#intermediate-variable-access">Section 4.2.2</a>), which is untypical for sampled data systms - with Co-Simulation there will always be a communication step delay for information going "through the FMU", so there cannot be an immediate reaction as in Co-Simulation. (see <a href="#fmi-for-co-simulation">Section 4</a></em>
+<em>And - at least without using intermediate update (see <a href="#intermediate-update">Section 4.2.2</a>), which is untypical for sampled data systems - with Co-Simulation there will always be a communication step delay for information going "through the FMU", so there cannot be an immediate reaction as in Co-Simulation (see <a href="#fmi-for-co-simulation">Section 4</a>).</em>
 <em>]</em></p>
 </div>
 <div class="paragraph">
@@ -8829,7 +8827,7 @@ Note that, since output events time instants are not known in advance, at output
 <p>a discrete set of time instants, called communication points, where input variables may change in non-smooth or even non-continuous way.</p>
 </li>
 <li>
-<p>intermediate time instances, where the simulation algorithm may get and set variables using <a href="#intermediate-variable-access">Section 4.2.2</a>.</p>
+<p>intermediate time instances, where the simulation algorithm may get and set variables using <a href="#intermediate-update">Section 4.2.2</a>.</p>
 </li>
 </ul>
 </div>
@@ -8878,7 +8876,7 @@ The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
 Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).<br>
 If no event happens at the communication point \(tc_i\), <a href="#continuous"><code>continuous</code></a> input variables \(\mathbf{u}(tc_{i+1}\) must be consistent with the values of the smooth functions \(\mathbf{u}_{i, IU}\), that is \(\mathbf{u}_{i, IU}(tc_{i+1})= \mathbf{u}(tc_i)\).
-It is also recommended but not mandatory that the function defined by the continuation of \(\mathbf{u}_{i, IU}\) with \(\mathbf{u}_{i+1, IU}\) be of smoothness \(C^{k}([tc_i, tc_{i+2}\))]  with the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\).<br>
+It is also recommended but not mandatory that the function defined by the continuation of \(\mathbf{u}_{i, IU}\) with \(\mathbf{u}_{i+1, IU}\) be of smoothness \(C^{k}([tc_i, tc_{i+2}])\)  with the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\).<br>
 <em>[This can increase simulation speed for higher order multi-step solvers that in this case do not have to reset even at communication points.]</em><br>
 If an event happens at the communication point, <a href="#continuous"><code>continuous</code></a> input variables may change discontinuously.</p></td>
 </tr>
@@ -8887,7 +8885,7 @@ If an event happens at the communication point, <a href="#continuous"><code>cont
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intermediate input variables corresponding to the input variables for intermediate update ("IU").
 The values of these variables are defined outside of the model.</p>
 <p class="tableblock">\(\mathbf{u}_{i, IU}\) are functions defined on the interval \( [t_i, t_{i+1}\) ] with \(\mathbf{u}_{i, IU}(t_i)=\mathbf{u}(t_i)\).<br>
-With the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> with value \(k\) the FMU can signal to the co-simulation algorithm that best convergence rates can be achieved if the these functions are of the smoothness (\(C^{k}([ t_i, t_{i+1}\)), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.</p></td>
+With the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> with value \(k\) FMUs can signal to the co-simulation algorithm that best convergence rates can be achieved if the functions are of the smoothness \(C^{k}([t_i, t_{i+1}])\), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(t_{i+1})\), \(\mathbf{y^{(j)}}(t_{i+1})\),</p></td>
@@ -8964,7 +8962,7 @@ with \(t_i = t_0 + \sum_{k=0}^{i-1}h_k\).</p>
 <div class="content">
 \[\mathbf{u}_{i, IU}(t)
 =
-\sum^{m_{\mathit{extra}}}_{j=0} \mathbf{C_{i, j}} \frac{(t-t_i)^j}{j!}\]
+\sum^{m_{\mathit{extra}}}_{j=0} \mathbf{C_{i, j}} \frac{(t-tc_i)^j}{j!}\]
 </div>
 </div>
 <div class="paragraph">
@@ -9268,13 +9266,13 @@ Multiple event types and also <a href="#outputClock"><code>outputClock</code></a
 </div>
 </div>
 <div class="sect3">
-<h4 id="intermediate-variable-access">4.2.2. Intermediate Variable Access</h4>
+<h4 id="intermediate-update">4.2.2. Intermediate Update of Variables</h4>
 <div class="paragraph">
 <p>A Co-Simulation FMU can provide values for its <a href="#output"><code>output</code></a> variables at intermediate points between two consecutive communication points, and is able to accept new values for <a href="#input"><code>input</code></a> variables at these intermediate points.
 This is typically required when the FMU uses a numerical solver to integrate the FMU&#8217;s internal state between communication points in <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
 This numerical solver assumes that the inputs are continuous in the integration interval, dictated by <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
 In FMI 2.0 Co-simulation, the intermediate inputs are provided by the use of extrapolations.
-The intermediate variable access functions allows the FMU to receive inputs, and provide outputs, directly to the co-simulation algorithm, in those intermediate time points.</p>
+The intermediate update functions allow FMUs to receive inputs, and provide outputs, directly to the co-simulation algorithm, in those intermediate time points.</p>
 </div>
 <div class="paragraph">
 <p>Due to the way numerical solvers estimate and correct the approximation error, these intermediate <a href="#output"><code>output</code></a> values may be tentative or may be final.
@@ -9294,20 +9292,18 @@ This can be either at tentative solver states or after successful integration st
 Moreover, this enables the same input approximation that was possible in FMI 2.0 with <code>fmi2SetInputDerivatives</code>, now evaluating the approximation polynomial and not within the FMU as in FMI 2.0.</p>
 </div>
 <div class="paragraph">
-<p>Intermediate variable access can be used in FMI for Co-Simulation, if the FMU and the co-simulation algorithm, support it.</p>
-</div>
-<div class="paragraph">
-<p><a href="#figure-intermediate-variable-access">Figure 24</a> summarizes the above description.
+<p>The intermediate-update functionality can be used in FMI for Co-Simulation, if both, the FMU and the co-simulation algorithm, support it.
+<a href="#figure-intermediate-update">Figure 24</a> summarizes the above description.
 It illustrates that multiple intermediate internal solver steps, distinguishing between the final ones (with black-filled circles) and tentative ones (with white-filled circles). It distinguishes the level of trust that can be placed in the tentative outputs (with dashed arrows) and in final outputs (with solid arrows).</p>
 </div>
-<div id="figure-intermediate-variable-access" class="imageblock text-center">
+<div id="figure-intermediate-update" class="imageblock text-center">
 <div class="content">
-<img src="images/intermediatevariableaccess.svg" alt="intermediatevariableaccess" width="65%">
+<img src="images/intermediateupdate.svg" alt="intermediateupdate" width="65%">
 </div>
-<div class="title">Figure 24. Overview of solver states and intermediate variable access during a communication step</div>
+<div class="title">Figure 24. Overview of solver states and intermediate update during a communication step</div>
 </div>
 <div class="paragraph">
-<p>If the co-simulation algorithm signals the support for intermediate variable access and an FMU has at least one variable with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>, the FMU can use the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to communicate information back to the co-simulation algorithm:</p>
+<p>If the co-simulation algorithm signals the support for intermediate update and an FMU has at least one variable with <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a>, the FMU can use the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to communicate information back to the co-simulation algorithm:</p>
 </div>
 <div id="fmi3CallbackIntermediateUpdate" class="listingblock">
 <div class="content">
@@ -9357,7 +9353,7 @@ If this flag is <code>fmi3True</code> the co-simulation algorithm must return wi
 <div id="intermediateVariableSetRequested" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the co-simulation algorithm should provide intermediate <a href="#input"><code>input</code></a> variables by calling <code>fmi3Set{VariableType}</code> for continuous variables with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>.
+<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the co-simulation algorithm should provide intermediate <a href="#input"><code>input</code></a> variables by calling <code>fmi3Set{VariableType}</code> for continuous variables with <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a>.
 The set of variables for which the co-simulation algorithm can provide intermediate values is supplied through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
 Note that if a co-simulation algorithm does not provide a new value for any of the variables contained in the set it registered, the last set value will be deemed to be the new value.</p>
 </li>
@@ -9366,7 +9362,7 @@ Note that if a co-simulation algorithm does not provide a new value for any of t
 <div id="intermediateVariableGetAllowed" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the co-simulation algorithm may collect intermediate output variables by calling <code>fmi3Get{VariableType}</code> for variables with <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>.
+<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the co-simulation algorithm may collect intermediate output variables by calling <code>fmi3Get{VariableType}</code> for variables with <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a>.
 The set of variables for which the co-simulation algorithm can get values is supplied through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </li>
 </ul>
@@ -9436,7 +9432,7 @@ If an input value changes for the same <a href="#intermediateUpdateTime"><code>i
 Note that <strong>Event Mode</strong> is not supported in Scheduled Execution.</p>
 </div>
 <div class="paragraph">
-<p>The following code example shows an implementation of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that uses intermediate variable access to record a set of variables at every internal solver step:</p>
+<p>The following code example shows an implementation of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that uses intermediate update to record a set of variables at every internal solver step:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9448,18 +9444,22 @@ Note that <strong>Event Mode</strong> is not supported in Scheduled Execution.</
     return status;
 }
 
-fmi3Status cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
-                                 fmi3Float64 intermediateUpdateTime,
-                                 fmi3Boolean eventOccurred,
-                                 fmi3Boolean clocksTicked,
-                                 fmi3Boolean intermediateVariableSetAllowed,
-                                 fmi3Boolean intermediateVariableGetAllowed,
-                                 fmi3Boolean intermediateStepFinished,
-                                 fmi3Boolean canReturnEarly) {
+void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
+                           fmi3Float64 intermediateUpdateTime,
+                           fmi3Boolean eventOccurred,
+                           fmi3Boolean clocksTicked,
+                           fmi3Boolean intermediateVariableSetAllowed,
+                           fmi3Boolean intermediateVariableGetAllowed,
+                           fmi3Boolean intermediateStepFinished,
+                           fmi3Boolean canReturnEarly,
+                           fmi3Boolean *earlyReturnRequested,
+                           fmi3Float64 *earlyReturnTime) {
 
     if (!instanceEnvironment) {
-        return fmi3Error;
+        return;
     }
+
+    *earlyReturnRequested = fmi3False;
 
     InstanceEnvironment* env = (InstanceEnvironment*)instanceEnvironment;
 
@@ -9469,7 +9469,7 @@ fmi3Status cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
     fmi3Status status = fmi3OK;
 
     if (eventOccurred) {
-        return fmi3OK; // don't record events
+        return; // don't record events
     }
 
     // if getting intermediate output variables is allowed
@@ -9497,7 +9497,6 @@ fmi3Status cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
     }
 
     // Internal execution in FMU will now continue
-    return status;
 }</code></pre>
 </div>
 </div>
@@ -9512,7 +9511,8 @@ fmi3Status cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
 This is also possible for higher <a href="#derivative"><code>derivatives</code></a> with respect to time.</p>
 </div>
 <div class="paragraph">
-<p><em>[The co-simulation algorithm is then able to extrapolate inputs using this information using <a href="#intermediate-variable-access">Section 4.2.2</a>. This enables the same functionality as with <code>fmi2SetInputDerivatives</code> in FMI1.0 and FMI2.0]</em></p>
+<p><em>[The co-simulation algorithm is then able to extrapolate inputs using this information using <a href="#intermediate-update">Section 4.2.2</a>.</em>
+<em>This enables the same functionality as with <code>fmi2SetInputDerivatives</code> in FMI1.0 and FMI2.0.]</em></p>
 </div>
 <div id="fmi3GetOutputDerivatives" class="listingblock">
 <div class="content">
@@ -9665,13 +9665,13 @@ However, even when the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</
 <div class="sect3">
 <h4 id="_communication_of_event_time_and_inputoutput_values">4.2.5. Communication of Event Time and Input/Output Values</h4>
 <div class="paragraph">
-<p>The <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback described in <a href="#intermediate-variable-access">Section 4.2.2</a> is also used in order to communicate the <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a> and, in particular, the event and <a href="#clock"><code>clock</code></a> time from the FMU to the co-simulation algorithm.
+<p>The <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback described in <a href="#intermediate-update">Section 4.2.2</a> is also used in order to communicate the <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a> and, in particular, the event and <a href="#clock"><code>clock</code></a> time from the FMU to the co-simulation algorithm.
 The <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback allows internal events (e.g. associated to <a href="#outputClock"><code>outputClock</code></a> ticks) to be signaled from an FMU to the co-simulation algorithm.
 For the interface type Co-Simulation, the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback must be defined in the instantiate function, i.e. NULL is not allowed.</p>
 </div>
 <div class="paragraph">
 <p>The arguments of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> are used to signal <a href="#outputClock"><code>outputClock</code></a> ticks and internal events to the co-simulation algorithm.
-See <a href="#intermediate-variable-access">Section 4.2.2</a> for details of the function parameters.</p>
+See <a href="#intermediate-update">Section 4.2.2</a> for details of the function parameters.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10125,12 +10125,12 @@ If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU 
 <dt class="hdlist1"><code>fmi3Get{VariableType}</code></dt>
 <dd>
 <p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the value of intermediate variables can be retrieved.
-Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </dd>
 <dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the value of intermediate, continuous variables should be set.
-Intermediate variables are variables that are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </dd>
 </dl>
 </div>
@@ -10227,9 +10227,29 @@ The code demonstrates the simplest co-simulation algorithm as shown in <a href="
 // Initialization sub-phase
 
 // instantiate both slaves
-s1 = s1_fmi3InstantiateBasicCoSimulation("slave1", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
+s1 = s1_fmi3InstantiateCoSimulation("slave1",      // instanceName
+                                    guid,          // instantiationToken
+                                    NULL,          // resourceLocation
+                                    fmi3False,     // visible
+                                    fmi3False,     // loggingOn
+                                    fmi3False,     // eventModeRequired
+                                    NULL,          // requiredIntermediateVariables
+                                    0,             // nRequiredIntermediateVariables
+                                    NULL,          // instanceEnvironment
+                                    cb_logMessage, // logMessage
+                                    NULL);         // intermediateUpdate
 
-s2 = s2_fmi3InstantiateBasicCoSimulation("slave2", guid, NULL, fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, NULL, cb_logMessage, NULL);
+s2 = s2_fmi3InstantiateCoSimulation("slave1",      // instanceName
+                                    guid,          // instantiationToken
+                                    NULL,          // resourceLocation
+                                    fmi3False,     // visible
+                                    fmi3False,     // loggingOn
+                                    fmi3False,     // eventModeRequired
+                                    NULL,          // requiredIntermediateVariables
+                                    0,             // nRequiredIntermediateVariables
+                                    NULL,          // instanceEnvironment
+                                    cb_logMessage, // logMessage
+                                    NULL);         // intermediateUpdate
 
 if (s1 == NULL || s2 == NULL)
     return EXIT_FAILURE;
@@ -10271,26 +10291,18 @@ while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
     // fmi3SetReal(s2, ..., 1, &amp;y1);
 
     // call slave s1 and check status
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True, NULL);
+    fmi3Boolean terminate, earlyReturn;
+    fmi3Float64 lastSuccessfulTime;
 
-    switch (status) {
-        case fmi3Discard:
-            s1_fmi3GetDoStepDiscardedStatus(s1, &amp;discard, &amp;lastSuccessfulTime);
-            if (discard == fmi3True)
-                printf("Slave s1 wants to terminate simulation.");
-        case fmi3Error:
-        case fmi3Fatal:
-            terminateSimulation = true;
-            break;
-        default:
-            break;
+    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
+
+    if (terminate) {
+        printf("Slave s1 wants to terminate simulation.");
+        break;
     }
 
-    if (terminateSimulation)
-        break;
-
     // call slave s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True, NULL);
+    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
     // ...
 
@@ -10409,9 +10421,9 @@ Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defi
 The communication step size (argument <a href="#communicationStepSize"><code>communicationStepSize</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>) has not to be constant for each call.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesIntermediateVariableAccess</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesIntermediateUpdate</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The FMU is able to provide access to selected variables during callback function call <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>.
-The accessible variables are marked with attribute <a href="#intermediateAccess"><code>intermediateAccess = true</code></a>.</p></td>
+The accessible variables are marked with attribute <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate</code></a></p></td>
@@ -10902,7 +10914,7 @@ If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU 
 <p>For an <a href="#outputClock"><code>outputClock</code></a> only the first call of <code>fmi3GetClock</code> for a specific activation of this <a href="#clock"><code>clock</code></a> signals <code>fmi3ClockActive</code>.
 The FMU sets the reported activation state immediately back to <code>fmi3ClockInactive</code> for the following <code>fmi3GetClock</code> calls for that <a href="#clock"><code>clock</code></a> (in the same or other model partitions of the FMU) until this <a href="#outputClock"><code>outputClock</code></a> is internally activated again.
 The simulation algorithm can call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> during the callback for variables associated to a <a href="#outputClock"><code>outputClock</code></a> that is active during this callback.
-Also intermediate variable access is allowed as defined in <a href="#state-intermediate-update-mode-co-simulation">Section 4.2.8.9</a></p>
+Also intermediate update is allowed as defined in <a href="#state-intermediate-update-mode-co-simulation">Section 4.2.8.9</a></p>
 </dd>
 </dl>
 </div>

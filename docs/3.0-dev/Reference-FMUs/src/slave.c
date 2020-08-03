@@ -24,7 +24,7 @@ ModelInstance *createModelInstance(
     intermediateUpdateType intermediateUpdate,
     void *componentEnvironment,
     const char *instanceName,
-    const char *GUID,
+    const char *instantiationToken,
     const char *resourceLocation,
     bool loggingOn,
     InterfaceType interfaceType,
@@ -41,12 +41,12 @@ ModelInstance *createModelInstance(
         return NULL;
     }
 
-    if (!GUID || strlen(GUID) == 0) {
+    if (!instantiationToken || strlen(instantiationToken) == 0) {
         cbLogger(componentEnvironment, instanceName, Error, "error", "Missing GUID.");
         return NULL;
     }
 
-    if (strcmp(GUID, MODEL_GUID)) {
+    if (strcmp(instantiationToken, INSTANTIATION_TOKEN)) {
         cbLogger(componentEnvironment, instanceName, Error, "error", "Wrong GUID.");
         return NULL;
     }
@@ -71,14 +71,14 @@ ModelInstance *createModelInstance(
         } else {
             comp->resourceLocation = NULL;
         }
-        
+
         comp->status = OK;
 
         comp->modelData = (ModelData *)calloc(1, sizeof(ModelData));
 
         comp->logEvents = loggingOn;
         comp->logErrors = true; // always log errors
-        
+
         comp->nSteps = 0;
 
         comp->returnEarly = false;
@@ -435,7 +435,7 @@ Status doStep(ModelInstance *comp, double t, double tNext, int* earlyReturn) {
 #endif
 
     double epsilon = (1.0 + fabs(comp->time)) * DBL_EPSILON;
-    
+
     while (comp->time + FIXED_SOLVER_STEP < tNext + epsilon) {
 
 #if NX > 0
@@ -487,28 +487,28 @@ Status doStep(ModelInstance *comp, double t, double tNext, int* earlyReturn) {
 
 #if FMI_VERSION == 3
             if (comp->intermediateUpdate) {
-                
+
                 comp->state = IntermediateUpdateMode;
 
-                status = comp->intermediateUpdate((fmi3InstanceEnvironment)comp->componentEnvironment,
-                                                  comp->time,         // intermediateUpdateTime
-                                                  1,                  // eventOccurred
-                                                  comp->clocksTicked, // clocksTicked
-                                                  0,                  // intermediateVariableSetAllowed
-                                                  1,                  // intermediateVariableGetAllowed
-                                                  0,                  // intermediateStepFinished
-                                                  1);                 // canReturnEarly
-                
-                if (status > Warning) {
-                    logError(comp, "Intermediate update callback returned with fmi3Error.");
-                    comp->state = Terminated;
-                    return Error;
-                }
-                
+                int earlyReturnRequested;
+                double earlyReturnTime;
+
+                comp->intermediateUpdate((fmi3InstanceEnvironment)comp->componentEnvironment,
+                                          comp->time,         // intermediateUpdateTime
+                                          1,                  // eventOccurred
+                                          comp->clocksTicked, // clocksTicked
+                                          0,                  // intermediateVariableSetAllowed
+                                          1,                  // intermediateVariableGetAllowed
+                                          0,                  // intermediateStepFinished
+                                          1,                  // canReturnEarly
+                                          &earlyReturnRequested,
+                                          &earlyReturnTime);
+
                 comp->state = StepMode;
 
-                if (comp->returnEarly) {
+                if (earlyReturnRequested) {
                     *earlyReturn = 1;
+                    // TODO: continue to earlyReturnTime?
                     return status;
                 }
             }
@@ -524,28 +524,27 @@ Status doStep(ModelInstance *comp, double t, double tNext, int* earlyReturn) {
         }
 
         comp->time = FIXED_SOLVER_STEP * (++comp->nSteps);
-        
+
 #if FMI_VERSION == 3
         if (comp->intermediateUpdate) {
-            
+
             comp->state = IntermediateUpdateMode;
 
+            int earlyReturnRequested;
+            double earlyReturnTime;
+
             // call intermediate update callback
-            status = comp->intermediateUpdate((fmi3InstanceEnvironment)comp->componentEnvironment,
-                                              comp->time, // intermediateUpdateTime
-                                              0,          // eventOccurred
-                                              0,          // clocksTicked
-                                              0,          // intermediateVariableSetAllowed
-                                              1,          // intermediateVariableGetAllowed
-                                              1,          // intermediateStepFinished
-                                              1);         // canReturnEarly
-            
-            if (status > Warning) {
-                logError(comp, "Intermediate update callback returned with fmi3Error.");
-                comp->state = Terminated;
-                return Error;
-            }
-            
+            comp->intermediateUpdate((fmi3InstanceEnvironment)comp->componentEnvironment,
+                                      comp->time, // intermediateUpdateTime
+                                      0,          // eventOccurred
+                                      0,          // clocksTicked
+                                      0,          // intermediateVariableSetAllowed
+                                      1,          // intermediateVariableGetAllowed
+                                      1,          // intermediateStepFinished
+                                      1,          // canReturnEarly
+                                      &earlyReturnRequested,
+                                      &earlyReturnTime);
+
             comp->state = StepMode;
         }
 #endif
