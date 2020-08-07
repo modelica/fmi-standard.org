@@ -7114,7 +7114,7 @@ Also, the FMU might consist of discrete-time equations only, for example, descri
 <div class="paragraph">
 <p>The <a href="#independent"><code>independent</code></a> variable \(t \in \mathbb{T}\) <em>[typically: time]</em> is a tuple \(t = (t_R,t_I)\), where \(t_R \in \mathbb{R},\ t_{I} \in \mathbb{N} = \{0, 1, 2, \ldots\}\).
 The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
-In this phase \(t_I = 0\).
+During continuous-time integration \(t_I = 0\).
 The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).
 This time definition is also called "super-dense time" in literature, see, for example, <a href="#LZ07">[LZ07]</a>.
 An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a href="#table-model-exchange-math-notation">Table 8</a>.
@@ -7245,14 +7245,14 @@ Such an event is called external event.
 </div>
 </li>
 <li>
-<p>At a predefined time instant \(t_i=(T_{\mathit{next}}(t_{i-1}, 0)\) that was defined at the previous event instant \(t_{i-1}\) by the FMU.
+<p>At a predefined time instant \(t_i=T_{\mathit{next}}(t_{i-1}, 0)\) that was defined at the previous event instant \(t_{i-1}\) by the FMU.
 Such an event is called <a href="#time-event">time event</a>.</p>
 </li>
 <li>
 <p>At a time instant, where an event indicator \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 19</a>).
-More precisely: An event \(t = t_i\) occurs at the smallest time instant "min t" with \(t&gt;t_{i-1}\) where "\((z_j(t)&gt;0) \neq (z_j(t_{i-1}) &gt;0)\)".
+More precisely: An event \(t = t_i\) occurs at the smallest time instant \(t\) with \(t&gt;t_{i-1}\) where \((z_j(t)&gt;0) \neq (z_j(t_{i-1}) &gt;0)\).
 Such an event is called <a href="#state-event">state event</a>.
-<em>[This definition is slightly different from the standard definition of <a href="#state-event"><code>state events</code></a>: "</em> \(z_j(t) \cdot z_j(t_{i-1}) \leq 0\) <em>".</em>
+<em>[This definition is slightly different from the standard definition of <a href="#state-event"><code>state events</code></a>: _ \(z_j(t) \cdot z_j(t_{i-1}) \leq 0\) _.</em>
 <em>This often used definition has the severe drawback that</em> \(z_j(t_{i-1}) \neq 0\) <em>is required in order to be well-defined and this condition cannot be guaranteed.].</em>
 All event indicators are piecewise continuous and are collected together in one vector of floating point numbers \(\mathbf{z(t)}\).<br></p>
 </li>
@@ -7348,16 +7348,16 @@ In reality, a discrete <a href="#state"><code>state</code></a> is part of the <a
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{next}}(t_{i})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">At initialization or at an event instant, an FMU can define the next time instant \(T_{\mathit{next}}\), at which the next event occurs (see also the definition of events above).
-Every event removes automatically a previous definition of \(T_{\mathit{next}}\), and it must be explicitly defined again, if a previously defined \(T_{\mathit{next}}\) was not triggered at the current event instant.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">At initialization or at an event instant, an FMU can define the next time instant \(T_{\mathit{next}}\), at which the next time event occurs (see also the definition of events above).
+Every event removes automatically a previous definition of \(T_{\mathit{next}}\), and it must be explicitly defined again, event if a previously defined \(T_{\mathit{next}}\) was not triggered at the current event instant.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{r}(t_i)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of Boolean variables with \(r_{i} := z_{i} &gt; 0\).
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of Boolean variables with \(r_{j} := z_{j} &gt; 0\).
 When entering <strong>Continuous-Time Mode</strong> all relations reported via the event indicators \(\mathbf{z}\) are fixed and during this mode these relations are replaced by \(\mathbf{r}\).
-Only during <strong>Initialization Mode</strong> or <strong>Event Mode</strong> the domains \(z_{i} &gt; 0\) can be changed.
+Only during <strong>Initialization Mode</strong> or <strong>Event Mode</strong> the domains \(z_{j} &gt; 0\) can be changed.
 For notational convenience, \(\mathbf{r} := \mathbf{z} &gt; 0\) is an abbreviation for \(\mathbf{r}:=\{z_1&gt;0, z_2&gt;0, \ldots \}\).
-<em>[For more details, see "Remark 3" below.]</em></p></td>
+<em>[For more details, see <a href="#Remark3">Remark 3</a> below.]</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -7671,7 +7671,7 @@ y2 := w2</pre>
 </dd>
 </dl>
 </div>
-<div class="paragraph">
+<div id="Remark3" class="paragraph">
 <p><em>Remark 3 - Event Indicators / Freezing Relations:</em></p>
 </div>
 <div class="paragraph">
@@ -7750,7 +7750,7 @@ After calling <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitialization
 If these variables are present in an algebraic loop, iteration can be used to compute them.
 Once finalized, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called, and depending on the value of the return argument, the FMU either continues the event iteration at the initial time instant or switches to <strong>Continuous-Time Mode</strong>.<br>
 After switching to <strong>Continuous-Time Mode</strong>, the integration is started.
-Basically, in this phase the <a href="#derivative"><code>derivatives</code></a> of the continuous <a href="#state"><code>states</code></a> are computed.
+Basically, during <strong>Continuous-Time Mode</strong>, the <a href="#derivative"><code>derivatives</code></a> of the continuous <a href="#state"><code>states</code></a> are computed.
 If FMUs and/or submodels are connected together, then the <a href="#input"><code>inputs</code></a> of these models are the <a href="#output"><code>outputs</code></a> of other models, and therefore, the corresponding FMU outputs must be computed.
 Whenever result values shall be stored, usually at output points defined before the start of the simulation, the <code>fmi3Get{VariableType}</code> function with respect to the desired variables must be called.<br>
 Continuous integration is stopped at an event instant.
@@ -7930,7 +7930,7 @@ When the FMU is terminated, it is assumed that an appropriate message is printed
 <div id="terminateSimulation" class="ulist">
 <ul>
 <li>
-<p>If output argument <code>terminateSimulation == fmi3True</code>, the FMU can signal it needs to terminate the simulation by calling <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
+<p>If output argument <code>terminateSimulation == fmi3True</code>, the FMU signals it needs to terminate the simulation.</p>
 </li>
 <li>
 <p>If argument <code>nominalsOfContinuousStatesChanged == fmi3True</code>, then the nominal values of the <a href="#state"><code>states</code></a> have changed due to the function call and can be inquired with <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a>.</p>
@@ -11723,7 +11723,11 @@ This definition is slightly different from the usual standard definition of stat
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>super-dense time</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A precise definition of time taking into account iterations at an event. For an <em>FMU</em>, the <a href="#independent"><code>independent</code></a> variable time \(t \in \mathbb{T}\) is a tuple \(t = (t_R, t_I)\) where \(t_R \in  \mathbb{R}, t_I \in \mathbb{N} = \{0,1,2,\ldots\}\). The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events. In this phase \(t_I = 0\). The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A precise definition of time taking into account iterations at an event.
+For an <em>FMU</em>, the <a href="#independent"><code>independent</code></a> variable time \(t \in \mathbb{T}\) is a tuple \(t = (t_R, t_I)\) where \(t_R \in  \mathbb{R}, t_I \in \mathbb{N} = \{0,1,2,\ldots\}\).
+The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
+During continuous-time integration \(t_I = 0\).
+The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>target simulator</em></p></td>
