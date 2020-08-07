@@ -621,7 +621,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#advancing-time">2.1.8. Advancing Time</a></li>
 <li><a href="#operation-on-clocks">2.1.9. Operation on Clocks</a>
 <ul class="sectlevel4">
-<li><a href="#_synchronous_clocks">2.1.9.1. Synchronous Clocks</a></li>
+<li><a href="#SynchronousClocks">2.1.9.1. Synchronous Clocks</a></li>
 <li><a href="#variants-of-clocks">2.1.9.2. Variants of Clocks</a>
 <ul class="sectlevel5">
 <li><a href="#_output_clocks">2.1.9.2.1. Output Clocks</a></li>
@@ -829,7 +829,7 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel2">
 <li><a href="#math-scheduled-execution">5.1. Mathematical Description</a>
 <ul class="sectlevel3">
-<li><a href="#clock-types-for-evaluation-of-clocked-model-partitions">5.1.1. Communication Point Clocks</a>
+<li><a href="#CommunicationPointClocks">5.1.1. Communication Point Clocks</a>
 <ul class="sectlevel4">
 <li><a href="#_clock_priority">5.1.1.1. Clock Priority</a></li>
 <li><a href="#clock-relationships-for-communication-point-clocks">5.1.1.2. Clock Relationships</a></li>
@@ -1165,10 +1165,9 @@ The scheduler is responsible for:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Clocks</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">Communication Point Clocks: <span class="icon"><i class="fa fa-check"></i></span><br>
-Other clocks: <span class="icon"><i class="fa fa-times"></i></span></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Only <a href="#SynchronousClocks">Synchronous Clocks</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Only <a href="#SynchronousClocks">Synchronous Clocks</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Only <a href="#CommunicationPointClocks">Communication Point Clocks</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Direct Feedthrough</p></td>
@@ -2486,7 +2485,7 @@ First the two different clock types are presented with the mathematical definiti
 After that the two clock variants are described. The section ends with a short description of connecting clocked FMUs.</p>
 </div>
 <div class="sect4">
-<h5 id="_synchronous_clocks">2.1.9.1. Synchronous Clocks</h5>
+<h5 id="SynchronousClocks">2.1.9.1. Synchronous Clocks</h5>
 <div class="paragraph">
 <p>A clocked partition is a set of equations that are associated to a <a href="#clock"><code>clock</code></a> and are executed when the corresponding <a href="#clock"><code>clock</code></a> is active.
 A clocked partition is mathematically defined as:</p>
@@ -10533,7 +10532,7 @@ Typically, hardware I/O or virtual ECU software events belong to this category.<
 </div>
 <div class="paragraph">
 <p>The result values will be computed for the current <a href="#clock"><code>clock</code></a> tick time (activation time) \(t_i\) from the assigned <a href="#inputClock"><code>inputClock</code></a> (which is known to the simulation algorithm).
-Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 5.1.1</a>) for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a>.</p>
+Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<a href="#CommunicationPointClocks">Section 5.1.1</a>) for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>If required, the FMU can internally derive the <a href="#clock"><code>clock</code></a> interval \(\Delta T_i\) based on the last <a href="#clock"><code>clock</code></a> tick time \(t_{i-1}\) i.e. last activation time for this model partition.</p>
@@ -10546,7 +10545,7 @@ Refer to the <a href="#clock"><code>clock</code></a> time progress definition (<
 The activation of such an <a href="#outputClock"><code>outputClock</code></a> is not controlled by the simulation algorithm but internally by the FMU.</p>
 </div>
 <div class="sect3">
-<h4 id="clock-types-for-evaluation-of-clocked-model-partitions">5.1.1. Communication Point Clocks</h4>
+<h4 id="CommunicationPointClocks">5.1.1. Communication Point Clocks</h4>
 <div class="paragraph">
 <p>Communication Point Clocks, introduced here, are used only in Co-Simulation and Scheduled Execution to define the communication points of model partitions (defined below).
 These <a href="#clock"><code>clocks</code></a> are not compatible with synchronous clocks theory and must not be used together with synchronous clocks in one model.</p>
@@ -10720,7 +10719,7 @@ Using the element index 0 means all elements of the <a href="#clock"><code>clock
 Calls are based on ticks of <a href="#periodic"><code>periodic</code></a> or <a href="#periodic">aperiodic</a> <a href="#inputClock"><code>input clocks</code></a>.
 These <a href="#inputClock"><code>inputClock</code></a> ticks can be based on <a href="#clock"><code>clock</code></a> ticks from FMU external sources (e.g. <a href="#outputClock"><code>output clocks</code></a> of other FMUs) or other external <a href="#clock"><code>clocks</code></a>/events/interrupts assigned via the simulation algorithm configuration (such external events can be based on a potentially unpredictable process or can be just simulation time based events e.g. the planned communication point).
 The <a href="#inputClock"><code>inputClock</code></a> ticks can also be based on <a href="#outputClock"><code>output clock</code></a> ticks of the same FMU.
-Refer to <a href="#math-scheduled-execution">Section 5.1</a> and <a href="#clock-types-for-evaluation-of-clocked-model-partitions">Section 5.1.1</a>.
+Refer to <a href="#math-scheduled-execution">Section 5.1</a> and <a href="#CommunicationPointClocks">Section 5.1.1</a>.
 The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function is not called for <a href="#outputClock"><code>output clocks</code></a> of an FMU.</p>
 </div>
 <div class="paragraph">
