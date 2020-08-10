@@ -9276,23 +9276,23 @@ Since the FMU itself can detect such changes, the co-simulation algorithm does n
 <div class="title">Figure 24. Different possibilities to synchronize parallel FMUs at the same event time.</div>
 </div>
 <div class="paragraph">
-<p><em>Each FMU starts integration from communication point \(t_{i}\) to reach the next communication point \(t_{i+1}\).</em>
-<em>Assuming an unexpected internal event is detected at</em> \(t^{'}_{i+1}&lt; t_{i+1}\) <em>during FMU<sub>1</sub> integration, the co-simulation algorithm is informed of this early return.</em>
-<em>Now the co-simulation algorithm would like to avoid other FMUs exceed the event time, since all FMUs should be resynchronized at the event time which will be the next new communication point.</em></p>
+<p><em>Each FMU starts integration from communication point</em> \(t_{i}\) <em>to reach the next communication point</em> \(t_{i+1}\) <em>.</em>
+<em>Assuming an unexpected internal event is detected at</em> \(t^{'}_{i+1}&lt; t_{i+1}\) <em>inside FMU<sub>1</sub> , the FMU immediately informs the co-simulation algorithm and asks for an early return.</em>
+<em>Since all FMUs should be resynchronized at the event time which will be the next new communication point, the co-simulation algorithm would like to avoid other FMUs exceed the event time.</em></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><em>In the case of FMU<sub>1</sub>, the internal event time becomes the new</em> \(t_{i+1}\) <em>time, i.e. this is the source of the event.</em></p>
+<p><em>In the case of FMU<sub>1</sub>, the FMU waits to get pushed into the event mode to handle the event at</em> \(t^{'}_{i+1}\) <em>.</em></p>
 </li>
 <li>
-<p><em>In the case of FMU<sub>2</sub>, a complete rollback from</em> \(t_{i}\) <em>to</em> \(t^{'}_{i+1}\) <em>is necessary.</em></p>
+<p><em>In the case of FMU<sub>2</sub>, since this FMU has already reached</em> \(t_{i+1}\) <em>, a complete rollback and a new co-simulation from</em> \(t_{i}\) <em>to</em> \(t^{'}_{i+1}\) <em>is necessary.</em></p>
 </li>
 <li>
-<p><em>In the case of FMU<sub>3</sub>, computation is immediately interrupted and only a partial rollback is necessary to reach \(t^{'}_{i+1}\) time.</em></p>
+<p><em>In the case of FMU<sub>3</sub>, computation is immediately interrupted and only a partial rollback is necessary to reach</em> \(t^{'}_{i+1}\) <em>time.</em></p>
 </li>
 <li>
-<p><em>In the case of FMU<sub>4</sub>, the current step integration has been interrupted at</em> \(t^{'}_{i+1}\) <em>and no rollback is necessary.</em></p>
+<p><em>In the case of FMU<sub>4</sub>, the master immediately requests FMU<sub>4</sub> an early return at</em> \(t^{'}{i+1}\) <em>and the current integration step will been interrupted at</em> \(t^{'}{i+1}\) <em>and no rollback is necessary for FMU<sub>4</sub>.</em></p>
 </li>
 </ul>
 </div>
