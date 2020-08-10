@@ -615,34 +615,48 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_platform_dependent_definitions">2.1.2. Platform Dependent Definitions</a></li>
 <li><a href="#status-returned-by-functions">2.1.3. Status Returned by Functions</a></li>
 <li><a href="#inquire-platform-and-version-number">2.1.4. Inquire Platform and Version Number of Header Files</a></li>
-<li><a href="#creation-destruction-and-logging">2.1.5. Creation, Destruction and Logging</a></li>
-<li><a href="#_configuration_initialization_termination_and_resetting">2.1.6. Configuration, Initialization, Termination and Resetting</a></li>
-<li><a href="#get-and-set-variable-values">2.1.7. Getting and Setting Variable Values</a></li>
-<li><a href="#advancing-time">2.1.8. Advancing Time</a></li>
-<li><a href="#operation-on-clocks">2.1.9. Operation on Clocks</a>
+<li><a href="#state-machine-and-common-states">2.1.5. State Machines and Common States</a>
 <ul class="sectlevel4">
-<li><a href="#SynchronousClocks">2.1.9.1. Synchronous Clocks</a></li>
-<li><a href="#variants-of-clocks">2.1.9.2. Variants of Clocks</a>
+<li><a href="#FMUStateSetable">2.1.5.1. Super State: FMU State Setable</a></li>
+<li><a href="#UnderEvaluation">2.1.5.2. Super State: Under Evaluation</a>
 <ul class="sectlevel5">
-<li><a href="#_output_clocks">2.1.9.2.1. Output Clocks</a></li>
-<li><a href="#_input_clocks">2.1.9.2.2. Input Clocks</a></li>
+<li><a href="#Instantiated">2.1.5.2.1. State: Instantiated</a></li>
+<li><a href="#ConfigurationMode">2.1.5.2.2. State: Configuration Mode</a></li>
+<li><a href="#ReconfigurationMode">2.1.5.2.3. State: Reconfiguration Mode</a></li>
+<li><a href="#InitializationMode">2.1.5.2.4. State: Initialization Mode</a></li>
+<li><a href="#Initialized">2.1.5.2.5. Super State: Initialized</a></li>
 </ul>
 </li>
-<li><a href="#periodic-clock-ticks">2.1.9.3. Periodic Clock Ticks</a></li>
-<li><a href="#connecting-clocked-fmus">2.1.9.4. Connecting Clocked FMUs</a></li>
-<li><a href="#fmi-api-setting-getting-clock-activation-state">2.1.9.5. Setting and Getting Clock Activation State</a></li>
+<li><a href="#Terminated">2.1.5.3. State: Terminated</a></li>
+<li><a href="#IntermediateUpdateMode">2.1.5.4. State: Intermediate Update Mode</a></li>
 </ul>
 </li>
-<li><a href="#get-set-fmu-state">2.1.10. Getting and Setting the Complete FMU State</a></li>
-<li><a href="#_getting_partial_derivatives">2.1.11. Getting Partial Derivatives</a>
+<li><a href="#get-and-set-variable-values">2.1.6. Getting and Setting Variable Values</a></li>
+<li><a href="#advancing-time">2.1.7. Advancing Time</a></li>
+<li><a href="#operation-on-clocks">2.1.8. Operation on Clocks</a>
 <ul class="sectlevel4">
-<li><a href="#_directional_derivatives">2.1.11.1. Directional Derivatives</a></li>
-<li><a href="#_adjoint_derivatives">2.1.11.2. Adjoint Derivatives</a></li>
+<li><a href="#SynchronousClocks">2.1.8.1. Synchronous Clocks</a></li>
+<li><a href="#variants-of-clocks">2.1.8.2. Variants of Clocks</a>
+<ul class="sectlevel5">
+<li><a href="#_output_clocks">2.1.8.2.1. Output Clocks</a></li>
+<li><a href="#_input_clocks">2.1.8.2.2. Input Clocks</a></li>
 </ul>
 </li>
-<li><a href="#_getting_number_of_event_indicators">2.1.12. Getting Number of Event Indicators</a></li>
-<li><a href="#_getting_number_of_states">2.1.13. Getting Number of States</a></li>
-<li><a href="#_getting_number_of_variable_dependencies_and_variable_dependencies">2.1.14. Getting Number of Variable Dependencies and Variable Dependencies</a></li>
+<li><a href="#periodic-clock-ticks">2.1.8.3. Periodic Clock Ticks</a></li>
+<li><a href="#connecting-clocked-fmus">2.1.8.4. Connecting Clocked FMUs</a></li>
+<li><a href="#fmi-api-setting-getting-clock-activation-state">2.1.8.5. Setting and Getting Clock Activation State</a></li>
+</ul>
+</li>
+<li><a href="#get-set-fmu-state">2.1.9. Getting and Setting the Complete FMU State</a></li>
+<li><a href="#_getting_partial_derivatives">2.1.10. Getting Partial Derivatives</a>
+<ul class="sectlevel4">
+<li><a href="#_directional_derivatives">2.1.10.1. Directional Derivatives</a></li>
+<li><a href="#_adjoint_derivatives">2.1.10.2. Adjoint Derivatives</a></li>
+</ul>
+</li>
+<li><a href="#_getting_number_of_event_indicators">2.1.11. Getting Number of Event Indicators</a></li>
+<li><a href="#_getting_number_of_states">2.1.12. Getting Number of States</a></li>
+<li><a href="#_getting_number_of_variable_dependencies_and_variable_dependencies">2.1.13. Getting Number of Variable Dependencies and Variable Dependencies</a></li>
 </ul>
 </li>
 <li><a href="#fmi-description-schema">2.2. FMI Description Schema</a>
@@ -747,13 +761,8 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#evaluation-of-model-equations">3.2.2. Evaluation of Model Equations</a></li>
 <li><a href="#state-machine-model-exchange">3.2.3. State Machine for Model Exchange</a>
 <ul class="sectlevel4">
-<li><a href="#_state_instantiated">3.2.3.1. State: Instantiated</a></li>
-<li><a href="#_state_configuration_mode">3.2.3.2. State: Configuration Mode</a></li>
-<li><a href="#_state_initialization_mode">3.2.3.3. State: Initialization Mode</a></li>
-<li><a href="#_state_continuous_time_mode">3.2.3.4. State: Continuous-Time Mode</a></li>
-<li><a href="#_state_event_mode">3.2.3.5. State: Event Mode</a></li>
-<li><a href="#_state_reconfiguration_mode">3.2.3.6. State: Reconfiguration Mode</a></li>
-<li><a href="#_state_terminated">3.2.3.7. State: Terminated</a></li>
+<li><a href="#_state_event_mode">3.2.3.1. State: Event Mode</a></li>
+<li><a href="#_state_continuous_time_mode">3.2.3.2. State: Continuous-Time Mode</a></li>
 </ul>
 </li>
 <li><a href="#_code_example">3.2.4. Code Example</a></li>
@@ -794,20 +803,11 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#state-machine-co-simulation">4.2.8. State Machine for Co-Simulation</a>
 <ul class="sectlevel4">
-<li><a href="#state-fmu-state-setable-co-simulation">4.2.8.1. State: FMU State Setable</a></li>
-<li><a href="#state-under-evaluation-co-simulation">4.2.8.2. State: Under Evaluation</a></li>
-<li><a href="#state-initialized-co-simulation">4.2.8.3. State: Initialized</a></li>
-<li><a href="#state-instantiated-co-simulation">4.2.8.4. State: Instantiated</a></li>
-<li><a href="#state-initialization-mode-co-simulation">4.2.8.5. State: Initialization Mode</a></li>
-<li><a href="#state-step-mode-co-simulation">4.2.8.6. State: Step Mode</a></li>
-<li><a href="#_state_event_mode_2">4.2.8.7. State: Event Mode</a></li>
-<li><a href="#state-reconfiguration-mode-co-simulation">4.2.8.8. State: Reconfiguration Mode</a></li>
-<li><a href="#state-intermediate-update-mode-co-simulation">4.2.8.9. State: Intermediate Update Mode</a></li>
-<li><a href="#state-terminated-co-simulation">4.2.8.10. State: Terminated</a></li>
-<li><a href="#state-configuration-mode-co-simulation">4.2.8.11. State: Configuration Mode</a></li>
+<li><a href="#state-step-mode-co-simulation">4.2.8.1. State: Step Mode</a></li>
+<li><a href="#_state_event_mode_2">4.2.8.2. State: Event Mode</a></li>
 </ul>
 </li>
-<li><a href="#_code_example_for_simplest_co_simulation">4.2.9. Code Example for Simplest Co-Simulation</a></li>
+<li><a href="#_code_example_for_co_simulation">4.2.9. Code Example for Co-Simulation</a></li>
 <li><a href="#code-example-clocked-co-simulation">4.2.10. Code Example for Clocks</a></li>
 </ul>
 </li>
@@ -843,12 +843,9 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_computation_in_scheduled_execution">5.2.2. Computation in Scheduled Execution</a></li>
 <li><a href="#state-machine-scheduled-execution">5.2.3. State Machine for Scheduled Execution</a>
 <ul class="sectlevel4">
-<li><a href="#_state_fmu_state_setable">5.2.3.1. State: FMU State Setable</a></li>
-<li><a href="#_state_under_evaluation">5.2.3.2. State: Under Evaluation</a></li>
-<li><a href="#_state_initialized">5.2.3.3. State: Initialized</a></li>
-<li><a href="#_state_clock_activation_mode">5.2.3.4. State: Clock Activation Mode</a></li>
-<li><a href="#_state_intermediate_update_mode">5.2.3.5. State: Intermediate Update Mode</a></li>
-<li><a href="#_state_reconfiguration_mode_2">5.2.3.6. State: Reconfiguration Mode</a></li>
+<li><a href="#Initialized-SE">5.2.3.1. Super State: Initialized</a></li>
+<li><a href="#_state_clock_activation_mode">5.2.3.2. State: Clock Activation Mode</a></li>
+<li><a href="#_state_intermediate_update_mode">5.2.3.3. State: Intermediate Update Mode</a></li>
 </ul>
 </li>
 <li><a href="#preemption-support">5.2.4. Preemption Support</a></li>
@@ -1580,7 +1577,7 @@ This data structure is implemented by the environment that provides the FMU; in 
 </div>
 <div class="paragraph">
 <p>This is a pointer to a data structure in the calling environment.
-Using this pointer, data from the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file <em>[for example, mapping of <a href="#valueReference">value references</a> to variable names]</em> can be transferred between the simulation environment and the <a href="#logMessage"><code>logMessage</code></a> function (see <a href="#creation-destruction-and-logging">Section 2.1.5</a>).</p>
+Using this pointer, data from the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file <em>[for example, mapping of <a href="#valueReference">value references</a> to variable names]</em> can be transferred between the simulation environment and the <a href="#logMessage"><code>logMessage</code></a> function (see <a href="#FMUStateSetable">Section 2.1.5.1</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1589,7 +1586,7 @@ Using this pointer, data from the <a href="#modelDescription.xml"><code>modelDes
 </div>
 <div class="paragraph">
 <p>This is a pointer to a data structure in the FMU that saves the internal FMU state of the actual or a previously saved time instant.
-This allows to restart a simulation from a saved FMU state (see <a href="#get-set-fmu-state">Section 2.1.10</a>).</p>
+This allows to restart a simulation from a saved FMU state (see <a href="#get-set-fmu-state">Section 2.1.9</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1754,9 +1751,34 @@ The standard header file as documented in this specification has version <code>"
 </div>
 </div>
 <div class="sect3">
-<h4 id="creation-destruction-and-logging">2.1.5. Creation, Destruction and Logging</h4>
+<h4 id="state-machine-and-common-states">2.1.5. State Machines and Common States</h4>
 <div class="paragraph">
-<p>This section documents functions that deal with instantiation, destruction and logging of FMUs.</p>
+<p>All FMI interface types share a number of states in their respective state machines.
+This chapter describes these common modes.
+FMI specific state-machine modes will be described in their respective chapters.</p>
+</div>
+<div id="figure-common-state-machine" class="imageblock text-center">
+<div class="content">
+<img src="images/state-machines-common-states.svg" alt="state machines common states" width="80%">
+</div>
+<div class="title">Figure 2. Common calling sequence for C functions of common states for all three FMI types.</div>
+</div>
+<div class="sect4">
+<h5 id="FMUStateSetable">2.1.5.1. Super State: FMU State Setable</h5>
+<div class="paragraph">
+<p>The description of the super state <strong>FMU State Setable</strong> generally describes functions that deal with instantiation, destruction and logging of FMUs.</p>
+</div>
+<div class="paragraph">
+<p>This state is entered when any of the following functions is called: <a href="#fmi3InstantiateModelExchange"><code>fmi3InstantiateModelExchange</code></a>, <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> and <a href="#fmi3InstantiateScheduledExecution"><code>fmi3InstantiateScheduledExecution</code></a>.
+The state is left by either calling <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a> or when any of the functions called during <strong>FMU State Setable</strong> returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dd>
+<p>In all states of this super state it is allowed to call <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <code>fmi3SetFMUState</code>, <code>fmi3FreeFMUState</code>, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a>, <a href="#fmi3Reset"><code>fmi3Reset</code></a>, <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a>, <code>fmi3SetDebugLogging</code> and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a>.</p>
+</dd>
+</dl>
 </div>
 <div id="fmi3Instantiate" class="listingblock">
 <div class="content">
@@ -2042,10 +2064,20 @@ Depending on the generating modeling environment, none, some or all allowed valu
 </ul>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_configuration_initialization_termination_and_resetting">2.1.6. Configuration, Initialization, Termination and Resetting</h4>
+<div class="sect4">
+<h5 id="UnderEvaluation">2.1.5.2. Super State: Under Evaluation</h5>
 <div class="paragraph">
 <p>This section documents functions that deal with configuration, initialization, termination, and resetting of an FMU.</p>
+</div>
+<div class="paragraph">
+<p>This super state is entered by the FMU when <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> was called and returned successfully.
+If any function called in super state <strong>Under Evaluation</strong> returns <a href="#fmi3Error"><code>fmi3Error</code></a>, the FMU enters state <strong>Terminated</strong>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1"><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
+</dl>
 </div>
 <div id="fmi3EnterConfigurationMode" class="listingblock">
 <div class="content">
@@ -2055,6 +2087,11 @@ Depending on the generating modeling environment, none, some or all allowed valu
 <div class="paragraph">
 <p>Informs the FMU to enter the <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong>.</p>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a></dt>
+</dl>
+</div>
 <div id="fmi3ExitConfigurationMode" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitConfigurationModeTYPE(fmi3Instance instance);</code></pre>
@@ -2062,6 +2099,11 @@ Depending on the generating modeling environment, none, some or all allowed valu
 </div>
 <div class="paragraph">
 <p>Informs the FMU to exit the <strong>Configuration Mode</strong> or <strong>Reconfiguration Mode</strong>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a></dt>
+</dl>
 </div>
 <div id="fmi3EnterInitializationMode" class="listingblock">
 <div class="content">
@@ -2113,17 +2155,27 @@ If <code>stopTimeDefined == fmi3False</code>, then no final value of the <a href
 <div class="paragraph">
 <p><em>[If the <a href="#independent"><code>independent</code></a> variable is <code>time</code>, <code>stopTime</code> is the stop time of the simulation.]</em></p>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a></dt>
+</dl>
+</div>
 </li>
 </ul>
 </div>
-<div id="fmi3ExitInitializationMode" class="listingblock">
+<div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitInitializationModeTYPE(fmi3Instance instance);</code></pre>
+<pre>typedef fmi3Status fmi3ExitInitializationModeTYPE(fmi3Instance instance);</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Informs the FMU to exit <strong>Initialization Mode</strong>.
 This function switches off all initialization equations, and the FMU enters <strong>Event Mode</strong> for Model Exchange, <strong>Step Mode</strong> for Co-Simulation and <strong>Clock Activation Mode</strong> for Scheduled Execution.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#fmi3Terminate"><code>fmi3Terminate</code></a></dt>
+</dl>
 </div>
 <div id="fmi3Terminate" class="listingblock">
 <div class="content">
@@ -2134,6 +2186,11 @@ This function switches off all initialization equations, and the FMU enters <str
 <p>Informs the FMU that the simulation run is terminated.
 After calling this function, the final values of all variables can be inquired with the <code>fmi3Get{VariableType}</code> functions.
 It is not allowed to call this function after one of the functions returned with a status flag of <a href="#fmi3Error"><code>fmi3Error</code></a> or <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#fmi3Reset"><code>fmi3Reset</code></a></dt>
+</dl>
 </div>
 <div id="fmi3Reset" class="listingblock">
 <div class="content">
@@ -2146,9 +2203,188 @@ The FMU goes into the same state as if <a href="#fmi3Instantiate"><code>fmi3Inst
 All variables have their default values.
 Before starting a new run <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> has to be called.</p>
 </div>
+<div class="sect5">
+<h6 id="Instantiated">2.1.5.2.1. State: Instantiated</h6>
+<div class="paragraph">
+<p>In this state the FMU can do one-time initializations and allocate memory.
+This state is entered after <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> returned successfully.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre> &lt;&lt;start&gt;&gt; and guess values (variables that have &lt;&lt;initial&gt;&gt; = &lt;&lt;exact&gt;&gt; or &lt;&lt;approx&gt;&gt;) can be set and all variables with &lt;&lt;variability&gt;&gt; latexmath:[\neq] &lt;&lt;constant&gt;&gt; can be set.
+This does not include inputs as they do not have an &lt;&lt;initial&gt;&gt; attribute.</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1"><a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a></dt>
+<dd>
+<p>Change state of FMU to <strong>Initialization Mode</strong>.</p>
+</dd>
+<dt class="hdlist1"><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
+<dd>
+<p>Change state of FMU to <strong>Configuration Mode</strong>.</p>
+</dd>
+<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
+<dd>
+<p>For variables with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> and for which <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>.
+The intention is to set <a href="#start"><code>start</code></a> and guess values for these variables.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="ConfigurationMode">2.1.5.2.2. State: Configuration Mode</h6>
+<div class="paragraph">
+<p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a> or <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
+This state is entered from state <strong>Instantiated</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Instantiated</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.
+<a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> can only be called if the FMU contains at least one <a href="#structuralParameter"><code>structural parameter</code></a></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1"><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a></dt>
+<dd>
+<p>With this function call, the FMU is returned to state <strong>Instantiated</strong>.</p>
+</dd>
+<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
+<dd>
+<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a> or <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="ReconfigurationMode">2.1.5.2.3. State: Reconfiguration Mode</h6>
+<div class="paragraph">
+<p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
+This state is entered from state <strong>Event Mode</strong> (ME), <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE) by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>.
+<a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> can only be called if the FMU contains at least one <a href="#structuralParameter"><code>structural parameter</code></a>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1"><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a></dt>
+<dd>
+<p>Returns back to <strong>Event Mode</strong> (ME), <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE).</p>
+</dd>
+<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
+<dd>
+<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="InitializationMode">2.1.5.2.4. State: Initialization Mode</h6>
+<div class="paragraph">
+<p>This mode is used by the simulation algorithm to compute consistent initial conditions for overall system.
+Equations are active to determine the initial FMU state, as well as all <a href="#output"><code>outputs</code></a> (and optionally other variables exposed by the exporting tool).
+Artificial or real algebraic loops over connected FMUs in <strong>Initialization Mode</strong> may be handled by using appropriate numerical algorithms.
+The variables that can be retrieved by <code>fmi3Get{VariableType}</code> calls are (1) defined in the XML file as elements <code>&lt;ModelStructure&gt;&lt;InitialUnknown&gt;</code> and (2) variables with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.
+Variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a>, as well as variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> can be set.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dd>
+<p><a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a>::<a id="fmi3ExitInitializationMode"></a>
+This function call changes the state of the FMU to the start state of the super state <strong>Initialized</strong> which is either <strong>Continuous-Time Mode</strong> (ME), <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE).</p>
+</dd>
+<dt class="hdlist1"><a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
+<dd>
+<p>For variables with:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> that have <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, or</p>
+</li>
+<li>
+<p><a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, or</p>
+</li>
+<li>
+<p><a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>fmi3Get{VariableType}</code></dt>
+<dd>
+<p>For variables with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> or continuous-time <a href="#state"><code>states</code></a> or state derivatives.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="Initialized">2.1.5.2.5. Super State: Initialized</h6>
+<div class="paragraph">
+<p>This super state is entered by the FMU when <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> is called.
+If the function <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> is called, the FMU enters state <strong>Terminated</strong> from all states of this super state.
+If any function returns <a href="#fmi3Error"><code>fmi3Error</code></a> in <strong>Initialized</strong>, the FMU switches to state <strong>Terminated</strong>.</p>
+</div>
+<div class="paragraph">
+<p>The states of this super state differ between the FMI types and will be described in detail in their respective chapters (except <strong>Reconfiguration Mode</strong>).</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="Terminated">2.1.5.3. State: Terminated</h5>
+<div class="paragraph">
+<p>In this state, the solution at the final time of a simulation can be retrieved.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dd>
+<p><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="IntermediateUpdateMode">2.1.5.4. State: Intermediate Update Mode</h5>
+<div class="paragraph">
+<p>The FMU enters this state when the FMU calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> in state <strong>Step Mode</strong> (CS) or in state <strong>Clock Activation Mode</strong> (SE).
+When the callback function returns, the FMU returns to <strong>Step Mode</strong> (CS) or to <strong>Clock Activation Mode</strong> (SE).</p>
+</div>
+<div class="paragraph">
+<p>In this state the co-simulation algorithm can retrieve information from the FMU between communication points.
+This state is only available in Co-Simulation and Scheduled Execution.
+Functions called in this state must not return <a href="#fmi3Discard"><code>fmi3Discard</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>The FMU enters this state by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> within <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> (CS) or <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (SE) and leaves the state towards state <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE) if the function returns <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a>.
+If the function returns <a href="#fmi3Error"><code>fmi3Error</code></a> the FMU enters state <strong>Terminated</strong>.
+If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU enters the terminal state.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1"><code>fmi3Get{VariableType}</code></dt>
+<dd>
+<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the value of intermediate variables can be retrieved.
+Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+</dd>
+<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
+<dd>
+<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the value of intermediate, continuous variables should be set.
+Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>There is a defined order of calling these functions: first all <code>fmi3Get{VariableType}</code>  calls must be performed, then <code>fmi3Set{VariableType}</code> may be called.<br>
+<em>[This is analogous to the calling sequence of of</em> <code>fmi3Get{VariableType}</code> <em>and</em> <code>fmi3Set{VariableType}</code> <em>calls at communication points.]</em></p>
+</div>
+</div>
 </div>
 <div class="sect3">
-<h4 id="get-and-set-variable-values">2.1.7. Getting and Setting Variable Values</h4>
+<h4 id="get-and-set-variable-values">2.1.6. Getting and Setting Variable Values</h4>
 <div class="paragraph">
 <p>All variables of an FMU are identified with a handle called <a href="#valueReference">value reference</a>.
 The handle is defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file as attribute <a href="#valueReference"><code>valueReference</code></a> in variable elements.
@@ -2447,7 +2683,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 </div>
 </div>
 <div class="sect3">
-<h4 id="advancing-time">2.1.8. Advancing Time</h4>
+<h4 id="advancing-time">2.1.7. Advancing Time</h4>
 <div class="paragraph">
 <p>This section highlights the differences of the concept of time (in general the independent variable) for the three different FMI types, ME, CS and SE.</p>
 </div>
@@ -2474,7 +2710,7 @@ The following chapters will focus on what mechanisms are relevant for the interf
 </div>
 </div>
 <div class="sect3">
-<h4 id="operation-on-clocks">2.1.9. Operation on Clocks</h4>
+<h4 id="operation-on-clocks">2.1.8. Operation on Clocks</h4>
 <div class="paragraph">
 <p>In the following section the operations on <a href="#clock"><code>clocks</code></a> are described.
 Clocks are defined for the evaluation of clocked model partitions and the related definition of suitable communication points.
@@ -2486,7 +2722,7 @@ First the two different clock types are presented with the mathematical definiti
 After that the two clock variants are described. The section ends with a short description of connecting clocked FMUs.</p>
 </div>
 <div class="sect4">
-<h5 id="SynchronousClocks">2.1.9.1. Synchronous Clocks</h5>
+<h5 id="SynchronousClocks">2.1.8.1. Synchronous Clocks</h5>
 <div class="paragraph">
 <p>A clocked partition is a set of equations that are associated to a <a href="#clock"><code>clock</code></a> and are executed when the corresponding <a href="#clock"><code>clock</code></a> is active.
 A clocked partition is mathematically defined as:</p>
@@ -2540,12 +2776,12 @@ States get updated.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="variants-of-clocks">2.1.9.2. Variants of Clocks</h5>
+<h5 id="variants-of-clocks">2.1.8.2. Variants of Clocks</h5>
 <div class="paragraph">
 <p>This section gives a definition of the two clock variants.</p>
 </div>
 <div class="sect5">
-<h6 id="_output_clocks">2.1.9.2.1. Output Clocks</h6>
+<h6 id="_output_clocks">2.1.8.2.1. Output Clocks</h6>
 <div class="paragraph">
 <p>An <a href="#outputClock"><code>outputClock</code></a> is a general <a href="#clock"><code>clock</code></a> that ticks when a time-, state- or step-event occurs in the continuous-model partition of the FMU (for Communication Point Clocks these <a href="#outputClock"><code>outputClock</code></a> tick events can occur in all model partitions) and are identified based on their <a href="#valueReference"><code>valueReference</code></a>.
 The events can be <a href="#periodic"><code>periodic</code></a> or <a href="#periodic">aperiodic</a>.</p>
@@ -2567,7 +2803,7 @@ Additional cases need to be handled if a <a href="#clock"><code>clock</code></a>
 </div>
 </div>
 <div class="sect5">
-<h6 id="_input_clocks">2.1.9.2.2. Input Clocks</h6>
+<h6 id="_input_clocks">2.1.8.2.2. Input Clocks</h6>
 <div class="paragraph">
 <p>An <a href="#inputClock"><code>inputClock</code></a> is a <a href="#periodic"><code>periodic</code></a> or <a href="#periodic">aperiodic</a> <a href="#clock"><code>clock</code></a> that is defined by a <a href="#clock"><code>clock</code></a> outside of the FMU.
 Its interval is initialized by the environment.</p>
@@ -2582,7 +2818,7 @@ Its interval is initialized by the environment.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="periodic-clock-ticks">2.1.9.3. Periodic Clock Ticks</h5>
+<h5 id="periodic-clock-ticks">2.1.8.3. Periodic Clock Ticks</h5>
 <div class="paragraph">
 <p>Either <a href="#output"><code>output</code></a> or <a href="#input"><code>input</code></a>, a <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clock</code></a> ticks at equidistant sample time points that are known a priori (defined in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>) or are alternatively determined by the environment in case of <a href="#inputClock"><code>input clocks</code></a>.
 Mathematically, the next <a href="#clock"><code>clock</code></a> tick at time instant \(t_i\) is defined as:</p>
@@ -2631,7 +2867,7 @@ The <a href="#clock"><code>clock</code></a> is <a href="#periodic">aperiodic</a>
 </div>
 </div>
 <div class="sect4">
-<h5 id="connecting-clocked-fmus">2.1.9.4. Connecting Clocked FMUs</h5>
+<h5 id="connecting-clocked-fmus">2.1.8.4. Connecting Clocked FMUs</h5>
 <div class="paragraph">
 <p>When connecting imported FMUs together, <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a> variables can readily be connected together only when they are defined on a <a href="#clock"><code>clock</code></a> with identical properties.
 If this is not possible, an explicit cast of one <a href="#clock"><code>clock</code></a> to another <a href="#clock"><code>clock</code></a> is typically defined in the environment.</p>
@@ -2645,7 +2881,7 @@ If this is not possible, an explicit cast of one <a href="#clock"><code>clock</c
 </div>
 </div>
 <div class="sect4">
-<h5 id="fmi-api-setting-getting-clock-activation-state">2.1.9.5. Setting and Getting Clock Activation State</h5>
+<h5 id="fmi-api-setting-getting-clock-activation-state">2.1.8.5. Setting and Getting Clock Activation State</h5>
 <div class="paragraph">
 <p>A <a href="#clock"><code>clock</code></a> is activated by the environment for the current time instant by the function <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, and the status of a <a href="#clock"><code>clock</code></a> can be inquired with the function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>:</p>
 </div>
@@ -2802,7 +3038,7 @@ Repeated calls if recomputations of clock state are needed during <strong>Event 
 </div>
 </div>
 <div class="sect3">
-<h4 id="get-set-fmu-state">2.1.10. Getting and Setting the Complete FMU State</h4>
+<h4 id="get-set-fmu-state">2.1.9. Getting and Setting the Complete FMU State</h4>
 <div class="paragraph">
 <p>The FMU has an internal state consisting of all values that are needed to continue a simulation.
 This internal state consists especially of the values of the continuous-time states, iteration variables, <a href="#parameter"><code>parameter</code></a> values, <a href="#input"><code>input</code></a> values, delay buffers, file identifiers, and FMU internal status information.
@@ -2917,7 +3153,7 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_getting_partial_derivatives">2.1.11. Getting Partial Derivatives</h4>
+<h4 id="_getting_partial_derivatives">2.1.10. Getting Partial Derivatives</h4>
 <div class="paragraph">
 <p>It is optionally possible to provide evaluation of partial derivatives for an FMU.
 For Model Exchange, this means computing the partial derivatives at any time instant, whereas for Co-Simulation, this means computing the partial derivatives at a communication point.</p>
@@ -3076,7 +3312,7 @@ The functions may only be called if their availability is indicated by the attri
 <em>Likewise <code>nSensitivity</code> is only equal to <code>nUnknowns</code> (resp., <code>nKnowns</code>) if all value references of <code>unknowns</code> (resp., <code>knowns</code>) point to scalar variables.]</em></p>
 </div>
 <div class="sect4">
-<h5 id="_directional_derivatives">2.1.11.1. Directional Derivatives</h5>
+<h5 id="_directional_derivatives">2.1.10.1. Directional Derivatives</h5>
 <div id="example-directional-derivatives" class="paragraph">
 <p><em>[Example:</em><br>
 <em>Assume an FMU has the output equations</em></p>
@@ -3234,7 +3470,7 @@ e \Delta U(1,1)+f \Delta U(2,1), e \Delta U(1,2)+ f \Delta U(2,2)
 </div>
 </div>
 <div class="sect4">
-<h5 id="_adjoint_derivatives">2.1.11.2. Adjoint Derivatives</h5>
+<h5 id="_adjoint_derivatives">2.1.10.2. Adjoint Derivatives</h5>
 <div class="paragraph">
 <p><em>[Adjoint derivatives are beneficial in several contexts:</em></p>
 </div>
@@ -3298,7 +3534,7 @@ h_2(u_1, u_2)
 </div>
 </div>
 <div class="sect3">
-<h4 id="_getting_number_of_event_indicators">2.1.12. Getting Number of Event Indicators</h4>
+<h4 id="_getting_number_of_event_indicators">2.1.11. Getting Number of Event Indicators</h4>
 <div class="paragraph">
 <p>The number of event indicators can change during simulation if it depends on one or more <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> and can be retrieved after instantiating the FMU by calling:</p>
 </div>
@@ -3324,7 +3560,7 @@ If all <a href="#structuralParameter"><code>structural parameters</code></a> are
 </div>
 </div>
 <div class="sect3">
-<h4 id="_getting_number_of_states">2.1.13. Getting Number of States</h4>
+<h4 id="_getting_number_of_states">2.1.12. Getting Number of States</h4>
 <div class="paragraph">
 <p>The number of <a href="#state"><code>states</code></a> can change during simulation if it depends on one or more <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> and can be retrieved after instantiating the FMU by calling:</p>
 </div>
@@ -3351,7 +3587,7 @@ If all <a href="#structuralParameter"><code>structural parameters</code></a> are
 </div>
 </div>
 <div class="sect3">
-<h4 id="_getting_number_of_variable_dependencies_and_variable_dependencies">2.1.14. Getting Number of Variable Dependencies and Variable Dependencies</h4>
+<h4 id="_getting_number_of_variable_dependencies_and_variable_dependencies">2.1.13. Getting Number of Variable Dependencies and Variable Dependencies</h4>
 <div class="paragraph">
 <p>The sparseness information within arrays is not given in the xml description.
 The sparseness muss be retrieved during run-time using the C-API functions.
@@ -3444,8 +3680,8 @@ It is filled in by this function with the enumeration value describing the depen
 </ul>
 </div>
 <div class="paragraph">
-<p>If this function is called before the <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> call, it returns the initial dependencies.
-If this function is called after the <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> call, it returns the run-time dependencies.
+<p>If this function is called before the <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> call, it returns the initial dependencies.
+If this function is called after the <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> call, it returns the run-time dependencies.
 The retrieved dependency information of one variable becomes invalid as soon as a <a href="#structuralParameter"><code>structural parameter</code></a> linked to the variable or to any of its depending variables are set.
 As a consequence, if you change <a href="#structuralParameter"><code>structural parameters</code></a> affecting B or A, the dependency of B becomes invalid.
 The dependency information must change only if <a href="#structuralParameter"><code>structural parameters</code></a> are changed.</p>
@@ -3476,7 +3712,7 @@ These schema files utilize several helper schema files.</p>
 <div class="paragraph">
 <p>In this section these schema files are discussed.
 The normative definition are the above mentioned schema files.
-In the graphical representation of the schema, optional elements are marked with a dashed box (e.g., see <a href="#figure-schema-Annotations">Figure 2</a>).
+In the graphical representation of the schema, optional elements are marked with a dashed box (e.g., see <a href="#figure-schema-Annotations">Figure 3</a>).
 The required data types (like: <code>xs:normalizedString</code>) are defined in <a href="https://www.w3.org/TR/xmlschema-2/">XML Schema Part 2: Datatypes Second Edition</a>.
 The types used in the FMI schema files are:</p>
 </div>
@@ -3620,7 +3856,7 @@ This is achieved through the <code>Annotations</code> element:</p>
 <div class="content">
 <img src="images/schema/Annotations.png" alt="Annotations" width="80%">
 </div>
-<div class="title">Figure 2. Annotations Element.</div>
+<div class="title">Figure 3. Annotations Element.</div>
 </div>
 <div class="paragraph">
 <p>Each <code>Annotation</code> element contains a required <code>type</code> attribute, which contains the namespace for that annotation.
@@ -3643,14 +3879,14 @@ All annotations can safely be ignored by implementations that just implement the
 <div class="sect3">
 <h4 id="fmiModelDescription">2.2.1. Definition of an FMU</h4>
 <div class="paragraph">
-<p>This is the root-level schema file and is illustrated in <a href="#system_overview">Figure 3</a>. The figure contains all elements in the schema file.
+<p>This is the root-level schema file and is illustrated in <a href="#system_overview">Figure 4</a>. The figure contains all elements in the schema file.
 Data is defined by attributes to these elements.</p>
 </div>
 <div id="system_overview" class="imageblock">
 <div class="content">
 <img src="images/schema/fmiModelDescription.png" alt="fmiModelDescription" width="70%">
 </div>
-<div class="title">Figure 3. fmiModelDescription element.</div>
+<div class="title">Figure 4. fmiModelDescription element.</div>
 </div>
 <div class="paragraph">
 <p>On the top level, the schema consists of the elements detailed in <a href="#table-schema-fmiModelDescription">Table 2</a>.
@@ -4118,37 +4354,37 @@ Furthermore, <code>name</code> of a <code>&lt;TypeDefinition&gt;</code> must be 
 <div class="paragraph">
 <p>Additionally, one variable type element must be present.
 Each variable type has its own attributes which can be consulted in the schema.
-<a href="#figure-schema-Float64Type">Figure 4</a>, <a href="#figure-schema-Int32Type">Figure 5</a>, <a href="#figure-schema-BooleanType">Figure 6</a>, <a href="#figure-schema-BinaryType">Figure 7</a>, and <a href="#figure-schema-EnumerationType">Figure 8</a>, are representative examples.</p>
+<a href="#figure-schema-Float64Type">Figure 5</a>, <a href="#figure-schema-Int32Type">Figure 6</a>, <a href="#figure-schema-BooleanType">Figure 7</a>, <a href="#figure-schema-BinaryType">Figure 8</a>, and <a href="#figure-schema-EnumerationType">Figure 9</a>, are representative examples.</p>
 </div>
 <div id="figure-schema-Float64Type" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Float64Type.png" alt="Float64Type" width="60%">
 </div>
-<div class="title">Figure 4. Float64Type element.</div>
+<div class="title">Figure 5. Float64Type element.</div>
 </div>
 <div id="figure-schema-Int32Type" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Int32Type.png" alt="Int32Type" width="50%">
 </div>
-<div class="title">Figure 5. Int32Type element.</div>
+<div class="title">Figure 6. Int32Type element.</div>
 </div>
 <div id="figure-schema-BooleanType" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/BooleanType.png" alt="BooleanType" width="50%">
 </div>
-<div class="title">Figure 6. BooleanType element.</div>
+<div class="title">Figure 7. BooleanType element.</div>
 </div>
 <div id="figure-schema-BinaryType" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/BinaryType.png" alt="BinaryType" width="70%">
 </div>
-<div class="title">Figure 7. BinaryType element.</div>
+<div class="title">Figure 8. BinaryType element.</div>
 </div>
 <div id="figure-schema-EnumerationType" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/EnumerationType.png" alt="EnumerationType" width="75%">
 </div>
-<div class="title">Figure 8. EnumerationType element.</div>
+<div class="title">Figure 9. EnumerationType element.</div>
 </div>
 <div class="paragraph">
 <p>The type elements are referred to in variable elements to declare their type.
@@ -4341,7 +4577,7 @@ The FMU exporter is not allowed to set <code>strict</code> to <code>true</code> 
 <p class="tableblock">The initial tick of <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a> may be delayed by defining a <code>shiftCounter</code> (default value 0). This results in the actual</p>
 <p class="tableblock"><code>offset = interval * shiftCounter / resolution</code>.</p>
 <p class="tableblock">More information about clock intervals:
- <a href="#periodic-clock-ticks">Section 2.1.9.3</a>.</p>
+ <a href="#periodic-clock-ticks">Section 2.1.8.3</a>.</p>
 <p class="tableblock">The attributes <code>intervalCounter</code>, <code>shiftCounter</code> and <code>resolution</code> are interval <a href="#start"><code>start</code></a> values for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a> and must not be used together with <a href="#periodic">aperiodic</a> <a href="#clock"><code>clocks</code></a>.
 If <code>strict = true</code> it is required to provide values for <code>intervalCounter</code>, <code>shiftCounter</code> and <code>resolution</code>.</p>
 <p class="tableblock"><code>intervalCounter</code> and <code>resolution</code> have no default value.</p></td>
@@ -4366,7 +4602,7 @@ If <code>strict = true</code> it is required to provide values for <code>interva
 </div>
 </div>
 <div class="paragraph">
-<p><code>&lt;LogCategories&gt;</code> defines an unordered set of category strings that can be utilized to define the log output via function <a href="#logMessage"><code>logMessage</code></a>, see <a href="#creation-destruction-and-logging">Section 2.1.5</a>.
+<p><code>&lt;LogCategories&gt;</code> defines an unordered set of category strings that can be utilized to define the log output via function <a href="#logMessage"><code>logMessage</code></a>, see <a href="#FMUStateSetable">Section 2.1.5.1</a>.
 A tool is free to use any <code>normalizedString</code> for a category value.
 The <code>name</code> attribute of <code>&lt;Category&gt;</code> must be unique with respect to all other elements of the <code>&lt;LogCategories&gt;</code> list.</p>
 </div>
@@ -4474,10 +4710,10 @@ Furthermore, for Co-Simulation FMUs the <code>stepSize</code> defines the prefer
 <div class="content">
 <img src="images/schema/fmiTerminalsAndIcons.png" alt="fmiTerminalsAndIcons" width="60%">
 </div>
-<div class="title">Figure 9. Overview of fmiTerminalsAndIcons.</div>
+<div class="title">Figure 10. Overview of fmiTerminalsAndIcons.</div>
 </div>
 <div class="paragraph">
-<p>On the top level, the schema consists of the following elements (see <a href="#terminals_and_icons_overview">Figure 9</a>).</p>
+<p>On the top level, the schema consists of the following elements (see <a href="#terminals_and_icons_overview">Figure 10</a>).</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -4984,10 +5220,10 @@ It provides the static information of all exposed variables and is defined as fo
 <div class="content">
 <img src="images/schema/ModelVariables.png" alt="ModelVariables" width="60%">
 </div>
-<div class="title">Figure 10. ModelVariables element.</div>
+<div class="title">Figure 11. ModelVariables element.</div>
 </div>
 <div class="paragraph">
-<p>The <code>&lt;ModelVariables&gt;</code> element consists of an ordered set of variable elements (see <a href="#figure-schema-ModelVariables">Figure 10</a>).
+<p>The <code>&lt;ModelVariables&gt;</code> element consists of an ordered set of variable elements (see <a href="#figure-schema-ModelVariables">Figure 11</a>).
 Variable elements can uniformly represent variables of primitive (atomic) types, like single floating point or integer variables, or as well as arrays of an arbitrary (but fixed) number of dimensions. The schema definition is present in a separate file <code>fmi3Variable.xsd</code>.</p>
 </div>
 <div class="paragraph">
@@ -5177,7 +5413,7 @@ Allowed values of this enumeration:</p>
 <p><code>= constant</code>: The value of the variable never changes.</p>
 </div>
 <div id="fixed" class="paragraph">
-<p><code>= fixed</code>: The value of the variable is fixed after initialization, in other words, after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called the variable value does not change anymore.</p>
+<p><code>= fixed</code>: The value of the variable is fixed after initialization, in other words, after <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> was called the variable value does not change anymore.</p>
 </div>
 <div id="tunable" class="paragraph">
 <p><code>= tunable</code>: The value of the variable is constant between external events (ME) and between communication points (CS and SE) due to changing variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.
@@ -5678,42 +5914,42 @@ Variables with <a href="#causality"><code>causality</code></a> <a href="#paramet
 </div>
 <div class="paragraph">
 <p><em>FMI for Co-Simulation:</em>
-<em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <code>fmi3Set{VariableType}</code>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <strong>Initialization Mode</strong>).</em>
+<em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <code>fmi3Set{VariableType}</code>) and before <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> is called (that is before and during <strong>Initialization Mode</strong>).</em>
 <em>The FMU internally carries out event handling if necessary.]</em></p>
 </div>
 <div class="paragraph">
 <p>Type specific properties are defined in the required choice element, where exactly one of the numeric types or an <code>&lt;Enumeration&gt;</code> must be present in the XML file:
-<a href="#figure-schema-Float64">Figure 11</a>, <a href="#figure-schema-Int32">Figure 12</a>, <a href="#figure-schema-Boolean">Figure 13</a>, <a href="#figure-schema-Binary">Figure 14</a>, and <a href="#figure-schema-Enumeration">Figure 15</a>, are representative examples.</p>
+<a href="#figure-schema-Float64">Figure 12</a>, <a href="#figure-schema-Int32">Figure 13</a>, <a href="#figure-schema-Boolean">Figure 14</a>, <a href="#figure-schema-Binary">Figure 15</a>, and <a href="#figure-schema-Enumeration">Figure 16</a>, are representative examples.</p>
 </div>
 <div id="figure-schema-Float64" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Float64.png" alt="Float64" width="70%">
 </div>
-<div class="title">Figure 11. Float64 element.</div>
+<div class="title">Figure 12. Float64 element.</div>
 </div>
 <div id="figure-schema-Int32" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Int32.png" alt="Int32" width="70%">
 </div>
-<div class="title">Figure 12. Int32 element.</div>
+<div class="title">Figure 13. Int32 element.</div>
 </div>
 <div id="figure-schema-Boolean" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Boolean.png" alt="Boolean" width="70%">
 </div>
-<div class="title">Figure 13. Boolean element.</div>
+<div class="title">Figure 14. Boolean element.</div>
 </div>
 <div id="figure-schema-Binary" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Binary.png" alt="Binary" width="70%">
 </div>
-<div class="title">Figure 14. Binary element.</div>
+<div class="title">Figure 15. Binary element.</div>
 </div>
 <div id="figure-schema-Enumeration" class="imageblock text-center">
 <div class="content">
 <img src="images/schema/Enumeration.png" alt="Enumeration" width="70%">
 </div>
-<div class="title">Figure 15. Enumeration element.</div>
+<div class="title">Figure 16. Enumeration element.</div>
 </div>
 <div class="paragraph">
 <p>The attributes are defined in <a href="#definition-of-types">Section 2.2.3</a> (<code>&lt;TypeDefinitions&gt;</code>), except:</p>
@@ -5752,7 +5988,7 @@ This value is also stored in the C functions.
 </div>
 <div class="paragraph">
 <p>The interpretation of <a href="#start"><code>start</code></a> is defined by variable attribute <a href="#initial"><code>initial</code></a>.
-A different <a href="#start"><code>start</code></a> value can be provided with an <code>fmi3Set{VariableType}</code> function before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (but not for variables with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>).</p>
+A different <a href="#start"><code>start</code></a> value can be provided with an <code>fmi3Set{VariableType}</code> function before <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> is called (but not for variables with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>).</p>
 </div>
 <div class="paragraph">
 <p><em>[The standard approach is to set the <a href="#start"><code>start</code></a> value before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</em>
@@ -5840,19 +6076,19 @@ A Co-Simulation FMU does not need to expose these state derivatives and event in
 <em>[A simulation environment can utilize this information to improve the efficiency, for example, when connecting FMUs together, or when computing the partial derivative of the <a href="#derivative"><code>derivatives</code></a> with respect to the <a href="#state"><code>states</code></a> in the simulation engine.]</em></p>
 </div>
 <div class="paragraph">
-<p><a href="#figure-schema-ModelStructure">Figure 16</a> shows the definition of <code>&lt;ModelStructure&gt;</code>.</p>
+<p><a href="#figure-schema-ModelStructure">Figure 17</a> shows the definition of <code>&lt;ModelStructure&gt;</code>.</p>
 </div>
 <div id="figure-schema-ModelStructure" class="imageblock">
 <div class="content">
 <img src="images/schema/ModelStructure.png" alt="ModelStructure" width="90%">
 </div>
-<div class="title">Figure 16. ModelStructure element.</div>
+<div class="title">Figure 17. ModelStructure element.</div>
 </div>
 <div class="paragraph">
 <p>Note that attribute <a href="#dependenciesKind"><code>dependenciesKind</code></a> for element <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> has less enumeration values as <a href="#dependenciesKind"><code>dependenciesKind</code></a> in the other lists, as detailed in <a href="#table-model-structure-elements">Table 7</a>.</p>
 </div>
 <div class="paragraph">
-<p><code>&lt;ModelStructure&gt;</code> consists of the elements detailed in <a href="#table-model-structure-elements">Table 7</a> (see also <a href="#figure-schema-ModelStructure">Figure 16</a>; the symbols of the mathematical equations describing the dependency are defined in <a href="#math-model-exchange">Section 3.1</a>):</p>
+<p><code>&lt;ModelStructure&gt;</code> consists of the elements detailed in <a href="#table-model-structure-elements">Table 7</a> (see also <a href="#figure-schema-ModelStructure">Figure 17</a>; the symbols of the mathematical equations describing the dependency are defined in <a href="#math-model-exchange">Section 3.1</a>):</p>
 </div>
 <table id="table-model-structure-elements" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 7. ModelStructure elements.</caption>
@@ -5980,9 +6216,9 @@ Otherwise, the corresponding known \({v_{\mathit{known},i}}\) enters the equatio
 <p class="tableblock">Only for floating point type unknowns \({v_{\mathit{unknown}}}\):</p>
 <p class="tableblock"><code>=</code> <a href="#constant"><code>constant</code></a>: constant factor, \({c \cdot v_{\mathit{known},i}}\) where \({c}\) is an expression that is evaluated before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.</p>
 <p class="tableblock">Only for floating point type unknowns \({v_{\mathit{unknown}}}\) in Event and <strong>Continuous-Time Mode</strong> (ME) and at communication points (CS and SE), and not for <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> for <strong>Initialization Mode</strong>:</p>
-<p class="tableblock"><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \({p \cdot v_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
-<p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \({p \cdot v_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external event (ME) or at a communication point (CS and SE)</p>
-<p class="tableblock"><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \({d \cdot v_{\mathit{known},i}}\) where \({d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external or internal event or at a communication point (CS and SE).</p></td>
+<p class="tableblock"><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \({p \cdot v_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> is called.</p>
+<p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \({p \cdot v_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> is called and in <strong>Event Mode</strong> due to an external event (ME) or at a communication point (CS and SE)</p>
+<p class="tableblock"><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \({d \cdot v_{\mathit{known},i}}\) where \({d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> is called and in <strong>Event Mode</strong> due to an external or internal event or at a communication point (CS and SE).</p></td>
 </tr>
 </tbody>
 </table>
@@ -6675,7 +6911,7 @@ All source file names that need to be defined in a compiler directive have to be
 <h4 id="resources-directory">2.3.5. Resources Directory</h4>
 <div class="paragraph">
 <p>In the optional directory <code>resources</code>, additional data can be provided in FMU specific formats, typically for tables and maps used in the FMU.
-This data must be read into the model at the latest during initialization (that is, before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called).
+This data must be read into the model at the latest during initialization (that is, before <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> is called).
 The actual file names in the ZIP file to access the data files can either be hard-coded in the generated FMU functions, or the file names can be provided as string arguments via the <code>fmi3SetString</code> function.
 <em>[Note that an URI pointing to the resources directory is provided by the initialization functions. If the environment is not able to do so, a NULL pointer will be provided instead, and the FMU can react with an error, if it requires access to the content of the resources folder.]</em>
 In the case of an FMU implementation of <code>needsExecutionTool = true</code> type, the <code>resources</code> directory can contain the model file in the tool specific file format.</p>
@@ -7021,13 +7257,13 @@ The default is <code>false</code>.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter contains the interface description to access the equations of a dynamic system from a C program.
-A schematic view of a model in FMI for Model Exchange format is shown in <a href="#figure-model-exchange-data-flow">Figure 17</a>:</p>
+A schematic view of a model in FMI for Model Exchange format is shown in <a href="#figure-model-exchange-data-flow">Figure 18</a>:</p>
 </div>
 <div id="figure-model-exchange-data-flow" class="imageblock text-center">
 <div class="content">
 <img src="images/model-exchange-data-flow.svg" alt="model exchange data flow" width="80%">
 </div>
-<div class="title">Figure 17. Data flow between the environment and an FMU for Model Exchange</div>
+<div class="title">Figure 18. Data flow between the environment and an FMU for Model Exchange</div>
 </div>
 <div class="paragraph">
 <p><strong class="blue">Blue</strong> arrows: Information provided by the FMU.<br>
@@ -7155,13 +7391,13 @@ is a continuous function of time inside each interval \(t_i^+ &lt; \ ^-t_{i+1}\)
 </tbody>
 </table>
 <div class="paragraph">
-<p>At every event instant \(t_i\), variables might be discontinuous (see <a href="#figure-piecwise-continuous-variables">Figure 18</a>).</p>
+<p>At every event instant \(t_i\), variables might be discontinuous (see <a href="#figure-piecwise-continuous-variables">Figure 19</a>).</p>
 </div>
 <div id="figure-piecwise-continuous-variables" class="imageblock">
 <div class="content">
 <img src="images/PieceWiseContinuousVariables.svg" alt="PieceWiseContinuousVariables" width="60%">
 </div>
-<div class="title">Figure 18. Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
+<div class="title">Figure 19. Piecewise-continuous variables of an FMU: continuous-time (\(v_c\)) and discrete-time (\(v_d\)).</div>
 </div>
 <div class="paragraph">
 <p>The next event instance \(t_i\) is defined by the earliest occurance of one of the following conditions:</p>
@@ -7183,7 +7419,7 @@ Such an event is called external event.
 Such an event is called <a href="#time-event">time event</a>.</p>
 </li>
 <li>
-<p>At a time instant, where an event indicator \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 19</a>).
+<p>At a time instant, where an event indicator \(z_j(t)\) changes its domain from \(z_j &gt; 0\) to \(z_j \leq 0\) or from \(z_j \leq 0\) to \(z_j &gt; 0\) (see <a href="#figure-events">Figure 20</a>).
 More precisely: An event \(t = t_i\) occurs at the smallest time instant \(t\) with \(t&gt;t_{i-1}\) where \((z_j(t)&gt;0) \neq (z_j(t_{i-1}) &gt;0)\).
 Such an event is called <a href="#state-event">state event</a>.
 <em>[This definition is slightly different from the standard definition of <a href="#state-event"><code>state events</code></a>: _ \(z_j(t) \cdot z_j(t_{i-1}) \leq 0\) _.</em>
@@ -7196,7 +7432,7 @@ All event indicators are piecewise continuous and are collected together in one 
 <div class="content">
 <img src="images/Event.svg" alt="Event" width="60%">
 </div>
-<div class="title">Figure 19. An event occurs when the event indicator changes its domain from \(z&gt;0\) to \(z\leq 0\) or vice versa.</div>
+<div class="title">Figure 20. An event occurs when the event indicator changes its domain from \(z&gt;0\) to \(z\leq 0\) or vice versa.</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="4">
@@ -7261,7 +7497,7 @@ Variables of this type are defined with attribute <a href="#causality"><code>cau
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{z}(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the event indicators used to define <a href="#state-event"><code>state events</code></a> (recall <a href="#figure-events">Figure 19</a>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the event indicators used to define <a href="#state-event"><code>state events</code></a> (recall <a href="#figure-events">Figure 20</a>).
 For notational convenience, an event indicator is conceptually treated as a different type of variable as an <a href="#output"><code>output</code></a> or a <a href="#local"><code>local</code></a> variable for the mathematical description in <a href="#table-math-model-exchange">Table 9</a>.
 In reality, event indicator is however part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
@@ -7334,13 +7570,13 @@ This data is optionally provided in the XML file under element <code>&lt;ModelSt
 If this data is not provided, the worst case must be assumed, that is, all <a href="#output"><code>output</code></a> variables depend algebraically on all <a href="#input"><code>input</code></a> variables.</p>
 </div>
 <div class="paragraph">
-<p><em>[Example: In <a href="#figure-connected-fmus">Figure 20</a> two different types of connected FMUs are shown (the "dotted lines" characterize the dependency information):</em></p>
+<p><em>[Example: In <a href="#figure-connected-fmus">Figure 21</a> two different types of connected FMUs are shown (the "dotted lines" characterize the dependency information):</em></p>
 </div>
 <div id="figure-connected-fmus" class="imageblock text-center">
 <div class="content">
 <img src="images/ArtificialAlgebraicLoop.svg" alt="ArtificialAlgebraicLoop" width="80%">
 </div>
-<div class="title">Figure 20. Calling sequences for FMUs that are connected in a loop.</div>
+<div class="title">Figure 21. Calling sequences for FMUs that are connected in a loop.</div>
 </div>
 <div class="paragraph">
 <p><em>In the upper diagram, FMU1 and FMU2 are connected in such a way that by an appropriate sequence of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> calls, the FMU variables can be computed.</em>
@@ -7518,7 +7754,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <p><em>In <a href="#table-math-model-exchange">Table 9</a>, for notational convenience in every mode one function call is defined to compute all output arguments from all inputs arguments.</em>
 <em>In reality, every scalar output argument can be computed by one <code>fmi3Get{VariableType}</code> function call.</em>
 <em>Additionally, the output argument need not be a function of all input arguments, but of only a subset from it, as defined in the XML file under <code>&lt;ModelStructure&gt;</code>.</em>
-<em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 20</a>. For example, since</em> \(y_{\mathit{2a}}\) <em>depends only on</em> \(u_{\mathit{1a}}\) <em>, but not on</em> \(u_{\mathit{1b}}\)<em>, it is possible to call</em> <code>fmi3Set{VariableType}</code> <em>to set</em> \(u_{\mathit{1a}}\) <em>, and then inquire</em> \(y_{\mathit{2a}}\) <em>with</em> <code>fmi3Get{VariableType}</code> <em>without setting</em> \(u_{\mathit{1b}}\) <em>beforehand.</em></p>
+<em>This is essential when FMUs are connected in a loop, as shown in <a href="#figure-connected-fmus">Figure 21</a>. For example, since</em> \(y_{\mathit{2a}}\) <em>depends only on</em> \(u_{\mathit{1a}}\) <em>, but not on</em> \(u_{\mathit{1b}}\)<em>, it is possible to call</em> <code>fmi3Set{VariableType}</code> <em>to set</em> \(u_{\mathit{1a}}\) <em>, and then inquire</em> \(y_{\mathit{2a}}\) <em>with</em> <code>fmi3Get{VariableType}</code> <em>without setting</em> \(u_{\mathit{1b}}\) <em>beforehand.</em></p>
 </div>
 <div class="paragraph">
 <p><em>It is non-trivial to provide code for <code>fmi3Set{VariableType}</code>, <code>fmi3Get{VariableType}</code>, if the environment can call <code>fmi3Set{VariableType}</code> on the <a href="#input"><code>inputs</code></a> in quite different orders.</em>
@@ -7680,7 +7916,7 @@ In <a href="#table-math-model-exchange">Table 9</a>, the variables with <a href=
 <div class="paragraph">
 <p>For example, initialization might be defined by providing initial <a href="#start"><code>start</code></a> values for the <a href="#state"><code>states</code></a>, \(\mathbf{x}_{\mathit{c0}}\), or by stating that the state derivatives are zero (\(\dot{\mathbf{x}}_{c} = \mathbf{0}\)).
 Initialization is a difficult topic by itself, and it is required that an FMU solves a well-defined initialization problem inside the FMU in <strong>Initialization Mode</strong>.<br>
-After calling <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, the FMU is implicitly in <strong>Event Mode</strong>, and all discrete-time and continuous-time variables at the initial time instant \((t_R, 0)\) can be calculated.
+After calling <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a>, the FMU is implicitly in <strong>Event Mode</strong>, and all discrete-time and continuous-time variables at the initial time instant \((t_R, 0)\) can be calculated.
 If these variables are present in an algebraic loop, iteration can be used to compute them.
 Once finalized, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called, and depending on the value of the return argument, the FMU either continues the event iteration at the initial time instant or switches to <strong>Continuous-Time Mode</strong>.<br>
 After switching to <strong>Continuous-Time Mode</strong>, the integration is started.
@@ -7769,7 +8005,7 @@ Note that <a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> is p
 </div>
 <div class="paragraph">
 <p>Set new values for <a href="#parameter"><code>parameters</code></a>, <a href="#start"><code>start</code></a> values and <a href="#input"><code>inputs</code></a> and re-initialize caching of variables that depend on these variables.
-The details of these functions are defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
+The details of these functions are defined in <a href="#get-and-set-variable-values">Section 2.1.6</a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[The functions above have the slight drawback that values must always be copied.</em>
@@ -7854,7 +8090,7 @@ Depending on the connection with other FMUs, the environment shall</p>
 </li>
 <li>
 <p>stay in <strong>Event Mode</strong> otherwise.
-When the FMU is terminated, it is assumed that an appropriate message is printed by the <a href="#logMessage"><code>logMessage</code></a> function (see <a href="#creation-destruction-and-logging">Section 2.1.5</a>) to explain the reason for the termination.</p>
+When the FMU is terminated, it is assumed that an appropriate message is printed by the <a href="#logMessage"><code>logMessage</code></a> function (see <a href="#FMUStateSetable">Section 2.1.5.1</a>) to explain the reason for the termination.</p>
 </li>
 </ul>
 </div>
@@ -8017,17 +8253,27 @@ Note that it is required that <code>nominals[i] &gt; 0.0</code>.
 <em>Example:</em><br>
 <code>absoluteTolerance[i] = 0.01 * tolerance * nominals[i];</code> <em>]</em></p>
 </div>
+<div class="paragraph">
+<p>Note that simulation backward in time is only allowed over continuous time intervals.
+As soon as an event occurrs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is forbidden, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
+</div>
+<div class="paragraph">
+<p>Note that during <strong>Initialization</strong>, <strong>Event Mode</strong>, and <strong>Continuous-Time Mode</strong>, <a href="#input"><code>input</code></a> variables can be set with <code>fmi3Set{VariableType}</code> and output variables can be retrieved with <code>fmi3Get{VariableType}</code> interchangeably according to the model structure defined under element <code>&lt;ModelStructure&gt;</code> in the XML file.
+<em>[For example, if one <a href="#output"><code>output</code></a> <code>y1</code> depends on two <a href="#input"><code>inputs</code></a> <code>u1</code>, <code>u2</code>, then these two <a href="#input"><code>inputs</code></a> must be set, before <code>y1</code> can be retrieved.</em>
+<em>If additionally an <a href="#output"><code>output</code></a> <code>y2</code> depends on an <a href="#input"><code>input</code></a> <code>u3</code>, then <code>u3</code> can be set and <code>y2</code> can be retrieved afterwards.</em>
+<em>As a result, artificial or <code>real</code> algebraic loops over connected FMUs in any of these three modes can be handled by using appropriate numerical algorithms.]</em></p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="state-machine-model-exchange">3.2.3. State Machine for Model Exchange</h4>
 <div class="paragraph">
-<p>Every implementation of the FMI must support calling sequences of the functions according to the state machine in <a href="#figure-model-exchange-state-machine">Figure 21</a>.</p>
+<p>Every implementation of the FMI must support calling sequences of the functions according to the state machine in <a href="#figure-model-exchange-state-machine">Figure 22</a>.</p>
 </div>
 <div id="figure-model-exchange-state-machine" class="imageblock text-center">
 <div class="content">
 <img src="images/state-machine-model-exchange.svg" alt="state machine model exchange" width="80%">
 </div>
-<div class="title">Figure 21. Calling sequence of Model Exchange C functions in form of a UML 2.0 state machine.</div>
+<div class="title">Figure 22. Calling sequence of Model Exchange C functions.</div>
 </div>
 <div class="paragraph">
 <p>The objective of the state machine is to define the allowed calling sequences for functions of the FMI: Calling sequences not accepted by the state machine are not supported by the FMI.
@@ -8037,69 +8283,55 @@ If a transition is labelled with one or more function names (for example, <code>
 Note that the FMU can always determine in which state it is since every state is entered by a particular function call (such as <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>), or a particular return value (such as <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>).</p>
 </div>
 <div class="paragraph">
-<p>The transition conditions <code>external event</code>, <a href="#time-event">time event</a>, and <a href="#state-event">state event</a> are defined in <a href="#math-model-exchange">Section 3.1</a>.
-Each state of the state machine corresponds to a certain phase of a simulation as follows:</p>
+<p>The transition conditions <a href="#external-event">external event</a>, <a href="#time-event">time event</a>, and <a href="#state-event">state event</a> are defined in <a href="#math-model-exchange">Section 3.1</a>.</p>
+</div>
+<div class="paragraph">
+<p>Each state of the state machine corresponds to a certain phase of a simulation.
+Common states are defined in <a href="#state-machine-and-common-states">Section 2.1.5</a>, such as super states <a href="#FMUStateSetable"><strong>FMU State Setable</strong></a>, <a href="#UnderEvaluation"><strong>Under Evaluation</strong></a> and  <a href="#Initialized"><strong>Initialized</strong></a>, states <a href="#Instantiated"><strong>Instantiated</strong></a>, <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a>, <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>, <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, and <a href="#Terminated"><strong>Terminated</strong></a>.</p>
 </div>
 <div class="sect4">
-<h5 id="_state_instantiated">3.2.3.1. State: Instantiated</h5>
+<h5 id="_state_event_mode">3.2.3.1. State: Event Mode</h5>
 <div class="paragraph">
-<p>In this state, <a href="#start"><code>start</code></a> and guess values (= variables that have <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>) set and <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> can be set, this does not include inputs as they do not have an <a href="#initial"><code>initial</code></a> attribute.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_state_configuration_mode">3.2.3.2. State: Configuration Mode</h5>
-<div class="paragraph">
-<p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a> or <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
-This state is entered from state <strong>Instantiated</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Instantiated</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.
-<a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> can only be called if the FMU contains at least one <a href="#structuralParameter"><code>structural parameter</code></a></p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_state_initialization_mode">3.2.3.3. State: Initialization Mode</h5>
-<div class="paragraph">
-<p>In this state, equations are active to determine all continuous-time states, as well as all <a href="#output"><code>outputs</code></a> (and optionally other variables exposed by the exporting tool).
-The variables that can be retrieved by <code>fmi3Get{VariableType}</code> calls are (1) defined in the XML file as elements <code>&lt;ModelStructure&gt;&lt;InitialUnknown&gt;</code> and (2) variables with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.
-Variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a>, as well as variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> can be set.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_state_continuous_time_mode">3.2.3.4. State: Continuous-Time Mode</h5>
-<div class="paragraph">
-<p>In this state, the continuous-time model equations are active and integrator steps are performed.
+<p>In this mode all continuous-time and discrete-time equations are active and the unknowns at an event can be computed and retrieved.
 The event time of a <a href="#state-event">state event</a> may be determined if a domain change of at least one event indicator is detected at the end of a completed integrator step.</p>
 </div>
+<div class="paragraph">
+<p><strong>Event Mode</strong> is entered by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, if an event is triggered in <strong>Continuous-Time Mode</strong>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1"><a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a></dt>
+<dd>
+<p>After an event is completely processed, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called and depending on the return argument, <code>newDiscreteStatesNeeded</code>, the state machine stays in <strong>Event Mode</strong> or switches to <strong>Continuous-Time Mode</strong>.</p>
+</dd>
+<dt class="hdlist1"><a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a></dt>
+<dd>
+<p>When the <strong>Initialization Mode</strong> is terminated with <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a>, then <strong>Event Mode</strong> is directly entered, and the continuous-time and discrete-time variables at the initial time are computed based on the initial continuous-time states determined in the <strong>Initialization Mode</strong>.</p>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect4">
-<h5 id="_state_event_mode">3.2.3.5. State: Event Mode</h5>
+<h5 id="_state_continuous_time_mode">3.2.3.2. State: Continuous-Time Mode</h5>
 <div class="paragraph">
-<p>If an event is triggered in <strong>Continuous-Time Mode</strong>, <strong>Event Mode</strong> is entered by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
-In this mode all continuous-time and discrete-time equations are active and the unknowns at an event can be computed and retrieved.
-After an event is completely processed, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called and depending on the return argument, <code>newDiscreteStatesNeeded</code>, the state machine stays in <strong>Event Mode</strong> or switches to <strong>Continuous-Time Mode</strong>.
-When the <strong>Initialization Mode</strong> is terminated with <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, then <strong>Event Mode</strong> is directly entered, and the continuous-time and discrete-time variables at the initial time are computed based on the initial continuous-time states determined in the <strong>Initialization Mode</strong>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_state_reconfiguration_mode">3.2.3.6. State: Reconfiguration Mode</h5>
-<div class="paragraph">
-<p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
-This state is entered from state <strong>Event Mode</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Event Mode</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.
-<a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> can only be called if the FMU contains at least one <a href="#structuralParameter"><code>structural parameter</code></a>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_state_terminated">3.2.3.7. State: Terminated</h5>
-<div class="paragraph">
-<p>In this state, the solution at the final time of a simulation can be retrieved.</p>
+<p>In this state, the continuous-time model equations are active and integrator steps are performed.</p>
 </div>
 <div class="paragraph">
-<p>Note that simulation backward in time is only allowed over continuous time intervals.
-As soon as an event occurrs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is forbidden, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
+<p><strong>Continuous-Time Mode</strong> is entered by calling <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a>, or when returning from <strong>Event Mode</strong> with <code>fmi3ExitEventMode</code>, or when returning from <strong>Reconfiguration Mode</strong> with <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, or when the importer returns from <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>.</p>
 </div>
-<div class="paragraph">
-<p>Note that during <strong>Initialization</strong>, <strong>Event</strong>, and <strong>Continuous-Time Mode</strong>, <a href="#input"><code>input</code></a> variables can be set with <code>fmi3Set{VariableType}</code> and output variables can be retrieved with <code>fmi3Get{VariableType}</code> interchangeably according to the model structure defined under element <code>&lt;ModelStructure&gt;</code> in the XML file.
-<em>[For example, if one <a href="#output"><code>output</code></a> <code>y1</code> depends on two <a href="#input"><code>inputs</code></a> <code>u1</code>, <code>u2</code>, then these two <a href="#input"><code>inputs</code></a> must be set, before <code>y1</code> can be retrieved.</em>
-<em>If additionally an <a href="#output"><code>output</code></a> <code>y2</code> depends on an <a href="#input"><code>input</code></a> <code>u3</code>, then <code>u3</code> can be set and <code>y2</code> can be retrieved afterwards.</em>
-<em>As a result, artificial or <code>real</code> algebraic loops over connected FMUs in any of these three modes can be handled by using appropriate numerical algorithms.]</em></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1"><a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a></dt>
+<dd>
+<p>When an event is detected, the importer must call this function to move the FMU into <strong>Event Mode</strong>.</p>
+</dd>
+<dt class="hdlist1"><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
+<dd>
+<p>If the environment wants to change <a href="#structuralParameter"><code>structural parameters</code></a>, it must move the FMU into <strong>Reconfiguration Mode</strong> using <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -8319,7 +8551,7 @@ if (m &amp;&amp; status != fmi3Fatal) {
 <dl>
 <dt class="hdlist1">Enter event mode</dt>
 <dd>
-<p>The <strong>Event Mode</strong> is entered after initialization (call to function <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>) or during simulation with a call to the function <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>. The FMU activates <a href="#outputClock"><code>output clocks</code></a>.</p>
+<p>The <strong>Event Mode</strong> is entered after initialization (call to function <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a>) or during simulation with a call to the function <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>. The FMU activates <a href="#outputClock"><code>output clocks</code></a>.</p>
 </dd>
 <dt class="hdlist1">Synchronize clock activation and intervals with the environment</dt>
 <dd>
@@ -8518,7 +8750,7 @@ In this framework, the physical connections between subsystems are represented b
 <div class="content">
 <img src="images/co-simulation-data-flow.svg" alt="co simulation data flow" width="80%">
 </div>
-<div class="title">Figure 22. Data flow at communication points.</div>
+<div class="title">Figure 23. Data flow at communication points.</div>
 </div>
 <div class="paragraph">
 <p>For co-simulation, two basic groups of functions have to be implemented:</p>
@@ -9035,13 +9267,13 @@ Since the FMU itself can detect such changes, the co-simulation algorithm does n
 <em>If an FMU prematurely stops its current step integration computation due to an unpredictable internal event before the normal end of the step calculation, all other concurrently running FMUs may be stopped as soon as possible in order to minimize the time needed for the co-simulation algorithm to resynchronize all the FMUs at the same event time.</em></p>
 </div>
 <div class="paragraph">
-<p><em>In this context based on parallel multi-FMU calculations, <a href="#figure-early-return">Figure 23</a> illustrates different possibilities to synchronize FMUs at the same event time.</em></p>
+<p><em>In this context based on parallel multi-FMU calculations, <a href="#figure-early-return">Figure 24</a> illustrates different possibilities to synchronize FMUs at the same event time.</em></p>
 </div>
 <div id="figure-early-return" class="imageblock text-center">
 <div class="content">
 <img src="images/earlyReturnFigure.png" alt="earlyReturnFigure" width="100%">
 </div>
-<div class="title">Figure 23. Different possibilities to synchronize parallel FMUs at the same event time.</div>
+<div class="title">Figure 24. Different possibilities to synchronize parallel FMUs at the same event time.</div>
 </div>
 <div class="paragraph">
 <p><em>Each FMU starts integration from communication point \(t_{i}\) to reach the next communication point \(t_{i+1}\).</em>
@@ -9127,14 +9359,14 @@ Moreover, this enables the same input approximation that was possible in FMI 2.0
 </div>
 <div class="paragraph">
 <p>The intermediate-update functionality can be used in FMI for Co-Simulation, if both, the FMU and the co-simulation algorithm, support it.
-<a href="#figure-intermediate-update">Figure 24</a> summarizes the above description.
+<a href="#figure-intermediate-update">Figure 25</a> summarizes the above description.
 It illustrates that multiple intermediate internal solver steps, distinguishing between the final ones (with black-filled circles) and tentative ones (with white-filled circles). It distinguishes the level of trust that can be placed in the tentative outputs (with dashed arrows) and in final outputs (with solid arrows).</p>
 </div>
 <div id="figure-intermediate-update" class="imageblock text-center">
 <div class="content">
 <img src="images/intermediateupdate.svg" alt="intermediateupdate" width="65%">
 </div>
-<div class="title">Figure 24. Overview of solver states and intermediate update during a communication step</div>
+<div class="title">Figure 25. Overview of solver states and intermediate update during a communication step</div>
 </div>
 <div class="paragraph">
 <p>If the co-simulation algorithm signals the support for intermediate update and an FMU has at least one variable with <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a>, the FMU can use the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to communicate information back to the co-simulation algorithm:</p>
@@ -9338,7 +9570,7 @@ void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
 <div class="sect3">
 <h4 id="transfer-of-input-output-and-parameters">4.2.3. Variables Access</h4>
 <div class="paragraph">
-<p><a href="#input"><code>Input</code></a> and <a href="#output"><code>output</code></a> variables and other variables are accessed via the <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> functions, defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
+<p><a href="#input"><code>Input</code></a> and <a href="#output"><code>output</code></a> variables and other variables are accessed via the <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> functions, defined in <a href="#get-and-set-variable-values">Section 2.1.6</a>.</p>
 </div>
 <div class="paragraph">
 <p>In order to enable the co-simulation algorithm to interpolate the <a href="#continuous"><code>continuous</code></a> floating point <a href="#input"><code>inputs</code></a> between communication steps, the <a href="#derivative"><code>derivatives</code></a> of the <a href="#output"><code>outputs</code></a> with respect to time at the end of a communication step can be enquired by the co-simulation algorithm.
@@ -9482,7 +9714,7 @@ However, even when the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</
 <em>It is up to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> how to achieve this.]</em></p>
 </div>
 <div class="paragraph">
-<p>At the first call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> must be equal to <code>startTime</code> as set with <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</p>
+<p>At the first call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> after <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> was called <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> must be equal to <code>startTime</code> as set with <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Formally, argument <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> is not needed.</em>
@@ -9632,7 +9864,7 @@ In <strong>Step Mode</strong>, the co-simulation algorithm can call <a href="#fm
 Note that <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may not reach the next input event instant because an early return may occur.</p>
 </div>
 <div class="paragraph">
-<p>The co-simulation algorithm sets and gets <a href="#clock"><code>clock</code></a> variable values similar to the FMI for Model Exchange, as defined in <a href="#fmi-api-setting-getting-clock-activation-state">Section 2.1.9.5</a>.</p>
+<p>The co-simulation algorithm sets and gets <a href="#clock"><code>clock</code></a> variable values similar to the FMI for Model Exchange, as defined in <a href="#fmi-api-setting-getting-clock-activation-state">Section 2.1.8.5</a>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -9666,108 +9898,20 @@ Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3Ente
 <div class="sect3">
 <h4 id="state-machine-co-simulation">4.2.8. State Machine for Co-Simulation</h4>
 <div class="paragraph">
-<p>The state machine in <a href="#figure-co-simulation-state-machine">Figure 25</a> defines the supported calling sequences.</p>
+<p>The state machine in <a href="#figure-co-simulation-state-machine">Figure 26</a> defines the supported calling sequences.</p>
 </div>
 <div id="figure-co-simulation-state-machine" class="imageblock text-center">
 <div class="content">
 <img src="images/state-machine-co-simulation.svg" alt="state machine co simulation" width="80%">
 </div>
-<div class="title">Figure 25. Calling sequence of Co-Simulation C functions in form of a UML 2.0 state machine.</div>
+<div class="title">Figure 26. Calling sequence of Co-Simulation C functions.</div>
 </div>
 <div class="paragraph">
-<p>In FMI for Co-Simulation the following functions must not be called: <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> including all functions that are specific to Model Exchange.</p>
+<p>Each state of the state machine corresponds to a certain phase of a simulation.
+Common states are defined in <a href="#state-machine-and-common-states">Section 2.1.5</a>, such as super states <a href="#FMUStateSetable"><strong>FMU State Setable</strong></a>, <a href="#UnderEvaluation"><strong>Under Evaluation</strong></a> and  <a href="#Initialized"><strong>Initialized</strong></a>, states <a href="#Instantiated"><strong>Instantiated</strong></a>, <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a>, <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>, <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#Terminated"><strong>Terminated</strong></a> and <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</p>
 </div>
 <div class="sect4">
-<h5 id="state-fmu-state-setable-co-simulation">4.2.8.1. State: FMU State Setable</h5>
-<div class="paragraph">
-<p>In all states of this super state it is allowed to call <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a>`, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <code>fmi3DeSerializeFMUState</code>, <a href="#fmi3Reset"><code>fmi3Reset</code></a>, <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a>, <code>fmi3SetDebugLogging</code> and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>If any function returns with <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU enters the terminal state.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="state-under-evaluation-co-simulation">4.2.8.2. State: Under Evaluation</h5>
-<div class="paragraph">
-<p>This super state is entered by the FMU when <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> is called.
-If any function returns <a href="#fmi3Error"><code>fmi3Error</code></a> the FMU enters state <strong>Terminated</strong>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="state-initialized-co-simulation">4.2.8.3. State: Initialized</h5>
-<div class="paragraph">
-<p>This super state is entered by the FMU when <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.
-If the function <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> is called, the FMU enters state <strong>Terminated</strong>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="state-instantiated-co-simulation">4.2.8.4. State: Instantiated</h5>
-<div class="paragraph">
-<p>In this state the FMU can do one-time initializations and allocate memory.
-The FMU sets all variables to its <a href="#start"><code>start</code></a> values.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Allowed Function Calls</dt>
-<dd>
-<p><a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, &lt;fmi3EnterConfigurationMode&gt;&gt;</p>
-</dd>
-<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
-<dd>
-<p>For variables with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> and for which <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>.
-The intention is to set <a href="#start"><code>start</code></a> and guess values for these variables.</p>
-</dd>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p><a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect4">
-<h5 id="state-initialization-mode-co-simulation">4.2.8.5. State: Initialization Mode</h5>
-<div class="paragraph">
-<p>This mode is used by the co-simulation algorithm to compute consistent initial conditions for overall system.
-Therefore iterative calls of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> are allowed.
-In between the FMU must evaluate all relevant equations.
-In this way artificial or real algebraic loops over connected FMUs in <strong>Initialization Mode</strong> may be handled by using appropriate numerical algorithms.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Allowed Function Calls</dt>
-<dd>
-<p><a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></p>
-</dd>
-<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
-<dd>
-<p>For variables with:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> that have <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, or</p>
-</li>
-<li>
-<p><a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, or</p>
-</li>
-<li>
-<p><a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1"><code>fmi3Get{VariableType}</code></dt>
-<dd>
-<p>For variables with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> or continuous-time <a href="#state"><code>states</code></a> or state derivatives.</p>
-</dd>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p><a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect4">
-<h5 id="state-step-mode-co-simulation">4.2.8.6. State: Step Mode</h5>
+<h5 id="state-step-mode-co-simulation">4.2.8.1. State: Step Mode</h5>
 <div class="paragraph">
 <p>This state is used by the co-simulation algorithm to progress simulation time.</p>
 </div>
@@ -9865,17 +10009,9 @@ Such an event might be caused by the change of an input during the communication
 <div class="paragraph">
 <p><em>]</em></p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a></p>
-</dd>
-</dl>
-</div>
 </div>
 <div class="sect4">
-<h5 id="_state_event_mode_2">4.2.8.7. State: Event Mode</h5>
+<h5 id="_state_event_mode_2">4.2.8.2. State: Event Mode</h5>
 <div class="paragraph">
 <p>The co-simulation algorithm and the FMU enter this state when the co-simulation algorithm calls <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> in state <strong>Step Mode</strong>, in order to handle discrete events and <a href="#clock"><code>clock</code></a> ticks.
 If the co-simulation algorithm signals <code>eventModeRequired == fmi3False</code> during instantiation, the co-simulation algorithm is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.</p>
@@ -9918,116 +10054,9 @@ For <a href="#input"><code>input</code></a> <a href="#periodic"><code>periodic</
 </dl>
 </div>
 </div>
-<div class="sect4">
-<h5 id="state-reconfiguration-mode-co-simulation">4.2.8.8. State: Reconfiguration Mode</h5>
-<div class="paragraph">
-<p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
-This state is entered from state <strong>Step Mode</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Step Mode</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1"><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a></dt>
-<dd>
-<p>Returns back to <strong>Step Mode</strong>.</p>
-</dd>
-<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
-<dd>
-<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
-</dd>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect4">
-<h5 id="state-intermediate-update-mode-co-simulation">4.2.8.9. State: Intermediate Update Mode</h5>
-<div class="paragraph">
-<p>In this state the co-simulation algorithm can retrieve information from the FMU between communication points.
-Functions called in this state must not return <a href="#fmi3Discard"><code>fmi3Discard</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>The FMU enters this state by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> within <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> and leaves the state towards state <strong>Step Mode</strong> if the function returns <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a>.
-If the function returns <a href="#fmi3Error"><code>fmi3Error</code></a> the FMU enters state <strong>Terminated</strong>.
-If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU enters the terminal state.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1"><code>fmi3Get{VariableType}</code></dt>
-<dd>
-<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the value of intermediate variables can be retrieved.
-Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
-</dd>
-<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
-<dd>
-<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the value of intermediate, continuous variables should be set.
-Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdateAttr"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>There is a defined order of calling these functions: first all <code>fmi3Get{VariableType}</code>  calls must be performed, then <code>fmi3Set{VariableType}</code> may be called.<br>
-<em>[This is analogous to the calling sequence of of</em> <code>fmi3Get{VariableType}</code> <em>and</em> <code>fmi3Set{VariableType}</code> <em>calls at communication points.]</em></p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p>The same functions which are not allowed to be called in <strong>Step Mode</strong> must not be called in this state.
-Additionally the following functions must not be called <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect4">
-<h5 id="state-terminated-co-simulation">4.2.8.10. State: Terminated</h5>
-<div class="paragraph">
-<p>In this state, the solution at the final time of the simulation can be retrieved.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Allowed Function Calls</dt>
-<dd>
-<p><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p>
-</dd>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <code>fmi3Set{VariableType}</code></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect4">
-<h5 id="state-configuration-mode-co-simulation">4.2.8.11. State: Configuration Mode</h5>
-<div class="paragraph">
-<p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.</p>
-</div>
-<div class="paragraph">
-<p>This state is entered from state <strong>Instantiated</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Instantiated</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Allowed Function Calls</dt>
-<dd>
-<p><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a></p>
-</dd>
-<dt class="hdlist1"><code>fmi3Set{VariableType}</code></dt>
-<dd>
-<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
-</dd>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, <code>fmi3Get{VariableType}</code></p>
-</dd>
-</dl>
-</div>
-</div>
 </div>
 <div class="sect3">
-<h4 id="_code_example_for_simplest_co_simulation">4.2.9. Code Example for Simplest Co-Simulation</h4>
+<h4 id="_code_example_for_co_simulation">4.2.9. Code Example for Co-Simulation</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 We consider two FMUs, where both have one <a href="#continuous"><code>continuous</code></a> floating point <a href="#input"><code>input</code></a> and one <a href="#continuous"><code>continuous</code></a> floating point <a href="#output"><code>output</code></a> which are connected in the following way:</p>
@@ -10036,7 +10065,7 @@ We consider two FMUs, where both have one <a href="#continuous"><code>continuous
 <div class="content">
 <img src="images/co-simulation-connection-of-FMUs.svg" alt="co simulation connection of FMUs" width="30%">
 </div>
-<div class="title">Figure 26. Connection graph of FMUs.</div>
+<div class="title">Figure 27. Connection graph of FMUs.</div>
 </div>
 <div class="paragraph">
 <p>We assume no algebraic dependency between input and <a href="#output"><code>output</code></a> of each FMU.
@@ -10587,7 +10616,7 @@ In case of <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3
 <div class="sect3">
 <h4 id="_transfer_of_input_and_output_values_and_parameters">5.2.1. Transfer of Input and Output Values and Parameters</h4>
 <div class="paragraph">
-<p>The simulation algorithm sets and gets variable values as defined in <a href="#get-and-set-variable-values">Section 2.1.7</a>.</p>
+<p>The simulation algorithm sets and gets variable values as defined in <a href="#get-and-set-variable-values">Section 2.1.6</a>.</p>
 </div>
 <div class="paragraph">
 <p>Before scheduling a model partition it is allowed to set all variables assigned to that model partition via its associated <a href="#clock"><code>clock</code></a> (including all global variables that are not associated to a <a href="#clock"><code>clock</code></a>) via <code>fmi3Set{VariableType}</code>.
@@ -10677,7 +10706,7 @@ A <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code><
 <div class="content">
 <img src="images/state-machine-scheduled-execution.svg" alt="state machine scheduled execution" width="80%">
 </div>
-<div class="title">Figure 27. Calling sequence of Scheduled Execution C functions in form of a UML 2.0 state machine.</div>
+<div class="title">Figure 28. Calling sequence of Scheduled Execution C functions.</div>
 </div>
 <div class="paragraph">
 <p>If the simulation algorithm intends to enter the state <strong>Terminated</strong> it must ensure that all tasks related to model partitions of the FMU have ended.
@@ -10685,39 +10714,24 @@ Hence if in states <strong>Clock Activation Mode</strong>, <strong>Intermediate 
 If in these states a function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> the simulation algorithm may wait until all other tasks of the model partitions of this FMU have ended, but new tasks must not be started.</p>
 </div>
 <div class="paragraph">
-<p>In Scheduled Execution the following functions must not be called: <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> including all functions that are specific to the Model Exchange interface.</p>
-</div>
-<div class="paragraph">
-<p>The states <strong>Configuration Mode</strong>, <strong>Instantiated</strong>, <strong>Initialization Mode</strong>, and <strong>Terminated</strong> are handled in the same way as in Co-Simulation, with the exception that the generally not allowed functions of Scheduled Execution must not be called.</p>
+<p>Each state of the state machine corresponds to a certain phase of a simulation.
+Common states are defined in <a href="#state-machine-and-common-states">Section 2.1.5</a>, such as super states <a href="#FMUStateSetable"><strong>FMU State Setable</strong></a>, <a href="#UnderEvaluation"><strong>Under Evaluation</strong></a> and  <a href="#Initialized"><strong>Initialized</strong></a>, states <a href="#Instantiated"><strong>Instantiated</strong></a>, <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a>, <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>, <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#Terminated"><strong>Terminated</strong></a> and <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</p>
 </div>
 <div class="sect4">
-<h5 id="_state_fmu_state_setable">5.2.3.1. State: FMU State Setable</h5>
+<h5 id="Initialized-SE">5.2.3.1. Super State: Initialized</h5>
 <div class="paragraph">
-<p>In all states of this super state it is allowed to call <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <code>fmi3SetFMUState</code>, <code>fmi3FreeFMUState</code>, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a>, <a href="#fmi3Reset"><code>fmi3Reset</code></a>, <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a>, <code>fmi3SetDebugLogging</code> and <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a>.
-If any function returns with <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU enters the state <strong>Terminated</strong>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_state_under_evaluation">5.2.3.2. State: Under Evaluation</h5>
-<div class="paragraph">
-<p>This super state is entered by the FMU when <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> is called.
-If any function returns <a href="#fmi3Error"><code>fmi3Error</code></a> or <a href="#fmi3Discard"><code>fmi3Discard</code></a> the FMU enters state <strong>Terminated</strong>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_state_initialized">5.2.3.3. State: Initialized</h5>
-<div class="paragraph">
-<p>This super state is entered by the FMU when <code>fmi3ExitInitializatoinMode</code> is called.
-If the function <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> is called, the FMU enters state <strong>Terminated</strong> from all states of this super state.
+<p>Special to Scheduled Execution, the following additional constrains apply to the state <strong>Initialized</strong> (see <a href="#Initialized">Section 2.1.5.2.5</a>).
 The FMU enters state <strong>Terminated</strong> only after all other tasks related to the computation of model partitions of this FMU have ended.
 After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no new tasks can be started (e.g. related to <a href="#outputClock"><code>outputClock</code></a> ticks) and all other function calls for this FMU must return <a href="#fmi3Error"><code>fmi3Error</code></a> until the state <strong>Terminated</strong> is reached.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_clock_activation_mode">5.2.3.4. State: Clock Activation Mode</h5>
+<h5 id="_state_clock_activation_mode">5.2.3.2. State: Clock Activation Mode</h5>
 <div class="paragraph">
-<p>The FMU enters this state when the simulation algorithm calls <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> in state <strong>Initialization Mode</strong> or <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a> in state <strong>Reconfiguration Mode</strong>.
-In this state the simulation algorithm can create multiple concurrent tasks related to an FMU and in each task the simulation algorithm can activate one or multiple <a href="#inputClock"><code>input clocks</code></a> of an FMU based on the defined <a href="#clock"><code>clock</code></a> properties via a <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call for each <a href="#clock"><code>clock</code></a>.</p>
+<p>The FMU enters this state when the simulation algorithm calls <a href="#fmi3ExitInitializationMode">[fmi3ExitInitializationMode]</a> in state <strong>Initialization Mode</strong> or <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a> in state <strong>Reconfiguration Mode</strong>.</p>
+</div>
+<div class="paragraph">
+<p>In this state the simulation algorithm can create multiple concurrent tasks related to an FMU and in each task the simulation algorithm can activate one or multiple <a href="#inputClock"><code>input clocks</code></a> of an FMU based on the defined <a href="#clock"><code>clock</code></a> properties via a <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call for each <a href="#clock"><code>clock</code></a>.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -10807,75 +10821,39 @@ If these functions are called while a model partition of an FMU is currently act
 <p>These functions can be called if no other task related to the computation of model partitions of this FMU is currently active or preempted and the prerequisites defined for these functions in Co-Simulation are fulfilled.
 Thus these functions can not be called concurrently for model partitions of an FMU but only for the whole FMU instance.</p>
 </dd>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p>Additionally to the generally forbidden functions in Scheduled Execution as listed above, the following functions must not be called in this state: <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>.</p>
-</dd>
 </dl>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_state_intermediate_update_mode">5.2.3.5. State: Intermediate Update Mode</h5>
+<h5 id="_state_intermediate_update_mode">5.2.3.3. State: Intermediate Update Mode</h5>
+<div class="paragraph">
+<p>The FMU enters this state when the FMU calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> in state <strong>Clock Activation Mode</strong>.
+When the callback function returns, the FMU returns to <strong>Clock Activation Mode</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Here only special remarks w.r.t. <strong>Intermediate Update Mode</strong> in Scheduled Execution are made.
+For the general mechanism see <a href="#IntermediateUpdateMode">Section 2.1.5.4</a>.</p>
+</div>
 <div class="paragraph">
 <p>The FMU transports activation states of <a href="#outputClock"><code>output clocks</code></a> to the simulation algorithm by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and providing <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.
 The simulation algorithm provides the implementation of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
 If the simulation algorithm detects that an <a href="#outputClock"><code>output clocks</code></a> ticked and this <a href="#outputClock"><code>output clock</code></a> is configured to <a href="#triggeredBy"><code>trigger</code></a> an <a href="#inputClock"><code>input clock</code></a> the simulation algorithm schedules a task associated to this <a href="#inputClock"><code>input clock</code></a>.</p>
 </div>
-<div class="paragraph">
-<p>The FMU enters this state by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>  within <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> and leaves the state towards state <strong>Clock Activation Mode</strong> if the function returns <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a>.
-If the function returns <a href="#fmi3Error"><code>fmi3Error</code></a> the FMU enters state <strong>Terminated</strong>.
-If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU enters the terminal state.</p>
-</div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p>The same functions which are not allowed to be called in <strong>Clock Activation Mode</strong> must not be called in this state. Additionally the following functions must not be called <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
-</dd>
 <dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1"><a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
 <dd>
 <p>For an <a href="#outputClock"><code>outputClock</code></a> only the first call of <code>fmi3GetClock</code> for a specific activation of this <a href="#clock"><code>clock</code></a> signals <code>fmi3ClockActive</code>.
 The FMU sets the reported activation state immediately back to <code>fmi3ClockInactive</code> for the following <code>fmi3GetClock</code> calls for that <a href="#clock"><code>clock</code></a> (in the same or other model partitions of the FMU) until this <a href="#outputClock"><code>outputClock</code></a> is internally activated again.
-The simulation algorithm can call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> during the callback for variables associated to a <a href="#outputClock"><code>outputClock</code></a> that is active during this callback.
-Also intermediate update is allowed as defined in <a href="#state-intermediate-update-mode-co-simulation">Section 4.2.8.9</a></p>
+The simulation algorithm can call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> during the callback for variables associated to an <a href="#outputClock"><code>outputClock</code></a> that is active during this callback.</p>
 </dd>
 </dl>
-</div>
-<div class="paragraph">
-<p>Functions called in this state must not return <a href="#fmi3Discard"><code>fmi3Discard</code></a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Based on the FMI standard it cannot be determined which part of the code of an FMU has called the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</em>
 <em>This is especially the case for Scheduled Execution where multiple model partitions can be active at the same time.</em>
 <em>This causes no issues since all function call prerequisites are connected to the activation state of <a href="#clock"><code>clocks</code></a>, <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> information and additionally available information from <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>]</em></p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_state_reconfiguration_mode_2">5.2.3.6. State: Reconfiguration Mode</h5>
-<div class="paragraph">
-<p>In this state <a href="#structuralParameter"><code>structural parameters</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> can be changed.
-This state is entered from state <strong>Clock Activation Mode</strong> by calling <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> and left back to <strong>Clock Activation Mode</strong> by calling <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a>.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Allowed Function Calls</dt>
-<dd>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a></p>
-</li>
-<li>
-<p><code>fmi3Set{VariableType}</code>: Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1">Forbidden Function Calls</dt>
-<dd>
-<p>Additionally to the generally forbidden functions in Scheduled Execution listed above the following functions must not be called in this state: <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a>, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, <code>fmi3GetOutputDerivatives</code>, <code>fmi3Get{VariableType}</code>.</p>
-</dd>
-</dl>
 </div>
 </div>
 </div>
@@ -10930,7 +10908,7 @@ Set/get calls for each task are only allowed for variables that are associated t
 <p><em>[If multiple tasks are needed to be scheduled for computation at a certain time instant a simulation algorithm must schedule a task of a higher priority always before a task of a lower priority]</em></p>
 </div>
 <div class="paragraph">
-<p><a href="#input"><code>Input</code></a> <a href="#clock"><code>clock</code></a> ticks (see <a href="#variants-of-clocks">Section 2.1.9.2</a>):</p>
+<p><a href="#input"><code>Input</code></a> <a href="#clock"><code>clock</code></a> ticks (see <a href="#variants-of-clocks">Section 2.1.8.2</a>):</p>
 </div>
 <div class="ulist">
 <ul>
@@ -11361,7 +11339,8 @@ Synonyms: dynamic mutual-exchange, simulator coupling, and coupled simulation.</
 <td class="tableblock halign-left valign-top"><p class="tableblock">Something that occurs instantaneously at a specific time or when a specific condition occurs.
 At an event, numerical integration is suspended and variables may change their values discontinuously.
 Internal events occur inside the FMU and should be signaled to the environment without any delay.
-External events occur outside the FMU and should be signaled to the FMU without any delay.</p></td>
+External events occur outside the FMU and should be signaled to the FMU without any delay.
+See <a href="#state-event">state event</a>, <a href="#step-event">step event</a>, <a href="#external-event">external event</a> and <a href="#time-event">time event</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>event indicator</em></p></td>
@@ -11369,6 +11348,10 @@ External events occur outside the FMU and should be signaled to the FMU without 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>exporter</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="external-event"></a><em>external event</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
