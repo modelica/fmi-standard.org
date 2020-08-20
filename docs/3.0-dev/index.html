@@ -685,11 +685,10 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_overview_3">2.2.6.2.1. Overview</a></li>
 <li><a href="#section-terminals">2.2.6.2.2. Terminals</a></li>
 <li><a href="#section-terminalvars">2.2.6.2.3. Terminal Member Variable</a></li>
-<li><a href="#_terminal_graphical_representations">2.2.6.2.4. Terminal Graphical Representations</a></li>
-<li><a href="#GeneralRemarkOnSignal">2.2.6.2.5. General Remark on Signal</a></li>
-<li><a href="#_general_remark_on_inflow_and_outflow">2.2.6.2.6. General Remark on Inflow and Outflow</a></li>
-<li><a href="#_terminal_stream_member_variable">2.2.6.2.7. Terminal Stream Member Variable</a></li>
-<li><a href="#_graphical_representation_of_terminals">2.2.6.2.8. Graphical Representation of Terminals</a></li>
+<li><a href="#_terminal_stream_member_variable">2.2.6.2.4. Terminal Stream Member Variable</a></li>
+<li><a href="#_terminal_graphical_representation">2.2.6.2.5. Terminal Graphical Representation</a></li>
+<li><a href="#GeneralRemarkOnSignal">2.2.6.2.6. General Remark on Signal</a></li>
+<li><a href="#_general_remark_on_inflow_and_outflow">2.2.6.2.7. General Remark on Inflow and Outflow</a></li>
 </ul>
 </li>
 </ul>
@@ -1975,7 +1974,7 @@ These callback functions are defined below.</p>
 <p><code>instanceName</code> is the instance name of the model that calls this function.</p>
 </li>
 <li>
-<p><code>status</code> contains the severity of the message.
+<p><code>status</code> contains the severity of the message, see <code>fmi3Status</code>.
 If <a href="#logMessage"><code>logMessage</code></a> is called with <a href="#fmi3OK"><code>status == fmi3OK</code></a>, then the message is a pure information message.</p>
 </li>
 <li>
@@ -2869,7 +2868,7 @@ The <a href="#clock"><code>clock</code></a> is <a href="#periodic">aperiodic</a>
 <div class="sect4">
 <h5 id="connecting-clocked-fmus">2.1.8.4. Connecting Clocked FMUs</h5>
 <div class="paragraph">
-<p>When connecting imported FMUs together, <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a> variables can readily be connected together only when they are defined on a <a href="#clock"><code>clock</code></a> with identical properties.
+<p>When connecting imported FMUs, <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a> variables can readily be connected only when they are defined on a <a href="#clock"><code>clock</code></a> with identical properties.
 If this is not possible, an explicit cast of one <a href="#clock"><code>clock</code></a> to another <a href="#clock"><code>clock</code></a> is typically defined in the environment.</p>
 </div>
 <div class="paragraph">
@@ -2942,7 +2941,7 @@ When getting or setting the values of array variables, the serialization of arra
 If <code>values[i] == fmi3ClockActive</code> the <a href="#clock"><code>clock</code></a> is currently active, otherwise the <a href="#clock"><code>clock</code></a> is not active.</p>
 </li>
 <li>
-<p><code>nValues</code> provides the number of values in the <code>values</code> vector, which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar clock variables.</p>
+<p><code>nValues</code> provides the number of values in the <code>values</code> vector, which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReferences</code></a> point to scalar clock variables.</p>
 </li>
 </ul>
 </div>
@@ -4970,29 +4969,49 @@ It is intended that the <code>terminalKind</code> is used to define domain speci
 </div>
 </div>
 <div class="paragraph">
-<p>The normalized string <code>variableKind</code> is used to provide general information about the variable.
-This information defines how the connection of this variable has to be implemented (e.g. Kirchhoff&#8217;s current law or common signal flow).</p>
+<p>The normalized string <code>variableName</code> is used to identify the terminal member variable in the element <code>&lt;ModelVariables&gt;</code>.
+The information about minimum, maximum, and nominal values is available in there.
+One variable can be part of several terminals.</p>
 </div>
 <div class="paragraph">
 <p>If the <code>matchingRule</code> <code>plug</code> and <code>bus</code> are used, then the normalized string <code>memberName</code> is used for member variable matching. So the <code>memberName</code> attribute is required for <code>plug</code> and <code>bus</code> and it has to be unique for a terminal. The <code>memberName</code> is not required for <code>matchingRule</code> <code>sequence</code>.</p>
 </div>
 <div class="paragraph">
-<p>The normalized string <code>variableName</code> is used to identify the terminal member variable in the element <code>&lt;ModelVariables&gt;</code>. The information about minimum, maximum, and nominal values is available in there.</p>
-</div>
-</div>
-<div class="sect5">
-<h6 id="_terminal_graphical_representations">2.2.6.2.4. Terminal Graphical Representations</h6>
-<div class="paragraph">
-<p>The <code>&lt;TerminalGraphicalRepresentation&gt;</code> is defined as:</p>
-</div>
-<div class="imageblock text-center">
-<div class="content">
-<img src="images/schema/TerminalGraphicalRepresentation.png" alt="TerminalGraphicalRepresentation" width="70%">
-</div>
+<p>The normalized string <code>variableKind</code> is used to provide general information about the variable.
+This information defines how the connection of this variable has to be implemented (e.g. Kirchhoff&#8217;s current law or common signal flow).</p>
 </div>
 <div class="paragraph">
-<p>One variable can be part of several terminals.</p>
+<p>The predefined <code>variableKind</code> are:</p>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>variableKind</code></th>
+<th class="tableblock halign-left valign-top">Description
+
+<a id="signal"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>signal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The values in connected terminals are intended to be equal.
+Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a>, <a href="#parameter"><code>parameter</code></a> and <a href="#calculatedParameter"><code>calculatedParameter</code></a>.
+<em>[Example: Signal flow, parameter propagation, equality checks]</em></p>
+<p class="tableblock"><a id="inoutflow"></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inflow</code> / <code>outflow</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variables which fulfill Kirchhoff&#8217;s current law.
+Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a>, <a href="#parameter"><code>parameter</code></a> and <a href="#calculatedParameter"><code>calculatedParameter</code></a>.
+<em>[Example: Electric current]</em></p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p><em>[The suggested variable naming scheme for the structured naming convention is &lt;ModelVariable name&gt; = &lt;terminalName&gt;.&lt;memberName&gt;.</em></p>
 </div>
@@ -5027,88 +5046,9 @@ This information defines how the connection of this variable has to be implement
 <em>If a <a href="#derivative"><code>derivative</code></a> is a terminal member variable then it is considered as normal member variable.</em>
 <em>However, if a <a href="#derivative"><code>derivative</code></a> of a terminal member variable is not terminal member, then this <a href="#derivative"><code>derivative</code></a> information may be used by an importing tool.]</em></p>
 </div>
-<div class="paragraph">
-<p>The predefined variable kinds are:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top"><code>variableKind</code></th>
-<th class="tableblock halign-left valign-top">Description
-
-<a id="signal"></a></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>signal</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The values in connected terminals are intended to be equal.
-Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a>, <a href="#parameter"><code>parameter</code></a> and <a href="#calculatedParameter"><code>calculatedParameter</code></a>.
-<em>[Example: Signal flow, parameter propagation, equality checks]</em></p>
-<p class="tableblock"><a id="inoutflow"></a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inflow</code> / <code>outflow</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Variables which fulfill Kirchhoff&#8217;s current law.
-Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a>, <a href="#parameter"><code>parameter</code></a> and <a href="#calculatedParameter"><code>calculatedParameter</code></a>.
-<em>[Example: Electric current]</em></p></td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="sect5">
-<h6 id="GeneralRemarkOnSignal">2.2.6.2.5. General Remark on Signal</h6>
-<div class="paragraph">
-<p><em>[The signal <code>variableKind</code> can be applied for different use cases.</em>
-<em>The first use case is a signal flow from an <a href="#output"><code>output</code></a> of one FMU to an <a href="#input"><code>input</code></a> of another FMU. The <a href="#output"><code>output</code></a> value has to be forwarded to the <a href="#input"><code>input</code></a>.</em></p>
-</div>
-<div class="paragraph">
-<p><em>The signal flow can cause algebraic loops.</em>
-<em>If variables in connected terminals have the <a href="#causality"><code>causality</code></a> <a href="#output"><code>output</code></a>, then an importing tool may iterate an undefined <a href="#input"><code>input</code></a> of an FMU to ensure that the connected output values are equal.</em></p>
-</div>
-<div class="paragraph">
-<p><em>Another use case is the parameter propagation.</em>
-<em>If a variable in both connected terminals has the <a href="#causality"><code>causality</code></a> <a href="#parameter"><code>parameter</code></a>, then an importing tool could ask the user for the value of one of those <a href="#parameter"><code>parameters</code></a> only, and propagate this value to the other FMU.</em>
-<em>If only one of the variables has <a href="#causality"><code>causality</code></a> <a href="#parameter"><code>parameter</code></a>, and the other is a <a href="#constant"><code>constant</code></a> <a href="#output"><code>output</code></a> or <a href="#calculatedParameter"><code>calculatedParameter</code></a>, then the importing tool could also propagate the <a href="#parameter"><code>parameter</code></a> value without presenting a parameter to the user.</em>
-<em>One example of use would be the name of a substance flowing through a pipe.</em>
-<em>If the fluid flows from one pipe FMU to another, the substance should be the same.</em>
-<em>This substance name could be propagated over several FMUs.</em></p>
-</div>
-<div class="paragraph">
-<p><em>Finally the <code>variableKind</code> <code>signal</code> can be applied to implement compatibility checks.</em>
-<em>If for example the <a href="#variability"><code>variability</code></a> of the variables in connected terminals are <a href="#constant"><code>constant</code></a>, then the importing tool can implement an equality assertion.</em>
-<em>This is also possible with <a href="#calculated"><code>calculated</code></a> <a href="#parameter"><code>parameters</code></a>.</em>
-<em>One example of use would be the cross sectional flow area in pipes which is calculated from geometry parameters.</em>
-<em>A change in the cross sectional flow area is relevant for the momentum equation, and therefore the connection has to be deemed incompatible if these variables are present and unequal.]</em></p>
-</div>
-</div>
-<div class="sect5">
-<h6 id="_general_remark_on_inflow_and_outflow">2.2.6.2.6. General Remark on Inflow and Outflow</h6>
-<div class="paragraph">
-<p><em>[Flow variables have a direction and must fulfill a zero sum constraint i.e. the sum of all flow variables connected together must be zero (Kirchhoff&#8217;s current law).</em>
-<em>In addition because different tools might have different direction definitions both, <code>inflow</code> and <code>outflow</code> are available as <code>variableKind</code>.</em>
-<em>For variables with <code>inflow</code> a positive value means that the flow is inwards, and for <code>outflow</code> a positive value means that the flow is outwards.</em>
-<em>For the sake of simplicity in the following \(\dot{m}_i\) denotes an inflowing quantity:</em></p>
-</div>
-<div class="paragraph">
-<p><em>\(0 = \sum{\dot{m}_i}\)</em></p>
-</div>
-<div class="paragraph">
-<p><em>[Connecting a single <a href="#output"><code>output</code></a> <code>outflow</code> to a single <a href="#input"><code>input</code></a> <code>inflow</code>, or vice versa automatically fulfills the flow constraint, while connecting two single signals of the same flow type requires a negation of the signal.</em></p>
-</div>
-<div class="paragraph">
-<p><code>inflow</code> <em>and</em> <code>outflow</code> <em>is only used as a sign convention for scalar flow quantities which obey Kirchhoff&#8217;s current law (sum up to zero).</em>
-<em>Other, nonscalar, quantities which also sum up to zero, like a mechanical force in 3D space according to D&#8217;Alembert&#8217;s principle, are not covered by this sign convention.</em>
-<em>This is the case since Kirchhoff&#8217;s current law only holds for scalars where a sign convention is sufficient.</em>
-<em>Other definitions are beyond the scope of this terminal specification and need clear definition in other specifications on top of this.]</em></p>
-</div>
-</div>
-<div class="sect5">
-<h6 id="_terminal_stream_member_variable">2.2.6.2.7. Terminal Stream Member Variable</h6>
+<h6 id="_terminal_stream_member_variable">2.2.6.2.4. Terminal Stream Member Variable</h6>
 <div class="paragraph">
 <p>The <code>&lt;TerminalStreamMemberVariable&gt;</code> is defined as:</p>
 </div>
@@ -5169,7 +5109,10 @@ q_{i, \mathit{inStream}} &amp;\textit{if $\dot{m}$ is inflowing through terminal
 </div>
 </div>
 <div class="sect5">
-<h6 id="_graphical_representation_of_terminals">2.2.6.2.8. Graphical Representation of Terminals</h6>
+<h6 id="_terminal_graphical_representation">2.2.6.2.5. Terminal Graphical Representation</h6>
+<div class="paragraph">
+<p>The <code>&lt;TerminalGraphicalRepresentation&gt;</code> is defined as:</p>
+</div>
 <div class="imageblock text-center">
 <div class="content">
 <img src="images/schema/TerminalGraphicalRepresentation.png" alt="TerminalGraphicalRepresentation" width="75%">
@@ -5179,15 +5122,16 @@ q_{i, \mathit{inStream}} &amp;\textit{if $\dot{m}$ is inflowing through terminal
 <p>The <code>iconBaseName</code> attribute is mandatory.
 This attribute defines the base name of the image file as a relative URI according to RFC 3986.
 The base URI that this relative URI is resolved against is the URI of the <code>icons/terminalsAndIcons.xml</code> file in the FMU ZIP archive.
-Implementations are only REQUIRED to support relative URIs, excluding relative URIs that move beyond the baseURI (i.e. go "up" a level via ..).
-Implementations are NOT REQUIRED to support any absolute URIs and any specific URI schemes.
+Implementations are required to support relative URIs, excluding relative URIs that move beyond the baseURI (i.e. go "up" a level via ..).
+Implementations are not required to support any absolute URIs and any specific URI schemes.
 The PNG file with the extension '.png' has to be provided. An additional SVG file with extension '.svg' is optional.</p>
 </div>
 <div class="paragraph">
 <p><em>[Note that this specification is functionally equivalent to looking up image sources from the icons folder of the FMU ZIP archive after dot removal from the path as per section 5.2.4 of RFC 3986.]</em></p>
 </div>
 <div class="paragraph">
-<p>The default connection stroke size and color can be provided, to define the intended connection line layout in the importing tool. The stroke size is given relative to the coordinate system extent.
+<p>The <code>defaultConnectionStrokeSize</code> and <code>defaultConnectionColor</code> can be provided to define the intended connection line layout in the importing tool.
+The stroke size is given relative to the coordinate system extent.
 The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</code>.</p>
 </div>
 <div class="paragraph">
@@ -5203,6 +5147,53 @@ The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</co
 </div>
 <div class="paragraph">
 <p><em>[If the graphical representation is used for an <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a> (e.g. a <code>fmi3Float64</code> <a href="#input"><code>input</code></a> <code>u</code>), then a <code>&lt;Terminal&gt;</code> has to be added to the <code>&lt;Terminals&gt;</code> element which has one <code>&lt;TerminalMemberVariable&gt;</code>.]</em></p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="GeneralRemarkOnSignal">2.2.6.2.6. General Remark on Signal</h6>
+<div class="paragraph">
+<p><em>[The signal <code>variableKind</code> can be applied for different use cases.</em>
+<em>The first use case is a signal flow from an <a href="#output"><code>output</code></a> of one FMU to an <a href="#input"><code>input</code></a> of another FMU. The <a href="#output"><code>output</code></a> value has to be forwarded to the <a href="#input"><code>input</code></a>.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The signal flow can cause algebraic loops.</em>
+<em>If variables in connected terminals have the <a href="#causality"><code>causality</code></a> <a href="#output"><code>output</code></a>, then an importing tool may iterate an undefined <a href="#input"><code>input</code></a> of an FMU to ensure that the connected output values are equal.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Another use case is the parameter propagation.</em>
+<em>If a variable in both connected terminals has the <a href="#causality"><code>causality</code></a> <a href="#parameter"><code>parameter</code></a>, then an importing tool could ask the user for the value of one of those <a href="#parameter"><code>parameters</code></a> only, and propagate this value to the other FMU.</em>
+<em>If only one of the variables has <a href="#causality"><code>causality</code></a> <a href="#parameter"><code>parameter</code></a>, and the other is a <a href="#constant"><code>constant</code></a> <a href="#output"><code>output</code></a> or <a href="#calculatedParameter"><code>calculatedParameter</code></a>, then the importing tool could also propagate the <a href="#parameter"><code>parameter</code></a> value without presenting a parameter to the user.</em>
+<em>One example of use would be the name of a substance flowing through a pipe.</em>
+<em>If the fluid flows from one pipe FMU to another, the substance should be the same.</em>
+<em>This substance name could be propagated over several FMUs.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Finally the <code>variableKind</code> <code>signal</code> can be applied to implement compatibility checks.</em>
+<em>If for example the <a href="#variability"><code>variability</code></a> of the variables in connected terminals are <a href="#constant"><code>constant</code></a>, then the importing tool can implement an equality assertion.</em>
+<em>This is also possible with <a href="#calculated"><code>calculated</code></a> <a href="#parameter"><code>parameters</code></a>.</em>
+<em>One example of use would be the cross sectional flow area in pipes which is calculated from geometry parameters.</em>
+<em>A change in the cross sectional flow area is relevant for the momentum equation, and therefore the connection has to be deemed incompatible if these variables are present and unequal.]</em></p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_general_remark_on_inflow_and_outflow">2.2.6.2.7. General Remark on Inflow and Outflow</h6>
+<div class="paragraph">
+<p><em>[Flow variables have a direction and must fulfill a zero sum constraint i.e. the sum of all flow variables connected together must be zero (Kirchhoff&#8217;s current law).</em>
+<em>In addition because different tools might have different direction definitions both, <code>inflow</code> and <code>outflow</code> are available as <code>variableKind</code>.</em>
+<em>For variables with <code>inflow</code> a positive value means that the flow is inwards, and for <code>outflow</code> a positive value means that the flow is outwards.</em>
+<em>For the sake of simplicity in the following \(\dot{m}_i\) denotes an inflowing quantity:</em></p>
+</div>
+<div class="paragraph">
+<p><em>\(0 = \sum{\dot{m}_i}\)</em></p>
+</div>
+<div class="paragraph">
+<p><em>[Connecting a single <a href="#output"><code>output</code></a> <code>outflow</code> to a single <a href="#input"><code>input</code></a> <code>inflow</code>, or vice versa automatically fulfills the flow constraint, while connecting two single signals of the same flow type requires a negation of the signal.</em></p>
+</div>
+<div class="paragraph">
+<p><code>inflow</code> <em>and</em> <code>outflow</code> <em>is only used as a sign convention for scalar flow quantities which obey Kirchhoff&#8217;s current law (sum up to zero).</em>
+<em>Other, nonscalar, quantities which also sum up to zero, like a mechanical force in 3D space according to D&#8217;Alembert&#8217;s principle, are not covered by this sign convention.</em>
+<em>This is the case since Kirchhoff&#8217;s current law only holds for scalars where a sign convention is sufficient.</em>
+<em>Other definitions are beyond the scope of this terminal specification and need clear definition in other specifications on top of this.]</em></p>
 </div>
 </div>
 </div>
@@ -5333,7 +5324,7 @@ This attribute is <code>required</code>.</p>
 Allowed values of this enumeration:</p>
 </div>
 <div id="parameter" class="paragraph">
-<p><code>= parameter</code>: A data value that is constant during the simulation (except for <a href="#tunable"><code>tunable</code></a> parameters, see there) and is provided by the environment and cannot be used in connections, except for parameter propagation in terminals as described in <a href="#GeneralRemarkOnSignal">Section 2.2.6.2.5</a>.
+<p><code>= parameter</code>: A data value that is constant during the simulation (except for <a href="#tunable"><code>tunable</code></a> parameters, see there) and is provided by the environment and cannot be used in connections, except for parameter propagation in terminals as described in <a href="#GeneralRemarkOnSignal">Section 2.2.6.2.6</a>.
 <a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
 These parameters can be changed independently, unlike <a href="#calculatedParameter">calculated parameters</a>.
 <a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).</p>
