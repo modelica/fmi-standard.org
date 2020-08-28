@@ -1218,7 +1218,7 @@ Once exported with binaries, the FMU can be executed by any simulator running on
 </dd>
 <dt class="hdlist1">Small run-time overhead</dt>
 <dd>
-<p>Communication between an FMU and a target simulator through the FMI does not introduce significant run-time overhead.
+<p>Communication between an FMU and an importer through the FMI does not introduce significant run-time overhead.
 This can be achieved by enabling caching of the FMU outputs and by exchanging multiple quantities with one call.</p>
 </dd>
 <dt class="hdlist1">Small footprint</dt>
@@ -1254,7 +1254,7 @@ A get method, for example to a state, will then either trigger a computation, or
 </dd>
 <dt class="hdlist1">Support numerical solvers</dt>
 <dd>
-<p>A typical target simulator will use numerical solvers.
+<p>A typical importer will use numerical solvers.
 These solvers require vectors for <a href="#state"><code>states</code></a>, <a href="#derivative"><code>derivatives</code></a> and zero-crossing functions.
 The FMU directly fills the values of such vectors provided by the solvers.
 Reason: minimize execution time.
@@ -1280,7 +1280,7 @@ Reason: This leads to a compact, easy-to-use, and hence attractive API with a co
 <dt class="hdlist1">Allocator must free</dt>
 <dd>
 <p>All memory (and other resources) allocated by the FMU are freed (released) by the FMU.
-Likewise, resources allocated by the target simulator are released by the target simulator.
+Likewise, resources allocated by the importer are released by the importer.
 Reason: this helps to prevent memory leaks and run-time errors due to incompatible run-time environments for different components.</p>
 </dd>
 <dt class="hdlist1">Immutable strings</dt>
@@ -1399,7 +1399,7 @@ Please refer to the glossary in <a href="#glossary">Appendix A</a> for the most 
 <li>
 <p>FMI functions of one instance do not need to be thread-safe.<br>
 <em>[For example, if the functions of one instance of an FMU are accessed from more than one thread;
-the multi-threaded target simulator that uses the FMU must guarantee that there are no race conditions while invoking the FMI functions.
+the multi-threaded simulation environment that uses the FMU must guarantee that there are no race conditions while invoking the FMI functions.
 The FMU itself does not implement any services to support this.]</em></p>
 </li>
 <li>
@@ -1436,7 +1436,7 @@ In all header files the convention is used that all C function and type definiti
 <dd>
 <p>contains the type definitions of the input and output arguments of the functions as well as some C preprocessor macro definitions for constants.
 This header file must
-be used both by the FMU and by the target simulator.
+be used both by the FMU and by the importer.
 <em>[Example of a definition in this header file:</em></p>
 <div class="listingblock">
 <div class="content">
@@ -1470,7 +1470,7 @@ For simplicity, the function type for each function is composed of the function 
 <p>contains the function prototypes of an FMU that can be accessed in simulation environments.</p>
 <div class="paragraph">
 <p>This header file includes <code>fmi3PlatformTypes.h</code> and <code>fmi3FunctionTypes.h</code>.
-The header file version number for which the model was compiled, can be inquired in the target simulator with <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a> (see <a href="#inquire-platform-and-version-number">Section 2.1.4</a>).<br></p>
+The header file version number for which the model was compiled, can be inquired by the importer with <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a> (see <a href="#inquire-platform-and-version-number">Section 2.1.4</a>).<br></p>
 </div>
 <div class="paragraph">
 <p><em>[Example of a definition in this header file:</em></p>
@@ -4526,7 +4526,7 @@ The variable sub type <code>fmi3Clock</code> provides additional attributes for 
 <p><code>= synchronousTime</code> is used, if the properties of the <a href="#clock"><code>clock</code></a> adhere to synchronous clock theory.</p>
 </div>
 <div id="communicationPoint" class="paragraph">
-<p><code>= communicationPoint</code> <a href="#clock"><code>clocks</code></a> define sampling points (i.e. communication points) for the variables of model partitions and are used in FMI for Co-Simulation and FMI for Scheduled Execution.
+<p><code>= communicationPoint</code> <a href="#clock"><code>clocks</code></a> define communication points for the variables of model partitions and are used in FMI for Co-Simulation and FMI for Scheduled Execution.
 These clocks are ignored by Model Exchange.</p>
 </div>
 <div class="paragraph">
@@ -4725,7 +4725,7 @@ Furthermore, for Co-Simulation FMUs the <code>stepSize</code> defines the prefer
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;GraphicalRepresentation&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If present, contains information for authoring tools to draw graphical representations of the FMU in a system view.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, contains information for importers of FMUs to draw graphical representations of the FMU in a system view.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;Terminals&gt;</code></p></td>
@@ -4970,8 +4970,10 @@ It is intended that the <code>terminalKind</code> is used to define domain speci
 </div>
 <div class="paragraph">
 <p>The normalized string <code>variableName</code> is used to identify the terminal member variable in the element <code>&lt;ModelVariables&gt;</code>.
-The information about minimum, maximum, and nominal values is available in there.
-One variable can be part of several terminals.</p>
+The information about minimum, maximum, and nominal values is available in there.</p>
+</div>
+<div class="paragraph">
+<p>One variable can be part of several terminals.</p>
 </div>
 <div class="paragraph">
 <p>If the <code>matchingRule</code> <code>plug</code> and <code>bus</code> are used, then the normalized string <code>memberName</code> is used for member variable matching. So the <code>memberName</code> attribute is required for <code>plug</code> and <code>bus</code> and it has to be unique for a terminal. The <code>memberName</code> is not required for <code>matchingRule</code> <code>sequence</code>.</p>
@@ -6638,14 +6640,14 @@ In case information beyond <code>&lt;BuildConfiguration&gt;</code> is required t
 <p><em>[Note that the header files <code>fmi3PlatformTypes.h</code> and <code>fmi3FunctionTypes.h/fmi3Functions.h</code> are not included in the FMU due to the following reasons:</em></p>
 </div>
 <div class="paragraph">
-<p><em><code>fmi3PlatformTypes.h</code> makes no sense in the <code>sources</code> directory, because if sources are provided, then the target simulator defines this header file and not the FMU.</em><br>
+<p><em><code>fmi3PlatformTypes.h</code> makes no sense in the <code>sources</code> directory, because if sources are provided, then the importer defines this header file and not the FMU.</em><br>
 <em>This header file is not included in the <code>binaries</code> directory, because it is implicitly defined by the platform directory (for example, <code>i686-windows</code> for a 32-bit machine or <code>x86_64-linux</code> for a 64-bit machine).</em></p>
 </div>
 <div class="paragraph">
 <p><em><code>fmi3FunctionTypes.h</code> / <code>fmi3Functions.h</code> are not needed in the <code>sources</code> directory, because they are implicitly defined by attribute <code>fmiVersion</code> in file <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</em>
-<em>Furthermore, in order that the C compiler can check for consistent function arguments, the header file from the target simulator should be used when compiling the C sources.</em>
+<em>Furthermore, in order that the C compiler can check for consistent function arguments, the header file from the importer should be used when compiling the C sources.</em>
 <em>It would therefore be counter-productive (unsafe) if this header file was present.</em><br>
-<em>These header files are not included in the <code>binaries</code> directory, since they are already utilized to build the target simulator executable.</em>
+<em>These header files are not included in the <code>binaries</code> directory, since they are already utilized to build the executable of the simulation environment.</em>
 <em>The version number of the header file used to construct the FMU can be deduced via attribute <code>fmiVersion</code> in file <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> or via function call <a href="#fmi3GetVersion"><code>fmi3GetVersion</code></a>.]</em></p>
 </div>
 </div>
@@ -6852,7 +6854,7 @@ When compiling a shared object on Linux, <code>RPATH="$ORIGIN"</code> has to be 
 </dl>
 </div>
 <div class="paragraph">
-<p><em>[Typical scenarios are to provide binaries only for one machine type (for example, on the machine where the target simulator is running and for which licenses of run-time libraries are available) or to provide only sources (for example, for translation and download for a particular micro-processor).]</em></p>
+<p><em>[Typical scenarios are to provide binaries only for one machine type (for example, on the machine where the importer is running and for which licenses of run-time libraries are available) or to provide only sources (for example, for translation and download for a particular micro-processor).]</em></p>
 </div>
 </div>
 <div class="sect4">
@@ -7268,7 +7270,7 @@ A schematic view of a model in FMI for Model Exchange format is shown in <a href
 <h4 id="basic-definitions-model-exchange">3.1.1. Basic Definitions</h4>
 <div class="paragraph">
 <p>The goal of the Model Exchange interface is to numerically solve a system of differential, algebraic and discrete-time equations.
-In this version of the interface, ordinary differential equations in state-space form with events are handled (abbreviated as "hybrid ODE").
+In this version of the interface, ordinary differential equations in state-space representation with events are handled (abbreviated as "hybrid ODE").
 Algebraic equation systems might be contained inside the FMU.
 Also, the FMU might consist of discrete-time equations only, for example, describing a sampled-data controller.</p>
 </div>
@@ -7887,7 +7889,7 @@ r2 = z2 &gt; 0</pre>
 <p><em>When z1 changes from z1 &gt; 0 to z1 &#8656; 0 or vice versa, or z2 correspondingly, the integration is halted, and the environment must call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.</em></p>
 </div>
 <div class="paragraph">
-<p><em>An actual implementation will pack the code in an impure function, say Greater(&#8230;&#8203;), resulting in:</em></p>
+<p><em>An actual implementation will pack the code into a function with side effects, say Greater(&#8230;&#8203;), resulting in:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8729,7 +8731,7 @@ It is designed both for coupling with subsystem models, which have been exported
 <p>Co-simulation exploits the modular structure of coupled problems in all stages of the simulation process beginning with the separate model setup and preprocessing for the individual subsystems in different simulation tools (which can be powerful simulators as well as simple C programs).
 During time integration, the simulation is again performed independently for all subsystems restricting the data exchange between subsystems to discrete communication points \(t_i\).
 For simulator coupling, also the visualization and post-processing of simulation data is done individually for each subsystem in its own native simulation tool.
-In different contexts, the communication points \(t_i\), the communication steps \(t_i \rightarrow t_{i+1}\) and the communication step sizes \(h_i := t_{i+1} - t_i\) are also known as sampling points (synchronization points), macro steps and sampling rates, respectively.
+We use the following terms: the communication points \(t_i\), the communication steps \(t_i \rightarrow t_{i+1}\) and the communication step sizes \(h_i := t_{i+1} - t_i\).
 The term "communication point" in FMI for Co-Simulation refers to the communication between subsystems in a co-simulation environment and should not be mixed with the output points for saving simulation results to file.</p>
 </div>
 <div class="paragraph">
@@ -11158,9 +11160,6 @@ There is a direct one-to-one relation for a <a href="#clock"><code>clock</code><
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">//include::examples/co_simulation_scheduled_execution.xml[]</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>TODO: describe capabilities</p>
-</div>
 </div>
 </div>
 </div>
@@ -11228,53 +11227,16 @@ There is a direct one-to-one relation for a <a href="#clock"><code>clock</code><
 <td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>adjoint derivative</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>algebraic equation</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>algebraic loop</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>algorithm</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A formal recipe for solving a specific type of problem.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>application programming interface (API)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A set of functions, procedures, methods or classes together with type conventions/declarations (for example, C header files) that an operating system, library or service provides to support requests made by computer programs.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>argument</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO: Refers to a function parameter. Not to be confused with <em>parameter</em>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>artificial algebraic loop</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>asynchronous co-simulation</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>authoring tool</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>AUTOSAR</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">AUTomotive Open System Architecture (<a href="http://www.autosar.org/">www.autosar.org</a>).<br>
-Evolving standard of the automotive industry to define the implementation of embedded systems in vehicles including communication mechanisms. An important part is the standardization of C functions and macros to communicate between software components. AUTOSAR is targeted to built on top of the real-time operating system OSEK (<a href="http://www.osek-vdx.org/">www.osek-vdx.org</a>, <a href="http://de.wikipedia.org/wiki/OSEK">de.wikipedia.org/wiki/OSEK</a>). The use of the AUTOSAR standard requires AUTOSAR membership.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refers to a function parameter. Not to be confused with <em>parameter</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>capability flag</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capability flags are used to indicate to the importer what optional functionality the FMU supports.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>clock</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A signal to report events or trigger events or model partitions.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>clock tick</em></p></td>
@@ -11284,11 +11246,11 @@ The ticking of a <a href="#outputClock"><code>outputClock</code></a> may lead to
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>communication points</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Time grid for data exchange between importer and FMU(s) in a (co-)simulation environment (also known as "sampling points" or "synchronization points"). TODO: We should get rid of as many synonyms as possible.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time grid for data exchange between importer and FMU(s) in a (co-)simulation environment.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>communication step size</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Distance between two subsequent <em>communication points</em> (also known as "sampling rate" or "macro step size").</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Distance between two subsequent <em>communication points</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>co-simulation</em></p></td>
@@ -11298,32 +11260,12 @@ Each simulation program is responsible for computing the behavior of a subsystem
 Synonyms: dynamic mutual-exchange, simulator coupling, and coupled simulation.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>co-simulation platform</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Software used for coupling several <em>simulation programs</em> for <em>co-simulation.</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>DAEs</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See <em>Differential Algebraic System of Equations</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Differential Algebraic System of Equations</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A system of equations that may contain differential equations and algebraic equations.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>direct feedthrough</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Direct feedthrough describes that values of output variables depend directly on values of input variables.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>directional derivative</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>discrete-time system</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>ECU</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Electronic Control Unit (Microprocessor that is used to control a sub-system in a vehicle).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Electronic Control Unit (Microprocessor that is used to control a technical system).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>event</em></p></td>
@@ -11335,11 +11277,11 @@ See <a href="#state-event">state event</a>, <a href="#step-event">step event</a>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>event indicator</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A variable that changes sign exactly at an event.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>exporter</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A program that creates an FMU.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="external-event"></a><em>external event</em></p></td>
@@ -11360,7 +11302,7 @@ Interface of a functional mock-up in form of a model. In analogy to the term dig
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI functions</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The function of the FMI C-API.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for co-simulation</em></p></td>
@@ -11382,35 +11324,20 @@ The implementations can be in source or binary form.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMU clock</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>freeze variables</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>hybrid ODE</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#clock"><code>clock</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>importer</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO a.k.a target simulator, simulation environment, environment, calling environment, (co-)simulation algorithm, integrator (in ME)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>impure function</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The tool that imports or loads one or more FMUs.
+Also called simulation environment, environment, calling environment, (co-)simulation algorithm, target platform, target environment, integrator (in ME).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>independent variable</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">All variables are a function of this <a href="#independent"><code>independent</code></a> variable, typically time.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>inline integration</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="input-event"></a><em>input event</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An input event occurrs when a discrete input variable changes or a continuous input variable has a discontinuity.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An input event occurs when a discrete input variable changes or a continuous input variable has a discontinuity.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>integration algorithm</em></p></td>
@@ -11421,40 +11348,16 @@ The implementations can be in source or binary form.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A <em>software component</em>, which implements an <em>integration algorithm</em>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>integrator step</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>interface</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An abstraction of a <em>software component</em> that describes its behavior without dealing with the internal implementation. <em>Software components</em> communicate with each other via interfaces.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>intermediate points</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>internal step</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO: possible synonyms: "internal integration step"</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>interrupt</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> connected to the tick of an <a href="#inputClock"><code>inputClock</code></a> of an FMU that is caused by an external potentially random process, i.e. hardware interrupt, software interrupt.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_jacobian _</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Kalman filter</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>linear system</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>machine epsilon</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Smallest floating point value.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>mock-up</em></p></td>
@@ -11464,18 +11367,6 @@ The implementations can be in source or binary form.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>model</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A model is a mathematical or logical representation of a system of entities, phenomena, or processes. Basically a model is a simplified abstract view of the complex reality.<br>
 It can be used to compute its expected behavior under specified conditions.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>model partition</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>model predictive control</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>modeling environment</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>model description file</em></p></td>
@@ -11499,24 +11390,12 @@ It can be used to compute its expected behavior under specified conditions.</p><
 The computation of model partitions can be externally controlled based on <a href="#clock"><code>clock</code></a> ticks of associated <a href="#inputClock"><code>input clocks</code></a>.</p>
 <p class="tableblock">Not all FMU internal model partitions have to be exposed in the Co-Simulation interface as <a href="#clock"><code>clock</code></a> and can also be handled FMU internally (e.g. internal subsampling).
 Nevertheless, it is assumed that the activation of all exposed <a href="#inputClock"><code>input clocks</code></a> results in the computation of the complete FMU.</p>
-<p class="tableblock">As stated above, continuous parts of the FMU are also associated to model partitions that define the sampling points (i.e. communication points) for the <a href="#continuous"><code>continuous</code></a> values.
+<p class="tableblock">As stated above, continuous parts of the FMU are also associated to model partitions that define the communication points for the <a href="#continuous"><code>continuous</code></a> values.
 Please note that this is only possible for <code>CommunicationPointClocks</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Newtonian time instant</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>non-linear system</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>numeric type</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>numerical solver</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">see <em>solver</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>ODE</em></p></td>
@@ -11539,28 +11418,12 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A quantity within a <em>model</em>, which remains constant during <em>simulation (<a href="#fixed"><code>fixed</code></a> <a href="#parameter"><code>parameter</code></a>) or may change at event instances (<a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a>)</em>. Examples are a mass, stiffness, etc. These parameters are different from <a href="#calculatedParameter">calculated parameters</a>, because they can be changed independently (according to their <a href="#variability"><code>variability</code></a>).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>rate monotonic scheduling</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>real sampled data system</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>relative tolerance</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>run-time environment</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO. Synonyms: "co-simulation environment"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See co-simulation environment</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>scheduled execution</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>scheduler</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FMI type that externalizes the scheduler to run <em>model partitions</em>, potentially synchronized between more than one FMU and exchanging input and output variables accordingly.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>simulation</em></p></td>
@@ -11588,16 +11451,8 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <em>tool coupling</em>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>singular solution</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>solver</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Software component,</em> which includes algorithms to solve <em>models</em>, for example, <em>integration algorithms</em> and <em>event handling</em> methods. TODO: Synonims: "simulation engine".</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>sparse matrix</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Software component,</em> which includes algorithms to solve <em>models</em>, for example, <em>integration algorithms</em> and <em>event handling</em> methods.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>state</em></p></td>
@@ -11610,20 +11465,12 @@ The discrete <a href="#state"><code>states</code></a> of a model are time-discre
 This definition is slightly different from the usual standard definition of state events: "\(z(t)*z(t_{i-1}) \leq 0\)" which has the severe drawback that the value of the event indicator at the previous event instant, \(z(t_{i-1}) \neq 0\), must be non-zero and this condition cannot be guaranteed. The often used term "zero crossing function" for <code>z</code> is misleading (and is therefore not used in this document), since a state event is defined by a change of a domain and not by a zero crossing of a variable.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>state machine</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>state-space form</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="step-event"></a><em>step event</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Event</em> that might occur at a completed integrator step. Since this event type is not defined by a precise time or condition, it is usually not defined by a user. A program may use it, for example, to dynamically switch between different states. A step event is handled much more efficiently than a <em>state event</em>, because the event is just triggered after performing a check at a completed integrator step, whereas a search procedure is needed for a state event.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>structural parameter</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A parameter influencing the size and/or dimensionality of an array variable of an FMU.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>synchronous clock theory</em></p></td>
@@ -11636,10 +11483,6 @@ For an <em>FMU</em>, the <a href="#independent"><code>independent</code></a> var
 The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
 During continuous-time integration \(t_I = 0\).
 The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>target simulator</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO (The terms "simulation environment", "calling environment", "target environment", "target platform", "environment" are also used. We should unify these. Maybe distinguish between the software and the platform executing it.)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>task</em></p></td>
@@ -11658,10 +11501,6 @@ The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>see Transmission Line Method</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>tool coupling</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Transmission Line Method</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A mathematical method which uses physically motivated time delays to decouple an equation system into independent parts during a specified time frame without compromising numerical stability. Also known as the <em>bi-lateral delay line</em> method.</p></td>
 </tr>
@@ -11672,14 +11511,6 @@ The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>XML</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">eXtensible Markup Language (<a href="http://www.w3.org/XML/">www.w3.org/XML</a>, <a href="http://en.wikipedia.org/wiki/Xml">en.wikipedia.org/wiki/XML</a>) - An open standard to store information in text files in a structured form.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>vendor</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>zero-crossing function</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 </tbody>
 </table>
