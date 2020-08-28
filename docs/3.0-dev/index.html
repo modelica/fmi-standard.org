@@ -8816,15 +8816,13 @@ The algorithm of the FMU may have the property to be able to repeat the simulati
 <p>During the interrupted simulation, the FMU (and its individual solver) can receive values for <a href="#input"><code>inputs</code></a> \(u(t_i)\) and send values of outputs \(y(t_i)\).</p>
 </li>
 <li>
-<p>Whenever the simulation in a FMU is interrupted, a new time value \(t_{i+1}, t_i \leq t_{i+1} \leq t_{\mathit{stop}}\), can be given to simulate the time subinterval \(t_i &lt; t \leq t_{i+1}\)</p>
+<p>Whenever the simulation in an FMU is interrupted, a new time value \(t_{i+1}, t_i &lt; t_{i+1} \leq t_{\mathit{stop}}\), can be given to simulate the time subinterval \(t_i &lt; t \leq t_{i+1}\)</p>
 </li>
 <li>
-<p>The subinterval length \(h_i\) is the communication step size of the \(i^{th}\) communication step, \(h_i = t_{i+1} - t_i\).</p>
+<p>The subinterval length \(h_i\) is the communication step size of the \(i^{th}\) communication step, \(h_i = t_{i+1} - t_i\).
+Note that the communication step size initiated by the co-simulation algorithm has to be greater than zero.</p>
 </li>
 </ol>
-</div>
-<div class="paragraph">
-<p>The communication step size initiated by the co-simulation algorithm has to be greater than zero.</p>
 </div>
 <div class="paragraph">
 <p>FMI for Co-Simulation allows a co-simulation flow which starts with instantiation and initialization (all FMUs are prepared for computation, the communication links are established), followed by simulation (the FMUs are forced to simulate a communication step), and finishes with shutdown.
@@ -8934,8 +8932,8 @@ Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a hr
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
 Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).<br>
-If no event happens at the communication point \(tc_i\), <a href="#continuous"><code>continuous</code></a> input variables \(\mathbf{u}(tc_{i+1}\) must be consistent with the values of the smooth functions \(\mathbf{u}_{i, IU}\), that is \(\mathbf{u}_{i, IU}(tc_{i+1})= \mathbf{u}(tc_i)\).
-It is also recommended but not mandatory that the function defined by the continuation of \(\mathbf{u}_{i, IU}\) with \(\mathbf{u}_{i+1, IU}\) be of smoothness \(C^{k}([tc_i, tc_{i+2}])\)  with the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\).<br>
+If no event happens at the communication point \(t_i\), <a href="#continuous"><code>continuous</code></a> input variables \(\mathbf{u}(t_{i+1})\) must be consistent with the values of the smooth functions \(\mathbf{u}_{i, IU}\), that is \(\mathbf{u}_{i, IU}(t_{i+1})= \mathbf{u}(t_i)\).
+It is also recommended but not mandatory that the function defined by the continuation of \(\mathbf{u}_{i, IU}\) with \(\mathbf{u}_{i+1, IU}\) be of smoothness \(C^{k}([t_i, t_{i+2}])\)  with the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\).<br>
 <em>[This can increase simulation speed for higher order multi-step solvers that in this case do not have to reset even at communication points.]</em><br>
 If an event happens at the communication point, <a href="#continuous"><code>continuous</code></a> input variables may change discontinuously.</p></td>
 </tr>
@@ -9002,7 +9000,7 @@ Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a h
 </div>
 </div>
 <div class="paragraph">
-<p>where \(\mathbf{\Phi}_i\) and \(\mathbf{\Gamma}_i\) define the system behavior for the time interval \(t_i \leq t &lt; t_{i+1}\),
+<p>where \(\mathbf{\Phi}_i\) and \(\mathbf{\Gamma}_i\) define the system behavior for the time interval \(t_i &lt; t \leq t_{i+1}\),
 with \(t_i = t_0 + \sum_{k=0}^{i-1}h_k\).</p>
 </div>
 <div class="paragraph">
@@ -9021,7 +9019,7 @@ with \(t_i = t_0 + \sum_{k=0}^{i-1}h_k\).</p>
 <div class="content">
 \[\mathbf{u}_{i, IU}(t)
 =
-\sum^{m_{\mathit{extra}}}_{j=0} \mathbf{C_{i, j}} \frac{(t-tc_i)^j}{j!}\]
+\sum^{m_{\mathit{extra}}}_{j=0} \mathbf{C_{i, j}} \frac{(t-t_i)^j}{j!}\]
 </div>
 </div>
 <div class="paragraph">
@@ -9203,7 +9201,7 @@ For an output argument, calling <code>fmi3Get{VariableType}</code> on such a var
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{y}_{i, IU}(t):= \mathbf{f}_{\mathit{Intermediate}}(\mathbf{u}_{i, c+d}, \mathbf{u}_{i, IU} ( t \in [t_i, t) ),  t, h_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})\)</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="blue">\(\mathbf{y}_{i, IU}(t):= \mathbf{f}_{\mathit{Intermediate}}(\mathbf{u}_{i, c+d}, \mathbf{u}_{i, IU} (t \in [t_i, t_{i+1}) ),  t, h_i, \mathbf{p}_{\mathit{tune}}, \mathbf{p}_{\mathit{other}})\)</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="blue">fmi3Get{VariableType}</span></code></p></td>
 </tr>
 <tr>
