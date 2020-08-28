@@ -16,7 +16,7 @@
 
 #include "config.h"
 #include "model.h"
-#include "slave.h"
+#include "cosimulation.h"
 
 
 // C-code FMUs have functions names prefixed with MODEL_IDENTIFIER_.
@@ -567,8 +567,9 @@ fmi2Status fmi2DoStep(fmi2Component c, fmi2Real currentCommunicationPoint,
     }
 
     int earlyReturn;
+    double lastSuccessfulTime;
 
-    return (fmi2Status)doStep(S, currentCommunicationPoint, currentCommunicationPoint + communicationStepSize, &earlyReturn);
+    return (fmi2Status)doStep(S, currentCommunicationPoint, currentCommunicationPoint + communicationStepSize, &earlyReturn, &lastSuccessfulTime);
 }
 
 /* Inquire slave status */

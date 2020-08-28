@@ -16,7 +16,7 @@
 
 #include "config.h"
 #include "model.h"
-#include "slave.h"
+#include "cosimulation.h"
 
 
 #define FMI_STATUS fmi3Status
@@ -49,9 +49,8 @@
 
 /* Creation and destruction of FMU instances */
 #define MASK_fmi3InstantiateInstantiateModelExchange MASK_AnyState
-#define MASK_fmi3InstantiateBasicCoSimulation        MASK_AnyState
-#define MASK_fmi3InstantiateHybridCoSimulation       MASK_AnyState
-#define MASK_fmi3InstantiateScheduledCoSimulation    MASK_AnyState
+#define MASK_fmi3InstantiateCoSimulation             MASK_AnyState
+#define MASK_fmi3InstantiateScheduledExectuion       MASK_AnyState
 #define MASK_fmi3FreeInstance                        MASK_AnyState
 
 /* Enter and exit initialization mode, terminate and reset */
@@ -239,7 +238,7 @@ fmi3Instance fmi3InstantiateCoSimulation(
         instantiationToken,
         resourceLocation,
         loggingOn,
-        BasicCoSimulation,
+        CoSimulation,
         false
     );
 
@@ -273,7 +272,7 @@ fmi3Instance fmi3InstantiateScheduledExecution(
         instantiationToken,
         resourceLocation,
         loggingOn,
-        ScheduledCoSimulation,
+        ScheduledExecution,
         false
     );
 
@@ -316,16 +315,16 @@ fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
     }
 
     switch (S->type) {
-        case BasicCoSimulation:
-            S->state = StepMode;
-            break;
-        case ScheduledCoSimulation:
-            S->state = ClockActivationMode;
-            break;
-        case HybridCoSimulation:
         case ModelExchange:
             S->state = EventMode;
             S->isNewEventIteration = true;
+            break;
+        case CoSimulation:
+            S->state = StepMode;
+            // TODO: new event iteration?
+            break;
+        case ScheduledExecution:
+            S->state = ClockActivationMode;
             break;
     }
 
@@ -333,6 +332,18 @@ fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
     // initialize event indicators
     getEventIndicators(S, S->prez, NZ);
 #endif
+
+    switch (S->type) {
+        case ModelExchange:
+            S->state = EventMode;
+            break;
+        case CoSimulation:
+            S->state = StepMode;
+            break;
+        case ScheduledExecution:
+            S->state = ClockActivationMode;
+            break;
+    }
 
     return fmi3OK;
 }
@@ -643,23 +654,79 @@ fmi3Status fmi3GetVariableDependencies(fmi3Instance instance,
 }
 
 fmi3Status fmi3GetFMUState(fmi3Instance instance, fmi3FMUState* FMUState) {
-    return fmi3Error; // unsupportedFunction(instance, "fmi3GetFMUState", MASK_fmi3GetFMUState);
+
+    ASSERT_STATE(GetFMUState)
+
+    ModelData *modelData = (ModelData *)calloc(1, sizeof(ModelData));
+    memcpy(modelData, S->modelData, sizeof(ModelData));
+    *FMUState = modelData;
+
+    return fmi3OK;
 }
+
 fmi3Status fmi3SetFMUState(fmi3Instance instance, fmi3FMUState FMUState) {
-    return fmi3Error; // unsupportedFunction(instance, "fmi3SetFMUState", MASK_fmi3SetFMUState);
+
+    ASSERT_STATE(SetFMUState)
+
+    ModelData *modelData = FMUState;
+    memcpy(S->modelData, modelData, sizeof(ModelData));
+
+    return fmi3OK;
 }
+
 fmi3Status fmi3FreeFMUState(fmi3Instance instance, fmi3FMUState* FMUState) {
-    return fmi3Error; // unsupportedFunction(instance, "fmi3FreeFMUState", MASK_fmi3FreeFMUState);
+
+    ASSERT_STATE(FreeFMUState)
+
+    ModelData *modelData = *FMUState;
+    free(modelData);
+    *FMUState = NULL;
+
+    return fmi3OK;
 }
+
 fmi3Status fmi3SerializedFMUStateSize(fmi3Instance instance, fmi3FMUState FMUState, size_t *size) {
-    return fmi3Error; // unsupportedFunction(instance, "fmi3SerializedFMUStateSize", MASK_fmi3SerializedFMUStateSize);
+
+     UNUSED(instance)
+     UNUSED(FMUState)
+     ASSERT_STATE(SerializedFMUStateSize)
+
+     *size = sizeof(ModelData);
+
+     return fmi3OK;
 }
+
 fmi3Status fmi3SerializeFMUState(fmi3Instance instance, fmi3FMUState FMUState, fmi3Byte serializedState[], size_t size) {
-    return fmi3Error; // unsupportedFunction(instance, "fmi3SerializeFMUState", MASK_fmi3SerializeFMUState);
+
+    ASSERT_STATE(SerializeFMUState)
+
+    if (nullPointer(S, "fmi3SerializeFMUState", "FMUstate", FMUState)) {
+        return fmi3Error;
+    }
+
+    if (invalidNumber(S, "fmi3SerializeFMUState", "size", size, sizeof(ModelData))) {
+        return fmi3Error;
+    }
+
+    memcpy(serializedState, FMUState, sizeof(ModelData));
+
+    return fmi3OK;
 }
+
 fmi3Status fmi3DeSerializeFMUState (fmi3Instance instance, const fmi3Byte serializedState[], size_t size,
                                     fmi3FMUState* FMUState) {
-    return fmi3Error; // unsupportedFunction(instance, "fmi3DeSerializeFMUState", MASK_fmi3DeSerializeFMUState);
+    ASSERT_STATE(DeSerializeFMUState)
+
+    if (*FMUState == NULL) {
+        *FMUState = (fmi3FMUState *)calloc(1, sizeof(ModelData));
+    }
+
+    if (invalidNumber(S, "fmi3DeSerializeFMUState", "size", size, sizeof(ModelData)))
+        return fmi3Error;
+
+    memcpy(*FMUState, serializedState, sizeof(ModelData));
+
+    return fmi3OK;
 }
 
 fmi3Status fmi3GetDirectionalDerivative(fmi3Instance instance, const fmi3ValueReference unknowns[], size_t nUnknowns, const fmi3ValueReference knowns[], size_t nKnowns, const fmi3Float64 deltaKnowns[], size_t nDeltaKnowns, fmi3Float64 deltaUnknowns[], size_t nDeltaOfUnknowns) {
@@ -734,13 +801,12 @@ fmi3Status fmi3ExitConfigurationMode(fmi3Instance instance) {
     } else {
         switch (S->type) {
             case ModelExchange:
-            case HybridCoSimulation:
                 S->state = EventMode;
                 break;
-            case BasicCoSimulation:
+            case CoSimulation:
                 S->state = StepMode;
                 break;
-            case ScheduledCoSimulation:
+            case ScheduledExecution:
                 S->state = ClockActivationMode;
                 break;
         }
@@ -844,12 +910,12 @@ fmi3Status fmi3NewDiscreteStates(fmi3Instance instance,
     S->isNewEventIteration = false;
 
     // copy internal eventInfo of component to output arguments
-    *newDiscreteStatesNeeded           = S->newDiscreteStatesNeeded;
-    *terminateSimulation               = S->terminateSimulation;
-    *nominalsOfContinuousStatesChanged = S->nominalsOfContinuousStatesChanged;
-    *valuesOfContinuousStatesChanged   = S->valuesOfContinuousStatesChanged;
-    *nextEventTimeDefined              = S->nextEventTimeDefined;
-    *nextEventTime                     = S->nextEventTime;
+    if (newDiscreteStatesNeeded)           *newDiscreteStatesNeeded           = S->newDiscreteStatesNeeded;
+    if (terminateSimulation)               *terminateSimulation               = S->terminateSimulation;
+    if (nominalsOfContinuousStatesChanged) *nominalsOfContinuousStatesChanged = S->nominalsOfContinuousStatesChanged;
+    if (valuesOfContinuousStatesChanged)   *valuesOfContinuousStatesChanged   = S->valuesOfContinuousStatesChanged;
+    if (nextEventTimeDefined)              *nextEventTimeDefined              = S->nextEventTimeDefined;
+    if (nextEventTime)                     *nextEventTime                     = S->nextEventTime;
 
     return fmi3OK;
 }
@@ -988,6 +1054,8 @@ fmi3Status fmi3EnterStepMode(fmi3Instance instance) {
 
     ASSERT_STATE(EnterStepMode)
 
+    S->state = StepMode;
+
     return fmi3OK;
 }
 
@@ -1016,7 +1084,7 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
         return fmi3Error;
     }
 
-    return (fmi3Status)doStep(S, currentCommunicationPoint, currentCommunicationPoint + communicationStepSize, earlyReturn);
+    return (fmi3Status)doStep(S, currentCommunicationPoint, currentCommunicationPoint + communicationStepSize, earlyReturn, lastSuccessfulTime);
 }
 
 fmi3Status fmi3ActivateModelPartition(fmi3Instance instance,

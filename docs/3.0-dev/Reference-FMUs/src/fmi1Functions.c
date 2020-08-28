@@ -16,7 +16,7 @@
 
 #include "config.h"
 #include "model.h"
-#include "slave.h"
+#include "cosimulation.h"
 
 
 #ifdef FMI_COSIMULATION
@@ -262,7 +262,7 @@ fmiComponent fmiInstantiateSlave(fmiString  instanceName, fmiString GUID,
         GUID,
         fmuLocation,
         loggingOn,
-        BasicCoSimulation,
+        CoSimulation,
         false);
 }
 
@@ -329,7 +329,8 @@ fmiStatus fmiCancelStep(fmiComponent c) {
 fmiStatus fmiDoStep(fmiComponent c, fmiReal currentCommunicationPoint, fmiReal communicationStepSize, fmiBoolean newStep) {
     ModelInstance* instance = (ModelInstance *)c;
     int earlyReturn;
-    return (fmiStatus)doStep(instance, currentCommunicationPoint, currentCommunicationPoint + communicationStepSize, &earlyReturn);
+    double lastSuccessfulTime;
+    return (fmiStatus)doStep(instance, currentCommunicationPoint, currentCommunicationPoint + communicationStepSize, &earlyReturn, &lastSuccessfulTime);
 }
 
 static fmiStatus getStatus(char* fname, fmiComponent c, const fmiStatusKind s) {

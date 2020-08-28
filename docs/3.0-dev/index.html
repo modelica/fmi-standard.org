@@ -1339,8 +1339,7 @@ Properties that might be additionally needed for trajectory optimization, for ex
 <p>In the end-user/logical view, one- and two-dimensional arrays are used.
 Here the convention of linear algebra, the control community and the most important tools in this area is utilized.
 In other words the first element along one dimension starts at index one.
-In all these cases, the starting index is also explicitly mentioned at the respective definition of the array.
-For example, in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file, the set of exposed variables is defined as ordered sets where the first element is referenced with index one (these indices are, for example, used to define the sparseness structure of partial derivative matrices).</p>
+In all these cases, the starting index is also explicitly mentioned at the respective definition of the array.</p>
 </li>
 <li>
 <p>In the implementation view, one-dimensional C arrays are used.
@@ -10080,8 +10079,8 @@ The code demonstrates the simplest co-simulation algorithm as shown in <a href="
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">////////////////////////////
 // Initialization sub-phase
 
-// instantiate both slaves
-s1 = s1_fmi3InstantiateCoSimulation("slave1",      // instanceName
+// instantiate both FMUs
+s1 = s1_fmi3InstantiateCoSimulation("instance1",      // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
@@ -10093,7 +10092,7 @@ s1 = s1_fmi3InstantiateCoSimulation("slave1",      // instanceName
                                     cb_logMessage, // logMessage
                                     NULL);         // intermediateUpdate
 
-s2 = s2_fmi3InstantiateCoSimulation("slave1",      // instanceName
+s2 = s2_fmi3InstantiateCoSimulation("instance1",      // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
@@ -10119,7 +10118,7 @@ h = 0.01;
 // s1_fmi3SetReal/Integer/Boolean/String(s1, ...);
 // s2_fmi3SetReal/Integer/Boolean/String(s2, ...);
 
-// initialize the slaves
+// initialize the FMUs
 s1_fmi3EnterInitializationMode(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
 s2_fmi3EnterInitializationMode(s2, fmi3False, 0.0, startTime, fmi3True, stopTime);
 
@@ -10132,7 +10131,7 @@ s2_fmi3ExitInitializationMode(s2);
 
 ////////////////////////
 // Simulation sub-phase
-tc = startTime; // current master time
+tc = startTime; // current time
 
 while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
 
@@ -10144,23 +10143,23 @@ while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
     // fmi3SetReal(s1, ..., 1, &amp;y2);
     // fmi3SetReal(s2, ..., 1, &amp;y1);
 
-    // call slave s1 and check status
+    // call instance s1 and check status
     fmi3Boolean terminate, earlyReturn;
     fmi3Float64 lastSuccessfulTime;
 
     status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
     if (terminate) {
-        printf("Slave s1 wants to terminate simulation.");
+        printf("Instance s1 requested to terminate simulation.");
         break;
     }
 
-    // call slave s2 and check status as above
+    // call instance s2 and check status as above
     status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
     // ...
 
-    // increment master time
+    // increment current time
     tc += h;
  }
 
