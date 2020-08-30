@@ -8930,18 +8930,18 @@ Dependent <a href="#parameter"><code>parameters</code></a> (variables with <a hr
 <td class="tableblock halign-left valign-top"><p class="tableblock">Input variables.
 The values of these variables are defined outside of the model.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
-Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).<br>
-If no event happens at the communication point \(t_i\), <a href="#continuous"><code>continuous</code></a> input variables \(\mathbf{u}(t_{i+1})\) must be consistent with the values of the smooth functions \(\mathbf{u}_{i, IU}\), that is \(\mathbf{u}_{i, IU}(t_{i+1})= \mathbf{u}(t_i)\).
-It is also recommended but not mandatory that the function defined by the continuation of \(\mathbf{u}_{i, IU}\) with \(\mathbf{u}_{i+1, IU}\) be of smoothness \(C^{k}([t_i, t_{i+2}])\)  with the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\).<br>
-<em>[This can increase simulation speed for higher order multi-step solvers that in this case do not have to reset even at communication points.]</em><br>
-If an event happens at the communication point, <a href="#continuous"><code>continuous</code></a> input variables may change discontinuously.</p></td>
+Whether the <a href="#input"><code>input</code></a> is a discrete-time or continuous-time variable is defined via attribute <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a> or <a href="#continuous"><code>continuous</code></a> (see <a href="#definition-of-model-variables">Section 2.2.7</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{u}_{i, IU}(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intermediate input variables corresponding to the input variables for intermediate update ("IU").
-The values of these variables are defined outside of the model.</p>
-<p class="tableblock">\(\mathbf{u}_{i, IU}\) are functions defined on the interval \( [t_i, t_{i+1}\) ] with \(\mathbf{u}_{i, IU}(t_i)=\mathbf{u}(t_i)\).<br>
-With the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> with value \(k\) FMUs can signal to the co-simulation algorithm that best convergence rates can be achieved if the functions are of the smoothness \(C^{k}([t_i, t_{i+1}])\), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.</p></td>
+The values of these variables are defined outside of the model.<br>
+\(\mathbf{u}_{i, IU}\) are functions defined on the interval \( [t_i, t_{i+1}\) ] with \(\mathbf{u}_{i, IU}(t_i)=\mathbf{u}(t_i)\).<br>
+For <a href="#continuous"><code>continuous</code></a> input variables, if there is no discontinuity at time \(t_{i+1}\) the importer must ensure that the input approximation function \(\mathbf{u}_{i, IU}\) is consistent with the values of the input variable (\(\mathbf{u}_{i, IU}(t_{i+1})= \mathbf{u}(t_{i+1})\)).
+FMUs can signal with the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\) to the co-simulation algorithm that best convergence rates can be achieved if the functions are of smoothness \(C^{k}([t_i, t_{i+1}])\), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.
+It is therefore recommended that the function defined by the continuation of \(\mathbf{u}_{i, IU}\) with \(\mathbf{u}_{i+1, IU}\) be of smoothness \(C^{k}([t_i, t_{i+2}])\) with the optional flag <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\).<br>
+<em>[This can increase simulation speed for higher order multi-step solvers that in this case do not have to reset at communication points.]</em><br>
+If there is a discontinuity in a <a href="#continuous"><code>continuous</code></a> input variable at time \(t_{i+1}\), then \(\mathbf{u}_{i, IU}\) does not have to be consistent, but the importer must raise an event to signal the discontinuity.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{y}(t_{i+1})\), \(\mathbf{y^{(j)}}(t_{i+1})\),</p></td>
