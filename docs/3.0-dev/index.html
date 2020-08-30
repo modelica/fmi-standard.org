@@ -7836,8 +7836,9 @@ y2 := w2</pre>
 <dt class="hdlist1">Synchronous systems</dt>
 <dd>
 <p><em>A synchronous system, such as Lucid Synchrone <a href="#PZ06">[PZ06]</a> or Modelica 3.3 <a href="#MLS12">[MLS12]</a>, is called periodically, and at every sample instant the discrete-time equations are evaluated exactly once.</em>
-<em>An FMU of this type can be implemented by activating the model equations only at the first event iteration and returning always <code>newDiscreteStatesNeeded == fmi3False</code> from <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.</em>
-<em>Furthermore, the discrete-time <a href="#state"><code>states</code></a> are not updated by <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, but as first action before the discrete-time equations are evaluated, in order that</em> \(^{\bullet}\mathbf{x}_d\) <em>(= value at the previous <a href="#clock"><code>clock</code></a> tick) and</em> \(\mathbf{x}_d\) <em>(value at the latest <a href="#clock"><code>clock</code></a> tick) have reasonable values between <a href="#clock"><code>clock</code></a> ticks.</em></p>
+<em>An FMU of this type should be implemented in FMI 3.0 with <a href="#clock"><code>clocks</code></a>.</em>
+<em>However, just like in FMI 2.0, it could in principle also be implemented by activating the model equations only at the first event iteration and returning always <code>newDiscreteStatesNeeded == fmi3False</code> from <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.</em>
+<em>Furthermore, the discrete-time <a href="#state"><code>states</code></a> are not updated by <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, but as first action before the discrete-time equations are evaluated, in order that</em> \(^{\bullet}\mathbf{x}_d\) <em>(= value at the previous clock tick) and</em> \(\mathbf{x}_d\) <em>(value at the latest <a href="#clock"><code>clock</code></a> tick) have reasonable values between clock ticks.</em></p>
 </dd>
 <dt class="hdlist1">State machines with one memory location for a state</dt>
 <dd>
