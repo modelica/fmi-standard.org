@@ -2674,9 +2674,6 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 <p>Note, <a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> is possible for the <code>fmi3Set{VariableType}</code> functions.</p>
 </div>
 <div class="paragraph">
-<p>For Co-Simulation FMUs, additional functions are defined in <a href="#transfer-of-input-output-and-parameters">Section 4.2.3</a> to set and inquire <a href="#derivative"><code>derivatives</code></a> of variables with respect to time in order to allow interpolation.</p>
-</div>
-<div class="paragraph">
 <p>The value of a variable may only be accessed with the respective <code>fmi3Get/Set{VariableType}</code> for its type.</p>
 </div>
 </div>
@@ -3289,17 +3286,9 @@ Each state derivative variable listed as elements <code>&lt;ModelStructure&gt;&l
 </div>
 </li>
 <li>
-<p>\(\mathbf{v}_{\mathit{known}}\) is the vector of known floating point <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that changes its value in the actual state.</p>
+<p>\(\mathbf{v}_{\mathit{known}}\) is the vector of known floating point <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that changes its value in the actual state.
+Details about which variables are in \(\mathbf{v}_{\mathit{known}}\) are given in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.2.8</a>.</p>
 </li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Details are given in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.2.8</a>.
-<em>[For example continuous-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>.</em>
-<em>A directional derivative with respect to the independent variable can be computed.].</em></p>
-</div>
-<div class="ulist">
-<ul>
 <li>
 <p>\({\mathbf{v}_{\mathit{rest}}}\) is the set of <a href="#input"><code>input</code></a> variables of function <strong>h</strong> that either changes its value in the actual state but are non-floating point variables, or do not change their values in this state, but change their values in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <strong>Continuous-Time Mode</strong>]</em>.</p>
 </li>
@@ -8996,7 +8985,7 @@ The details of the flow are given in the state machine of the calling sequences 
 <p>The <a href="#co-simulation-api">Co-Simulation</a> interface provides functionalities to control and observe the ticking of <a href="#clock">clocks</a>.
 For FMI for Co-Simulation, the ticking of a clock is interpreted as an activity of the associated model partition.
 During simulation, the co-simulation algorithm updates and manages values of inputs and outputs of FMUs and further models at communication points for each model partition.
-The ratio between communication points created for a model partition and time can be seen as a model rate.
+The number of communication points created for a model partition per time unit can be seen as a model rate.
 In that sense multiple model partitions of a model define multiple model rates in a model.</p>
 </div>
 <div class="paragraph">
