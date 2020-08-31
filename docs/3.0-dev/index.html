@@ -7684,18 +7684,59 @@ If this data is not provided, the worst case must be assumed, that is, all <a hr
 </div>
 <div id="figure-connected-fmus" class="imageblock text-center">
 <div class="content">
-<img src="images/ArtificialAlgebraicLoop.svg" alt="ArtificialAlgebraicLoop" width="80%">
+<img src="images/ArtificialAlgebraicLoops.svg" alt="ArtificialAlgebraicLoops" width="80%">
 </div>
 <div class="title">Figure 24. Calling sequences for FMUs that are connected in a loop.</div>
 </div>
 <div class="paragraph">
-<p><em>In the upper diagram, FMU1 and FMU2 are connected in such a way that by an appropriate sequence of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> calls, the FMU variables can be computed.</em>
-<em>In the lower diagram, FMU3 and FMU4 are connected in such a way that a real algebraic loop is present.</em>
+<p><em>In the left diagram, FMU1 and FMU2 are connected in such a way that by an appropriate sequence of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> calls, the FMU variables can be computed with the following call sequence:</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">fmi3Instance FMI1, FMI2;
+fmi3ValueReference vr_FMU1_u, vr_FMU1_y, vr_FMU2_u1, vr_FMU2_u2, vr_FMU2_y1, vr_FMU2_y2;
+fmi3Float64 s=0.1, FMU2_y1, FMU1_y, FMU2_y2;
+
+...
+
+fmi3SetFloat64(FMU2, &amp;vr_FMU2_u1, 1, &amp;s,        1);
+fmi3GetFloat64(FMU2, &amp;vr_FMU2_y1, 1, &amp;FMU2_y1,  1);
+fmi3SetFloat64(FMU1, &amp;vr_FMU1_u,  1, &amp;FMU2_y1,  1);
+fmi3GetFloat64(FMU1, &amp;vr_FMU1_y,  1, &amp;FMU1_y,   1);
+fmi3SetFloat64(FMU2, &amp;vr_FMU2_u2, 1, &amp;FMU1_y,   1);
+fmi3GetFloat64(FMU2, &amp;vr_FMU2_y1, 1, &amp;FMU2_y2,  1);
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>In the right diagram, FMU3 and FMU4 are connected in such a way that a real algebraic loop is present.</em>
 <em>This loop might be solved iteratively with a Newton method.</em>
-<em>In every iteration the iteration variable \(u_4\) is provided by the solver, and via the shown sequence of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> calls, the residue is computed and is provided back to the solver.</em>
-<em>Based on the residue a new value of \(u_4\) is provided.</em>
-<em>The iteration is terminated when the residue is close to zero.</em>
-<em>These types of artifical or real algebraic loops can occur in all the different modes, such as <strong>Initialization Mode</strong>, <strong>Event Mode</strong>, and <strong>Continuous-Time Mode</strong>.</em>
+<em>In every iteration the iteration variable \(u_4\) is provided by the solver, and via the shown sequence of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> calls, the residual is computed and is provided back to the solver.</em>
+<em>Based on the residual a new value of \(u_4\) is provided.</em>
+<em>The iteration is terminated when the residual is close to zero.</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">fmi3Instance FMI1, FMI2;
+fmi3ValueReference vr_FMU3_u, vr_FMU3_y, vr_FMU4_u, vr_FMU4_y;
+fmi3Float64 s, FMU3_y, FMU4_y, residual;
+bool converged;
+
+// Newton iteration
+while (!converged)
+{
+  // input s[0] calculated by the solver
+  ...
+  fmi3SetFloat64(FMU2, &amp;vr_FMU4_u, 1, &amp;s,   1);
+  fmi3GetFloat64(FMU2, &amp;vr_FMU4_y, 1, &amp;FMU4_y,  1);
+  fmi3SetFloat64(FMU1, &amp;vr_FMU3_u, 1, &amp;FMU4_y,  1);
+  fmi3GetFloat64(FMU1, &amp;vr_FMU3_y, 1, &amp;FMU3_y,  1);
+  residual=s-FMU3_y; // provided to the solver
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>These types of artifical or real algebraic loops can occur in all the different modes, such as <strong>Initialization Mode</strong>, <strong>Event Mode</strong>, and <strong>Continuous-Time Mode</strong>.</em>
 <em>Since different variables are computed in every mode and the causality of variable computation can be different in <strong>Initialization Mode</strong> as with respect to the other two modes, it might be necessary to solve different kinds of loops in the different modes.]</em></p>
 </div>
 <div class="paragraph">
