@@ -3088,37 +3088,43 @@ If the <a href="#clock"><code>clocks</code></a> are aperiodic, the interval has 
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 16.6666%;">
-<col style="width: 33.3333%;">
-<col style="width: 50.0001%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
 </colgroup>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">API function</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#outputClock"><code>Output clock</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#inputClock"><code>Input clock</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#localClock"><code>Local clock</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3GetClock</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Call during <strong>Event Mode</strong> or <strong>Intermediate Update Mode</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Call during <strong>Event Mode</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Call during <strong>Event Mode</strong> and <strong>Intermediate Update Mode</strong>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not allowed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Call during <strong>Event Mode</strong> and <strong>Intermediate Update Mode</strong>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3SetClock</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Call only if recomputations of clock state are needed during <strong>Event Mode</strong>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not allowed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Call after entering <strong>Event Mode</strong>.
 Repeated calls if recomputations of clock state are needed during <strong>Event Mode</strong>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not allowed</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3GetIntervalDecimal</code> <code>fmi3GetIntervalFraction</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Call during <strong>Event Mode</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Call during <strong>Event Mode</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Call during <strong>Event Mode</strong>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not allowed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Call during <strong>Event Mode</strong>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3SetIntervalDecimal</code> <code>fmi3SetIntervalFraction</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Don&#8217;t call.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not allowed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Call after first <a href="#clock"><code>clock</code></a> activation.
 (only for <a href="#periodic"><code>periodic</code></a> <a href="#clock"><code>clocks</code></a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not allowed</p></td>
 </tr>
 </tbody>
 </table>
@@ -5416,19 +5422,20 @@ These parameters can be changed independently, unlike <a href="#calculatedParame
 <a href="#initial"><code>initial</code></a> must be <a href="#approx"><code>approx</code></a>, <a href="#calculated"><code>calculated</code></a> or not present (meaning <a href="#calculated"><code>calculated</code></a>).</p>
 </div>
 <div id="input" class="paragraph">
-<p><code>= input</code>: The variable value can be provided from another FMU.
+<p><code>= input</code>: The variable value can be provided from another FMU.<br>
 <a id="inputClock"></a> If <a href="#variability"><code>variability</code></a> = <a href="#clock"><code>clock</code></a> the variable defines an <a href="#inputClock"><code>input clock</code></a> that is controlled by the importer.
 An <a href="#inputClock"><code>input clock</code></a> can be left unconnected, can be connected to an <a href="#outputClock"><code>output clock</code></a>, or the importer generates the clock signal.</p>
 </div>
 <div id="output" class="paragraph">
 <p><code>= output</code>: The variable value can be used by another FMU.
-The algebraic relationship to the <a href="#input"><code>inputs</code></a> is defined via the <a href="#dependencies"><code>dependencies</code></a> attribute of <code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;&lt;Output&gt;</code>.
+The algebraic relationship to the <a href="#input"><code>inputs</code></a> is defined via the <a href="#dependencies"><code>dependencies</code></a> attribute of <code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;&lt;Output&gt;</code>.<br>
 <a id="outputClock"></a> If <a href="#variability"><code>variability</code></a> = <a href="#clock"><code>clock</code></a> the variable defines an <a href="#outputClock"><code>output clock</code></a> that is controlled by the FMU.
-An <a href="#outputClock"><code>output clock</code></a> can be left unconnected or can be connected to an <a href="#inputClock"><code>input clock</code></a>, usually of another FMU.</p>
+An <a href="#outputClock"><code>output clock</code></a> can be left unconnected or can be connected to an <a href="#inputClock"><code>input clock</code></a>, usually of another FMU (for exceptions see <a href="#triggeredBy"><code>triggeredBy</code></a>).</p>
 </div>
 <div id="local" class="paragraph">
 <p><code>= local</code>: Local variable that is calculated from other variables or is a continuous-time <a href="#state"><code>state</code></a> or an event indicator (see <a href="#ModelStructure">Section 2.2.8</a>).
-It is not allowed to use the variable value in another model or FMU.</p>
+Local variable values must not be used in another model or FMU.<br>
+<a id="localClock"></a> If <a href="#variability"><code>variability</code></a> = <a href="#clock"><code>clock</code></a> the variable defines a <a href="#localClock"><code>local clock</code></a> computed by the FMU..</p>
 </div>
 <div id="independent" class="paragraph">
 <p><code>= independent</code>: The independent variable (usually <code>time</code> <em>[but could also be, for example, <code>angle</code>]</em>).
