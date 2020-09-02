@@ -791,7 +791,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#early-return">4.2.1. Early Return</a></li>
 <li><a href="#intermediate-update">4.2.2. Intermediate Update of Variables</a></li>
 <li><a href="#transfer-of-input-output-and-parameters">4.2.3. Variables Access</a></li>
-<li><a href="#_computation_in_co_simulation">4.2.4. Computation in Co-Simulation</a></li>
+<li><a href="#Computation-in-Co-Simulation">4.2.4. Computation in Co-Simulation</a></li>
 <li><a href="#_communication_of_event_time_and_input_and_output_values">4.2.5. Communication of Event Time and Input and Output Values</a></li>
 <li><a href="#_handling_early_return_and_events">4.2.6. Handling Early Return and Events</a></li>
 <li><a href="#api-clocked-co-simulation">4.2.7. Co-Simulation with Clock Support</a>
@@ -1149,19 +1149,19 @@ The scheduler is responsible for:</p>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-times"></i></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Early Return</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#early-return">Early Return</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-times"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-times"></i></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Intermediate Update</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#intermediate-update">Intermediate Update</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-times"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Clocks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#operation-on-clocks">Clocks</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">Only <a href="#SynchronousClocks">Synchronous Clocks</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">Only <a href="#SynchronousClocks">Synchronous Clocks</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">Only <a href="#CommunicationPointClocks">Communication Point Clocks</a></p></td>
@@ -2348,16 +2348,10 @@ If any function returns <a href="#fmi3Error"><code>fmi3Error</code></a> in <stro
 <div class="sect4">
 <h5 id="IntermediateUpdateMode">2.1.5.4. State: Intermediate Update Mode</h5>
 <div class="paragraph">
-<p>The FMU enters this state when the FMU calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> in state <strong>Step Mode</strong> (CS) or in state <strong>Clock Activation Mode</strong> (SE).
-When the callback function returns, the FMU returns to <strong>Step Mode</strong> (CS) or to <strong>Clock Activation Mode</strong> (SE).</p>
+<p>This state is only available in Co-Simulation and Scheduled Execution.</p>
 </div>
 <div class="paragraph">
-<p>In this state the co-simulation algorithm can retrieve information from the FMU between communication points.
-This state is only available in Co-Simulation and Scheduled Execution.
-Functions called in this state must not return <a href="#fmi3Discard"><code>fmi3Discard</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>The FMU enters this state by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> within <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> (CS) or <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (SE) and leaves the state towards state <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE) if the function returns <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a>.
+<p>The FMU enters this state by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> within <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE) and leaves the state towards state <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE) if the function returns <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a>.
 If the function returns <a href="#fmi3Error"><code>fmi3Error</code></a> the FMU enters state <strong>Terminated</strong>.
 If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU enters the terminal state.</p>
 </div>
@@ -9479,6 +9473,22 @@ Multiple event types and also <a href="#outputClock"><code>outputClock</code></a
 <div class="sect3">
 <h4 id="intermediate-update">4.2.2. Intermediate Update of Variables</h4>
 <div class="paragraph">
+<p>The <strong>Intermediate Update Mode</strong> was introduced to facilitate the following use cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>improve input accuracy between communication points when importer sets intermediate input values extracted with the same mechanism form another FMU (see below for details),</p>
+</li>
+<li>
+<p>allow for cooperative multitasking when FMU calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a> (see <a href="#scheduled-execution-api">Section 5.2</a>),</p>
+</li>
+<li>
+<p>allow for the FMU to return early from an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> because the importer detected an event between communication points (see <a href="#Computation-in-Co-Simulation">Section 4.2.4</a>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p>A Co-Simulation FMU can provide values for its <a href="#output"><code>output</code></a> variables at intermediate points between two consecutive communication points, and is able to accept new values for <a href="#input"><code>input</code></a> variables at these intermediate points.
 This is typically required when the FMU uses a numerical solver to integrate the FMU&#8217;s internal state between communication points in <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
 This numerical solver assumes that the inputs are continuous in the integration interval, dictated by <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
@@ -9768,7 +9778,7 @@ If the actual order is lower (because the order of integration algorithm is low)
 </div>
 </div>
 <div class="sect3">
-<h4 id="_computation_in_co_simulation">4.2.4. Computation in Co-Simulation</h4>
+<h4 id="Computation-in-Co-Simulation">4.2.4. Computation in Co-Simulation</h4>
 <div class="paragraph">
 <p>The importer requests the computation of the next time step with the following function:</p>
 </div>
