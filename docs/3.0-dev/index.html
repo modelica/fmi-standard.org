@@ -7806,8 +7806,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Event Mode</strong> at \(t = t_{i}\) with \({t_{i}\ : = (t}_{R},t_{I} + 1)\) <strong>if</strong>  externalEvent <strong>or</strong> nextMode \(\equiv\) EventMode <strong>or</strong> \(t_i=(T_{\mathit{next}}(t_{i-1}), 0)\) <strong>or</strong>  \(\min_{t&gt;t_{i-1}} t:\left\lbrack z_{j}\left( t \right) &gt; 0\  \neq \ z_{j}\left( t_{i-1} \right) &gt; 0 \right\rbrack\)<br>
 (activate discrete-time equations)</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterEventMode</span></code> <span class="lime">(only from <strong>Continuous-Time Mode</strong> or after calling</span> <code><span class="lime">fmi3SetTime</span></code>
-<span class="lime">if FMU has no continuous-time equations)</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterEventMode</span></code> <span class="lime">(only from <strong>Continuous-Time Mode</strong>)</span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{tune}}\)<br>
@@ -7841,10 +7840,6 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3NewDiscreteStates</span></code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable <em>[typically: time]</em> \(t_i := (T_{\mathit{next}},0)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetTime"><code>fmi3SetTime</code></a> + (if no continuous-time equations)</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Continuous-Time Mode</strong></p></td>
 </tr>
 <tr>
@@ -7856,7 +7851,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterContinuousTimeMode</span></code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable <em>[typically: time]</em> \(t(&gt;t_{\mathit{enter  mode}}): t:=(t_R, 0)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#independent"><code>independent</code></a> variable <em>[typically: time]</em> \(t(&gt;t_{\mathit{enter  mode}}): t:=(\min(t_{Ri} + h, T_{\mathit{next}}), 0)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetTime"><code>fmi3SetTime</code></a></p></td>
 </tr>
 <tr>
@@ -7888,7 +7883,8 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">\(t \in \mathbb{R}, \mathbf{p} \in \mathbb{P}^{np},  \mathbf{u}(t) \in \mathbb{P}^{nu},\mathbf{y}(t) \in \mathbb{P}^{ny}, \mathbf{x}_c(t) \in \mathbb{R}^{nxc}, \mathbf{x}_d(t) \in \mathbb{P}^{nxd}, \mathbf{w}(t) \in \mathbb{P}^{nw}, \mathbf{z}(t) \in \mathbb{R}^{nz}\)<br>
 \(\qquad \mathbb{R}\): floating point variable, \(\mathbb{P}\): floating point <strong>or</strong> Boolean <strong>or</strong> integer <strong>or</strong> enumeration <strong>or</strong> string variable<br>
-\(\mathbf{f}_{\mathit{init}}, \mathbf{f}_{\mathit{sim}} \in C^0\) (=continuous functions with respect to all input parameters inside the respective mode).</p></td>
+\(\mathbf{f}_{\mathit{init}}, \mathbf{f}_{\mathit{sim}} \in C^0\) (=continuous functions with respect to all input parameters inside the respective mode).<br>
+\(h \in \mathbb{R}\) is the simulation step size.</p></td>
 </tr>
 </tbody>
 </table>
