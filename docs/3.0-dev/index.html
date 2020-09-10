@@ -9791,8 +9791,8 @@ If the actual order is lower (because the order of integration algorithm is low)
                                   fmi3Float64 currentCommunicationPoint,
                                   fmi3Float64 communicationStepSize,
                                   fmi3Boolean noSetFMUStatePriorToCurrentPoint,
-                                  fmi3Boolean* eventOccurred,
-                                  fmi3Boolean* clocksTicked,
+                                  fmi3Boolean* eventEncountered,
+                                  fmi3Boolean* clocksAboutToTick,
                                   fmi3Boolean* terminate,
                                   fmi3Boolean* earlyReturn,
                                   fmi3Float64* lastSuccessfulTime);</code></pre>
@@ -9819,17 +9819,17 @@ If the actual order is lower (because the order of integration algorithm is low)
 </li>
 </ul>
 </div>
-<div id="eventOccurred" class="ulist">
+<div id="eventEncountered" class="ulist">
 <ul>
 <li>
-<p><a href="#eventOccurred"><code>eventOccurred == fmi3True</code></a> indicates that an event occurred at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the co-simulation algorithm has to enter <strong>Event Mode</strong> and call <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> to gather related information about the event.</p>
+<p><a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the co-simulation algorithm has to call <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> to gather related information about the event.</p>
 </li>
 </ul>
 </div>
-<div id="clocksTicked" class="ulist">
+<div id="clocksAboutToTick" class="ulist">
 <ul>
 <li>
-<p><a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a> indicates that one or more clocks ticked at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function should be called to gather all information related to <a href="#outputClock"><code>output clocks</code></a> that have the value <code>fmi3ClockActive</code>.</p>
+<p><a href="#clocksAboutToTick"><code>clocksAboutToTick == fmi3True</code></a> indicates that one or more clocks will tick at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and, after calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> should be called to gather all information related to <a href="#outputClock"><code>output clocks</code></a> that have the value <code>fmi3ClockActive</code>.</p>
 </li>
 <li>
 <p><code>terminate</code> signals to the co-simulation algorithm that the FMU requests the end of the simulation for internal reasons.
@@ -9936,7 +9936,7 @@ If the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <
 the FMU signals this via <a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through the output argument <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a>, along with the reason <a href="#eventOccurred"><code>eventOccurred == fmi3True</code></a>.
+<p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through the output argument <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a>, along with the reason <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a>.
 The co-simulation algorithm will start event handling by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> for that FMU to push the FMU into <strong>Event Mode</strong>.
 In this mode the co-simulation algorithm is supposed to catch all events through the <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> function.</p>
 </div>
@@ -10002,8 +10002,8 @@ If the FMU provides the Co-Simulation interface and is instantiated with it, the
 <h5 id="transfer-of-input-output-and-parameters-clocked-co-simulation">4.2.7.1. Transfer of Input and Output Values and Parameters</h5>
 <div class="paragraph">
 <p>If the co-simulation algorithm supports <a href="#clock"><code>clocks</code></a>, all <a href="#inputClock"><code>input clocks</code></a> of the model should be handled and <a href="#inputClock"><code>inputClock</code></a> events should be scheduled by the co-simulation algorithm.
-If an <a href="#outputClock"><code>outputClock</code></a> ticks, the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a> and the co-simulation algorithm pushes the FMU into <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
-Once the FMU is in <strong>Event Mode</strong>, the activation status of <a href="#outputClock"><code>output clocks</code></a> are retrieved by <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function.
+If an <a href="#outputClock"><code>outputClock</code></a> will tick, the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#clocksAboutToTick"><code>clocksAboutToTick == fmi3True</code></a>.
+After calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, the activation status of <a href="#outputClock"><code>output clocks</code></a> can be retrieved with <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.
 Then <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> (and <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> if necessary) should be invoked to enable the ticked <a href="#inputClock"><code>input clocks</code></a>.
 Each <a href="#clock"><code>clock</code></a>, that ticks outside of the FMU (i.e. <a href="#inputClock"><code>inputClock</code></a>), is activated for an FMU based on its <a href="#clockReference"><code>clockReference</code></a> and an associated <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <strong>Event Mode</strong>.
 <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> can activate multiple <a href="#clock"><code>clocks</code></a> with each call.
@@ -10020,7 +10020,7 @@ Note that <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may not reach the ne
 <h5 id="computation-clocked-co-simulation">4.2.7.2. Computation in Co-Simulation</h5>
 <div class="paragraph">
 <p>Similar to FMI for Model Exchange, in order to activate <a href="#inputClock"><code>input clocks</code></a> of an FMU, it is required to push the FMU into <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
-If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> and <a href="#eventOccurred"><code>eventOccurred == fmi3True</code></a> or <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a>, the FMU must be pushed into the <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.</p>
+If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> or <a href="#clocksAboutToTick"><code>clocksAboutToTick == fmi3True</code></a>, the FMU must be pushed into <strong>Event Mode</strong> and <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called.</p>
 </div>
 <div class="paragraph">
 <p>In order to retrieve the status of <a href="#outputClock"><code>output clocks</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> and <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> or <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a> need to be called in the <strong>Event Mode</strong>.
