@@ -9534,6 +9534,7 @@ It illustrates that multiple intermediate internal solver steps, distinguishing 
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void (*fmi3CallbackIntermediateUpdate) (
     fmi3InstanceEnvironment instanceEnvironment,
     fmi3Float64 intermediateUpdateTime,
+    fmi3Boolean clocksTicked,
     fmi3Boolean intermediateVariableSetRequested,
     fmi3Boolean intermediateVariableGetAllowed,
     fmi3Boolean intermediateStepFinished,
@@ -9550,6 +9551,14 @@ If an event happens or an <a href="#outputClock"><code>outputClock</code></a> ti
 If the FMU returns with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> then <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the internal simulation time of the FMU of the last <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> call that signaled <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a>.
 <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is also the value of the <a href="#independent"><code>independent</code></a> variable of intermediate steps of the internal FMU solver.
 The FMU must not call the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <code>intermediateStepFinished == fmi3True</code>.</p>
+</li>
+</ul>
+</div>
+<div id="clocksTickedIA" class="ulist">
+<ul>
+<li>
+<p>The <a href="#clocksTickedIA"><code>clocksTicked</code></a> parameter is only used in Scheduled Execution and is ignored in Co-Simulation.
+When <a href="#clocksTickedIA"><code>clocksTicked == fmi3True</code></a>, it means that <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function must be called for gathering all <a href="#clock"><code>clock</code></a> related information about ticking <a href="#outputClock"><code>output clocks</code></a> at <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> and then activate the given model partitions accordingly.</p>
 </li>
 </ul>
 </div>
@@ -9897,6 +9906,7 @@ See <a href="#intermediate-update">Section 4.2.2</a> for details of the function
 <pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void (*fmi3CallbackIntermediateUpdate) (
     fmi3InstanceEnvironment instanceEnvironment,
     fmi3Float64 intermediateUpdateTime,
+    fmi3Boolean clocksTicked,
     fmi3Boolean intermediateVariableSetRequested,
     fmi3Boolean intermediateVariableGetAllowed,
     fmi3Boolean intermediateStepFinished,
