@@ -1794,7 +1794,7 @@ typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
     fmi3String                     resourceLocation,
     fmi3Boolean                    visible,
     fmi3Boolean                    loggingOn,
-    fmi3Boolean                    eventModeRequired,
+    fmi3Boolean                    eventModeUsed,
     const fmi3ValueReference       requiredIntermediateVariables[],
     size_t                         nRequiredIntermediateVariables,
     fmi3InstanceEnvironment        instanceEnvironment,
@@ -1916,8 +1916,9 @@ This set should typically contain categories for messages that explain execution
 The function <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> gives more detailed control about required <code>&lt;LogCategories&gt;</code> (see <a href="#definition-of-log-categories">Section 2.2.4</a>).</p>
 </li>
 <li>
-<p>If <code>eventModeRequired == fmi3True</code> the simulation algorithm can handle events, otherwise <code>fmi3EnterEventMode</code> must not be called.
-The flag may only be <code>fmi3True</code>, if <code>hasEventMode == true</code>, otherwise the FMU must raise an error.</p>
+<p>If <code>eventModeUsed == fmi3True</code> the simulation algorithm can handle events, otherwise <code>fmi3EnterEventMode</code> must not be called.
+The flag may only be <code>fmi3True</code>, if <code>hasEventMode == true</code>, otherwise the FMU must raise an error.
+For FMUs that have synchronous clocks, <code>eventModeUsed == fmi3True</code> is required.</p>
 </li>
 <li>
 <p><code>instanceEnvironment</code> is a pointer that can be passed to the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> function in order that the simulation environment can provide an efficient way to identify the FMU that called <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</p>
@@ -10300,7 +10301,7 @@ This function must not be called if the FMU contains no <a href="#tunable"><code
 <dt class="hdlist1"><a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a></dt>
 <dd>
 <p>With this function call the <strong>Event Mode</strong> is entered.
-This function must not be called, if the co-simulation algorithm signaled <code>eventModeRequired = fmi3False</code> during instantiation.</p>
+This function must not be called, if the co-simulation algorithm signaled <code>eventModeUsed = fmi3False</code> during instantiation.</p>
 </dd>
 <dt class="hdlist1"><a href="#fmi3DoStep"><code>fmi3DoStep</code></a></dt>
 <dd>
@@ -10385,7 +10386,7 @@ Such an event might be caused by the change of an input during the communication
 <h5 id="_state_event_mode_2">4.2.8.2. State: Event Mode</h5>
 <div class="paragraph">
 <p>The co-simulation algorithm and the FMU enter this state when the co-simulation algorithm calls <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> in state <strong>Step Mode</strong>, in order to handle discrete events and <a href="#clock"><code>clock</code></a> ticks.
-If the co-simulation algorithm signals <code>eventModeRequired == fmi3False</code> during instantiation, the co-simulation algorithm is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.</p>
+If the co-simulation algorithm signals <code>eventModeUsed == fmi3False</code> during instantiation, the co-simulation algorithm is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -10681,9 +10682,10 @@ The accessible variables are marked with attribute <a href="#intermediateUpdateA
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>hasEventMode</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code> the FMU supports <code>fmi3EnterEventMode</code> and <code>fmi3ExitEventMode</code>.
-Even if this flag is <code>true</code>, the co-simulation algorithm can chose to delegate event handling to the FMU by calling <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <code>eventModeRequired == fmi3False</code>.
-If <code>eventModeRequired == fmi3True</code>, the co-simulation algorithm will have to actively trigger event handling in the FMU using <code>fmi3EnterEventMode</code> and <code>fmi3ExitEventMode</code>.
-Calling <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <code>eventModeRequired == fmi3True</code> when the flag <code>hasEventMode = false</code> must raise an error from the FMU during instantiation.
+Even if this flag is <code>true</code>, the co-simulation algorithm can chose to delegate event handling to the FMU by calling <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <code>eventModeUsed == fmi3False</code>.
+If <code>eventModeUsed == fmi3True</code>, the co-simulation algorithm will have to actively trigger event handling in the FMU using <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.
+<a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> must only be called with <code>eventModeUsed == fmi3True</code> if <code>hasEventMode == true</code>.
+If the FMU has synchronous clocks, then <code>eventModeUsed == fmi3True</code> and the importer must call <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <code>eventModeUsed == fmi3True</code>.
 <em>[As with other optional features, these functions have to be present regardless of this flag.</em>
 <em>The co-simulation algorithm is informed this way if calling these functions triggers event handling functionalities.</em></p></td>
 </tr>
