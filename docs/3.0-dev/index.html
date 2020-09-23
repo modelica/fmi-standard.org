@@ -2848,17 +2848,17 @@ Claudio: Make it clear that clocks are just a way to implement numerically sound
 <div class="paragraph">
 <p>Variables \(x_j\) are called <code>states of a clocked partition</code>, or <code>discrete-time states</code> and \(j\) is the \(j+1\)th tick of the associated <a href="#clock"><code>clock</code></a>.
 Variables \(u_j\) are the (external or <a href="#local"><code>local</code></a>) <a href="#input"><code>inputs</code></a> and \(y_j\) are the (external or <a href="#local"><code>local</code></a>) <a href="#output"><code>outputs</code></a> of a clocked partition.
-A discrete-time <a href="#state"><code>state</code></a> variable can be of any type (e.g. <code>fmi3Float64</code> or <code>fmi3Boolean</code>, but not of <a href="#clock"><code>clock</code></a> type).</p>
+A discrete-time state variable can be of any type (e.g. <code>fmi3Float64</code> or <code>fmi3Boolean</code>, but not of <a href="#clock"><code>clock</code></a> type).</p>
 </div>
 <div class="paragraph">
 <p><em>[TODO: (external or local) is here very confusing]</em></p>
 </div>
 <div class="paragraph">
 <p>A clocked partition is not executed during <strong>Initialization Mode</strong>, but it is executed the first time at its first <a href="#clock"><code>clock</code></a> tick.
-The associated <a href="#clock"><code>clock</code></a> of the model partition is synchronous to its discrete-time <a href="#state"><code>states</code></a>.</p>
+The associated <a href="#clock"><code>clock</code></a> of the model partition is synchronous to its discrete-time states.</p>
 </div>
 <div class="paragraph">
-<p>Discrete-time <a href="#state"><code>states</code></a> are listed in the <code>&lt;ModelStructure&gt;</code>.
+<p>Discrete-time states are listed in the <code>&lt;ModelStructure&gt;</code>.
 They can have initial values defined by XML attributes <a href="#initial"><code>initial</code></a> and <a href="#start"><code>start</code></a>, or the initial values are computed internally as a function of the parameters.</p>
 </div>
 <div class="paragraph">
@@ -5754,13 +5754,11 @@ The environment can nevertheless choose different <a href="#start"><code>start</
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canHandleMultipleSetPerTimeInstant</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="canHandleMultipleSetPerTimeInstant" class="paragraph">
-<p>Only useful for Model Exchange FMUs, if only a Co-Simulation FMU, this attribute must not be present.
-If Model Exchange and Co-Simulation are combined in one FMU, this attribute is ignored for Co-Simulation:<br>
-Only for variables with <a href="#variability"><code>variability</code></a> = <a href="#input"><code>input</code></a> :<br>
+<p>Only for variables with <a href="#variability"><code>variability</code></a> = <a href="#input"><code>input</code></a> :<br>
 If not present, the default value is assumed to be <code>true</code>.
 If <code>canHandleMultipleSetPerTimeInstant = false</code>, then only one <code>fmi3Set{VariableType}</code> call is allowed at one super-dense time instant (model evaluation) on this variable.
 That is, this <a href="#input"><code>input</code></a> is not allowed to appear in a (real) algebraic loop requiring multiple calls of <code>fmi3Set{VariableType}</code> on this variable <em>[for example, due to a Newton iteration]</em>.<br>
-<em>[This flag must be set by FMUs where (internal) discrete-time <a href="#state"><code>states</code></a> are directly updated when assigned (xd := f(xd) instead of xd = f(previous(xd)), and at least one <a href="#output"><code>output</code></a> depends on this <a href="#input"><code>input</code></a> and on discrete <a href="#state"><code>states</code></a>.</em><br>
+<em>[This flag must be set to <code>false</code> for variables where (internal) discrete-time states are directly updated when assigned (xd := f(xd) instead of xd = f(previous(xd)), and at least one <a href="#output"><code>output</code></a> depends on this <a href="#input"><code>input</code></a> and on discrete-time states.</em><br>
 <em>It is strongly recommended that such an FMU checks the fulfillment of the requirement by itself during run-time, because an environment might not be able to check it; usually, there is a generic mechanism to import an FMU in an environment, but the mechanism to connect FMUs together is unrelated to the import mechanism.</em>
 <em>For example, there is no mechanism in the Modelica language to formulate connection restrictions for C functions (the FMU) called in a Modelica model.]</em></p>
 </div></div></td>
@@ -7804,11 +7802,11 @@ In reality, a continuous-time <a href="#state"><code>state</code></a> is however
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\)<br>
 \(^{\bullet}\mathbf{x}_d(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\) is a vector of (internal) discrete-time variables (of any type) representing the discrete <a href="#state"><code>states</code></a>.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\) is a vector of (internal) discrete-time variables (of any type) representing the discrete-time states.<br>
 \({}^{\bullet}\mathbf{x}_d(t)\) is the value of \(\mathbf{x}_d(t)\) at the previous super-dense time instant, so \({}^{\bullet}\mathbf{x}_d(t)=\mathbf{x}_d({}^{\bullet}t)\).
-Given the previous values of the discrete-time <a href="#state"><code>states</code></a>, \({}^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t)\), can be computed.<br>
-Discrete <a href="#state"><code>states</code></a> are not visible in the interface of an FMU and are only introduced here to clarify the mathematical description.
-In reality, a discrete <a href="#state"><code>state</code></a> is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
+Given the previous values of the discrete-time states, \({}^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete-time states \(\mathbf{x}_d(t)\), can be computed.<br>
+Discrete-time states are not visible in the interface of an FMU and are only introduced here to clarify the mathematical description.
+In reality, a discrete-time state is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{next}}(t_{i})\)</p></td>
@@ -7835,7 +7833,7 @@ The phases can be categorized according to the following modes:</p>
 <div class="sect4">
 <h5 id="_initialization_mode">3.1.2.1. Initialization Mode</h5>
 <div class="paragraph">
-<p>This mode is used to compute at the start time \(t_0\) initial values for continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_c(t_0)\), and for the previous (internal) discrete-time <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t_0)\), by utilizing extra equations not present in the other modes (for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state"><code>state</code></a> or for the derivative of a <a href="#state"><code>state</code></a>).</p>
+<p>This mode is used to compute at the start time \(t_0\) initial values for continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_c(t_0)\), and for the previous (internal) discrete-time states \(\mathbf{x}_d(t_0)\), by utilizing extra equations not present in the other modes (for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state"><code>state</code></a> or for the derivative of a <a href="#state"><code>state</code></a>).</p>
 </div>
 </div>
 <div class="sect4">
@@ -8146,9 +8144,9 @@ y2 := w2</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><em>At an event instant, the discrete system is described by algebraic equations as function of the previous (internal) discrete-time <a href="#state"><code>states</code></a></em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>and the discrete-time <a href="#input"><code>inputs</code></a></em> \(\mathbf{u}_{d}\).
+<p><em>At an event instant, the discrete system is described by algebraic equations as function of the previous (internal) discrete-time states&gt;&gt;</em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>and the discrete-time <a href="#input"><code>inputs</code></a></em> \(\mathbf{u}_{d}\).
 <em>If FMUs are connected in a loop, these algebraic equations are called iteratively, until the solution is found.</em>
-<em>If the actual discrete-time <a href="#state"><code>states</code></a></em> \(\mathbf{x}_{d}\) <em>and the previous discrete-time <a href="#state"><code>states</code></a></em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>are not identical, the discrete-time <a href="#state"><code>states</code></a> are updated, the integer part of the time is incremented and a new event iteration is performed.</em>
+<em>If the current discrete-time states</em> \(\mathbf{x}_{d}\) <em>and the previous discrete-time states</em> \(_{}^{\bullet}\mathbf{x}_{d}\) <em>are not identical, the discrete-time states are updated, the integer part of the time is incremented and a new event iteration is performed.</em>
 <em>Other discrete-time models must be mapped to this description form.</em>
 <em>Examples:</em></p>
 </div>
@@ -8163,16 +8161,16 @@ y2 := w2</pre>
 </div>
 <div class="paragraph">
 <p><em>However, just like in FMI 2.0, it could in principle also be implemented by activating the model equations only at the first event iteration and returning always <code>newDiscreteStatesNeeded == fmi3False</code> from <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.</em>
-<em>Furthermore, the discrete-time <a href="#state"><code>states</code></a> are not updated by <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, but as first action before the discrete-time equations are evaluated, in order that</em> \(^{\bullet}\mathbf{x}_d\) <em>(= value at the previous Lucid Synchrone/Modelica 3.3 clock tick) and</em> \(\mathbf{x}_d\) <em>(value at the latest Lucid Synchrone/Modelica 3.3 clock tick) have reasonable values between Lucid Synchrone/Modelica 3.3 clock ticks.</em></p>
+<em>Furthermore, the discrete-time states are not updated by <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, but as first action before the discrete-time equations are evaluated, in order that</em> \(^{\bullet}\mathbf{x}_d\) <em>(= value at the previous Lucid Synchrone/Modelica 3.3 clock tick) and</em> \(\mathbf{x}_d\) <em>(value at the latest Lucid Synchrone/Modelica 3.3 clock tick) have reasonable values between Lucid Synchrone/Modelica 3.3 clock ticks.</em></p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">State machines with one memory location for a state</dt>
 <dd>
-<p><em>In such a system there is only one memory location for a discrete-time <a href="#state"><code>state</code></a> and not two, and therefore a discrete-time <a href="#state"><code>state</code></a> is updated in the statement where it is assigned (and not in <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>).</em>
+<p><em>In such a system there is only one memory location for a discrete-time state and not two, and therefore a discrete-time state is updated in the statement where it is assigned (and not in <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>).</em>
 <em>As a result, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is basically just used to start a new (super-dense) time instant.</em>
 <em>This is unproblematic, as long as no algebraic loops occur.</em>
-<em>FMUs of this type can therefore not be used in real algebraic loops if the involved variables depend on a discrete-time <a href="#state"><code>state</code></a>.</em>
+<em>FMUs of this type can therefore not be used in real algebraic loops if the involved variables depend on a discrete-time state.</em>
 <em>This restriction is communicated to the environment of the FMU by the <code>ScalarVariable</code> definition of the corresponding <a href="#input"><code>input</code></a> with flag <a href="#canHandleMultipleSetPerTimeInstant"><code>canHandleMultipleSetPerTimeInstant</code></a> <code>= false</code> (so an <a href="#input"><code>input</code></a> with this flag is not allowed to be called in an algebraic loop).</em></p>
 </dd>
 </dl>
@@ -8267,7 +8265,7 @@ An event instant is determined by a <a href="#time-event"><code>time</code></a>,
 Once the event indicators signal a change of their domain, an iteration over time is performed between the previous and the actual completed integrator step, in order to determine the time instant of the domain change up to a certain precision.<br>
 After an event is triggered, the FMU needs to be switched to <strong>Event Mode</strong>.
 In this mode, systems of equations over connected FMUs might be solved (similarily as in <strong>Continuous-Time Mode</strong>).
-Once convergence is reached, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called to increment super-dense time (and conceptually update the discrete-time <a href="#state"><code>states</code></a> defined internally in the FMU by \(^{\bullet}\mathbf{x}_d := \mathbf{x}_d\)).
+Once convergence is reached, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called to increment super-dense time (and conceptually update the discrete-time states defined internally in the FMU by \(^{\bullet}\mathbf{x}_d := \mathbf{x}_d\)).
 Depending on the discrete-time model, a new event iteration might be needed.</p>
 </div>
 <div class="paragraph">
@@ -8414,7 +8412,7 @@ If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is no
 </div>
 </div>
 <div class="paragraph">
-<p>The FMU is in <strong>Event Mode</strong> and the super-dense time is incremented by this call.<br>
+<p>The FMU is in <strong>Event Mode</strong>.
 If the super-dense time before a call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> was \((t_R,t_I)\), then the time instant after the call is \((t_R,t_{I + 1})\).<br></p>
 </div>
 <div class="ulist">
@@ -8909,9 +8907,9 @@ Moreover the current <a href="#clock"><code>clock</code></a> intervals may be in
 <dd>
 <p>The function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> evaluates the discrete-time equations, provided the corresponding <a href="#clock"><code>clock</code></a> is active and the discrete-time equations have not already been evaluated with calls to <code>fmi3Get{VariableType}</code> functions.
 Clocks are automatically deactivated by <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> and by <a href="#fmi3Reset"><code>fmi3Reset</code></a>.
-<em>[This handling of discrete <a href="#state"><code>states</code></a> and <a href="#time-event"><code>time events</a> is forward compatible with FMI 2.0 for any model that could be treated with FMI 2.0 and is exported again using the new features.</em>
+<em>[This handling of discrete-time states and <a href="#time-event">`time events</a> is forward compatible with FMI 2.0 for any model that could be treated with FMI 2.0 and is exported again using the new features.</em>
 <em>The environment may ignore the new functions <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> and <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>.</em>
-<em>The new functions are needed for FMUs with input sample times and to set discrete-time <a href="#state">`states</code></a> in model-based control applications or if algebraic loops are present among discrete-time equations of multiple connected FMUs.]</em></p>
+<em>The new functions are needed for FMUs with input sample times and to set discrete-time states in model-based control applications or if algebraic loops are present among discrete-time equations of multiple connected FMUs.]</em></p>
 </dd>
 </dl>
 </div>
@@ -9316,16 +9314,16 @@ However, at a communication point, a continuous-time <a href="#state"><code>stat
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\)<br>
 \(^{\bullet}\mathbf{x}_d(t)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\) is a vector of (internal) discrete-time variables (of any type) representing the (internal) discrete <a href="#state"><code>states</code></a>.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d(t)\) is a vector of (internal) discrete-time variables (of any type) representing the (internal) discrete-time states.<br>
 \(^{\bullet}\mathbf{x}_d(t)\) is the value of \(\mathbf{x}_d(t)\) at the previous sample time instant, so \(^{\bullet}\mathbf{x}_d(t) = \mathbf{x}_d(^{\bullet}t)\).<br>
-Given the previous values of the discrete-time <a href="#state"><code>states</code></a>, \(^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete <a href="#state"><code>states</code></a> \(\mathbf{x}_d(t)\), can be computed.<br>
-Discrete <a href="#state"><code>states</code></a> are not visible in the interface of an FMU and are only introduced here to clarify the mathematical description.
-Formally, a discrete <a href="#state"><code>state</code></a> is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
+Given the previous values of the discrete-time states, \(^{\bullet}\mathbf{x}_d(t)\), at the actual time instant \(t\), all other discrete-time variables, especially the discrete-time states \(\mathbf{x}_d(t)\), can be computed.<br>
+Discrete-time states are not visible in the interface of an FMU and are only introduced here to clarify the mathematical description.
+Formally, a discrete-time state is part of the <a href="#output"><code>outputs</code></a> \(\mathbf{y}\) or the <a href="#local"><code>local</code></a> variables \(\mathbf{w}\) of an FMU.</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>When the transient simulation of the coupled system through Co-Simulation is completed, the sequence of evaluations is the following (here \(\mathbf{x} = {\lbrack \mathbf{x}_c; \mathbf{x}_d \rbrack}^T\) is the combined vector of continuous-time and discrete-time <a href="#state">states</a>, and \(\mathbf{y} = {\lbrack \mathbf{y}_c; \mathbf{y}_d \rbrack}^T\)) is the combined vector of continuous-time and discrete-time <a href="#output"><code>outputs</code></a>):</p>
+<p>When the transient simulation of the coupled system through Co-Simulation is completed, the sequence of evaluations is the following (here \(\mathbf{x} = {\lbrack \mathbf{x}_c; \mathbf{x}_d \rbrack}^T\) is the combined vector of continuous-time and discrete-time states, and \(\mathbf{y} = {\lbrack \mathbf{y}_c; \mathbf{y}_d \rbrack}^T\)) is the combined vector of continuous-time and discrete-time <a href="#output"><code>outputs</code></a>):</p>
 </div>
 <div id="equation-co-simulation-evaluations" class="stemblock">
 <div class="title">Sequence of Co-Simulation evaluations</div>
@@ -9433,7 +9431,7 @@ The phases can be categorized according to the following modes:</p>
 <div class="sect3">
 <h4 id="_initialization_mode_2">4.1.1. Initialization Mode</h4>
 <div class="paragraph">
-<p>This mode is used to compute at the start time \(t_0\) initial values for all variables of the Co-Simulation FMU, especially for continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_c(t_0)\), discrete-time states \(\mathbf{x}_d(t_0)\), and for the previous discrete-time <a href="#state"><code>states</code></a> \(^{\bullet}\mathbf{x}_d(t_0)\) by utilizing extra equations only present in <strong>Initialization Mode</strong> <em>[for example, equations to set all <a href="#derivative"><code>derivatives</code></a> to zero, that is, to initialize in steady-state]</em>.</p>
+<p>This mode is used to compute at the start time \(t_0\) initial values for all variables of the Co-Simulation FMU, especially for continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_c(t_0)\), discrete-time states \(\mathbf{x}_d(t_0)\), and for the previous discrete-time states \(^{\bullet}\mathbf{x}_d(t_0)\) by utilizing extra equations only present in <strong>Initialization Mode</strong> <em>[for example, equations to set all <a href="#derivative"><code>derivatives</code></a> to zero, that is, to initialize in steady-state]</em>.</p>
 </div>
 <div class="paragraph">
 <p>If the FMU is connected in loops with other models, iterations over the FMU equations are possible.
@@ -11740,7 +11738,7 @@ Please note that this is only possible for <code>CommunicationPointClocks</code>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>state</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The continuous <a href="#state"><code>states</code></a> of a model are all variables that appear differentiated in the model and are independent from each other.<br>
-The discrete <a href="#state"><code>states</code></a> of a model are time-discrete variables that have two values in a model: The value of the variable from the previous <em>event</em> instant, and the value of the variable at the actual event instant.</p></td>
+The discrete-time states of a model are time-discrete variables that have two values in a model: The value of the variable from the previous <em>event</em> instant, and the value of the variable at the actual event instant.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="state-event"></a><em>state event</em></p></td>
