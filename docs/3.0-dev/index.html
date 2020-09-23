@@ -5623,9 +5623,40 @@ The algebraic relationship to the <a href="#input"><code>inputs</code></a> is de
 An <a href="#outputClock"><code>output clock</code></a> can be left unconnected or can be connected to an <a href="#inputClock"><code>input clock</code></a>, usually of another FMU (for exceptions see <a href="#triggeredBy"><code>triggeredBy</code></a>).</p>
 </div>
 <div id="local" class="paragraph">
-<p><code>= local</code>: Local variable that is calculated from other variables or is a continuous-time <a href="#state"><code>state</code></a> or an event indicator (see <a href="#ModelStructure">Section 2.2.8</a>).
-Local variable values must not be used in another model or FMU.<br>
-<a id="localClock"></a> If <a href="#variability"><code>variability</code></a> = <a href="#clock"><code>clock</code></a> the variable defines a <a href="#localClock"><code>local clock</code></a> computed by the FMU..</p>
+<p><code>= local</code>: Local variables are:<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>continuous-time <a href="#state"><code>states</code></a> and their <code>Derivative</code>s, <code>ClockedState</code>s, <code>EventIndicator</code>s or <code>InitialUnknown</code>s.
+These variables are listed in the <code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;</code>.<br></p>
+</li>
+<li>
+<p><a id="localClock"></a> internal, intermediate variables or local clocks which can be read for debugging purposes and are not listed in the <code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Setting of local variables:<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In <strong>Initialization Mode</strong> and before, local variables need to be set if they do have start values or are listed as <code>InitialUnknown</code>.</p>
+</li>
+<li>
+<p>In super state <strong>Initialized</strong>, <code>fmi3Set{VariableType}</code> must not be called on any of the local variables.
+Only in Model Exchange, continuous <a href="#state"><code>states</code></a> can be set with <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.
+Local variable values must not be used as input to another model or FMU.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>[Continuous-time <a href="#state"><code>states</code></a> and their <code>Derivative</code>s, <code>ClockedState</code>s, <code>EventIndicator</code>s or <code>InitialUnknown</code>s are listed as local variables to give them properties like name and unit for debugging purposes and a value reference to be listed in &lt;fmiModelDescription&gt;&lt;ModelStructure&gt;.]</em></p>
+</div>
+<div class="paragraph">
+<p><em>[TODO: add ClockedState elements to ModelStructure.]</em>
+<em>[TODO: rename Derivative to StateDerivative to differentiate between derivatives of states and general derivatives of any other variable.]</em></p>
 </div>
 <div id="independent" class="paragraph">
 <p><code>= independent</code>: The independent variable (usually <code>time</code> <em>[but could also be, for example, <code>angle</code>]</em>).
@@ -8556,13 +8587,13 @@ Note that <a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> is p
 </div>
 <div class="paragraph">
 <p>The <a href="#derivative"><code>derivatives</code></a> are returned as a vector with <code>nContinuousStates</code> elements.
-The ordering of the elements of the <code>derivatives</code> vector is identical to the ordering of the state vector (for example, <code>derivatives[2]</code> is the <a href="#derivative"><code>derivative</code></a> of <code>continuousStates[2]</code>).
-The order of the states and derivatives is also the same as the ordered list of elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>.
+The ordering of the elements of the <code>derivatives</code> vector must be identical to the ordering of the <code>continuousStates</code> vector (for example, <code>derivatives[2]</code> is the <a href="#derivative"><code>derivative</code></a> of <code>continuousStates[2]</code>).
+The order of the <code>continuousStates</code> and <code>derivatives</code> vector must be the same as the ordered list of elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>.
 <em>[Array variables are serialized in "row major" order, as usual.]</em></p>
 </div>
 <div class="paragraph">
 <p>The event indicators are returned as a vector with <code>nEventIndicators</code> elements.
-The order of event indicators in <code>eventIndicators</code> vector is the same as the ordered list of <code>&lt;EventIndicator&gt;</code> elements in <code>&lt;ModelStructure&gt;</code>.
+The order of the <code>eventIndicators</code> vector must be the same as the ordered list of elements <code>&lt;ModelStructure&gt;&lt;EventIndicator&gt;</code>.
 <em>[Array variables are serialized in "row major" order, as usual.]</em>
 A <a href="#state-event">state event</a> is triggered when the domain of an event indicator changes from \(z_j &gt; 0\) to \(z_j \leq 0\) or vice versa.
 The FMU must guarantee that at an event restart \(z_j \neq 0\), for example, by shifting \(z_j\) with a small value.
