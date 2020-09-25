@@ -1054,7 +1054,7 @@ The co-simulation algorithm is responsible for:</p>
 <p>advancing the overall simulation time,</p>
 </li>
 <li>
-<p>triggering execution of synchronous and asynchronous external events for a set of FMUs, and</p>
+<p>triggering of periodic and aperiodic clocks, and</p>
 </li>
 <li>
 <p>handling events (e.g. clock ticks) signaled by the FMUs.</p>
@@ -1083,7 +1083,7 @@ The scheduler is responsible for:</p>
 <p>advancing the overall simulation time,</p>
 </li>
 <li>
-<p>triggering execution of synchronous and asynchronous external events for all exposed model parts of a set of FMUs, and</p>
+<p>triggering of periodic and aperiodic clocks for all exposed model partitions of a set of FMUs, and</p>
 </li>
 <li>
 <p>handling events (e.g. clock ticks) signaled by the FMUs.</p>
@@ -6025,7 +6025,7 @@ Allowed values of this enumeration:</p>
 <p><code>= fixed</code>: The value of the variable is fixed after initialization, in other words, after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called the variable value does not change anymore.</p>
 </div>
 <div id="tunable" class="paragraph">
-<p><code>= tunable</code>: The value of the variable is constant between external events (ME) and between communication points (CS and SE) due to changing variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.
+<p><code>= tunable</code>: The value of the variable is constant between events (ME) and between communication points (CS and SE) due to changing variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.
 Whenever a <a href="#parameter"><code>parameter</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> changes, an event is triggered externally (ME or CS if events are supported), or the change is performed at the next communication point (CS and SE) and the variables with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> and <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> or <a href="#output"><code>output</code></a> must be newly computed.
 <em>[<a href="#tunable"><code>tunable</code></a> <a href="#input">inputs</a> are not allowed, see <a href="#table-allowed-variability-causality-combinations">Table 6</a>.]</em></p>
 </div>
@@ -6396,7 +6396,7 @@ Variables with <a href="#causality"><code>causality</code></a> <a href="#paramet
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em>(2)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#parameter"><code>parameter</code></a> (changing such a <a href="#parameter"><code>parameter</code></a> triggers an external event (ME) or takes effect at the next communication point (CS and SE), and <a href="#tunable"><code>tunable</code></a> <a href="#calculatedParameter"><code>calculatedParameter</code></a>/<a href="#output"><code>output</code></a>/<a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#parameter"><code>parameter</code></a> (changing such a <a href="#parameter"><code>parameter</code></a> triggers event handling (ME) or takes effect at the next communication point (CS and SE), and <a href="#tunable"><code>tunable</code></a> <a href="#calculatedParameter"><code>calculatedParameter</code></a>/<a href="#output"><code>output</code></a>/<a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em>(3)</em></p></td>
@@ -6406,7 +6406,7 @@ Variables with <a href="#causality"><code>causality</code></a> <a href="#paramet
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em>(4)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameter</code></a></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameter</code></a> (changing a <a href="#parameter"><code>parameter</code></a> triggers an external event (ME) or takes effect at the next communication point (CS and SE), and <a href="#tunable"><code>tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameters</code></a> and <a href="#tunable"><code>tunable</code></a> <a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>Tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameter</code></a> (changing a <a href="#parameter"><code>parameter</code></a> triggers event handling (ME) or takes effect at the next communication point (CS and SE), and <a href="#tunable"><code>tunable</code></a> <a href="#dependenciesKind"><code>dependent</code></a> <a href="#parameter"><code>parameters</code></a> and <a href="#tunable"><code>tunable</code></a> <a href="#local"><code>local</code></a> variables might change their values).</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em>(5)</em></p></td>
@@ -6835,7 +6835,7 @@ Otherwise, the corresponding known \({v_{\mathit{known},i}}\) enters the equatio
 <p class="tableblock"><code>=</code> <a href="#constant"><code>constant</code></a>: constant factor, \({c \cdot v_{\mathit{known},i}}\) where \({c}\) is an expression that is evaluated before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.</p>
 <p class="tableblock">Only for floating point type unknowns \({v_{\mathit{unknown}}}\) in Event and <strong>Continuous-Time Mode</strong> (ME) and at communication points (CS and SE), and not for <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> for <strong>Initialization Mode</strong>:</p>
 <p class="tableblock"><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \({p \cdot v_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
-<p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \({p \cdot v_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external event (ME) or at a communication point (CS and SE)</p>
+<p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \({p \cdot v_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to event handling (ME) or at a communication point (CS and SE)</p>
 <p class="tableblock"><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \({d \cdot v_{\mathit{known},i}}\) where \({d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <strong>Event Mode</strong> due to an external or internal event or at a communication point (CS and SE).</p></td>
 </tr>
 </tbody>
@@ -8040,9 +8040,8 @@ is a continuous function of time inside each interval \(t_i^+ &lt; \ ^-t_{i+1}\)
 <ol class="arabic">
 <li>
 <p>The environment of the FMU triggers an event at the current time instant because at least one discrete-time <a href="#input"><code>input</code></a> changes its value, a continuous-time <a href="#input"><code>input</code></a> has a discontinuous change, or a <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a> changes its value.
-Such an event is called external event.
 <em>[Note that if an FMU A is connected to an FMU B, and an event is triggered for A, then potentially all <a href="#output"><code>outputs</code></a> of A will be discontinuous at this time instant.</em>
-<em>It is therefore advisable to trigger an external event for B at this time instant too if an <a href="#output"><code>output</code></a> of A is connected to B.</em>
+<em>It is therefore advisable to move B into <strong>Event Mode</strong> at this time instant too if an <a href="#output"><code>output</code></a> of A is connected to B.</em>
 <em>This means to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> on B.]</em><br></p>
 <div class="paragraph">
 <p>All the following events are internal events:</p>
@@ -8600,7 +8599,7 @@ Basically, during <strong>Continuous-Time Mode</strong>, the <a href="#derivativ
 If FMUs and/or submodels are connected together, then the <a href="#input"><code>inputs</code></a> of these models are the <a href="#output"><code>outputs</code></a> of other models, and therefore, the corresponding FMU outputs must be computed.
 Whenever result values shall be stored, usually at output points defined before the start of the simulation, the <code>fmi3Get{VariableType}</code> function with respect to the desired variables must be called.<br>
 Continuous integration is stopped at an event instant.
-An event instant is determined by a <a href="#time-event"><code>time</code></a>, <a href="#state-event"><code>state</code></a> or <a href="#step-event">step event</a>, or by an external event triggered by the environment.</p>
+An event instant is determined by a <a href="#time-event"><code>time</code></a>, <a href="#state-event"><code>state</code></a> or <a href="#step-event">step event</a>, or by the environment (e.g. to change a <a href="#continuous"><code>continuous</code></a> variable discretely).</p>
 </div>
 <div class="paragraph">
 <p>In order to determine a <a href="#state-event">state event</a>, the event indicators <strong>z</strong> have to be inquired at every completed integrator step.
@@ -8949,7 +8948,7 @@ If a transition is labelled with one or more function names (for example, <a hre
 Note that the FMU can always determine in which state it is since every state is entered by a particular function call (such as <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>), or a particular return value (such as <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>).</p>
 </div>
 <div class="paragraph">
-<p>The transition conditions <a href="#external-event">external event</a>, <a href="#time-event">time event</a>, and <a href="#state-event">state event</a> are defined in <a href="#math-model-exchange">Section 3.1</a>.</p>
+<p>The transition conditions <a href="#time-event">time event</a>, and <a href="#state-event">state event</a> are defined in <a href="#math-model-exchange">Section 3.1</a>.</p>
 </div>
 <div class="paragraph">
 <p>Each state of the state machine corresponds to a certain phase of a simulation.
@@ -10656,7 +10655,7 @@ The accessible variables are marked with attribute <a href="#intermediateUpdate"
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the co-simulation algorithm returns <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a>.
 <em>[If set to <code>true</code>, a Co-Simulation FMU supports ending <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> before the planned next communication point.</em>
-<em>This can be used by the co-simulation algorithm to avoid unnecessary computations and roll backs of the FMU due to external events known by the co-simulation algorithm.]</em></p></td>
+<em>This can be used by the co-simulation algorithm to avoid unnecessary computations and roll backs of the FMU due to input clock activations known to the co-simulation algorithm.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a></p></td>
@@ -10978,7 +10977,7 @@ Using the element index 0 means all elements of the <a href="#clock"><code>clock
 <div class="paragraph">
 <p>Scheduling of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> calls for each FMU is done by the simulation algorithm.
 Calls are based on ticks of <a href="#periodic"><code>periodic</code></a> or <a href="#periodic">aperiodic</a> <a href="#inputClock"><code>input clocks</code></a>.
-These <a href="#inputClock"><code>inputClock</code></a> ticks can be based on <a href="#clock"><code>clock</code></a> ticks from FMU external sources (e.g. <a href="#outputClock"><code>output clocks</code></a> of other FMUs) or other external <a href="#clock"><code>clocks</code></a>/events/interrupts assigned via the simulation algorithm configuration (such external events can be based on a potentially unpredictable process or can be just simulation time based events e.g. the planned communication point).
+These <a href="#inputClock"><code>input clock</code></a> ticks can be based on <a href="#clock"><code>clock</code></a> ticks from FMU external sources (e.g. <a href="#outputClock"><code>output clocks</code></a> of other FMUs).
 The <a href="#inputClock"><code>inputClock</code></a> ticks can also be based on <a href="#outputClock"><code>output clock</code></a> ticks of the same FMU.
 Refer to <a href="#math-scheduled-execution">Section 5.1</a> and <a href="#CommunicationPointClocks">Section 2.1.9.2</a>.
 The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function is not called for <a href="#outputClock"><code>output clocks</code></a> of an FMU.</p>
@@ -11181,7 +11180,7 @@ Arbitrary evaluation order is possible for model partitions of the same priority
 <p>Based on the period and priority definitions the exporting tool can restrict the code evaluation order.
 It nevertheless has to secure its code against concurrent evaluation <em>[not against parallel evaluation, as this is not supported for model partitions of an FMU in the interface description of this mode]</em> along the defined priority restrictions.
 Mostly this is required for internal inter-model-partition communication and in general for the joint use of global variables within the FMU.
-The exporting tool has to consider external events i.e. interrupts (if <a href="#input"><code>input</code></a> <a href="#periodic">aperiodic</a> <a href="#clock"><code>clocks</code></a> are defined) and the influences of computing speed, so the exact preemption occurrence points cannot be foreseen (within the given priority and period restrictions).</p>
+The exporting tool has to consider the effect of <a href="#input"><code>input</code></a> <a href="#periodic">aperiodic</a> <a href="#clock"><code>clocks</code></a> and the influences of computing speed, so the exact preemption occurrence points cannot be foreseen (within the given priority and period restrictions).</p>
 </div>
 <div class="paragraph">
 <p>To guard certain code parts against preemption they must be enclosed with the callback functions <code>lockPreemption</code> and <code>unlockPreemption</code>.</p>
@@ -11529,9 +11528,9 @@ Synonyms: dynamic mutual-exchange, simulator coupling, and coupled simulation.</
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>event</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Something that occurs instantaneously at a specific time or when a specific condition occurs.
 At an event, numerical integration is suspended and variables may change their values discontinuously.
-Internal events occur inside the FMU and should be signaled to the environment without any delay.
-External events occur outside the FMU and should be signaled to the FMU without any delay.
-See <a href="#state-event">state event</a>, <a href="#step-event">step event</a>, <a href="#external-event">external event</a> and <a href="#time-event">time event</a>.</p></td>
+Internal events occur inside the FMU and should be signaled to the environment without any delay and can cause event handling and/or the activation of an output clock.
+Input clocks are activated by the environment to inform the FMU about the exact moment an event across FMUs has to be handled.
+See <a href="#state-event">state event</a>, <a href="#step-event">step event</a> and <a href="#time-event">time event</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>event indicator</em></p></td>
@@ -11540,10 +11539,6 @@ See <a href="#state-event">state event</a>, <a href="#step-event">step event</a>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>exporter</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A program that creates an FMU.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="external-event"></a><em>external event</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>external scheduler</em></p></td>
