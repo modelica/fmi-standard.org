@@ -8760,22 +8760,7 @@ If the super-dense time before a call to <a href="#fmi3NewDiscreteStates"><code>
 <div class="ulist">
 <ul>
 <li>
-<p>If output argument <code>newDiscreteStatesNeeded == fmi3True</code>, the FMU should stay in <strong>Event Mode</strong>, and the FMU requires to set new inputs to the FMU (<code>fmi3Set{VariableType}</code> on <a href="#input"><code>inputs</code></a>) to compute and get the <a href="#output"><code>outputs</code></a> (<code>fmi3Get{VariableType}</code> on <a href="#output"><code>outputs</code></a>) and to call <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> again.
-Depending on the connection with other FMUs, the environment shall</p>
-<div class="ulist">
-<ul>
-<li>
-<p>call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, if <a href="#terminateSimulation"><code>terminateSimulation == fmi3True</code></a> is returned by at least one FMU,</p>
-</li>
-<li>
-<p>call <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> if all FMUs return <code>newDiscreteStatesNeeded == fmi3False</code>, and</p>
-</li>
-<li>
-<p>stay in <strong>Event Mode</strong> otherwise.
-When the FMU is terminated, it is assumed that an appropriate message is printed by the <a href="#logMessage"><code>logMessage</code></a> function (see <a href="#FMUStateSetable">Section 2.1.5.1</a>) to explain the reason for the termination.</p>
-</li>
-</ul>
-</div>
+<p>If output argument <code>newDiscreteStatesNeeded == fmi3True</code>, the FMU should stay in <strong>Event Mode</strong>, and the FMU requires to set new inputs to the FMU (<code>fmi3Set{VariableType}</code> on <a href="#input"><code>inputs</code></a>) to compute and get the <a href="#output"><code>outputs</code></a> (<code>fmi3Get{VariableType}</code> on <a href="#output"><code>outputs</code></a>) and to call <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> again.</p>
 </li>
 </ul>
 </div>
@@ -8811,6 +8796,25 @@ If no element of the continuous state vector has changed its value, <code>values
 If integration is stopped before <a href="#nextEventTime"><code>nextEventTime</code></a>, for example, due to a <a href="#state-event">state event</a>, the definition of <a href="#nextEventTime"><code>nextEventTime</code></a> becomes obsolete.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Where there are multiple connected FMUs, the environment shall</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, if <a href="#terminateSimulation"><code>terminateSimulation == fmi3True</code></a> is returned by at least one FMU,</p>
+</li>
+<li>
+<p>call <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> if all FMUs return <code>newDiscreteStatesNeeded == fmi3False</code>, and</p>
+</li>
+<li>
+<p>stay in <strong>Event Mode</strong> otherwise.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When the FMU is terminated, it is assumed that an appropriate message is printed by the <a href="#logMessage"><code>logMessage</code></a> function (see <a href="#FMUStateSetable">Section 2.1.5.1</a>) to explain the reason for the termination.</p>
 </div>
 <div id="fmi3CompletedIntegratorStep" class="listingblock">
 <div class="content">
