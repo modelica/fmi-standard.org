@@ -6726,7 +6726,7 @@ A Co-Simulation FMU does not need to expose these state derivatives and event in
 <em>This is for example, important for linearization, in order that the interpretation of the output vector does not change for a re-exported FMU.]</em>
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (ME) and at the current communication point (CS and SE).
 Attribute <a href="#dependencies"><code>dependencies</code></a> for output clocks (variables with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#clock"><code>clock</code></a>) lists all known variables (including input clocks) that contribute to trigger a clock tick for that output clock.
-Beside the knowns, the <a href="#output"><code>outputs</code></a> also depend on the freeze variables (= variables which cannot be changed in the current mode) but these freeze variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
+Beside the knowns, the <a href="#output"><code>outputs</code></a> also depend on "frozen" variables (= variables which cannot be changed in the current mode) but these "frozen" variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as (dependencies of variables that are fixed in Event and <strong>Continuous-Time Mode</strong> and at communication points are not shown):<br>
 \({(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{\mathit{output}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{\mathit{tune}})}\)</p></td>
 </tr>
@@ -6747,7 +6747,7 @@ For Co-Simulation, elements <code>&lt;Derivative&gt;</code> are ignored if capab
 <em>If the above flag is set to <code>false</code> for the Co-Simulation cases, then the <code>&lt;Derivative&gt;</code> elements are ignored for Co-Simulation.</em>
 <em>If "inline integration" is used for a co-simulation FMU, then the model still has continuous-time <a href="#state"><code>states</code></a> and just a special solver is used (internally the implementation results in a discrete-time system, but from the outside, it is still a continuous-time system).]</em><br>
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the state derivatives from the knowns at the current super-dense time instant in Event and in <strong>Continuous-Time Mode</strong> (ME) and at the current communication point (CS and SE).
-Beside the knowns the derivatives also depend on the freeze variables (= variables which cannot be changed in the current mode) but these freeze variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
+Beside the knowns the derivatives also depend on the "frozen" variables (= variables which cannot be changed in the current mode) but these "frozen" variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as (dependencies of variables that are fixed in Event and <strong>Continuous-Time Mode</strong> and at communication points are not shown):<br>
 \({\dot{\mathbf{x}_c} := \mathbf{f}_{\mathit{der}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{\mathit{tune}})}\)</p></td>
 </tr>
@@ -6761,7 +6761,7 @@ This list consists of all variables with</p>
 <p class="tableblock">- all continuous-time <a href="#state"><code>states</code></a> and all state derivatives (defined with elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a> <em>[if a Co-Simulation FMU does not define the <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code> elements, (3) cannot be present]</em>.</p>
 <p class="tableblock">The resulting list is not allowed to have duplicates (for example, if a <a href="#state"><code>state</code></a> is also an <a href="#output"><code>output</code></a>, it is included only once in the list).<br>
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the unknowns from the knowns in <strong>Initialization Mode</strong> at the initial time.
-Beside the knowns the initial unknowns also depend on the freeze variables (= variables which cannot be changed in the current mode) but these freeze variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
+Beside the knowns the initial unknowns also depend on the "frozen" variables (= variables which cannot be changed in the current mode) but these "frozen" variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as:</p>
 <p class="tableblock">\({\mathbf{v}_{\mathit{initialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{\mathit{initial=exact}})}\)</p>
 <p class="tableblock">Since, <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <code>fmi3Get{VariableType}</code> in <strong>Initialization Mode</strong>.</p>
@@ -8373,7 +8373,7 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Enter <strong>Continuous-Time Mode</strong>:</span><br>
 <span class="lime">\(\qquad \textrm{// de-activate discrete-time equations}\)</span><br>
-<span class="lime">\(\qquad \textrm{// "freeze" variables:}\)</span><br>
+<span class="lime">\(\qquad \textrm{// "frozen" variables:}\)</span><br>
 <span class="lime">\(\qquad \mathbf{r} := \mathbf{z}&gt;0 \qquad \textrm{//all relations}\)</span><br>
 <span class="lime">\(\qquad \textbf{x}_d, \textbf{w}_d \qquad \textrm{//all discrete-time variables}\)</span><br></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3EnterContinuousTimeMode</span></code></p></td>
@@ -8518,11 +8518,11 @@ y2 := w2</pre>
 </dl>
 </div>
 <div id="Remark3" class="paragraph">
-<p><em>Remark 3 - Event Indicators / Freezing Relations:</em></p>
+<p><em>Remark 3 - Event Indicators / Frozen Relations:</em></p>
 </div>
 <div class="paragraph">
 <p><em>In <a href="#table-math-model-exchange">Table 9</a>, vector</em> \(\mathbf{r}\) <em>is used to collect all relations together that are utilized in the event indicators</em> \(\mathbf{z}\) <em>.</em>
-<em>In <strong>Continuous-Time Mode</strong> all these relations are <code>frozen</code> and do not change during the evaluations in the respective mode.</em>
+<em>In <strong>Continuous-Time Mode</strong> all these relations are "frozen" and do not change during the evaluations in the respective mode.</em>
 <em>This is indicated in <a href="#table-math-model-exchange">Table 9</a> by computing</em> \(\mathbf{r}\) <em>when entering the <strong>Continuous-Time Mode</strong> and providing</em> \(\mathbf{r}\) <em>as (internal) input argument to the evaluation functions.</em>
 <em>Example:</em></p>
 </div>
