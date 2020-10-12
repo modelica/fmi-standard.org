@@ -730,20 +730,7 @@ document.addEventListener('keydown', (event) => {
 </li>
 </ul>
 </li>
-<li><a href="#_definition_of_source_code">2.4. Definition of Source Code</a>
-<ul class="sectlevel3">
-<li><a href="#_sourcefileset">2.4.1. SourceFileSet</a>
-<ul class="sectlevel4">
-<li><a href="#_sourcefile">2.4.1.1. SourceFile</a></li>
-<li><a href="#_preprocessordefinition">2.4.1.2. PreprocessorDefinition</a></li>
-<li><a href="#_preprocessordefinitionoption">2.4.1.3. PreprocessorDefinition/Option</a></li>
-<li><a href="#_includedirectory">2.4.1.4. IncludeDirectory</a></li>
-</ul>
-</li>
-<li><a href="#_library">2.4.2. Library</a></li>
-<li><a href="#_examples">2.4.3. Examples</a></li>
-</ul>
-</li>
+<li><a href="#VersioningLayered">2.4. Versioning and Layered Standards</a></li>
 </ul>
 </li>
 <li><a href="#fmi-for-model-exchange">3. FMI for Model Exchange</a>
@@ -1209,11 +1196,26 @@ To be processor independent, the FMU must include its C (or C++) sources.</p>
 </dd>
 <dt class="hdlist1">Simulator independence</dt>
 <dd>
-<p>It is possible to compile, link and distribute an FMU without knowing the environment in which the FMU will be loaded.
-Reason: The standard would be much less attractive otherwise, unnecessarily restricting the later use of an FMU at compile time and forcing users to maintain simulator specific variants of an FMU.
+<p>It is possible to compile, link and distribute an FMU without knowing the environment in which the FMU will be loaded.</p>
+<div class="paragraph">
+<p>Reason: The standard would be much less attractive otherwise, unnecessarily restricting the later use of an FMU at compile time and forcing users to maintain simulator specific variants of an FMU.
 To be simulator independent, the FMU must export its implementation in self-contained binary form.
 This requires that the target operating system and processor be known.
 Once exported with binaries, the FMU can be executed by any simulator running on the target platform (provided the necessary licenses are available, if required from the model or from the used run-time libraries).</p>
+</div>
+</dd>
+<dt class="hdlist1">Semantic versioning</dt>
+<dd>
+<p>The FMI standard uses semantic version numbers, as defined in <a href="#PW13">[PW13]</a>, where the standard version consists of a triple of version numbers, consisting of major version, minor version, and patch version numbers, see <a href="#VersioningLayered">Section 2.4</a>.</p>
+</dd>
+<dt class="hdlist1">Version independence</dt>
+<dd>
+<p>FMUs with a specific major and minor version number are valid FMUs w.r.t. the same major version and any minor version because features of minor versions are optional and ignorable.</p>
+<div class="paragraph">
+<p>Reason: A tool can always export the greatest minor version it supports.
+Such an FMU can be imported into all tools supporting this major version and arbitrary minor versions.
+This achieves maximal longevity of FMUs protecting its value for users.</p>
+</div>
 </dd>
 <dt class="hdlist1">Small run-time overhead</dt>
 <dd>
@@ -1222,14 +1224,18 @@ This can be achieved by enabling caching of the FMU outputs and by exchanging mu
 </dd>
 <dt class="hdlist1">Small footprint</dt>
 <dd>
-<p>A compiled FMU binary requires little memory.
-Reason: An FMU may run on an ECU (Electronic Control Unit, for example, a microprocessor), and ECUs have strong memory limitations.
+<p>A compiled FMU binary requires little memory.</p>
+<div class="paragraph">
+<p>Reason: An FMU may run on an ECU (Electronic Control Unit, for example, a microprocessor), and ECUs have strong memory limitations.
 This is achieved by storing signal attributes (<code>name</code>, <code>unit</code>, etc.) and all other static information not needed for model evaluation in a separate text file (= Model Description File) that is not needed on the microprocessor where the executable might run.</p>
+</div>
 </dd>
 <dt class="hdlist1">Hide data structure</dt>
 <dd>
-<p>The FMI for Model Exchange does not prescribe a data structure (e.g., a C struct) to represent a model.
-Reason: the FMI standard shall not unnecessarily restrict or prescribe a certain implementation of FMUs or simulators (whichever contains the model data) to ease implementation by different tool vendors.</p>
+<p>The FMI for Model Exchange does not prescribe a data structure (e.g., a C struct) to represent a model.</p>
+<div class="paragraph">
+<p>Reason: the FMI standard shall not unnecessarily restrict or prescribe a certain implementation of FMUs or simulators (whichever contains the model data) to ease implementation by different tool vendors.</p>
+</div>
 </dd>
 <dt class="hdlist1">Support many and nested FMUs</dt>
 <dd>
@@ -1244,33 +1250,41 @@ Moreover, an FMU may contain nested FMUs.</p>
 <dt class="hdlist1">Hide cache</dt>
 <dd>
 <p>A typical FMU will cache computed results for later reuse.
-To simplify usage and to reduce error possibilities by a simulator, the caching mechanism is hidden from the usage of the FMU.
-Reason: First, the FMI should not force an FMU to implement a certain caching policy.
+To simplify usage and to reduce error possibilities by a simulator, the caching mechanism is hidden from the usage of the FMU.</p>
+<div class="paragraph">
+<p>Reason: First, the FMI should not force an FMU to implement a certain caching policy.
 Second, this helps to keep the FMI simple.
 To help implement this cache, the FMI provides explicit methods (called by the FMU environment) for setting properties that invalidate cached data.
 An FMU that chooses to implement a cache may maintain a set of "dirty" flags, hidden from the simulator.
 A get method, for example to a state, will then either trigger a computation, or return cached data, depending on the value of these flags.</p>
+</div>
 </dd>
 <dt class="hdlist1">Support numerical solvers</dt>
 <dd>
 <p>A typical importer will use numerical solvers.
 These solvers require vectors for <a href="#state"><code>states</code></a>, <a href="#derivative"><code>derivatives</code></a> and zero-crossing functions.
-The FMU directly fills the values of such vectors provided by the solvers.
-Reason: minimize execution time.
+The FMU directly fills the values of such vectors provided by the solvers.</p>
+<div class="paragraph">
+<p>Reason: minimize execution time.
 The exposure of these vectors conflicts somewhat with the "hide data structure" requirement, but the efficiency gain justifies this.</p>
+</div>
 </dd>
 <dt class="hdlist1">Explicit signature</dt>
 <dd>
 <p>The intended operations, arguments, and return types are made explicit in the signature.
 For example, an operator (such as <code>compute_derivatives</code>) is not passed as an int argument but a special function is called for this.
-The <code>const</code> prefix is used for any pointer that should not be changed, including <code>const char*</code> instead of <code>char*</code>.
-Reason: the correct use of the FMI can be checked at compile time and allows calling of the C code in a C++ environment (which is much stricter on <code>const</code> than C is).
+The <code>const</code> prefix is used for any pointer that should not be changed, including <code>const char*</code> instead of <code>char*</code>.</p>
+<div class="paragraph">
+<p>Reason: the correct use of the FMI can be checked at compile time and allows calling of the C code in a C++ environment (which is much stricter on <code>const</code> than C is).
 This will help to develop FMUs that use the FMI in the intended way.</p>
+</div>
 </dd>
 <dt class="hdlist1">Few functions</dt>
 <dd>
-<p>The FMI consists of a few, "orthogonal" functions, avoiding redundant functions that could be defined in terms of others.
-Reason: This leads to a compact, easy-to-use, and hence attractive API with a compact documentation.</p>
+<p>The FMI consists of a few, "orthogonal" functions, avoiding redundant functions that could be defined in terms of others.</p>
+<div class="paragraph">
+<p>Reason: This leads to a compact, easy-to-use, and hence attractive API with a compact documentation.</p>
+</div>
 </dd>
 <dt class="hdlist1">Error handling</dt>
 <dd>
@@ -1279,13 +1293,17 @@ Reason: This leads to a compact, easy-to-use, and hence attractive API with a co
 <dt class="hdlist1">Allocator must free</dt>
 <dd>
 <p>All memory (and other resources) allocated by the FMU are freed (released) by the FMU.
-Likewise, resources allocated by the importer are released by the importer.
-Reason: this helps to prevent memory leaks and run-time errors due to incompatible run-time environments for different components.</p>
+Likewise, resources allocated by the importer are released by the importer.</p>
+<div class="paragraph">
+<p>Reason: this helps to prevent memory leaks and run-time errors due to incompatible run-time environments for different components.</p>
+</div>
 </dd>
 <dt class="hdlist1">Immutable strings</dt>
 <dd>
-<p>All strings passed as arguments or returned are read-only and must not be modified by the receiver.
-Reason: This eases the reuse of strings.</p>
+<p>All strings passed as arguments or returned are read-only and must not be modified by the receiver.</p>
+<div class="paragraph">
+<p>Reason: This eases the reuse of strings.</p>
+</div>
 </dd>
 <dt class="hdlist1">Named list elements</dt>
 <dd>
@@ -7607,316 +7625,54 @@ The described multi-mode support is based on wrapping functionality into the <a 
 <em>Especially <a href="#periodic">aperiodic</a> <a href="#inputClock"><code>input clocks</code></a> can not always be sufficiently emulated in modes that do not directly support <a href="#clock"><code>clocks</code></a>.</em>
 <em>Therefore it is recommended that the FMU provides logging information to the user about the influence of the current mode on simulation results, if non-optimal modes are used by the simulation environment.]</em></p>
 </div>
+<div class="paragraph">
+<p>include::docs/2_4_source_code.adoc</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_definition_of_source_code">2.4. Definition of Source Code</h3>
+<h3 id="VersioningLayered">2.4. Versioning and Layered Standards</h3>
 <div class="paragraph">
-<p>A source code FMU contains the sources of the model in the <code>sources</code> directory together with a <code>buildDescription.xml</code> that contains at least one <code>&lt;BuildConfiguration&gt;</code> element for the supported platforms.
-Each <code>&lt;BuildConfiguration&gt;</code> provides the necessary information to compile and link the sources of the model into a dynamic library or as part of an executable.</p>
+<p>The FMI standard uses semantic version numbers, as defined in <a href="#PW13">[PW13]</a>, where the standard version consists of a triple of version numbers, consisting of major version, minor version, and patch version numbers <em>[e.g. 1.2.3 for major version 1, minor version 2 and patch version 3]</em>.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Attribute</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>modelIdentifier</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The attribute <code>modelIdentifier</code> of the <code>&lt;ModelExchange&gt;</code>, <code>&lt;CoSimulation&gt;</code> or <code>&lt;ScheduledExecution&gt;</code> elements this build configuration is associated with.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>platform</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Platform tuple of the platform the build configuration is intended for (e.g. <code>x86_64-linux</code>)</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Description of the build configuration</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="sect3">
-<h4 id="_sourcefileset">2.4.1. SourceFileSet</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Major versions will introduce changes that are neither backward nor forward-compatible, including changes to the XML schemas to include new non-ignorable content.</p>
+</li>
+<li>
+<p>Minor versions will only contain clarifications and include new layered standards, which may add new ignorable XML content, as defined below, into the core standard document, indicating that the standard needs to be supported by all conforming implementations.</p>
+</li>
+<li>
+<p>Patch versions will only change explanatory text of the standard, make formerly defined content clearer, without any other changes to the XML schemas or other content definitions. For this reason, the version number attribute of all FMI files will only contain major and minor version numbers and not the patch version number: It should never be necessary for an importing tool to know the patch version number of the standard that the generating tool implemented.</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>The <code>&lt;SourceFileSet&gt;</code> element groups source files that can be compiled with the same compiler and compiler options.
-Every build configuration must contain at least one <code>&lt;SourceFileSet&gt;</code>.</p>
+<p>In order to enable the backward-compatible extension of the FMI standard in minor releases and between minor releases, the FMI project intends the use of the layered standard mechanism to introduce new features in a fully backward-compatible and optional way.<br>
+A layered standard defines extensions to the base FMI standard by specifying either standardized annotations, standardized extra files in the FMU, and/or support for additional MIME types/file formats, defined in <a href="#definition-of-types">Section 2.2.3</a>. <br>
+A layered standard can include a single or combined set of extension mechanisms from this set.<br>
+The layered standard is thus considered to be layered on top of the definitions and extensions mechanisms provided by this base standard.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Attribute</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>language</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Language of the source files (e.g. <code>C99</code>, <code>C++11</code>)</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compiler</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The compiler to compile the sources (e.g. <code>VisualC</code>, <code>gcc</code>, <code>clang++</code>)</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compilerOptions</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The compiler flags that have to be used when compiling the sources (e.g. <code>-fno-rtti</code>, <code>/Od</code>)</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="sect4">
-<h5 id="_sourcefile">2.4.1.1. SourceFile</h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Attribute</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path of the source file relative to the <code>sources</code> directory</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect4">
-<h5 id="_preprocessordefinition">2.4.1.2. PreprocessorDefinition</h5>
 <div class="paragraph">
-<p>The <code>&lt;PreprocessorDefinition&gt;</code> element defines a preprocessor definition that needs to be passed to the compiler when compiling the source files in the <code>&lt;SourceFileSet&gt;</code>.</p>
+<p>Layered standards can fall into three categories:</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Attribute</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the preprocessor definition</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>value</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Value of the preprocessor definition</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Determines wether the definition is optional (default is <code>false</code>)</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Description of the preprocessor definition</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="ulist">
+<ul>
+<li>
+<p>Layered standards defined by third parties, without any representations by the FMI project for their suitability or content, or even knowledge by the FMI project about their existence.</p>
+</li>
+<li>
+<p>Layered standards defined by third parties that are endorsed by the FMI project and listed on the FMI project website.</p>
+</li>
+<li>
+<p>Layered standards can be defined/adopted and published by the FMI project itself, making them FMI project layered standards.</p>
+</li>
+</ul>
 </div>
-<div class="sect4">
-<h5 id="_preprocessordefinitionoption">2.4.1.3. PreprocessorDefinition/Option</h5>
 <div class="paragraph">
-<p>The <code>&lt;Option&gt;</code> element defines a possible value for the <code>&lt;PreprocessorDefinition&gt;</code>.
-If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</code> elements, its default value must be contained in the options.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Attribute</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>value</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Value of the preprocessor definition option</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Description of the preprocessor definition option</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect4">
-<h5 id="_includedirectory">2.4.1.4. IncludeDirectory</h5>
-<div class="paragraph">
-<p>The <code>&lt;IncludeDirectory&gt;</code> element defines the include directories that need to be passed to the compiler when compiling the source files in the <code>&lt;SourceFileSet&gt;</code>.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Attribute</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path of the include directory relative to the <code>sources</code> directory</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_library">2.4.2. Library</h4>
-<div class="paragraph">
-<p>The <code>&lt;Library&gt;</code> element defines a static library required to link the model binary.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Attribute</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the library</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Version specifier of the library as defined in <a href="https://www.python.org/dev/peps/pep-0440/#version-specifiers">PEP 440</a>.
-The characters <code>&gt;</code> (greater-than) and <code>&lt;</code> (less-than) must be escaped as <code>&gt;</code> and <code>&lt;</code>.
- <em>[For example <code>2.5</code>, <code>&gt;=2.0,&lt;3.0</code> or <code>&gt;=1.0,!=1.2</code>]</em>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>external</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Boolean attribute that determines wether the library is contained in the <code>binaries/&lt;platform_tuple&gt;</code> directory (<code>false</code>) or if it has to be provided by the environment (<code>true</code>).
-The default is <code>false</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Description of the library definition option</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_examples">2.4.3. Examples</h4>
-<div class="listingblock">
-<div class="title">A minimal build configuration</div>
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiBuildDescription fmiVersion="3.0-alpha.5"&gt;
-
-  &lt;BuildConfiguration modelIdentifier="PIDContoller"&gt;
-    &lt;SourceFileSet&gt;
-      &lt;SourceFile name="all.c"/&gt;
-    &lt;/SourceFileSet&gt;
-  &lt;/BuildConfiguration&gt;
-
-&lt;/fmiBuildDescription&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Multiple complex build configurations</div>
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiBuildDescription fmiVersion="3.0-alpha.5"&gt;
-
-  &lt;BuildConfiguration modelIdentifier="PlantModel" description="Build configuration for desktop platforms"&gt;
-    &lt;SourceFileSet language="C99"&gt;
-      &lt;SourceFile name="fmi3Functions.c"/&gt;
-      &lt;SourceFile name="solver.c"/&gt;
-    &lt;/SourceFileSet&gt;
-    &lt;SourceFileSet language="C++11"&gt;
-      &lt;SourceFile name="model.c"/&gt;
-      &lt;SourceFile name="logging/src/logger.c"/&gt;
-      &lt;PreprocessorDefinition name="FMI_VERSION" value="3"/&gt;
-      &lt;PreprocessorDefinition name="LOG_TO_FILE" optional="true"/&gt;
-      &lt;PreprocessorDefinition name="LOG_LEVEL" value="0" optional="true"&gt;
-        &lt;Option value="0" description="Log infos, warnings and errors"/&gt;
-        &lt;Option value="1" description="Log warnings and errors"/&gt;
-        &lt;Option value="2" description="Log only errors"/&gt;
-      &lt;/PreprocessorDefinition&gt;
-      &lt;IncludeDirectory name="logging/include"/&gt;
-    &lt;/SourceFileSet&gt;
-    &lt;Library name="hdf5" version="&amp;gt;=1.8,!=1.8.17,&amp;lt;1.10" external="true" description="HDF5"/&gt;
-  &lt;/BuildConfiguration&gt;
-
-  &lt;BuildConfiguration modelIdentifier="PlantModel" platform="aarch64-linux"&gt;
-    &lt;SourceFileSet language="C99"&gt;
-      &lt;SourceFile name="fmi3Functions.c"/&gt;
-    &lt;/SourceFileSet&gt;
-    &lt;SourceFileSet language="C++11" compiler="clang++" compilerOptions="-fno-rtti"&gt;
-      &lt;SourceFile name="model.c"/&gt;
-      &lt;PreprocessorDefinition name="NO_FILE_SYSTEM"/&gt;
-    &lt;/SourceFileSet&gt;
-    &lt;Library name="libm.a" description="OpenLibm math library"/&gt;
-  &lt;/BuildConfiguration&gt;
-
-&lt;/fmiBuildDescription&gt;</code></pre>
-</div>
-</div>
+<p>Layered standards that have achieved enough adoption or importance to be included into the base standard set could be incorporated into a new minor or major release version of the base standard as an optional or mandatory appendix, making support for this layered standard optional or required for conformance with the newly published minor release version of the base standard.</p>
 </div>
 </div>
 </div>
@@ -11507,11 +11263,13 @@ Aperiodic tasks are scheduled explicitly during the execution.</p>
 <p><a id="MG09"></a>[MG09] MODELISAR Glossary (2009): <strong>MODELISAR WP2 Glossary and Abbreviations</strong>. Version 1.0, June 9, 2009.</p>
 </li>
 <li>
-<p><a id="PZ06"></a>[PZ06] Pouzet M. (2006): Lucid Synchrone, Version 3.0, Tutorial and Reference Manual.
-<a href="http://www.di.ens.fr/~pouzet/lucid-synchrone/" class="bare">http://www.di.ens.fr/~pouzet/lucid-synchrone/</a></p>
+<p><a id="PZ06"></a>[PZ06] Pouzet M. (2006): <strong>Lucid Synchrone</strong>. Version 3.0, Tutorial and Reference Manual. <a href="http://www.di.ens.fr/~pouzet/lucid-synchrone/" class="bare">http://www.di.ens.fr/~pouzet/lucid-synchrone/</a></p>
 </li>
 <li>
 <p><a id="CGM84"></a>[CGM84] Coleman, Garbow, Mor&#233; (1984): <strong>Software for estimating sparse Jacobian matrices, ACM Transactions on Mathematical Software</strong>. TOMS , vol. 10, no. 3, pp. 346-347</p>
+</li>
+<li>
+<p><a id="PW13"></a>[PW13] Preston-Werner, T. (2013): <strong>Semantic Versioning 2.0.0</strong>.  <a href="https://semver.org/spec/v2.0.0.html" class="bare">https://semver.org/spec/v2.0.0.html</a></p>
 </li>
 </ul>
 </div>
