@@ -635,7 +635,7 @@ document.addEventListener('keydown', (event) => {
 </ul>
 </li>
 <li><a href="#get-and-set-variable-values">2.1.6. Getting and Setting Variable Values</a></li>
-<li><a href="#intermediate-update">2.1.7. Intermediate Variables Update</a></li>
+<li><a href="#intermediate-update">2.1.7. Intermediate Update</a></li>
 <li><a href="#advancing-time">2.1.8. Advancing Time</a></li>
 <li><a href="#operation-on-clocks">2.1.9. Operation on Clocks</a>
 <ul class="sectlevel4">
@@ -795,7 +795,7 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel3">
 <li><a href="#transfer-of-input-output-and-parameters">4.2.1. Getting and Setting Variable Values</a></li>
 <li><a href="#Computation-in-Co-Simulation">4.2.2. Computation in Co-Simulation</a></li>
-<li><a href="#_communication_of_event_time_and_input_and_output_values">4.2.3. Communication of Event Time and Input and Output Values</a></li>
+<li><a href="#Communication-during-update">4.2.3. Communication of Event Time and Input and Output Values</a></li>
 <li><a href="#early-return">4.2.4. Early Return</a></li>
 <li><a href="#_handling_early_return_and_events">4.2.5. Handling Early Return and Events</a></li>
 <li><a href="#api-clocked-co-simulation">4.2.6. Co-Simulation with Clock Support</a>
@@ -2727,22 +2727,27 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 </div>
 </div>
 <div class="sect3">
-<h4 id="intermediate-update">2.1.7. Intermediate Variables Update</h4>
+<h4 id="intermediate-update">2.1.7. Intermediate Update</h4>
 <div class="paragraph">
-<p>The <strong>Intermediate Update Mode</strong> was introduced to Co-Simulation and Scheduled Execution to facilitate the following use cases:</p>
+<p>The <strong>Intermediate Update Mode</strong> was introduced to Co-Simulation and Scheduled Execution. This mode enables FMUs during a current computation to inform the importer of updates, which are significant for further processing. The following use cases are supported:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>improve input accuracy between communication points when importer sets intermediate input values extracted with the same mechanism from another FMU (see below for details),</p>
+<p>improve the input accuracy in CS between communication points, when the importer sets intermediate input values extracted with the same mechanism from another FMU as output values (see below for details and <a href="#Communication-during-update">Section 4.2.3</a>),</p>
 </li>
 <li>
-<p>allow for cooperative multitasking when FMU calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a> (see <a href="#scheduled-execution-api">Section 5.2</a>),</p>
+<p>allow FMUs to inform the importer of an event, which occurs during an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> in case of CS or <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in case of SE (see <a href="#co-simulation-api">Section 4.2</a>, <a href="#Communication-during-update">Section 4.2.3</a> and <a href="#IntermediateUpdateModeSE">Section 5.2.1.3</a>),</p>
 </li>
 <li>
-<p>allow for the FMU to return early from an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> because the importer detected an event between communication points (see <a href="#Computation-in-Co-Simulation">Section 4.2.2</a>).</p>
+<p>allow the importer in CS to request an early return from FMUs calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a>, because of any event between communication points (see <a href="#early-return">Section 4.2.4</a> and <a href="#Computation-in-Co-Simulation">Section 4.2.2</a>).
+This also enables cooperative multitasking of FMUs in CS.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Note that the call to <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and thus entering the <strong>Intermediate Update Mode</strong> can only be triggered by the FMU itself.
+The importer cannot actively trigger this and hence for some use cases (e.g. cooperative multitasking and setting of intermediate input values) relies on the callbacks from the FMUs to be able to realize these use cases properly.</p>
 </div>
 <div class="paragraph">
 <p>A Co-Simulation FMU can provide values for its <a href="#output"><code>output</code></a> variables at intermediate points between two consecutive communication points, and is able to accept new values for <a href="#input"><code>input</code></a> variables at these intermediate points.
@@ -10111,7 +10116,7 @@ However, even when the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</
 </div>
 </div>
 <div class="sect3">
-<h4 id="_communication_of_event_time_and_input_and_output_values">4.2.3. Communication of Event Time and Input and Output Values</h4>
+<h4 id="Communication-during-update">4.2.3. Communication of Event Time and Input and Output Values</h4>
 <div class="paragraph">
 <p>The <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback described in <a href="#intermediate-update">Section 2.1.7</a> is also used in order to communicate the <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a> and, in particular, the event and <a href="#clock"><code>clock</code></a> time from the FMU to the co-simulation algorithm.
 The <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback allows internal events (e.g. associated to <a href="#outputClock"><code>outputClock</code></a> ticks) to be signaled from an FMU to the co-simulation algorithm.
@@ -10169,22 +10174,25 @@ There may be an event iteration in <strong>Event Mode</strong> at a Newtonian ti
 <p><em>In the case of FMU<sub>1</sub>, the FMU waits to get pushed into the event mode to handle the event at</em> \(t^{'}_{i+1}\) <em>.</em></p>
 </li>
 <li>
-<p><em>In the case of FMU<sub>2</sub>, since this FMU has already reached</em> \(t_{i+1}\) <em>, a complete rollback and a new co-simulation from</em> \(t_{i}\) <em>to</em> \(t^{'}_{i+1}\) <em>is necessary.</em></p>
+<p><em>FMU<sub>2</sub> can not be interrupted before it reaches</em> \(t_{i+1}\) <em>, which requires a complete rollback and a new co-simulation from</em> \(t_{i}\) <em>to</em> \(t^{'}_{i+1}\) <em>.</em></p>
 </li>
 <li>
-<p><em>In the case of FMU<sub>3</sub>, computation is immediately interrupted and only a partial rollback is necessary to reach</em> \(t^{'}_{i+1}\) <em>time.</em></p>
+<p><em>FMU<sub>3</sub> triggeres the callback function to the co-simulation algorithm after passing</em> \(t^{'}{i+1}\) <em>, which leads to a request by the co-simulation algorithm to immediately do an early return.
+The FMU interrupts its computation and a partial rollback and a new co-simulation from</em> \(t_{i}\) <em>to</em> \(t^{'}_{i+1}\) <em>is necessary.</em></p>
 </li>
 <li>
-<p><em>In the case of FMU<sub>4</sub>, the master immediately requests FMU<sub>4</sub> an early return at</em> \(t^{'}{i+1}\) <em>and the current integration step will been interrupted at</em> \(t^{'}{i+1}\) <em>and no rollback is necessary for FMU<sub>4</sub>.</em></p>
+<p><em>In the case of FMU<sub>4</sub>, the FMU triggered the callback function before reaching</em> \(t^{'}_{i+1}\) <em>.
+The co-simulation algorithm requests FMU<sub>4</sub> to do an early return at</em> \(t^{'}{i+1}\) <em>and the FMU will interrupt its current integration step at</em> \(t^{'}{i+1}\) <em>.
+No rollback is necessary for FMU<sub>4</sub>.</em></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><em>Each ongoing FMU stops its integration either exactly at the interrupt time given by the co-simulation algorithm or immediately after its current intermediate step if this time is already out-of-date.</em>
+<p><em>Each ongoing FMU stops its integration either exactly at the interrupt time given by the co-simulation algorithm or immediately after its current intermediate step, if this time is already out-of-date.</em>
 <em>Afterwards, a new step integration done on the FMU returns and signals the premature stop (early-return) to the co-simulation algorithm.</em></p>
 </div>
 <div class="paragraph">
-<p><em>Due to the early-return mechanism, the overall execution time of the simulation is reduced.]</em></p>
+<p><em>Due to the early-return mechanism, the overall execution time of the simulation can be reduced.]</em></p>
 </div>
 <div class="paragraph">
 <p>A Co-Simulation FMU is allowed to stop the execution of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> and return without reaching the predefined communication time, i.e. <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <code>+</code> <a href="#communicationStepSize"><code>communicationStepSize</code></a>.
@@ -10196,7 +10204,7 @@ The default value of this capability flag is <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p>Each time an internal discontinuity or an event happens inside an FMU with capability flag <a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate = true</code></a>, the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> is called by the FMU.
-The co-simulation algorithm can only use this early return functionality if it provides the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback function pointer in the instantiate function.</p>
+The co-simulation algorithm can only use this early return functionality, if it provides the <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callback function pointer in the instantiate function.</p>
 </div>
 <div class="paragraph">
 <p>With the early return feature, an FMU can signal <a href="#outputClock"><code>outputClock</code></a> events or internal state changes, i.e., discontinuity events to the co-simulation algorithm at any time (not only at the end of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function calls).
@@ -10205,8 +10213,8 @@ Note that an event signal is not seen in the narrow sense of solver induced disc
 </div>
 <div class="paragraph">
 <p>A second use of the early-return mechanism is the following:
-In particular in multi-node architectures, significant co-simulation speed-up may be obtained if the co-simulation algorithm can avoid waiting until the end of the slowest <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> when many FMUs are integrating in parallel and an event occurs.
-To exploit such efficiency gains, the co-simulation algorithm can command the FMU to return early from the current communication step.
+In particular in multi-node architectures, significant co-simulation speed-up may be obtained if the co-simulation algorithm can avoid waiting until the end of the slowest <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, when many FMUs are integrating in parallel and an event occurs.
+To exploit such efficiency gains, the co-simulation algorithm can command the FMUs to return early from the current communication step, if it gets triggered in the callback function by the FMUs.
 <em>[In this use case, early return is a simple form of cooperative multitasking.]</em></p>
 </div>
 <div class="paragraph">
