@@ -6,6 +6,14 @@ layout: default
 
 ## FMI Related Publications
 
+### [2nd American Modelica Conference 2019](https://2020.american.conference.modelica.org)
+
+* [Hierarchical Multi-Level Electric Power System Simulation withSmart Photovoltaic Systems using the Functional Mock-upInterface on the Lawrencium Computing Cluster](https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_20.pdf)
+* [Parameter Estimation of User-Defined Control System Models for Itaipú Power Plant using Modelica and OpenIPSL])(https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_9.pdf)
+* [Application of Model-Based Testing to Dynamic Conformance Evaluation of Functional Mockup Units](https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_1.pdf)
+* [Traceability in the Model-based Design of Cyber-Physical Systems](https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_11.pdf)
+* [Parameter Estimation Methods for Fault Diagnosis using Modelica and FMI](https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_29.pdf)
+* [Nonlinear State Estimation with FMI: Tutorial and Applications](https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_27.pdf)
 
 ### [13th International Modelica Conference 2019](https://www.modelica.org/events/modelica2019)
 
@@ -41,9 +49,9 @@ FMI related conference papers:
 
 FMI related conference papers ([link to proceedings](https://www.modelica.org/events/modelica2018Americas/preliminary-program/166522_Modelica_Proceedings_v2.pdf)):
 
-* ModestPy: An Open-Source Python Tool for Parameter Estimation in Functional Mock-up Units 
-* A Safe Regression Test Selection Technique for Modelica 
-* Functional Mockup Interface: An Empirical Survey  Identifies Research Challenges and Current Barriers 
+* ModestPy: An Open-Source Python Tool for Parameter Estimation in Functional Mock-up Units
+* A Safe Regression Test Selection Technique for Modelica
+* Functional Mockup Interface: An Empirical Survey  Identifies Research Challenges and Current Barriers
 * A Method to Import FMU to Hardware Description Language
 * The OpenModelica Integrated Modeling, Simulation and Optimization Environment
 
