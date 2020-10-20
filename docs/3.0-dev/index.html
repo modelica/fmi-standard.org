@@ -4329,7 +4329,7 @@ This also enables cooperative multitasking of FMUs in CS.</p>
 </div>
 <div class="paragraph">
 <p>Note that the call to <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and thus entering the <strong>Intermediate Update Mode</strong> can only be triggered by the FMU itself.
-The importer cannot actively trigger this and hence for some use cases (e.g. cooperative multitasking and setting of intermediate input values) relies on the callbacks from the FMUs to be able to realize these use cases properly.</p>
+The importer cannot actively trigger this and hence for some use cases (e.g. cooperative multitasking and setting of intermediate input values) it relies on the callbacks from the FMUs to be able to realize these use cases properly.</p>
 </div>
 <div class="paragraph">
 <p>A Co-Simulation FMU can provide values for its <a href="#output"><code>output</code></a> variables at intermediate points between two consecutive communication points, and is able to accept new values for <a href="#input"><code>input</code></a> variables at these intermediate points.
@@ -4340,8 +4340,8 @@ The intermediate update functions allow FMUs to receive inputs, and provide outp
 </div>
 <div class="paragraph">
 <p>Due to the way numerical solvers estimate and correct the approximation error, these intermediate <a href="#output"><code>output</code></a> values may be tentative or may be final.
-It is possible for the FMU to inform the co-simulation algorithm whether the internal solver is in a tentative state, meaning that the output values computed from that state are also tentative, or if the internal solver has successfully completed the integration step, meaning that the FMU&#8217;s internal state is final, and will never be change by the normal in the current execution of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
-If the internal integration step has successfully completed, the co-simulation algorithm can forward intermediate outputs to other FMUs, where they can be used, for e.g., for extrapolation, interpolation, filtering or asynchronous co-simulation.
+It is possible for the FMU to inform the co-simulation algorithm whether the internal solver is in a tentative state, meaning that the output values computed from that state are also tentative, or if the internal solver has successfully completed the integration step, meaning that the FMU&#8217;s internal state is final, and will never be changed in the current execution of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
+If the internal integration step has been successfully completed, the co-simulation algorithm can forward intermediate outputs to other FMUs, where they can be used, for e.g., for extrapolation, interpolation, filtering or asynchronous co-simulation.
 <em>[For tentative output values, the co-simulation algorithm must keep in mind that these values may change for the same time point.]</em></p>
 </div>
 <div class="paragraph">
@@ -4349,12 +4349,12 @@ If the internal integration step has successfully completed, the co-simulation a
 This can be either at tentative solver states or after successful integration steps.</p>
 </div>
 <div class="paragraph">
-<p>Access to intermediate variables enables advanced Co-Simulation with interpolation/extrapolation techniques (such as polynomial extrapolation, TLM co-simulation, anti-alias filtering, smoothing of input)<br>
-Moreover, this enables the same input approximation that was possible in FMI 2.0 with <code>fmi2SetInputDerivatives</code>, now evaluating the approximation polynomial and not within the FMU as in FMI 2.0.</p>
+<p>Access to intermediate variables enables advanced Co-Simulation with interpolation/extrapolation techniques (such as polynomial extrapolation, TLM co-simulation, anti-alias filtering, smoothing of input among others)<br>
+Moreover, this enables the same input approximation that was possible in FMI 2.0 with <code>fmi2SetInputDerivatives</code>, by evaluating the approximation polynomial and not within the FMU as in FMI 2.0.</p>
 </div>
 <div class="paragraph">
 <p><a href="#figure-IntermediateUpdateMode">Figure 9</a> summarizes the above description.
-It illustrates that multiple intermediate internal solver steps, distinguishing between the final ones (with black-filled circles) and tentative ones (with white-filled circles).
+It illustrates multiple intermediate internal solver steps, distinguishing between the final ones (with black-filled circles) and tentative ones (with white-filled circles).
 It distinguishes the level of trust that can be placed in the tentative outputs (with dashed arrows) and in final outputs (with solid arrows).</p>
 </div>
 <div id="figure-IntermediateUpdateMode" class="imageblock text-center">
@@ -4364,11 +4364,11 @@ It distinguishes the level of trust that can be placed in the tentative outputs 
 <div class="title">Figure 9. Overview of solver states and intermediate update during a communication step</div>
 </div>
 <div class="paragraph">
-<p>The FMU signals the support of <strong>Intermediate Update Mode</strong> by the capability flag <code>providesIntermediateUpdate</code>.
+<p>The FMU signals the support of <strong>Intermediate Update Mode</strong> via the capability flag <code>providesIntermediateUpdate</code>.
 The co-simulation algorithm signals the support for <strong>Intermediate Update Mode</strong> by providing a non-NULL callback-function pointer for <a href="#fmi3CallbackIntermediateUpdate"><code>intermediateUpdate</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The FMU enters <strong>Intermediate Update Mode</strong> by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> within <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE) and leaves the state towards state <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE) if the function returns <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a>.
+<p>The FMU enters <strong>Intermediate Update Mode</strong> by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> within <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE) and leaves the state towards <strong>Step Mode</strong> (CS) or <strong>Clock Activation Mode</strong> (SE) if the function returns <a href="#fmi3OK"><code>fmi3OK</code></a> or <a href="#fmi3Warning"><code>fmi3Warning</code></a>.
 If the function returns <a href="#fmi3Error"><code>fmi3Error</code></a> the FMU enters state <strong>Terminated</strong>.
 If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU enters the terminal state.</p>
 </div>
@@ -10356,7 +10356,7 @@ There may be an event iteration in <strong>Event Mode</strong> at a Newtonian ti
 </div>
 <div id="figure-early-return" class="imageblock text-center">
 <div class="content">
-<img src="images/earlyReturnFigure.png" alt="earlyReturnFigure" width="100%">
+<img src="images/earlyReturnFigure.svg" alt="earlyReturnFigure" width="100%">
 </div>
 <div class="title">Figure 29. Different possibilities to synchronize parallel FMUs at the same event time.</div>
 </div>
@@ -10374,7 +10374,7 @@ There may be an event iteration in <strong>Event Mode</strong> at a Newtonian ti
 <p><em>FMU<sub>2</sub> can not be interrupted before it reaches</em> \(t_{i+1}\) <em>, which requires a complete rollback and a new co-simulation from</em> \(t_{i}\) <em>to</em> \(t^{'}_{i+1}\) <em>.</em></p>
 </li>
 <li>
-<p><em>FMU<sub>3</sub> triggeres the callback function to the co-simulation algorithm after passing</em> \(t^{'}{i+1}\) <em>, which leads to a request by the co-simulation algorithm to immediately do an early return.
+<p><em>FMU<sub>3</sub> triggers the callback function to the co-simulation algorithm after passing</em> \(t^{'}{i+1}\) <em>, which leads to a request by the co-simulation algorithm to immediately do an early return.
 The FMU interrupts its computation and a partial rollback and a new co-simulation from</em> \(t_{i}\) <em>to</em> \(t^{'}_{i+1}\) <em>is necessary.</em></p>
 </li>
 <li>
