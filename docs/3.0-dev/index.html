@@ -1158,7 +1158,8 @@ The scheduler is responsible for:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#IntermediateUpdateMode">Intermediate Update</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-times"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon"><i class="fa fa-check"></i></span></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Signal output clock ticks: <span class="icon"><i class="fa fa-check"></i></span><br>
+Inputs/Outputs: <span class="icon"><i class="fa fa-times"></i></span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#operation-on-clocks">Clocks</a></p></td>
@@ -1605,7 +1606,7 @@ Variables of this type are defined with attribute <a href="#causality"><code>cau
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{next}}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">At initialization or at an event instant, an FMU can define the next time instant \(T_{\mathit{next}}\), at which the next time event occurs (see also the definition of <a href="#EventMode">events</a>).
-Every event removes automatically a previous definition of \(T_{\mathit{next}}\), and it must be explicitly defined again, even if a previously defined \(T_{\mathit{next}}\) was not yet reached (see <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>).</p></td>
+Every event removes automatically a previous definition of \(T_{\mathit{next}}\), and it must be explicitly defined again, even if a previously defined \(T_{\mathit{next}}\) was not yet reached (see <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{r}\)</p></td>
@@ -4219,10 +4220,10 @@ If the co-simulation algorithm signals <code>eventModeUsed == fmi3False</code> d
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a></dt>
 <dd>
-<p>In order to handle discrete events <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is called.
-When the output argument <code>newDiscreteStatesNeeded == fmi3True</code>, the FMU should stay in <strong>Event Mode</strong> and another call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is required.</p>
+<p>In order to handle discrete events <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> is called.
+When the output argument <code>discreteStatesNeedUpdate == fmi3True</code>, the FMU should stay in <strong>Event Mode</strong> and another call to <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> is required.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a></dt>
 </dl>
@@ -4253,7 +4254,7 @@ This function has to be called when changing from <strong>Event Mode</strong> (a
 </dl>
 </div>
 <div class="paragraph">
-<p>Once all events are handled and <code>newDiscreteStatesNeeded == fmi3False</code>, the FMU should be pushed to <strong>Step Mode</strong> by calling <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, unless it requests to terminate the Co-Simulation by setting  &lt;&lt;terminateSimulation,<code>terminateSimulation</code>&gt; to <code>fmi3True</code>.
+<p>Once all events are handled and <code>discreteStatesNeedUpdate == fmi3False</code>, the FMU should be pushed to <strong>Step Mode</strong> by calling <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>, unless it requests to terminate the Co-Simulation by setting  &lt;&lt;terminateSimulation,<code>terminateSimulation</code>&gt; to <code>fmi3True</code>.
 In this case, a new step can be started from the current communication point time.</p>
 </div>
 <div class="dlist">
@@ -8703,13 +8704,13 @@ continuous-time <a href="#state"><code>states</code></a> with <a href="#start"><
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="lime">Increment super-dense time and define with</span>
-<code><span class="lime">newDiscreteStatesNeeded</span></code> <span class="lime">whether a new event iteration is required.</span><br>
-<span class="blue">\(\qquad\)<strong>if not</strong></span> <code><span class="blue">newDiscreteStatesNeeded</span></code><span class="blue"><strong>then</strong><br>
+<code><span class="lime">discreteStatesNeedUpdate</span></code> <span class="lime">whether a new event iteration is required.</span><br>
+<span class="blue">\(\qquad\)<strong>if not</strong></span> <code><span class="blue">discreteStatesNeedUpdate</span></code><span class="blue"><strong>then</strong><br>
 \(\qquad \qquad T_{\mathit{next}}=T_{\mathit{next}}(\mathbf{x}_c,{}^\bullet\mathbf{x}_d, \mathbf{u_{c+d}}, \color{grey}t_{\color{grey} i}, \mathbf{p}_{\mathit{tune}}, \color{grey}{\mathbf{p}_{\mathit{other}})}\)</span><br>
 <span class="blue">\(\qquad\)<strong>end if</strong></span><br>
 <span class="blue">\(\qquad t:=t(t_R, t_i+1)\)</span><br>
 <span class="blue">\(\qquad {}^\bullet\mathbf{x}_d:=\mathbf{x}_d\)</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3NewDiscreteStates</span></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><span class="lime">fmi3UpdateDiscreteStates</span></code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Equations during <strong>Continuous-Time Mode</strong></p></td>
@@ -8847,15 +8848,15 @@ y2 := w2</pre>
 </dl>
 </div>
 <div class="paragraph">
-<p><em>However, just like in FMI 2.0, it could in principle also be implemented by activating the model equations only at the first event iteration and returning always <code>newDiscreteStatesNeeded == fmi3False</code> from <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.</em>
-<em>Furthermore, the discrete-time states are not updated by <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, but as first action before the discrete-time equations are evaluated, in order that</em> \(^{\bullet}\mathbf{x}_d\) <em>(= value at the previous Lucid Synchrone/Modelica 3.3 clock tick) and</em> \(\mathbf{x}_d\) <em>(value at the latest Lucid Synchrone/Modelica 3.3 clock tick) have reasonable values between Lucid Synchrone/Modelica 3.3 clock ticks.</em></p>
+<p><em>However, just like in FMI 2.0, it could in principle also be implemented by activating the model equations only at the first event iteration and returning always <code>discreteStatesNeedUpdate == fmi3False</code> from <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</em>
+<em>Furthermore, the discrete-time states are not updated by <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, but as first action before the discrete-time equations are evaluated, in order that</em> \(^{\bullet}\mathbf{x}_d\) <em>(= value at the previous Lucid Synchrone/Modelica 3.3 clock tick) and</em> \(\mathbf{x}_d\) <em>(value at the latest Lucid Synchrone/Modelica 3.3 clock tick) have reasonable values between Lucid Synchrone/Modelica 3.3 clock ticks.</em></p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">State machines with one memory location for a state</dt>
 <dd>
-<p><em>In such a system there is only one memory location for a discrete-time state and not two, and therefore a discrete-time state is updated in the statement where it is assigned (and not in <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>).</em>
-<em>As a result, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is basically just used to start a new (super-dense) time instant.</em>
+<p><em>In such a system there is only one memory location for a discrete-time state and not two, and therefore a discrete-time state is updated in the statement where it is assigned (and not in <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>).</em>
+<em>As a result, <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> is basically just used to start a new (super-dense) time instant.</em>
 <em>This is unproblematic, as long as no algebraic loops occur.</em>
 <em>FMUs of this type can therefore not be used in real algebraic loops if the involved variables depend on a discrete-time state.</em>
 <em>This restriction is communicated to the environment of the FMU by the <code>ScalarVariable</code> definition of the corresponding <a href="#input"><code>input</code></a> with flag <a href="#canHandleMultipleSetPerTimeInstant"><code>canHandleMultipleSetPerTimeInstant</code></a> <code>= false</code> (so an <a href="#input"><code>input</code></a> with this flag is not allowed to be called in an algebraic loop).</em></p>
@@ -8939,7 +8940,7 @@ In <a href="#table-math-model-exchange">Table 9</a>, the variables with <a href=
 Initialization is a difficult topic by itself, and it is required that an FMU solves a well-defined initialization problem inside the FMU in <strong>Initialization Mode</strong>.<br>
 After calling <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a>, the FMU is implicitly in <strong>Event Mode</strong>, and all discrete-time and continuous-time variables at the initial time instant \((t_R, 0)\) can be calculated.
 If these variables are present in an algebraic loop, iteration can be used to compute them.
-Once finalized, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called, and depending on the value of the return argument, the FMU either continues the event iteration at the initial time instant or switches to <strong>Continuous-Time Mode</strong>.<br>
+Once finalized, <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> must be called, and depending on the value of the return argument, the FMU either continues the event iteration at the initial time instant or switches to <strong>Continuous-Time Mode</strong>.<br>
 After switching to <strong>Continuous-Time Mode</strong>, the integration is started.
 Basically, during <strong>Continuous-Time Mode</strong>, the <a href="#derivative"><code>derivatives</code></a> of the continuous <a href="#state"><code>states</code></a> are computed.
 If FMUs and/or submodels are connected together, then the <a href="#input"><code>inputs</code></a> of these models are the <a href="#output"><code>outputs</code></a> of other models, and therefore, the corresponding FMU outputs must be computed.
@@ -8952,7 +8953,7 @@ An event instant is determined by a <a href="#time-event"><code>time</code></a>,
 Once the event indicators signal a change of their domain, an iteration over time is performed between the previous and the actual completed integrator step, in order to determine the time instant of the domain change up to a certain precision.<br>
 After an event is triggered, the FMU needs to be switched to <strong>Event Mode</strong>.
 In this mode, systems of equations over connected FMUs might be solved (similarly as in <strong>Continuous-Time Mode</strong>).
-Once convergence is reached, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called to increment super-dense time (and conceptually update the discrete-time states defined internally in the FMU by \(^{\bullet}\mathbf{x}_d := \mathbf{x}_d\)).
+Once convergence is reached, <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> must be called to increment super-dense time (and conceptually update the discrete-time states defined internally in the FMU by \(^{\bullet}\mathbf{x}_d := \mathbf{x}_d\)).
 Depending on the discrete-time model, a new event iteration might be needed.</p>
 </div>
 <div class="paragraph">
@@ -9087,10 +9088,10 @@ If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is no
 <div class="paragraph">
 <p><em>[An <a href="#input-event">input event</a> can be detected by the FMU by keeping track of the calls of <code>fmi3Set{VariableType}</code> in <strong>Event Mode</strong>.]</em></p>
 </div>
-<div id="fmi3NewDiscreteStates" class="listingblock">
+<div id="fmi3UpdateDiscreteStates" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3NewDiscreteStatesTYPE(fmi3Instance instance,
-                                             fmi3Boolean *newDiscreteStatesNeeded,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
+                                             fmi3Boolean *discreteStatesNeedUpdate,
                                              fmi3Boolean *terminateSimulation,
                                              fmi3Boolean *nominalsOfContinuousStatesChanged,
                                              fmi3Boolean *valuesOfContinuousStatesChanged,
@@ -9100,12 +9101,12 @@ If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is no
 </div>
 <div class="paragraph">
 <p>The FMU is in <strong>Event Mode</strong>.
-If the super-dense time before a call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> was \((t_R,t_I)\), then the time instant after the call is \((t_R,t_{I + 1})\).<br></p>
+If the super-dense time before a call to <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> was \((t_R,t_I)\), then the time instant after the call is \((t_R,t_{I + 1})\).<br></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>If output argument <code>newDiscreteStatesNeeded == fmi3True</code>, the FMU should stay in <strong>Event Mode</strong>, and the FMU requires to set new inputs to the FMU (<code>fmi3Set{VariableType}</code> on <a href="#input"><code>inputs</code></a>) to compute and get the <a href="#output"><code>outputs</code></a> (<code>fmi3Get{VariableType}</code> on <a href="#output"><code>outputs</code></a>) and to call <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> again.</p>
+<p>If output argument <code>discreteStatesNeedUpdate == fmi3True</code>, the FMU should stay in <strong>Event Mode</strong>, and the FMU requires to set new inputs to the FMU (<code>fmi3Set{VariableType}</code> on <a href="#input"><code>inputs</code></a>) to compute and get the <a href="#output"><code>outputs</code></a> (<code>fmi3Get{VariableType}</code> on <a href="#output"><code>outputs</code></a>) and to call <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> again.</p>
 </li>
 </ul>
 </div>
@@ -9151,7 +9152,7 @@ If a (e.g. <a href="#state-event">state event</a>) event happens before <a href=
 <p>call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>, if <a href="#terminateSimulation"><code>terminateSimulation == fmi3True</code></a> is returned by at least one FMU,</p>
 </li>
 <li>
-<p>call <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> if all FMUs return <code>newDiscreteStatesNeeded == fmi3False</code>, and</p>
+<p>call <a href="#fmi3EnterContinuousTimeMode"><code>fmi3EnterContinuousTimeMode</code></a> if all FMUs return <code>discreteStatesNeedUpdate == fmi3False</code>, and</p>
 </li>
 <li>
 <p>stay in <strong>Event Mode</strong> otherwise.</p>
@@ -9196,7 +9197,7 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 <p><em>Dynamic state selection:</em><br>
 <em>It is checked whether the dynamically selected states are still numerically appropriate.</em>
 <em>If yes, the function returns with <code>enterEventMode == fmi3False</code>  otherwise with <code>enterEventMode == fmi3True</code>.</em>
-<em>In the latter case, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> has to be called and the states are dynamically changed by a subsequent <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.</em></p>
+<em>In the latter case, <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> has to be called and the states are dynamically changed by a subsequent <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</em></p>
 </li>
 </ol>
 </div>
@@ -9257,7 +9258,7 @@ _[Array variables are serialized in "row major" order, as usual.]</p>
 </div>
 <div class="paragraph">
 <p>Return the nominal values of the continuous <a href="#state"><code>states</code></a> with the some convention for the order as above.
-This function should always be called after calling function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged == fmi3True</code>, since then the nominal values of the continuous <a href="#state"><code>states</code></a> have changed <em>[for example, because the association of the continuous <a href="#state"><code>states</code></a> to variables has changed due to internal dynamic state selection]</em>.
+This function should always be called after calling function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged == fmi3True</code>, since then the nominal values of the continuous <a href="#state"><code>states</code></a> have changed <em>[for example, because the association of the continuous <a href="#state"><code>states</code></a> to variables has changed due to internal dynamic state selection]</em>.
 If the FMU does not have information about the nominal value of a continuous <a href="#state"><code>state</code></a> i, a nominal value <code>nominals[i] == 1.0</code> should be returned.
 Note that it is required that <code>nominals[i] &gt; 0.0</code>.
 <em>[Typically, the nominal values of the continuous <a href="#state"><code>states</code></a> are used to compute the absolute tolerance required by the integrator.</em>
@@ -9266,7 +9267,7 @@ Note that it is required that <code>nominals[i] &gt; 0.0</code>.
 </div>
 <div class="paragraph">
 <p>Note that simulation backward in time is only allowed over continuous time intervals.
-As soon as an event occurs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is forbidden, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
+As soon as an event occurs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is forbidden, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
 </div>
 <div class="paragraph">
 <p>Note that during <strong>Initialization</strong>, <strong>Event Mode</strong>, and <strong>Continuous-Time Mode</strong>, <a href="#input"><code>input</code></a> variables can be set with <code>fmi3Set{VariableType}</code> and output variables can be retrieved with <code>fmi3Get{VariableType}</code> interchangeably according to the model structure defined under element <code>&lt;ModelStructure&gt;</code> in the XML file.
@@ -9558,8 +9559,8 @@ Moreover the current <a href="#clock"><code>clock</code></a> intervals may be in
 <dl>
 <dt class="hdlist1">Leave event mode</dt>
 <dd>
-<p>The function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> evaluates the discrete-time equations, provided the corresponding <a href="#clock"><code>clock</code></a> is active and the discrete-time equations have not already been evaluated with calls to <code>fmi3Get{VariableType}</code> functions.
-Clocks are automatically deactivated by <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> and by <a href="#fmi3Reset"><code>fmi3Reset</code></a>.
+<p>The function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> evaluates the discrete-time equations, provided the corresponding <a href="#clock"><code>clock</code></a> is active and the discrete-time equations have not already been evaluated with calls to <code>fmi3Get{VariableType}</code> functions.
+Clocks are automatically deactivated by <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> and by <a href="#fmi3Reset"><code>fmi3Reset</code></a>.
 <em>[This handling of discrete-time states and <a href="#time-event">`time events</a> is forward compatible with FMI 2.0 for any model that could be treated with FMI 2.0 and is exported again using the new features.</em>
 <em>The environment may ignore the new functions <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a>, <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> and <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>.</em>
 <em>The new functions are needed for FMUs with input sample times and to set discrete-time states in model-based control applications or if algebraic loops are present among discrete-time equations of multiple connected FMUs.]</em></p>
@@ -10253,14 +10254,14 @@ The inner level does not exist for scalar variables.</p>
 <div id="eventEncountered" class="ulist">
 <ul>
 <li>
-<p><a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the co-simulation algorithm has to call <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> to gather related information about the event.</p>
+<p><a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the co-simulation algorithm has to call <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> to gather related information about the event.</p>
 </li>
 </ul>
 </div>
 <div id="clocksAboutToTick" class="ulist">
 <ul>
 <li>
-<p><a href="#clocksAboutToTick"><code>clocksAboutToTick == fmi3True</code></a> indicates that one or more clocks will tick at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and, after calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> should be called to gather all information related to <a href="#outputClock"><code>output clocks</code></a> that have the value <code>fmi3ClockActive</code>.</p>
+<p><a href="#clocksAboutToTick"><code>clocksAboutToTick == fmi3True</code></a> indicates that one or more clocks will tick at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and, after calling <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> should be called to gather all information related to <a href="#outputClock"><code>output clocks</code></a> that have the value <code>fmi3ClockActive</code>.</p>
 </li>
 <li>
 <p><code>terminate</code> signals to the co-simulation algorithm that the FMU requests the end of the simulation for internal reasons.
@@ -10342,7 +10343,7 @@ See <a href="#IntermediateUpdateMode">Section 2.3.3</a> for details of the funct
 There may be an event iteration in <strong>Event Mode</strong> at a Newtonian time instant causing super-dense time instants.</p>
 </div>
 <div class="paragraph">
-<p>Based on the information provided by <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, additional information about the discontinuity at that time instant can be obtained by the co-simulation algorithm from the FMU by calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> and <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.</p>
+<p>Based on the information provided by <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, additional information about the discontinuity at that time instant can be obtained by the co-simulation algorithm from the FMU by calling <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> and <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -10444,7 +10445,7 @@ the FMU signals this via <a href="#canReturnEarlyAfterIntermediateUpdate"><code>
 <div class="paragraph">
 <p>The FMU stops computation at the first encountered internal event (if any) and the event time is provided through the output argument <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a>, along with the reason <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a>.
 The co-simulation algorithm will start event handling by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> for that FMU to push the FMU into <strong>Event Mode</strong>.
-In this mode the co-simulation algorithm is supposed to catch all events through the <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> function.</p>
+In this mode the co-simulation algorithm is supposed to catch all events through the <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> function.</p>
 </div>
 <div class="paragraph">
 <p>If an early-return request of the co-simulation algorithm is ignored by the FMU, then <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#earlyReturn"><code>earlyReturn == fmi3False</code></a>.
@@ -10452,8 +10453,8 @@ The co-simulation algorithm can start a resynchronization of FMUs at an event ti
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3NewDiscreteStatesTYPE(fmi3Instance instance,
-                                             fmi3Boolean *newDiscreteStatesNeeded,
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
+                                             fmi3Boolean *discreteStatesNeedUpdate,
                                              fmi3Boolean *terminateSimulation,
                                              fmi3Boolean *nominalsOfContinuousStatesChanged,
                                              fmi3Boolean *valuesOfContinuousStatesChanged,
@@ -10462,13 +10463,13 @@ The co-simulation algorithm can start a resynchronization of FMUs at an event ti
 </div>
 </div>
 <div class="paragraph">
-<p>In <strong>Event Mode</strong> and only after <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returned with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a>, and <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called, the function <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> may be called.
+<p>In <strong>Event Mode</strong> and only after <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returned with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a>, and <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called, the function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> may be called.
 Only the following output arguments are defined by the FMU:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>When <code>newDiscreteStatesNeeded = true</code>, the co-simulation algorithm should stay in <strong>Event Mode</strong> and another call to <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is required.</p>
+<p>When <code>discreteStatesNeedUpdate = true</code>, the co-simulation algorithm should stay in <strong>Event Mode</strong> and another call to <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> is required.</p>
 </li>
 <li>
 <p>When <a href="#nextEventTime"><code>nextEventTimeDefined == fmi3True</code></a>, an event time is available and the value is given by <a href="#nextEventTime"><code>nextEventTime</code></a>.
@@ -10480,10 +10481,10 @@ This is the case when the model can report in advance the accurate time of the n
 </ul>
 </div>
 <div class="paragraph">
-<p>All other output arguments of <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> are undefined and have no meaning in Co-Simulation.</p>
+<p>All other output arguments of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> are undefined and have no meaning in Co-Simulation.</p>
 </div>
 <div class="paragraph">
-<p>In <strong>Event Mode</strong> it is allowed to call <code>fmi3Get{VariableType}</code> after <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> has been called and it is allowed to call <code>fmi3Set{VariableType}</code> before calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>.
+<p>In <strong>Event Mode</strong> it is allowed to call <code>fmi3Get{VariableType}</code> after <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> has been called and it is allowed to call <code>fmi3Set{VariableType}</code> before calling <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.
 The FMU leaves <strong>Event Mode</strong> when the co-simulation algorithm calls <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a>.</p>
 </div>
 </div>
@@ -10509,7 +10510,7 @@ If the FMU provides the Co-Simulation interface and is instantiated with it, the
 <div class="paragraph">
 <p>If the co-simulation algorithm supports <a href="#clock"><code>clocks</code></a>, all <a href="#inputClock"><code>input clocks</code></a> of the model should be handled and <a href="#inputClock"><code>inputClock</code></a> events should be scheduled by the co-simulation algorithm.
 If an <a href="#outputClock"><code>outputClock</code></a> will tick, the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#clocksAboutToTick"><code>clocksAboutToTick == fmi3True</code></a>.
-After calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a>, the activation status of <a href="#outputClock"><code>output clocks</code></a> can be retrieved with <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.
+After calling <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, the activation status of <a href="#outputClock"><code>output clocks</code></a> can be retrieved with <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>.
 Then <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> (and <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> if necessary) should be invoked to enable the ticked <a href="#inputClock"><code>input clocks</code></a>.
 Each <a href="#clock"><code>clock</code></a>, that ticks outside of the FMU (i.e. <a href="#inputClock"><code>inputClock</code></a>), is activated for an FMU based on its <a href="#clockReference"><code>clockReference</code></a> and an associated <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <strong>Event Mode</strong>.
 <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> can activate multiple <a href="#clock"><code>clocks</code></a> with each call.
@@ -10526,11 +10527,11 @@ Note that <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may not reach the ne
 <h5 id="computation-clocked-co-simulation">4.2.6.2. Computation in Co-Simulation</h5>
 <div class="paragraph">
 <p>Similar to FMI for Model Exchange, in order to activate <a href="#inputClock"><code>input clocks</code></a> of an FMU, it is required to push the FMU into <strong>Event Mode</strong> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
-If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> or <a href="#clocksAboutToTick"><code>clocksAboutToTick == fmi3True</code></a>, the FMU must be pushed into <strong>Event Mode</strong> and <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> must be called.</p>
+If <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> or <a href="#clocksAboutToTick"><code>clocksAboutToTick == fmi3True</code></a>, the FMU must be pushed into <strong>Event Mode</strong> and <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> must be called.</p>
 </div>
 <div class="paragraph">
 <p>In order to retrieve the status of <a href="#outputClock"><code>output clocks</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> and <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> or <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a> need to be called in the <strong>Event Mode</strong>.
-If the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> return value is <a href="#fmi3OK"><code>fmi3OK</code></a>, the calling of <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> is only meaningful after <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in the case of super-dense time iterations are desired.</p>
+If the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> return value is <a href="#fmi3OK"><code>fmi3OK</code></a>, the calling of <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> is only meaningful after <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in the case of super-dense time iterations are desired.</p>
 </div>
 <div class="paragraph">
 <p>Similar to the Model Exchange case, the allowed call order is <a href="#fmi3GetClock"><code>fmi3GetClock</code></a>, <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a>, <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>, <code>fmi3Get{VariableType}</code>, <code>fmi3Set{VariableType}</code>.
@@ -10540,7 +10541,7 @@ Function calls of this call order can be omitted.</p>
 <p>The handling of return values of function calls is identical to Co-Simulation.</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#terminateSimulation"><code>terminateSimulation</code></a> becomes <code>fmi3True</code> after calling <a href="#fmi3NewDiscreteStates"><code>fmi3NewDiscreteStates</code></a> then the co-simulation should be terminated by calling <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.
+<p>If <a href="#terminateSimulation"><code>terminateSimulation</code></a> becomes <code>fmi3True</code> after calling <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> then the co-simulation should be terminated by calling <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.
 Once handling of the <a href="#clock"><code>clock</code></a> events finished, the co-simulation algorithm calls <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> for that FMU to push it into <strong>Step Mode</strong>.
 Note that it is not allowed to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> or <a href="#fmi3EnterStepMode"><code>fmi3EnterStepMode</code></a> in Scheduled Execution.</p>
 </div>
