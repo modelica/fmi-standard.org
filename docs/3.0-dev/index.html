@@ -1243,7 +1243,7 @@ This can be achieved by enabling caching of the FMU outputs and by exchanging mu
 <p>A compiled FMU binary requires little memory.</p>
 <div class="paragraph">
 <p>Reason: An FMU may run on an ECU (Electronic Control Unit, for example, a microprocessor), and ECUs have strong memory limitations.
-This is achieved by storing signal attributes (<code>name</code>, <code>unit</code>, etc.) and all other static information not needed for model evaluation in a separate text file (= Model Description File) that is not needed on the microprocessor where the executable might run.</p>
+This is achieved by storing variable attributes (<code>name</code>, <code>unit</code>, etc.) and all other static information not needed for model evaluation in a separate text file (= Model Description File) that is not needed on the microprocessor where the executable might run.</p>
 </div>
 </dd>
 <dt class="hdlist1">Hide data structure</dt>
@@ -1468,7 +1468,7 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a
 </tbody>
 </table>
 <div class="paragraph">
-<p><em>[Assume that an FMU has an event at \(t_R=2.1s\) and here a signal changes discontinuously.</em>
+<p><em>[Assume that an FMU has an event at \(t_R=2.1s\) and here a variable changes discontinuously.</em>
 <em>If no event iteration occurs, the time instant when the event occurs is defined as (2.1, 0), and the time instant when the integration is restarted is defined as (2.1, 1).]</em></p>
 </div>
 <div class="paragraph">
@@ -2383,7 +2383,7 @@ In this implementation, time and state events can be used to mimic the behavior 
 </div>
 <div class="paragraph">
 <p><em>[However, this approach poses a big problem: since both Ctrl and Sensor FMUs have time events to sample with frequency \(x\), it is unclear how the importer will guarantee that the two are going to executed in the same event mode.</em>
-<em>Due to floating point precision, it can happen that the importer takes both FMUs into event mode, but only one knows that it is entering event mode because it has to sample the signal.</em>
+<em>Due to floating point precision, it can happen that the importer takes both FMUs into event mode, but only one knows that it is entering event mode because it has to sample an input variable.</em>
 <em>It makes it unclear which equations should be executed.]</em></p>
 </div>
 <div class="paragraph">
@@ -3819,7 +3819,7 @@ The FMU state copy can be set as actual FMU state, in order to continue the simu
 </div>
 <div class="paragraph">
 <p><em>For nonlinear model predictive control (get the FMU state just before initialization; in every sample period, set new continuous states from an observer, initialize and get the FMU state after initialization.</em>
-<em>From this state, perform many simulations that are restarted after the initialization with new input signals proposed by the optimizer).]</em></p>
+<em>From this state, perform many simulations that are restarted after the initialization with new input variables proposed by the optimizer).]</em></p>
 </div>
 <div class="paragraph">
 <p>Furthermore, the FMU state can be serialized and copied in a byte vector.
@@ -5174,13 +5174,13 @@ If a variable is associated with a <code>Unit</code>, then the value set (resp. 
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Signal connection check</dt>
+<dt class="hdlist1">Unit check when connecting variables of different FMUs</dt>
 <dd>
 <div class="paragraph">
-<p><em>When two signals v1 and v2 are connected together, and on at least one of the signals no <code>&lt;BaseUnit&gt;</code> element is defined, then the connection equation "v2 = v1" holds (if v1 is an <a href="#output"><code>output</code></a> of an FMU and v2 is an <a href="#input"><code>input</code></a> of another FMU, with <code>fmi3Get{VariableType}</code> the value of v1 is inquired and used as value for v2 by calling <code>fmi3Set{VariableType}</code>).</em></p>
+<p><em>When only one of <a href="#input"><code>input</code></a> <code>v2</code> and <a href="#output"><code>output</code></a> <code>v1</code>, connected with equation <code>v2 = v1</code>, defines a <code>&lt;BaseUnit&gt;</code> element, <code>fmi3Get{VariableType}</code> must be used to get the value of <code>v1</code>  to then set it with <code>fmi3Set{VariableType}</code> for <code>v2</code>.</em></p>
 </div>
 <div class="paragraph">
-<p><em>When two signals v1 and v2 are connected together, and for both of them <code>&lt;BaseUnit&gt;</code> elements are defined, then they must have identical exponents of their <code>&lt;BaseUnit&gt;</code>.</em>
+<p><em>When two variables v1 and v2 are connected and for both of them <code>&lt;BaseUnit&gt;</code> elements are defined, then they must have identical exponents of their <code>&lt;BaseUnit&gt;</code>.</em>
 <em>If <code>factor</code> and <code>offset</code> are also identical, again the connection equation <code>v2 = v1</code> holds.</em>
 <em>If <code>factor</code> and <code>offset</code> are not identical, the tool may either trigger an error or, if supported, perform a conversion; in other words, use the connection equation (in this case the <code>relativeQuantity</code> of the <code>&lt;TypeDefinition&gt;</code>, see below, has to be taken into account in order to determine whether <code>offset</code> shall or shall not be utilized):</em></p>
 </div>
@@ -5188,7 +5188,7 @@ If a variable is associated with a <code>Unit</code>, then the value set (resp. 
 <p><code>factor(v1) * v1 + offset(v1) = factor(v2) * v2 + offset(v2)</code></p>
 </div>
 <div class="paragraph">
-<p><em>As a result, wrong connections can be detected (for example, connecting a force with an angle signal would trigger an error) and conversions between, say, US and SI units can be either automatically performed or, if not supported, an error is triggered as well.</em></p>
+<p><em>As a result, wrong connections can be detected (for example, connecting a force with an angle-based variable would trigger an error) and conversions between, say, US and SI units can be either automatically performed or, if not supported, an error is triggered as well.</em></p>
 </div>
 <div class="paragraph">
 <p><em>[Note that this approach is not satisfactory for variables belonging to different quantities that have, however, the same <code>&lt;BaseUnit&gt;</code>, such as quantities <code>Energy</code> and <code>Torque</code>, or <code>AngularVelocity</code> and <code>Frequency</code>.</em>
@@ -5218,7 +5218,7 @@ J \cdot \alpha = f \rightarrow [kg.m^2]*[rad/s^2] = [kg.m/s^2] &amp; \quad \text
 <dt class="hdlist1">Unit propagation</dt>
 <dd>
 <div class="paragraph">
-<p><em>If unit definitions are missing for signals, they might be deduced from the equations where the signals are used.</em>
+<p><em>If unit definitions are missing for variables, they might be deduced from the equations where the variables are used.</em>
 <em>If no unit computation is needed, <code>rad</code> is propagated.</em>
 <em>If a unit computation is needed and one of the involved units has <code>rad</code> as a <code>&lt;BaseUnit&gt;</code>, then unit propagation is not possible.</em>
 <em>Examples:</em></p>
@@ -5710,7 +5710,7 @@ Furthermore, for Co-Simulation FMUs the <code>stepSize</code> defines the prefer
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;Terminals&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining input and output signals into logical groups to ease connections on a system level.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining input and output variables into logical groups to ease connections on a system level.</p></td>
 </tr>
 </tbody>
 </table>
@@ -6175,7 +6175,7 @@ The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</co
 <div class="sect5">
 <h6 id="_general_remark_on_inflow_and_outflow">2.4.7.2.7. General Remark on Inflow and Outflow</h6>
 <div class="paragraph">
-<p><em>[Flow variables have a direction and must fulfill a zero sum constraint i.e. the sum of all flow variables connected together must be zero (Kirchhoff&#8217;s current law).</em>
+<p><em>[Flow variables have a direction and must fulfill a zero sum constraint i.e. the sum of all flow variables connected must be zero (Kirchhoff&#8217;s current law).</em>
 <em>In addition because different tools might have different direction definitions both, <code>inflow</code> and <code>outflow</code> are available as <code>variableKind</code>.</em>
 <em>For variables with <code>inflow</code> a positive value means that the flow is inwards, and for <code>outflow</code> a positive value means that the flow is outwards.</em>
 <em>For the sake of simplicity in the following \(\dot{m}_i\) denotes an inflowing quantity:</em></p>
@@ -6184,7 +6184,7 @@ The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</co
 <p><em>\(0 = \sum{\dot{m}_i}\)</em></p>
 </div>
 <div class="paragraph">
-<p><em>[Connecting a single <a href="#output"><code>output</code></a> <code>outflow</code> to a single <a href="#input"><code>input</code></a> <code>inflow</code>, or vice versa automatically fulfills the flow constraint, while connecting two single signals of the same flow type requires a negation of the signal.</em></p>
+<p><em>[Connecting a single <a href="#output"><code>output</code></a> <code>outflow</code> to a single <a href="#input"><code>input</code></a> <code>inflow</code>, or vice versa automatically fulfills the flow constraint, while connecting two variables of the same flow type requires a negation of the variable value.</em></p>
 </div>
 <div class="paragraph">
 <p><code>inflow</code> <em>and</em> <code>outflow</code> <em>is only used as a sign convention for scalar flow quantities which obey Kirchhoff&#8217;s current law (sum up to zero).</em>
@@ -6335,7 +6335,7 @@ These parameters can be changed independently, unlike <a href="#calculatedParame
 <div id="input" class="paragraph">
 <p><code>= input</code>: The variable value can be provided from another FMU.<br>
 <a id="inputClock"></a> If <a href="#variability"><code>variability</code></a> = <a href="#clock"><code>clock</code></a> the variable defines an <a href="#inputClock"><code>input clock</code></a> that is controlled by the importer.
-An <a href="#inputClock"><code>input clock</code></a> can be left unconnected, can be connected to an <a href="#outputClock"><code>output clock</code></a>, or the importer generates the clock signal.</p>
+An <a href="#inputClock"><code>input clock</code></a> can be left unconnected, can be connected to an <a href="#outputClock"><code>output clock</code></a>, or the importer generates the clock variable.</p>
 </div>
 <div id="output" class="paragraph">
 <p><code>= output</code>: The variable value can be used by another FMU.
@@ -6615,7 +6615,7 @@ The default value of this attribute is <code>false</code>.</p>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#discrete"><code>discrete</code></a> signals</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#discrete"><code>discrete</code></a> variables</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
@@ -6625,7 +6625,7 @@ The default value of this attribute is <code>false</code>.</p>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#continuous"><code>continuous</code></a> signals</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#continuous"><code>continuous</code></a> variables</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
@@ -6647,7 +6647,7 @@ The default value of this attribute is <code>false</code>.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p><em>[Note: For local and output signals and <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, then the variable is explicitly set in <strong>Initialization Mode</strong>.</em>
+<p><em>[Note: For local and output variables and <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, then the variable is explicitly set in <strong>Initialization Mode</strong>.</em>
 <em>The value of the variable is either the <a href="#start"><code>start</code></a> value stored in a variable element <code>&lt;XXX start=YYY/&gt;</code> or the value set with <code>fmi3Set{VariableType}</code> during <strong>Initialization Mode</strong>.]</em></p>
 </div>
 <div class="paragraph">
@@ -6712,7 +6712,7 @@ The default value of this attribute is <code>false</code>.</p>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#discrete"><code>discrete</code></a> signals</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#discrete"><code>discrete</code></a> variables</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
@@ -6722,7 +6722,7 @@ The default value of this attribute is <code>false</code>.</p>
 <td class="tableblock halign-center valign-top"><p class="tableblock">--(c)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#continuous"><code>continuous</code></a> signals</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#continuous"><code>continuous</code></a> variables</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
@@ -8943,7 +8943,7 @@ If these variables are present in an algebraic loop, iteration can be used to co
 Once finalized, <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> must be called, and depending on the value of the return argument, the FMU either continues the event iteration at the initial time instant or switches to <strong>Continuous-Time Mode</strong>.<br>
 After switching to <strong>Continuous-Time Mode</strong>, the integration is started.
 Basically, during <strong>Continuous-Time Mode</strong>, the <a href="#derivative"><code>derivatives</code></a> of the continuous <a href="#state"><code>states</code></a> are computed.
-If FMUs and/or submodels are connected together, then the <a href="#input"><code>inputs</code></a> of these models are the <a href="#output"><code>outputs</code></a> of other models, and therefore, the corresponding FMU outputs must be computed.
+If FMUs and/or submodels are connected, then the <a href="#input"><code>inputs</code></a> of these models are the <a href="#output"><code>outputs</code></a> of other models, and therefore, the corresponding FMU outputs must be computed.
 Whenever result values shall be stored, usually at output points defined before the start of the simulation, the <code>fmi3Get{VariableType}</code> function with respect to the desired variables must be called.<br>
 Continuous integration is stopped at an event instant.
 An event instant is determined by a <a href="#time-event"><code>time</code></a>, <a href="#state-event"><code>state</code></a> or <a href="#step-event">step event</a>, or by the environment (e.g. to change a <a href="#continuous"><code>continuous</code></a> variable discretely).</p>
@@ -11727,7 +11727,7 @@ Not to be confused with <em>parameter</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>clock</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A signal to report events or trigger events or model partitions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A variable to report events or trigger events or model partitions.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>clock tick</em></p></td>
