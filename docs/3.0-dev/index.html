@@ -616,7 +616,12 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_platform_dependent_definitions">2.2.2. Platform Dependent Definitions</a></li>
 <li><a href="#status-returned-by-functions">2.2.3. Status Returned by Functions</a></li>
 <li><a href="#inquire-version-number">2.2.4. Inquire Version Number of Header Files</a></li>
-<li><a href="#get-and-set-variable-values">2.2.5. Getting and Setting Variable Values</a></li>
+<li><a href="#fmu-variables">2.2.5. Variables of a Functional Mockup Unit</a>
+<ul class="sectlevel4">
+<li><a href="#serialization-of_variables">2.2.5.1. Serialization of Array Variables</a></li>
+<li><a href="#get-and-set-variable-values">2.2.5.2. Getting and Setting Variable Values</a></li>
+</ul>
+</li>
 <li><a href="#advancing-time">2.2.6. Advancing Time</a></li>
 <li><a href="#operation-on-clocks">2.2.7. Operation on Clocks</a>
 <ul class="sectlevel4">
@@ -1980,15 +1985,19 @@ This function call is allowed always and in all interface types.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="get-and-set-variable-values">2.2.5. Getting and Setting Variable Values</h4>
+<h4 id="fmu-variables">2.2.5. Variables of a Functional Mockup Unit</h4>
 <div class="paragraph">
 <p>All variables of an FMU are identified with a handle called <a href="#valueReference">value reference</a>.
 The handle is defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file as attribute <a href="#valueReference"><code>valueReference</code></a> in variable elements.
 Each variable must have a unique <a href="#valueReference"><code>valueReference</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>A variable can be a scalar or an array.
-When getting or setting the values of array variables, the serialization of array variable values used in C-API function calls, as well as in the XML <a href="#start"><code>start</code></a> attributes, is defined as row major - i.e. dimension order from left to right for the C-API (e.g. <code>array[dim1][dim2]&#8230;&#8203;[dimN]</code>), and the document order in the XML attributes for the respective dimensions.
+<p>A variable can be a scalar or an array.</p>
+</div>
+<div class="sect4">
+<h5 id="serialization-of_variables">2.2.5.1. Serialization of Array Variables</h5>
+<div class="paragraph">
+<p>When getting or setting the values of array variables, the serialization of array variable values used in C-API function calls, as well as in the XML <a href="#start"><code>start</code></a> attributes, is defined as row major, i.e., dimension order from left to right for the C-API (e.g. <code>array[dim1][dim2]&#8230;&#8203;[dimN]</code>), and the document order in the XML attributes for the respective dimensions.
 For this serialization of array variables the sparsity pattern of the array is not taken into account.
 All elements of the array, including structural zeros, are serialized.</p>
 </div>
@@ -2048,6 +2057,9 @@ All elements of the array, including structural zeros, are serialized.</p>
 <div class="paragraph">
 <p><em>]</em></p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="get-and-set-variable-values">2.2.5.2. Getting and Setting Variable Values</h5>
 <div class="paragraph">
 <p>The actual values of the variables that are defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file can be inquired after calling <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> with the following functions:</p>
 </div>
@@ -2273,6 +2285,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 </div>
 <div class="paragraph">
 <p>The value of a variable may only be accessed with the respective <code>fmi3Get/Set{VariableType}</code> for its type.</p>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -2780,10 +2793,7 @@ If this is not possible, an explicit cast of one <a href="#clock"><code>clock</c
 <div class="paragraph">
 <p>Sets <a href="#clock"><code>clocks</code></a> activation status by providing the value references of the corresponding <a href="#clock"><code>clock</code></a> variables and their values.
 Note that <a href="#clock"><code>clock</code></a> variables, like any other variables can be scalar or array variables.
-When getting or setting the values of array variables, the serialization of array variable values used in C-API function calls is defined as row major - i.e. dimension order from left to right for the C-API (e.g. <code>array[dim1][dim2]&#8230;&#8203;[dimN]</code>).</p>
-</div>
-<div class="paragraph">
-<p><em>[TODO: the array serialization should be defined once and only referenced here.]</em></p>
+(The serialization of variables is described in <a href="#serialization-of_variables">Section 2.2.5.1</a>.)</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3077,7 +3087,7 @@ The functions may only be called if their availability is indicated by the attri
 </ul>
 </div>
 <div class="paragraph">
-<p><em>[Note that array variables will be serialized, so <code>nSeed</code> is only equal to <code>nKnowns</code> in the case of directional derivatives (resp., equal to <code>nUnknowns</code> in the case of adjoint derivatives), if all value references of <code>knowns</code> (resp., <code>unknowns</code>) point to scalar variables.</em>
+<p><em>[Note that array variables will be serialized, so <code>nSeed</code> is only equal to <code>nKnowns</code> in the case of directional derivatives (resp., equal to <code>nUnknowns</code> in the case of adjoint derivatives) if all value references of <code>knowns</code> (resp., <code>unknowns</code>) point to scalar variables.</em>
 <em>Likewise <code>nSensitivity</code> is only equal to <code>nUnknowns</code> (resp., <code>nKnowns</code>) if all value references of <code>unknowns</code> (resp., <code>knowns</code>) point to scalar variables.]</em></p>
 </div>
 <div class="sect4">
@@ -3429,7 +3439,7 @@ typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Instance instance,
 <p><code>elementIndicesOfDependent</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the element index of the dependent variable that dependency information is provided for.
 The element indices start with 1. Using the element index 0 means all elements of the variable.
-(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values).</p>
+(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.5.1</a>.)</p>
 </li>
 <li>
 <p><code>independents</code> must point to a buffer of <code>fmi3ValueReference</code> values of size <code>nDependencies</code> allocated by the calling environment.
@@ -3440,7 +3450,7 @@ It is filled in by this function with the value reference of the <a href="#indep
 It is filled in by this function with the element index of the <a href="#independent"><code>independent</code></a> variable that this dependency entry is dependent upon.
 The element indices start with 1.
 Using the element index 0 means all elements of the variable.
-(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values).</p>
+(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.5.1</a>.)</p>
 </li>
 <li>
 <p><code>dependencyKinds</code> must point to a buffer of <code>fmi3DependencyKind</code> values of size <code>nDependencies</code> allocated by the calling environment.
@@ -3934,7 +3944,7 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 <dl>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
-<p>See <a href="#get-and-set-variable-values">Section 2.2.5</a> for the general mechanism to get variable values.
+<p>See <a href="#get-and-set-variable-values">Section 2.2.5.2</a> for the general mechanism to get variable values.
 Getting variable might trigger computations.
 <em>[If <strong>Terminated</strong> is entered because of an <code>fmi3Error</code> return value, retrieved values should only be used for debugging purposes.]</em></p>
 </dd>
@@ -6230,7 +6240,7 @@ The <a href="#variability"><code>variability</code></a> of the dimension size is
 </ul>
 </div>
 <div class="paragraph">
-<p>These two options are mutually exclusive, i.e. for each <code>&lt;Dimension&gt;</code> element either a <a href="#start"><code>start</code></a> attribute or an <a href="#valueReference"><code>valueReference</code></a> attribute can be supplied, but not both.
+<p>These two options are mutually exclusive, i.e., for each <code>&lt;Dimension&gt;</code> element either a <a href="#start"><code>start</code></a> attribute or a <a href="#valueReference"><code>valueReference</code></a> attribute can be supplied, but not both.
 However different dimension sizes can be specified using different mechanisms and can have differing <a href="#variability"><code>variability</code></a> attributes.</p>
 </div>
 <div class="paragraph">
@@ -7011,6 +7021,11 @@ This value is also stored in the C functions.
 <em>It is not allowed to change the start values in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file of an FMU, as this would break the consistency with the hard-coded start values in the C-Code.</em>
 <em>This could lead to unpredictable behavior of the FMU in different importing tools, as it is not mandatory to call <code>fmi3Set{VariableType}</code> to set start values during initialization.</em>
 <em>Instead it is recommended to use the SSP Standard (<a href="https://ssp-standard.org/" class="bare">https://ssp-standard.org/</a>) to handle modified parameters of FMUs or different parameter sets.]</em></p>
+</div>
+<div class="paragraph">
+<p>The <a href="#start"><code>start</code></a> is either a single value or a list of values.
+The serialization of a multi-dimensional array variable is described in <a href="#serialization-of_variables">Section 2.2.5.1</a>.
+If only a single value is given for a multi-dimensional array, all values of the multi-dimensional array are equal to this value.</p>
 </div>
 <div class="paragraph">
 <p>The interpretation of <a href="#start"><code>start</code></a> is defined by variable attribute <a href="#initial"><code>initial</code></a>.
@@ -9033,7 +9048,7 @@ Note that <a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> is p
 </div>
 <div class="paragraph">
 <p>Set new values for <a href="#parameter"><code>parameters</code></a>, <a href="#start"><code>start</code></a> values and <a href="#input"><code>inputs</code></a> and re-initialize caching of variables that depend on these variables.
-The details of these functions are defined in <a href="#get-and-set-variable-values">Section 2.2.5</a>.</p>
+The details of these functions are defined in <a href="#get-and-set-variable-values">Section 2.2.5.2</a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[The functions above have the slight drawback that values must always be copied.</em>
@@ -9227,12 +9242,12 @@ Note that <a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> is p
 <p>The <a href="#derivative"><code>derivatives</code></a> are returned as a vector with <code>nContinuousStates</code> elements.
 The ordering of the elements of the <code>derivatives</code> vector must be identical to the ordering of the <code>continuousStates</code> vector (for example, <code>derivatives[2]</code> is the <a href="#derivative"><code>derivative</code></a> of <code>continuousStates[2]</code>).
 The order of the <code>continuousStates</code> and <code>derivatives</code> vector must be the same as the ordered list of elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>.
-<em>[Array variables are serialized in "row major" order, as usual.]</em></p>
+<em>[Array variables are serialized as defined in <a href="#serialization-of_variables">Section 2.2.5.1</a>.]</em></p>
 </div>
 <div class="paragraph">
 <p>The event indicators are returned as a vector with <code>nEventIndicators</code> elements.
 The order of the <code>eventIndicators</code> vector must be the same as the ordered list of elements <code>&lt;ModelStructure&gt;&lt;EventIndicator&gt;</code>.
-<em>[Array variables are serialized in "row major" order, as usual.]</em>
+<em>[Array variables are serialized as defined in <a href="#serialization-of_variables">Section 2.2.5.1</a>.]</em>
 A <a href="#state-event">state event</a> is triggered when the domain of an event indicator changes from \(z_j &gt; 0\) to \(z_j \leq 0\) or vice versa.
 The FMU must guarantee that at an event restart \(z_j \neq 0\), for example, by shifting \(z_j\) with a small value.
 Furthermore, \(z_j\) should be scaled in the FMU with its nominal value (so all elements of the returned vector <code>eventIndicators</code> should be in the order of "one").</p>
@@ -9247,7 +9262,7 @@ Furthermore, \(z_j\) should be scaled in the FMU with its nominal value (so all 
 <div class="paragraph">
 <p>Return the new continuous state vector <code>continuousStates</code>.
 The order of the states is also the same as the ordered list of elements <code>&lt;ModelStructure&gt;&lt;Derivative&gt;</code>.
-_[Array variables are serialized in "row major" order, as usual.]</p>
+_[Array variables are serialized as defined in <a href="#serialization-of_variables">Section 2.2.5.1</a>.]</p>
 </div>
 <div id="fmi3GetNominalsOfContinuousStates" class="listingblock">
 <div class="content">
@@ -10140,7 +10155,7 @@ Since the FMU itself can detect such changes, the co-simulation algorithm does n
 <div class="sect3">
 <h4 id="transfer-of-input-output-and-parameters">4.2.1. Getting and Setting Variable Values</h4>
 <div class="paragraph">
-<p><a href="#input"><code>Input</code></a>, <a href="#output"><code>output</code></a> and other variables are accessed via the <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> functions, defined in <a href="#get-and-set-variable-values">Section 2.2.5</a>.</p>
+<p><a href="#input"><code>Input</code></a>, <a href="#output"><code>output</code></a> and other variables are accessed via the <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> functions, defined in <a href="#get-and-set-variable-values">Section 2.2.5.2</a>.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -10191,7 +10206,7 @@ If multiple derivatives of a variable shall be retrieved, provide a list of them
 </li>
 <li>
 <p><code>values</code> is a vector with the values of the <a href="#derivative"><code>derivatives</code></a>.
-The order of the <code>values</code> elements is derived from a twofold serialization: the outer level corresponds to the combination of a value reference (e.g., <code>valueReferences[k]</code>) and order (e.g., <code>orders[k]</code>), and the inner level to the serialization of variables.
+The order of the <code>values</code> elements is derived from a twofold serialization: the outer level corresponds to the combination of a value reference (e.g., <code>valueReferences[k]</code>) and order (e.g., <code>orders[k]</code>), and the inner level to the serialization of variables as defined in <a href="#serialization-of_variables">Section 2.2.5.1</a>.
 The inner level does not exist for scalar variables.</p>
 </li>
 <li>
@@ -11154,9 +11169,9 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 </li>
 <li>
 <p><code>size_t</code> <a href="#clockElementIndex"><code>clockElementIndex</code></a>:: The element index of the <a href="#inputClock"><code>inputClock</code></a> variable which shall be activated.
-For a scalar <a href="#clock"><code>clock</code></a> variable this must be 0; for array <a href="#clock"><code>clock</code></a> variables the element clock to activate is specified using the 1-based element index.
+For a scalar <a href="#clock"><code>clock</code></a> variable this must be 0; for array <a href="#clock"><code>clock</code></a> variables, the element clock to activate is specified using the 1-based element index.
 Using the element index 0 means all elements of the <a href="#clock"><code>clock</code></a> variable.
-(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values).</p>
+(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.5.1</a>).</p>
 </li>
 </ul>
 </div>
