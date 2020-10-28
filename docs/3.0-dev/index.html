@@ -5015,8 +5015,7 @@ This flag is not supported in <code>ModelExchange</code>.</p></td>
 <div class="paragraph">
 <p><em>[Unit support is important for technical systems since otherwise it is very easy for errors to occur.</em>
 <em>Unit handling is a difficult topic, and there seems to be no method available that is really satisfactory for all applications, such as unit check, unit conversion, unit propagation or dimensional analysis.</em>
-<em>In FMI, a pragmatic approach is used that takes into account that every software system supporting units has potentially its own specific technique to describe and utilize units.</em>
-<em>The approach used here is slightly different than FMI 1.0 to reduce the need for standardized string representations.]</em></p>
+<em>In FMI, a pragmatic approach is used that takes into account that every software system supporting units has potentially its own specific technique to describe and utilize units.]</em></p>
 </div>
 <div class="paragraph">
 <p>Element <code>&lt;fmiModelDescription&gt;&lt;UnitDefinitions&gt;</code> is defined as:</p>
@@ -5027,18 +5026,18 @@ This flag is not supported in <code>ModelExchange</code>.</p></td>
 </div>
 </div>
 <div class="paragraph">
-<p>It consists of zero or more <code>Unit</code> definitions.
-If no units are defined, element <code>&lt;UnitDefinitions&gt;</code> must not be present.
-If 1 or more units are defined, this element must be present.</p>
+<p>It contains one or more <code>Unit</code> definitions.
+If no units are defined, element <code>&lt;UnitDefinitions&gt;</code> must not be present.</p>
 </div>
 <div class="paragraph">
-<p>A <code>Unit</code> is defined by its <code>name</code> attribute such as <code>N.m</code> or <code>N*m</code> or <code>Nm</code>, which must be unique with respect to all other defined elements of the <code>&lt;UnitDefinitions&gt;</code> list.
-If a variable is associated with a <code>Unit</code>, then the value set (resp. get) with functions <code>fmi3Set{VariableType}</code> (resp. <code>fmi3Get{VariableType}</code>) has this <code>Unit</code>.
+<p>The <code>name</code> of a <code>Unit</code> must be unique with respect to all other <code>&lt;Unit&gt;</code> elements.
+If a variable is associated with a <code>Unit</code>, the value passed to <code>fmi3Set{VariableType}</code> (resp. retrieved with <code>fmi3Get{VariableType}</code>) has this unit.
 <em>[The purpose of the name is to uniquely identify a unit and, for example, use it to display the unit in menus or in plots.</em>
 <em>Since there is no standard to represent units in strings, and there are different ways how this is performed in different tools, no specific format for the string representation of the unit is required.]</em></p>
 </div>
 <div class="paragraph">
-<p>Optionally, a value given in unit <code>Unit</code> can be converted to a value with respect to unit <code>&lt;BaseUnit&gt;</code> utilizing the conversion <code>factor</code> and <code>offset</code> attributes:</p>
+<p>The <code>Unit</code> definition consists of the exponents of the 7 SI base units <code>kg</code>, <code>m</code>, <code>s</code>, <code>A</code>, <code>K</code>, <code>mol</code>, <code>cd</code>, the exponent of the SI derived unit <code>rad</code>, and optionally a <code>factor</code> and an <code>offset</code>.
+<em>[The additional <code>rad</code> base unit helps to handle the often occurring quantities in technical systems that depend on an angle.]</em></p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -5046,26 +5045,27 @@ If a variable is associated with a <code>Unit</code>, then the value set (resp. 
 </div>
 </div>
 <div class="paragraph">
-<p>Besides <code>factor</code> and <code>offset</code>, the <code>&lt;BaseUnit&gt;</code> definition consists of the exponents of the 7 SI base units <code>kg</code>, <code>m</code>, <code>s</code>, <code>A</code>, <code>K</code>, <code>mol</code>, <code>cd</code>, and of the exponent of the SI derived unit <code>rad</code>.
-<em>[The additional <code>rad</code> base unit helps to handle the often occurring quantities in technical systems that depend on an angle.]</em></p>
+<p>A value \(v_{unit}\) in <code>Unit</code> is converted to the base unit \(v_{base}\) by the equation</p>
 </div>
-<div class="paragraph">
-<p>A value with respect to <code>Unit</code> (abbreviated as <code>Unit_value</code>) is converted with respect to <code>&lt;BaseUnit&gt;</code> (abbreviated as <code>BaseUnit_value</code>) by the equation:</p>
+<div class="stemblock">
+<div class="content">
+\[v_{base} = \texttt{factor} * v_{unit} + \texttt{offset}\]
 </div>
-<div class="paragraph">
-<p><code>BaseUnit_value = factor * Unit_value + offset</code></p>
 </div>
 <div class="paragraph">
 <p><em>[For example, if</em> \({p_{\mathit{bar}}}\) <em>is a pressure value in unit <code>bar</code>, and</em> \({p_{\mathit{Pa}}}\) <em>is the pressure value in <code>&lt;BaseUnit&gt;</code>, then</em></p>
 </div>
-<div class="paragraph">
-<p>\({p_{\mathit{Pa}} = 10^5 p_{\mathit{bar}}}\)</p>
+<div class="stemblock">
+<div class="content">
+\[{p_{\mathit{Pa}} = 10^5 p_{\mathit{bar}}}\]
+</div>
 </div>
 <div class="paragraph">
 <p><em>and therefore, <code>factor = 1.0e5</code> and <code>offset = 0.0</code>.</em></p>
 </div>
 <div class="paragraph">
-<p><em>In the following table several unit examples are given (Note that if in column <code>exponents</code> the definition "\({kgm^2 / s^2}\)" is present, then the attributes of <code>&lt;BaseUnit&gt;</code> are: <code>kg=1, m=2, s=-2</code>):</em></p>
+<p><em>In the following table several unit examples are given.</em>
+<em>Note that if in column <code>exponents</code> the definition</em> \(\frac{kg \cdot m^2}{s^2}\) <em>is present, then the attributes of <code>&lt;BaseUnit&gt;</code> are  <code>kg=1, m=2, s=-2</code>.</em></p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -5126,25 +5126,22 @@ If a variable is associated with a <code>Unit</code>, then the value set (resp. 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Angular velocity</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rpm</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rad/s</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.1047197551196598 (=2*pi/60)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.1047197551196598 (= 2*pi/60)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Frequency</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Hz</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rad/s</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.283185307179586</code><br>
-<code>(= 2*pi)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.283185307179586 (= 2*pi)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Temperature</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&#176;F</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>K</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.5555555555555556</code><br>
-<code>(= 5/9)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>255.3722222222222</code><br>
-<code>(= 273.15-32*5/9)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.5555555555555556 (= 5/9)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>255.3722222222222 (= 273.15-32*5/9)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Per cent by length</em></p></td>
@@ -5255,8 +5252,7 @@ J \cdot \alpha = f \rightarrow [kg.m^2]*[rad/s^2] = [kg.m/s^2] &amp; \quad \text
 <p><em>]</em></p>
 </div>
 <div class="paragraph">
-<p>Additionally to the unit definition, optionally a set of display units can be defined.
-These can be utilized for <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> of a value:</p>
+<p>A <code>&lt;Unit&gt;</code> can contain any number of <code>&lt;DisplayUnit&gt;</code> elements.</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -5264,18 +5260,27 @@ These can be utilized for <a href="#input"><code>input</code></a> / <a href="#ou
 </div>
 </div>
 <div class="paragraph">
-<p>A <code>&lt;DisplayUnit&gt;</code> is defined by <code>name</code>, <code>factor</code> and <code>offset</code>.
-The attribute <code>name</code> must be unique with respect to all other <code>names</code> of the <code>&lt;DisplayUnit&gt;</code> definitions of the same <code>Unit</code> [(different <code>Unit</code> elements may have the same <code>&lt;DisplayUnit&gt;</code> names)].
-A value with respect to Unit (abbreviated as <code>Unit_value</code>) is converted with respect to <code>&lt;DisplayUnit&gt;</code> (abbreviated as <code>DisplayUnit_value</code>) by the equation:</p>
+<p>A <code>&lt;DisplayUnit&gt;</code> is defined by <code>name</code>, <code>factor</code>, <code>offset</code>, and <code>inverse</code>.
+The attribute <code>name</code> must be unique with respect to all other names of the <code>&lt;DisplayUnit&gt;</code> definitions of the same <code>Unit</code>.
+<em>[Different <code>Unit</code> elements may have the same <code>&lt;DisplayUnit&gt;</code> names].</em></p>
 </div>
 <div class="paragraph">
-<p><code>DisplayUnit_value = factor * Unit_value + offset</code></p>
+<p>A value \(v_{unit}\) in <code>Unit</code> is converted to a value \(v_{display}\) in <code>DisplayUnit</code> by the equation:</p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[v_{display} =
+\left\{\begin{array}{ll}
+\texttt{factor} *          v_{unit}  + \texttt{offset} &amp;\text{if} \; \texttt{inverse == false} \\
+\texttt{factor} * \frac{1}{v_{unit}} + \texttt{offset} &amp;\text{if} \; \texttt{inverse == true}
+\end{array}\right.\]
+</div>
 </div>
 <div class="paragraph">
-<p><em>[For example, <code>offset</code> is needed for temperature units.]</em></p>
+<p><em>[<code>offset</code> is needed for temperature units like <code>F</code> (Fahrenheit), <code>inverse</code> for inverse display units like <code>mpg</code> (miles per gallon) or <code>S</code> (Siemens).</em></p>
 </div>
 <div class="paragraph">
-<p><em>[For example, if \({T_K}\) is the temperature value of <code>Unit.name</code> (in <code>K</code>) and \({T_F}\) is the temperature value of <code>&lt;DisplayUnit&gt;</code> (in <code>&#176;F</code>), then</em></p>
+<p><em>For example, if \({T_K}\) is the temperature value of <code>Unit.name</code> (in <code>K</code>) and \({T_F}\) is the temperature value of <code>&lt;DisplayUnit&gt;</code> (in <code>&#176;F</code>), then</em></p>
 </div>
 <div class="stemblock">
 <div class="content">
@@ -5286,31 +5291,36 @@ A value with respect to Unit (abbreviated as <code>Unit_value</code>) is convert
 <p><em>and therefore, <code>factor = 1.8 (=9/5)</code> and <code>offset = -459.67 (= 32 - 273.15*9/5)</code>.</em></p>
 </div>
 <div class="paragraph">
-<p><em>Both the <code>DisplayUnit.name</code> definitions as well as the <code>Unit.name</code> definitions are used in the variable elements.</em>
-<em>Example of a definition:</em></p>
+<p><em>Both the <code>DisplayUnit.name</code> definitions as well as the <code>Unit.name</code> definitions are used in the variable elements.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Example of a definition:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;Unit name="rad/s"&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;UnitDefinitions&gt;
+  &lt;Unit name="rad/s"&gt;
     &lt;BaseUnit s="-1" rad="1"/&gt;
     &lt;DisplayUnit name="deg/s" factor="57.29577951308232"/&gt;
     &lt;DisplayUnit name="rev/min" factor="9.549296585513721"/&gt;
-&lt;/Unit&gt;
- &lt;Unit name="bar"&gt;
+  &lt;/Unit&gt;
+  &lt;Unit name="bar"&gt;
     &lt;BaseUnit kg="1" m="-1" s="-2" factor="1e5" offset="0"/&gt;
-&lt;/Unit&gt;
- &lt;Unit name="Re"&gt;
+  &lt;/Unit&gt;
+  &lt;Unit name="L/100km"&gt;
+    &lt;BaseUnit m="2" factor="1e-8"/&gt;
+    &lt;DisplayUnit name="mpg" inverse="true" factor="235.214583"/&gt;
+  &lt;/Unit&gt;
+  &lt;Unit name="Re"&gt;
     &lt;BaseUnit/&gt; &lt;!-- unit="1" --&gt;
                 &lt;!-- (dimensionless, all exponents of BaseUnit are zero) --&gt;
- &lt;/Unit&gt;
- &lt;Unit name="Euro/PersonYear"/&gt;  &lt;!-- no mapping to BaseUnit defined --&gt;</code></pre>
+  &lt;/Unit&gt;
+  &lt;Unit name="Euro/PersonYear"/&gt;  &lt;!-- no mapping to BaseUnit defined --&gt;
+&lt;/UnitDefinitions&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><em>]</em></p>
-</div>
-<div class="paragraph">
-<p>The schema definition is present in a separate file <code>fmi3Unit.xsd</code>.</p>
 </div>
 </div>
 <div class="sect3">
