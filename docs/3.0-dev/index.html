@@ -8157,7 +8157,9 @@ int main(int argc, char* argv[]) {
 <h3 id="_definition_of_source_code">2.6. Definition of Source Code</h3>
 <div class="paragraph">
 <p>A source code FMU contains the sources of the model in the <code>sources</code> directory together with a <code>buildDescription.xml</code> that contains at least one <code>&lt;BuildConfiguration&gt;</code> element for the supported platforms.
-Each <code>&lt;BuildConfiguration&gt;</code> provides the necessary information to compile and link the sources of the model into a dynamic library or as part of an executable.</p>
+Each <code>&lt;BuildConfiguration&gt;</code> provides the necessary information to compile and link the sources of the model into a dynamic library or as part of an executable.
+An FMU importing tool may not regard more than one <code>&lt;BuildConfiguration&gt;</code> when building the FMU for a specific <code>&lt;platform&gt;</code>.
+The importer chooses the matching <code>&lt;BuildConfiguration&gt;</code> based on the <code>&lt;platform&gt;</code> and <code>&lt;modelIdentifier&gt;</code> attributes.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -8180,7 +8182,12 @@ Each <code>&lt;BuildConfiguration&gt;</code> provides the necessary information 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>platform</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Platform tuple of the platform the build configuration is intended for (e.g. <code>x86_64-linux</code>)</p>
+<p>Platform tuple of the platform the <code>&lt;BuildConfiguration&gt;</code> is intended for (e.g. <code>x86_64-linux</code>).
+All <code>platform</code> attributes defined in the <code>&lt;BuildConfiguration&gt;</code> elements for the same <code>&lt;modelIdentifier&gt;</code> must be unique.
+For each <code>platform</code> there can only be one matching <code>&lt;BuildConfiguration&gt;</code>.
+This attribute is optional.
+Thus there must not be more than one <code>&lt;BuildConfiguration&gt;</code> without a <code>platform</code> attribute.
+If a <code>&lt;BuildConfiguration&gt;</code> without a <code>platform</code> attribute is provided this is the fallback <code>&lt;BuildConfiguration&gt;</code> an importer can use if it cannot find any other <code>&lt;BuildConfiguration&gt;</code> with a matching <code>platform</code> attribute.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -8195,7 +8202,8 @@ Each <code>&lt;BuildConfiguration&gt;</code> provides the necessary information 
 <h4 id="_sourcefileset">2.6.1. SourceFileSet</h4>
 <div class="paragraph">
 <p>The <code>&lt;SourceFileSet&gt;</code> element groups source files that can be compiled with the same compiler and compiler options.
-Every build configuration must contain at least one <code>&lt;SourceFileSet&gt;</code>.</p>
+Every build configuration must contain at least one <code>&lt;SourceFileSet&gt;</code>.
+An importer of the FMU has to regard every <code>&lt;SourceFileSet&gt;</code> of the matching <code>&lt;BuildConfiguration&gt;</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -8359,7 +8367,8 @@ If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</
 <div class="sect3">
 <h4 id="_library">2.6.2. Library</h4>
 <div class="paragraph">
-<p>The <code>&lt;Library&gt;</code> element defines a static library required to link the model binary.</p>
+<p>The <code>&lt;Library&gt;</code> element defines a static library required to link the model binary.
+An importer of the FMU has to link every library of the matching <code>&lt;BuildConfiguration&gt;</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
