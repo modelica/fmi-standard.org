@@ -646,9 +646,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_adjoint_derivatives">2.2.8.2. Adjoint Derivatives</a></li>
 </ul>
 </li>
-<li><a href="#_getting_number_of_event_indicators">2.2.9. Getting Number of Event Indicators</a></li>
-<li><a href="#_getting_number_of_states">2.2.10. Getting Number of States</a></li>
-<li><a href="#_getting_number_of_variable_dependencies_and_variable_dependencies">2.2.11. Getting Number of Variable Dependencies and Variable Dependencies</a></li>
+<li><a href="#_getting_number_of_variable_dependencies_and_variable_dependencies">2.2.9. Getting Number of Variable Dependencies and Variable Dependencies</a></li>
 </ul>
 </li>
 <li><a href="#common-state-machine">2.3. State Machine and Semantics</a>
@@ -780,6 +778,8 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#_code_example">3.2.4. Code Example</a></li>
 <li><a href="#_event_handling">3.2.5. Event Handling</a></li>
+<li><a href="#_getting_number_of_event_indicators">3.2.6. Getting Number of Event Indicators</a></li>
+<li><a href="#_getting_number_of_states">3.2.7. Getting Number of States</a></li>
 </ul>
 </li>
 <li><a href="#model-exchange-schema">3.3. Description Schema</a>
@@ -3313,60 +3313,7 @@ h_2(u_1, u_2)
 </div>
 </div>
 <div class="sect3">
-<h4 id="_getting_number_of_event_indicators">2.2.9. Getting Number of Event Indicators</h4>
-<div class="paragraph">
-<p>The number of event indicators can change during simulation if it depends on one or more <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> and can be retrieved after instantiating the FMU by calling:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfEventIndicatorsTYPE(fmi3Instance instance,
-                                                      size_t* nEventIndicators);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This function returns the number of event indicators.
-The dependency of the number of event indicators on <a href="#structuralParameter"><code>structural parameters</code></a> is implicitly given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file.
-<em>[All event indicator variables are listed as elements <code>&lt;EventIndicator&gt;</code> in <code>&lt;ModelStructure&gt;</code>.</em>
-<em>If the event indicator variable is an array variable and the <code>&lt;Dimension&gt;</code> element maps to a dependent variable, then this dependent variable is a dependency for the number of event indicators.]</em>
-If all <a href="#structuralParameter"><code>structural parameters</code></a> are unchanged then this dependency information can be used to calculate the initial number of states just using information given in the XML file without the need to call this C-API function.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Argument <code>nEventIndicators</code> points to the <code>size_t</code> variable that will receive the number of event indicators.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_getting_number_of_states">2.2.10. Getting Number of States</h4>
-<div class="paragraph">
-<p>The number of <a href="#state"><code>states</code></a> can change during simulation if it depends on one or more <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> and can be retrieved after instantiating the FMU by calling:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfContinuousStatesTYPE(fmi3Instance instance,
-                                                       size_t* nContinuousStates);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This function returns the number of <a href="#state"><code>continuous states</code></a>.
-The dependency of the number of states on <a href="#structuralParameter"><code>structural parameters</code></a> is implicitly given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file.
-<em>[All state derivative variables are listed as elements <code>&lt;Derivative&gt;</code> in <code>&lt;ModelStructure&gt;</code>.</em>
-<em>Each state derivative variable maps to the corresponding state variable by the <code>derivative</code> attribute.</em>
-<em>If the state variable is an array variable and the <code>&lt;Dimension&gt;</code> element maps to a dependent variable, then this dependent variable is a dependency for the number of states.]</em>
-If all <a href="#structuralParameter"><code>structural parameters</code></a> are unchanged then this dependency information can be used to calculate the initial number of states just using information given in the XML file without the need to call this C-API function.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Argument <code>nContinuousStates</code> points to the <code>size_t</code> variable that will receive the number of <a href="#state"><code>states</code></a>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_getting_number_of_variable_dependencies_and_variable_dependencies">2.2.11. Getting Number of Variable Dependencies and Variable Dependencies</h4>
+<h4 id="_getting_number_of_variable_dependencies_and_variable_dependencies">2.2.9. Getting Number of Variable Dependencies and Variable Dependencies</h4>
 <div class="paragraph">
 <p>The sparseness information within arrays is not given in the xml description.
 The sparseness muss be retrieved during run-time using the C-API functions.
@@ -9593,6 +9540,59 @@ Clocks are automatically deactivated by <a href="#fmi3UpdateDiscreteStates"><cod
 <em>The new functions are needed for FMUs with input sample times and to set discrete-time states in model-based control applications or if algebraic loops are present among discrete-time equations of multiple connected FMUs.]</em></p>
 </dd>
 </dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_getting_number_of_event_indicators">3.2.6. Getting Number of Event Indicators</h4>
+<div class="paragraph">
+<p>The number of event indicators can change during simulation if it depends on one or more <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> and can be retrieved after instantiating the FMU by calling:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfEventIndicatorsTYPE(fmi3Instance instance,
+                                                      size_t* nEventIndicators);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This function returns the number of event indicators.
+The dependency of the number of event indicators on <a href="#structuralParameter"><code>structural parameters</code></a> is implicitly given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file.
+<em>[All event indicator variables are listed as elements <code>&lt;EventIndicator&gt;</code> in <code>&lt;ModelStructure&gt;</code>.</em>
+<em>If the event indicator variable is an array variable and the <code>&lt;Dimension&gt;</code> element maps to a dependent variable, then this dependent variable is a dependency for the number of event indicators.]</em>
+If all <a href="#structuralParameter"><code>structural parameters</code></a> are unchanged then this dependency information can be used to calculate the initial number of states just using information given in the XML file without the need to call this C-API function.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Argument <code>nEventIndicators</code> points to the <code>size_t</code> variable that will receive the number of event indicators.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_getting_number_of_states">3.2.7. Getting Number of States</h4>
+<div class="paragraph">
+<p>The number of <a href="#state"><code>states</code></a> can change during simulation if it depends on one or more <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> and can be retrieved after instantiating the FMU by calling:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfContinuousStatesTYPE(fmi3Instance instance,
+                                                       size_t* nContinuousStates);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This function returns the number of <a href="#state"><code>continuous states</code></a>.
+The dependency of the number of states on <a href="#structuralParameter"><code>structural parameters</code></a> is implicitly given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file.
+<em>[All state derivative variables are listed as elements <code>&lt;Derivative&gt;</code> in <code>&lt;ModelStructure&gt;</code>.</em>
+<em>Each state derivative variable maps to the corresponding state variable by the <code>derivative</code> attribute.</em>
+<em>If the state variable is an array variable and the <code>&lt;Dimension&gt;</code> element maps to a dependent variable, then this dependent variable is a dependency for the number of states.]</em>
+If all <a href="#structuralParameter"><code>structural parameters</code></a> are unchanged then this dependency information can be used to calculate the initial number of states just using information given in the XML file without the need to call this C-API function.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Argument <code>nContinuousStates</code> points to the <code>size_t</code> variable that will receive the number of <a href="#state"><code>states</code></a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
