@@ -6486,8 +6486,13 @@ Model Exchange: No restrictions on value changes (see <a href="#smoothness">Sect
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>initial</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="initial" class="paragraph">
-<p>Enumeration that defines how the variable is initialized.
-It is not allowed to provide a value for <a href="#initial"><code>initial</code></a> if <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> or <a href="#independent"><code>independent</code></a>:</p>
+<p>Enumeration that defines how the variable is initialized, i.e. if a <code>fmi3Set{VariableType}</code> is allowed and how the FMU internally treats this value in <strong>Instantiated</strong> and <strong>Initialization Mode</strong>.</p>
+</div>
+<div class="paragraph">
+<p>For the variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, the attribute <a href="#initial"><code>initial</code></a> must not be provided, because its start value is set with the <code>startTime</code> parameter of <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>The attribute <a href="#initial"><code>initial</code></a> for other variables can have the following values and meanings:</p>
 </div>
 <div id="exact" class="paragraph">
 <p><code>= exact</code>: The variable is initialized with the <a href="#start"><code>start</code></a> value (provided under the variable type element).</p>
@@ -6606,7 +6611,7 @@ The default value of this attribute is <code>false</code>.</p>
 <tr>
 <td class="tableblock halign-center valign-top" rowspan="6"><p class="tableblock"><a href="#variability"><code>variability</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#constant"><code>constant</code></a> data</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">exact</span>,&#8201;&#8212;&#8201;</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
@@ -6703,7 +6708,7 @@ The default value of this attribute is <code>false</code>.</p>
 <tr>
 <td class="tableblock halign-center valign-top" rowspan="6"><p class="tableblock"><a href="#variability"><code>variability</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#constant"><code>constant</code></a> data</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(a)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(a)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(a)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(a)</p></td>
@@ -6739,7 +6744,7 @@ The default value of this attribute is <code>false</code>.</p>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(5)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(8)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(13)</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">--(c)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#continuous"><code>continuous</code></a> variables</p></td>
@@ -6780,7 +6785,7 @@ The default value of this attribute is <code>false</code>.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><em>(a)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>The combinations <a href="#constant"><code>constant</code></a> / <a href="#parameter"><code>parameter</code></a>, <a href="#constant"><code>constant</code></a> / <a href="#calculatedParameter"><code>calculatedParameter</code></a> and <a href="#constant"><code>constant</code></a> / <a href="#input"><code>input</code></a> do not make sense, since <a href="#parameter"><code>parameters</code></a> and <a href="#input"><code>inputs</code></a> are set from the environment, whereas a constant has always a value.</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>The combinations <a href="#constant"><code>constant</code></a> / <a href="#structuralParameter"><code>structuralParameter</code></a>, <a href="#constant"><code>constant</code></a> / <a href="#parameter"><code>parameter</code></a>, <a href="#constant"><code>constant</code></a> / <a href="#calculatedParameter"><code>calculatedParameter</code></a> and <a href="#constant"><code>constant</code></a> / <a href="#input"><code>input</code></a> do not make sense, since <a href="#parameter"><code>parameters</code></a> and <a href="#input"><code>inputs</code></a> are set from the environment, whereas <a href="#constant"><code>constant</code></a> variables have an unchangeable value.</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><em>(b)</em></p></td>
