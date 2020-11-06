@@ -4981,8 +4981,11 @@ If a variable is associated with a <code>Unit</code>, the value passed to <code>
 </div>
 <div class="stemblock">
 <div class="content">
-\[v_{base} = \texttt{factor} * v_{unit} + \texttt{offset}\]
+\[v_{base} = \texttt{factor} * v_{unit} + \texttt{if relativeQuantity then 0 else offset}\]
 </div>
+</div>
+<div class="paragraph">
+<p>where <code>factor</code> and <code>offset</code> are attributes of the <code>&lt;BaseUnit&gt;</code>, and  <code>relativeQuantity</code> an attrinbute of the <code>TypeDefinition</code> of a variable.</p>
 </div>
 <div class="paragraph">
 <p><em>[For example, if</em> \({p_{\mathit{bar}}}\) <em>is a pressure value in unit <code>bar</code>, and</em> \({p_{\mathit{Pa}}}\) <em>is the pressure value in <code>&lt;BaseUnit&gt;</code>, then</em></p>
@@ -5125,7 +5128,7 @@ If a variable is associated with a <code>Unit</code>, the value passed to <code>
 <em>If <code>factor</code> and <code>offset</code> are not identical, the tool may either trigger an error or, if supported, perform a conversion; in other words, use the connection equation (in this case the <code>relativeQuantity</code> of the <code>&lt;TypeDefinition&gt;</code>, see below, has to be taken into account in order to determine whether <code>offset</code> shall or shall not be utilized):</em></p>
 </div>
 <div class="paragraph">
-<p><code>factor(v1) * v1 + offset(v1) = factor(v2) * v2 + offset(v2)</code></p>
+<p><code>factor(v1) * v1 + (if relativeQuantity(v1) then 0 else offset(v1)) = factor(v2) * v2 + (if relativeQuantity(v2) then 0 else offset(v2))</code></p>
 </div>
 <div class="paragraph">
 <p><em>As a result, wrong connections can be detected (for example, connecting a force with an angle-based variable would trigger an error) and conversions between, say, US and SI units can be either automatically performed or, if not supported, an error is triggered as well.</em></p>
@@ -5356,7 +5359,7 @@ Implementations can use this information to provide guidance to the user about v
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>relativeQuantity</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If this attribute is <code>true</code>, then the <code>offset</code> of <code>displayUnit</code> must be ignored.
+<td class="tableblock halign-left valign-top"><p class="tableblock">If this attribute is <code>true</code>, then the <code>offset</code> of <code>BaseUnit</code> and <code>displayUnit</code> must be ignored.
 <em>[For example, 10 degree Celsius = 10 Kelvin if <code>relativeQuantity = true</code> and not 283.15 Kelvin.]</em></p></td>
 </tr>
 <tr>
