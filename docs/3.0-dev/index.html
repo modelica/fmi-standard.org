@@ -5200,7 +5200,9 @@ J \cdot \alpha = f \rightarrow [kg.m^2]*[rad/s^2] = [kg.m/s^2] &amp; \quad \text
 <div class="paragraph">
 <p>A <code>&lt;DisplayUnit&gt;</code> is defined by <code>name</code>, <code>factor</code>, <code>offset</code>, and <code>inverse</code>.
 The attribute <code>name</code> must be unique with respect to all other names of the <code>&lt;DisplayUnit&gt;</code> definitions of the same <code>Unit</code>.
-<em>[Different <code>Unit</code> elements may have the same <code>&lt;DisplayUnit&gt;</code> names].</em></p>
+<em>[Different <code>Unit</code> elements may have the same <code>&lt;DisplayUnit&gt;</code> names].</em><br>
+<code>inverse == true</code> is only allowed if <code>offset == 0</code>.<br>
+<em>[Reason: no use case is known for the combination of inverse and offset, which would also be more complicated.]</em></p>
 </div>
 <div class="paragraph">
 <p>A value \(v_{unit}\) in <code>Unit</code> is converted to a value \(v_{display}\) in <code>DisplayUnit</code> by the equation:</p>
@@ -5210,7 +5212,7 @@ The attribute <code>name</code> must be unique with respect to all other names o
 \[v_{display} =
 \left\{\begin{array}{ll}
 \texttt{factor} *          v_{unit}  + \texttt{offset} &amp;\text{if} \; \texttt{inverse == false} \\
-\texttt{factor} * \frac{1}{v_{unit}} + \texttt{offset} &amp;\text{if} \; \texttt{inverse == true}
+\texttt{factor} * \frac{1}{v_{unit}}  &amp;\text{if} \; \texttt{inverse == true}
 \end{array}\right.\]
 </div>
 </div>
