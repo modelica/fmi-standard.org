@@ -1529,6 +1529,11 @@ However, <code>fmi3Get{VariableType}</code> will return the value computed at th
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>u</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A set of continuous-time variables accessible in <strong>Intermediate Update Mode</strong>.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>attribute=value</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A set of variables which have an XML attribute-value combination as defined.
+<em>[Example:</em> \(\mathbf{v}_{\mathit{initial=exact}}\) <em>are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (see <a href="#definition-of-model-variables">Section 2.4.8</a>).]</em></p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -1566,9 +1571,7 @@ The communication step size is denoted as \(h_i = t_{i+1} - t_i\)<br></p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{v}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of all exposed variables (all variables defined in element <code>&lt;ModelVariables&gt;</code>, see <a href="#definition-of-model-variables">Section 2.4.8</a>).
-A subset of the variables is selected via a subscript.</p>
-<p class="tableblock"><em>[Example:</em> \(\mathbf{v}_{\mathit{initial=exact}}\) <em>are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (see <a href="#definition-of-model-variables">Section 2.4.8</a>).</em>
-<em>These are <a href="#parameter"><code>parameters</code></a> and <a href="#start"><code>start</code></a> values of other variables, such as initial values for <a href="#state"><code>states</code></a>, state derivatives or <a href="#output"><code>outputs</code></a>.]</em></p></td>
+A subset of the variables is selected via a subscript.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{p}\)</p></td>
@@ -3908,6 +3911,27 @@ Getting variable might trigger computations.
 <p>In this state the FMU can do one-time initializations and allocate memory.
 This state is entered after <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> returned successfully.</p>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Mathematical Description</dt>
+</dl>
+</div>
+<table id="table-math-model-common" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 62.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Equations in <strong>Instantiated</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FMI functions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{\mathit{initial=exact}}\) and \(\mathbf{v}_{\mathit{initial=approx}}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
+</tr>
+</tbody>
+</table>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
