@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="generator" content="Asciidoctor 2.0.12">
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 <title>Functional Mock-up Interface Specification</title>
 <style>
@@ -479,6 +479,7 @@ a {
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/github.min.css">
 <script>
 // hide / show the Table of Contents (TOC)
 function toggleTOC() {
@@ -1682,7 +1683,7 @@ be used both by the FMU and by the importer.
 <em>[Example of a definition in this header file:</em></p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef double fmi3Float64;</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef double fmi3Float64;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1700,7 +1701,7 @@ For simplicity, the function type for each function is composed of the function 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance, fmi3Float64);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance, fmi3Float64);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1719,7 +1720,7 @@ The header file version number for which the model was compiled, can be inquired
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">FMI3_Export fmi3SetTimeTYPE fmi3SetTime;</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">FMI3_Export fmi3SetTimeTYPE fmi3SetTime;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1748,7 +1749,7 @@ To support the source code representation of FMUs, macros are provided in <code>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">// FMU is shipped with C source code, or with static link library
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">// FMU is shipped with C source code, or with static link library
 #define FMI3_FUNCTION_PREFIX MyModel_
 #include "fmi3Functions.h"
 &lt; usage of the FMU functions e.g. MyModel_fmi3SetTime &gt;
@@ -1804,7 +1805,7 @@ It is required to use this definition for all binary FMUs.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3Instance;             /* Pointer to FMU instance */</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void*           fmi3Instance;             /* Pointer to FMU instance */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1812,7 +1813,7 @@ It is required to use this definition for all binary FMUs.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3InstanceEnvironment;  /* Pointer to FMU environment */</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void*           fmi3InstanceEnvironment;  /* Pointer to FMU environment */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1821,7 +1822,7 @@ Using this pointer, data can be transferred between the importer and callback fu
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void*           fmi3FMUState;             /* Pointer to internal FMU state */</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void*           fmi3FMUState;             /* Pointer to internal FMU state */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1830,7 +1831,7 @@ This allows to restart a simulation from a saved FMU state (see <a href="#get-se
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef unsigned int    fmi3ValueReference;       /* Handle to the value of a variable */</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef unsigned int    fmi3ValueReference;       /* Handle to the value of a variable */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1852,7 +1853,7 @@ If a function in the following sections is called with a wrong <code>fmi3ValueRe
 <div id="code-base-types" class="listingblock">
 <div class="title">Base types</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef           float fmi3Float32;  /* Single precision floating point (32-bit) */
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef           float fmi3Float32;  /* Single precision floating point (32-bit) */
 typedef          double fmi3Float64;  /* Double precision floating point (64-bit) */
 typedef          int8_t fmi3Int8;     /* 8-bit signed integer */
 typedef         uint8_t fmi3UInt8;    /* 8-bit unsigned integer */
@@ -1903,7 +1904,7 @@ The memory of this string/binary may be deallocated by the next call to any of t
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef enum {
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef enum {
     fmi3OK,
     fmi3Warning,
     fmi3Discard,
@@ -1978,7 +1979,7 @@ It is not allowed to call any other function for any instance of the FMU.</p>
 <h4 id="inquire-version-number">2.2.4. Inquire Version Number of Header Files</h4>
 <div id="fmi3GetVersion" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef const char* fmi3GetVersionTYPE(void);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef const char* fmi3GetVersionTYPE(void);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2070,7 +2071,7 @@ All elements of the array, including structural zeros, are serialized.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetFloat32TYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetFloat32TYPE(fmi3Instance instance,
                                       const fmi3ValueReference valueReferences[],
                                       size_t nValueReferences,
                                       fmi3Float32 values[],
@@ -2183,7 +2184,7 @@ Furthermore, the actual value of every variable defined in the <a href="#modelDe
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetFloat32TYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetFloat32TYPE(fmi3Instance instance,
                                       const fmi3ValueReference valueReferences[],
                                       size_t nValueReferences,
                                       const fmi3Float32 values[],
@@ -2789,7 +2790,7 @@ If this is not possible, an explicit cast of one <a href="#clock"><code>clock</c
 </div>
 <div id="fmi3SetClock" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetClockTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetClockTYPE(fmi3Instance instance,
                                     const fmi3ValueReference valueReferences[],
                                     size_t nValueReferences,
                                     const fmi3Clock values[],
@@ -2824,7 +2825,7 @@ Note that <a href="#clock"><code>clock</code></a> variables, like any other vari
 </div>
 <div id="fmi3GetClock" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetClockTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetClockTYPE(fmi3Instance instance,
                                     const fmi3ValueReference valueReferences[],
                                     size_t nValueReferences,
                                     fmi3Clock values[],
@@ -2865,7 +2866,7 @@ If <code>values[i] == fmi3ClockActive</code> the <a href="#clock"><code>clock</c
 </div>
 <div id="fmi3SetIntervalDecimal" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetIntervalDecimalTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetIntervalDecimalTYPE(fmi3Instance instance,
                                               const fmi3ValueReference valueReferences[],
                                               size_t nValueReferences,
                                               const fmi3Float64 interval[],
@@ -2874,7 +2875,7 @@ If <code>values[i] == fmi3ClockActive</code> the <a href="#clock"><code>clock</c
 </div>
 <div id="fmi3SetIntervalFraction" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetIntervalFractionTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetIntervalFractionTYPE(fmi3Instance instance,
                                                const fmi3ValueReference valueReferences[],
                                                size_t nValueReferences,
                                                const fmi3UInt64 intervalCounter[],
@@ -2884,7 +2885,7 @@ If <code>values[i] == fmi3ClockActive</code> the <a href="#clock"><code>clock</c
 </div>
 <div id="fmi3GetIntervalDecimal" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetIntervalDecimalTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetIntervalDecimalTYPE(fmi3Instance instance,
                                               const fmi3ValueReference valueReferences[],
                                               size_t nValueReferences,
                                               fmi3Float64 interval[],
@@ -2893,7 +2894,7 @@ If <code>values[i] == fmi3ClockActive</code> the <a href="#clock"><code>clock</c
 </div>
 <div id="fmi3GetIntervalFraction" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetIntervalFractionTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetIntervalFractionTYPE(fmi3Instance instance,
                                                const fmi3ValueReference valueReferences[],
                                                size_t nValueReferences,
                                                fmi3UInt64 intervalCounter[],
@@ -3039,7 +3040,7 @@ The functions may only be called if their availability is indicated by the attri
 </div>
 <div id="fmi3GetDirectionalDerivative" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDirectionalDerivativeTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetDirectionalDerivativeTYPE(fmi3Instance instance,
                                                     const fmi3ValueReference unknowns[],
                                                     size_t nUnknowns,
                                                     const fmi3ValueReference knowns[],
@@ -3052,7 +3053,7 @@ The functions may only be called if their availability is indicated by the attri
 </div>
 <div id="fmi3GetAdjointDerivative" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetAdjointDerivativeTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetAdjointDerivativeTYPE(fmi3Instance instance,
                                                 const fmi3ValueReference unknowns[],
                                                 size_t nUnknowns,
                                                 const fmi3ValueReference knowns[],
@@ -3167,7 +3168,7 @@ g_2(x, u_1)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">    //   c[]      column vector
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    //   c[]      column vector
 
     // set time, states and inputs
     CHECK_STATUS(fmi3SetTime(m, time))
@@ -3309,7 +3310,7 @@ h_2(u_1, u_2)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">    for (i = 0; i &lt; nx; i++) {
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    for (i = 0; i &lt; nx; i++) {
         // construct the Jacobian matrix column wise
         CHECK_STATUS(fmi3GetAdjointDerivative(m, &amp;vr_dx[i], 1, vr_x, nx, &amp;dk, 1, &amp;J[i][0], nx))
     }</code></pre>
@@ -3338,7 +3339,7 @@ Note that these functions are only defined if the capability flag <code>provides
 </div>
 <div id="fmi3GetNumberOfVariableDependencies" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfVariableDependenciesTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetNumberOfVariableDependenciesTYPE(fmi3Instance instance,
                                                            fmi3ValueReference valueReference,
                                                            size_t* nDependencies);</code></pre>
 </div>
@@ -3361,7 +3362,7 @@ Note that these functions are only defined if the capability flag <code>provides
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef enum {
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef enum {
     /* fmi3Independent = 0, not needed but reserved for future use */
     fmi3Constant  = 1,
     fmi3Fixed     = 2,
@@ -3479,7 +3480,7 @@ The <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> has to
 </div>
 <div id="fmi3Instantiate" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Instance fmi3InstantiateModelExchangeTYPE(
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Instance fmi3InstantiateModelExchangeTYPE(
     fmi3String                 instanceName,
     fmi3String                 instantiationToken,
     fmi3String                 resourceLocation,
@@ -3628,7 +3629,7 @@ These callback functions are defined below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void  (*fmi3CallbackLogMessage)     (fmi3InstanceEnvironment instanceEnvironment,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void  (*fmi3CallbackLogMessage)     (fmi3InstanceEnvironment instanceEnvironment,
                                              fmi3String instanceName,
                                              fmi3Status status,
                                              fmi3String category,
@@ -3689,7 +3690,7 @@ If the character <code>#</code> shall be included in the message, it has to be p
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status  fmi3SetDebugLoggingTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status  fmi3SetDebugLoggingTYPE(fmi3Instance instance,
                                             fmi3Boolean loggingOn,
                                             size_t nCategories,
                                             const fmi3String categories[]);</code></pre>
@@ -3722,7 +3723,7 @@ Depending on the generating modeling environment, none, some or all allowed valu
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ResetTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3ResetTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3738,7 +3739,7 @@ Before starting a new run <a href="#fmi3EnterInitializationMode"><code>fmi3Enter
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3TerminateTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3TerminateTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3753,7 +3754,7 @@ It is not allowed to call this function after one of the functions returned with
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void fmi3FreeInstanceTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void fmi3FreeInstanceTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3798,7 +3799,7 @@ The FMU state copy can be set as actual FMU state, in order to continue the simu
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetFMUStateTYPE (fmi3Instance instance, fmi3FMUState* FMUState);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetFMUStateTYPE (fmi3Instance instance, fmi3FMUState* FMUState);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3815,7 +3816,7 @@ In particular, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a> had
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetFMUStateTYPE (fmi3Instance instance, fmi3FMUState  FMUState);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetFMUStateTYPE (fmi3Instance instance, fmi3FMUState  FMUState);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3830,7 +3831,7 @@ The <code>FMUState</code> copy still exists.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3FreeFMUStateTYPE(fmi3Instance instance, fmi3FMUState* FMUState);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3FreeFMUStateTYPE(fmi3Instance instance, fmi3FMUState* FMUState);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3849,7 +3850,7 @@ The function returns a null pointer in argument <code>FMUState</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SerializedFMUStateSizeTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SerializedFMUStateSizeTYPE(fmi3Instance instance,
                                                   fmi3FMUState  FMUState,
                                                   size_t* size);</code></pre>
 </div>
@@ -3865,7 +3866,7 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SerializeFMUStateTYPE     (fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SerializeFMUStateTYPE     (fmi3Instance instance,
                                                   fmi3FMUState  FMUState,
                                                   fmi3Byte serializedState[],
                                                   size_t size);</code></pre>
@@ -3881,7 +3882,7 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3DeSerializeFMUStateTYPE   (fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3DeSerializeFMUStateTYPE   (fmi3Instance instance,
                                                   const fmi3Byte serializedState[],
                                                   size_t size,
                                                   fmi3FMUState* FMUState);</code></pre>
@@ -3944,7 +3945,7 @@ This state is entered after <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterConfigurationModeTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterConfigurationModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3957,7 +3958,7 @@ This state is entered after <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterInitializationModeTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterInitializationModeTYPE(fmi3Instance instance,
                                                    fmi3Boolean toleranceDefined,
                                                    fmi3Float64 tolerance,
                                                    fmi3Float64 startTime,
@@ -4032,7 +4033,7 @@ Artificial or real algebraic loops over connected FMUs in <strong>Initialization
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitInitializationModeTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3ExitInitializationModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4077,7 +4078,7 @@ This state is entered from state <strong>Instantiated</strong> by calling <a hre
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ExitConfigurationModeTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3ExitConfigurationModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4191,7 +4192,7 @@ When the output argument <code>discreteStatesNeedUpdate == fmi3True</code>, the 
 </div>
 <div id="fmi3EnterContinuousTimeMode" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterContinuousTimeModeTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterContinuousTimeModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4336,7 +4337,7 @@ If the function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the FMU 
 </div>
 <div id="fmi3CallbackIntermediateUpdate" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void (*fmi3CallbackIntermediateUpdate) (
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3CallbackIntermediateUpdate) (
     fmi3InstanceEnvironment instanceEnvironment,
     fmi3Float64 intermediateUpdateTime,
     fmi3Boolean clocksTicked,
@@ -4476,7 +4477,7 @@ Intermediate variables are variables that are marked with attribute <a href="#in
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">fmi3Status recordVariables(InstanceEnvironment *instanceEnvironment, fmi3Float64 time) {
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">fmi3Status recordVariables(InstanceEnvironment *instanceEnvironment, fmi3Float64 time) {
     fmi3ValueReference outputsVRs[2] = { vr_h, vr_v };
     fmi3Float64 y[2];
     fmi3Status status = fmi3GetFloat64(instanceEnvironment-&gt;instance, outputsVRs, 2, y, 2);
@@ -4687,7 +4688,7 @@ It is required that the encoding scheme is always UTF-8:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5262,7 +5263,7 @@ The attribute <code>name</code> must be unique with respect to all other names o
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;UnitDefinitions&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;UnitDefinitions&gt;
   &lt;Unit name="rad/s"&gt;
     &lt;BaseUnit s="-1" rad="1"/&gt;
     &lt;DisplayUnit name="deg/s" factor="57.29577951308232"/&gt;
@@ -6263,7 +6264,7 @@ Variable aliases of floating point variables may additionally have a <a href="#d
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs"> &lt;Float64 name="engine.torque" valueReference="1" unit="N.m"&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml"> &lt;Float64 name="engine.torque" valueReference="1" unit="N.m"&gt;
    &lt;Alias name="engine.torqueLbfFt" description="Engine torque in pound-foot"
      displayUnit="lbf.ft"/&gt;
  &lt;/Float64&gt;</code></pre>
@@ -6403,7 +6404,7 @@ This <a href="#causality"><code>causality</code></a> requires the variable not t
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">   &lt;UInt64 name="spD"      valueReference= "100"
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">   &lt;UInt64 name="spD"      valueReference= "100"
      description="Dimension" causality="structuralParameter"
      variability="fixed" start="7"/&gt;</code></pre>
 </div>
@@ -7324,7 +7325,7 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelVariables&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;ModelVariables&gt;
    &lt;Float64 name="p"       valueReference= "1"/&gt;
    &lt;Float64 name="u1"      valueReference= "2"/&gt;
    &lt;Float64 name="u2"      valueReference= "3"/&gt;
@@ -7367,7 +7368,7 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelStructure&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;ModelStructure&gt;
   &lt;Output valueReference="2" dependencies="1" dependenciesKind="discrete"/&gt;
   &lt;InitialUnknown valueReference="2"/&gt;
 &lt;/ModelStructure&gt;</code></pre>
@@ -7394,7 +7395,7 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelStructure&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;ModelStructure&gt;
   &lt;Output valueReference="2" dependencies="1" dependenciesKind="dependent"/&gt;
   &lt;InitialUnknown valueReference="2"/&gt;
 &lt;/ModelStructure&gt;</code></pre>
@@ -7418,7 +7419,7 @@ The definition of the model structure is then:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ModelVariables&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;ModelVariables&gt;
    &lt;Float64 name="u" valueReference= "1"/&gt;
    &lt;Float64 name="y" valueReference= "2" causality="output"/&gt;
    &lt;Float64 name="x" valueReference= "3"/&gt;
@@ -8014,7 +8015,7 @@ The described multi-mode support is based on wrapping functionality into the <a 
 <h5 id="_accessing_fmi_functions_in_shared_libraries">2.5.8.1. Accessing FMI Functions in Shared Libraries</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">/* This example demonstrates how to import an FMU implemented as a shared library */
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">/* This example demonstrates how to import an FMU implemented as a shared library */
 
 #ifdef _WIN32
 #include &lt;Windows.h&gt;
@@ -8107,7 +8108,7 @@ int main(int argc, char* argv[]) {
 <h5 id="_accessing_fmi_functions_in_static_libraries_and_source_code">2.5.8.2. Accessing FMI Functions in Static Libraries and Source Code</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">/* This example demonstrates how to import an FMU implemented as a static library or source code*/
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">/* This example demonstrates how to import an FMU implemented as a static library or source code*/
 
 // FMI function prefix (from XML)
 #define FMI3_FUNCTION_PREFIX VanDerPol_
@@ -8209,6 +8210,12 @@ An importer of the FMU has to regard every <code>&lt;SourceFileSet&gt;</code> of
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the <code>&lt;SourceFileSet&gt;</code></p>
+</div></div></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>language</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8414,7 +8421,7 @@ The default is <code>false</code>.</p>
 <div class="listingblock">
 <div class="title">A minimal build configuration</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;fmiBuildDescription fmiVersion="3.0-alpha.5"&gt;
 
   &lt;BuildConfiguration modelIdentifier="PIDContoller"&gt;
@@ -8429,7 +8436,7 @@ The default is <code>false</code>.</p>
 <div class="listingblock">
 <div class="title">Multiple complex build configurations</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;fmiBuildDescription fmiVersion="3.0-alpha.5"&gt;
 
   &lt;BuildConfiguration modelIdentifier="PlantModel" description="Build configuration for desktop platforms"&gt;
@@ -8590,7 +8597,7 @@ If this data is not provided, the worst case must be assumed, that is, all <a hr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">fmi3Instance FMI1, FMI2;
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Instance FMI1, FMI2;
 fmi3ValueReference vr_FMU1_u, vr_FMU1_y, vr_FMU2_u1, vr_FMU2_u2, vr_FMU2_y1, vr_FMU2_y2;
 fmi3Float64 s=0.1, FMU2_y1, FMU1_y, FMU2_y2;
 
@@ -8614,7 +8621,7 @@ fmi3GetFloat64(FMU2, &amp;vr_FMU2_y1, 1, &amp;FMU2_y2,  1);
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">fmi3Instance FMI1, FMI2;
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Instance FMI1, FMI2;
 fmi3ValueReference vr_FMU3_u, vr_FMU3_y, vr_FMU4_u, vr_FMU4_y;
 fmi3Float64 s, FMU3_y, FMU4_y, residual;
 bool converged;
@@ -9026,7 +9033,7 @@ This is unproblematic for time and states, but is more involved for <a href="#pa
 </div>
 <div id="fmi3SetTime" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance instance, fmi3Float64 time);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance instance, fmi3Float64 time);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -9034,7 +9041,7 @@ This is unproblematic for time and states, but is more involved for <a href="#pa
 </div>
 <div id="fmi3SetContinuousStates" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3SetContinuousStatesTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetContinuousStatesTYPE(fmi3Instance instance,
                                                const fmi3Float64 continuousStates[],
                                                size_t nContinuousStates);</code></pre>
 </div>
@@ -9059,7 +9066,7 @@ Note that <a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> is p
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">fmi3Status fmi3Set{VariableType}(..);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3Set{VariableType}(..);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -9080,7 +9087,7 @@ Before one of these functions can be called, the appropriate functions from the 
 </div>
 <div id="fmi3EnterEventMode" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
                                           fmi3Boolean stepEvent,
                                           const fmi3Int32 rootsFound[],
                                           size_t nEventIndicators,
@@ -9121,7 +9128,7 @@ If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is no
 </div>
 <div id="fmi3UpdateDiscreteStates" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
                                              fmi3Boolean *discreteStatesNeedUpdate,
                                              fmi3Boolean *terminateSimulation,
                                              fmi3Boolean *nominalsOfContinuousStatesChanged,
@@ -9195,7 +9202,7 @@ If a (e.g. <a href="#state-event">state event</a>) event happens before <a href=
 </div>
 <div id="fmi3CompletedIntegratorStep" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3CompletedIntegratorStepTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3CompletedIntegratorStepTYPE(fmi3Instance instance,
                                                    fmi3Boolean noSetFMUStatePriorToCurrentPoint,
                                                    fmi3Boolean* enterEventMode,
                                                    fmi3Boolean* terminateSimulation);</code></pre>
@@ -9238,14 +9245,14 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 </div>
 <div id="fmi3GetDerivatives" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetDerivativesTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetDerivativesTYPE(fmi3Instance instance,
                                           fmi3Float64 derivatives[],
                                           size_t nContinuousStates);</code></pre>
 </div>
 </div>
 <div id="fmi3GetEventIndicators" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetEventIndicatorsTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetEventIndicatorsTYPE(fmi3Instance instance,
                                               fmi3Float64 eventIndicators[],
                                               size_t nEventIndicators);</code></pre>
 </div>
@@ -9270,7 +9277,7 @@ Furthermore, \(z_j\) should be scaled in the FMU with its nominal value (so all 
 </div>
 <div id="fmi3GetContinuousStates" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetContinuousStatesTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetContinuousStatesTYPE(fmi3Instance instance,
                                                fmi3Float64 continuousStates[],
                                                size_t nContinuousStates);</code></pre>
 </div>
@@ -9282,7 +9289,7 @@ _[Array variables are serialized as defined in <a href="#serialization-of_variab
 </div>
 <div id="fmi3GetNominalsOfContinuousStates" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNominalsOfContinuousStatesTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetNominalsOfContinuousStatesTYPE(fmi3Instance instance,
                                                          fmi3Float64 nominals[],
                                                          size_t nContinuousStates);</code></pre>
 </div>
@@ -9368,7 +9375,7 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="c" class="language-c hljs">m = M_fmi3InstantiateModelExchange("m", INSTANTIATION_TOKEN, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">m = M_fmi3InstantiateModelExchange("m", INSTANTIATION_TOKEN, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
 // "m" is the instance name
 // "M_" is the MODEL_IDENTIFIER
 
@@ -9544,7 +9551,7 @@ if (m &amp;&amp; status != fmi3Fatal) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">#define CHECK_STATUS(S) status = S; if (status != fmi3OK) goto TERMINATE;</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#define CHECK_STATUS(S) status = S; if (status != fmi3OK) goto TERMINATE;</code></pre>
 </div>
 </div>
 </div>
@@ -9606,7 +9613,7 @@ Clocks are automatically deactivated by <a href="#fmi3UpdateDiscreteStates"><cod
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfEventIndicatorsTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetNumberOfEventIndicatorsTYPE(fmi3Instance instance,
                                                       size_t* nEventIndicators);</code></pre>
 </div>
 </div>
@@ -9632,7 +9639,7 @@ If all <a href="#structuralParameter"><code>structural parameters</code></a> are
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetNumberOfContinuousStatesTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetNumberOfContinuousStatesTYPE(fmi3Instance instance,
                                                        size_t* nContinuousStates);</code></pre>
 </div>
 </div>
@@ -9705,7 +9712,7 @@ If <code>false</code> (the default), the function must be called after every com
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;fmiModelDescription
   fmiVersion="3.0-alpha.5"
   modelName="MyLibrary.SpringMassDamper"
@@ -10253,7 +10260,7 @@ For example, after a successful call to <a href="#fmi3DoStep"><code>fmi3DoStep</
 </div>
 <div id="fmi3GetOutputDerivatives" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3GetOutputDerivativesTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetOutputDerivativesTYPE(fmi3Instance instance,
                                                 const fmi3ValueReference valueReferences[],
                                                 size_t nValueReferences,
                                                 const fmi3Int32 orders[],
@@ -10304,7 +10311,7 @@ The inner level does not exist for scalar variables.</p>
 </div>
 <div id="fmi3DoStep" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3DoStepTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3DoStepTYPE(fmi3Instance instance,
                                   fmi3Float64 currentCommunicationPoint,
                                   fmi3Float64 communicationStepSize,
                                   fmi3Boolean noSetFMUStatePriorToCurrentPoint,
@@ -10413,7 +10420,7 @@ See <a href="#IntermediateUpdateMode">Section 2.3.3</a> for details of the funct
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void (*fmi3CallbackIntermediateUpdate) (
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3CallbackIntermediateUpdate) (
     fmi3InstanceEnvironment instanceEnvironment,
     fmi3Float64 intermediateUpdateTime,
     fmi3Boolean clocksTicked,
@@ -10515,7 +10522,7 @@ If the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
                                           fmi3Boolean stepEvent,
                                           const fmi3Int32 rootsFound[],
                                           size_t nEventIndicators,
@@ -10540,7 +10547,7 @@ The co-simulation algorithm can start a resynchronization of FMUs at an event ti
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
                                              fmi3Boolean *discreteStatesNeedUpdate,
                                              fmi3Boolean *terminateSimulation,
                                              fmi3Boolean *nominalsOfContinuousStatesChanged,
@@ -10589,7 +10596,7 @@ If the FMU provides the Co-Simulation interface and is instantiated with it, the
 </div>
 <div id="fmi3EnterStepMode" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3EnterStepModeTYPE(fmi3Instance instance);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterStepModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="sect4">
@@ -10783,7 +10790,7 @@ The code demonstrates the simplest co-simulation algorithm as shown in <a href="
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">////////////////////////////
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">////////////////////////////
 // Initialization sub-phase
 
 // instantiate both FMUs
@@ -10895,7 +10902,7 @@ We consider &#8230;&#8203;</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">//include::examples/c-code/co_simulation_clocked.c[tags=CoSimulation]</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">//include::examples/c-code/co_simulation_clocked.c[tags=CoSimulation]</code></pre>
 </div>
 </div>
 </div>
@@ -11002,7 +11009,7 @@ The only differences are the replacement of the element <code>&lt;ModelExchange&
 <div id="xml-example-fmimodeldescription-cosimulation" class="listingblock">
 <div class="title">Example fmiModelDescription</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;fmiModelDescription
   fmiVersion="3.0-alpha.5"
   modelName="MyLibrary.SpringMassDamper_Early_Return_example"
@@ -11071,7 +11078,7 @@ The XML file may have the following content:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">//include::examples/co_simulation_clocked_cosimulation.xml[]</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">//include::examples/co_simulation_clocked_cosimulation.xml[]</code></pre>
 </div>
 </div>
 </div>
@@ -11225,7 +11232,7 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef fmi3Status fmi3ActivateModelPartitionTYPE(fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3ActivateModelPartitionTYPE(fmi3Instance instance,
                                                   fmi3ValueReference clockReference,
                                                   size_t clockElementIndex,
                                                   fmi3Float64 activationTime);</code></pre>
@@ -11474,7 +11481,7 @@ The exporting tool has to consider the effect of <a href="#input"><code>input</c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">typedef void       (*fmi3CallbackLockPreemption)   ();
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void       (*fmi3CallbackLockPreemption)   ();
 typedef void       (*fmi3CallbackUnlockPreemption) ();</code></pre>
 </div>
 </div>
@@ -11488,7 +11495,7 @@ typedef void       (*fmi3CallbackUnlockPreemption) ();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">Int16 DataBuffer[3];   // global buffer
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">Int16 DataBuffer[3];   // global buffer
 
 void Task1(void) //low priority
 {
@@ -11553,7 +11560,7 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;fmiModelDescription fmiVersion="3.0" modelName="ThreeInputClocks"&gt;
 	&lt;ScheduledExecution modelIdentifier="ThreeInputClocks" canBeInstantiatedOnlyOncePerProcess="true"/&gt;
 	&lt;LogCategories&gt;
@@ -11565,23 +11572,23 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 		&lt;Float64 name="AIn1" valueReference="0" causality="input"  clockReference="5"	start="0"/&gt;
 		&lt;Float64 name="AIn2" valueReference="1" causality="input"  clockReference="5"	start="0"/&gt;
 		&lt;Float64 name="AOut" valueReference="2" causality="output" clockReference="5"/&gt;
-
+		
 		&lt;!-- Variables related to input clock AperiodicClock  --&gt;
 		&lt;Float64 name="BIn"  valueReference="3" causality="input"  clockReference="6"	start="0"/&gt;
 		&lt;Float64 name="BOut" valueReference="4" causality="output" clockReference="6"/&gt;
-
+		
 		&lt;!-- Clock variables --&gt;
 		&lt;!-- Periodic input clock --&gt;
-		&lt;Clock name="10msClock" valueReference="5" causality="input" clockType="communicationPoint"
+		&lt;Clock name="10msClock" valueReference="5" causality="input" clockType="communicationPoint" 
 		priority="1" periodic="true" strict="true" intervalCounter="10" resolution="1000"/&gt;
 		&lt;!-- Input clock that must be triggered by OutClock --&gt;
-		&lt;Clock name="AperiodicClock" valueReference="6" causality="input" clockType="communicationPoint"
+		&lt;Clock name="AperiodicClock" valueReference="6" causality="input" clockType="communicationPoint" 
 		priority="2" triggeredBy="7" /&gt;
 		&lt;!-- Output clock activated in model partition associated to 10msClock   --&gt;
-		&lt;Clock name="OutClock" valueReference="7" causality="output" clockType="communicationPoint"
+		&lt;Clock name="OutClock" valueReference="7" causality="output" clockType="communicationPoint" 
 		priority="2" clockReference="5" /&gt;
 		&lt;!-- Periodic input clock --&gt;
-		&lt;Clock name="50msClock" valueReference="8" causality="input" clockType="communicationPoint"
+		&lt;Clock name="50msClock" valueReference="8" causality="input" clockType="communicationPoint" 
 		priority="3" periodic="true" strict="true" intervalCounter="50" resolution="1000"/&gt;
 	&lt;/ModelVariables&gt;
 	&lt;ModelStructure&gt;
@@ -11604,7 +11611,7 @@ Aperiodic tasks are scheduled explicitly during the execution.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">Task10ms.Execute()
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">Task10ms.Execute()
 {
    // Set inputs with valueReference 0 and 1 associated to clockIndex 5
    fmi3SetFloat64(s, {0,1}, &amp;AIn);
@@ -11620,7 +11627,7 @@ Aperiodic tasks are scheduled explicitly during the execution.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">void CallbackIntermediateUpdate(..., fmi3Boolean clocksTicked, ...)
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void CallbackIntermediateUpdate(..., fmi3Boolean clocksTicked, ...)
 {
    fmi3ValueReference outputClockReferences = {7};
    fmi3Boolean[] clocksActivationState = {fmi3ClockInactive};
@@ -11645,7 +11652,7 @@ Aperiodic tasks are scheduled explicitly during the execution.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">fmi3Status fmi3ActivateModelPartition(fmi3Instance *instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3ActivateModelPartition(fmi3Instance *instance,
    fmi3ValueReference clockReference, fmi3Float64 activationTime)
 {
    switch (clockReference)
@@ -11669,7 +11676,7 @@ Aperiodic tasks are scheduled explicitly during the execution.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">void activateModelPartition10ms(fmi3Instance *instance, ...)
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void activateModelPartition10ms(fmi3Instance *instance, ...)
 {
    ...
    if (...)
@@ -11689,7 +11696,7 @@ Aperiodic tasks are scheduled explicitly during the execution.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="C" class="language-C hljs">fmi3Status fmi3GetClock(..., fmi3ValueReference outputClockReferences,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetClock(..., fmi3ValueReference outputClockReferences,
    fmi3Clock *clocksActivationState, ...)
 {
    if (outputClockReferences[0] == 7)
@@ -12148,9 +12155,13 @@ Also known as the <em>bi-lateral delay line</em> method.</p></td>
 </div>
 </div>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
-<script>hljs.initHighlighting()</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   messageStyle: "none",
@@ -12167,13 +12178,13 @@ MathJax.Hub.Config({
 })
 MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
   MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
-    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains('stemblock')) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
       data.math.root.display = "block"
     }
     return data
   })
 })
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 </body>
 </html>
