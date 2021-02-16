@@ -8087,7 +8087,11 @@ The FMU must implement all common API functions according to <a href="#general-m
 Especially it is required that all functions that are part of the specified FMI interface type are present, even if they are only needed for optional capabilities that the FMU does not support.
 The behavior of those functions is unspecified, so while calling environments can rely on the functions being present, they cannot rely on any particular behavior for functions only needed for capabilities the FMU does not support.
 The extension of the ZIP file must be <code>.fmu</code> <em>[, for example, <code>HybridVehicle.fmu</code>]</em>.
-The compression method used for the ZIP file must be <code>deflate</code> <em>[(most free tools, such as zlib, offer only the common compression method <code>deflate</code>)]</em>.</p>
+The compression method for all files stored in the ZIP archive must be either 8 (<code>deflate</code>), or 0 (<code>store</code>).
+Only files stored using compression method 8 (<code>deflate</code>) may be stored with general purpose bit 3 set.
+The field <code>version needed to extract</code> of the archive must not be higher than 2.0, and encryption must not be employed.
+The archive may not be a split or spanned ZIP archive.
+ <em>[These restrictions ensure broad compatibility of the archive with common ZIP processing tools and libraries.)]</em></p>
 </div>
 <div class="paragraph">
 <p><em>[Note: especially section 4.4.17 of <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">the ZIP format specification</a> states that backslashes "\" are forbidden as path separator, only forward slashes "/" are allowed.</em><br>
