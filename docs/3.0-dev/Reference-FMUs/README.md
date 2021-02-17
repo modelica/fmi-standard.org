@@ -2,7 +2,7 @@
 
 [![Build Status](https://dev.azure.com/CATIA-Systems/Reference-FMUs/_apis/build/status/modelica.Reference-FMUs?branchName=master)](https://dev.azure.com/CATIA-Systems/Reference-FMUs/_build/latest?definitionId=5&branchName=master)
 
-A set of hand-coded FMUs for development, testing and debugging of the [Functional Mock-up Interface](https://fmi-standard.org/).
+A set of hand-coded FMUs for development, testing and debugging of the [Functional Mock-Up Interface](https://fmi-standard.org/).
 
 - [BouncingBall](BouncingBall) - a bouncing ball model with state events
 - [Dahlquist](Dahlquist) - Dahlquist test equation

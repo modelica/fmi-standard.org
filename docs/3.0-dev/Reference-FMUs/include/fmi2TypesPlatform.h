@@ -2,7 +2,7 @@
 #define fmi2TypesPlatform_h
 
 /* Standard header file to define the argument types of the
-   functions of the Functional Mock-up Interface 2.0.1
+   functions of the Functional Mock-Up Interface 2.0.1
    This header file must be utilized both by the model and
    by the simulation engine.
 
