@@ -6,7 +6,7 @@ layout: default
 
 ## Purpose of the Modelica Association Project Functional Mockup Interface
 
-Development and promotion of the Functional Mock-up Interface (FMI) standard. The intention is to simplify the creation, storage, exchange and (re-) use of dynamic system models of different simulation systems for model/software/hardware-in-the-loop simulation, for cyber physical systems, and other applications.
+Development and promotion of the Functional Mock-Up Interface (FMI) standard. The intention is to simplify the creation, storage, exchange and (re-) use of dynamic system models of different simulation systems for model/software/hardware-in-the-loop simulation, for cyber physical systems, and other applications.
 
 The FMI specifications are published under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode) (Creative Common Attribution-ShareAlike 4.0 International) license.
 Source code, such as C-header and XML-schema files, that accompany the specification documents, are provided under the [2-Clause BSD License](https://www.opensource.org/licenses/bsd-license.html).
@@ -15,7 +15,7 @@ FMI is a registered trademark. The rules for trademark usage are [here](https://
 
 ## Modelica Association Project (MAP) FMI
 
-Today, the core development of the FMI standard is organised as [Modelica Association Project](https://modelica.org/projects) _Functional Mock-up Interface_ under the roof of the [Modelica Association](https://www.modelica.org/). (History below)
+Today, the core development of the FMI standard is organised as [Modelica Association Project](https://modelica.org/projects) _Functional Mock-Up Interface_ under the roof of the [Modelica Association](https://www.modelica.org/). (History below)
 
 Current Project Leader and Deputy:
 Andreas Junghanns (Synopsys) and Torsten Blochwitz (ESI ITI) [projectleader@fmi-standard.org](mailto:projectleader@fmi-standard.org)
@@ -63,7 +63,7 @@ ARMINES, AIT, ATB, AVL List, Altran, Daimler, Dassault Syst√®mes, Dassault Syst√
 EAS, SCAI), Geensoft, Halle University, IFP Energies nouvelles, LMS Imagine, INSPIRE, SIMPACK, ITI, LMS International,
 QTronic, Trialog, Triphase, TWT, Verhaert, Volkswagen, Volvo
 
-The core MODELISAR development partners agreed to continue FMI specification work under the roof of the [Modelica Association](https://www.modelica.org/) as newly created [Modelica Association Project](https://modelica.org/projects) _Functional Mock-up Interface_.
+The core MODELISAR development partners agreed to continue FMI specification work under the roof of the [Modelica Association](https://www.modelica.org/) as newly created [Modelica Association Project](https://modelica.org/projects) _Functional Mock-Up Interface_.
 
 ## Acknowledgement
 
