@@ -1303,15 +1303,11 @@ By pressing "t", the table of contents can be displayed on the left side or hidd
 <li>
 <p>The key words <strong>MUST</strong>, <strong>MUST NOT</strong>, <strong>REQUIRED</strong>, <strong>SHALL</strong>, <strong>SHALL NOT</strong>, <strong>SHOULD</strong>, <strong>SHOULD NOT</strong>, <strong>RECOMMENDED</strong>, <strong>NOT RECOMMENDED</strong>, <strong>MAY</strong>, and <strong>OPTIONAL</strong> in this document are to be interpreted as described in <a href="https://tools.ietf.org/html/rfc2119">RFC 2119</a>.</p>
 </li>
-</ul>
-</div>
-<div id="VariableType" class="ulist">
-<ul>
 <li>
-<p><code>{VariableType}</code> is used as a placeholder for all variable type names without the <code>fmi3</code> prefix (e.g. <a href="#get-and-set-variable-values"><code>fmi3Get</code></a><a href="#VariableType"><code>VariableType</code></a> stands for <code>fmi3GetUInt8</code>, <code>fmi3GetBoolean</code>, <code>fmi3GetFloat64</code>, <code>fmi3GetClock</code>, <code>fmi3GetBinary</code>, etc.).</p>
+<p><code>{VariableType}</code> is used as a placeholder for all variable type names without the <code>fmi3</code> prefix (e.g. <code>fmi3Get{VariableType}</code> stands for <code>fmi3GetUInt8</code>, <code>fmi3GetBoolean</code>, <code>fmi3GetFloat64</code>, etc.).</p>
 </li>
 <li>
-<p>State machine states are formatted as <strong>bold</strong> link, e.g. <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
+<p>State machine states are formatted in <strong>bold</strong>, e.g. <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
 </li>
 </ul>
 </div>
@@ -2057,8 +2053,8 @@ All elements of the array, including structural zeros, are serialized.</p>
 <p>Restrictions for setting and getting of variables with certain types, causalities and variabilities are described in the state machine and state descriptions (see <a href="#common-state-machine">Section 2.3</a>, <a href="#state-machine-model-exchange">Section 3.2</a> in case of Model Exchange, <a href="#state-machine-co-simulation">Section 4.2</a> for Co-Simulation and <a href="#state-machine-scheduled-execution">Section 5.2</a> for Scheduled Execution).</p>
 </div>
 <div class="paragraph">
-<p>The value of a variable must be accessed with the respective <a href="#get-and-set-variable-values"><code>fmi3Get/Set{VariableType}</code></a> (see also <a href="#VariableType"><code>{VariableType}</code></a>) for the <a href="#definition-of-model-variables">type defined</a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
-To set or inquire variables of type <a href="#figure-schema-Enumeration"><code>Enumeration</code></a>, <code>fmi3SetInt64</code> and <code>fmi3GetInt64</code> must be used.</p>
+<p>The value of a variable must be accessed with the respective <code>fmi3Get/Set{VariableType}</code> for the <a href="#definition-of-model-variables">type defined</a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
+For variables of type <a href="#figure-schema-Enumeration"><code>Enumeration</code></a>, <code>fmi3SetInt64</code> and <code>fmi3GetInt64</code> must be used.</p>
 </div>
 <div class="paragraph">
 <p>The current values of the variables can be inquired with the following functions:</p>
@@ -2279,7 +2275,7 @@ typedef fmi3Status fmi3SetClockTYPE  (fmi3Instance instance,
 </ul>
 </div>
 <div class="paragraph">
-<p>With two exceptions, all variables that are allowed to be set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> keep their respective values until the next call to <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.
+<p>With two exceptions, all variables that are allowed to be set with <code>fmi3Set{VariableType}</code> keep their respective values until the next call to <code>fmi3Set{VariableType}</code>.
 Exceptions:</p>
 </div>
 <div class="olist arabic">
@@ -2300,12 +2296,12 @@ Exceptions:</p>
 <h5 id="min-max-violations">2.2.6.3. Handling min/max Range Violations</h5>
 <div class="paragraph">
 <p><a href="#min-max">Attributes <code>min</code> and <code>max</code></a> can be defined for variables of float, integer or enumeration types.
-The question is how <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> shall utilize this definition.
+The question is how <code>fmi3Set{VariableType}</code>, <code>fmi3Get{VariableType}</code> shall utilize this definition.
 There are several conflicting requirements:<br>
 Avoiding forbidden regions (for example, if <code>u</code> is an <a href="#input"><code>input</code></a> and "sqrt(u)" is computed in the FMU, <code>min = 0</code> on <code>u</code> shall guarantee that only values of <code>u</code> in the allowed regions are provided).
 Numerical algorithms (solvers or optimizers) do not guarantee constraints.
 If a variable is outside of the bounds, the solver tries to bring it back into the bounds.
-As a consequence, calling <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> during an iteration of such a solver might return values that are not in the defined min/max region.
+As a consequence, calling <code>fmi3Get{VariableType}</code> during an iteration of such a solver might return values that are not in the defined min/max region.
 After the iteration is finalized, it is only guaranteed that a value is within its bounds up to a certain numerical precision.<br>
 During system creation and prototyping, checks on min/max should be performed.
 For maximum performance on production or real-time systems, these checks might not be performed.<br>
@@ -2317,7 +2313,7 @@ For example, dividing by an <a href="#input"><code>input</code></a> (so the <a h
 <p>If the FMU is generated so that min/max shall be checked whenever meaningful (for example, for debug purposes), then the following strategy should be used:</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> is called violating the min/max attribute settings of the corresponding variable, the following actions are performed:</p>
+<p>If <code>fmi3Set{VariableType}</code> is called violating the min/max attribute settings of the corresponding variable, the following actions are performed:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2330,10 +2326,10 @@ For example, dividing by an <a href="#input"><code>input</code></a> (so the <a h
 </ul>
 </div>
 <div class="paragraph">
-<p>If an FMU defines min/max values for integer types and <code>&lt;Enumeration&gt;</code> variables (<a href="#local"><code>local</code></a> and <a href="#output"><code>output</code></a> variables), then the expected behavior of the FMU is that <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> functions return values in the defined range.</p>
+<p>If an FMU defines min/max values for integer types and <code>&lt;Enumeration&gt;</code> variables (<a href="#local"><code>local</code></a> and <a href="#output"><code>output</code></a> variables), then the expected behavior of the FMU is that <code>fmi3Get{VariableType}</code> functions return values in the defined range.</p>
 </div>
 <div class="paragraph">
-<p>If an FMU defines min/max values, then the expected behavior of the FMU is that <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> returns values at the solution (accepted steps of the integrators) in the defined range with a certain uncertainty related to the tolerances of the numerical algorithms.]</p>
+<p>If an FMU defines min/max values, then the expected behavior of the FMU is that <code>fmi3Get{VariableType}</code> returns values at the solution (accepted steps of the integrators) in the defined range with a certain uncertainty related to the tolerances of the numerical algorithms.]</p>
 </div>
 </div>
 <div class="sect4">
@@ -2474,7 +2470,7 @@ With this information, the environment has to allocate an <code>fmi3Byte</code> 
 <h4 id="selectiv-computation">2.2.7. Selective Computation of Variables</h4>
 <div class="paragraph">
 <p>Depending on the phase of the solver algorithm, different FMU variables need to be computed.
-FMI allows selective retrieval of FMU variables with specific get functions (e.g. <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>).
+FMI allows selective retrieval of FMU variables with specific get functions (e.g. <code>fmi3Get{VariableType}</code>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>).
 This enables computation on demand with subsequent calls returning the same value until some set operation requires re-computation.</p>
 </div>
 <div class="paragraph">
@@ -2482,10 +2478,10 @@ This enables computation on demand with subsequent calls returning the same valu
 When localizing <a href="#state-event">state events</a>, only the computation of event indicators might be required.</p>
 </div>
 <div class="paragraph">
-<p>Because specific set functions exist (<a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>), caching algorithms can be applied to reuse already computed values.</p>
+<p>Because specific set functions exist (<code>fmi3Set{VariableType}</code>, <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>), caching algorithms can be applied to reuse already computed values.</p>
 </div>
 <div class="paragraph">
-<p>In all tables describing the mathematical model of a state (e.g. <a href="#table-math-model-exchange">ContinuousTimeMode</a>), for notational convenience one function (e.g. \(\mathbf{f}_\mathit{cont}\)) is defined to compute all output arguments from all inputs arguments.
+<p>In all tables describing the mathematical model of a state (e.g. <a href="#table-math-model-exchange">&lt;&lt;ContinuousTimeMode</a>&gt;&gt;), for notational convenience one function (e.g. \(\mathbf{f}_\mathit{cont}\)) is defined to compute all output arguments from all inputs arguments.
 In an FMU, every output argument can be computed by its specific get function.
 Additionally, the output argument need not be a function of all input arguments, but of only a subset from it, as defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> under <code>&lt;ModelStructure&gt;</code>.</p>
 </div>
@@ -2514,7 +2510,7 @@ If this data is not provided, the worst case must be assumed: all <a href="#outp
 </div>
 <div class="paragraph">
 <p><em>Since different variables are computed in every mode and the causality of variable computation can be different in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> as with respect to the other two modes, it might be necessary to solve different kinds of loops in the different modes.</em>
-<em>Artificial algebraic loops (see left diagram of <a href="#figure-connected-fmus">Figure 3</a>) can be solved in the modes <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> calls:</em></p>
+<em>Artificial algebraic loops (see left diagram of <a href="#figure-connected-fmus">Figure 3</a>) can be solved in the modes <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> by an appropriate sequence of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> calls:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2534,7 +2530,7 @@ fmi3GetFloat64(FMU2, &amp;vr_FMU2_y1, 1, &amp;FMU2_y2,  1);
 <div class="paragraph">
 <p><em>In the right diagram, FMU3 and FMU4 are connected in such a way that a real algebraic loop is formed.</em>
 <em>This loop might be solved iteratively, for example with a Newton method.</em>
-<em>In every iteration the iteration variable FMU4_u is provided by the solver, and via the shown sequence of <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> calls, the residual is computed and used by the solver to determine a new value of FMU4_u.</em>
+<em>In every iteration the iteration variable FMU4_u is provided by the solver, and via the shown sequence of <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> calls, the residual is computed and used by the solver to determine a new value of FMU4_u.</em>
 <em>The iteration is terminated when the residual is small enough.</em>
 <em>This method works for <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>.</em></p>
 </div>
@@ -2558,7 +2554,7 @@ while (!converged) { // start iteration
 </div>
 </div>
 <div class="paragraph">
-<p><em>In <a href="#StepMode"><strong>Step Mode</strong></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> is required to restore the FMU state before the next iteration with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> is executed.</em></p>
+<p><em>In <a href="#StepMode"><strong>Step Mode</strong></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> is required to restore the FMU state before the next iteration with <code>fmi3Set{VariableType}</code>, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, and <code>fmi3Get{VariableType}</code> is executed.</em></p>
 </div>
 <div class="paragraph">
 <p><em>In <a href="#EventMode"><strong>Event Mode</strong></a>, the algorithms from above must be embedded in an event iteration:</em></p>
@@ -2951,7 +2947,7 @@ Model partitions are initialized at their first clock activation, not in <a href
 </div>
 <div class="paragraph">
 <p>In some clock semantics (e.g. <a href="#MLS12">[MLS12]</a>), a clocked variable has a value only when its associated clock is active.
-However, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> will return the value computed at the last clock activation time.
+However, <code>fmi3Get{VariableType}</code> will return the value computed at the last clock activation time.
 Before the first clock tick, clocked variables have their initial value.</p>
 </div>
 <div class="paragraph">
@@ -3627,7 +3623,7 @@ h_2(u_1, u_2)
 If the actual order is lower (because the order of integration algorithm is low), the retrieved value is 0.</p>
 </div>
 <div class="paragraph">
-<p>Restrictions on calling the function are the same as for the <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> function for <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a>.
+<p>Restrictions on calling the function are the same as for the <code>fmi3Get{VariableType}</code> function for <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a>.
 The returned values correspond to the current time of the FMU.
 For example, after a successful call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, the returned values are related to the end of the communication step.</p>
 </div>
@@ -3861,7 +3857,7 @@ Only in this case, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may return 
 <li>
 <p><a id="requiredIntermediateVariables"></a> <code>requiredIntermediateVariables</code> is an array of the value references of all <a href="#input"><code>input</code></a> variables that the simulation algorithm intends to set and all <a href="#output"><code>output</code></a> variables it intends to get during intermediate updates.
 This set may be empty (<a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables</code></a> == 0) when the simulation algorithm does not intend to use intermediate update.
-Only the variables in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> may be accessed by the simulation algorithm using <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> during <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks.
+Only the variables in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> may be accessed by the simulation algorithm using <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> during <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> callbacks.
 All variables referenced in this set must be marked with the attribute <a href="#intermediateUpdate"><code>intermediateUpdate = "true"</code></a> in the model description.
 For Co-Simulation, these intermediate variables must be continuous-time variables.</p>
 </li>
@@ -4021,11 +4017,11 @@ If a null pointer is provided for argument <code>instance</code>, the function c
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \((\mathbf{v}_{\mathit{initial=exact}}\) or \(\mathbf{v}_{\mathit{initial=approx}})\) and \(\mathbf{v}_{\mathit{variability \neq constant}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get variable <a href="#start"><code>start</code></a> values as defined in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Get{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
@@ -4045,7 +4041,7 @@ If a null pointer is provided for argument <code>instance</code>, the function c
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>This function can be called for variables with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> and with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>.
 The intention is to set <a href="#start"><code>start</code></a> and guess values for these variables.</p>
@@ -4213,15 +4209,15 @@ Artificial or real algebraic loops over connected FMUs in <a href="#Initializati
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{\mathit{initial=exact}}\)<br>
 <em>[<a href="#parameter"><code>parameters</code></a> \(\mathbf{p}\) and
 continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_{c,\mathit{initial=exact}}\) are included here]</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a>  \(\mathbf{u}_{c+d}(\mathbf{t}_{start})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, ^{\bullet}\mathbf{x}_d, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{shift}}, \mathbf{T}_\mathit{interval}) := \mathbf{f}_{\mathit{init}}(\mathbf{u}_{c+d}, \mathbf{t}_{start}, \mathbf{v}_{\mathit{initial=exact}})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetShift"><code>fmi3GetShift</code></a>, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetShift"><code>fmi3GetShift</code></a>, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
@@ -4257,7 +4253,7 @@ continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_{c,\mathit
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>This function can be called for variables with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> and with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>.</p>
 </dd>
@@ -4396,7 +4392,7 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set \(\mathbf{v}_{\mathit{causality=structuralParameter}}\)<br>
 <em>[<a href="#structuralParameter"><code>structuralParameters</code></a> with</em> \(\mathbf{p}_{\mathit{variability=fixed}}\) <em>or</em> \(\mathbf{p}_{\mathit{variability=tunable}}\) <em>are included here]</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Resize arrays with dimensions that just changed.</p></td>
@@ -4407,7 +4403,7 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a> or <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
 </dd>
@@ -4448,7 +4444,7 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{term}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, \mathbf{t})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Get{VariableType}</code>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -4576,11 +4572,11 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{variability == tunable}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}(\mathbf{t})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
@@ -4616,8 +4612,9 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 </li>
 </ul>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>,<br>
-<a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>,<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetClock"><code>fmi3GetClock</code></a>,<br>
+<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>,<br>
+<code>fmi3Get{VariableType}</code>,<br>
 <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>,<br>
 <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>,<br>
 <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a><br></p></td>
@@ -4666,7 +4663,7 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>This function can be called for variables with <a href="#causality"><code>causality == input</code></a> and for variables with <a href="#causality"><code>causality == parameter</code></a> and <a href="#variability"><code>variability == tunable</code></a>.</p>
 </dd>
@@ -4842,7 +4839,7 @@ This state must not be entered, if the FMU contains no <a href="#structuralParam
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set \(\mathbf{v}_{\mathit{causality=structuralParameter}}\)<br>
 <em>[<a href="#structuralParameter"><code>structuralParameters</code></a> with</em> \(\mathbf{p}_{\mathit{variability=tunable}}\) <em>are included here]</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Resize arrays with dimensions that just changed.</p></td>
@@ -4857,7 +4854,7 @@ This state must not be entered, if the FMU contains no <a href="#structuralParam
 <dd>
 <p><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a> returns back to <a href="#EventMode"><strong>Event Mode</strong></a> (ME), <a href="#StepMode"><strong>Step Mode</strong></a> (CS) or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> (SE).</p>
 </dd>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
 </dd>
@@ -4971,7 +4968,7 @@ When <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a>, it means
 <div id="intermediateVariableSetRequested" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the co-simulation algorithm may provide intermediate values for continuous <a href="#input"><code>input</code></a> variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> by calling <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.
+<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the co-simulation algorithm may provide intermediate values for continuous <a href="#input"><code>input</code></a> variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> by calling <code>fmi3Set{VariableType}</code>.
 The set of variables for which the co-simulation algorithm will provide intermediate values is declared through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
 If a co-simulation algorithm does not provide a new value for any of the variables contained in the set it registered, the last value set remains.</p>
 </li>
@@ -4980,7 +4977,7 @@ If a co-simulation algorithm does not provide a new value for any of the variabl
 <div id="intermediateVariableGetAllowed" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the co-simulation algorithm may collect intermediate output variables by calling <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> for variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.
+<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the co-simulation algorithm may collect intermediate output variables by calling <code>fmi3Get{VariableType}</code> for variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.
 The set of variables for which the co-simulation algorithm can get values is supplied through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </li>
 </ul>
@@ -4988,8 +4985,8 @@ The set of variables for which the co-simulation algorithm can get values is sup
 <div id="intermediateStepFinished" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3False</code></a>, the intermediate outputs of the FMU that the co-simulation algorithm inquires with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> resulting from tentative internal solver states and may still change for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> <em>[e.g., if the solver deems the tentative state to cause a too high approximation error, it may go back in time and try to re-estimate the state using smaller internal time steps]</em>.<br>
-If <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a>, intermediate outputs inquired by the co-simulation algorithm with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> correspond to accepted internal solver step.</p>
+<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3False</code></a>, the intermediate outputs of the FMU that the co-simulation algorithm inquires with <code>fmi3Get{VariableTypes}</code> resulting from tentative internal solver states and may still change for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> <em>[e.g., if the solver deems the tentative state to cause a too high approximation error, it may go back in time and try to re-estimate the state using smaller internal time steps]</em>.<br>
+If <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a>, intermediate outputs inquired by the co-simulation algorithm with <code>fmi3Get{VariableTypes}</code> correspond to accepted internal solver step.</p>
 </li>
 </ul>
 </div>
@@ -5033,7 +5030,7 @@ This argument is ignored in Scheduled Execution.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get intermediate variable values \(\mathbf{v}_u(\mathbf{t}_u)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Get{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get time derivatives of <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a> \(\mathbf{y}_\mathit{c,u}^{(j)}(\mathbf{t_\mathit{u}})\).</p></td>
@@ -5050,22 +5047,23 @@ This argument is ignored in Scheduled Execution.</p>
 </li>
 </ul>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 </tbody>
 </table>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Get{VariableType}</code></dt>
+<dt class="hdlist1">Function <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
 <dd>
-<p>This function can be called for intermediate variables, if <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>.
+<p>These functions can be called for intermediate variables, if <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>.
 Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 <div class="paragraph">
 <p>For details on <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> see <a href="#getting-output-derivatives">Section 2.2.12</a>.</p>
 </div>
 </dd>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>This function can be called for intermediate input variables, if <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>.
 Intermediate input variables are input variables that are marked with attribute <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument of <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
@@ -5074,8 +5072,8 @@ In Co-Simulation, <a href="#discrete"><code>discrete</code></a> <a href="#input"
 </dl>
 </div>
 <div class="paragraph">
-<p>There is a defined order of calling these functions: first all <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> calls must be performed, then <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> may be called.<br>
-<em>[This is analogous to the calling sequence of</em> <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> <em>and</em> <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> <em>calls at communication points.]</em></p>
+<p>There is a defined order of calling these functions: first all <code>fmi3Get{VariableType}</code> calls must be performed, then <code>fmi3Set{VariableType}</code> may be called.<br>
+<em>[This is analogous to the calling sequence of</em> <code>fmi3Get{VariableType}</code> <em>and</em> <code>fmi3Set{VariableType}</code> <em>calls at communication points.]</em></p>
 </div>
 <div class="paragraph">
 <p>Additionally to the functions listed above, Scheduled Execution allows calling the following functions:</p>
@@ -5086,7 +5084,7 @@ In Co-Simulation, <a href="#discrete"><code>discrete</code></a> <a href="#input"
 <dd>
 <p>The scheduling algorithm uses <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to determine which clock is active.<br>
 <em>[For efficiency, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> should only be called if <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a>.]</em><br>
-Depending on the clock activation state, the scheduling algorithm can call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> for variables associated with the corresponding <a href="#clock"><code>clock</code></a>.
+Depending on the clock activation state, the scheduling algorithm can call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> for variables associated with the corresponding <a href="#clock"><code>clock</code></a>.
 If an <a href="#outputClock"><code>output clock</code></a> with an attribute <a href="#triggeredBy"><code>triggeredBy</code></a> is active, the scheduling algorithm schedules the model partition associated with the corresponding <a href="#inputClock"><code>input clock</code></a>.<br>
 For an <a href="#outputClock"><code>output clock</code></a> only the first call of <code>fmi3GetClock</code> for a specific activation of this <a href="#clock"><code>clock</code></a> signals <code>fmi3ClockActive</code>.
 The FMU sets the reported activation state immediately back to <code>fmi3ClockInactive</code> for following <code>fmi3GetClock</code> calls for that <a href="#clock"><code>clock</code></a> until this <a href="#outputClock"><code>output clock</code></a> is activated again.</p>
@@ -5547,7 +5545,7 @@ If no units are defined, element <code>&lt;UnitDefinitions&gt;</code> must not b
 </div>
 <div class="paragraph">
 <p>The <code>name</code> of a <code>Unit</code> must be unique with respect to all other <code>&lt;Unit&gt;</code> elements.
-If a variable is associated with a <code>Unit</code>, the value passed to <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> (resp. retrieved with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>) has this unit.
+If a variable is associated with a <code>Unit</code>, the value passed to <code>fmi3Set{VariableType}</code> (resp. retrieved with <code>fmi3Get{VariableType}</code>) has this unit.
 <em>[The purpose of the name is to uniquely identify a unit and, for example, use it to display the unit in menus or in plots.</em>
 <em>Since there is no standard to represent units in strings, and there are different ways how this is performed in different tools, no specific format for the string representation of the unit is required.]</em></p>
 </div>
@@ -5705,7 +5703,7 @@ If a variable is associated with a <code>Unit</code>, the value passed to <a hre
 <dt class="hdlist1">Unit check when connecting variables of different FMUs</dt>
 <dd>
 <div class="paragraph">
-<p><em>When only one of <a href="#input"><code>input</code></a> <code>v2</code> and <a href="#output"><code>output</code></a> <code>v1</code>, connected with equation <code>v2 = v1</code>, defines a <code>&lt;BaseUnit&gt;</code> element, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> must be used to get the value of <code>v1</code>  to then set it with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> for <code>v2</code>.</em></p>
+<p><em>When only one of <a href="#input"><code>input</code></a> <code>v2</code> and <a href="#output"><code>output</code></a> <code>v1</code>, connected with equation <code>v2 = v1</code>, defines a <code>&lt;BaseUnit&gt;</code> element, <code>fmi3Get{VariableType}</code> must be used to get the value of <code>v1</code>  to then set it with <code>fmi3Set{VariableType}</code> for <code>v2</code>.</em></p>
 </div>
 <div class="paragraph">
 <p><em>When two variables v1 and v2 are connected and for both of them <code>&lt;BaseUnit&gt;</code> elements are defined, then they must have identical exponents of their <code>&lt;BaseUnit&gt;</code>.</em>
@@ -6336,7 +6334,7 @@ These variables are listed in the <code>&lt;fmiModelDescription&gt;&lt;ModelStru
 <p>In <a href="#InitializationMode"><strong>Initialization Mode</strong></a> and before, local variables need to be set if they do have start values or are listed as <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>.</p>
 </li>
 <li>
-<p>In super state <a href="#Initialized"><strong>Initialized</strong></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> must not be called on any of the local variables.
+<p>In super state <a href="#Initialized"><strong>Initialized</strong></a>, <code>fmi3Set{VariableType}</code> must not be called on any of the local variables.
 Only in Model Exchange, continuous <a href="#state"><code>states</code></a> can be set with <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.
 Local variable values must not be used as input to another model or FMU.</p>
 </li>
@@ -6349,9 +6347,9 @@ All variables are a function of this <a href="#independent"><code>independent</c
 Exactly one variable of an FMU must be defined as <a href="#independent"><code>independent</code></a>.
 If the unit for the independent variable is not defined, it is implicitely`unit = s`.
 If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined with a floating point type without a <a href="#start"><code>start</code></a> attribute.
-It is not allowed to call function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> on an <a href="#independent"><code>independent</code></a> variable.
+It is not allowed to call function <code>fmi3Set{VariableType}</code> on an <a href="#independent"><code>independent</code></a> variable.
 Instead, its value is initialized with <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> and <a href="#communicationStepSize"><code>communicationStepSize</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation FMUs.
-<em>[The actual value can be inquired with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>.]</em></p>
+<em>[The actual value can be inquired with <code>fmi3Get{VariableType}</code>.]</em></p>
 </div>
 <div id="structuralParameter" class="paragraph">
 <p><code>= structuralParameter</code>: Parameters that can only be changed in <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> or <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>.
@@ -6392,7 +6390,7 @@ A continuous-time <a href="#state"><code>state</code></a> or an event indicator 
 <td class="tableblock halign-left valign-top"><div class="content"><div id="variability" class="paragraph">
 <p>Enumeration that defines the time dependency of the variable, in other words, it defines the time instants when a variable can change its value.
 <em>[The purpose of this attribute is to define when a result value needs to be inquired and to be stored.</em>
-<em>For example, <a href="#discrete"><code>discrete</code></a> variables change their values only at event instants (ME) or at a communication point (CS and SE) and it is therefore only necessary to inquire them with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and store them at event times.]</em>
+<em>For example, <a href="#discrete"><code>discrete</code></a> variables change their values only at event instants (ME) or at a communication point (CS and SE) and it is therefore only necessary to inquire them with <code>fmi3Get{VariableType}</code> and store them at event times.]</em>
 Allowed values of this enumeration:</p>
 </div>
 <div id="constant" class="paragraph">
@@ -6430,7 +6428,7 @@ Model Exchange: No restrictions on value changes (see <a href="#smoothness">Sect
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>initial</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="initial" class="paragraph">
-<p>Enumeration that defines how the variable is initialized, i.e. if a <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> is allowed and how the FMU internally treats this value in <a href="#Instantiated"><strong>Instantiated</strong></a> and <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
+<p>Enumeration that defines how the variable is initialized, i.e. if a <code>fmi3Set{VariableType}</code> is allowed and how the FMU internally treats this value in <a href="#Instantiated"><strong>Instantiated</strong></a> and <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
 </div>
 <div class="paragraph">
 <p>For the variable with <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, the attribute <a href="#initial"><code>initial</code></a> must not be provided, because its start value is set with the <a href="#startTime"><code>startTime</code></a> parameter of <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</p>
@@ -6468,7 +6466,7 @@ The environment can nevertheless choose different <a href="#start"><code>start</
 <p>If <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> the <a href="#initial"><code>initial</code></a> attribute value is set to <a href="#calculated"><code>calculated</code></a> and no <a href="#start"><code>start</code></a> value is provided.</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> is not called on a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, then the FMU must use the <a href="#start"><code>start</code></a> value as value of this <a href="#input"><code>input</code></a>.</p>
+<p>If <code>fmi3Set{VariableType}</code> is not called on a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, then the FMU must use the <a href="#start"><code>start</code></a> value as value of this <a href="#input"><code>input</code></a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -6476,10 +6474,10 @@ The environment can nevertheless choose different <a href="#start"><code>start</
 <td class="tableblock halign-left valign-top"><div class="content"><div id="canHandleMultipleSetPerTimeInstant" class="paragraph">
 <p>Only for variables with <a href="#variability"><code>variability</code></a> = <a href="#input"><code>input</code></a>.<br>
 The default value is <code>true</code>.
-If <code>canHandleMultipleSetPerTimeInstant = false</code>, then only one <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> call is allowed for this variable per super-dense time instant in <a href="#EventMode"><strong>Event Mode</strong></a>.
+If <code>canHandleMultipleSetPerTimeInstant = false</code>, then only one <code>fmi3Set{VariableType}</code> call is allowed for this variable per super-dense time instant in <a href="#EventMode"><strong>Event Mode</strong></a>.
 <em>[This flag can be set to <code>false</code> for variables where discrete-time states are directly updated when assigned (</em> \(\mathbf{x}_\mathit{d} := f(\mathbf{x}_\mathit{d},\mathbf{u}_\mathit{c+d})\) <em>instead of</em> \(\mathbf{x}_\mathit{d} := f({}^\bullet\mathbf{x}_\mathit{d},\mathbf{u}_\mathit{c+d})\) <em>).</em>
 <em>If an <a href="#output"><code>output</code></a> depends on this <a href="#input"><code>input</code></a> and on discrete-time states, then an algebraic loop could be formed with such an <a href="#input"><code>input</code></a>.</em>
-<em>Such loops cannot be solved iteratively because of the limitation on <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.</em>
+<em>Such loops cannot be solved iteratively because of the limitation on <code>fmi3Set{VariableType}</code>.</em>
 <em>Therefore, such an <a href="#input"><code>input</code></a> should not appear in an algebraic loop.]</em></p>
 </div></div></td>
 </tr>
@@ -6591,7 +6589,7 @@ The default value of this attribute is <code>false</code>.</p>
 </table>
 <div class="paragraph">
 <p><em>[Note: For local and output variables and <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, then the variable is explicitly set in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</em>
-<em>The value of the variable is either the <a href="#start"><code>start</code></a> value stored in a variable element <code>&lt;XXX start=YYY/&gt;</code> or the value set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.]</em></p>
+<em>The value of the variable is either the <a href="#start"><code>start</code></a> value stored in a variable element <code>&lt;XXX start=YYY/&gt;</code> or the value set with <code>fmi3Set{VariableType}</code> during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.]</em></p>
 </div>
 <div class="paragraph">
 <p><a href="#table-allowed-variability-causality-combinations">Table 21</a> shows the combinations of <a href="#variability"><code>variability</code></a>/<a href="#causality"><code>causality</code></a> settings that are allowed.</p>
@@ -6880,12 +6878,12 @@ The default value of this attribute is <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p><em>FMI for Co-Simulation:</em>
-<em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>).</em>
+<em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <code>fmi3Set{VariableType}</code>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>).</em>
 <em>The FMU internally carries out event handling if necessary.]</em></p>
 </div>
 <div class="paragraph">
 <p><em>FMI for Scheduled Execution:</em>
-<em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>).</em></p>
+<em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <code>fmi3Set{VariableType}</code>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>).</em></p>
 </div>
 <div class="paragraph">
 <p>Type specific properties are defined in the required choice element, where exactly one float, integer or enumeration must be present in the XML file:
@@ -6958,9 +6956,9 @@ For all other types, this attribute is optional.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="start" class="paragraph">
 <p>Initial or guess value of variable.
 This value is also stored in the C functions.
-<em>[Therefore, calling</em> <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.</em>
+<em>[Therefore, calling</em> <code>fmi3Set{VariableType}</code> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.</em>
 <em>It is not allowed to change the start values in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file of an FMU, as this would break the consistency with the hard-coded start values in the C-Code.</em>
-<em>This could lead to unpredictable behavior of the FMU in different importing tools, as it is not mandatory to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> to set start values during initialization.</em>
+<em>This could lead to unpredictable behavior of the FMU in different importing tools, as it is not mandatory to call <code>fmi3Set{VariableType}</code> to set start values during initialization.</em>
 <em>Instead it is recommended to use the SSP Standard (<a href="https://ssp-standard.org/" class="bare">https://ssp-standard.org/</a>) to handle modified parameters of FMUs or different parameter sets.]</em></p>
 </div>
 <div class="paragraph">
@@ -6970,7 +6968,7 @@ If only a single value is given for a multi-dimensional array, all values of the
 </div>
 <div class="paragraph">
 <p>The interpretation of <a href="#start"><code>start</code></a> is defined by variable attribute <a href="#initial"><code>initial</code></a>.
-A different <a href="#start"><code>start</code></a> value can be provided with an <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> function before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (but not for variables with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>).</p>
+A different <a href="#start"><code>start</code></a> value can be provided with an <code>fmi3Set{VariableType}</code> function before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (but not for variables with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>).</p>
 </div>
 <div class="paragraph">
 <p><em>[The standard approach is to set the <a href="#start"><code>start</code></a> value before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</em>
@@ -7291,7 +7289,7 @@ Attribute <a href="#dependencies"><code>dependencies</code></a> defines the depe
 Beside the knowns the initial unknowns also depend on the "frozen" variables (= variables which cannot be changed in the current mode) but these "frozen" variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as:</p>
 <p class="tableblock">\({\mathbf{v}_{\mathit{initialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{\mathit{initial=exact}})}\)</p>
-<p class="tableblock">Since, <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
+<p class="tableblock">Since, <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <code>fmi3Get{VariableType}</code> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
 <p class="tableblock"><em>[Example: Assume an FMU is defined in the following way:</em></p>
 <p class="tableblock">\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{init}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_0, \mathbf{p})}\)<br></p>
 <p class="tableblock">\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{sim}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_i, \mathbf{p})}\)<br></p>
@@ -9133,8 +9131,8 @@ This is indicated in <a href="#updateRelations">the mathematical description</a>
 z1 = x1 - x2;
 z2 = x3 - x1;
 
-// relations do not change in Continuous Time Mode
-if Initialization Mode || Event Mode {
+// relations do not change in &lt;&lt;ContinuousTimeMode&gt;&gt;
+if &lt;&lt;InitializationMode&gt;&gt; || &lt;&lt;EventMode&gt;&gt; {
   r1 = z1 &gt; 0;
   r2 = z2 &gt; 0;
 }
@@ -9188,7 +9186,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}(\mathbf{t})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_{c}(\mathbf{t})\)</p></td>
@@ -9199,7 +9197,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 <p>\((\mathbf{y}_{c}, \mathbf{\dot{x}}_c, \mathbf{z}, \mathbf{w}_{c}) := \mathbf{f}_{\mathit{cont}}(\mathbf{x}_{c}, {}^\bullet\mathbf{x}_{d}, \mathbf{u}_{c}, {}^\bullet\mathbf{u}_{d}, \mathbf{p}, {}^\bullet\mathbf{r}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>,
+<p><code>fmi3Get{VariableType}</code>,
 <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>,
 <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a></p>
 </div></div></td>
@@ -9279,7 +9277,7 @@ It refers to the unit of the <a href="#independent"><code>independent</code></a>
 </ul>
 </div>
 </dd>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>.</p>
 </dd>
@@ -9421,7 +9419,7 @@ The importer must have set valid values for <a href="#time"><code>time</code></a
 This is usually performed by an iteration where time is varied and <a href="#state"><code>state</code></a> variables are determined by interpolation.
 Function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after this <a href="#state-event">state event</a> location procedure.
 The intended purpose of the function call is to indicate to the FMU that at this stage all <a href="#input"><code>inputs</code></a> and <a href="#state"><code>state</code></a> variables have valid (accepted) values.
-After <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> is called, it is still allowed to go back in time (calling <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>) and inquire values of variables at previous time instants with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> <em>[for example, to determine values of non-state variables at output points]</em>.
+After <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> is called, it is still allowed to go back in time (calling <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>) and inquire values of variables at previous time instants with <code>fmi3Get{VariableType}</code> <em>[for example, to determine values of non-state variables at output points]</em>.
 However, it is not allowed to go back in time over the previous <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> or the last <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> call.</p>
 </div>
 <div class="paragraph">
@@ -9501,7 +9499,7 @@ The order in the <code>rootsFound</code> array is the same as in <a href="#event
 </ul>
 </div>
 <div class="paragraph">
-<p><em>[An <a href="#input-event">input event</a> can be detected by the FMU by keeping track of the calls of <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>.]</em></p>
+<p><em>[An <a href="#input-event">input event</a> can be detected by the FMU by keeping track of the calls of <code>fmi3Set{VariableType}</code> in <a href="#EventMode"><strong>Event Mode</strong></a>.]</em></p>
 </div>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
@@ -9515,7 +9513,7 @@ The order in the <code>rootsFound</code> array is the same as in <a href="#event
 As soon as an event occurs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is forbidden, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
 </div>
 <div class="paragraph">
-<p>Note that during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>, <a href="#input"><code>input</code></a> variables can be set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and output variables can be retrieved with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> interchangeably according to the model structure defined under element <code>&lt;ModelStructure&gt;</code> in the XML file.
+<p>Note that during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>, <a href="#input"><code>input</code></a> variables can be set with <code>fmi3Set{VariableType}</code> and output variables can be retrieved with <code>fmi3Get{VariableType}</code> interchangeably according to the model structure defined under element <code>&lt;ModelStructure&gt;</code> in the XML file.
 <em>[For example, if one <a href="#output"><code>output</code></a> <code>y1</code> depends on two <a href="#input"><code>inputs</code></a> <code>u1</code>, <code>u2</code>, then these two <a href="#input"><code>inputs</code></a> must be set, before <code>y1</code> can be retrieved.</em>
 <em>If additionally an <a href="#output"><code>output</code></a> <code>y2</code> depends on an <a href="#input"><code>input</code></a> <code>u3</code>, then <code>u3</code> can be set and <code>y2</code> can be retrieved afterwards.</em>
 <em>As a result, artificial or <code>real</code> algebraic loops over connected FMUs in any of these three modes can be handled by using appropriate numerical algorithms.]</em></p>
@@ -10004,15 +10002,15 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{variability == tunable}}\) .</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}(\mathbf{t})\).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get values of variables \(\mathbf{v}(\mathbf{t})\).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Get{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get time derivatives of <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a> \(\mathbf{y}_c^{(j)}(\mathbf{t})\).</p></td>
@@ -10050,7 +10048,7 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Set{VariableType}</code></dt>
 <dd>
 <p>sets the values of variables with:</p>
 <div class="ulist">
@@ -10067,14 +10065,14 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 <p>at time \(\mathbf{t}\).</p>
 </div>
 </dd>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <code>fmi3Get{VariableType}</code></dt>
 <dd>
 <p>returns values for all variables at \(\mathbf{t}\).
-<a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> does not trigger an evaluation of \(\mathbf{f}_\mathit{doStep}\).
-Therefore, <a href="#algebraic-loops">algebraic loops</a> at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls <em>[contrary to <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>]</em>.
+<code>fmi3Get{VariableType}</code> does not trigger an evaluation of \(\mathbf{f}_\mathit{doStep}\).
+Therefore, <a href="#algebraic-loops">algebraic loops</a> at communication points cannot be handled by an appropriate sequence of <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> calls <em>[contrary to <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>]</em>.
 Repeating a communication step requires to reset the FMU state to the previous communication point with <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> and repeating the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with new input values.</p>
 <div class="paragraph">
-<p>Calling <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> is not allowed after <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> without calling <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> in between.
+<p>Calling <code>fmi3Get{VariableType}</code> is not allowed after <code>fmi3Set{VariableType}</code> without calling <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> in between.
 <em>[This allows for more efficient FMU implementations that avoid double buffering and allows in-place operations.]</em></p>
 </div>
 </dd>
@@ -10576,10 +10574,10 @@ The activation of such an <a href="#outputClock"><code>output clock</code></a> i
 <h4 id="preemption-support">5.1.1. Preemption Support</h4>
 <div class="paragraph">
 <p>For real-time applications the simulation time equals the real wall <a href="#clock"><code>clock</code></a> time, thus each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> computation step has to be finished in real-time within its current period time length (computation time is not only defined by the runtime of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> but also by the time for setting and getting variables and related operations).
-Usually a preemptive scheduling of the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls is required to respect this constraint.</p>
+Usually a preemptive scheduling of the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <code>fmi3Get{VariableType}</code>, <code>fmi3Set{VariableType}</code> calls is required to respect this constraint.</p>
 </div>
 <div class="paragraph">
-<p>The FMU&#8217;s code has to be prepared for being able to correctly handle preemptive calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.
+<p>The FMU&#8217;s code has to be prepared for being able to correctly handle preemptive calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <code>fmi3Get{VariableType}</code>, <code>fmi3Set{VariableType}</code>.
 That requires a secured internal and external access to global states and variable values.
 Thus in Scheduled Execution a support for a correct handling of the preemption of model partition computations is required.
 That also requires that the FMU reports the active state of a <a href="#outputClock"><code>output clock</code></a> only with the first call of <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> for a specific activation of this <a href="#clock"><code>clock</code></a> and sets the reported activation state immediately back to <code>false</code> for the following <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> calls for that <a href="#clock"><code>clock</code></a> until this <a href="#outputClock"><code>output clock</code></a> is internally activated again.</p>
@@ -10593,7 +10591,7 @@ So the FMU exporting tool does not need to take care for that (except for prepar
 <p><em>[If only one single model partition (<a href="#inputClock"><code>input clock</code></a>) is available via the interface of an FMU, preemptive calls of the related <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function are possible by default since there are no external cross dependencies within one model partition between communication points.]</em></p>
 </div>
 <div class="paragraph">
-<p>Based on the <a href="#inputClock"><code>input clock</code></a> settings defined in the XML the simulation algorithm calls <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> calls.
+<p>Based on the <a href="#inputClock"><code>input clock</code></a> settings defined in the XML the simulation algorithm calls <code>fmi3Set{VariableType}</code>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <code>fmi3Get{VariableType}</code> calls.
 Set/get calls for each task are only allowed for variables that are associated to the <a href="#inputClock"><code>input clock</code></a> associated to that task or - here preemption issues become important - to variables that are associated to no <a href="#clock"><code>clocks</code></a> (global variables), based on the XML information (see <a href="#table-overview-clocks">Table 5</a>).</p>
 </div>
 <div class="paragraph">
@@ -10604,7 +10602,7 @@ Set/get calls for each task are only allowed for variables that are associated t
 <p>The simulation algorithm has no knowledge about the FMU internal communication between the model partitions of a single FMU and does not handle it.</p>
 </div>
 <div class="paragraph">
-<p>The simulation algorithm schedules the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (as well as related <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>) calls based on given priorities for <a href="#inputClock"><code>input clocks</code></a> defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
+<p>The simulation algorithm schedules the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (as well as related <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code>) calls based on given priorities for <a href="#inputClock"><code>input clocks</code></a> defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>Priority (see <a href="#priority"><code>priority</code></a>):</p>
@@ -10757,15 +10755,15 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{variability == tunable}}\) .</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d}(\mathbf{t})\).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Set{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get values of variables \(\mathbf{v}(\mathbf{t})\).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3Get{VariableType}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -10796,7 +10794,7 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 <dd>
 <p>This function can be called before scheduling a model partition for variables assigned to that model partition via its associated <a href="#clock"><code>clock</code></a> and all variables not associated to a <a href="#clock"><code>clock</code></a> (global variables).</p>
 </dd>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</a></code></dt>
 <dd>
 <p>These functions can be called after the computation of a model partition for variables assigned to that model partition via its associated <a href="#clock"><code>clock</code></a> and all variables not associated to a <a href="#clock"><code>clock</code></a> (global variables).</p>
 <div class="paragraph">
@@ -10805,17 +10803,17 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 <div class="paragraph">
 <p><em>[Because of real-time constraints, the computational effort has to be predictable for all operations in Scheduled Execution.</em>
 <em>Therefore, all computationally expensive operations to compute a model partition have to be contained within the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function.</em>
-<em>The simulation algorithm can assume that <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> operations are not computationally expensive.</em>
-<em>It is recommended, to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.]</em></p>
+<em>The simulation algorithm can assume that <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> operations are not computationally expensive.</em>
+<em>It is recommended, to call <code>fmi3Set{VariableType}</code> and <code>fmi3Get{VariableType}</code> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.]</em></p>
 </div>
 <div class="paragraph">
 <p>The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <a href="#StepMode"><strong>Step Mode</strong></a> in <a href="#fmi-for-co-simulation"><code>Co-Simulation</code></a> apply.</p>
 </div>
 <div class="paragraph">
-<p>It is not allowed to call <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> functions after <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> functions without an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call in between.</p>
+<p>It is not allowed to call <code>fmi3Get{VariableType}</code> functions after <code>fmi3Set{VariableType}</code> functions without an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call in between.</p>
 </div>
 <div class="paragraph">
-<p><em>[The reason is to avoid different interpretations of the caching, since contrary to <a href="#fmi-for-model-exchange"><code>FMI for Model Exchange</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will perform the actual calculation instead of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, and therefore, dummy algebraic loops at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls as for Model Exchange.]</em></p>
+<p><em>[The reason is to avoid different interpretations of the caching, since contrary to <a href="#fmi-for-model-exchange"><code>FMI for Model Exchange</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will perform the actual calculation instead of <code>fmi3Get{VariableType}</code>, and therefore, dummy algebraic loops at communication points cannot be handled by an appropriate sequence of <code>fmi3Get{VariableType}</code> and <code>fmi3Set{VariableType}</code> calls as for Model Exchange.]</em></p>
 </div>
 </dd>
 <dt class="hdlist1"><a id="fmi3ActivateModelPartition"></a> Function <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a></dt>
