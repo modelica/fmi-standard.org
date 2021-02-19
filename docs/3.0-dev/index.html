@@ -3987,39 +3987,6 @@ Before starting a new run <a href="#fmi3EnterInitializationMode"><code>fmi3Enter
 If a null pointer is provided for argument <code>instance</code>, the function call is ignored (does not have an effect).</p>
 </div>
 </dd>
-</dl>
-</div>
-<div id="fmi3GetNominalsOfContinuousStates" class="dlist">
-<dl>
-<dt class="hdlist1">Function <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a></dt>
-<dd>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetNominalsOfContinuousStatesTYPE(fmi3Instance instance,
-                                                         fmi3Float64 nominals[],
-                                                         size_t nContinuousStates);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Return the nominal values of the continuous <a href="#state"><code>states</code></a>.
-This function can only be called in Model Exchange.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Return argument <code>nominals</code> contains the nominal values for each <a href="#state">continuous state</a> with the same convention for the order as defined for <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.
-If the FMU does not have information about the nominal value of a continuous <a href="#state"><code>state</code></a> <code>i</code>, a nominal value <code>nominals[i] == 1.0</code> should be returned.
-It is required that <code>nominals[i] &gt; 0.0</code>.</p>
-</li>
-<li>
-<p>Argument <code>nContinuousStates</code> is the size of the <code>nominals</code> vector.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>This function should always be called after calling function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged == fmi3True</code>, since then the nominal values of the continuous <a href="#state"><code>states</code></a> have changed <em>[for example, because the mapping of the continuous <a href="#state"><code>states</code></a> to variables has changed because of internal <a href="#dynamic-state-selection">dynamic state selection</a>]</em>.</p>
-</div>
-</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a></dt>
 <dt class="hdlist1">Function <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a></dt>
 <dt class="hdlist1">Function <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a></dt>
@@ -4326,6 +4293,39 @@ continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_{c,\mathit
 </ul>
 </div>
 </dd>
+</dl>
+</div>
+<div id="fmi3GetNominalsOfContinuousStates" class="dlist">
+<dl>
+<dt class="hdlist1">Function <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a></dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetNominalsOfContinuousStatesTYPE(fmi3Instance instance,
+                                                         fmi3Float64 nominals[],
+                                                         size_t nContinuousStates);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Return the nominal values of the continuous <a href="#state"><code>states</code></a>.
+This function can only be called in Model Exchange.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Return argument <code>nominals</code> contains the nominal values for each <a href="#state">continuous state</a> with the same convention for the order as defined for <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.
+If the FMU does not have information about the nominal value of a continuous <a href="#state"><code>state</code></a> <code>i</code>, a nominal value <code>nominals[i] == 1.0</code> should be returned.
+It is required that <code>nominals[i] &gt; 0.0</code>.</p>
+</li>
+<li>
+<p>Argument <code>nContinuousStates</code> is the size of the <code>nominals</code> vector.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This function should always be called after calling function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged == fmi3True</code>, since then the nominal values of the continuous <a href="#state"><code>states</code></a> have changed <em>[for example, because the mapping of the continuous <a href="#state"><code>states</code></a> to variables has changed because of internal <a href="#dynamic-state-selection">dynamic state selection</a>]</em>.</p>
+</div>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
 <dd>
 <p>See <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</p>
@@ -4458,6 +4458,7 @@ continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_{c,\mathit
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a></dt>
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a></dt>
 <dt class="hdlist1">Function <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a></dt>
 <dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
 <dt class="hdlist1">Function <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a></dt>
@@ -4498,6 +4499,10 @@ continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_{c,\mathit
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1">Function <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a>.</p>
+</dd>
 </dl>
 </div>
 <div id="fmi3Terminate" class="dlist">
@@ -4509,11 +4514,11 @@ continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_{c,\mathit
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3TerminateTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
-</dd>
-</dl>
-</div>
 <div class="paragraph">
 <p>Changes state to <a href="#Terminated"><strong>Terminated</strong></a>.</p>
+</div>
+</dd>
+</dl>
 </div>
 <div class="sect4">
 <h5 id="EventMode">2.3.2.1. State: Event Mode</h5>
