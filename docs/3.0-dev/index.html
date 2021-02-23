@@ -3267,7 +3267,7 @@ In every state, the general form of the FMU equations are:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>\(\mathbf{v}_{\mathit{unknonwn}}\) is the vector of unknown variables computed in the actual state:</p>
+<p>\(\mathbf{v}_{\mathit{unknonwn}}\) is the vector of unknown variables computed in the current state:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -3287,19 +3287,17 @@ Each state derivative variable listed as elements <a href="#StateDerivative"><co
 </div>
 </li>
 <li>
-<p>\(\mathbf{v}_{\mathit{known}}\) is the vector of known <a href="#input"><code>input</code></a> variables of function <strong>f</strong> that changes its value in the actual state.
+<p>\(\mathbf{v}_{\mathit{known}}\) is the vector of <a href="#input"><code>input</code></a> variables of function <strong>f</strong> which can be changed by the importer in the current state.
 Details about which variables are in \(\mathbf{v}_{\mathit{known}}\) are given in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.4.8</a>.</p>
 </li>
 <li>
-<p>\({\mathbf{v}_{\mathit{rest}}}\) is the set of <a href="#input"><code>input</code></a> variables of function <strong>f</strong> that either changes its value in the actual state, or do not change their values in this state, but change their values in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>]</em>.</p>
+<p>\({\mathbf{v}_{\mathit{rest}}}\) is the set of <a href="#input"><code>input</code></a> variables and discrete-time states of function <strong>f</strong> which cannot be set by the importer in the current state, but in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>]</em>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p><em>[The variable relationships are different in different states.</em>
-<em>For example, during <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>, a continuous-time output y does not depend on discrete-time <a href="#input"><code>inputs</code></a> (because they are held constant between events).</em>
-<em>However, at <a href="#EventMode"><strong>Event Mode</strong></a>, y depends on discrete-time <a href="#input"><code>inputs</code></a>.</em>
-<em>The function may compute the directional derivatives by numerical differentiation taking into account the sparseness of the equation system, or (preferred) by analytic derivatives.]</em></p>
+<em>For example, during <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>, the partial derivate of a continuous-time output <strong>y</strong> with respect to discrete-time <a href="#input"><code>inputs</code></a> is undefined, because discrete-time <a href="#input"><code>inputs</code></a> cannot be set between events.]</em></p>
 </div>
 <div class="paragraph">
 <p>There are two access functions for partial derivatives:</p>
