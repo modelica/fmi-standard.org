@@ -1311,6 +1311,13 @@ By pressing "t", the table of contents can be displayed on the left side or hidd
 <li>
 <p><code>{VariableType}</code> is used as a placeholder for all variable type names without the <code>fmi3</code> prefix (e.g. <a href="#get-and-set-variable-values"><code>fmi3Get</code></a><a href="#VariableType"><code>VariableType</code></a> stands for <code>fmi3GetUInt8</code>, <code>fmi3GetBoolean</code>, <code>fmi3GetFloat64</code>, <code>fmi3GetClock</code>, <code>fmi3GetBinary</code>, etc.).</p>
 </li>
+</ul>
+</div>
+<div id="VariableTypeExclClock" class="ulist">
+<ul>
+<li>
+<p><code>{VariableTypeExclClock}</code> is used just like <a href="#VariableType"><code>{VariableType}</code></a>, except does not include functions on <code>fmi3Clock</code>.</p>
+</li>
 <li>
 <p>State machine states are formatted as <strong>bold</strong> link, e.g. <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
 </li>
@@ -2058,7 +2065,7 @@ All elements of the array, including structural zeros, are serialized.</p>
 <p>Restrictions for setting and getting of variables with certain types, causalities and variabilities are described in the state machine and state descriptions (see <a href="#common-state-machine">Section 2.3</a>, <a href="#state-machine-model-exchange">Section 3.2</a> in case of Model Exchange, <a href="#state-machine-co-simulation">Section 4.2</a> for Co-Simulation and <a href="#state-machine-scheduled-execution">Section 5.2</a> for Scheduled Execution).</p>
 </div>
 <div class="paragraph">
-<p>The value of a variable must be accessed with the respective <a href="#get-and-set-variable-values"><code>fmi3Get/Set{VariableType}</code></a> (see also <a href="#VariableType"><code>{VariableType}</code></a>) for the <a href="#definition-of-model-variables">type defined</a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
+<p>The value of a variable must be accessed with the respective <a href="#get-and-set-variable-values"><code>fmi3Get/Set{VariableType}</code></a> (see also <a href="#VariableType"><code>{VariableType}</code></a> and <a href="#VariableTypeExclClock"><code>{VariableTypeExclClock}</code></a>) for the <a href="#definition-of-model-variables">type defined</a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
 To set or inquire variables of type <a href="#figure-schema-Enumeration"><code>Enumeration</code></a>, <code>fmi3SetInt64</code> and <code>fmi3GetInt64</code> must be used.</p>
 </div>
 <div class="paragraph">
@@ -10853,11 +10860,11 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a></dt>
 <dd>
-<p>This function can be called before scheduling a model partition for variables assigned to that model partition via its associated <a href="#clock"><code>clock</code></a> and all variables not associated to a <a href="#clock"><code>clock</code></a> (global variables).</p>
+<p>These functions can be called before scheduling a model partition for variables assigned to that model partition via its associated <a href="#clock"><code>clock</code></a> and all variables not associated to a <a href="#clock"><code>clock</code></a> (global variables).</p>
 </dd>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
+<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a></dt>
 <dd>
 <p>These functions can be called after the computation of a model partition for variables assigned to that model partition via its associated <a href="#clock"><code>clock</code></a> and all variables not associated to a <a href="#clock"><code>clock</code></a> (global variables).</p>
 <div class="paragraph">
@@ -10866,17 +10873,17 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 <div class="paragraph">
 <p><em>[Because of real-time constraints, the computational effort has to be predictable for all operations in Scheduled Execution.</em>
 <em>Therefore, all computationally expensive operations to compute a model partition have to be contained within the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function.</em>
-<em>The simulation algorithm can assume that <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> operations are not computationally expensive.</em>
-<em>It is recommended, to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.]</em></p>
+<em>The simulation algorithm can assume that <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> operations are not computationally expensive.</em>
+<em>It is recommended, to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.]</em></p>
 </div>
 <div class="paragraph">
 <p>The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <a href="#StepMode"><strong>Step Mode</strong></a> in <a href="#fmi-for-co-simulation"><code>Co-Simulation</code></a> apply.</p>
 </div>
 <div class="paragraph">
-<p>It is not allowed to call <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> functions after <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> functions without an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call in between.</p>
+<p>It is not allowed to call <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> functions after <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> functions without an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call in between.</p>
 </div>
 <div class="paragraph">
-<p><em>[The reason is to avoid different interpretations of the caching, since contrary to <a href="#fmi-for-model-exchange"><code>FMI for Model Exchange</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will perform the actual calculation instead of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, and therefore, dummy algebraic loops at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls as for Model Exchange.]</em></p>
+<p><em>[The reason is to avoid different interpretations of the caching, since contrary to <a href="#fmi-for-model-exchange"><code>FMI for Model Exchange</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will perform the actual calculation instead of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a>, and therefore, dummy algebraic loops at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> calls as for Model Exchange.]</em></p>
 </div>
 </dd>
 <dt class="hdlist1"><a id="fmi3ActivateModelPartition"></a> Function <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a></dt>
