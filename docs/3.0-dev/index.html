@@ -2994,6 +2994,24 @@ This ordering is defined by the <a href="#priority"><code>priority</code></a> at
 </div>
 <div class="sect4">
 <h5 id="_api">2.2.9.5. <a id="fmi3SetInterval"></a> API</h5>
+<div id="fmi3GetClock" class="paragraph">
+<p><a id="fmi3SetClock"></a>Clocks are get and set just like any other variable (see also <a href="#get-and-set-variable-values">Section 2.2.6.2</a>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetClockTYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[],
+                                      size_t nValueReferences,
+                                      fmi3Clock values[],
+                                      size_t nValues);
+
+typedef fmi3Status fmi3SetClockTYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[],
+                                      size_t nValueReferences,
+                                      const fmi3Clock values[],
+                                      size_t nValues);</code></pre>
+</div>
+</div>
 <div class="paragraph">
 <p>For some <a href="#clock"><code>clock</code></a> types, the interval <a id="fmi3SetInterval"></a> is set by the environment for the current time instant by the function <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>.
 The values of the arguments <code>interval</code>, <code>intervalCounter</code>, <code>resolution</code>, <code>shift</code> and <code>shiftCounter</code> refer to the unit of the <a href="#independent"><code>independent</code></a> variable.</p>
@@ -4680,13 +4698,13 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <dd>
 <p>Getting variables might trigger <a href="#selectiv-computation">computations</a>.</p>
 </dd>
-<dt class="hdlist1"><a id="fmi3SetClock"></a>Function <a href="#fmi3SetClock"><code>fmi3SetClock</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3SetClock"><code>fmi3SetClock</code></a></dt>
 <dd>
 <p>For <a href="#inputClock"><code>input clocks</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> is called to set the activation status of <a href="#clock"><code>clocks</code></a> to <code>fmi3ClockActive</code> or <code>fmi3ClockInactive</code>.
 During the solution of algebraic loops, the activation condition of triggered input clocks may change and therefore <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> can be called multiple times per super-dense time instant.
 Only <a href="#time-based-clocks">Time-based clocks</a> must not be active for more than one call of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> per <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
 </dd>
-<dt class="hdlist1"><a id="fmi3GetClock"></a>Function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
 <dd>
 <p>is used to inquire the status of <a href="#clocks">clocks</a>.</p>
 </dd>
