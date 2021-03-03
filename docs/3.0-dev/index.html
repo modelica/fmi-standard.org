@@ -649,21 +649,15 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#common-state-machine">2.3. State Machine and Semantics</a>
 <ul class="sectlevel3">
-<li><a href="#FMUStateSetable">2.3.1. Super State: FMU State Setable</a>
-<ul class="sectlevel4">
-<li><a href="#Instantiated">2.3.1.1. State: Instantiated</a></li>
-<li><a href="#InitializationMode">2.3.1.2. State: Initialization Mode</a></li>
-<li><a href="#ConfigurationMode">2.3.1.3. State: Configuration Mode</a></li>
-<li><a href="#Terminated">2.3.1.4. State: Terminated</a></li>
-</ul>
-</li>
-<li><a href="#Initialized">2.3.2. Super State: Initialized</a>
-<ul class="sectlevel4">
-<li><a href="#EventMode">2.3.2.1. State: Event Mode</a></li>
-<li><a href="#ReconfigurationMode">2.3.2.2. State: Reconfiguration Mode</a></li>
-</ul>
-</li>
-<li><a href="#IntermediateUpdateMode">2.3.3. State: Intermediate Update Mode</a></li>
+<li><a href="#FMUStateSetable">2.3.1. Super State: FMU State Setable</a></li>
+<li><a href="#Instantiated">2.3.2. State: Instantiated</a></li>
+<li><a href="#InitializationMode">2.3.3. State: Initialization Mode</a></li>
+<li><a href="#Initialized">2.3.4. Super State: Initialized</a></li>
+<li><a href="#EventMode">2.3.5. State: Event Mode</a></li>
+<li><a href="#ConfigurationMode">2.3.6. State: Configuration Mode</a></li>
+<li><a href="#ReconfigurationMode">2.3.7. State: Reconfiguration Mode</a></li>
+<li><a href="#IntermediateUpdateMode">2.3.8. State: Intermediate Update Mode</a></li>
+<li><a href="#Terminated">2.3.9. State: Terminated</a></li>
 </ul>
 </li>
 <li><a href="#fmi-description-schema">2.4. FMI Description Schema</a>
@@ -4008,8 +4002,9 @@ If a null pointer is provided for argument <code>instance</code>, the function c
 </dd>
 </dl>
 </div>
-<div class="sect4">
-<h5 id="Instantiated">2.3.1.1. State: Instantiated</h5>
+</div>
+<div class="sect3">
+<h4 id="Instantiated">2.3.2. State: Instantiated</h4>
 <div class="paragraph">
 <p>In the state <a href="#Instantiated"><strong>Instantiated</strong></a> the FMU can do one-time initializations and allocate memory.</p>
 </div>
@@ -4191,8 +4186,8 @@ If <a href="#stopTimeDefined"><code>stopTimeDefined == fmi3False</code></a>, the
 </dl>
 </div>
 </div>
-<div class="sect4">
-<h5 id="InitializationMode">2.3.1.2. State: Initialization Mode</h5>
+<div class="sect3">
+<h4 id="InitializationMode">2.3.3. State: Initialization Mode</h4>
 <div class="paragraph">
 <p>The <a href="#InitializationMode"><strong>Initialization Mode</strong></a> is used by the simulation algorithm to compute consistent initial conditions for the overall system.
 Equations are active to determine the initial FMU state, as well as all <a href="#output"><code>outputs</code></a> (and optionally other variables exposed by the exporting tool).
@@ -4379,110 +4374,8 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 <p>Changes the state to <a href="#EventMode"><strong>Event Mode</strong></a> (ME), <a href="#StepMode"><strong>Step Mode</strong></a> (CS) or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> (SE).</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="ConfigurationMode">2.3.1.3. State: Configuration Mode</h5>
-<div class="paragraph">
-<p>The <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> allows setting <a href="#structuralParameter"><code>structural parameters</code></a> for example to resize array variables.
-<a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> must not be called if the FMU contains no <a href="#structuralParameter"><code>structural parameter</code></a>.</p>
-</div>
-<table id="table-math-configurationMode" class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 66.6666%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top"><a href="#each-state-description">Equations and Actions</a></th>
-<th class="tableblock halign-left valign-top">Functions Influencing Equations</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set \(\mathbf{v}_{\mathit{causality=structuralParameter}}\)<br>
-<em>[<a href="#structuralParameter"><code>structuralParameters</code></a> with</em> \(\mathbf{p}_{\mathit{variability=fixed}}\) <em>or</em> \(\mathbf{p}_{\mathit{variability=tunable}}\) <em>are included here]</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Resize arrays with dimensions that just changed.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a></p></td>
-</tr>
-</tbody>
-</table>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
-<dd>
-<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a> or <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
-</dd>
-</dl>
-</div>
-<div id="fmi3ExitConfigurationMode" class="dlist">
-<dl>
-<dt class="hdlist1">Function <code>fmi3ExitConfigurationMode</code></dt>
-<dd>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3ExitConfigurationModeTYPE(fmi3Instance instance);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Exits the <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> and returns to state <a href="#Instantiated"><strong>Instantiated</strong></a>.</p>
-</div>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect4">
-<h5 id="Terminated">2.3.1.4. State: Terminated</h5>
-<div class="paragraph">
-<p>In this state, the final values of all variables at the final time of a simulation can be retrieved.</p>
-</div>
-<table id="table-math-terminated" class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 66.6666%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top"><a href="#each-state-description">Equations and Actions</a></th>
-<th class="tableblock halign-left valign-top">Functions Influencing Equations</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{term}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, \mathbf{t})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p></td>
-</tr>
-</tbody>
-</table>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Allowed Function Calls</dt>
-<dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
-<dd>
-<p>Getting variables might trigger <a href="#selectiv-computation">computations</a>.
-<em>[If <a href="#Terminated"><strong>Terminated</strong></a> is entered because of an <code>fmi3Error</code> return value, retrieved values should only be used for debugging purposes.]</em></p>
-</dd>
-<dt class="hdlist1">Function <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a></dt>
-<dt class="hdlist1">Function <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a></dt>
-<dt class="hdlist1">Function <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a></dt>
-<dt class="hdlist1">Function <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a></dt>
-<dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
-<dt class="hdlist1">Function <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a></dt>
-<dd>
-<p>No restrictions.</p>
-</dd>
-<dt class="hdlist1">Function <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
-<dd>
-<p>Not allowed in Model Exchange.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
 <div class="sect3">
-<h4 id="Initialized">2.3.2. Super State: Initialized</h4>
+<h4 id="Initialized">2.3.4. Super State: Initialized</h4>
 <div class="paragraph">
 <p>This super state is entered by the FMU when <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
 </div>
@@ -4528,8 +4421,9 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 </dd>
 </dl>
 </div>
-<div class="sect4">
-<h5 id="EventMode">2.3.2.1. State: Event Mode</h5>
+</div>
+<div class="sect3">
+<h4 id="EventMode">2.3.5. State: Event Mode</h4>
 <div class="paragraph">
 <p><a href="#EventMode"><strong>Event Mode</strong></a> is only available in Model Exchange and Co-Simulation.
 In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, discrete-time equations and active model partitions are evaluated.</p>
@@ -4828,11 +4722,65 @@ If another (e.g. <a href="#state-event">state event</a>) event happens before th
 </dl>
 </div>
 </div>
-<div class="sect4">
-<h5 id="ReconfigurationMode">2.3.2.2. State: Reconfiguration Mode</h5>
+<div class="sect3">
+<h4 id="ConfigurationMode">2.3.6. State: Configuration Mode</h4>
 <div class="paragraph">
-<p>The <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a> allows setting <a href="#structuralParameter"><code>structural parameters</code></a> for example to resize array variables.
-This state must not be entered, if the FMU contains no <a href="#structuralParameter"><code>structural parameters</code></a>.</p>
+<p>The <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> allows setting <a href="#structuralParameter"><code>structural parameters</code></a> for example to resize array variables.
+<a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> must not be called if the FMU contains no <a href="#structuralParameter"><code>structural parameter</code></a>.</p>
+</div>
+<table id="table-math-configurationMode" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 66.6666%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><a href="#each-state-description">Equations and Actions</a></th>
+<th class="tableblock halign-left valign-top">Functions Influencing Equations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set \(\mathbf{v}_{\mathit{causality=structuralParameter}}\)<br>
+<em>[<a href="#structuralParameter"><code>structuralParameters</code></a> with</em> \(\mathbf{p}_{\mathit{variability=fixed}}\) <em>or</em> \(\mathbf{p}_{\mathit{variability=tunable}}\) <em>are included here]</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resize arrays with dimensions that just changed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
+<dd>
+<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a> or <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.</p>
+</dd>
+</dl>
+</div>
+<div id="fmi3ExitConfigurationMode" class="dlist">
+<dl>
+<dt class="hdlist1">Function <code>fmi3ExitConfigurationMode</code></dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3ExitConfigurationModeTYPE(fmi3Instance instance);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Exits the <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> and returns to state <a href="#Instantiated"><strong>Instantiated</strong></a>.</p>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ReconfigurationMode">2.3.7. State: Reconfiguration Mode</h4>
+<div class="paragraph">
+<p>The <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a> allows setting <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> for example to resize array variables during the simulation.
+This state must not be entered, if the FMU contains no <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a>.</p>
 </div>
 <table id="table-math-reconfigurationMode" class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -4871,9 +4819,8 @@ This state must not be entered, if the FMU contains no <a href="#structuralParam
 </dl>
 </div>
 </div>
-</div>
 <div class="sect3">
-<h4 id="IntermediateUpdateMode">2.3.3. State: Intermediate Update Mode</h4>
+<h4 id="IntermediateUpdateMode">2.3.8. State: Intermediate Update Mode</h4>
 <div class="paragraph">
 <p>This state is only available in Co-Simulation and Scheduled Execution.</p>
 </div>
@@ -5106,6 +5053,53 @@ The FMU sets the reported activation state immediately back to <code>fmi3ClockIn
 <div class="paragraph">
 <p><em>[In Scheduled Execution it cannot be determined which model partition has called <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, because multiple model partitions can be active at the same time.</em>
 <em>Since all information about which model partition to activate is coded into its corresponding clock, there is no need to know which potentially other model partition activated this clock.]</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Terminated">2.3.9. State: Terminated</h4>
+<div class="paragraph">
+<p>In this state, the final values of all variables at the final time of a simulation can be retrieved.</p>
+</div>
+<table id="table-math-terminated" class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 66.6666%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><a href="#each-state-description">Equations and Actions</a></th>
+<th class="tableblock halign-left valign-top">Functions Influencing Equations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{term}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, \mathbf{t})\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Allowed Function Calls</dt>
+<dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
+<dd>
+<p>Getting variables might trigger <a href="#selectiv-computation">computations</a>.
+<em>[If <a href="#Terminated"><strong>Terminated</strong></a> is entered because of an <code>fmi3Error</code> return value, retrieved values should only be used for debugging purposes.]</em></p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a></dt>
+<dd>
+<p>No restrictions.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
+<dd>
+<p>Not allowed in Model Exchange.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -9243,7 +9237,7 @@ y = (r1 || r2) ? +1 : -1;</pre>
 </div>
 <div id="figure-model-exchange-state-machine" class="imageblock text-center">
 <div class="content">
-<img src="images/state-machine-model-exchange.svg" alt="state machine model exchange" width="60%">
+<img src="images/state-machine-model-exchange.svg" alt="state machine model exchange" width="80%">
 </div>
 <div class="title">Figure 39. Calling sequence of Model Exchange C functions.</div>
 </div>
