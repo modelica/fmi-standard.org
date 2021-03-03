@@ -4568,8 +4568,8 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 </div>
 <table id="table-math-event-mode" class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 62.5%;">
-<col style="width: 37.5%;">
+<col style="width: 71.4285%;">
+<col style="width: 28.5715%;">
 </colgroup>
 <thead>
 <tr>
@@ -4616,12 +4616,11 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <p>Activate output clocks and respective model partitions in \(\mathbf{f}_{\mathit{event}}\)<br></p>
 </li>
 <li>
-<p>\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}, \mathbf{T}_\mathit{interval}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
+<p>\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
 </li>
 </ul>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>,<br>
-<a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>,<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>,<br>
 <a href="#fmi3GetDerivatives"><code>fmi3GetDerivatives</code></a>,<br>
 <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>,<br>
 <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a><br></p></td>
@@ -4631,6 +4630,9 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <ul>
 <li>
 <p>Evaluate \(\mathbf{f}_{\mathit{event}}\), if no <code>fmi3GetXXX</code> function was called in this instant of super-dense time</p>
+</li>
+<li>
+<p>\((\mathbf{T}_\mathit{interval}) := \mathbf{f}_{\mathit{update}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
 </li>
 <li>
 <p>Update previous values of discrete states: \({}^\bullet\mathbf{x}_d:=\mathbf{x}_d\)</p>
@@ -4693,7 +4695,8 @@ Only <a href="#time-based-clocks">Time-based clocks</a> must not be active for m
 <dd>
 <p>For <a href="#clock"><code>input clocks</code></a> it is allowed to call these functions to query the next activation interval.<br>
 For <a href="#changing-aperiodic-clocks">changing aperiodic clocks</a>, these functions must be called in every <a href="#EventMode"><strong>Event Mode</strong></a> where this clock was activated.<br>
-For <a href="#countdown-aperiodic-clocks">countdown aperiodic clocks</a>, these functions must be called in every <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
+For <a href="#countdown-aperiodic-clocks">countdown aperiodic clocks</a>, these functions must be called in every <a href="#EventMode"><strong>Event Mode</strong></a>.<br>
+Clock intervals are computed in <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> (at the latest), therefore, these functions should be called after <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
 <dd>
