@@ -4095,9 +4095,8 @@ This function can only be called in Model Exchange.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The number of <a href="#state">continuous states</a> can change during simulation if they are an array with a <code>&lt;Dimension&gt;</code> depending on one or more <a href="#structuralParameter"><code>structural parameters</code></a>.
-This dependency is defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file by the <code>&lt;Dimension&gt;</code> element pointing to a <a href="#structuralParameter"><code>structuralParameter</code></a>.
-<a href="#fmi3GetNumberOfContinuousStates"><code>fmi3GetNumberOfContinuousStates</code></a> must be called after such <a href="#structuralParameter"><code>structural parameters</code></a> changed.<br>
+<p>The number of <a href="#state">continuous states</a> might change if a variable representing a state has a <code>&lt;Dimension&gt;</code> element that references a <a href="#structuralParameter"><code>structural parameter</code></a> (see <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> and <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>).
+<a href="#fmi3GetNumberOfContinuousStates"><code>fmi3GetNumberOfContinuousStates</code></a> must be called after such <a href="#structuralParameter"><code>structural parameters</code></a> changed.
 As long as no <a href="#structuralParameter"><code>structural parameters</code></a> changed, the number of states is given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>, alleviating the need to call this function.</p>
 </div>
 </dd>
@@ -4125,9 +4124,8 @@ This function can only be called in Model Exchange.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The number of <a href="#state-event">event indicators</a> can change during simulation if they are an array with a <code>&lt;Dimension&gt;</code> depending on one or more <a href="#structuralParameter"><code>structural parameters</code></a>.
-This dependency is defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file by the <code>&lt;Dimension&gt;</code> element pointing to a <a href="#structuralParameter"><code>structuralParameter</code></a>.
-<a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a> must be called after such <a href="#structuralParameter"><code>structural parameters</code></a> changed.<br>
+<p>The number of <a href="#state-event">event indicators</a> might change if a variable related to <a href="#state-event">event indicators</a> has a <code>&lt;Dimension&gt;</code> that references a <a href="#structuralParameter"><code>structural parameter</code></a>  (see <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> and <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>).
+<a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a> must be called after such <a href="#structuralParameter"><code>structural parameters</code></a> changed.
 As long as no <a href="#structuralParameter"><code>structural parameters</code></a> changed, the number of event indicators is given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>, alleviating the need to call this function.</p>
 </div>
 </dd>
@@ -6193,7 +6191,8 @@ The <a href="#variability"><code>variability</code></a> of the dimension size is
 <li>
 <p>If the <a href="#valueReference"><code>valueReference</code></a> attribute of the <code>&lt;Dimension&gt;</code> element is present, it defines the size of this dimension to be the value of the variable with the value reference given by the <a href="#valueReference"><code>valueReference</code></a> attribute.
 The referenced variable must be a variable of type <code>&lt;UInt64&gt;</code>, and must either be a constant (i.e. with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>) or a <a href="#structuralParameter"><code>structural parameter</code></a>(i.e. with <a href="#causality"><code>causality</code></a> = <a href="#structuralParameter"><code>structuralParameter</code></a>).
-The <a href="#variability"><code>variability</code></a> of the dimension size is in this case the <a href="#variability"><code>variability</code></a> of the referenced variable.</p>
+The <a href="#variability"><code>variability</code></a> of the dimension size is in this case the <a href="#variability"><code>variability</code></a> of the referenced variable.
+A <a href="#structuralParameter"><code>structural parameter</code></a> must be a variable of type <code>&lt;UInt64&gt;</code> only if it is referenced in <code>&lt;Dimension&gt;</code>.</p>
 </li>
 </ul>
 </div>
@@ -6208,6 +6207,27 @@ However different dimension sizes can be specified using different mechanisms an
 <p><em>[This allows importing tools to ignore <a href="#structuralParameter"><code>structural parameters</code></a> because that <a href="#start"><code>start</code></a> value reflects the internal default setting of that <a href="#structuralParameter"><code>structural parameter</code></a>.</em>
 <em>The rationale for requiring positive start values for <a href="#structuralParameter"><code>structural parameters</code></a> is that this avoids importers having to deal with vanishing dimensions if they do not want to deal with them (or even with changing sizes at all).</em>
 <em>If we allowed 0 dimension sizes for initial values, tools that do not even care about changing dimension sizes must be prepared to handle vanishing dimensions.]</em></p>
+</div>
+<div class="paragraph">
+<p><em>[ Example:</em>
+<em>`V` is a floating point vector parameter.</em>
+<em>The length of the vector depends on the <a href="#structuralParameter"><code>structural parameter</code></a> <code>len</code>.</em>
+<em>The default length of the vector is 7.</em>
+<em>This length can be changed in <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> because the <a href="#variability"><code>variability</code></a> of the <a href="#structuralParameter"><code>structural parameter</code></a> <code>len</code> is <a href="#fixed"><code>fixed</code></a>.</em>
+<em>The values of <code>V</code> can be changed whenever <a href="#tunable"><code>tunable</code></a> parameters can be changed.</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;UInt64 name="len" valueReference= "100" causality="structuralParameter"
+  variability="fixed" start="7"/&gt;
+&lt;Float32 name="V" valueReference="1" causality="parameter" variability="tunable"
+  start="0.1 -0.2 0.3 -0.4 0.5 -0.6 0.7"&gt;
+  &lt;Dimension valueReference="100"/&gt;
+&lt;/Float32&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>]</em></p>
 </div>
 <div class="paragraph">
 <p>Changes to dimension sizes are constrained by the <code>min</code>/<code>max</code> attributes of the referenced <a href="#structuralParameter"><code>structural parameters</code></a>, which can be any non-negative integer, including zero.
@@ -6345,35 +6365,21 @@ Local variable values must not be used as input to another model or FMU.</p>
 All variables are a function of this <a href="#independent"><code>independent</code></a> variable.
 <a href="#variability"><code>variability</code></a> must be <a href="#continuous"><code>continuous</code></a>.
 Exactly one variable of an FMU must be defined as <a href="#independent"><code>independent</code></a>.
-If the unit for the independent variable is not defined, it is implicitely`unit = s`.
+If the unit for the independent variable is not defined, it is implicitly`unit = s`.
 If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined with a floating point type without a <a href="#start"><code>start</code></a> attribute.
 It is not allowed to call function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> on an <a href="#independent"><code>independent</code></a> variable.
 Instead, its value is initialized with <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> and <a href="#communicationStepSize"><code>communicationStepSize</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation FMUs.
 <em>[The actual value can be inquired with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>.]</em></p>
 </div>
 <div id="structuralParameter" class="paragraph">
-<p><code>= structuralParameter</code>: Parameters that can only be changed in <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> or <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>.
-These parameters may be referenced in <code>&lt;Dimension&gt;</code> elements.
-<a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
-<a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).
-A <code>structuralParameter</code> must not have a <code>&lt;Dimension&gt;</code> element.</p>
-</div>
-<div class="paragraph">
-<p><em>[</em>
-<em>Example:</em></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">   &lt;UInt64 name="spD"      valueReference= "100"
-     description="Dimension" causality="structuralParameter"
-     variability="fixed" start="7"/&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><em>]</em></p>
-</div>
-<div class="paragraph">
-<p><a href="#structuralParameter"><code>structural parameters</code></a> that are referenced in <code>&lt;Dimension&gt;</code> elements may have a <code>min</code> attribute with 0 but the <a href="#start"><code>start</code></a> attribute, which is mandatory for <a href="#structuralParameter"><code>structural parameters</code></a>, must have a value larger than 0 for <a href="#structuralParameter"><code>structural parameters</code></a> used in <code>&lt;Dimension&gt;</code> elements.</p>
+<p><code>= structuralParameter</code>: The variable value can only be changed in <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> or <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>.
+The <a href="#variability"><code>variability</code></a> attribute must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
+The <a href="#initial"><code>initial</code></a> attribute must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).
+The <a href="#start"><code>start</code></a> attribute is mandatory.
+A <a href="#structuralParameter"><code>structural parameter</code></a> must not have a <code>&lt;Dimension&gt;</code> element.
+A <a href="#structuralParameter"><code>structural parameter</code></a> may be referenced in <code>&lt;Dimension&gt;</code> elements.
+If a <a href="#structuralParameter"><code>structural parameters</code></a> is referenced in <code>&lt;Dimension&gt;</code> elements, it must be of type <code>&lt;UInt64&gt;</code> and its <a href="#start"><code>start</code></a> attribute must be larger than 0.
+The <code>min</code> attribute might still be 0.</p>
 </div>
 <div class="paragraph">
 <p>The default of <a href="#causality"><code>causality</code></a> is <a href="#local"><code>local</code></a>.<br>
