@@ -6352,7 +6352,7 @@ The algebraic relationship to the <a href="#input"><code>inputs</code></a> can b
 <div class="ulist">
 <ul>
 <li>
-<p>continuous <a href="#state"><code>states</code></a> and their <a href="#StateDerivative"><code>StateDerivative</code>s</a>, <a href="#DiscreteTimeState"><code>DiscreteTimeState</code>s</a>, <a href="#EventIndicator"><code>EventIndicator</code>s</a> or <a href="#InitialUnknown"><code>InitialUnknown</code>s</a>.
+<p>continuous <a href="#state"><code>states</code></a> and their <a href="#StateDerivative"><code>StateDerivative</code>s</a>, <a href="#ClockedState"><code>ClockedState</code>s</a>, <a href="#EventIndicator"><code>EventIndicator</code>s</a> or <a href="#InitialUnknown"><code>InitialUnknown</code>s</a>.
 These variables are listed in the <code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;</code>.<br></p>
 </li>
 <li>
@@ -6511,6 +6511,18 @@ Variables with <a href="#causality"><code>causality</code></a> <a href="#paramet
 <div class="paragraph">
 <p>This attribute is ignored in Model Exchange.
 The default value of this attribute is <code>false</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>previous</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div id="previous" class="paragraph">
+<p>If present, this variable is a <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> and this attribute is a value reference to the variable with the previous value.
+Only clocked variables (they are listed in at least one of the <a href="#clockedVariables"><code>clockedVariables</code></a> lists) may have the <a href="#previous"><code>previous</code></a> attribute.
+Only variables with <a href="#variability"><code>variability == discrete</code></a> may have a previous value.</p>
+</div>
+<div class="paragraph">
+<p><em>[For example, if <code>previous == 3</code> for variable <code>8</code>, then variable <code>3</code> is the previous value of variable <code>8</code>. See also <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</em>
+<em>Note: This is reverse compared to the <a href="#derivative"><code>derivative</code></a> attribute.]</em></p>
 </div></div></td>
 </tr>
 </tbody>
@@ -7315,10 +7327,12 @@ The functional dependency is defined as (dependencies of variables that are fixe
 \({\dot{\mathbf{x}_c} := \mathbf{f}_{\mathit{der}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{\mathit{tune}})}\)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscreteTimeState</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="DiscreteTimeState"></a>
-XXX // TODO: Add description, see #1287 on github.<br>
-XXX // TODO: This should likely be Locals (ask ZIrina), to allow dependency definitions for modelPartitions (to input clocks) for all local variables</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClockedState</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="ClockedState"></a>
+A <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> is part of the discrete state of a model partition and represented by a <a href="#ClockElement">clocked</a> variable.
+To which clock or clocks it belongs is described in <a href="#ClockElement"><code>&lt;Clock&gt;</code></a>.
+Each <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> must have the attribute <a href="#previous"><code>previous</code></a> to represent the previous value of this <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>.
+All <a href="#ClockedState">clocked states</a> must have <a href="#variability"><code>variability == discrete</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>InitialUnknown</code></p></td>
@@ -7350,13 +7364,21 @@ Ordered list of all event indicators, in other words, a list of value references
 <p class="tableblock">For Co-Simulation, elements <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> are ignored.
 <em>[If an FMU supports both Model Exchange and Co-Simulation, then the <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> elements might be present, since it is needed for Model Exchange.]</em></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Clock</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="ClockElement"></a>
+List of all clocks and their clocked variables.
+All variables referenced by these lists must have <a href="#variability"><code>variability == discrete</code></a>.
+A clocked variable my depend on multiple clocks and may therefore be listed in multiple <a href="#ClockElement"><code>&lt;Clock&gt;</code></a> elements.
+<em>[More rigorous importers requiring a variable to be dependent on a single clock can reject FMUs violating this restriction.]</em></p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Elements <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#StateDerivative"><code>&lt;StateDerivative&gt;</code></a>, <a href="#DiscreteTimeState"><code>&lt;DiscreteTimeState&gt;</code></a> and <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> have the following attributes:</p>
+<p>Elements <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#StateDerivative"><code>&lt;StateDerivative&gt;</code></a>, <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> and <a href="#ClockElement"><code>&lt;Clock&gt;</code></a> have (partially) the following attributes:</p>
 </div>
 <table id="table-output-der-initialUknown-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 25. <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#StateDerivative"><code>&lt;StateDerivative&gt;</code></a>, <a href="#DiscreteTimeState"><code>&lt;DiscreteTimeState&gt;</code></a> and <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> attribute details.</caption>
+<caption class="title">Table 25. <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#StateDerivative"><code>&lt;StateDerivative&gt;</code></a>, <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> and <a href="#ClockElement"><code>&lt;Clock&gt;</code></a> attribute details.</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 83.3334%;">
@@ -7406,6 +7428,11 @@ Otherwise, the corresponding known \({\mathbf{f}_{\mathit{known},i}}\) enters th
 <p class="tableblock"><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \({p \cdot \mathbf{v}_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
 <p class="tableblock"><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \({p \cdot \mathbf{v}_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <a href="#EventMode"><strong>Event Mode</strong></a> due to event handling (ME) or at a communication point (CS and SE)</p>
 <p class="tableblock"><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \({d \cdot \mathbf{v}_{\mathit{known},i}}\) where \({d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <a href="#EventMode"><strong>Event Mode</strong></a> due to an external or internal event or at a communication point (CS and SE).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clockedVariables</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="clockedVariables"></a>
+This element is only available with the <a href="#ClockElement"><code>&lt;Clock&gt;</code></a> element and is a list of value references indicating clocked variables depending on this clock.</p></td>
 </tr>
 </tbody>
 </table>
