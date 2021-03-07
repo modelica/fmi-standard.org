@@ -1772,7 +1772,7 @@ It is required to use this definition for all binary FMUs.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void*           fmi3Instance;             /* Pointer to FMU instance */</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef           void* fmi3Instance;             /* Pointer to the FMU instance */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1780,7 +1780,7 @@ It is required to use this definition for all binary FMUs.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void*           fmi3InstanceEnvironment;  /* Pointer to FMU environment */</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef           void* fmi3InstanceEnvironment;  /* Pointer to the FMU environment */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1789,7 +1789,7 @@ Using this pointer, data can be transferred between the importer and callback fu
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void*           fmi3FMUState;             /* Pointer to internal FMU state */</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef           void* fmi3FMUState;             /* Pointer to the internal FMU state */</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3075,20 +3075,20 @@ The values of the arguments <code>interval</code>, <code>intervalCounter</code>,
 <div id="fmi3GetShiftDecimal" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetShiftDecimalTYPE(fmi3Instance instance,
-                                              const fmi3ValueReference valueReferences[],
-                                              size_t nValueReferences,
-                                              fmi3Float64 shift[],
-                                              size_t nValues);</code></pre>
+                                           const fmi3ValueReference valueReferences[],
+                                           size_t nValueReferences,
+                                           fmi3Float64 shift[],
+                                           size_t nValues);</code></pre>
 </div>
 </div>
 <div id="fmi3GetShiftFraction" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetShiftFractionTYPE(fmi3Instance instance,
-                                               const fmi3ValueReference valueReferences[],
-                                               size_t nValueReferences,
-                                               fmi3UInt64 shiftCounter[],
-                                               fmi3UInt64 resolution[],
-                                               size_t nValues);</code></pre>
+                                            const fmi3ValueReference valueReferences[],
+                                            size_t nValueReferences,
+                                            fmi3UInt64 shiftCounter[],
+                                            fmi3UInt64 resolution[],
+                                            size_t nValues);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -3878,11 +3878,11 @@ If <a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariable
 <p><a id="logMessage"></a>Callback function <code>logMessage</code></p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void  (*fmi3CallbackLogMessage)     (fmi3InstanceEnvironment instanceEnvironment,
-                                             fmi3String instanceName,
-                                             fmi3Status status,
-                                             fmi3String category,
-                                             fmi3String message);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void  (*fmi3CallbackLogMessage) (fmi3InstanceEnvironment instanceEnvironment,
+                                         fmi3String instanceName,
+                                         fmi3Status status,
+                                         fmi3String category,
+                                         fmi3String message);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3939,10 +3939,10 @@ Additionally, a pointer to the environment is provided (<code>instanceEnvironmen
 <dd>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status  fmi3SetDebugLoggingTYPE(fmi3Instance instance,
-                                            fmi3Boolean loggingOn,
-                                            size_t nCategories,
-                                            const fmi3String categories[]);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetDebugLoggingTYPE(fmi3Instance instance,
+                                           fmi3Boolean loggingOn,
+                                           size_t nCategories,
+                                           const fmi3String categories[]);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4623,12 +4623,12 @@ Can only be called in Model Exchange.</p>
 <div id="fmi3UpdateDiscreteStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
-                                             fmi3Boolean *discreteStatesNeedUpdate,
-                                             fmi3Boolean *terminateSimulation,
-                                             fmi3Boolean *nominalsOfContinuousStatesChanged,
-                                             fmi3Boolean *valuesOfContinuousStatesChanged,
-                                             fmi3Boolean *nextEventTimeDefined,
-                                             fmi3Float64 *nextEventTime);</code></pre>
+                                                fmi3Boolean* discreteStatesNeedUpdate,
+                                                fmi3Boolean* terminateSimulation,
+                                                fmi3Boolean* nominalsOfContinuousStatesChanged,
+                                                fmi3Boolean* valuesOfContinuousStatesChanged,
+                                                fmi3Boolean* nextEventTimeDefined,
+                                                fmi3Float64* nextEventTime);</code></pre>
 </div>
 </div>
 </dd>
@@ -4897,14 +4897,14 @@ The co-simulation algorithm signals the support for <a href="#IntermediateUpdate
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3CallbackIntermediateUpdate) (
     fmi3InstanceEnvironment instanceEnvironment,
-    fmi3Float64 intermediateUpdateTime,
-    fmi3Boolean clocksTicked,
-    fmi3Boolean intermediateVariableSetRequested,
-    fmi3Boolean intermediateVariableGetAllowed,
-    fmi3Boolean intermediateStepFinished,
-    fmi3Boolean canReturnEarly,
-    fmi3Boolean *earlyReturnRequested,
-    fmi3Float64 *earlyReturnTime);</code></pre>
+    fmi3Float64  intermediateUpdateTime,
+    fmi3Boolean  clocksTicked,
+    fmi3Boolean  intermediateVariableSetRequested,
+    fmi3Boolean  intermediateVariableGetAllowed,
+    fmi3Boolean  intermediateStepFinished,
+    fmi3Boolean  canReturnEarly,
+    fmi3Boolean* earlyReturnRequested,
+    fmi3Float64* earlyReturnTime);</code></pre>
 </div>
 </div>
 <div id="intermediateUpdateTime" class="ulist">
@@ -9528,7 +9528,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3CompletedIntegratorStepTYPE(fmi3Instance instance,
-                                                   fmi3Boolean noSetFMUStatePriorToCurrentPoint,
+                                                   fmi3Boolean  noSetFMUStatePriorToCurrentPoint,
                                                    fmi3Boolean* enterEventMode,
                                                    fmi3Boolean* terminateSimulation);</code></pre>
 </div>
@@ -10761,8 +10761,8 @@ The exporting tool has to consider the effect of <a href="#triggered"><code>trig
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void       (*fmi3CallbackLockPreemption)   ();
-typedef void       (*fmi3CallbackUnlockPreemption) ();</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3CallbackLockPreemption)   ();
+typedef void (*fmi3CallbackUnlockPreemption) ();</code></pre>
 </div>
 </div>
 <div class="paragraph">
