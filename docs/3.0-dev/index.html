@@ -2781,7 +2781,7 @@ The importer will then activate the clock by calling <a href="#fmi3SetClock"><co
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t}_\mathit{event}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Current event time in <a href="#EventMode"><strong>Event Mode</strong></a>, or the current time in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> in SE.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current event time in <a href="#EventMode"><strong>Event Mode</strong></a>, or the current time in SE.</p></td>
 </tr>
 </tbody>
 </table>
@@ -4915,7 +4915,7 @@ If an event happens or an <a href="#outputClock"><code>output clock</code></a> t
 In Co-Simulation, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is restricted by the arguments to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as follows:<br>
 <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> \(\leq\) <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> \(\leq\) (<a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>).<br>
 The FMU must not call the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <code>intermediateStepFinished == fmi3True</code>.
-In Scheduled Execution the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is equal or greater than <a href="#activationTime"><code>activationTime</code></a> of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.</p>
+In Scheduled Execution the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> should be ignored since in this case the simulation algorithm controls the time and not the FMU.</p>
 </li>
 </ul>
 </div>
