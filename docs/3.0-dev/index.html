@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 24a9818,</span>
+<span id="revnumber">version aa0e15c,</span>
 <span id="revdate">2021-03-23</span>
 </div>
 <div id="toc" class="toc2">
@@ -1776,6 +1776,20 @@ Basically, this means that it should be short.
 These restrictions apply to all interface types and for binary and source-code FMUs.
 <em>[For example, the Windows API only supports full path-names of a file up to 260 characters (see: <a href="http://msdn.microsoft.com/en-us/library/aa365247%28VS.85%29.aspx" class="bare">http://msdn.microsoft.com/en-us/library/aa365247%28VS.85%29.aspx</a>).]</em></p>
 </div>
+<div class="paragraph">
+<p>In the code examples the following structure is used that holds the pointers to the FMU&#8217;s functions and instance.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef struct {
+    
+    fmi3Instance instance;
+    fmi3GetFloat64TYPE* fmi3GetFloat64;
+    // ...
+
+} FMU;</code></pre>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_platform_dependent_definitions">2.2.2. Platform Dependent Definitions</h4>
@@ -2539,17 +2553,17 @@ If this data is not provided, the worst case must be assumed: all <a href="#outp
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Instance FMI1, FMI2;
-fmi3ValueReference vr_FMU1_u, vr_FMU1_y, vr_FMU2_u1, vr_FMU2_u2, vr_FMU2_y1, vr_FMU2_y2;
-fmi3Float64 s=0.1, FMU2_y1, FMU1_y, FMU2_y2;
-...
-fmi3SetFloat64(FMU2, &amp;vr_FMU2_u1, 1, &amp;s,        1);
-fmi3GetFloat64(FMU2, &amp;vr_FMU2_y1, 1, &amp;FMU2_y1,  1);
-fmi3SetFloat64(FMU1, &amp;vr_FMU1_u,  1, &amp;FMU2_y1,  1);
-fmi3GetFloat64(FMU1, &amp;vr_FMU1_y,  1, &amp;FMU1_y,   1);
-fmi3SetFloat64(FMU2, &amp;vr_FMU2_u2, 1, &amp;FMU1_y,   1);
-fmi3GetFloat64(FMU2, &amp;vr_FMU2_y1, 1, &amp;FMU2_y2,  1);
-...</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    FMU *m1, *m2;
+    fmi3ValueReference vr_M1_u, vr_M1_y, vr_M2_u1, vr_M2_u2, vr_M2_y1, vr_M2_y2;
+    fmi3Float64 s = 0.1, M2_y1, M1_y, M2_y2;
+    // ...
+    m2-&gt;fmi3SetFloat64(m2-&gt;instance, &amp;vr_M2_u1, 1, &amp;s, 1);
+    m2-&gt;fmi3GetFloat64(m2-&gt;instance, &amp;vr_M2_y1, 1, &amp;M2_y1, 1);
+    m1-&gt;fmi3SetFloat64(m1-&gt;instance, &amp;vr_M1_u,  1, &amp;M2_y1, 1);
+    m1-&gt;fmi3GetFloat64(m1-&gt;instance, &amp;vr_M1_y,  1, &amp;M1_y, 1);
+    m2-&gt;fmi3SetFloat64(m2-&gt;instance, &amp;vr_M2_u2, 1, &amp;M1_y, 1);
+    m2-&gt;fmi3GetFloat64(m2-&gt;instance, &amp;vr_M2_y1, 1, &amp;M2_y2, 1);
+    //...</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2561,21 +2575,21 @@ fmi3GetFloat64(FMU2, &amp;vr_FMU2_y1, 1, &amp;FMU2_y2,  1);
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Instance FMU3, FMU4;
-fmi3ValueReference vr_FMU3_u, vr_FMU3_y, vr_FMU4_u, vr_FMU4_y;
-fmi3Float64 s, FMU3_y, FMU4_y, residual;
-bool converged = false;
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    FMU *m3, *m4;
+    fmi3ValueReference vr_M3_u, vr_M3_y, vr_M4_u, vr_M4_y;
+    fmi3Float64 s, M3_y, M4_y, residual, tolerance;
+    bool converged = false;
 
-while (!converged) { // start iteration
-  // s determined by the solver
-  ...
-  fmi3SetFloat64(FMU4, &amp;vr_FMU4_u, 1, &amp;s,   1);
-  fmi3GetFloat64(FMU4, &amp;vr_FMU4_y, 1, &amp;FMU4_y,  1);
-  fmi3SetFloat64(FMU3, &amp;vr_FMU3_u, 1, &amp;FMU4_y,  1);
-  fmi3GetFloat64(FMU3, &amp;vr_FMU3_y, 1, &amp;FMU3_y,  1);
-  residual=s-FMU3_y; // provided to the solver
-  converged=residual&lt;tolerance;
-}</code></pre>
+    while (!converged) { // start iteration
+        // s determined by the solver
+        // ...
+        m4-&gt;fmi3SetFloat64(m4-&gt;instance, &amp;vr_M4_u, 1, &amp;s, 1);
+        m4-&gt;fmi3GetFloat64(m4-&gt;instance, &amp;vr_M4_y, 1, &amp;M4_y, 1);
+        m3-&gt;fmi3SetFloat64(m3-&gt;instance, &amp;vr_M3_u, 1, &amp;M4_y, 1);
+        m3-&gt;fmi3GetFloat64(m3-&gt;instance, &amp;vr_M3_y, 1, &amp;M3_y, 1);
+        residual = s - M3_y; // provided to the solver
+        converged = residual &lt; tolerance;
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2586,24 +2600,30 @@ while (!converged) { // start iteration
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Instance FMUx, FMUy;
-bool newDiscreteStatesNeededx;
-bool newDiscreteStatesNeededy;
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    FMU *m1, *m2;  // structures that hold the functions and instances of the FMUs
+    
+    m1-&gt;fmi3EnterEventMode(m1-&gt;instance, v1, v2, v3, v4, v5);
+    m2-&gt;fmi3EnterEventMode(m2-&gt;instance, v1, v2, v3, v4, v5);
+    
+    // start event iteration
+    do {
+        // solve algebraic loop as described in the sample codes above
 
-fmi3EnterEventMode(FMUx,...);
-fmi3EnterEventMode(FMUy,...);
-do { // start event iteration
-    // solve algebraic loop as described in the sample codes above
+        // introduce new instant of super-dense time
+        m1-&gt;fmi3UpdateDiscreteStates(m1-&gt;instance, &amp;m1_DStatesNeedUpdate, p2, p3, p4, p5, p6);
+        m2-&gt;fmi3UpdateDiscreteStates(m2-&gt;instance, &amp;m2_DStatesNeedUpdate, p2, p3, p4, p5, p6);
+        
+    } while (m1_DStatesNeedUpdate || m2_DStatesNeedUpdate);
 
-    // introduce new instant of super-dense time
-    fmi3NewDiscreteStates(FMUx, newDiscreteStatesNeededx, ...);
-    fmi3NewDiscreteStates(FMUy, newDiscreteStatesNeededy, ...);
-} while (newDiscreteStatesNeededx || newDiscreteStatesNeededy);
-
-fmi3EnterStepMode(FMUx); // for CS
-fmi3EnterStepMode(FMUy); // for CS
-// or for ME: fmi3EnterContinuousTimeMode(FMUx);
-// or for ME: fmi3EnterContinuousTimeMode(FMUy);</code></pre>
+    if (isCoSimulation) {
+        // Co-Simulation
+        m1-&gt;fmi3EnterStepMode(m1-&gt;instance);
+        m2-&gt;fmi3EnterStepMode(m2-&gt;instance);
+    } else {
+        // Model Exchange
+        m1-&gt;fmi3EnterContinuousTimeMode(m1-&gt;instance);
+        m2-&gt;fmi3EnterContinuousTimeMode(m2-&gt;instance);
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -10831,31 +10851,33 @@ typedef void (*fmi3CallbackUnlockPreemption) ();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">Int16 DataBuffer[3];   // global buffer
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">Environment *env;
+uint16_t DataBuffer[3]; // global buffer
 
-void Task1(void) //low priority
-{
-   ...
-   // write data to DataBuffer
-   fmi3CallbackLockPreemption();
-   DataBuffer[0] = internal_out_RootSys1_1;
-   DataBuffer[1] = internal_out_RootSys1_2;
-   DataBuffer[2] = internal_out_RootSys1_3;
-   fmi3CallbackUnlockPreemption();
-   ...
+void Task1(void) { // low priority
+
+    // ...
+    // write data to DataBuffer
+    env-&gt;lockPreemption();
+    DataBuffer[0] = internal_out_RootSys1_1;
+    DataBuffer[1] = internal_out_RootSys1_2;
+    DataBuffer[2] = internal_out_RootSys1_3;
+    env-&gt;unlockPreemption();
+    // ...
  }
 
-...
-void Task2(void) //high priority
-{
-   ...
-   // read data from DataBuffer
-   fmi3CallbackLockPreemption();
-   internal_in_RootSys2_1 = DataBuffer[0];
-   internal_in_RootSys2_2 = DataBuffer[1];
-   internal_in_RootSys2_3 = DataBuffer[2];
-   fmi3CallbackUnlockPreemption();
-   ...
+// ...
+
+void Task2(void) { // high priority
+
+    // ...
+    // read data from DataBuffer
+    env-&gt;lockPreemption();
+    internal_in_RootSys2_1 = DataBuffer[0];
+    internal_in_RootSys2_2 = DataBuffer[1];
+    internal_in_RootSys2_3 = DataBuffer[2];
+    env-&gt;unlockPreemption();
+    // ...
 }</code></pre>
 </div>
 </div>
@@ -11091,14 +11113,20 @@ Aperiodic tasks are scheduled explicitly during the execution.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">Task10ms.Execute()
-{
-   // Set inputs with valueReference 0 and 1 associated to clockIndex 5
-   fmi3SetFloat64(s, {0,1}, &amp;AIn);
-   // call for 10msClock tick (clockIndex 5)
-   fmi3ActivateModelPartition(s, 5, 0, Task10ms.ActivationTime);
-   // Get output with valueReference 2 associated to clockIndex 0
-   fmi3GetFloat64(s, {2}, &amp;AOut);
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void Task10ms_Execute() {
+
+    FMU *m; // FMU instance
+    fmi3ValueReference vr_in[2] = {0, 1}, vr_out[1] = {2};
+    fmi3Float64 AIn[2], AOut[1], Task10ms_ActivationTime;
+
+    // Set inputs with valueReference 0 and 1 associated to clockIndex 5
+    m-&gt;fmi3SetFloat64(m-&gt;instance, vr_in, 2, AIn, 2);
+
+    // call for 10msClock tick (clockIndex 5)
+    m-&gt;fmi3ActivateModelPartition(m-&gt;instance, 5, 0, Task10ms_ActivationTime);
+
+    // Get output with valueReference 2 associated to clockIndex 0
+    m-&gt;fmi3GetFloat64(m-&gt;instance, vr_out, 1, AOut, 1);
 };</code></pre>
 </div>
 </div>
@@ -11109,29 +11137,35 @@ Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void CallbackIntermediateUpdate(...,fmi3Boolean clocksTicked, ...)
-{
-   if (clocksTicked == fmi3True)
-   {
-      // ask FMU if countdown clock is about to tick
-      fmi3ValueReference aperiodicClockReferences = {6};
-      fmi3GetIntervalDecimal(... aperiodicClockReferences, ... &amp;interval, &amp;qualifier, ...);
-      if (qualifier[0] == fmi3IntervalChanged)
-      {
-         // schedule task for AperiodicClock with a delay
-         Scheduler-&gt;ScheduleTask(TaskAperiodic, interval[0]);
-      }
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void CallbackIntermediateUpdate(/*..., */ fmi3Boolean clocksTicked /*, ...*/) {
 
-      // ask FMU if output clock has ticked
-      fmi3ValueReference outputClockReferences = {7};
-      fmi3Boolean[] clocksActivationState = {fmi3ClockInactive};
-      fmi3GetClocks(... outputClockReferences, &amp;clocksActivationState, ...);
-      if (clocksActivationState[0])
-      {
-         // schedule some external task
-         Scheduler-&gt;ScheduleTask(SomeTask);
-      }
-   }
+    FMU *m;
+    
+    if (clocksTicked) {
+        
+        // ask FMU if countdown clock is about to tick
+        fmi3ValueReference aperiodicClockReferences[1] = { 6 };
+        fmi3Float64 intervals[1];
+        fmi3IntervalQualifier qualifiers[1];
+        
+        m-&gt;fmi3GetIntervalDecimal(m-&gt;instance, aperiodicClockReferences, 1, intervals, qualifiers, 1);
+        
+        if (qualifiers[0] == fmi3IntervalChanged) {
+            // schedule task for AperiodicClock with a delay
+            // Scheduler-&gt;ScheduleTask(TaskAperiodic, intervals[0]);
+        }
+
+        // ask FMU if output clock has ticked
+        fmi3ValueReference outputClockReferences[1] = { 7 };
+        fmi3Clock clockActivationStates[1] = { fmi3ClockInactive };
+        
+        m-&gt;fmi3GetClock(m-&gt;instance, outputClockReferences, 1, clockActivationStates, 1);
+        
+        if (clockActivationStates[0]) {
+            // schedule some external task
+            // Scheduler-&gt;ScheduleTask(SomeTask);
+        }
+    }
 }</code></pre>
 </div>
 </div>
@@ -11143,22 +11177,28 @@ Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3ActivateModelPartition(fmi3Instance *instance,
-   fmi3ValueReference clockReference, fmi3Float64 activationTime)
-{
-   switch (clockReference)
-   {
-      case 5:
-         // Input clock 10msClock
-         activateModelPartition10ms(instance, activationTime);
-      case 6:
-         // Input clock AperiodicClock
-         activateModelPartitionAperiodic(instance, activationTime);
-      case 8:
-         // Input clock 50msClock
-         activateModelPartition50ms(instance, activationTime);
-      ...
-   }
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3ActivateModelPartition(fmi3Instance instance,
+                                      fmi3ValueReference clockReference,
+                                      size_t clockElementIndex,
+                                      fmi3Float64 activationTime) {
+    
+    switch (clockReference) {
+    case 5:
+        // Input clock 10msClock
+        activateModelPartition10ms(instance, activationTime);
+        break;
+    case 6:
+        // Input clock AperiodicClock
+        activateModelPartitionAperiodic(instance, activationTime);
+        break;
+    case 8:
+        // Input clock 50msClock
+        activateModelPartition50ms(instance, activationTime);
+        break;
+    // ...
+    }
+    
+    return fmi3OK;
 }</code></pre>
 </div>
 </div>
@@ -11167,41 +11207,48 @@ Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void activateModelPartition10ms(fmi3Instance *instance, ...)
-{
-   ...
-   if (...)
-   {
-      CountdownClockQualifier = fmi3IntervalChanged;
-      CountdownClockInterval = 0.0;
-      // inform simulation algorithm that the countdown clock has ticked
-      fmi3Boolean clocksTicked = fmi3True;
-      instance-&gt;fmi3CallbackIntermediateUpdate(..., clocksTicked, ...);
-   }
-    if (...)
-   {
-      // outputClock ticks
-      fmi3SetClock({7});
-      // inform simulation algorithm that output clock has ticked
-      fmi3Boolean clocksTicked = fmi3True;
-      instance-&gt;fmi3CallbackIntermediateUpdate(..., clocksTicked, ...);
-   }
-   ...
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void activateModelPartition10ms(fmi3Instance instance, fmi3Float64 activationTime) {
+    
+    // ...
+    
+    FMU *m;
+    
+    if (condition1) {
+        CountdownClockQualifier = fmi3IntervalChanged;
+        CountdownClockInterval = 0.0;
+        // inform simulation algorithm that the countdown clock has ticked
+        fmi3Boolean clocksTicked = fmi3True;
+        // fmi3CallbackIntermediateUpdate(..., clocksTicked, ...);
+    }
+    
+    if (condition2) {
+        // outputClock ticks
+        // fmi3SetClock({7});
+        // inform simulation algorithm that output clock has ticked
+        // fmi3Boolean clocksTicked = fmi3True;
+        // instance-&gt;fmi3CallbackIntermediateUpdate(..., clocksTicked, ...);
+    }
+    
+    // ...
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetIntervalDecimal(..., fmi3ValueReference inputClockReferences[],
-   fmi3Float64 interval[],
-   fmi3IntervalQualifier qualifier[], ...)
-{
-   if (inputClockReferences[0] == 8)
-   {
-      interval[0] = CountdownClockInterval;
-      qualifier[0] = CountdownClockQualifier;
-      CountdownClockQualifier = fmi3IntervalNotYetKnown;
-   }
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
+                                  const fmi3ValueReference valueReferences[],
+                                  size_t nValueReferences,
+                                  fmi3Float64 intervals[],
+                                  fmi3IntervalQualifier qualifiers[],
+                                  size_t nIntervals) {
+   
+    if (valueReferences[0] == 8) {
+        intervals[0] = CountdownClockInterval;
+        qualifiers[0] = CountdownClockQualifier;
+        CountdownClockQualifier = fmi3IntervalChanged;
+    }
+
+    return fmi3OK;
 }</code></pre>
 </div>
 </div>
@@ -11210,14 +11257,18 @@ Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetClock(..., fmi3ValueReference outputClockReferences,
-   fmi3Clock *clocksActivationState, ...)
-{
-   if (outputClockReferences[0] == 7)
-   {
-      clocksActivationState[0] = OutClockActivationState;
-      OutClockActivationState = fmi3ClockInactive;
-   }
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetClock(fmi3Instance instance,
+                        const fmi3ValueReference valueReferences[],
+                        size_t nValueReferences,
+                        fmi3Clock values[],
+                        size_t nValues) {
+    
+    if (valueReferences[0] == 7) {
+        values[0] = OutClockActivationState;
+        OutClockActivationState = fmi3ClockInactive;
+    }
+    
+    return fmi3OK;
 }</code></pre>
 </div>
 </div>
