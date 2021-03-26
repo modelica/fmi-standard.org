@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 50012f6,</span>
-<span id="revdate">2021-03-25</span>
+<span id="revnumber">version c9790c1,</span>
+<span id="revdate">2021-03-26</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -11113,21 +11113,11 @@ Aperiodic tasks are scheduled explicitly during the execution.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void Task10ms_Execute() {
-
-    FMU *m; // FMU instance
-    fmi3ValueReference vr_in[2] = {0, 1}, vr_out[1] = {2};
-    fmi3Float64 AIn[2], AOut[1], Task10ms_ActivationTime;
-
-    // Set inputs with valueReference 0 and 1 associated to clockIndex 5
-    m-&gt;fmi3SetFloat64(m-&gt;instance, vr_in, 2, AIn, 2);
-
-    // call for 10msClock tick (clockIndex 5)
-    m-&gt;fmi3ActivateModelPartition(m-&gt;instance, 5, 0, Task10ms_ActivationTime);
-
-    // Get output with valueReference 2 associated to clockIndex 0
-    m-&gt;fmi3GetFloat64(m-&gt;instance, vr_out, 1, AOut, 1);
-};</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void ExecuteModelPartition10ms() {
+	fmi3SetFloat64(fmu, AInputReferences, 2, AInput, 2);
+	fmi3ActivateModelPartition(fmu, ClockReference10ms, ClockElementIndex, ActivationTime);
+	fmi3GetFloat64(fmu, AOutputReferences, 1, AOutput, 1);
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -11137,35 +11127,31 @@ Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void CallbackIntermediateUpdate(/*..., */ fmi3Boolean clocksTicked /*, ...*/) {
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void CallbackIntermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
+	fmi3Float64  intermediateUpdateTime, fmi3Boolean  clocksTicked,
+	fmi3Boolean  intermediateVariableSetRequested, fmi3Boolean  intermediateVariableGetAllowed,
+	fmi3Boolean  intermediateStepFinished, fmi3Boolean  canReturnEarly,
+	fmi3Boolean* earlyReturnRequested, fmi3Float64* earlyReturnTime) {
 
-    FMU *m;
-    
-    if (clocksTicked) {
-        
-        // ask FMU if countdown clock is about to tick
-        fmi3ValueReference aperiodicClockReferences[1] = { 6 };
-        fmi3Float64 intervals[1];
-        fmi3IntervalQualifier qualifiers[1];
-        
-        m-&gt;fmi3GetIntervalDecimal(m-&gt;instance, aperiodicClockReferences, 1, intervals, qualifiers, 1);
-        
-        if (qualifiers[0] == fmi3IntervalChanged) {
-            // schedule task for AperiodicClock with a delay
-            // Scheduler-&gt;ScheduleTask(TaskAperiodic, intervals[0]);
-        }
-
-        // ask FMU if output clock has ticked
-        fmi3ValueReference outputClockReferences[1] = { 7 };
-        fmi3Clock clockActivationStates[1] = { fmi3ClockInactive };
-        
-        m-&gt;fmi3GetClock(m-&gt;instance, outputClockReferences, 1, clockActivationStates, 1);
-        
-        if (clockActivationStates[0]) {
-            // schedule some external task
-            // Scheduler-&gt;ScheduleTask(SomeTask);
-        }
-    }
+	fmi3Float64 interval[] = { 0.0 };
+	fmi3IntervalQualifier intervalQualifier[] = { fmi3IntervalNotYetKnown };
+	if (clocksTicked == fmi3True) {
+		// ask FMU if countdown clock is about to tick
+		const fmi3ValueReference aperiodicClockReferences[] = { 6 };
+		fmi3GetIntervalDecimal(fmu, aperiodicClockReferences, 1, interval, intervalQualifier, 1);
+		if (intervalQualifier[0] == fmi3IntervalChanged) {
+			// schedule task for AperiodicClock with a delay
+			ScheduleAperiodicTask(interval[0]);
+		}
+		// ask FMU if output clock has ticked
+		fmi3ValueReference outputClockReferences[] = { 7 };
+		fmi3Boolean clocksActivationState[] = { fmi3ClockInactive };
+		fmi3GetClock(fmu, outputClockReferences, 1, clocksActivationState, 1);
+		if (clocksActivationState[0]) {
+			// schedule some external task
+			ScheduleExternalTask();
+		}
+	}
 }</code></pre>
 </div>
 </div>
@@ -11177,28 +11163,25 @@ Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3ActivateModelPartition(fmi3Instance instance,
-                                      fmi3ValueReference clockReference,
-                                      size_t clockElementIndex,
-                                      fmi3Float64 activationTime) {
-    
-    switch (clockReference) {
-    case 5:
-        // Input clock 10msClock
-        activateModelPartition10ms(instance, activationTime);
-        break;
-    case 6:
-        // Input clock AperiodicClock
-        activateModelPartitionAperiodic(instance, activationTime);
-        break;
-    case 8:
-        // Input clock 50msClock
-        activateModelPartition50ms(instance, activationTime);
-        break;
-    // ...
-    }
-    
-    return fmi3OK;
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3ActivateModelPartition(fmi3Instance instance, fmi3ValueReference clockReference,
+	size_t clockElementIndex, fmi3Float64 activationTime) {
+
+	switch (clockReference) {
+	case 5:
+		// Input clock 10msClock
+		activateModelPartition10ms(instance, activationTime);
+		break;
+	case 6:
+		// Input clock AperiodicClock
+		activateModelPartitionAperiodic(instance, activationTime);
+		break;
+	case 8:
+		// Input clock 50msClock
+		activateModelPartition50ms(instance, activationTime);
+		break;
+		// ...
+	}
+	return fmi3OK;
 }</code></pre>
 </div>
 </div>
@@ -11207,48 +11190,49 @@ Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void activateModelPartition10ms(fmi3Instance instance, fmi3Float64 activationTime) {
-    
-    // ...
-    
-    FMU *m;
-    
-    if (condition1) {
-        CountdownClockQualifier = fmi3IntervalChanged;
-        CountdownClockInterval = 0.0;
-        // inform simulation algorithm that the countdown clock has ticked
-        fmi3Boolean clocksTicked = fmi3True;
-        // fmi3CallbackIntermediateUpdate(..., clocksTicked, ...);
-    }
-    
-    if (condition2) {
-        // outputClock ticks
-        // fmi3SetClock({7});
-        // inform simulation algorithm that output clock has ticked
-        // fmi3Boolean clocksTicked = fmi3True;
-        // instance-&gt;fmi3CallbackIntermediateUpdate(..., clocksTicked, ...);
-    }
-    
-    // ...
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void activateModelPartition10ms(ModelInstance* instance, fmi3Float64 activationTime) {
+
+	fmi3Boolean conditionForCountdownClockMet = (AIn1 &gt; AIn2);
+	if (conditionForCountdownClockMet) {
+		CountdownClockQualifier = fmi3IntervalChanged;
+		CountdownClockInterval = 0.0;
+		// inform simulation algorithm that the countdown clock has ticked
+		fmi3Boolean clocksTicked = fmi3True;
+		instance-&gt;callbackIntermediateUpdate(instance-&gt;instanceEnvironment, activationTime, clocksTicked,
+			fmi3False, fmi3False, fmi3False, fmi3False, NULL, NULL);
+	}
+	fmi3Boolean conditionForOutputClockMet = (AIn2 &gt; 42.0);
+	if (conditionForOutputClockMet) {
+		// outputClock ticks
+		OutputClockTicked = fmi3ClockActive;
+		// inform simulation algorithm that output clock has ticked
+		fmi3Boolean clocksTicked = fmi3True;
+		instance-&gt;callbackIntermediateUpdate(instance-&gt;instanceEnvironment, activationTime, clocksTicked,
+			fmi3False, fmi3False, fmi3False, fmi3False, NULL, NULL);
+	}
+	AOut = AIn1 + AIn2;
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>In <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> the Clock&#8217;s interval qualifier is reset to <a href="#fmi3GetIntervalDecimal"><code>fmi3IntervalUnchanged</code></a>.</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
-                                  const fmi3ValueReference valueReferences[],
-                                  size_t nValueReferences,
-                                  fmi3Float64 intervals[],
-                                  fmi3IntervalQualifier qualifiers[],
-                                  size_t nIntervals) {
-   
-    if (valueReferences[0] == 8) {
-        intervals[0] = CountdownClockInterval;
-        qualifiers[0] = CountdownClockQualifier;
-        CountdownClockQualifier = fmi3IntervalChanged;
-    }
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance, const fmi3ValueReference valueReferences[],
+	size_t nValueReferences, fmi3Float64 interval[], fmi3IntervalQualifier qualifier[], size_t nValues) {
 
-    return fmi3OK;
+	for (int i = 0; i &lt; nValues; i++) {
+		if (valueReferences[i] == 6) {
+			interval[i] = CountdownClockInterval;
+			qualifier[i] = CountdownClockQualifier;
+			CountdownClockQualifier = fmi3IntervalUnchanged;
+		}
+		else {
+			qualifier[i] = fmi3IntervalNotYetKnown;
+		}
+	}
+	return fmi3OK;
 }</code></pre>
 </div>
 </div>
@@ -11257,18 +11241,19 @@ Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetClock(fmi3Instance instance,
-                        const fmi3ValueReference valueReferences[],
-                        size_t nValueReferences,
-                        fmi3Clock values[],
-                        size_t nValues) {
-    
-    if (valueReferences[0] == 7) {
-        values[0] = OutClockActivationState;
-        OutClockActivationState = fmi3ClockInactive;
-    }
-    
-    return fmi3OK;
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetClock(fmi3Instance instance, const fmi3ValueReference valueReferences[],
+	size_t nValueReferences, fmi3Clock values[], size_t nValues) {
+
+	for (int i = 0; i &lt; nValues; i++) {
+		if (valueReferences[i] == 7) {
+			values[i] = OutputClockTicked;
+			OutputClockTicked = fmi3ClockInactive;
+		}
+		else {
+			values[i] = fmi3ClockInactive;
+		}
+	}
+	return fmi3OK;
 }</code></pre>
 </div>
 </div>
@@ -11331,13 +11316,13 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 	&lt;DefaultExperiment startTime="0" stopTime="6" stepSize="0.001"/&gt;
 	&lt;ModelVariables&gt;
 		&lt;!-- Variables related to input clock 10msClock  --&gt;
-		&lt;Float64 name="AIn1" valueReference="0" causality="input" start="0"/&gt;
-		&lt;Float64 name="AIn2" valueReference="1" causality="input" start="0"/&gt;
-		&lt;Float64 name="AOut" valueReference="2" causality="output"/&gt;
+		&lt;Float64 name="AIn1" valueReference="0" causality="input" variability="discrete" start="0"/&gt;
+		&lt;Float64 name="AIn2" valueReference="1" causality="input" variability="discrete" start="0"/&gt;
+		&lt;Float64 name="AOut" valueReference="2" causality="output" variability="discrete"/&gt;
 
 		&lt;!-- Variables related to input clock AperiodicClock  --&gt;
-		&lt;Float64 name="BIn"  valueReference="3" causality="input" start="0"/&gt;
-		&lt;Float64 name="BOut" valueReference="4" causality="output"/&gt;
+		&lt;Float64 name="BIn"  valueReference="3" causality="input" variability="discrete" start="0"/&gt;
+		&lt;Float64 name="BOut" valueReference="4" causality="output" variability="discrete"/&gt;
 
 		&lt;!-- Clock variables --&gt;
 		&lt;!-- Periodic input clock --&gt;
@@ -11353,9 +11338,13 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 		priority="3" intervalCounter="50" resolution="1000"/&gt;
 	&lt;/ModelVariables&gt;
 	&lt;ModelStructure&gt;
-		&lt;Output valueReference="2" dependencies="0 1 5"/&gt;
-		&lt;Output valueReference="4" dependencies="3 6"/&gt;
+		&lt;Output valueReference="2" dependencies="0 1"/&gt;
+		&lt;Output valueReference="4" dependencies="3"/&gt;
 		&lt;Output valueReference="7" dependencies="5"/&gt;
+		&lt;Clock valueReference="5" clockedVariables="0 1 2"/&gt;
+		&lt;Clock valueReference="6" clockedVariables="3 4"/&gt;
+		&lt;Clock valueReference="7" clockedVariables="5"/&gt;
+		&lt;Clock valueReference="8"/&gt;
 	&lt;/ModelStructure&gt;
 &lt;/fmiModelDescription&gt;</code></pre>
 </div>
