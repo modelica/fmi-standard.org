@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version c9790c1,</span>
+<span id="revnumber">version e9125a7,</span>
 <span id="revdate">2021-03-26</span>
 </div>
 <div id="toc" class="toc2">
@@ -2746,7 +2746,7 @@ The importer calls <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to inqu
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
 <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
 <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>,
-<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in both <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if and only if this Clock ticked</p></td>
+<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in both <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if and only if this Clock ticked using <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">simulation of the behavior of a control algorithm with variable execution time, generation of pulse sequences</p></td>
 </tr>
 <tr>
@@ -2754,7 +2754,7 @@ The importer calls <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to inqu
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
 <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
 <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, in every <a href="#EventMode"><strong>Event Mode</strong></a>, and in <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
-In Scheduled Execution the FMU has to inform the importer by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that the Clock is about to tick.</p></td>
+In Scheduled Execution the FMU has to inform the importer by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that the Clock is about to tick using <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">time-delayed actions after an event, for example, ignition signal some time after specific crank shaft angle</p></td>
 </tr>
 <tr>
@@ -5015,7 +5015,7 @@ In Scheduled Execution the <a href="#intermediateUpdateTime"><code>intermediateU
 <ul>
 <li>
 <p>The <a href="#clocksTicked"><code>clocksTicked</code></a> parameter is only used in Scheduled Execution and is ignored in Co-Simulation.
-When <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a>, it means that <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function must be called for gathering all <a href="#Clock">Clock</a> related information about ticking <a href="#outputClock"><code>output clocks</code></a> and then activate the given model partitions accordingly.</p>
+When <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a>, it means that <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function must be called for gathering all <a href="#Clock">Clock</a> related information about ticking <a href="#outputClock"><code>output clocks</code></a>, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> must be called for all <a href="#countdown"><code>countdown</code></a> <a href="#Clock">Clocks</a> and then activate the respective model partitions accordingly.</p>
 </li>
 </ul>
 </div>
