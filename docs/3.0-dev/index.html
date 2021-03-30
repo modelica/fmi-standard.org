@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 08f98b9,</span>
+<span id="revnumber">version c91d4d4,</span>
 <span id="revdate">2021-03-30</span>
 </div>
 <div id="toc" class="toc2">
@@ -6014,7 +6014,7 @@ The attributes and elements have the following meaning:</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Attribute or Elements</th>
+<th class="tableblock halign-left valign-top">Attribute or Element</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -7719,10 +7719,13 @@ The definition of the model structure is then:</p>
 <h4 id="fmiTerminalsAndIcons">2.4.9. Definition of Terminals and Icons</h4>
 <div class="paragraph">
 <p>Terminals define semantic groups of variables to ease connecting compatible signals on the system level.
+This definition adds an additional layer to the interface description of the FMUs.
+It does not change the <a href="#causality"><code>causality</code></a> of the variables (i.e. inputs and outputs), but enables the definition of physical and bus-like  connectors that require special handling on the system level by the importer (e.g. flow variables and bus frames).
 Icons define a graphical representation of an FMU and its terminals.</p>
 </div>
 <div class="paragraph">
-<p>Both can be defined in the separate XML file <code>icons/terminalsAndIcons.xml</code>:</p>
+<p>Both features are optional and can be defined in the separate XML file <code>icons/terminalsAndIcons.xml</code>.<br>
+<em>[The usage of a separate file enables backporting of this feature to previous FMI versions.]</em></p>
 </div>
 <div id="terminals_and_icons_overview" class="imageblock text-center">
 <div class="content">
@@ -7741,18 +7744,24 @@ Icons define a graphical representation of an FMU and its terminals.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Element</th>
+<th class="tableblock halign-left valign-top">Attribute or Element</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmiVersion</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This attribute declares the FMI version defining the XSD of the <code>icons/terminalsAndIcons.xml</code> file.
+Starting with FMI 3.0, this <code>fmiVersion</code> attribute must match the <code>fmiVersion</code> attribute of element <a href="#fmiModelDescription">Section 2.4.1</a> of the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file.
+If used in previous FMI versions, this attribute points to the FMI version defining this <code>icons/terminalsAndIcons.xml</code> file (e.g. XSD, file location).</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;GraphicalRepresentation&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If present, contains information for importers of FMUs to draw graphical representations of the FMU in a system view.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;Terminals&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining input and output variables into logical groups to ease connections on a system level.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining input and output variables into logical groups to ease connections on a system level and add semantic information required for system-level connections.</p></td>
 </tr>
 </tbody>
 </table>
@@ -7761,7 +7770,7 @@ Icons define a graphical representation of an FMU and its terminals.</p>
 <div class="sect5">
 <h6 id="_overview_2">2.4.9.1.1. Overview</h6>
 <div class="paragraph">
-<p>The graphical representation of the FMU and terminals are needed in order to more easily comprehend the meaning of connected FMUs and to help an importing tool to display the terminals and the FMU icon in the way the exporter intended.</p>
+<p>The graphical representation of the FMU and terminals are needed to more easily comprehend the meaning of connected FMUs and to help importers to display the terminals and the FMU icon in the way the exporter intended.</p>
 </div>
 <div class="paragraph">
 <p>The graphical representation is fully optional.
@@ -7770,15 +7779,15 @@ The graphical representation of terminals is separate from the terminal definiti
 <div class="paragraph">
 <p>There are two optional elements in the <code>&lt;GraphicalRepresentation&gt;</code>:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
-<p>The <code>&lt;CoordinateSystem&gt;</code> defines the extent of the whole icon (graphical items may exceed that rectangle).</p>
+<p>The element <code>&lt;CoordinateSystem&gt;</code> defines the extent of the whole icon, graphical items may exceed that rectangle.</p>
 </li>
 <li>
-<p>The <code>&lt;Icon&gt;</code> defines an image source for the FMU.</p>
+<p>The element <code>&lt;Icon&gt;</code> defines the image position.</p>
 </li>
-</ol>
+</ul>
 </div>
 <div id="figure-schema-GraphicalRepresentation" class="imageblock text-center">
 <div class="content">
@@ -7796,7 +7805,7 @@ The graphical representation of terminals is separate from the terminal definiti
 <div class="title">Figure 33. CoordinateSytem element.</div>
 </div>
 <div class="paragraph">
-<p>The <code>&lt;CoordinateSystem&gt;</code> element and its defined extent is used as reference for other graphical items.
+<p>The <code>&lt;CoordinateSystem&gt;</code> element and its extent is used as reference for other graphical items.
 It also provides a scaling factor to millimeter.</p>
 </div>
 <div class="paragraph">
@@ -7804,18 +7813,18 @@ It also provides a scaling factor to millimeter.</p>
 The x-axis is directed to the right, the y-axis is directed upwards.</p>
 </div>
 <div class="paragraph">
-<p><em>[The exporting tool should define how the coordinate system unit relates to mm display or print out size.</em>
+<p><em>[The exporting tool should define how the coordinate system unit relates to mm display or printout size.</em>
 <em>However, an importing tool might choose to use the factor from the default coordinate system extent to the actual coordinate system extent to calculate a scaling factor, to match the default icon size in the importing tool.</em></p>
 </div>
 <div class="paragraph">
-<p><em>The area defined by the coordinate system is suggested to be used as "clickable icon size" in other tools.</em>
-<em>A <code>&lt;Terminal&gt;</code> might be placed outside of this area, so the visible bounding box has to be determined by the importing tool.]</em></p>
+<p><em>The area defined by the coordinate system is suggested to be used as "clickable icon size" in importers.</em>
+<em>A <code>&lt;Terminal&gt;</code> might be placed outside of this area, therefore the visible bounding box has to be determined by the importing tool.]</em></p>
 </div>
 <div class="paragraph">
 <p>The coordinate system default is <code>x1=-100, y1=-100, x2=100, y2=100</code>.
 This extent is used if the <code>&lt;CoordinateSystem&gt;</code> element is missing.
-The default <code>suggestedScalingFactorTo_mm</code> is 0.1.
-So the default coordinate system display size should be 20 mm width and 20 mm height.</p>
+The default <code>suggestedScalingFactorTo_mm</code> is <code>0.1</code>.
+So the default coordinate system display size should be <code>20 mm</code> width and <code>20 mm</code> height.</p>
 </div>
 <div class="paragraph">
 <p>The FMU icon and all graphical representations provide the position and extent with the attributes <code>x1</code>, <code>y1</code>, <code>x2</code>, <code>y2</code>.
@@ -7835,9 +7844,8 @@ Flipping of the FMU icon or a terminal can be realized by setting its attributes
 <p>The extent and position of the FMU icon are defined in the <code>&lt;Icon&gt;</code> element.
 The optional image file of the FMU icon is placed at the path <code>icons/icon.png</code> in the ZIP archive of the FMU.
 The terminals should not be visible in the image.
-Optionally an SVG file can be provided if also the PNG file is present.
-This enables high quality rendering and printing in importing tools.
-This SVG file has to be placed at the path <code>icons/icon.svg</code> in the ZIP archive.</p>
+Optionally an SVG file with path <code>icons/icon.svg</code> can be provided if also the PNG file is present.
+This enables high quality rendering and printing in importing tools.</p>
 </div>
 <div class="paragraph">
 <p>The point (<code>x1</code>, <code>y1</code>) maps to the left lower corner of the PNG image or SVG viewport.
@@ -7874,37 +7882,33 @@ The first element in the <code>&lt;TerminalGraphicalRepresentation&gt;</code> is
 <p>Terminals are fully optional and can be ignored by any importing tool.</p>
 </div>
 <div class="paragraph">
-<p>Definition <code>&lt;Terminal&gt;</code>: A terminal is&#8230;&#8203;</p>
+<p>A terminal is:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>a structured interface for connections to other models</p>
+<p>a structured interface for connections to other models,</p>
 </li>
 <li>
-<p>intended to be used for signal flow between models, parameter propagation, and compatibility checks of the model configuration</p>
+<p>intended to be used for signal flow between models, parameter propagation, and compatibility checks of the model configuration, and</p>
 </li>
 <li>
-<p>a sequence of references to variables with connection meta data</p>
+<p>a sequence of references to variables with connection meta data.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>Predefined rules for variable matching in a connection are given in <a href="#table-predefined-matching-rules">Table 27</a>.
-Predefined variable kinds are used to describe how the member variables have to be handled.
+Predefined variable kinds are used to describe how the terminal member variables have to be handled.
 Domain specific connection rules, terminals and their member variables can be provided by other standards.</p>
 </div>
 <div class="paragraph">
-<p><em>[Co-simulation errors are not addressed by the terminals.</em>
-<em>The co-simulation algorithm has to be chosen and implemented by the importing tool.</em>
-<em>Features that might be required for specific co-simulation algorithms had to be implemented by the FMU exporting tool.</em></p>
+<p><em>[Algebraic loops in systems of connected FMUs are not addressed or resolved by the terminals.</em>
+<em>The FMU standard does not require that the <a href="#causality"><code>causality</code></a> of the terminal member variables in connected terminals match.</em>
+<em>This must be handled by the importer.</em></p>
 </div>
 <div class="paragraph">
-<p><em>Algebraic loops in systems of connected Model Exchange FMUs are not addressed or resolved by the terminals.</em>
-<em>It is not required that the <a href="#causality"><code>causality</code></a> of the terminal member variables in connected terminals match.</em></p>
-</div>
-<div class="paragraph">
-<p><em>The SSP standard refers to a <code>connectorKind</code>.</em>
+<p><em>The <a href="https://ssp-standard.org/">System Structure &amp; Parameterization Standard (SSP)</a> refers to a <code>connectorKind</code>.</em>
 <em>This <code>connectorKind</code> is not related to the <code>terminalKind</code> or <code>variableKind</code> described in <a href="#section-terminals">Section 2.4.9.2.2</a> and <a href="#section-terminalvars">Section 2.4.9.2.3</a>.]</em></p>
 </div>
 </div>
@@ -7920,23 +7924,15 @@ Domain specific connection rules, terminals and their member variables can be pr
 <div class="title">Figure 35. Terminals element.</div>
 </div>
 <div class="paragraph">
-<p>All instances of <code>&lt;Terminal&gt;</code> have the type <code>fmi3Terminal</code> and are listed in the <code>&lt;Terminals&gt;</code> sequence.</p>
-</div>
-<div class="paragraph">
 <p>The normalized string attribute <code>name</code> of the <code>&lt;Terminal&gt;</code> element is the instance name of the terminal.
 The terminal name must be unique on each level.</p>
 </div>
 <div class="paragraph">
-<p>The normalized string attribute <code>matchingRule</code> describes the rules for variable matching in a connection.
-As detailed in <a href="#table-predefined-matching-rules">Table 27</a>, there are three predefined matching rules: plug, bus, and sequence.
+<p>The normalized string attribute <code>matchingRule</code> describes the rules for variable matching in a connection of terminals.
+As detailed in <a href="#table-predefined-matching-rules">Table 27</a>, there are three predefined matching rules: <code>plug</code>, <code>bus</code>, and <code>sequence</code>.
 Other standards may define new matching rules.
 In order to avoid ambiguities and conflicts, rule names must follow the reverse domain notation of a domain that is controlled by the entity defining the semantics and content of the additional entries.
-The rule names beginning with <code>org.modelica</code> and <code>org.fmi-standard</code> are explicitly reserved for use by MAP FMI-defined layered standards.</p>
-</div>
-<div class="paragraph">
-<p>There is a sequence of terminal member variables, terminal stream member variables, nested terminals, and an optional <code>&lt;TerminalGraphicalRepresentation&gt;</code> element in the <code>&lt;Terminal&gt;</code> element.
-The member variables are the exchanged variables.
-The type of the nested terminals is <code>fmi3Terminal</code>, and they can be used to implement structured terminals.</p>
+The rule names beginning with <code>org.modelica</code> and <code>org.fmi-standard</code> are explicitly reserved for use by Modelica Association Project FMI-defined layered standards.</p>
 </div>
 <table id="table-predefined-matching-rules" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 27. Predefined matching rules.</caption>
@@ -7978,7 +7974,7 @@ Other standards may define terminal kinds.
 It is intended that the <code>terminalKind</code> is used to define domain specific member variable sequences, member names and order, or high level restrictions for connections.</p>
 </div>
 <div class="paragraph">
-<p><em>[Other terminal kinds should refer to the predefined <code>matchingRule</code>.</em>
+<p><em>[Externally defined terminal kinds should refer to a predefined <code>matchingRule</code>, if possible.</em>
 <em>Vendor specific terminal kinds should start with <code>_vendorName</code> or <code>_toolName</code> to avoid namespace clashes.</em></p>
 </div>
 <div class="paragraph">
@@ -8003,15 +7999,11 @@ It is intended that the <code>terminalKind</code> is used to define domain speci
 <div class="title">Figure 36. TerminalMemberVariable element.</div>
 </div>
 <div class="paragraph">
-<p>The normalized string <code>variableName</code> is used to identify the terminal member variable in the element <code>&lt;ModelVariables&gt;</code>.
-The information about minimum, maximum, and nominal values is available in there.</p>
+<p>The normalized string <code>variableName</code> identifies a variable in <code>&lt;ModelVariables&gt;</code> which is actually connected and for which <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> is called.</p>
 </div>
 <div class="paragraph">
-<p>One variable can be part of several terminals.</p>
-</div>
-<div class="paragraph">
-<p>If the <code>matchingRule</code> <code>plug</code> and <code>bus</code> are used, then the normalized string <code>memberName</code> is used for member variable matching.
-So the <code>memberName</code> attribute is required for <code>plug</code> and <code>bus</code> and it has to be unique for a terminal.
+<p>If the <code>matchingRule</code> <code>plug</code> and <code>bus</code> are used, then <code>memberName</code> is used for variable matching.
+Therefore, the <code>memberName</code> attribute is required for <code>plug</code> and <code>bus</code> and must be unique per terminal.
 The <code>memberName</code> is not required for <code>matchingRule</code> <code>sequence</code>.</p>
 </div>
 <div class="paragraph">
