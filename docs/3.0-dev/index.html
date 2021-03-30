@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version e9125a7,</span>
-<span id="revdate">2021-03-26</span>
+<span id="revnumber">version 95063e8,</span>
+<span id="revdate">2021-03-30</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -10790,11 +10790,11 @@ So the FMU exporting tool does not need to take care for that (except for prepar
 </div>
 <div class="paragraph">
 <p>Based on the settings defined in the XML for <a href="#inputClock">input Clocks</a> the simulation algorithm calls <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, or <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>.
-Set/get calls for each task are only allowed for variables that are associated to the <a href="#inputClock"><code>input Clock</code></a> associated to that task or - here preemption issues become important - to variables that are associated to no <a href="#Clock">Clock</a> (global variables), based on the XML information (see <a href="#table-overview-clocks">Table 5</a>).</p>
+Set/get calls for each task are only allowed for variables that are associated to the <a href="#inputClock"><code>input Clock</code></a> associated to that task or - here preemption issues become important - to variables that are associated to no <a href="#Clock">Clock</a>, based on the XML information.</p>
 </div>
 <div class="paragraph">
-<p><em>[The recommendation is to avoid global variable associations as much as possible in the XML.</em>
-<em>It is also recommended to reduce dependencies (defined in XML model structure) between variables located in different model partitions of one FMU, since this also requires in most cases that the related variables have to be global variables.]</em></p>
+<p><em>[The recommendation is to avoid variables associated to no or more than one model partition or <a href="#inputClock">input Clocks</a> as much as possible in the XML.</em>
+<em>Because they also introduce complexity it is recommended to reduce dependencies (defined in XML model structure) between variables located in different model partitions of one FMU, too.]</em></p>
 </div>
 <div class="paragraph">
 <p>The simulation algorithm has no knowledge about the FMU internal communication between the model partitions of a single FMU and does not handle it.</p>
@@ -10826,7 +10826,7 @@ Refer to chapter on <a href="#Clock">Clocks</a> for details.</p>
 <div class="paragraph">
 <p>Based on the period and priority definitions the exporting tool can restrict the code evaluation order.
 It nevertheless has to secure its code against concurrent evaluation <em>[not against parallel evaluation, as this is not supported for model partitions of an FMU in the interface description of this mode]</em> along the defined priority restrictions.
-Mostly this is required for internal inter-model-partition communication and in general for the joint use of global variables within the FMU.
+Mostly this is required for internal inter-model-partition communication and in general for the joint use of variables that are associated to more than one model partition of the FMU.
 The exporting tool has to consider the effect of <a href="#triggered"><code>triggered</code></a> <a href="#inputClock">'input Clocks'</a> and the influences of computing speed, because the exact occurrence of preemption points cannot be foreseen (within the given priority and period restrictions).</p>
 </div>
 <div class="paragraph">
@@ -10983,11 +10983,11 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a></dt>
 <dd>
-<p>This function can be called before scheduling a model partition for variables assigned to that model partition via its associated <a href="#Clock">Clock</a> and all variables not associated to a <a href="#Clock">Clock</a> (global variables).</p>
+<p>This function can be called before scheduling a model partition for variables assigned to that model partition via its associated <a href="#Clock">Clock</a> and all variables not associated to any <a href="#Clock">Clock</a>.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a></dt>
 <dd>
-<p>These functions can be called after the computation of a model partition for variables assigned to that model partition via its associated <a href="#Clock">Clock</a> and all variables not associated to a <a href="#Clock">Clock</a> (global variables).</p>
+<p>These functions can be called after the computation of a model partition for variables assigned to that model partition via its associated <a href="#Clock">Clock</a> and all variables not associated to any <a href="#Clock">Clock</a>.</p>
 <div class="paragraph">
 <p>Set/get operations must be atomic for a single variable.</p>
 </div>
