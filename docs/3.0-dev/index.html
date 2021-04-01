@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 1ed2dfc,</span>
+<span id="revnumber">version 541d429,</span>
 <span id="revdate">2021-04-01</span>
 </div>
 <div id="toc" class="toc2">
@@ -720,7 +720,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#sources-directory">2.5.1.3. Directory Sources</a>
 <ul class="sectlevel5">
 <li><a href="#_sourcefileset">2.5.1.3.1. SourceFileSet</a></li>
-<li><a href="#_sourcefile">2.5.1.3.2. SourceFile</a></li>
+<li><a href="#SourceFile">2.5.1.3.2. SourceFile</a></li>
 <li><a href="#_preprocessordefinition">2.5.1.3.3. PreprocessorDefinition</a></li>
 <li><a href="#_preprocessordefinitionoption">2.5.1.3.4. PreprocessorDefinition/Option</a></li>
 <li><a href="#_includedirectory">2.5.1.3.5. IncludeDirectory</a></li>
@@ -8342,6 +8342,12 @@ Each <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> p
 An FMU importing tool may not regard more than one <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> when building the FMU for a specific <a href="#platform"><code>platform</code></a>.
 The importer chooses the matching <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> based on the <a href="#platform"><code>platform</code></a> and <a href="#modelIdentifier"><code>modelIdentifier</code></a> attributes.</p>
 </div>
+<div class="paragraph">
+<p>In order to avoid symbol name conflicts when compiling and linking multiple source code FMUs, source files should keep the exported symbols to a minimum by declaring all symbols not needed for linking as <code>static</code>.
+If only a single <a href="#SourceFile"><code>&lt;SourceFile&gt;</code></a> is provided in the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> all symbols except for the FMI functions should be defined as <code>static</code>.
+<em>[This source file may include other source files that are not listed in the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a>.]</em>
+It is also recommended to use a descriptive name (e.g. <code>&lt;model_identifier&gt;.c</code>) for this single <a href="#SourceFile"><code>&lt;SourceFile&gt;</code></a> instead of generic names (like <code>all.c</code>, or <code>model.c</code>) in order to aid readability and reduce integration effort.</p>
+</div>
 <table id="table-BuildConfiguration-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 28. BuildConfiguration attribute details.</caption>
 <colgroup>
@@ -8428,7 +8434,7 @@ An importer of the FMU has to regard every <code>&lt;SourceFileSet&gt;</code> of
 </table>
 </div>
 <div class="sect5">
-<h6 id="_sourcefile">2.5.1.3.2. SourceFile</h6>
+<h6 id="SourceFile">2.5.1.3.2. SourceFile</h6>
 <table id="table-SourceFile-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 30. SourceFile attribute details.</caption>
 <colgroup>
@@ -8630,7 +8636,7 @@ The default is <code>false</code>.</p>
 
   &lt;BuildConfiguration modelIdentifier="PIDContoller"&gt;
     &lt;SourceFileSet&gt;
-      &lt;SourceFile name="all.c"/&gt;
+      &lt;SourceFile name="PIDContoller.c"/&gt;
     &lt;/SourceFileSet&gt;
   &lt;/BuildConfiguration&gt;
 
