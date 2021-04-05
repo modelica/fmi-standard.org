@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 7feed11,</span>
-<span id="revdate">2021-04-04</span>
+<span id="revnumber">version 0474718,</span>
+<span id="revdate">2021-04-05</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -11474,6 +11474,15 @@ See <a href="#state-event">state event</a>, <a href="#step-event">step event</a>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="eventIndicator"></a><em>event indicator</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A variable that changes sign exactly at an event.
 See <a href="#state-event">event indicator</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>event iteration</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An importer can iteratively call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> e.g. to solve <em>algebraic loops</em> during an event and during a <em>super-dense time instant</em>.
+When reaching a consistent state, changes to discrete variables may be triggered.
+Such a discrete (state) change may require another solution of an algebraic loop in the next super-dense time instant.
+These discontinuous changes can repeat until the participating FMUs or the master decide that no further iteration is needed.
+An example for a system that can be simulated with event iteration is a powertrain with multiple clutches distributed in several FMUs.
+The decision which clutch is open, which is closed and which is slipping can be determined with event iteration.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>exporter</em></p></td>
