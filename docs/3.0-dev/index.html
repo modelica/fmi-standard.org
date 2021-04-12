@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 558c059,</span>
-<span id="revdate">2021-04-06</span>
+<span id="revnumber">version cfae935,</span>
+<span id="revdate">2021-04-12</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -4675,7 +4675,10 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <dd>
 <p>For <a href="#inputClock"><code>input Clocks</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> is called to set the activation status of <a href="#Clock"><code>Clocks</code></a> to <code>fmi3ClockActive</code> or <code>fmi3ClockInactive</code>.
 During the solution of algebraic loops, the activation condition of triggered input clocks may change and therefore <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> can be called multiple times per super-dense time instant.
-Only <a href="#time-based-clock">Time-based clocks</a> must not be active for more than one call of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> per <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
+Only <a href="#time-based-clock">Time-based clocks</a> must not be active for more than one call of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> per <a href="#EventMode"><strong>Event Mode</strong></a>.
+The importer must ensure that coinciding time-based Clocks are activated at the same instant of super-dense time.<br>
+<em>[The event iteration for handling discontinuities of the continuous part of the FMU should precede handling of time-based Clocks.</em>
+<em>For that reason no further constraints on activations of time-based Clocks are defined (e.g. activating at the first instant of super-dense time).]</em></p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
 <dd>
