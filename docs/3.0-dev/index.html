@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version ad48d97,</span>
+<span id="revnumber">version cc1395a,</span>
 <span id="revdate">2021-04-13</span>
 </div>
 <div id="toc" class="toc2">
@@ -8297,10 +8297,6 @@ icons                         // FMU and terminal icons (optional)
    // all terminal and fmu icons referenced in the graphical representation
 sources                       // directory containing the C sources (optional)
    buildDescription.xml
-   // All needed C sources and header files to compile and link the FMU
-   // except fmi3PlatformTypes.h, fmi3FunctionTypes.h, and fmi3Functions.h.
-   // The files to be compiled (but not the files included from these files)
-   // have to be reported in the buildDescription.xml.
 binaries                      // directory containing the binaries (optional)
    x86_64-windows             // binaries for Windows on Intel 64-bit
       &lt;modelIdentifier&gt;.dll   // shared library of the FMI implementation
@@ -8313,19 +8309,8 @@ binaries                      // directory containing the binaries (optional)
       &lt;modelIdentifier&gt;.so    // shared library of the FMI implementation
    x86_64-darwin              // binaries for macOS
       &lt;modelIdentifier&gt;.dylib // shared library of the FMI implementation
-   // If an FMU is run through one of its binaries all items in that binary
-   // folder are recommended to be unpacked at the same location as the binary
-   // &lt; modelIdentifier &gt;.* is unpacked. If not it is likely that, if the FMU
-   // has dependencies on those items, it will not be able to find them.
 resources                     // resources used by the FMU (optional)
-   // data in FMU specific files which will be read during initialization;
-   // also more folders can be added under resources (tool/model specific).
-   // In order for the FMU to access these resource files, the resource directory
-   // shall be available in unzipped form and the absolute path to this directory
-   // should be reported via argument "resourceLocation" of fmi3InstantiateXXX.
-extra                         // Additional (meta-)data of the FMU (optional)
-   // additional (meta-)data that is supposed to travel with the FMU;
-   // see below for structure and content definition.</pre>
+extra                         // Additional (meta-)data of the FMU (optional)</pre>
 </div>
 </div>
 <div class="sect4">
@@ -8355,14 +8340,17 @@ If it is present, it must contain either a <a href="https://spdx.dev">license.sp
 <h5 id="sources-directory">2.5.1.3. Directory Sources</h5>
 <div id="BuildConfiguration" class="paragraph">
 <p>A source code FMU contains the sources of the model in the <code>sources</code> directory together with a <code>buildDescription.xml</code> that contains at least one <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> element for the supported platforms.
-Each <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> provides the necessary information to compile and link the sources of the model into a dynamic library or as part of an executable.
+The header files <code>fmi3PlatformTypes.h</code>, <code>fmi3FunctionTypes.h</code> and <code>fmi3Functions.h</code> are supplied by the importer to potentially reflect their specific platform and compiler tool set.</p>
+</div>
+<div class="paragraph">
+<p>Each <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> provides the necessary information to compile and link the sources of the model into a dynamic library or as part of an executable.
 An FMU importing tool may not regard more than one <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> when building the FMU for a specific <a href="#platform"><code>platform</code></a>.
 The importer chooses the matching <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> based on the <a href="#platform"><code>platform</code></a> and <a href="#modelIdentifier"><code>modelIdentifier</code></a> attributes.</p>
 </div>
 <div class="paragraph">
 <p>In order to avoid symbol name conflicts when compiling and linking multiple source code FMUs, source files should keep the exported symbols to a minimum by declaring all symbols not needed for linking as <code>static</code>.
 If only a single <a href="#SourceFile"><code>&lt;SourceFile&gt;</code></a> is provided in the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> all symbols except for the FMI functions should be defined as <code>static</code>.
-<em>[This source file may include other source files that are not listed in the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a>.]</em>
+This source file may include other source files that are not listed in the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a>.
 It is also recommended to use a descriptive name (e.g. <code>&lt;model_identifier&gt;.c</code>) for this single <a href="#SourceFile"><code>&lt;SourceFile&gt;</code></a> instead of generic names (like <code>all.c</code>, or <code>model.c</code>) in order to aid readability and reduce integration effort.</p>
 </div>
 <table id="table-BuildConfiguration-details" class="tableblock frame-all grid-all stretch">
@@ -8704,6 +8692,9 @@ The default is <code>false</code>.</p>
 </div>
 <div class="sect4">
 <h5 id="binaries-directory">2.5.1.4. Directory Binaries</h5>
+<div class="paragraph">
+<p>If an FMU is run through one of its binaries all items in that binary folder must be unpacked at the same location as the binary <code>&lt;modelIdentifier&gt;.*</code>.</p>
+</div>
 <div class="sect5">
 <h6 id="platform-tupe-definition">2.5.1.4.1. Platform Tuple Definition</h6>
 <div class="paragraph">
@@ -8987,7 +8978,11 @@ The requirements and the expected processing should be documented in the <code>d
 <h5 id="resources-directory">2.5.1.5. Directory Resources</h5>
 <div class="paragraph">
 <p>In the optional directory <code>resources</code>, additional data can be provided in FMU specific formats, typically for tables and maps used in the FMU.
-This data must be read into the model at the latest during initialization (that is, before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called).
+More folders can be added under resources (tool/model specific).
+For the FMU to access these resource files, the <code>resource</code> directory shall be available in unzipped form and the absolute path to this directory must be reported via argument <code>resourceLocation</code> of <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>resource</code> data must be read into the model at the latest during initialization (that is, before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called).
 The actual file names in the ZIP file to access the data files can either be hard-coded in the generated FMU functions, or the file names can be provided as string arguments via the <code>fmi3SetString</code> function.
 <em>[Note that an URI pointing to the resources directory is provided by the initialization functions.</em>
 <em>If the environment is not able to do so, a NULL pointer will be provided instead, and the FMU can react with an error, if it requires access to the content of the resources folder.]</em>
