@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version cfae935,</span>
-<span id="revdate">2021-04-12</span>
+<span id="revnumber">version f089ed1,</span>
+<span id="revdate">2021-04-13</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2979,6 +2979,11 @@ Before the first Clock tick, clocked variables have their initial value.</p>
 <a href="#clocked-variable">Clocked variables</a> can depend on multiple Clocks.
 <em>[For example, a global counter could be incremented by multiple tasks, each controlled by a different Clock.]</em></p>
 </div>
+<div class="paragraph">
+<p>Clocks may depend on input Clocks.
+This dependency is also defined by the <a href="#clocks"><code>clocks</code></a> attribute.
+<em>[E.g. if an <a href="#outputClock"><code>output Clock</code></a> depends on an <a href="#inputClock"><code>input Clock</code></a>, then Clock ticks of the <a href="#inputClock"><code>input Clock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> may create <a href="#outputClock"><code>output Clock</code></a> ticks during this event handling.]</em></p>
+</div>
 </div>
 <div class="sect4">
 <h5 id="scheduled-execution">2.2.9.4. Scheduled Execution</h5>
@@ -3203,13 +3208,13 @@ The values of the arguments <code>interval</code>, <code>intervalCounter</code>,
 <li>
 <p>define the sparseness when computing <a href="#partial-derivatives">partial derivatives</a>, avoiding unnecessary calls to <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> and <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a>.</p>
 </li>
-<li>
-<p>assign <a href="#clocked-variable">clocked variables</a> to <a href="#Clock">Clocks</a>.</p>
-</li>
 </ul>
 </div>
 <div class="paragraph">
 <p>The dependencies are encoded in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> with the element <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> up to <a href="#valueReference"><code>valueReference</code></a> resolution, not individual elements of array variables.</p>
+</div>
+<div class="paragraph">
+<p>Note, that the association between <a href="#clocked-variable">clocked variables</a> and their <a href="#Clock">Clocks</a> is defined by the attribute <a href="#clocks"><code>clocks</code></a> in <code>&lt;fmiModelDescription&gt;&lt;ModelVariables&gt;</code>.</p>
 </div>
 <div class="paragraph">
 <p>The variable dependency information in the XML description:</p>
@@ -6626,7 +6631,7 @@ Only variables with <a href="#variability"><code>variability == discrete</code><
 <td class="tableblock halign-left valign-top"><div class="content"><div id="clocks" class="paragraph">
 <p>If present, this variable is clocked.
 The value of <a href="#clocks"><code>clocks</code></a> is a list of value references of <a href="#Clock">Clock</a> variables this variable depends on.
-Only discrete variables can have this attribute.
+Only variables with <a href="#variability"><code>variability == discrete</code></a> or <a href="#variability"><code>variability == tunable</code></a> can have this attribute.
 <em>[More rigorous importers requiring a variable to be dependent on a single clock can reject FMUs violating this restriction.]</em></p>
 </div></div></td>
 </tr>
@@ -7504,8 +7509,6 @@ Knowns \({\mathbf{v}_{\mathit{known}}}\) in <a href="#EventMode"><strong>Event M
 <p class="tableblock">* continuous states and discrete-time states,</p>
 <p class="tableblock">* parameters (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>),</p>
 <p class="tableblock">* <a href="#independent"><code>independent</code></a> variable (usually time; <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>).</p>
-<p class="tableblock"><em>[The list of dependencies may include input clocks (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#Clock">Clock</a>).</em>
-<em>If an <a href="#outputClock"><code>output Clock</code></a> depends on an <a href="#inputClock"><code>input Clock</code></a>, then clock ticks of the <a href="#inputClock"><code>input Clock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> may create <a href="#outputClock"><code>output Clock</code></a> ticks during this event handling.]</em></p>
 <p class="tableblock">Knowns \({\mathbf{v}_{\mathit{known}}}\) in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> (for elements <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>):</p>
 <p class="tableblock">* inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>),</p>
 <p class="tableblock">* variables with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, <em>[for example, <a href="#parameter"><code>parameters</code></a> or initial <a href="#state"><code>states</code></a>]</em></p>
@@ -11324,12 +11327,12 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 		&lt;!-- Clock variables --&gt;
 		&lt;!-- Periodic input clock --&gt;
 		&lt;Clock name="10msClock"      valueReference="5" causality="input"  interval="constant"
-		priority="1" intervalCounter="10" resolution="1000" clocks="7"/&gt;
+		priority="1" intervalCounter="10" resolution="1000"/&gt;
 		&lt;!-- Input clock that is triggered by 10msClock --&gt;
 		&lt;Clock name="AperiodicClock" valueReference="6" causality="input"  interval="countdown"
-		priority="2"/&gt;
+		priority="2" clocks="5"/&gt;
 		&lt;!-- Output clock --&gt;
-		&lt;Clock name="OutputClock"    valueReference="7" causality="output" interval="triggered"/&gt;
+		&lt;Clock name="OutputClock"    valueReference="7" causality="output" interval="triggered"  clocks="5"/&gt;
 		&lt;!-- Periodic input clock --&gt;
 		&lt;Clock name="50msClock"      valueReference="8" causality="input"  interval="constant"
 		priority="3" intervalCounter="50" resolution="1000"/&gt;
@@ -11337,7 +11340,6 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 	&lt;ModelStructure&gt;
 		&lt;Output valueReference="2" dependencies="0 1"/&gt;
 		&lt;Output valueReference="4" dependencies="3"/&gt;
-		&lt;Output valueReference="7" dependencies="5"/&gt;
 	&lt;/ModelStructure&gt;
 &lt;/fmiModelDescription&gt;</code></pre>
 </div>
