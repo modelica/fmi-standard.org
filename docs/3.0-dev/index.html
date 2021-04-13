@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-Up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version ceb3b58,</span>
+<span id="revnumber">version ad48d97,</span>
 <span id="revdate">2021-04-13</span>
 </div>
 <div id="toc" class="toc2">
@@ -4593,7 +4593,7 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <div class="ulist">
 <ul>
 <li>
-<p>Reset respective clocked variables to their previous values: \(\mathbf{v}_{\mathit{d}} := {}^\bullet\mathbf{v}_{\mathit{d}}\)</p>
+<p>Reset respective clocked variables to their previous values: \(\mathbf{v}_{\mathit{k}} := {}^\bullet\mathbf{v}_{\mathit{k}}\)</p>
 </li>
 <li>
 <p>Deactivate respective model partitions in \(\mathbf{f}_{\mathit{event}}\)</p>
@@ -4603,7 +4603,7 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 </li>
 </ul>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetClock"><code>fmi3SetClock</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetClockEM"><code>fmi3SetClock</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
@@ -4676,11 +4676,17 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <dd>
 <p>Getting variables might trigger <a href="#selectiv-computation">computations</a>.</p>
 </dd>
+</dl>
+</div>
+<div id="fmi3SetClockEM" class="dlist">
+<dl>
 <dt class="hdlist1">Function <a href="#fmi3SetClock"><code>fmi3SetClock</code></a></dt>
 <dd>
 <p>For <a href="#inputClock"><code>input Clocks</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> is called to set the activation status of <a href="#Clock"><code>Clocks</code></a> to <code>fmi3ClockActive</code> or <code>fmi3ClockInactive</code>.
 During the solution of algebraic loops, the activation condition of triggered input clocks may change and therefore <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> can be called multiple times per super-dense time instant.
-Only <a href="#time-based-clock">Time-based clocks</a> must not be active for more than one call of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> per <a href="#EventMode"><strong>Event Mode</strong></a>.
+When a Clock is deactivated, the FMU must reset all clocked variables of this Clock to the values computed during the last <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> when this Clock was active (\({}^\bullet\mathbf{v}_{\mathit{k}}\)).
+A Clock can only be set to inactive once activated if the attribute <a href="#canBeDeactivated"><code>canBeDeactivated == true</code></a>.<br>
+Only <a href="#time-based-clock">time-based Clocks</a> must not be active for more than one call of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> per <a href="#EventMode"><strong>Event Mode</strong></a>.
 The importer must ensure that coinciding time-based Clocks are activated at the same instant of super-dense time.<br>
 <em>[The event iteration for handling discontinuities of the continuous part of the FMU should precede handling of time-based Clocks.</em>
 <em>For that reason no further constraints on activations of time-based Clocks are defined (e.g. activating at the first instant of super-dense time).]</em></p>
@@ -6092,6 +6098,11 @@ An <code>&lt;Enumeration&gt;</code> element must have at least one <code>&lt;Ite
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">Attributes for <code>ClockType</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canBeDeactivated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canBeDeactivated"></a>
+<a href="#Clock"><code>Clocks</code></a> with the attribute <a href="#canBeDeactivated"><code>canBeDeactivated == true</code></a> can be actively deactivated using <a href="#fmi3SetClockEM"><code>fmi3SetClock</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>priority</code></p></td>
