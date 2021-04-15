@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 63cdab0,</span>
-<span id="revdate">2021-04-14</span>
+<span id="revnumber">version 6b0b353,</span>
+<span id="revdate">2021-04-15</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2965,14 +2965,18 @@ Must be retrieved in <a href="#InitializationMode"><strong>Initialization Mode</
 <p><em>[Such a model partition may represent a task or an interrupt service routine of an embedded system, or a discretized part of a plant model.]</em></p>
 </div>
 <div class="paragraph">
-<p>Discrete-time variables computed in such a model partition are called <a href="#clocked-variable">clocked variables</a>.
-Therefore, the value of a <a href="#clocked-variable">clocked variable</a> changes only when its Clock is active.
-Model partitions are initialized at their first Clock activation, not in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
+<p>Discrete-time variables computed in such a model partition are called <a href="#clocked-variable">clocked variables</a>.</p>
 </div>
 <div class="paragraph">
-<p>In some clock semantics (e.g. <a href="#MLS12">[MLS12]</a>), a clocked variable has a value only when its associated Clock is active.
-However, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> will return the value computed at the last Clock activation time.
-Before the first Clock tick, clocked variables have their initial value.</p>
+<p>The value of a clocked variable can acquire a new value and can be queried only when its Clock is active, except during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
+<em>[This is common in clock semantics. See, e.g., <a href="#MLS12">[MLS12]</a>.]</em>
+During <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, if a clocked variable is declared as an <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, then it must be initialized as a discrete variable.
+Declaring a clocked variable as an <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> is optional.
+Uninitialized clocked variables must be initialized in the corresponding Clock&#8217;s first tick.</p>
+</div>
+<div class="paragraph">
+<p>A <a href="#ClockedState"><code>ClockedState</code></a> is a clocked variable whose value depends on its previous value (i.e., the value computed at the last clock tick).
+Clocked states declare the <a href="#valueReference"><code>valueReference</code></a> of their previous variable using the <a href="#previous"><code>previous</code></a> attribute.</p>
 </div>
 <div class="paragraph">
 <p>The association between <a href="#clocked-variable">clocked variables</a> and their <a href="#Clock">Clocks</a> is defined by the attribute <a href="#clocks"><code>clocks</code></a>.
@@ -4686,7 +4690,10 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <dd>
 <p>For <a href="#inputClock"><code>input Clocks</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> is called to set the activation status of <a href="#Clock"><code>Clocks</code></a> to <code>fmi3ClockActive</code> or <code>fmi3ClockInactive</code>.
 During the solution of algebraic loops, the activation condition of triggered input clocks may change and therefore <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> can be called multiple times per super-dense time instant.
-When a Clock is deactivated, the FMU must reset all clocked variables of this Clock to the values computed during the last <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> when this Clock was active (\({}^\bullet\mathbf{v}_{\mathit{k}}\)).
+When a Clock is deactivated, the FMU must reset all clocked states of this Clock to the values computed during the last <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> when this Clock was active (\({}^\bullet\mathbf{v}_{\mathit{k}}\)).<br>
+<em>[Rationale: a triggered output Clock \(c\) may depend on some variable \(v\) that is involved in an algebraic loop.</em>
+<em>As part of the iterations to solve the algebraic loop, \(v\) acquires a value that activates the Clock.</em>
+<em>If the final (or some intermediate) value of \(v\) no longer activates the Clock, then this Clock must be deactivated by the Importer during the same super-dense time instant.]</em><br>
 A Clock can only be set to inactive once activated if the attribute <a href="#canBeDeactivated"><code>canBeDeactivated == true</code></a>.<br>
 Only <a href="#time-based-clock">time-based Clocks</a> must not be active for more than one call of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> per <a href="#EventMode"><strong>Event Mode</strong></a>.
 The importer must ensure that coinciding time-based Clocks are activated at the same instant of super-dense time.<br>
@@ -6630,9 +6637,8 @@ The default value of this attribute is <code>false</code>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>previous</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="previous" class="paragraph">
-<p>If present, this variable is a <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> and this attribute is a value reference to the variable with the previous value.
-Only clocked variables (i.e. variables with the attribute <a href="#clocks"><code>clocks</code></a>) may have the <a href="#previous"><code>previous</code></a> attribute.
-Only variables with <a href="#variability"><code>variability == discrete</code></a> may have a previous value.</p>
+<p>If present, this variable is a <a href="#ClockedState"><code>ClockedState</code></a> and this attribute is a value reference to the variable with the previous value.
+The following constraints apply: only clocked variables (i.e. variables with the attribute <a href="#clocks"><code>clocks</code></a>) may have the <a href="#previous"><code>previous</code></a> attribute; only variables with <a href="#variability"><code>variability == discrete</code></a> may have a previous value; and the variable referenced by the previous attribute must have the same numeric type.</p>
 </div>
 <div class="paragraph">
 <p><em>[For example, if <code>previous == 3</code> for variable <code>8</code>, then variable <code>3</code> is the previous value of variable <code>8</code>. See also <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</em>
@@ -7453,19 +7459,20 @@ The functional dependency is defined as (dependencies of variables that are fixe
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClockedState</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="ClockedState"></a>
-A <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> is part of the discrete state of a model partition and represented by a clocked variable.
+A <a href="#ClockedState"><code>ClockedState</code></a> is part of the discrete state of a model partition and represented by a clocked variable.
 To which Clock or Clocks it belongs is described by the attribute <a href="#clocks"><code>clocks</code></a>.
-Each <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> must have the attribute <a href="#previous"><code>previous</code></a> to represent the previous value of this <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>.
+Each <a href="#ClockedState"><code>ClockedState</code></a> must have the attribute <a href="#previous"><code>previous</code></a> to represent the previous value of this <a href="#ClockedState"><code>ClockedState</code></a>.
 All <a href="#ClockedState">clocked states</a> must have <a href="#variability"><code>variability == discrete</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>InitialUnknown</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="InitialUnknown"></a>
 Ordered list of all exposed unknowns in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
-This list consists of all variables with</p>
-<p class="tableblock">- <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> and (<a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), and</p>
-<p class="tableblock">- <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> and</p>
-<p class="tableblock">- all continuous-time <a href="#state"><code>states</code></a> and all state derivatives (defined with elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a> <em>[if a Co-Simulation FMU does not define the <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> elements, (3) cannot be present]</em>.</p>
+This list consists of all variables which</p>
+<p class="tableblock">- are not <a href="#clocked-variable">clocked variables</a> and have <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> (with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), or</p>
+<p class="tableblock">- have <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>, or</p>
+<p class="tableblock">- are continuous-time <a href="#state"><code>states</code></a> or state derivatives (defined with elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a> <em>[if a Co-Simulation FMU does not define the <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> elements, (3) cannot be present]</em>, or</p>
+<p class="tableblock">- are <a href="#clocked-variable">clocked variables</a> that the FMU wishes to initialize in initialization mode.</p>
 <p class="tableblock">The resulting list is not allowed to have duplicates (for example, if a <a href="#state"><code>state</code></a> is also an <a href="#output"><code>output</code></a>, it is included only once in the list).<br>
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the unknowns from the knowns in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> at the initial time.
 Beside the knowns the initial unknowns also depend on the "frozen" variables (= variables which cannot be changed in the current mode) but these "frozen" variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
@@ -7491,10 +7498,10 @@ Ordered list of all event indicators, in other words, a list of value references
 </tbody>
 </table>
 <div class="paragraph">
-<p>Elements <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> have (partially) the following attributes:</p>
+<p>Elements <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>ClockedState</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> have (partially) the following attributes:</p>
 </div>
 <table id="table-output-der-initialUknown-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 25. <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> attribute details.</caption>
+<caption class="title">Table 25. <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>ClockedState</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> attribute details.</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 83.3334%;">
