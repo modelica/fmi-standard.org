@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 6b0b353,</span>
+<span id="revnumber">version e42cd00,</span>
 <span id="revdate">2021-04-15</span>
 </div>
 <div id="toc" class="toc2">
@@ -3386,11 +3386,15 @@ Each continuous state derivative variable listed as elements <a href="#Continuou
 </div>
 </li>
 <li>
-<p>\(\mathbf{v}_{\mathit{known}}\) is the vector of <a href="#input"><code>input</code></a> variables of function <strong>f</strong> which can be changed by the importer in the current state.
+<p>\(\mathbf{v}_{\mathit{known}}\) is the vector of <a href="#input"><code>input</code></a> variables of function \(\mathbf{f}\) which can be changed by the importer in the current state.
 Details about which variables are in \(\mathbf{v}_{\mathit{known}}\) are given in the description of element <a href="#dependencies"><code>dependencies</code></a> in <a href="#ModelStructure">Section 2.4.8</a>.</p>
 </li>
 <li>
-<p>\({\mathbf{v}_{\mathit{rest}}}\) is the set of <a href="#input"><code>input</code></a> variables and discrete-time states of function <strong>f</strong> which cannot be set by the importer in the current state, but in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>]</em>.</p>
+<p>\({\mathbf{v}_{\mathit{rest}}}\) is the set of <a href="#input"><code>input</code></a> variables and discrete-time states of function \(\mathbf{f}\) which cannot be set by the importer in the current state, but in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>]</em>.</p>
+</li>
+<li>
+<p><a href="#EventIndicator"><code>EventIndicators</code></a> must not be included among \(\mathbf{v}_{\mathit{unknonwn}}\).
+<em>[This is intentional as their dependencies listed in <code>&lt;ModelStructure&gt;</code> are intended for debugging purposes and not for partial derivatives.]</em></p>
 </li>
 </ul>
 </div>
@@ -4225,7 +4229,8 @@ This function can only be called in Model Exchange.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The number of <a href="#state-event">event indicators</a> might change if a variable related to <a href="#state-event">event indicators</a> has a <code>&lt;Dimension&gt;</code> that references a <a href="#structuralParameter"><code>structural parameter</code></a>  (see <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> and <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>).
+<p>The initial value of <code>nEventIndicators</code> is the sum of the sizes of the variables referenced by the <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> elements.
+The number of <a href="#state-event">event indicators</a> might change if a variable related to <a href="#state-event">event indicators</a> has a <code>&lt;Dimension&gt;</code> that references a <a href="#structuralParameter"><code>structural parameter</code></a>  (see <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> and <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>).
 <a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a> must be called after such <a href="#structuralParameter"><code>structural parameters</code></a> changed.
 As long as no <a href="#structuralParameter"><code>structural parameters</code></a> changed, the number of event indicators is given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>, alleviating the need to call this function.</p>
 </div>
@@ -7479,6 +7484,7 @@ Beside the knowns the initial unknowns also depend on the "frozen" variables (= 
 The functional dependency is defined as:</p>
 <p class="tableblock">\({\mathbf{v}_{\mathit{initialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{\mathit{initial=exact}})}\)</p>
 <p class="tableblock">Since, <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state"><code>states</code></a> and state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
+<p class="tableblock"><a href="#EventIndicator"><code>EventIndicators</code></a> are available during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, however their dependencies are intended for debugging purposes only (and not for connection with other FMU&#8217;s), and therefore they must not be listed as <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>.</p>
 <p class="tableblock"><em>[Example: Assume an FMU is defined in the following way:</em></p>
 <p class="tableblock">\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{init}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_0, \mathbf{p})}\)<br></p>
 <p class="tableblock">\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{sim}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_i, \mathbf{p})}\)<br></p>
@@ -7488,12 +7494,13 @@ The functional dependency is defined as:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EventIndicator</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="EventIndicator"></a>
-Ordered list of all event indicators, in other words, a list of value references where every corresponding variable must be an event indicator.
-<em>[Note that only <a href="#continuous"><code>continuous</code></a> floating point variables are listed here.</em>
-<em>If an event indicator shall not be exposed from the FMU, or if event indicators are not statically associated with a variable (due to dynamic event indicator selection), then dummy variables have to be introduced, for example, <code>eventIndicator[4]</code>.</em>
+An ordered list of all event indicators, in other words, a list of value references where every referenced variable must be an event indicator.
+The serialized and concatenated values of the variables referenced by the attribute <code>valueReference</code> form the array that can be retrieved with <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.
+Only <a href="#continuous"><code>continuous</code></a> variables of type <code>Float32</code> and <code>Float64</code> can be referenced by <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a>.</p>
+<p class="tableblock"><em>[If an event indicator shall not be exposed from the FMU, or if event indicators are not statically associated with a variable (due to dynamic event indicator selection), then dummy variables have to be introduced, for example, <code>eventIndicator[4]</code>.</em>
 <em>The ordering of the variables in this list is defined by the exporting tool.]</em></p>
-<p class="tableblock">For Co-Simulation, elements <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> are ignored.
-<em>[If an FMU supports both Model Exchange and Co-Simulation, then the <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> elements might be present, since it is needed for Model Exchange.]</em></p></td>
+<p class="tableblock">For Co-Simulation, elements <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> are ignored.</p>
+<p class="tableblock"><em>[If an FMU supports both Model Exchange and Co-Simulation, then the <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> elements might be present, since it is needed for Model Exchange.]</em></p></td>
 </tr>
 </tbody>
 </table>
