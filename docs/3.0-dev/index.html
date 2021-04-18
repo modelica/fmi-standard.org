@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version f6c9fd6,</span>
-<span id="revdate">2021-04-16</span>
+<span id="revnumber">version 02bef77,</span>
+<span id="revdate">2021-04-18</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -8653,7 +8653,7 @@ The default is <code>false</code>.</p>
 <div class="title">A minimal build configuration</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiBuildDescription fmiVersion="3.0-alpha.7"&gt;
+&lt;fmiBuildDescription fmiVersion="3.0-beta.1"&gt;
 
   &lt;BuildConfiguration modelIdentifier="PIDContoller"&gt;
     &lt;SourceFileSet&gt;
@@ -8668,7 +8668,7 @@ The default is <code>false</code>.</p>
 <div class="title">Multiple complex build configurations</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiBuildDescription fmiVersion="3.0-alpha.7"&gt;
+&lt;fmiBuildDescription fmiVersion="3.0-beta.1"&gt;
 
   &lt;BuildConfiguration modelIdentifier="PlantModel" description="Build configuration for desktop platforms"&gt;
     &lt;SourceFileSet language="C99"&gt;
@@ -9086,7 +9086,7 @@ static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3Strin
 int main(int argc, char* argv[]) {
 
 #if defined(_WIN32)
-    HMODULE libraryHandle = LoadLibrary("VanDerPol\\binaries\\x86_64-windows\\VanDerPol.dll");
+    HMODULE libraryHandle = LoadLibraryA("VanDerPol\\binaries\\x86_64-windows\\VanDerPol.dll");
 #elif defined(__APPLE__)
     void *libraryHandle = dlopen("VanDerPol/binaries/x86_64-darwin/VanDerPol.dylib", RTLD_LAZY);
 #else
@@ -9826,18 +9826,18 @@ while (!terminateSimulation) {
     if (enterEventMode || stateEvent || timeEvent) {
 
         if (!initialEventMode) {
-            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, rootsFound, NZ, timeEvent));
+            CHECK_STATUS(M_fmi3EnterEventMode(m, enterEventMode, stateEvent, rootsFound, NZ, timeEvent));
         }
 
         // event iteration
-        fmi3Boolean newDiscreteStatesNeeded           = fmi3True;
+        fmi3Boolean discreteStatesNeedUpdate          = fmi3True;
         fmi3Boolean terminateSimulation               = fmi3False;
         fmi3Boolean nominalsOfContinuousStatesChanged = fmi3False;
         fmi3Boolean valuesOfContinuousStatesChanged   = fmi3False;
         fmi3Boolean nextEventTimeDefined              = fmi3False;
         fmi3Float64 nextEventTime                     = 0;
 
-        while (newDiscreteStatesNeeded) {
+        while (discreteStatesNeedUpdate) {
 
             // set inputs at super dense time point
             // M_fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
@@ -9846,7 +9846,7 @@ while (!terminateSimulation) {
             fmi3Boolean statesChanged   = fmi3False;
 
             // update discrete states
-            CHECK_STATUS(M_fmi3NewDiscreteStates(m, &amp;newDiscreteStatesNeeded, &amp;terminateSimulation, &amp;nominalsChanged, &amp;statesChanged, &amp;nextEventTimeDefined, &amp;nextEventTime));
+            CHECK_STATUS(M_fmi3UpdateDiscreteStates(m, &amp;discreteStatesNeedUpdate, &amp;terminateSimulation, &amp;nominalsChanged, &amp;statesChanged, &amp;nextEventTimeDefined, &amp;nextEventTime));
 
             // getOutput at super dense time point
             // M_fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
@@ -9887,7 +9887,7 @@ while (!terminateSimulation) {
     }
 
     // compute derivatives
-    CHECK_STATUS(M_fmi3GetDerivatives(m, der_x, NX));
+    CHECK_STATUS(M_fmi3GetContinuousStateDerivatives(m, der_x, NX));
 
     // advance time
     h = min(fixedStep, tNext - time);
@@ -10011,7 +10011,7 @@ If <code>false</code> (the default), the function must be called after every com
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;fmiModelDescription
-  fmiVersion="3.0-alpha.7"
+  fmiVersion="3.0-beta.1"
   modelName="MyLibrary.SpringMassDamper"
   instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f9e0}"
   description="Rotational Spring Mass Damper System"
@@ -10468,26 +10468,41 @@ The code demonstrates the simplest importer as shown in <a href="#state-machine-
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">////////////////////////////
 // Initialization sub-phase
+typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourceLocation,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    eventModeUsed,
+    fmi3Boolean                    earlyReturnAllowed,
+    const fmi3ValueReference       requiredIntermediateVariables[],
+    size_t                         nRequiredIntermediateVariables,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 // instantiate both FMUs
-s1 = s1_fmi3InstantiateCoSimulation("instance1",      // instanceName
+s1 = s1_fmi3InstantiateCoSimulation("instance1",   // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
                                     fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeRequired
+                                    fmi3False,     // eventModeUsed
+                                    fmi3False,     // earlyReturnAllowed
                                     NULL,          // requiredIntermediateVariables
                                     0,             // nRequiredIntermediateVariables
                                     NULL,          // instanceEnvironment
                                     cb_logMessage, // logMessage
                                     NULL);         // intermediateUpdate
 
-s2 = s2_fmi3InstantiateCoSimulation("instance1",      // instanceName
+s2 = s2_fmi3InstantiateCoSimulation("instance1",   // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
                                     fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeRequired
+                                    fmi3False,     // eventModeUsed
+                                    fmi3False,     // earlyReturnAllowed
                                     NULL,          // requiredIntermediateVariables
                                     0,             // nRequiredIntermediateVariables
                                     NULL,          // instanceEnvironment
@@ -10534,18 +10549,18 @@ while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
     // fmi3SetReal(s2, ..., 1, &amp;y1);
 
     // call instance s1 and check status
-    fmi3Boolean terminate, earlyReturn;
+    fmi3Boolean eventEncountered, terminateSimulation, earlyReturn;
     fmi3Float64 lastSuccessfulTime;
 
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
+    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
-    if (terminate) {
+    if (terminateSimulation) {
         printf("Instance s1 requested to terminate simulation.");
         break;
     }
 
     // call instance s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
+    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
     // ...
 
@@ -10658,7 +10673,7 @@ The only differences are the replacement of the element <code>&lt;ModelExchange&
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;fmiModelDescription
-  fmiVersion="3.0-alpha.7"
+  fmiVersion="3.0-beta.1"
   modelName="MyLibrary.SpringMassDamper_Early_Return_example"
   instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f9e0}"
   description="Rotational Spring Mass Damper System"
@@ -11339,7 +11354,7 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiModelDescription fmiVersion="3.0-alpha.7" modelName="ThreeInputClocks" instantiationToken="ThreeInputClocks"&gt;
+&lt;fmiModelDescription fmiVersion="3.0-beta.1" modelName="ThreeInputClocks" instantiationToken="ThreeInputClocks"&gt;
 	&lt;LogCategories&gt;
 		&lt;Category name="logStatusError" description="Log error messages"/&gt;
 	&lt;/LogCategories&gt;
