@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version e1fa7dd,</span>
+<span id="revnumber">version b08420a,</span>
 <span id="revdate">2021-04-29</span>
 </div>
 <div id="toc" class="toc2">
@@ -1639,9 +1639,9 @@ An FMI function may change settings of the thread in which it is called (such as
 <em>An FMU might temporarily change the floating point control word and get notified on floating point exceptions internally, but has to restore the flag and clear the floating point status word before return of the respective FMI function.]</em></p>
 </li>
 <li>
-<p>In general, FMI function arguments are not allowed to be NULL, unless explicitly allowed by the standard document where NULL will be assigned a specific semantic.<br>
-<em>[For an example of NULL being explicitly allowed see <a href="#resourceLocation"><code>resourceLocation</code></a>.</em>
-<em>Careful implementations should still guard against NULL pointers.]</em></p>
+<p>In general, FMI function arguments are not allowed to be <code>NULL</code>, unless explicitly allowed by the standard document where <code>NULL</code> will be assigned a specific semantic.<br>
+<em>[For an example of <code>NULL</code> being explicitly allowed see <a href="#resourcePath"><code>resourcePath</code></a>.</em>
+<em>Defensive implementations should still guard against <code>NULL</code> pointers.]</em></p>
 </li>
 <li>
 <p>The FMI Standard does not provide a runtime platform or portability layer.
@@ -1782,7 +1782,7 @@ These restrictions apply to all interface types and for binary and source-code F
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef struct {
-    
+
     fmi3Instance instance;
     fmi3GetFloat64TYPE* fmi3GetFloat64;
     // ...
@@ -2601,10 +2601,10 @@ If this data is not provided, the worst case must be assumed: all <a href="#outp
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    FMU *m1, *m2;  // structures that hold the functions and instances of the FMUs
-    
+
     m1-&gt;fmi3EnterEventMode(m1-&gt;instance, v1, v2, v3, v4, v5);
     m2-&gt;fmi3EnterEventMode(m2-&gt;instance, v1, v2, v3, v4, v5);
-    
+
     // start event iteration
     do {
         // solve algebraic loop as described in the sample codes above
@@ -2612,7 +2612,7 @@ If this data is not provided, the worst case must be assumed: all <a href="#outp
         // introduce new instant of super-dense time
         m1-&gt;fmi3UpdateDiscreteStates(m1-&gt;instance, &amp;m1_DStatesNeedUpdate, p2, p3, p4, p5, p6);
         m2-&gt;fmi3UpdateDiscreteStates(m2-&gt;instance, &amp;m2_DStatesNeedUpdate, p2, p3, p4, p5, p6);
-        
+
     } while (m1_DStatesNeedUpdate || m2_DStatesNeedUpdate);
 
     if (isCoSimulation) {
@@ -3849,7 +3849,7 @@ It is allowed to call this function only if <a href="#modelDescription.xml"><cod
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Instance fmi3InstantiateModelExchangeTYPE(
     fmi3String                 instanceName,
     fmi3String                 instantiationToken,
-    fmi3String                 resourceLocation,
+    fmi3String                 resourcePath,
     fmi3Boolean                visible,
     fmi3Boolean                loggingOn,
     fmi3InstanceEnvironment    instanceEnvironment,
@@ -3858,7 +3858,7 @@ It is allowed to call this function only if <a href="#modelDescription.xml"><cod
 typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
     fmi3String                     instanceName,
     fmi3String                     instantiationToken,
-    fmi3String                     resourceLocation,
+    fmi3String                     resourcePath,
     fmi3Boolean                    visible,
     fmi3Boolean                    loggingOn,
     fmi3Boolean                    eventModeUsed,
@@ -3872,7 +3872,7 @@ typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
 typedef fmi3Instance fmi3InstantiateScheduledExecutionTYPE(
     fmi3String                     instanceName,
     fmi3String                     instantiationToken,
-    fmi3String                     resourceLocation,
+    fmi3String                     resourcePath,
     fmi3Boolean                    visible,
     fmi3Boolean                    loggingOn,
     const fmi3ValueReference       requiredIntermediateVariables[],
@@ -3908,30 +3908,16 @@ It must be passed unchanged to the FMU.
 This argument must not be a null pointer.</p>
 </li>
 <li>
-<p><a id="resourceLocation"></a> <code>resourceLocation</code> is a URI according to the <a href="http://datatracker.ietf.org/doc/rfc3986/">IETF RFC3986</a> syntax to indicate the location to the <code>resources</code> directory of the unzipped FMU archive.
-The following schemes must be understood by the FMU:</p>
+<p><a id="resourcePath"></a> <code>resourcePath</code> is the absolute file path (with a trailing file separator) of the <code>resources</code> directory of the extracted FMU archive.<br>
+<em>[Example: An FMU is extracted to the directory <code>C:\temp\MyFMU</code>, then <a href="#resourcePath"><code>resourcePath</code></a> = <code>C:\temp\MyFMU\resources\</code>.]</em><br>
+<a href="#resourcePath"><code>resourcePath</code></a> must be <code>NULL</code>, if no resource path can be provided to the FMU, which may occur if</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Mandatory&#8201;&#8212;&#8201;<code>file</code> with absolute path (either including or omitting the authority component);<br></p>
+<p>the FMU does not contain a <code>resources</code> folder, or</p>
 </li>
 <li>
-<p>Optional&#8201;&#8212;&#8201;<code>http</code>, <code>https</code>, <code>ftp</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><em>[Example: An FMU is unzipped in directory <code>C:\temp\MyFMU</code>, then <a href="#resourceLocation"><code>resourceLocation</code></a> = <code><a href="file:///C:/temp/MyFMU/resources" class="bare">file:///C:/temp/MyFMU/resources</a></code> or <code>file:/C:/temp/MyFMU/resources</code>.</em><br>
-<em>The <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> functions are then able to read all needed resources from this directory, for example maps or tables used by the FMU.]</em><br>
-A NULL pointer is supplied for <a href="#resourceLocation"><code>resourceLocation</code></a>, if no resource location can be provided to the FMU, which may occur</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>if the FMU does not contain a resources folder, or</p>
-</li>
-<li>
-<p>if the environment is not able to provide an URI to the resources folder <em>[e.g., if the environment does not have a file system.</em>
+<p>the environment is not able to provide the file path to the resources folder <em>[e.g., if the environment does not have a file system.</em>
 <em>If the FMU in such a case cannot be simulated, as it depends on the resources folder, it shall terminate with an error.]</em></p>
 </li>
 </ul>
@@ -8990,8 +8976,10 @@ The requirements and the expected processing should be documented in the <code>d
 <h5 id="resources-directory">2.5.1.5. Directory Resources</h5>
 <div class="paragraph">
 <p>In the optional directory <code>resources</code>, additional data can be provided in FMU specific formats, typically for tables and maps used in the FMU.
-More folders can be added under resources (tool/model specific).
-For the FMU to access these resource files, the <code>resource</code> directory shall be available in unzipped form and the absolute path to this directory must be reported via argument <code>resourceLocation</code> of <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+More folders can be added under <code>resources</code> (tool/model specific).
+For the FMU to access these resource files, the resources directory shall be available in extracted form and the absolute path to this directory is provided via argument <a href="#resourcePath"><code>resourcePath</code></a> of <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
+The resources directory must be available for the lifetime of the FMU instance.
+The FMU instance must not write to or delete the directory or parts of it.</p>
 </div>
 <div class="paragraph">
 <p>The <code>resource</code> data must be read into the model at the latest during initialization (that is, before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called).
