@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 4c4cbdb,</span>
+<span id="revnumber">version e1fa7dd,</span>
 <span id="revdate">2021-04-29</span>
 </div>
 <div id="toc" class="toc2">
@@ -6599,15 +6599,11 @@ If <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</c
 If <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>, or <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, it is not allowed to provide a <a href="#start"><code>start</code></a> value.</p>
 </div>
 <div class="paragraph">
-<p><em>[The environment decides when to use the <a href="#start"><code>start</code></a> value of a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
-Examples: (a) automatic tests of FMUs are performed, and the FMU is tested by providing the <a href="#start"><code>start</code></a> value as <a href="#constant"><code>constant</code></a> <a href="#input"><code>input</code></a>.
-(b) For a Model Exchange FMU, the FMU might be part of an algebraic loop.
-If the <a href="#input"><code>input</code></a> variable is iteration variable of this algebraic loop, then initialization starts with its <a href="#start"><code>start</code></a> value.]</em></p>
-</div>
-<div class="paragraph">
-<p>If <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#Clock">Clock</a>, that is, the variable is an <a href="#inputClock"><code>input Clock</code></a>, it is required to provide a <a href="#start"><code>start</code></a> value for describing the expected initial condition of the <a href="#inputClock"><code>input Clock</code></a> for that FMU.
-If an <a href="#inputClock"><code>input Clock</code></a> has <code>fmi3True</code> as a <a href="#start"><code>start</code></a> value, the environment should activate the <a href="#Clock">Clock</a> the first time it enters <a href="#EventMode"><strong>Event Mode</strong></a>.
-The environment can nevertheless choose different <a href="#start"><code>start</code></a> values if it is not possible to fulfill the conditions in a simulation setup.</p>
+<p><em>[The environment decides when to use the <a href="#start"><code>start</code></a> value of a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.</em>
+<em>Examples:</em>
+ * <em>Automatic tests of FMUs are performed, and the FMU is tested by providing the <a href="#start"><code>start</code></a> value as <a href="#constant"><code>constant</code></a> <a href="#input"><code>input</code></a>.</em>
+ * <em>For a Model Exchange FMU, the FMU might be part of an algebraic loop.</em>
+<em>If the <a href="#input"><code>input</code></a> variable is iteration variable of this algebraic loop, then initialization starts with its <a href="#start"><code>start</code></a> value.]</em></p>
 </div>
 <div class="paragraph">
 <p>If <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> the <a href="#initial"><code>initial</code></a> attribute value is set to <a href="#calculated"><code>calculated</code></a> and no <a href="#start"><code>start</code></a> value is provided.</p>
@@ -7179,7 +7175,7 @@ A different <a href="#start"><code>start</code></a> value can be provided with a
 <p>If <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>, the <a href="#start"><code>start</code></a> value is the value of it.</p>
 </li>
 <li>
-<p>If <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, the <a href="#start"><code>start</code></a> value is used by the model as value of the <a href="#input"><code>input</code></a>, if the <a href="#input"><code>input</code></a> is not set by the environment.</p>
+<p>If <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, the <a href="#start"><code>start</code></a> value is used by the model as value of the <a href="#input"><code>input</code></a>, if the <a href="#input"><code>input</code></a> is not set by the environment, except for variables of type <a href="#Clock">Clock</a>.</p>
 </li>
 <li>
 <p>If <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>, the <a href="#start"><code>start</code></a> value is the value of the constant.</p>
