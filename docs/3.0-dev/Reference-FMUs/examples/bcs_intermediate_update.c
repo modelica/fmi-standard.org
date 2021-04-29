@@ -23,8 +23,9 @@ fmi3Status recordVariables(InstanceEnvironment *instanceEnvironment, fmi3Float64
 
 void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
                            fmi3Float64 intermediateUpdateTime,
+                           fmi3Boolean eventOccurred,
                            fmi3Boolean clocksTicked,
-                           fmi3Boolean intermediateVariableSetRequested,
+                           fmi3Boolean intermediateVariableSetAllowed,
                            fmi3Boolean intermediateVariableGetAllowed,
                            fmi3Boolean intermediateStepFinished,
                            fmi3Boolean canReturnEarly,
@@ -44,6 +45,10 @@ void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
 
     fmi3Status status = fmi3OK;
 
+    if (eventOccurred) {
+        return; // don't record events
+    }
+
     // if getting intermediate output variables is allowed
     if (intermediateVariableGetAllowed) {
 
@@ -58,7 +63,7 @@ void cb_intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
     }
 
     // if setting intermediate output variables is allowed
-    if (intermediateVariableSetRequested) {
+    if (intermediateVariableSetAllowed) {
         // Compute intermediate input variables from output variables and
         // variables from other FMUs. Use latest available output
         // variables, possibly from get functions above.
@@ -100,13 +105,12 @@ int main(int argc, char* argv[]) {
 
     // Instantiate the FMU
     fmi3Instance s = fmi3InstantiateCoSimulation(
-        "instance1",            // instanceName
+        "instance1",               // instanceName
         INSTANTIATION_TOKEN,    // instantiationToken
         NULL,                   // resourceLocation
         fmi3False,              // visible
         fmi3False,              // loggingOn
-        fmi3False,              // eventModeUsed
-        fmi3False,              // earlyReturnAllowed
+        fmi3False,              // eventModeRequired
         NULL,                   // requiredIntermediateVariables
         0,                      // nRequiredIntermediateVariables
         &instanceEnvironment,   // instanceEnvironment
@@ -132,10 +136,10 @@ int main(int argc, char* argv[]) {
 
     while (time < stopTime) {
 
-        fmi3Boolean eventEncountered, terminateSimulation, earlyReturn;
+        fmi3Boolean terminate, earlyReturn;
         fmi3Float64 lastSuccessfulTime;
 
-        CHECK_STATUS(fmi3DoStep(s, time, h, fmi3False, &eventEncountered, &terminateSimulation, &earlyReturn, &lastSuccessfulTime))
+        CHECK_STATUS(fmi3DoStep(s, time, h, fmi3False, &terminate, &earlyReturn, &lastSuccessfulTime))
 
         time += h;
     };

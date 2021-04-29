@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version eae9671,</span>
+<span id="revnumber">version 4c4cbdb,</span>
 <span id="revdate">2021-04-29</span>
 </div>
 <div id="toc" class="toc2">
@@ -601,7 +601,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_fmi_for_model_exchange_me">1.2.1. FMI for Model Exchange (ME)</a></li>
 <li><a href="#_fmi_for_co_simulation_cs">1.2.2. FMI for Co-Simulation (CS)</a></li>
 <li><a href="#_fmi_for_scheduled_execution_se">1.2.3. FMI for Scheduled Execution (SE)</a></li>
-<li><a href="#_feature_overview_of_fmi_interface_types">1.2.4. Feature Overview of FMI Interface Types</a></li>
+<li><a href="#_feature_overview_of_the_interface_types">1.2.4. Feature Overview of the Interface Types</a></li>
 </ul>
 </li>
 <li><a href="#_properties_and_guiding_ideas">1.3. Properties and Guiding Ideas</a></li>
@@ -902,12 +902,12 @@ Concrete features to support vECU export are:</p>
 <p>introduction of structural parameters that allow description and changing of array sizes, even during runtime to support advanced online calibration of control code, and</p>
 </li>
 <li>
-<p>addition of the new interface type FMI for Scheduled Execution (see <a href="#fmi-for-scheduled-execution">Section 5</a>) that allows activation of individual model partitions (or tasks) from an external scheduler, e.g. for realtime platforms.</p>
+<p>addition of the new interface type "Scheduled Execution" (see <a href="#fmi-for-scheduled-execution">Section 5</a>) that allows activation of individual model partitions (or tasks) by an external scheduler, e.g. on real-time platforms.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>A second need of the simulation community was address by introducing the more advanced co-simulation interface <a href="#fmi-for-co-simulation">FMI for Co-Simulation</a>.
+<p>A second need of the simulation community was address by introducing the more advanced co-simulation interface type <a href="#fmi-for-co-simulation">FMI for Co-Simulation</a>.
 New features, like</p>
 </div>
 <div class="ulist">
@@ -958,11 +958,11 @@ New features, like</p>
 <p>The FMI (Functional Mock-up Interface) defines an interface to be implemented by an executable called an FMU (Functional Mock-up Unit).
 The FMI functions are used (called) by a simulation environment to create one or more instances of the FMU and to simulate them, typically together with other models.
 An FMU may either have its own solvers (<a href="#fmi-for-co-simulation">FMI for Co-Simulation</a>), or require the simulation environment to perform numerical integration (<a href="#fmi-for-model-exchange">FMI for Model Exchange</a>), or require the simulation environment to trigger model partition execution (<a href="#fmi-for-scheduled-execution">FMI for Scheduled Execution</a>).
-The goal of this interface is that the calling of an FMU in a simulation environment is reasonably simple.
+The goal of this interface type is that the calling of an FMU in a simulation environment is reasonably simple.
 This document does not describe how to generate an FMU from a modeling environment.</p>
 </div>
 <div class="paragraph">
-<p>The interfaces have large parts in common, defined in <a href="#fmi-common-concepts">Common Concepts</a>.
+<p>The interface types have large parts in common, defined in <a href="#fmi-common-concepts">Common Concepts</a>.
 In particular:</p>
 </div>
 <div class="ulist">
@@ -1006,7 +1006,7 @@ That integration algorithm of the importing tool, usually a DAE solver, is respo
 <div class="sect3">
 <h4 id="_fmi_for_co_simulation_cs">1.2.2. FMI for Co-Simulation (CS)</h4>
 <div class="paragraph">
-<p>The FMI for Co-Simulation interface is designed both for the coupling of simulation tools, and the coupling of subsystem models, exported by their simulators together with its solvers as runnable code.
+<p>The Co-Simulation interface is designed both for the coupling of simulation tools, and the coupling of subsystem models, exported by their simulators together with its solvers as runnable code.
 (See <a href="#fmi-for-co-simulation">Section 4</a>.)</p>
 </div>
 <div id="figure-co-simulation-data-flow" class="imageblock text-center">
@@ -1034,17 +1034,17 @@ The scheduler is responsible for advancing the overall simulation time, triggeri
 </div>
 </div>
 <div class="sect3">
-<h4 id="_feature_overview_of_fmi_interface_types">1.2.4. Feature Overview of FMI Interface Types</h4>
+<h4 id="_feature_overview_of_the_interface_types">1.2.4. Feature Overview of the Interface Types</h4>
 <div class="imageblock text-center">
 <div class="content">
 <img src="images/fmi-types-overview.svg" alt="fmi types overview" width="50%">
 </div>
 </div>
 <div class="paragraph">
-<p><a href="#table-overview-features">Table 1</a> gives a non-normative overview of the features of the different interfaces.</p>
+<p><a href="#table-overview-features">Table 1</a> gives a non-normative overview of the features of the different interface types.</p>
 </div>
 <table id="table-overview-features" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Non-normative overview of features per interface.</caption>
+<caption class="title">Table 1. Non-normative overview of features per interface type.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -1264,8 +1264,7 @@ This attribute must be unique with respect to all other <code>name</code> attrib
 </dd>
 <dt class="hdlist1">Use C</dt>
 <dd>
-<p>The FMI is encoded using C, not C++.
-Reasons: Avoid problems with compiler and linker dependent behavior, and run the FMU on embedded systems.</p>
+<p>The FMI API is written in C, not C++, to avoid problems with compiler and linker dependent behavior, and to enable the use of FMUs on embedded systems.</p>
 </dd>
 </dl>
 </div>
@@ -1296,7 +1295,7 @@ Properties that might be additionally needed for trajectory optimization, for ex
 <div class="sect2">
 <h3 id="_how_to_read_this_document">1.4. How to Read This Document</h3>
 <div class="paragraph">
-<p>The core of this document is the description of the state machines and their states for each of the three FMI interface types, each interface type in its own section.
+<p>The core of this document is the description of the state machines and their states for each of the three interface types, each interface type in its own section.
 Each state description starts with a brief state&#8217;s purpose, then the mathematical model in a table linking formulas with C-API functions, and finally descriptions of all allowed functions for this particular state.</p>
 </div>
 <div class="paragraph">
@@ -3791,9 +3790,9 @@ The inner level does not exist for scalar variables.</p>
 <div class="paragraph">
 <p>To define allowed calling sequences of FMI functions, state machines are used.
 Each state of the state machine corresponds to a certain phase of a simulation.
-All FMI interface types share a number of states in their respective state machines.
+All interface types share a number of states in their respective state machines.
 This chapter describes these common states used in at least two of the interface types.
-State-machine states specific to a single FMI interface type will be described in their respective chapters.</p>
+State-machine states specific to a single interface type will be described in their respective chapters.</p>
 </div>
 <div id="each-state-description" class="paragraph">
 <p>Each state description lists the governing equations and actions and the corresponding API functions influencing these equations in a table (not defining the calling order), and also lists the allowed function calls and usage restrictions.</p>
@@ -8275,8 +8274,8 @@ The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</co
 The implementation of the simulation model represented by the FMU may be distributed in source code and/or in binary format.
 The FMU must be distributed with at least one implementation, in other words, either sources or one of the binaries for a particular machine.
 It is also possible to provide the sources and binaries for different target machines together in one ZIP file.
-The FMU must implement all common API functions according to <a href="#general-mechanisms">Section 2.2</a> and the functions for at least one of the FMI interface types.
-Especially it is required that all functions that are part of the specified FMI interface type are present, even if they are only needed for optional capabilities that the FMU does not support.
+The FMU must implement all common API functions according to <a href="#general-mechanisms">Section 2.2</a> and the functions for at least one of the interface types.
+Especially it is required that all functions that are part of the specified interface type are present, even if they are only needed for optional capabilities that the FMU does not support.
 The behavior of those functions is unspecified, so while calling environments can rely on the functions being present, they cannot rely on any particular behavior for functions only needed for capabilities the FMU does not support.
 The extension of the ZIP file must be <code>.fmu</code> <em>[, for example, <code>HybridVehicle.fmu</code>]</em>.
 The compression method for all files stored in the ZIP archive must be either 8 (<code>deflate</code>), or 0 (<code>store</code>).
@@ -9021,7 +9020,7 @@ Specifically all validation or digital signature schemes used to protect the con
 <h4 id="_multiple_interface_types">2.5.2. Multiple Interface Types</h4>
 <div class="paragraph">
 <p>Exporters may support multiple FMI types in one FMU, so it can be used in differently capable simulation algorithms and for different use cases.
-To indicate support for a specific interface type, the <code>&lt;fmiModelDescription&gt;</code> must have the respective element present, irrespective if a specific interface is contained in binary or source format.</p>
+To indicate support for a specific interface type, the <code>&lt;fmiModelDescription&gt;</code> must have the respective element present, irrespective if a specific interface type is contained in binary or source format.</p>
 </div>
 <div class="paragraph">
 <p><em>[The described multi-mode support is often based on wrapping functionality into the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function by emulating missing features of the Model Exchange and Scheduled Execution interface types.]</em></p>
@@ -9087,7 +9086,7 @@ static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3Strin
 int main(int argc, char* argv[]) {
 
 #if defined(_WIN32)
-    HMODULE libraryHandle = LoadLibraryA("VanDerPol\\binaries\\x86_64-windows\\VanDerPol.dll");
+    HMODULE libraryHandle = LoadLibrary("VanDerPol\\binaries\\x86_64-windows\\VanDerPol.dll");
 #elif defined(__APPLE__)
     void *libraryHandle = dlopen("VanDerPol/binaries/x86_64-darwin/VanDerPol.dylib", RTLD_LAZY);
 #else
@@ -9827,18 +9826,18 @@ while (!terminateSimulation) {
     if (enterEventMode || stateEvent || timeEvent) {
 
         if (!initialEventMode) {
-            CHECK_STATUS(M_fmi3EnterEventMode(m, enterEventMode, stateEvent, rootsFound, NZ, timeEvent));
+            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, rootsFound, NZ, timeEvent));
         }
 
         // event iteration
-        fmi3Boolean discreteStatesNeedUpdate          = fmi3True;
+        fmi3Boolean newDiscreteStatesNeeded           = fmi3True;
         fmi3Boolean terminateSimulation               = fmi3False;
         fmi3Boolean nominalsOfContinuousStatesChanged = fmi3False;
         fmi3Boolean valuesOfContinuousStatesChanged   = fmi3False;
         fmi3Boolean nextEventTimeDefined              = fmi3False;
         fmi3Float64 nextEventTime                     = 0;
 
-        while (discreteStatesNeedUpdate) {
+        while (newDiscreteStatesNeeded) {
 
             // set inputs at super dense time point
             // M_fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
@@ -9847,7 +9846,7 @@ while (!terminateSimulation) {
             fmi3Boolean statesChanged   = fmi3False;
 
             // update discrete states
-            CHECK_STATUS(M_fmi3UpdateDiscreteStates(m, &amp;discreteStatesNeedUpdate, &amp;terminateSimulation, &amp;nominalsChanged, &amp;statesChanged, &amp;nextEventTimeDefined, &amp;nextEventTime));
+            CHECK_STATUS(M_fmi3NewDiscreteStates(m, &amp;newDiscreteStatesNeeded, &amp;terminateSimulation, &amp;nominalsChanged, &amp;statesChanged, &amp;nextEventTimeDefined, &amp;nextEventTime));
 
             // getOutput at super dense time point
             // M_fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
@@ -9888,7 +9887,7 @@ while (!terminateSimulation) {
     }
 
     // compute derivatives
-    CHECK_STATUS(M_fmi3GetContinuousStateDerivatives(m, der_x, NX));
+    CHECK_STATUS(M_fmi3GetDerivatives(m, der_x, NX));
 
     // advance time
     h = min(fixedStep, tNext - time);
@@ -10469,41 +10468,26 @@ The code demonstrates the simplest importer as shown in <a href="#state-machine-
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">////////////////////////////
 // Initialization sub-phase
-typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
-    fmi3String                     instanceName,
-    fmi3String                     instantiationToken,
-    fmi3String                     resourceLocation,
-    fmi3Boolean                    visible,
-    fmi3Boolean                    loggingOn,
-    fmi3Boolean                    eventModeUsed,
-    fmi3Boolean                    earlyReturnAllowed,
-    const fmi3ValueReference       requiredIntermediateVariables[],
-    size_t                         nRequiredIntermediateVariables,
-    fmi3InstanceEnvironment        instanceEnvironment,
-    fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 // instantiate both FMUs
-s1 = s1_fmi3InstantiateCoSimulation("instance1",   // instanceName
+s1 = s1_fmi3InstantiateCoSimulation("instance1",      // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
                                     fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeUsed
-                                    fmi3False,     // earlyReturnAllowed
+                                    fmi3False,     // eventModeRequired
                                     NULL,          // requiredIntermediateVariables
                                     0,             // nRequiredIntermediateVariables
                                     NULL,          // instanceEnvironment
                                     cb_logMessage, // logMessage
                                     NULL);         // intermediateUpdate
 
-s2 = s2_fmi3InstantiateCoSimulation("instance1",   // instanceName
+s2 = s2_fmi3InstantiateCoSimulation("instance1",      // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
                                     fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeUsed
-                                    fmi3False,     // earlyReturnAllowed
+                                    fmi3False,     // eventModeRequired
                                     NULL,          // requiredIntermediateVariables
                                     0,             // nRequiredIntermediateVariables
                                     NULL,          // instanceEnvironment
@@ -10550,18 +10534,18 @@ while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
     // fmi3SetReal(s2, ..., 1, &amp;y1);
 
     // call instance s1 and check status
-    fmi3Boolean eventEncountered, terminateSimulation, earlyReturn;
+    fmi3Boolean terminate, earlyReturn;
     fmi3Float64 lastSuccessfulTime;
 
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
+    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
-    if (terminateSimulation) {
+    if (terminate) {
         printf("Instance s1 requested to terminate simulation.");
         break;
     }
 
     // call instance s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
+    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
     // ...
 
@@ -11602,8 +11586,12 @@ Also called simulation environment, environment, calling environment, (co-)simul
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>interface</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An abstraction of a <em>software component</em> that describes its behavior without dealing with the internal implementation.
+<td class="tableblock halign-left valign-top"><p class="tableblock">General: An abstraction of a <em>software component</em> that describes its behavior without dealing with the internal implementation.
 <em>Software components</em> communicate with each other via interfaces.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>interface type</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One of the three FMI variants "Model Exchange", "Co-simulation" or "Scheduled execution"</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>machine epsilon</em></p></td>

@@ -2,11 +2,11 @@
 #define fmi3PlatformTypes_h
 
 /*
-This header file defines the data types of FMI 3.0-beta.1.
+This header file defines the data types of FMI 3.0-alpha.5.
 It must be used by both FMU and FMI master.
 
 Copyright (C) 2008-2011 MODELISAR consortium,
-              2012-2021 Modelica Association Project "FMI"
+              2012-2020 Modelica Association Project "FMI"
               All rights reserved.
 
 This file is licensed by the copyright holders under the 2-Clause BSD License
@@ -37,25 +37,24 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ----------------------------------------------------------------------------
 */
 
-/* Include the integer and boolean type definitions */
+/* Include the integer type definitions */
 #include <stdint.h>
-#include <stdbool.h>
 
 
 /* tag::Component[] */
-typedef           void* fmi3Instance;             /* Pointer to the FMU instance */
+typedef void*           fmi3Instance;             /* Pointer to FMU instance */
 /* end::Component[] */
 
 /* tag::ComponentEnvironment[] */
-typedef           void* fmi3InstanceEnvironment;  /* Pointer to the FMU environment */
+typedef void*           fmi3InstanceEnvironment;  /* Pointer to FMU environment */
 /* end::ComponentEnvironment[] */
 
 /* tag::FMUState[] */
-typedef           void* fmi3FMUState;             /* Pointer to the internal FMU state */
+typedef void*           fmi3FMUState;             /* Pointer to internal FMU state */
 /* end::FMUState[] */
 
 /* tag::ValueReference[] */
-typedef        uint32_t fmi3ValueReference;       /* Handle to the value of a variable */
+typedef unsigned int    fmi3ValueReference;       /* Handle to the value of a variable */
 /* end::ValueReference[] */
 
 /* tag::VariableTypes[] */
@@ -69,24 +68,24 @@ typedef         int32_t fmi3Int32;    /* 32-bit signed integer */
 typedef        uint32_t fmi3UInt32;   /* 32-bit unsigned integer */
 typedef         int64_t fmi3Int64;    /* 64-bit signed integer */
 typedef        uint64_t fmi3UInt64;   /* 64-bit unsigned integer */
-typedef            bool fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
+typedef             int fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
 typedef            char fmi3Char;     /* Data type for one character */
 typedef const fmi3Char* fmi3String;   /* Data type for character strings
                                          ('\0' terminated, UTF-8 encoded) */
-typedef         uint8_t fmi3Byte;     /* Smallest addressable unit of the machine
+typedef            char fmi3Byte;     /* Smallest addressable unit of the machine
                                          (typically one byte) */
 typedef const fmi3Byte* fmi3Binary;   /* Data type for binary data
                                          (out-of-band length terminated) */
-typedef            bool fmi3Clock;    /* Data type to be used with fmi3ClockActive and
+typedef             int fmi3Clock ;   /* Data type to be used with fmi3ClockActive and
                                          fmi3ClockInactive */
 
 /* Values for fmi3Boolean */
-#define fmi3True  true
-#define fmi3False false
+#define fmi3True  1
+#define fmi3False 0
 
 /* Values for fmi3Clock */
-#define fmi3ClockActive   true
-#define fmi3ClockInactive false
+#define fmi3ClockActive   1
+#define fmi3ClockInactive 0
 /* end::VariableTypes[] */
 
 #endif /* fmi3PlatformTypes_h */
