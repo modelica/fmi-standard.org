@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.12">
+<meta name="generator" content="Asciidoctor 2.0.15">
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 <title>Functional Mock-up Interface Specification</title>
 <style>
@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 90fa222,</span>
-<span id="revdate">2021-04-29</span>
+<span id="revnumber">version f8c7e82,</span>
+<span id="revdate">2021-05-10</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -807,7 +807,8 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel2">
 <li><a href="#concepts-scheduled-execution">5.1. Concepts</a>
 <ul class="sectlevel3">
-<li><a href="#preemption-support">5.1.1. Preemption Support</a></li>
+<li><a href="#concepts-timing-scheduled-execution">5.1.1. Timing Concepts and Clocks</a></li>
+<li><a href="#preemption-support">5.1.2. Preemption Support</a></li>
 </ul>
 </li>
 <li><a href="#state-machine-scheduled-execution">5.2. State Machine for Scheduled Execution</a>
@@ -858,7 +859,7 @@ The licenses text can be found in the <a href="https://raw.githubusercontent.com
 <div class="paragraph">
 <p>Attention is drawn to the possibility that some of the elements of this document may be the subject of patent rights.
 Modelica Association shall not be held responsible for identifying such patent rights.
-All contributors to this specification have signed the <a href="https://svn.fmi-standard.org/fmi/branches/public/FMI_CCLA_v1.0_2016_06_21.pdf">Corporate Contributor License Agreement of the FMI Project</a> or the <a href="https://www.modelica.org/licenses/ModelicaAssociationCLA_1.1">Contributor License Agreement of the Modelica Association</a>.</p>
+All contributors to this specification have signed the <a href="https://github.com/modelica/fmi-standard/blob/master/FMI_CCLA.adoc">Corporate Contributor License Agreement of the FMI Project</a> or the <a href="https://github.com/modelica/ModelicaAssociationCLA/releases/download/1.1.1/ModelicaAssociationCLA_1.1.1.pdf">Contributor License Agreement of the Modelica Association</a>.</p>
 </div>
 <div class="paragraph">
 <p></p>
@@ -3983,33 +3984,31 @@ If <a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariable
 </div>
 </div>
 <div class="paragraph">
-<p>Pointer to a function that is called in the FMU <em>[usually if an <code>fmi3XXX</code> function does not behave as desired]</em>.</p>
+<p>Pointer to a function that is called by the FMU <em>[usually if an <code>fmi3XXX</code> function does not behave as desired]</em>.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>instanceName</code> is the instance name of the model that calls this function.</p>
+<p><code>instanceName</code> is the name of the FMU instance that calls this function.</p>
 </li>
 <li>
 <p><code>status</code> contains the severity of the message, see <code>fmi3Status</code>.
-If <a href="#logMessage"><code>logMessage</code></a> is called with <a href="#fmi3OK"><code>status == fmi3OK</code></a>, then the message is a pure information message.</p>
+If <a href="#fmi3OK"><code>status == fmi3OK</code></a>, the message is a pure information message.</p>
 </li>
 <li>
 <p><code>category</code> is the category of the message.
-The meaning of <code>category</code> is defined by the modeling environment that generated the FMU.
-Depending on this modeling environment, none, some, or all, allowed values of <code>category</code> for this FMU are defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file via element <code>&lt;fmiModelDescription&gt;&lt;LogCategories&gt;</code>, see <a href="#definition-of-log-categories">Section 2.4.5</a>.
-Only messages are provided by function <a href="#logMessage"><code>logMessage</code></a> that have a category according to a call to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a>.</p>
+The allowed values for <code>category</code> are defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file via the element <a href="#definition-of-log-categories"><code>&lt;LogCategories&gt;</code></a>.
+<a href="#logMessage"><code>logMessage</code></a> should only be called for log categories that were enabled by a call to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> or via <code>loggingOn == fmi3True</code> in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
+If the FMU does not define any log categories, <code>category</code> must be <code>NULL</code>.</p>
 </li>
 <li>
-<p><code>message</code> is a string that contains the message.</p>
+<p><code>message</code> is a string that contains the message to log. It may contain line-breaks (<code>\n</code>), but should not have a trailing line break.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>All string-valued arguments passed by the FMU to the <a href="#logMessage"><code>logMessage</code></a> may be deallocated by the FMU directly after function <a href="#logMessage"><code>logMessage</code></a> returns.
-The simulation environment must therefore create copies of these strings if it needs to access these strings later.<br>
-The <a href="#logMessage"><code>logMessage</code></a> function will append a line break to each message when writing messages after each other to a terminal or a file (the messages may also be shown in other ways, for example, as separate text-boxes in a GUI).
-The caller may include line-breaks (using "\n") within the message, but should avoid trailing line breaks.<br>
+<em>[The simulation environment must therefore create copies of these strings if it needs to access these strings later.]</em><br>
 Variables can be referenced in a message with <code>#&lt;ValueReference&gt;#</code>.
 If the character <code>#</code> shall be included in the message, it has to be prefixed with <code>#</code>, so <code>#</code> is an escape character.<br>
 <em>[Example: The message <code>#1365# must be larger than zero (used in IO channel ##4)</code> might be changed by the <a href="#logMessage"><code>logMessage</code></a> function to <code>body.m must be larger than zero (used in IO channel #4)</code> if <code>body.m</code> is the name of the variable with value reference 1365.]</em></p>
@@ -4021,7 +4020,7 @@ See <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpda
 </li>
 <li>
 <p>Callback function <code>lockPreemption</code> and <code>unlockPreemption</code><br>
-See <a href="#preemption-support">Section 5.1.1</a> for details.</p>
+See <a href="#preemption-support">Section 5.1.2</a> for details.</p>
 </li>
 </ul>
 </div>
@@ -4047,22 +4046,22 @@ Additionally, a pointer to the environment is provided (<code>instanceEnvironmen
 </div>
 </div>
 <div class="paragraph">
-<p>The function controls debug logging that is output via the <a href="#logMessage"><code>logMessage</code></a> callback function.</p>
+<p>The function controls the debug logging that is output via the <a href="#logMessage"><code>logMessage</code></a> callback function by the FMU.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>If <code>loggingOn == fmi3True</code>, debug logging is enabled, otherwise it is switched off.</p>
+<p>If <code>loggingOn == fmi3True</code>, debug logging is enabled for the log categories specified in <code>categories</code>, otherwise it is disabled.</p>
 </li>
 <li>
-<p><code>nCategories</code> defines the length of the next argument <code>categories</code>
-If <code>loggingOn == fmi3True</code> and <code>nCategories == 0</code>, then all debug messages shall be output.
-If <code>loggingOn == fmi3True</code> and <code>nCategories &gt; 0</code>, then only debug messages according to the <code>categories</code> argument shall be printed via the <a href="#logMessage"><code>logMessage</code></a> function.</p>
+<p><code>nCategories</code> defines the length of the argument <code>categories</code>.</p>
 </li>
 <li>
-<p><code>categories</code> is a vector with <code>nCategories</code> elements.
-The allowed values of <code>categories</code> are defined by the modeling environment that generated the FMU.
-Depending on the generating modeling environment, none, some or all allowed values for <code>categories</code> for this FMU are defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file via element <code>&lt;fmiModelDescription&gt;&lt;LogCategories&gt;</code>, see <a href="#definition-of-log-categories">Section 2.4.5</a>.</p>
+<p>If <code>nCategories == 0</code>, <code>loggingOn</code> applies to all log categories and the value of <code>categories</code> is undefined.</p>
+</li>
+<li>
+<p><code>categories</code> is an array of <code>nCategories</code> elements.
+The allowed values of <code>categories</code> are defined in the modelDescription.xml via element <a href="#definition-of-log-categories"><code>&lt;LogCategories&gt;</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -6241,10 +6240,6 @@ If a tool supports one of these log categories and wants to expose it, then an e
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>logStatusFatal</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Log messages when returning <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> status from any function.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>logAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log all messages.</p></td>
 </tr>
 </tbody>
 </table>
@@ -10785,27 +10780,31 @@ For that a preemptive multitasking regime is intended (cooperative multitasking 
 </div>
 <div class="sect2">
 <h3 id="concepts-scheduled-execution">5.1. Concepts</h3>
+<div class="sect3">
+<h4 id="concepts-timing-scheduled-execution">5.1.1. Timing Concepts and Clocks</h4>
 <div class="paragraph">
 <p>The Scheduled Execution interface has a different timing concept compared to FMI for Co-Simulation.
 This is required to handle activations of <a href="#triggered">triggered input Clocks</a> which may tick at a time instant that is unpredictable for the simulation algorithm.
 Typically, hardware I/O or virtual ECU software events belong to this category.</p>
 </div>
 <div class="paragraph">
-<p>A simulation algorithm&#8217;s activation of a model partition will compute the results of the model partition defined by a <a href="#triggered">triggered input Clock</a> for the current <a href="#Clock">Clock</a> tick time \(\mathbf{t}_i\).
-Refer to the Clock time progress definition for <a href="#periodic-clock">periodic Clocks</a>.</p>
+<p>A simulation algorithm&#8217;s activation of a model partition will invoke the computation of the model partition defined by an <a href="#input">input Clock</a> for the current <a href="#Clock">Clock</a> tick time \(\mathbf{t}_i\).</p>
 </div>
 <div class="paragraph">
 <p>A model partition can only be activated once per activation time point \(\mathbf{t}_i\).</p>
 </div>
 <div class="paragraph">
-<p>Model partitions that are associated to <a href="#outputClock"><code>output Clocks</code></a> will accordingly provide the result values of the model partition&#8217;s variables for the current <a href="#outputClock"><code>output Clock</code></a> tick time \(\mathbf{t}_i\) of the active <a href="#outputClock"><code>output Clock</code></a>.
-The activation of such an <a href="#outputClock"><code>output Clock</code></a> is not controlled by the simulation algorithm but internally by the FMU.</p>
+<p>During the computation of a model partition of an <a href="#inputClock"><code>input Clock</code></a> the FMU may inform the importer that an <a href="#outputClock"><code>output Clock</code></a> ticked or a <a href="#countdown"><code>countdown Clock</code></a> has to be activated.
+To do so the FMU switches into <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
+Subsequently it is up to the importer to react on this information.
+I.e. the importer may activate potential sinks (e.g. a model partition of another FMU) connected to this <a href="#outputClock"><code>output Clock</code></a> or it may activate the model partition of the respective <a href="#countdown"><code>countdown Clock</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>More details can be found in <a href="#Clock">Clocks</a>.</p>
 </div>
+</div>
 <div class="sect3">
-<h4 id="preemption-support">5.1.1. Preemption Support</h4>
+<h4 id="preemption-support">5.1.2. Preemption Support</h4>
 <div class="paragraph">
 <p>For real-time applications the simulation time equals the real wall clock time, thus each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> computation step has to be finished in real-time within its current period time length (computation time is not only defined by the runtime of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> but also by the time for setting and getting variables and related operations).
 Usually a preemptive scheduling of the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls is required to respect this constraint.</p>
