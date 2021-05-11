@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version f8c7e82,</span>
-<span id="revdate">2021-05-10</span>
+<span id="revnumber">version 95e46a0,</span>
+<span id="revdate">2021-05-11</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2689,7 +2689,8 @@ This allows different use cases to be implemented with different semantics.</p>
 </div>
 <div id="inputClock" class="paragraph">
 <p>is a variable of type Clock with <a href="#causality"><code>causality</code></a> == <a href="#input"><code>input</code></a>.
-The importer will activate input Clocks using <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> or <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.
+In Model Exchange and Co-Simulation, when input Clocks tick, the importer will activate the input Clocks using <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>.
+In Scheduled Execution, when input Clocks tick, the importer will activate the associated model partitions (but not the input Clocks) using <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.
 While the importer is the source of the actual Clock activations, the timing of the Clocks is defined by the FMU, either through the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> or calling <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>, or by another Clock connected to a <a href="#triggered"><code>triggered</code></a> input Clock.</p>
 </div>
 <div class="dlist">
@@ -2795,8 +2796,8 @@ argument <a href="#clocksTicked"><code>clocksTicked</code></a> of <a href="#fmi3
 <dd>
 <p>is in a sense predictable and helps the importer to take its Clock ticks into account a priori.
 All time-based Clocks are defined to be input Clocks because the importer calls <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> or <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> on these Clocks.
-The importer queries the FMU about when a time-based Clock should be activated.
-The importer will then activate the Clock by calling <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>.</p>
+The importer queries the FMU about when a time-based Clock should tick.
+The importer will then activate the Clock by calling <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>, or activate the associated model partition by calling <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.</p>
 <div class="paragraph">
 <p>The mathematical descriptions of <a href="#time-based-clock">time-based Clock</a> will use the following notations:</p>
 </div>
@@ -2809,7 +2810,7 @@ The importer will then activate the Clock by calling <a href="#fmi3SetClock"><co
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t}_0\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The time instant at which the Clock is activated the first time.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time instant at which the Clock ticks the first time.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t}_\mathit{i-1}\)</p></td>
@@ -2817,7 +2818,7 @@ The importer will then activate the Clock by calling <a href="#fmi3SetClock"><co
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{\mathit{shift}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The delay for the first Clock activation relative to \(\mathbf{t}_{\mathit{start}}\). \(\mathbf{T}_{\mathit{shift}}\) is defined differently for the different Clock types, and can be retrieved from the FMU with <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a> as floating point value, or with <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a> as rational number <code>shiftCounter / resolution</code> (see <a href="#resolution"><code>resolution</code></a>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The delay for the first Clock tick relative to \(\mathbf{t}_{\mathit{start}}\). \(\mathbf{T}_{\mathit{shift}}\) is defined differently for the different Clock types, and can be retrieved from the FMU with <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a> as floating point value, or with <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a> as rational number <code>shiftCounter / resolution</code> (see <a href="#resolution"><code>resolution</code></a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{interval, i}\)</p></td>
@@ -2834,9 +2835,9 @@ The importer will then activate the Clock by calling <a href="#fmi3SetClock"><co
 <dt class="hdlist1"><a id="periodic-clock"></a>Periodic Clock</dt>
 <dd>
 <p>is a time-based Clock with a constant interval, except when <a href="#interval"><code>interval</code></a> == <a href="#tunable"><code>tunable</code></a>, which indicates that the interval can change when tunable <a href="#parameter">parameters</a> change.
-The time instant of the first Clock activation is defined by a <a href="#shift"><code>shift</code></a>.</p>
+The time instant of the first Clock tick is defined by a <a href="#shift"><code>shift</code></a>.</p>
 <div class="paragraph">
-<p>The next Clock activation at time instant \(t_i\) is defined as:<br>
+<p>The next Clock tick at time instant \(t_i\) is defined as:<br>
 \(\begin{align*}
 \mathbf{t}_0 &amp;:= \mathbf{t}_{\mathit{start}} + \mathbf{T}_{\mathit{shift}} \\
 \mathbf{t}_i &amp;:= \mathbf{t}_{i-1} + \mathbf{T}_{interval, i} \qquad i = 1,2,3,{...}
@@ -2862,7 +2863,7 @@ The time instant of the first Clock activation is defined by a <a href="#shift">
 </dd>
 <dt class="hdlist1"><a id="fixed-periodic-clock"></a>Fixed periodic Clock</dt>
 <dd>
-<p>is a time-base periodic Clock which can be activated by the importer with an arbitrary, but constant interval starting after an arbitrary <a href="#shift"><code>shift</code></a>.
+<p>is a time-base periodic Clock which ticks with an arbitrary, but constant interval starting after an arbitrary <a href="#shift"><code>shift</code></a>.
 The importer informs the FMU about the interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a>.</p>
 </dd>
 <dt class="hdlist1">Calculated periodic Clock</dt>
@@ -2891,7 +2892,7 @@ Calling <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> is not allowed.</p
 <dd>
 <p>is a time-based Clock whose next interval is unchangeably known right after the Clock just ticked.</p>
 <div class="paragraph">
-<p>The next Clock activation at time instant \(t_i\) is defined as:<br>
+<p>The next Clock tick at time instant \(t_i\) is defined as:<br>
 \(\begin{align*}
 \mathbf{t}_0 &amp;:= \mathbf{t}_{\mathit{start}} + \mathbf{T}_{interval, 0} \\
 \mathbf{t}_i &amp;:= \mathbf{t}_{i-1} + \mathbf{T}_{interval, i} \qquad i = 1,2,3,{...}
@@ -2926,7 +2927,7 @@ Must be retrieved in <a href="#EventMode"><strong>Event Mode</strong></a> or <a 
 <p>is a time-based Clock whose next interval is not yet known right after the Clock just ticked, forcing the importer to call <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in every <a href="#EventMode"><strong>Event Mode</strong></a> and in <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> if <a href="#clocksTicked"><code>clocksTicked</code></a> == <code>fmi3True</code> in <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
 The return argument <a href="#qualifier"><code>qualifier</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> is used to indicate if the next interval is already known.</p>
 <div class="paragraph">
-<p>The next Clock activation at time instant \(t_i\) is defined as:<br>
+<p>The next Clock tick at time instant \(t_i\) is defined as:<br>
 \(\begin{align*}
 \mathbf{t}_0 &amp;:= \mathbf{t}_{\mathit{start}} + \mathbf{T}_{interval, 0} \\
 \mathbf{t}_i &amp;:= \mathbf{t}_{event} + \mathbf{T}_{interval, i} \qquad i = 1,2,3,{...}
@@ -2957,7 +2958,7 @@ Must be retrieved in <a href="#InitializationMode"><strong>Initialization Mode</
 </dd>
 <dt class="hdlist1">Triggered input Clock</dt>
 <dd>
-<p>is activated with <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> by the importer in <a href="#EventMode"><strong>Event Mode</strong></a>, or with <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>.</p>
+<p>is activated with <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> by the importer in <a href="#EventMode"><strong>Event Mode</strong></a>, or triggers activation of the associated model partition with <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>.</p>
 </dd>
 <dt class="hdlist1">Triggered output Clock</dt>
 <dd>
@@ -2974,7 +2975,7 @@ Must be retrieved in <a href="#InitializationMode"><strong>Initialization Mode</
 <div class="sect4">
 <h5 id="clocked-variable">2.2.9.3. Model Partitions and Clocked Variables</h5>
 <div class="paragraph">
-<p>An input Clock activates its specific <a href="#model-partition">model partition</a>.</p>
+<p>An input Clock tick activates its specific <a href="#model-partition">model partition</a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Such a model partition may represent a task or an interrupt service routine of an embedded system, or a discretized part of a plant model.]</em></p>
@@ -3019,7 +3020,7 @@ If a new interval is provided, the importer initiates the scheduling of the asso
 <a href="#qualifier"><code>qualifier</code></a> == <code>fmi3IntervalChanged</code> indicates that the corresponding Clock has to be scheduled.</p>
 </div>
 <div class="paragraph">
-<p>In case more than one Clock has to be activated at the same time instant, the scheduler needs a priority to define the activation sequence.
+<p>In case more than one Clock ticks at the same time instant, the scheduler needs a priority to define the activation sequence of the associated model partitions.
 This ordering is defined by the <a href="#priority"><code>priority</code></a> attributes of the Clock.</p>
 </div>
 <div class="paragraph">
@@ -3055,6 +3056,9 @@ typedef fmi3Status fmi3SetClockTYPE  (fmi3Instance instance,
                                       const fmi3Clock values[],
                                       size_t nValues);</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> is never called in Scheduled Execution.</p>
 </div>
 <div class="paragraph">
 <p>For some Clock types, the interval <a id="fmi3SetInterval"></a> is set by the environment for the current time instant by the function <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>.
@@ -3182,7 +3186,7 @@ The values of the arguments <code>interval</code>, <code>intervalCounter</code>,
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the Clock variables.</p>
 </li>
 <li>
-<p><code>shifts</code> is an array of length <code>nShifts</code> that defines the time of the first Clock activation (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
+<p><code>shifts</code> is an array of length <code>nShifts</code> that defines the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
 </li>
 </ul>
 </div>
@@ -3202,7 +3206,7 @@ The values of the arguments <code>interval</code>, <code>intervalCounter</code>,
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the Clock variables.</p>
 </li>
 <li>
-<p><code>shifts</code> and <code>shiftCounters</code> are arrays of length <code>nShifts</code> that define the time of the first Clock activation (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
+<p><code>shifts</code> and <code>shiftCounters</code> are arrays of length <code>nShifts</code> that define the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
 </li>
 </ul>
 </div>
@@ -10784,7 +10788,7 @@ For that a preemptive multitasking regime is intended (cooperative multitasking 
 <h4 id="concepts-timing-scheduled-execution">5.1.1. Timing Concepts and Clocks</h4>
 <div class="paragraph">
 <p>The Scheduled Execution interface has a different timing concept compared to FMI for Co-Simulation.
-This is required to handle activations of <a href="#triggered">triggered input Clocks</a> which may tick at a time instant that is unpredictable for the simulation algorithm.
+This is required to handle <a href="#triggered">triggered input Clocks</a> which may tick at a time instant that is unpredictable for the simulation algorithm.
 Typically, hardware I/O or virtual ECU software events belong to this category.</p>
 </div>
 <div class="paragraph">
@@ -10794,7 +10798,7 @@ Typically, hardware I/O or virtual ECU software events belong to this category.<
 <p>A model partition can only be activated once per activation time point \(\mathbf{t}_i\).</p>
 </div>
 <div class="paragraph">
-<p>During the computation of a model partition of an <a href="#inputClock"><code>input Clock</code></a> the FMU may inform the importer that an <a href="#outputClock"><code>output Clock</code></a> ticked or a <a href="#countdown"><code>countdown Clock</code></a> has to be activated.
+<p>During the computation of a model partition of an <a href="#inputClock"><code>input Clock</code></a> the FMU may inform the importer that an <a href="#outputClock"><code>output Clock</code></a> ticked or a <a href="#countdown"><code>countdown Clock</code></a> has to be ticked.
 To do so the FMU switches into <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
 Subsequently it is up to the importer to react on this information.
 I.e. the importer may activate potential sinks (e.g. a model partition of another FMU) connected to this <a href="#outputClock"><code>output Clock</code></a> or it may activate the model partition of the respective <a href="#countdown"><code>countdown Clock</code></a>.</p>
@@ -10931,7 +10935,7 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 <p>The FMU enters this state when the simulation algorithm calls <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> in state <a href="#InitializationMode"><strong>Initialization Mode</strong></a> or <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a> in state <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>.</p>
 </div>
 <div class="paragraph">
-<p>In this state the simulation algorithm can create multiple concurrent tasks related to an FMU and in each task the simulation algorithm can activate one or multiple <a href="#inputClock">input Clocks</a> of an FMU based on the defined <a href="#Clock">Clock</a> properties via a <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call for each Clock.</p>
+<p>In this state the simulation algorithm can create multiple concurrent tasks related to an FMU. In each task, the simulation algorithm can activate one or multiple model partitions of an FMU based on the defined <a href="#inputClock">input Clocks</a> properties via a <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call for each Clock.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -10959,7 +10963,7 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>When an input Clock \(\mathbf{k}_i\) is active, activate the corresponding model partition:</p>
+<p>When an input Clock \(\mathbf{k}_i\) ticks, activate the corresponding model partition:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -11045,11 +11049,11 @@ The simulation algorithm can assume that <a href="#get-and-set-variable-values">
 <div class="ulist">
 <ul>
 <li>
-<p><a id="clockReference"></a> <code>clockReference</code>: <a href="#valueReference"><code>valueReference</code></a> of an <a href="#inputClock"><code>input Clock</code></a> which shall be activated.</p>
+<p><a id="clockReference"></a> <code>clockReference</code>: <a href="#valueReference"><code>valueReference</code></a> of the <a href="#inputClock"><code>input Clock</code></a> associated to the model partition which shall be activated.</p>
 </li>
 <li>
-<p><a id="clockElementIndex"></a> <code>clockElementIndex</code>: The element index of the <a href="#Clock">Clock</a> variable which shall be activated.
-For a scalar <a href="#Clock">Clock</a> variable this must be 0; for array <a href="#Clock">Clock</a> variables, the element clock to activate is specified using the 1-based element index.
+<p><a id="clockElementIndex"></a> <code>clockElementIndex</code>: The element index of the <a href="#Clock">Clock</a> variable associated to the model partition which shall be activated.
+For a scalar <a href="#Clock">Clock</a> variable this must be 0; for array <a href="#Clock">Clock</a> variables, the element clock is specified using the 1-based element index.
 Using the element index 0 means all elements of the <a href="#Clock">Clock</a> variable.
 (Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.6.1</a>).</p>
 </li>
@@ -11057,9 +11061,8 @@ Using the element index 0 means all elements of the <a href="#Clock">Clock</a> v
 <p><a id="activationTime"></a> <code>activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the assigned <a href="#Clock">Clock</a> tick time \(\mathbf{t}_i\) <em>[typically: simulation (i.e. virtual) time]</em> (which is known to the simulation algorithm).</p>
 <div class="paragraph">
 <p>The importer schedules calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for each FMU.
-Calls are based on activations of <a href="#inputClock">input Clocks</a>.
-These <a href="#Clock">Clock</a> activations can be based on <a href="#Clock">Clock</a> activations from FMU external sources (e.g. <a href="#outputClock">output Clocks</a> of other FMUs).
-The <a href="#inputClock"><code>input Clock</code></a> activations can be based on <a href="#outputClock"><code>output Clock</code></a> ticks of another FMU.
+Calls are based on ticks of <a href="#inputClock">input Clocks</a>.
+These <a href="#Clock">Clock</a> ticks can be based on <a href="#Clock">Clock</a> ticks from FMU external sources, e.g. <a href="#outputClock"><code>output Clock</code></a> ticks of another FMU.
 The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function must not be called on <a href="#outputClock">output Clocks</a> of an FMU.</p>
 </div>
 <div class="paragraph">
@@ -11455,7 +11458,7 @@ Not to be confused with <em>parameter</em>.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>clock tick</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When the <a href="#Clock">Clock</a> ticks an event is present, otherwise the event is absent.
-This document calls a <a href="#Clock">Clock</a> tick a <a href="#Clock">Clock</a> activation.</p></td>
+A <a href="#Clock">Clock</a> tick causes a <a href="#Clock">Clock</a> activation at that time instant, except for input <a href="#Clock">Clock</a> ticks in Scheduled Execution, which cause an activation of the associated model partition instead.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>communication points</em></p></td>
