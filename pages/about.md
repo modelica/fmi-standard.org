@@ -31,7 +31,7 @@ ABB, DLR, ETAS, Fraunhofer (IIS/EAS First, SCAI), ITK Engineering, Open Modelica
 There are FMI tracks at other FMI related events like conferences and design meetings.
 If you believe you could benefit from the standard or if you would like to contribute to the improvement or distribution of it, please contact us at: [contact@fmi-standard.org](mailto:contact@fmi-standard.org).
 
-All contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://svn.fmi-standard.org/fmi/branches/public/FMI_CCLA_v1.0_2016_06_21.pdf) (or equivalently must be corporate contributors that have signed the [CLA of the Modelica Association](https://www.modelica.org/licenses/ModelicaAssociationCLA_1.1) ). 
+All contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://svn.fmi-standard.org/fmi/branches/public/FMI_CCLA_v1.0_2016_06_21.pdf) (or equivalently must be corporate contributors that have signed the [CLA of the Modelica Association](https://modelica.org/licenses/ModelicaAssociationCLA_1.1.1.html) ). 
 Therefore, the first step is getting your company to agree and sign the CCLA/CLA. This ensures that all IP contributed to the FMI standard will be licensed to the Modelica Association (MA) which in turn will sublicense the FMI standard to tool vendors implementing it and end users using it, free of charge.
 
 With the CCLA signed by your company, we will grant you access to our IT infrastructure.

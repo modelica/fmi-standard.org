@@ -4,7 +4,7 @@ categories: [events]
 layout: post
 ---
 
-The [Modelica Conference 2019](https://modelica.org/events/modelica2019/index_html) will take place from March 4-6, 2019 in Regensburg, Germany organized by the OTH Regensburg /
+The [Modelica Conference 2019](https://2019.international.conference.modelica.org/) will take place from March 4-6, 2019 in Regensburg, Germany organized by the OTH Regensburg /
 Faculty of Electrical Engineering and Information Technology in cooperation with the Modelica Association.
 
 The FMI user meeting will take place during the "industrial user presentations" session of the different Modelica Association
@@ -17,4 +17,4 @@ departments, enabling collaborative model based systems engineering.
 Users can also give feedback on their experience with FMI and missing features for the future. Additionally, the connection of FMI to past and future research projects will be summarized.
 More information is contained in the [call for participation](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/CFP_FMI-User-Meeting_Modelica_Conference_2019.pdf).
 
-The program of the user meeting is now online [here](https://modelica.org/events/modelica2019/proceedings/html/Modelica2019Program.pdf#page=7).
+The program of the user meeting is now online [here](https://2019.international.conference.modelica.org/proceedings/html/Modelica2019Program.pdf#page=7).

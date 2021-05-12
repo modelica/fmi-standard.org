@@ -17,7 +17,7 @@ layout: default
 
 ### [13th International Modelica Conference 2019](https://www.modelica.org/events/modelica2019)
 
-FMI User meeting ([Agenda](https://www.modelica.org/events/modelica2019/proceedings/html/userpres.html)):
+FMI User meeting ([Agenda](https://2019.international.conference.modelica.org/proceedings/html/userpres.html)):
 
 * [Overview of the FMI, DCP and SSP standards](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/001_Overview_FMI_SSP_DCP.pdf)
 * [Usage of FMI at Bosch - status and outlook](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/2808_Usage_FMI_Bosch.pdf)
@@ -26,24 +26,24 @@ FMI User meeting ([Agenda](https://www.modelica.org/events/modelica2019/proceedi
 
 FMI related conference papers:
 
-* [OMSimulator - Integrated FMI and TLM-based Co-simulation with Composite Model Editing and SSP](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1C1.pdf)
-* [FMU-proxy: A Framework for Distributed Access to Functional Mock-up Units](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1C2.pdf)
-* [Standardized Integration of Real-Time and Non-Real-Time Systems: The Distributed Co-Simulation Protocol](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1C3.pdf)
-* [Non Linear Dimension Reduction of Dynamic Model Outputs](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2C1.pdf)
-* [Relative Consistency and Robust Stability Measures for Sequential Co-simulatio](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2C2.pdf)
-* [Energy balance based Verification for Model Based Development](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2C3.pdf)
-* [A virtual test-bed for building Model Predictive Control developments](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1A1.pdf)
-* [BIM2Modelica - An open source toolchain for generating and simulating thermal multi-zone building models by using structured data from BIM models](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper1A3.pdf)
-* [Dynamic Simulation of Residential Buildings Supporting the Development of Flexible Control in District Heating Systems](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2A1.pdf)
-* [An Extended Luenberger Observer for HVAC Application using FMI](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper2A3.pdf)
-* [Model visualization for e-learning, Kidney simulator for medical students](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper3D4.pdf)
-* [Enhanced Motion Control of a Self-Driving Vehicle Using Modelica, FMI and ROS](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper4B2.pdf)
-* [Adaptive Step Size Control for Hybrid CT Simulation without Rollback](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper4D2.pdf)
-* [Co-Simulation Through Exchange of Time-Series Data Applied to an Energy System Model and Detailed Ground Heat Exchanger Model](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper5A1.pdf)
-* [The WaterHub Modules: Material and Energy Flow Analysis of Domestic Hot Water Systems](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper6A1.pdf)
-* [OMJulia: An OpenModelica API for Julia-Modelica Interaction](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper6C2.pdf)
-* [Integration and Analysis of EPAS and Chassis System in FMI-based co-simulation](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper6D1.pdf)
-* [Hierarchical Coupling Approach Utilizing Multi-Objective Optimization for Non-Iterative Co-Simulation](https://www.modelica.org/events/modelica2019/proceedings/html/papers/Modelica2019paper6D3.pdf)
+* [OMSimulator - Integrated FMI and TLM-based Co-simulation with Composite Model Editing and SSP](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper1C1.pdf)
+* [FMU-proxy: A Framework for Distributed Access to Functional Mock-up Units](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper1C2.pdf)
+* [Standardized Integration of Real-Time and Non-Real-Time Systems: The Distributed Co-Simulation Protocol](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper1C3.pdf)
+* [Non Linear Dimension Reduction of Dynamic Model Outputs](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper2C1.pdf)
+* [Relative Consistency and Robust Stability Measures for Sequential Co-simulatio](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper2C2.pdf)
+* [Energy balance based Verification for Model Based Development](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper2C3.pdf)
+* [A virtual test-bed for building Model Predictive Control developments](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper1A1.pdf)
+* [BIM2Modelica - An open source toolchain for generating and simulating thermal multi-zone building models by using structured data from BIM models](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper1A3.pdf)
+* [Dynamic Simulation of Residential Buildings Supporting the Development of Flexible Control in District Heating Systems](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper2A1.pdf)
+* [An Extended Luenberger Observer for HVAC Application using FMI](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper2A3.pdf)
+* [Model visualization for e-learning, Kidney simulator for medical students](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper3D4.pdf)
+* [Enhanced Motion Control of a Self-Driving Vehicle Using Modelica, FMI and ROS](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper4B2.pdf)
+* [Adaptive Step Size Control for Hybrid CT Simulation without Rollback](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper4D2.pdf)
+* [Co-Simulation Through Exchange of Time-Series Data Applied to an Energy System Model and Detailed Ground Heat Exchanger Model](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper5A1.pdf)
+* [The WaterHub Modules: Material and Energy Flow Analysis of Domestic Hot Water Systems](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper6A1.pdf)
+* [OMJulia: An OpenModelica API for Julia-Modelica Interaction](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper6C2.pdf)
+* [Integration and Analysis of EPAS and Chassis System in FMI-based co-simulation](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper6D1.pdf)
+* [Hierarchical Coupling Approach Utilizing Multi-Objective Optimization for Non-Iterative Co-Simulation](https://2019.international.conference.modelica.org/proceedings/html/papers/Modelica2019paper6D3.pdf)
 
 ### [American Modelica Conference 2018](https://www.modelica.org/events/modelica2018Americas)
 
@@ -56,7 +56,7 @@ FMI related conference papers ([link to proceedings](https://www.modelica.org/ev
 * The OpenModelica Integrated Modeling, Simulation and Optimization Environment
 
 
-### [Japanese Modelica Conference 2018](https://www.modelica.org/events/modelica2018japan)
+### [Japanese Modelica Conference 2018](https://modelica.org/events/modelica2018japan.html)
 
 Keynote: [10 Years of FMI: Where are we now, where do we go?](https://www.modelica.org/events/modelica2018japan/presentation/10_Years_of_FMI.pdf)
 
@@ -74,7 +74,7 @@ FMI related conference papers ([link to proceedings](https://www.modelica.org/ev
 * A Web Architecture for Modeling and Simulation
 * Multibody simulation and control of kinematic systems with FMI/FMU
 
-### [12th International Modelica Conference 2017](https://www.modelica.org/events/modelica2017)
+### [12th International Modelica Conference 2017](https://2017.international.conference.modelica.org/)
 
 FMI User meeting ([Agenda](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/000_Agenda.pdf)):
 
@@ -89,27 +89,27 @@ FMI User meeting ([Agenda](https://svn.fmi-standard.org/fmi/branches/public/docs
 
 FMI related conference papers:
 
-* [Improving Interoperability of FMI-supporting Tools with Reference FMUs](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132533_BertschMukbilJunghanns.pdf)
-* [The Embedded Simulation via FMI and its Application to the Simulation of Lifetime Tests Including Wear](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132541_GundermannThieleFraulobWaltherTodtermuschkeSchnabel.pdf)
-* [Integration Modelica with Digital Mockup Tool using the FMI](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132547_MatsudaToriyaSuzukiOhtomi.pdf)
-* [FMI Go! A simulation runtime environment with a client server architecture over multiple protocols](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132653_LacoursiereHardin.pdf)
-* [Building Parallel FMUs (or Matryoshka Co-Simulations)](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132663_GaltierIanottoCaujolleCorniglionTavellaEvoragomezHernandezcabreraReinboldKremers.pdf)
-* [Scaling FMI-CS Based Multi-Simulation Beyond Thousand FMUs on Infiniband Cluster](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132673_VialleTavellaDadCorniglionCaujolleReinbold.pdf)
-* [Development of an open source multi-platform software tool for parameter estimation studies in FMI models](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132683_BonillaCarballoRocaBerenguel.pdf)
-* [Co-Simulation between detailed building energy performance simulation and Modelica HVAC component models](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp1713263_NicolaiPaepcke.pdf)
-* [Aspects of FMI in Building Simulation](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp1713273_SchwanUngerPipiorke.pdf)
-* [Application of Richardson Extrapolation to the Co-Simulation of FMUs from Building Simulation](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp1713279_ClaussMajettaMeyer.pdf)
-* [From system model to optimal control - A tool chain for the efficient solution of optimal control problems](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132249_GraberFritzscheTegethoff.pdf)
-* [Nonlinear Model Predictive Control of a Thermal Management System for Electrified Vehicles using FMI](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132255_FischerKrausKirchesGauterin.pdf)
-* [Towards Virtual Validation of ECU Software using FMI](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132307_MikelsonsSamlaus.pdf)
-* [Parameter Estimation based on FMI](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132313_KampfmannMoschMenager.pdf)
-* [Generic FMI-compliant Simulation Tool Coupling](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132321_WidlMuller.pdf)
-* [FMI and IP protection of models: A survey of use cases and support in the standard](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132329_DurlingPalmkvistHenningsson.pdf)
-* [Model-based virtual sensors by means of Modelica and FMI](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132337_GonzalezcochoSalgadoCroesPluymersDesmet.pdf)
-* [Towards Adjoint and Directional Derivatives in FMI utilizing ADOL-C within OpenModelica](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132363_BraunKulshreshthaFrankeBachmannWalther.pdf)
-* [Discrete-time models for control applications with FMI](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132507_FrankeMattssonOtterWernerssonOlssonOchelBlochwitz.pdf)
-* [Towards Medical Cyber-Physical Systems: Modelica and FMI based Online Parameter Identification of the Cardiovascular System](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132613_GesenhuesHeinKetelhutAlbinAbel.pdf)
-* [Virtual flight testing of a controller for gust load alleviation using FMI for cosimulation](https://www.modelica.org/events/modelica2017/proceedings/html/submissions/ecp17132921_MullerRitter.pdf)
+* [Improving Interoperability of FMI-supporting Tools with Reference FMUs](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132533_BertschMukbilJunghanns.pdf)
+* [The Embedded Simulation via FMI and its Application to the Simulation of Lifetime Tests Including Wear](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132541_GundermannThieleFraulobWaltherTodtermuschkeSchnabel.pdf)
+* [Integration Modelica with Digital Mockup Tool using the FMI](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132547_MatsudaToriyaSuzukiOhtomi.pdf)
+* [FMI Go! A simulation runtime environment with a client server architecture over multiple protocols](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132653_LacoursiereHardin.pdf)
+* [Building Parallel FMUs (or Matryoshka Co-Simulations)](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132663_GaltierIanottoCaujolleCorniglionTavellaEvoragomezHernandezcabreraReinboldKremers.pdf)
+* [Scaling FMI-CS Based Multi-Simulation Beyond Thousand FMUs on Infiniband Cluster](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132673_VialleTavellaDadCorniglionCaujolleReinbold.pdf)
+* [Development of an open source multi-platform software tool for parameter estimation studies in FMI models](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132683_BonillaCarballoRocaBerenguel.pdf)
+* [Co-Simulation between detailed building energy performance simulation and Modelica HVAC component models](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp1713263_NicolaiPaepcke.pdf)
+* [Aspects of FMI in Building Simulation](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp1713273_SchwanUngerPipiorke.pdf)
+* [Application of Richardson Extrapolation to the Co-Simulation of FMUs from Building Simulation](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp1713279_ClaussMajettaMeyer.pdf)
+* [From system model to optimal control - A tool chain for the efficient solution of optimal control problems](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132249_GraberFritzscheTegethoff.pdf)
+* [Nonlinear Model Predictive Control of a Thermal Management System for Electrified Vehicles using FMI](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132255_FischerKrausKirchesGauterin.pdf)
+* [Towards Virtual Validation of ECU Software using FMI](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132307_MikelsonsSamlaus.pdf)
+* [Parameter Estimation based on FMI](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132313_KampfmannMoschMenager.pdf)
+* [Generic FMI-compliant Simulation Tool Coupling](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132321_WidlMuller.pdf)
+* [FMI and IP protection of models: A survey of use cases and support in the standard](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132329_DurlingPalmkvistHenningsson.pdf)
+* [Model-based virtual sensors by means of Modelica and FMI](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132337_GonzalezcochoSalgadoCroesPluymersDesmet.pdf)
+* [Towards Adjoint and Directional Derivatives in FMI utilizing ADOL-C within OpenModelica](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132363_BraunKulshreshthaFrankeBachmannWalther.pdf)
+* [Discrete-time models for control applications with FMI](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132507_FrankeMattssonOtterWernerssonOlssonOchelBlochwitz.pdf)
+* [Towards Medical Cyber-Physical Systems: Modelica and FMI based Online Parameter Identification of the Cardiovascular System](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132613_GesenhuesHeinKetelhutAlbinAbel.pdf)
+* [Virtual flight testing of a controller for gust load alleviation using FMI for cosimulation](https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132921_MullerRitter.pdf)
 
 ### [11th International Modelica Conference 2015](https://www.modelica.org/events/modelica2015)
 
@@ -117,14 +117,14 @@ FMI related conference papers:
 
 Other FMI related conference papers:
 
-* [Experience with Industrial In-House Application of FMI](https://modelica.org/events/modelica2015/proceedings/html/submissions/ecp1511817_LinkGallMuhlbauerGallardoyances.pdf)
-* [A Novel Proposal on how to Parameterize Models in Dymola Utilizing External Files under Consideration of a Subsequent Model Export using the Functional Mock-Up Interface](https://modelica.org/events/modelica2015/proceedings/html/submissions/ecp1511823_SchmittAndresZieglerDiehl.pdf)
-* [Design Choices for Thermofluid Flow Components and Systems that are Exported as Functional Mockup Units](https://modelica.org/events/modelica2015/proceedings/html/submissions/ecp1511831_WetterFuchsNouidui.pdf)
-* [FMI for Physical Models on Automotive Embedded Targets](https://modelica.org/events/modelica2015/proceedings/html/submissions/ecp1511843_BertschNeudorferAhleArumughamRamachandranThuy.pdf)
-* [Co-Simulation of Hybrid Systems with SpaceEx and Uppaal](https://modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118159_BogomolovGreitschusJensenLarsenMikucionisStrumpTripakis.pdf)
-* [Automated Deployment of Modelica Models in Excel via Functional Mockup Interface and Integration with modeFRONTIER](https://modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118171_BattehGohlPitchaikaniDugganFateh.pdf)
-* [An Open-Source Graphical Composite Modeling Editor and Simulation Tool Based on FMI and TLM Co-Simulation](https://modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118181_MengistAsgharPopFritzsonBraunSiemersFritzson.pdf)
-* [The Modelica Language and the FMI Standard for Modeling and Simulation of Smart Grids](https://modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118189_ChilardBoesPerlesCamilleriGleizesTavellaCroteau.pdf)
+* [Experience with Industrial In-House Application of FMI](https://2015.international.conference.modelica.org/proceedings/html/submissions/ecp1511817_LinkGallMuhlbauerGallardoyances.pdf)
+* [A Novel Proposal on how to Parameterize Models in Dymola Utilizing External Files under Consideration of a Subsequent Model Export using the Functional Mock-Up Interface](https://2015.international.conference.modelica.org/proceedings/html/submissions/ecp1511823_SchmittAndresZieglerDiehl.pdf)
+* [Design Choices for Thermofluid Flow Components and Systems that are Exported as Functional Mockup Units](https://2015.international.conference.modelica.org/proceedings/html/submissions/ecp1511831_WetterFuchsNouidui.pdf)
+* [FMI for Physical Models on Automotive Embedded Targets](https://2015.international.conference.modelica.org/proceedings/html/submissions/ecp1511843_BertschNeudorferAhleArumughamRamachandranThuy.pdf)
+* [Co-Simulation of Hybrid Systems with SpaceEx and Uppaal](https://2015.international.conference.modelica.org/proceedings/html/submissions/ecp15118159_BogomolovGreitschusJensenLarsenMikucionisStrumpTripakis.pdf)
+* [Automated Deployment of Modelica Models in Excel via Functional Mockup Interface and Integration with modeFRONTIER](https://2015.international.conference.modelica.org/proceedings/html/submissions/ecp15118171_BattehGohlPitchaikaniDugganFateh.pdf)
+* [An Open-Source Graphical Composite Modeling Editor and Simulation Tool Based on FMI and TLM Co-Simulation](https://2015.international.conference.modelica.org/proceedings/html/submissions/ecp15118181_MengistAsgharPopFritzsonBraunSiemersFritzson.pdf)
+* [The Modelica Language and the FMI Standard for Modeling and Simulation of Smart Grids](https://2015.international.conference.modelica.org/proceedings/html/submissions/ecp15118189_ChilardBoesPerlesCamilleriGleizesTavellaCroteau.pdf)
 * [Initiatives for Acausal Model Connection using FMI in JSAE (Society of Automotive Engineers of Japan)](https://www.modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118795_HiranoShimadaTeraokaSeyaOhsumiMurakamiHironoSekisue.pdf)
 * [Using FMI in a Cloud-based Web Application for System Simulation](https://www.modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118845_BittnerOelsnerNeidhold.pdf)
 * [Test of Basic Co-Simulation Algorithms Using FMI](https://www.modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118865_PetridisClau.pdf)
