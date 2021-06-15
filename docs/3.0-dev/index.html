@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version ba0dfe8,</span>
-<span id="revdate">2021-06-14</span>
+<span id="revnumber">version 21fe3a6,</span>
+<span id="revdate">2021-06-15</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -6605,9 +6605,6 @@ If <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>cal
 <em>If the <a href="#input"><code>input</code></a> variable is iteration variable of this algebraic loop, then initialization starts with its <a href="#start"><code>start</code></a> value.]</em></p>
 </div>
 <div class="paragraph">
-<p>If <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> the <a href="#initial"><code>initial</code></a> attribute value is set to <a href="#calculated"><code>calculated</code></a> and no <a href="#start"><code>start</code></a> value is provided.</p>
-</div>
-<div class="paragraph">
 <p>If <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> is not called on a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, then the FMU must use the <a href="#start"><code>start</code></a> value as value of this <a href="#input"><code>input</code></a>.</p>
 </div></div></td>
 </tr>
@@ -6737,20 +6734,13 @@ Only variables with <a href="#variability"><code>variability == discrete</code><
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span>, exact, approx</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#Clock"><code>Clocks</code></a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">exact</span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
-</tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p><em>[Note: For local and output variables and <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, then the variable is explicitly set in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</em>
+<p><a href="#Clock">Clock</a> variables must not have <a href="#initial"><code>initial</code></a> attributes.</p>
+</div>
+<div class="paragraph">
+<p><em>[Note: For <a href="#local"><code>local</code></a> and <a href="#output"><code>output</code></a> variables and <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, then the variable is explicitly set in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</em>
 <em>The value of the variable is either the <a href="#start"><code>start</code></a> value stored in a variable element <code>&lt;XXX start=YYY/&gt;</code> or the value set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.]</em></p>
 </div>
 <div class="paragraph">
@@ -6833,16 +6823,6 @@ Only variables with <a href="#variability"><code>variability == discrete</code><
 <td class="tableblock halign-center valign-top"><p class="tableblock">(9)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(14)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(15)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#Clock"><code>Clocks</code></a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">(18)</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">(18)</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">(18)</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 </tr>
 </tbody>
 </table>
@@ -6995,11 +6975,6 @@ Only variables with <a href="#variability"><code>variability == discrete</code><
 <td class="tableblock halign-right valign-top"><p class="tableblock"><em>(17)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structuralParameter</code></a></em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#parameter"><code>Parameter</code></a> used in  <code>&lt;Dimension&gt;</code> element;  can be changed before initialization in <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> and in <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>.</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><em>(18)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><a href="#Clock">Clock</a></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Variable that defines a <a href="#Clock">Clock</a>.</em></p></td>
 </tr>
 </tbody>
 </table>
