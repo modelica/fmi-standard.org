@@ -15,7 +15,7 @@ layout: default
 * [Parameter Estimation Methods for Fault Diagnosis using Modelica and FMI](https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_29.pdf)
 * [Nonlinear State Estimation with FMI: Tutorial and Applications](https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_27.pdf)
 
-### [13th International Modelica Conference 2019](https://www.modelica.org/events/modelica2019)
+### [13th International Modelica Conference 2019](https://2019.international.conference.modelica.org/)
 
 FMI User meeting ([Agenda](https://www.modelica.org/events/modelica2019/proceedings/html/userpres.html)):
 
