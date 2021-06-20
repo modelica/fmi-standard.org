@@ -31,7 +31,7 @@ ABB, DLR, ETAS, Fraunhofer (IIS/EAS First, SCAI), ITK Engineering, Open Modelica
 There are FMI tracks at other FMI related events like conferences and design meetings.
 If you believe you could benefit from the standard or if you would like to contribute to the improvement or distribution of it, please contact us at: [contact@fmi-standard.org](mailto:contact@fmi-standard.org).
 
-All contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://svn.fmi-standard.org/fmi/branches/public/FMI_CCLA_v1.0_2016_06_21.pdf) (or equivalently must be corporate contributors that have signed the [CLA of the Modelica Association](https://www.modelica.org/licenses/ModelicaAssociationCLA_1.1) ). 
+All contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://svn.fmi-standard.org/fmi/branches/public/FMI_CCLA_v1.0_2016_06_21.pdf) (or equivalently must be corporate contributors that have signed the [CLA of the Modelica Association](https://www.modelica.org/licenses/ModelicaAssociationCLA_1.1) ).
 Therefore, the first step is getting your company to agree and sign the CCLA/CLA. This ensures that all IP contributed to the FMI standard will be licensed to the Modelica Association (MA) which in turn will sublicense the FMI standard to tool vendors implementing it and end users using it, free of charge.
 
 With the CCLA signed by your company, we will grant you access to our IT infrastructure.
@@ -84,6 +84,31 @@ The FMI development was partially funded within the ITEA2 project MODELISAR by
     <td> <a href="http://www.vinnova.se/en/">VINNOVA</a> for Dynasim AB, Volvo (funding number: 2008-02291)</td>
   </tr>
 </table>
+
+## Trademark Guidelines for the Use of the FMI Trademark
+
+### Preliminaries
+The FMI project and the Modelica Association (MA) are asking all members of the public and the FMI community tofollow and respect the following usage guidelines for the use of the FMI trademark.
+The purpose of the trademark registration is to protect the use of the word-mark FMI in the protected application domainsfrom any usage that is contrary to the mission and values of the trademark owner, the Modelica Association.  
+The purpose of this guideline is to make sure that any use of the FMI trademark agreeswith these guidelines and strengthens the brand and value of the FMI standard.
+Further, the guidelines will try to make sure that no confusion ormisinformation can arise from the use of the FMI trademark.
+At the same time, the Modelica Association wants to encourage as many commercial companies and open source software developers tosupport the FMI standard in a high quality of implementation and put as little administrative burden as possible.
+The MA encourages to mention the FMI standard with a proper reference. The main reference in any tool documentation should contain a pointer to the official FMI website http://www.fmi-standard.org.
+The Modelica Association expects all tool vendors that implement the FMI standard toparticipate in the cross-check protocol, especially those using FMI in their product name.
+
+### Trademark Usage Guidelines
+
+The use of the letters FMI in a product name or other relevant reference is allowed when
+
+- The use is clearly a reference to adhering to the standardThe use of the letters FMI in a product name, referenceor other relevant contextis not allowed when:The use can cause confusion whether the FMI standard is followed (e.g. using FMI with a version number that is not released by the FMI project),
+- The use can be interpreted as a variant, subsetor improvement ofthe original FMI standard (e.g. using a tool name, say FMIplus, that can be interpreted as supporting with extensions/improvements with respect to one of the FMI versions),
+- The use spreads wrong or misleading information about the FMI standard
+- The use mocks or degrades the FMI standard
+
+The FMI Steering committee reserves the right to determine whether a use of FMI violates these guidelines and will ask any offender to cease and desist from using the FMI trademark in a non-approved way.
+The FMI steering committee also reserves the right to retract the permission ofthe use oftheterm FMI in a product name when the product owner does not submit to the duties of a responsible member of the FMI community by participating in the cross-checking protocol, or when the tool developer does over a longer period not fix known errors in their FMI support.
+If you are in doubt about your intended usage of the FMI trademark, please contact contact@fmi-standard.org.
+
 
 # Standardization Projects and Groups Related to FMI
 
