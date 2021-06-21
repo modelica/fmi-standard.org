@@ -101,7 +101,7 @@ The Modelica Association expects all tool vendors that implement the FMI standar
 
 The use of the letters FMI in a product name or other relevant reference is allowed when
 
-- The use is clearly a reference to adhering to the standardThe use of the letters FMI in a product name, referenceor other relevant contextis not allowed when:The use can cause confusion whether the FMI standard is followed (e.g. using FMI with a version number that is not released by the FMI project),
+- The use is clearly a reference to adhering to the standard. The use of the letters FMI in a product name, reference or other relevant contextis not allowed when:The use can cause confusion whether the FMI standard is followed (e.g. using FMI with a version number that is not released by the FMI project),
 - The use can be interpreted as a variant, subsetor improvement ofthe original FMI standard (e.g. using a tool name, say FMIplus, that can be interpreted as supporting with extensions/improvements with respect to one of the FMI versions),
 - The use spreads wrong or misleading information about the FMI standard
 - The use mocks or degrades the FMI standard
