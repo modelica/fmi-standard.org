@@ -31,21 +31,21 @@ ABB, DLR, ETAS, Fraunhofer (IIS/EAS First, SCAI), ITK Engineering, Open Modelica
 There are FMI tracks at other FMI related events like conferences and design meetings.
 If you believe you could benefit from the standard or if you would like to contribute to the improvement or distribution of it, please contact us at: [contact@fmi-standard.org](mailto:contact@fmi-standard.org).
 
-All contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://svn.fmi-standard.org/fmi/branches/public/FMI_CCLA_v1.0_2016_06_21.pdf) (or equivalently must be corporate contributors that have signed the [CLA of the Modelica Association](https://www.modelica.org/licenses/ModelicaAssociationCLA_1.1) ).
-Therefore, the first step is getting your company to agree and sign the CCLA/CLA. This ensures that all IP contributed to the FMI standard will be licensed to the Modelica Association (MA) which in turn will sublicense the FMI standard to tool vendors implementing it and end users using it, free of charge.
+All individual contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://svn.fmi-standard.org/fmi/branches/public/FMI_CCLA_v1.0_2016_06_21.pdf) or must be corporate contributors that have signed the [CLA of the Modelica Association](https://www.modelica.org/licenses/ModelicaAssociationCLA_1.1).
+Therefore, the first step is to get your company to sign the CCLA/CLA.
+This ensures that all intellectual property (IP) contributed to the FMI Standard will be licensed to the Modelica Association (MA) which will sublicense the FMI Standard to tool vendors implementing it and end users using it.
 
-With the CCLA signed by your company, we will grant you access to our IT infrastructure.
-We will add you to the [FMI design mailing list](mailto:fmi-design@googlegroups.com).
-There you will be invited to our regular FMI design meetings.
-You will get access to the FMI github repositories.
-They are the central information hubs for the Modelica Association Project FMI.
-Here you can also find which working groups are currently working on FMI Change Proposals (FCPs) and you can decide which one of them to join (email the respective working group leader shown in a wiki table), or, if you have other ideas, you may propose to start and lead a new working group addressing your improvement to the FMI standard by searching for collaborators on the FMI design mailing list and/or presenting your ideas at a face-to-face design meeting.
+With the CCLA signed by your company, you will be granted access to our IT infrastructure and GitHub repositories and you will be added to the [FMI Design mailing list](mailto:fmi-design@googlegroups.com) where you will be invited to our regular FMI Design Meetings.
+These are the central information hubs for the Modelica Association Project FMI.
+Here you can also find out which working groups are currently working on FMI Change Proposals (FCPs).
+You can join a working group by e-mailing the respective working group leader.
+If you have other ideas, you may propose to start and lead a new working group by searching for collaborators on the FMI Design mailing list and/or present your ideas at an FMI Design Meeting.
 
 Companies that have shown continued commitment and valuable contributions will be invited to join the FMI Advisory Committee.
 This membership is mostly ceremonial and its most important function is to recognize publicly who is actively helping to develop the FMI standard.
 
-The next level of involvement is membership in the FMI Steering Committee which is the governing body of the MAP FMI.
-You have to formally apply, explaining your past, current and future involvement and plans with the FMI standard.
+The next level of involvement is membership in the FMI Steering Committee which is the governing body of the Modelica Association Project FMI.
+You have to formally apply, explaining your past, current and future involvement and plans regarding the FMI Standard.
 The FMI Steering Committee will vote on your applications.
 
 ## Development Process
