@@ -107,7 +107,7 @@ The use of the letters FMI in a product name or other relevant reference is allo
 - The use mocks or degrades the FMI standard
 
 The FMI Steering committee reserves the right to determine whether a use of FMI violates these guidelines and will ask any offender to cease and desist from using the FMI trademark in a non-approved way.
-The FMI steering committee also reserves the right to retract the permission ofthe use oftheterm FMI in a product name when the product owner does not submit to the duties of a responsible member of the FMI community by participating in the cross-checking protocol, or when the tool developer does over a longer period not fix known errors in their FMI support.
+The FMI steering committee also reserves the right to retract the permission ofthe use of the term FMI in a product name when the product owner does not submit to the duties of a responsible member of the FMI community by participating in the cross-checking protocol, or when the tool developer does over a longer period not fix known errors in their FMI support.
 If you are in doubt about your intended usage of the FMI trademark, please contact contact@fmi-standard.org.
 
 # Standardization Projects and Groups Related to FMI
