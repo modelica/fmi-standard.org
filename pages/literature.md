@@ -6,7 +6,12 @@ layout: default
 
 ## FMI Related Publications
 
-### [2nd American Modelica Conference 2019](https://2020.american.conference.modelica.org)
+### [Asian Modelica Conference 2020](https://doi.org/10.3384/ecp202017413)
+* [Introducing the Virtual Systems Interface for Dynamic Coupling of Continuous Time Systems with Discontinuities](http://www.ep.liu.se/ecp/174/001/ecp2020174001.pdf)
+* [Collaborative Development and Simulation of an Aircraft Hydraulic Actuator Model](https://doi.org/10.3384/ecp202017467)
+* [A Protocol-Based Verification Approach for Standard-Compliant Distributed Co-Simulation](https://doi.org/10.3384/ecp2020174133)
+
+### [2nd American Modelica Conference 2020](https://2020.american.conference.modelica.org)
 
 * [Hierarchical Multi-Level Electric Power System Simulation withSmart Photovoltaic Systems using the Functional Mock-upInterface on the Lawrencium Computing Cluster](https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_20.pdf)
 * [Parameter Estimation of User-Defined Control System Models for Itaipú Power Plant using Modelica and OpenIPSL](https://2020.american.conference.modelica.org/proceedings/papers/Modelica2020US_paper_9.pdf
