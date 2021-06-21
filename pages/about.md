@@ -90,7 +90,7 @@ The FMI development was partially funded within the ITEA2 project MODELISAR by
 ### Preliminaries
 
 The FMI project and the Modelica Association (MA) are asking all members of the public and the FMI community to follow and respect the following usage guidelines for the use of the FMI trademark.
-The purpose of the trademark registration is to protect the use of the word-mark FMI in the protected application domainsfrom any usage that is contrary to the mission and values of the trademark owner, the Modelica Association.  
+The purpose of the trademark registration is to protect the use of the word-mark FMI in the protected application domains from any usage that is contrary to the mission and values of the trademark owner, the Modelica Association.  
 The purpose of this guideline is to make sure that any use of the FMI trademark agreeswith these guidelines and strengthens the brand and value of the FMI standard.
 Further, the guidelines will try to make sure that no confusion or misinformation can arise from the use of the FMI trademark.
 At the same time, the Modelica Association wants to encourage as many commercial companies and open source software developers tosupport the FMI standard in a high quality of implementation and put as little administrative burden as possible.
