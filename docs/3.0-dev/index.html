@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 63214af,</span>
+<span id="revnumber">version 9807f19,</span>
 <span id="revdate">2021-07-21</span>
 </div>
 <div id="toc" class="toc2">
@@ -8325,42 +8325,44 @@ The archive may not be a split or spanned ZIP archive.
 <div class="title">Structure of the ZIP file</div>
 <div class="content">
 <pre>// Structure of ZIP file of an FMU
-modelDescription.xml          // description of FMU (required file)
-documentation                 // directory containing the documentation (optional)
-   index.html                 // entry point of the documentation
-   diagram.png                // descriptive diagram view of the model (optional)
-   diagram.svg                // if existing the diagram.png is required (optional)
+modelDescription.xml                // description of FMU (required file)
+documentation                       // directory containing the documentation (optional)
+   index.html                       // entry point of the documentation
+   diagram.png                      // descriptive diagram view of the model (optional)
+   diagram.svg                      // if provided, diagram.png is also required (optional)
+   externalDependencies.{txt|html}  // documentation of external resources required to load or simulate the FMU
    &lt;other documentation files&gt;
-   licenses                   // directory for licenses (optional)
-      license.{txt|html}      // Entry point for license information
-      &lt;license files&gt;         // For example BSD licenses
-icons                         // FMU and terminal icons (optional)
-   terminalsAndIcons.xml      // description of terminals and icons (optional)
-   icon.png                   // image file of icon without terminals (optional)
-   icon.svg                   // if existing the icon.png is required (optional)
-   // all terminal and fmu icons referenced in the graphical representation
-sources                       // directory containing the C sources (optional)
+   licenses                         // directory for licenses (optional)
+      license.{txt|html}            // entry point for license information
+      &lt;license files&gt;               // for example BSD licenses
+icons                               // FMU and terminal icons (optional)
+   terminalsAndIcons.xml            // description of terminals and icons (optional)
+   icon.png                         // image file of icon without terminals (optional)
+   icon.svg                         // if existing the icon.png is required (optional)
+                                    // all terminal and fmu icons referenced in the graphical representation
+sources                             // directory containing the C sources (optional)
    buildDescription.xml
-binaries                      // directory containing the binaries (optional)
-   x86_64-windows             // binaries for Windows on Intel 64-bit
-      &lt;modelIdentifier&gt;.dll   // shared library of the FMI implementation
-      &lt;other DLLs&gt;            // the DLL can include other DLLs
-   x86_64-windows-msvc140mt   // static libraries for 64-bit Windows generated
-      &lt;modelIdentifier&gt;.lib   // with Visual Studio 2015 with /MT flag
-   i686-linux                 // binaries for Linux on Intel 32-bit
-      &lt;modelIdentifier&gt;.so    // shared library of the FMI implementation
-   aarch32-linux              // binaries for Linux on ARM 32-bit
-      &lt;modelIdentifier&gt;.so    // shared library of the FMI implementation
-   x86_64-darwin              // binaries for macOS
-      &lt;modelIdentifier&gt;.dylib // shared library of the FMI implementation
-resources                     // resources used by the FMU (optional)
-extra                         // Additional (meta-)data of the FMU (optional)</pre>
+binaries                            // directory containing the binaries (optional)
+   x86_64-windows                   // binaries for Windows on Intel 64-bit
+      &lt;modelIdentifier&gt;.dll         // shared library of the FMI implementation
+      &lt;other DLLs&gt;                  // the DLL can include other DLLs
+   x86_64-windows-msvc140mt         // static libraries for 64-bit Windows generated
+      &lt;modelIdentifier&gt;.lib         // with Visual Studio 2015 with /MT flag
+   i686-linux                       // binaries for Linux on Intel 32-bit
+      &lt;modelIdentifier&gt;.so          // shared library of the FMI implementation
+   aarch32-linux                    // binaries for Linux on ARM 32-bit
+      &lt;modelIdentifier&gt;.so          // shared library of the FMI implementation
+   x86_64-darwin                    // binaries for macOS
+      &lt;modelIdentifier&gt;.dylib       // shared library of the FMI implementation
+resources                           // resources used by the FMU (optional)
+extra                               // Additional (meta-)data of the FMU (optional)</pre>
 </div>
 </div>
 <div class="sect4">
 <h5 id="documentation-directory">2.5.1.1. Directory Documentation</h5>
 <div class="paragraph">
-<p><a href="#figure-zip-structure">Structure of the ZIP file</a> defines the files expected in the <code>documentation</code> directory.</p>
+<p><a href="#figure-zip-structure">Structure of the ZIP file</a> defines the files expected in the <code>documentation</code> directory.
+If the FMU depends on external resources <em>[e.g. shared libraries, files, or servers]</em> to be loaded or simulated <code>documentation/externalDependencies.{txt|html}</code> must be present to document these dependencies and how to provide them.</p>
 </div>
 <div class="sect5">
 <h6 id="license-information">2.5.1.1.1. Directory Licenses</h6>
@@ -8744,8 +8746,10 @@ The default is <code>false</code>.</p>
 <div class="paragraph">
 <p>The names of the binary directories are standardized by the "platform tuple".
 Further names can be introduced by vendors.
-Dynamic link libraries must include all referenced resources that are not available on a standard target machine <em>[for example, DLLs on Windows that are built with Visual Studio should be compiled with the <code>/MT</code> option to include the required symbols from the Visual C runtime in the DLL, and not use the option <code>/MD</code> where this is not the case]</em>.
-When compiling a shared object on Linux, <code>RPATH="$ORIGIN"</code> has to be set when generating the shared object in order that shared objects used from it, can be dynamically loaded.</p>
+FMUs should contain all resources that are required to load and execute a shared library, link against a static library, or compile from source.
+Shared libraries should be statically linked against their dependencies <em>[e.g. the Visual Studio C Runtime on Windows]</em>.
+<code>RPATH="$ORIGIN"</code> should be set when building ELF binaries to allow dynamic loading of dependencies on the target machine.
+All external dependencies must be documented (see <a href="#documentation-directory">Section 2.5.1.1</a>).</p>
 </div>
 <div class="paragraph">
 <p>The binaries must be placed in the respective &lt;platformTuple&gt; directory with the general format <code>&lt;arch&gt;-&lt;sys&gt;{-&lt;abi&gt;{&lt;abi_ver&gt;}{&lt;abi_sub&gt;}}</code>.</p>
