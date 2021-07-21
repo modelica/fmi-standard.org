@@ -72,7 +72,7 @@ The FMI development was partially funded within the ITEA2 project MODELISAR by
 <table class="table table-borderless">
   <tr>
     <td> <img src="https://svn.fmi-standard.org/fmi/branches/public/img/bmbf.png" alt="bmbf.png" title="bmbf.png" /> </td>
-    <td> <a href="http://www.bmbf.de/en/index.php">BMBF</a> for Daimler AG, DLR e.V., Fraunhofer IIS/EAS, ITI GmbH, Martin-Luther-University Halle-Wittenberg, QTronic GmbH, SIMPACK AG, TWT (BMBF Förderkennzeichen: 01lS08002)
+    <td> <a href="https://www.bmbf.de/">BMBF</a> for Daimler AG, DLR e.V., Fraunhofer IIS/EAS, ITI GmbH, Martin-Luther-University Halle-Wittenberg, QTronic GmbH, SIMPACK AG, TWT (BMBF Förderkennzeichen: 01lS08002)
     </td>
   </tr>
   <tr>
