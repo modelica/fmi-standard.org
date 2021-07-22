@@ -240,16 +240,6 @@ void getEventIndicators(ModelInstance *comp, double z[], size_t nz) {
 }
 #endif
 
-#ifndef GET_FLOAT64
-Status getFloat64(ModelInstance* comp, ValueReference vr, double *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
-    return Error;
-}
-#endif
-
 #ifndef GET_UINT16
 Status getUInt16(ModelInstance* comp, ValueReference vr, uint16_t *value, size_t *index) {
     UNUSED(comp)
@@ -371,10 +361,20 @@ Status activateClock(ModelInstance* comp, ValueReference vr) {
 #endif
 
 #ifndef GET_CLOCK
-Status getClock(ModelInstance* comp, ValueReference vr, int* value) {
+Status getClock(ModelInstance* comp, ValueReference vr, bool* value) {
     UNUSED(comp)
     UNUSED(vr)
     UNUSED(value)
+    return Error;
+}
+#endif
+
+#ifndef GET_INTERVAL
+Status getInterval(ModelInstance* comp, ValueReference vr, double* interval, int* qualifier) {
+    UNUSED(comp)
+    UNUSED(vr)
+    UNUSED(interval)
+    UNUSED(qualifier)
     return Error;
 }
 #endif
@@ -490,17 +490,16 @@ Status doStep(ModelInstance *comp, double t, double tNext, int* earlyReturn, dou
 
                 comp->state = IntermediateUpdateMode;
 
-                int earlyReturnRequested;
+                bool earlyReturnRequested;
                 double earlyReturnTime;
 
                 comp->intermediateUpdate((fmi3InstanceEnvironment)comp->componentEnvironment,
                                           comp->time,         // intermediateUpdateTime
-                                          1,                  // eventOccurred
                                           comp->clocksTicked, // clocksTicked
-                                          0,                  // intermediateVariableSetAllowed
-                                          1,                  // intermediateVariableGetAllowed
-                                          0,                  // intermediateStepFinished
-                                          1,                  // canReturnEarly
+                                          false,              // intermediateVariableSetRequested
+                                          true,               // intermediateVariableGetAllowed
+                                          false,              // intermediateStepFinished
+                                          true,               // canReturnEarly
                                           &earlyReturnRequested,
                                           &earlyReturnTime);
 
@@ -530,18 +529,17 @@ Status doStep(ModelInstance *comp, double t, double tNext, int* earlyReturn, dou
 
             comp->state = IntermediateUpdateMode;
 
-            int earlyReturnRequested;
+            bool earlyReturnRequested;
             double earlyReturnTime;
 
             // call intermediate update callback
             comp->intermediateUpdate((fmi3InstanceEnvironment)comp->componentEnvironment,
                                       comp->time, // intermediateUpdateTime
-                                      0,          // eventOccurred
-                                      0,          // clocksTicked
-                                      0,          // intermediateVariableSetAllowed
-                                      1,          // intermediateVariableGetAllowed
-                                      1,          // intermediateStepFinished
-                                      1,          // canReturnEarly
+                                      false,      // clocksTicked
+                                      false,      // intermediateVariableSetRequested
+                                      true,       // intermediateVariableGetAllowed
+                                      true,       // intermediateStepFinished
+                                      true,       // canReturnEarly
                                       &earlyReturnRequested,
                                       &earlyReturnTime);
 

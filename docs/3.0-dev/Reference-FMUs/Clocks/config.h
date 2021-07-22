@@ -11,6 +11,8 @@
 
 #define SCHEDULED_CO_SIMULATION
 
+#define DEFAULT_STOP_TIME 3
+
 // define model size
 #define NX 0
 #define NZ 0
@@ -20,18 +22,19 @@
 #define GET_INT32
 #define SET_INT32
 #define GET_CLOCK
+#define GET_INTERVAL
 #define ACTIVATE_MODEL_PARTITION
 #define N_INPUT_CLOCKS 3
-#define N_OUTPUT_CLOCKS 2
 
 #define FIXED_SOLVER_STEP 1
 
 typedef enum {
+    vr_time              = 0,
     vr_inClock1          = 1001,
     vr_inClock2          = 1002,
     vr_inClock3          = 1003,
     vr_outClock1         = 1004,
-    vr_outClock2         = 1005,
+    vr_outClock          = 1005,
     vr_inClock1Ticks     = 2001,
     vr_inClock2Ticks     = 2002,
     vr_inClock3Ticks     = 2003,
@@ -42,8 +45,9 @@ typedef enum {
 } ValueReference;
 
 typedef struct {
-    int outClock1;
-    int outClock2;
+    double inClock3_interval;
+    int inClock3_qualifier;
+    int outClock;
     int inClock1Ticks;
     int inClock2Ticks;
     int inClock3Ticks;

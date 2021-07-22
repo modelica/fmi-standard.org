@@ -26,7 +26,7 @@ static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3Strin
 int main(int argc, char* argv[]) {
 
 #if defined(_WIN32)
-    HMODULE libraryHandle = LoadLibrary("VanDerPol\\binaries\\x86_64-windows\\VanDerPol.dll");
+    HMODULE libraryHandle = LoadLibraryA("VanDerPol\\binaries\\x86_64-windows\\VanDerPol.dll");
 #elif defined(__APPLE__)
     void *libraryHandle = dlopen("VanDerPol/binaries/x86_64-darwin/VanDerPol.dylib", RTLD_LAZY);
 #else
@@ -37,14 +37,14 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    fmi3InstantiateModelExchangeTYPE *instantiateModelExchange =
+    fmi3InstantiateModelExchangeTYPE *instantiateModelExchange = (fmi3InstantiateModelExchangeTYPE *)
 #ifdef _WIN32
         GetProcAddress(libraryHandle, "fmi3InstantiateModelExchange");
 #else
         dlsym(libraryHandle, "fmi3InstantiateModelExchange");
 #endif
 
-    fmi3FreeInstanceTYPE *freeInstance =
+    fmi3FreeInstanceTYPE *freeInstance = (fmi3FreeInstanceTYPE *)
 #ifdef _WIN32
         GetProcAddress(libraryHandle, "fmi3FreeInstance");
 #else

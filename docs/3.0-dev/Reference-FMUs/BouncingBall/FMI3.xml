@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fmiModelDescription
-  fmiVersion="3.0-alpha.5"
+  fmiVersion="3.0-beta.2"
   modelName="BouncingBall"
   description="This model calculates the trajectory, over time, of a ball dropped from a height of 1 m."
   instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f003}">
 
-  <ModelExchange modelIdentifier="BouncingBall"/>
+  <ModelExchange
+    modelIdentifier="BouncingBall"
+    canGetAndSetFMUState="true"
+    canSerializeFMUState="true"/>
 
-  <CoSimulation modelIdentifier="BouncingBall"
+  <CoSimulation
+    modelIdentifier="BouncingBall"
+    canGetAndSetFMUState="true"
+    canSerializeFMUState="true"
     canHandleVariableCommunicationStepSize="true"
-    providesIntermediateVariableAccess="true"
-    canReturnEarlyAfterIntermediateUpdate="true"/>
+    providesIntermediateUpdate="true"
+    canReturnEarlyAfterIntermediateUpdate="true"
+    fixedInternalStepSize="1e-3"/>
 
   <UnitDefinitions>
     <Unit name="m">
@@ -38,6 +45,7 @@
   <DefaultExperiment startTime="0" stopTime="3" stepSize="1e-3"/>
 
   <ModelVariables>
+    <Float64 name="time" valueReference="0" causality="independent" variability="continuous" description="Simulation time"/>
     <Float64 name="h" valueReference="1" causality="output" variability="continuous" initial="exact" declaredType="Position" start="1" description="Position of the ball"/>
     <Float64 name="der(h)" valueReference="2" causality="local" variability="continuous" initial="calculated" declaredType="Velocity" derivative="1" description="Derivative of h"/>
     <Float64 name="v" valueReference="3" causality="output" variability="continuous" initial="exact" declaredType="Velocity" start="0" reinit="true" description="Velocity of the ball"/>
@@ -49,8 +57,8 @@
   <ModelStructure>
     <Output valueReference="1"/>
     <Output valueReference="3"/>
-    <Derivative valueReference="2"/>
-    <Derivative valueReference="4"/>
+    <ContinuousStateDerivative valueReference="2"/>
+    <ContinuousStateDerivative valueReference="4"/>
     <InitialUnknown valueReference="2" dependencies="3" dependenciesKind="constant"/>
     <InitialUnknown valueReference="4" dependencies="5" dependenciesKind="constant"/>
     <EventIndicator valueReference="1"/>

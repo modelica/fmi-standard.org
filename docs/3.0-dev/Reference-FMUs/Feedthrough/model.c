@@ -3,6 +3,10 @@
 #include <stdlib.h>  // for free()
 #include <string.h>  // for strcmp()
 
+#ifdef _MSC_VER
+#define strdup _strdup
+#endif
+
 
 const char *STRING_START = "Set me!";
 const char *BINARY_START = "Set me, too!";
@@ -25,8 +29,13 @@ void calculateValues(ModelInstance *comp) {
 }
 
 Status getFloat64(ModelInstance* comp, ValueReference vr, double *value, size_t *index) {
+
     calculateValues(comp);
+
     switch (vr) {
+        case vr_time:
+            value[(*index)++] = comp->time;
+            return OK;
         case vr_continuous_real_in:
             value[(*index)++] = M(real_continuous_in);
             return OK;
@@ -43,7 +52,9 @@ Status getFloat64(ModelInstance* comp, ValueReference vr, double *value, size_t 
         case vr_tunable_real_parameter:
             value[(*index)++] = M(real_tunable_parameter);
             return OK;
-        default: return Error;
+        default:
+            logError(comp, "Get Float64 is not allowed for value reference %u.", vr);
+            return Error;
     }
 }
 
@@ -56,7 +67,9 @@ Status getInt32(ModelInstance* comp, ValueReference vr, int *value, size_t *inde
         case vr_int_out:
             value[(*index)++] = M(integer);
             return OK;
-        default: return Error;
+        default:
+            logError(comp, "Get Int32 is not allowed for value reference %u.", vr);
+            return Error;
     }
 }
 
@@ -69,11 +82,13 @@ Status getBoolean(ModelInstance* comp, ValueReference vr, bool *value, size_t *i
         case vr_bool_out:
             value[(*index)++] = M(boolean) && (strcmp(M(string), "FMI is awesome!") == 0);
             return OK;
-        default: return Error;
+        default:
+            logError(comp, "Get Boolean is not allowed for value reference %u.", vr);
+            return Error;
     }
 }
 
-Status getBinary(ModelInstance* comp, ValueReference vr, size_t size[], const char *value[], size_t *index) {
+Status getBinary(ModelInstance* comp, ValueReference vr, size_t size[], const char* value[], size_t* index) {
     calculateValues(comp);
     switch (vr) {
         case vr_binary_in:
@@ -81,7 +96,9 @@ Status getBinary(ModelInstance* comp, ValueReference vr, size_t size[], const ch
             value[*index] = M(binary);
             size[(*index)++] = M(binary_size);
             return OK;
-        default: return Error;
+        default:
+            logError(comp, "Get Binary is not allowed for value reference %u.", vr);
+            return Error;
     }
     return Error;
 }
@@ -91,7 +108,9 @@ Status getString(ModelInstance* comp, ValueReference vr, const char **value, siz
         case vr_string:
             value[(*index)++] = M(string);
             return OK;
-        default: return Error;
+        default:
+            logError(comp, "Get String is not allowed for value reference %u.", vr);
+            return Error;
     }
 }
 
@@ -140,6 +159,7 @@ Status setFloat64(ModelInstance* comp, ValueReference vr, const double *value, s
             return OK;
 
         default:
+            logError(comp, "Set Float64 is not allowed for value reference %u.", vr);
             return Error;
     }
 }
@@ -160,6 +180,7 @@ Status setBoolean(ModelInstance* comp, ValueReference vr, const bool *value, siz
             M(boolean) = value[(*index)++];
             return OK;
         default:
+            logError(comp, "Set Boolean is not allowed for value reference %u.", vr);
             return Error;
     }
 }
@@ -173,11 +194,12 @@ Status setString(ModelInstance* comp, ValueReference vr, const char *const *valu
             M(string) = strdup(value[(*index)++]);
             return OK;
         default:
+            logError(comp, "Set String is not allowed for value reference %u.", vr);
             return Error;
     }
 }
 
-Status setBinary(ModelInstance* comp, ValueReference vr, const size_t size[], const char *const value[], size_t *index) {
+Status setBinary(ModelInstance* comp, ValueReference vr, const size_t size[], const char* const value[], size_t* index) {
     switch (vr) {
         case vr_binary_in:
             if (M(binary) != BINARY_START) {
@@ -188,6 +210,7 @@ Status setBinary(ModelInstance* comp, ValueReference vr, const size_t size[], co
             memcpy((void *)M(binary), value[(*index)++], M(binary_size));
             return OK;
         default:
+            logError(comp, "Set Binary is not allowed for value reference %u.", vr);
             return Error;
     }
 }

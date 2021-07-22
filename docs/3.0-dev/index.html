@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 9807f19,</span>
-<span id="revdate">2021-07-21</span>
+<span id="revnumber">version 6371478,</span>
+<span id="revdate">2021-07-22</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3629,14 +3629,14 @@ g_2(x, u_1)
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    //   c[]      column vector
 
     // set time, states and inputs
-    CHECK_STATUS(fmi3SetTime(m, time))
-    CHECK_STATUS(fmi3SetContinuousStates(m, x, nx))
-    // fmi3Set{VariableType}(m, ...)
+    CHECK_STATUS(S-&gt;fmi3SetTime(s, time))
+    CHECK_STATUS(S-&gt;fmi3SetContinuousStates(s, x, nx))
+    // fmi3Set{VariableType}(s, ...)
 
     // if required at this step, compute the Jacobian as a dense matrix
     for (i = 0; i &lt; nx; i++) {
         // construct the Jacobian matrix column wise
-        CHECK_STATUS(fmi3GetDirectionalDerivative(m, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, c, nx))
+        CHECK_STATUS(S-&gt;fmi3GetDirectionalDerivative(s, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, c, nx))
         for (j = 0; j &lt; nx; j++) {
             J[j][i] = c[j];
         }
@@ -3770,7 +3770,7 @@ h_2(u_1, u_2)
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    for (i = 0; i &lt; nx; i++) {
         // construct the Jacobian matrix column wise
-        CHECK_STATUS(fmi3GetAdjointDerivative(m, &amp;vr_dx[i], 1, vr_x, nx, &amp;dk, 1, &amp;J[i][0], nx))
+        CHECK_STATUS(S-&gt;fmi3GetAdjointDerivative(s, &amp;vr_dx[i], 1, vr_x, nx, &amp;dk, 1, &amp;J[i][0], nx))
     }</code></pre>
 </div>
 </div>
@@ -8683,7 +8683,7 @@ The default is <code>false</code>.</p>
 <div class="title">A minimal build configuration</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiBuildDescription fmiVersion="3.0-beta.1"&gt;
+&lt;fmiBuildDescription fmiVersion="3.0-beta.2"&gt;
 
   &lt;BuildConfiguration modelIdentifier="PIDContoller"&gt;
     &lt;SourceFileSet&gt;
@@ -8698,7 +8698,7 @@ The default is <code>false</code>.</p>
 <div class="title">Multiple complex build configurations</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiBuildDescription fmiVersion="3.0-beta.1"&gt;
+&lt;fmiBuildDescription fmiVersion="3.0-beta.2"&gt;
 
   &lt;BuildConfiguration modelIdentifier="PlantModel" description="Build configuration for desktop platforms"&gt;
     &lt;SourceFileSet language="C99"&gt;
@@ -9120,7 +9120,7 @@ static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3Strin
 int main(int argc, char* argv[]) {
 
 #if defined(_WIN32)
-    HMODULE libraryHandle = LoadLibrary("VanDerPol\\binaries\\x86_64-windows\\VanDerPol.dll");
+    HMODULE libraryHandle = LoadLibraryA("VanDerPol\\binaries\\x86_64-windows\\VanDerPol.dll");
 #elif defined(__APPLE__)
     void *libraryHandle = dlopen("VanDerPol/binaries/x86_64-darwin/VanDerPol.dylib", RTLD_LAZY);
 #else
@@ -9131,14 +9131,14 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    fmi3InstantiateModelExchangeTYPE *instantiateModelExchange =
+    fmi3InstantiateModelExchangeTYPE *instantiateModelExchange = (fmi3InstantiateModelExchangeTYPE *)
 #ifdef _WIN32
         GetProcAddress(libraryHandle, "fmi3InstantiateModelExchange");
 #else
         dlsym(libraryHandle, "fmi3InstantiateModelExchange");
 #endif
 
-    fmi3FreeInstanceTYPE *freeInstance =
+    fmi3FreeInstanceTYPE *freeInstance = (fmi3FreeInstanceTYPE *)
 #ifdef _WIN32
         GetProcAddress(libraryHandle, "fmi3FreeInstance");
 #else
@@ -9811,175 +9811,192 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">m = M_fmi3InstantiateModelExchange("m", INSTANTIATION_TOKEN, NULL, fmi3False, fmi3False, NULL, cb_logMessage);
-// "m" is the instance name
-// "M_" is the MODEL_IDENTIFIER
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">    fmi3Instance s = S-&gt;fmi3InstantiateModelExchange(
+        "intstance1",        // instanceName
+        INSTANTIATION_TOKEN, // instantiationToken
+        NULL,                // resourceLocation
+        fmi3False,           // visible
+        fmi3False,           // loggingOn
+        NULL,                // instanceEnvironment
+        cb_logMessage        // logMessage
+    );
 
-if (m == NULL) {
-    status = fmi3Error;
-    goto TERMINATE;
-}
-
-// set the start time
-time  = tStart;
-
-// set all variable start values (of "ScalarVariable / &lt;type&gt; / start") and
-// set the start values at time = Tstart
-// M_fmi3SetReal/Integer/Boolean/String(m, ...)
-
-// initialize
-// determine continuous and discrete states
-CHECK_STATUS(M_fmi3EnterInitializationMode(m, fmi3False, 0.0, tStart, fmi3True, tEnd));
-CHECK_STATUS(M_fmi3ExitInitializationMode(m));
-
-initialEventMode = fmi3True;
-enterEventMode   = fmi3False;
-timeEvent        = fmi3False;
-stateEvent       = fmi3False;
-
-// initialize previous event indicators
-CHECK_STATUS(M_fmi3GetEventIndicators(m, previous_z, NZ));
-
-initialEventMode = fmi3False;
-
-CHECK_STATUS(M_fmi3EnterContinuousTimeMode(m));
-
-// retrieve initial state x and
-// nominal values of x (if absolute tolerance is needed)
-CHECK_STATUS(M_fmi3GetContinuousStates(m, x, NX));
-CHECK_STATUS(M_fmi3GetNominalsOfContinuousStates(m, x_nominal, NX));
-
-// retrieve solution at t=Tstart, for example, for outputs
-// M_fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
-
-while (!terminateSimulation) {
-
-    tNext = time + h;
-
-    // handle events
-    if (enterEventMode || stateEvent || timeEvent) {
-
-        if (!initialEventMode) {
-            CHECK_STATUS(M_fmi3EnterEventMode(m, fmi3False, rootsFound, NZ, timeEvent));
-        }
-
-        // event iteration
-        fmi3Boolean newDiscreteStatesNeeded           = fmi3True;
-        fmi3Boolean terminateSimulation               = fmi3False;
-        fmi3Boolean nominalsOfContinuousStatesChanged = fmi3False;
-        fmi3Boolean valuesOfContinuousStatesChanged   = fmi3False;
-        fmi3Boolean nextEventTimeDefined              = fmi3False;
-        fmi3Float64 nextEventTime                     = 0;
-
-        while (newDiscreteStatesNeeded) {
-
-            // set inputs at super dense time point
-            // M_fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
-
-            fmi3Boolean nominalsChanged = fmi3False;
-            fmi3Boolean statesChanged   = fmi3False;
-
-            // update discrete states
-            CHECK_STATUS(M_fmi3NewDiscreteStates(m, &amp;newDiscreteStatesNeeded, &amp;terminateSimulation, &amp;nominalsChanged, &amp;statesChanged, &amp;nextEventTimeDefined, &amp;nextEventTime));
-
-            // getOutput at super dense time point
-            // M_fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
-
-            nominalsOfContinuousStatesChanged |= nominalsChanged;
-            valuesOfContinuousStatesChanged   |= statesChanged;
-
-            if (terminateSimulation) goto TERMINATE;
-        }
-
-        // enter Continuous-Time Mode
-        CHECK_STATUS(M_fmi3EnterContinuousTimeMode(m));
-
-        // retrieve solution at simulation (re)start
-        CHECK_STATUS(recordVariables(outputFile, m, time));
-
-        if (initialEventMode || valuesOfContinuousStatesChanged) {
-            // the model signals a value change of states, retrieve them
-            CHECK_STATUS(M_fmi3GetContinuousStates(m, x, NX));
-        }
-
-        if (initialEventMode || nominalsOfContinuousStatesChanged) {
-            // the meaning of states has changed; retrieve new nominal values
-            CHECK_STATUS(M_fmi3GetNominalsOfContinuousStates(m, x_nominal, NX));
-        }
-
-        if (nextEventTimeDefined) {
-            tNext = min(nextEventTime, tEnd);
-        } else {
-            tNext = tEnd;
-        }
-
-        initialEventMode = fmi3False;
-    }
-
-    if (time &gt;= tEnd) {
+    if (s == NULL) {
+        status = fmi3Error;
         goto TERMINATE;
     }
 
-    // compute derivatives
-    CHECK_STATUS(M_fmi3GetDerivatives(m, der_x, NX));
+    // set the start time
+    fmi3Float64 time = 0;
 
-    // advance time
-    h = min(fixedStep, tNext - time);
-    time += h;
-    CHECK_STATUS(M_fmi3SetTime(m, time));
+    // TODO: set all variable start values (of "ScalarVariable / &lt;type&gt; / start")
 
-    // set continuous inputs at t = time
-    // M_fmi3SetFloat*(m, ...)
+    // initialize
+    // determine continuous and discrete states
+    CHECK_STATUS(S-&gt;fmi3EnterInitializationMode(s, fmi3False, 0.0, time, fmi3True, stopTime));
 
-    // set states at t = time and perform one step
-    for (size_t i = 0; i &lt; NX; i++) {
-        x[i] += h * der_x[i]; // forward Euler method
+    // TODO: apply input
+
+    CHECK_STATUS(S-&gt;fmi3ExitInitializationMode(s));
+
+    // intial event iteration
+    while (discreteStatesNeedUpdate) {
+
+        CHECK_STATUS(S-&gt;fmi3UpdateDiscreteStates(
+            s,
+            &amp;discreteStatesNeedUpdate,
+            &amp;terminateSimulation,
+            &amp;nominalsOfContinuousStatesChanged,
+            &amp;valuesOfContinuousStatesChanged,
+            &amp;nextEventTimeDefined,
+            &amp;nextEventTime));
+
+        if (terminateSimulation) {
+            goto TERMINATE;
+        }
     }
 
-    CHECK_STATUS(M_fmi3SetContinuousStates(m, x, NX));
+    CHECK_STATUS(S-&gt;fmi3EnterContinuousTimeMode(s));
 
-    // get event indicators at t = time
-    CHECK_STATUS(M_fmi3GetEventIndicators(m, z, NZ));
+#if NZ &gt; 0
+    // initialize previous event indicators
+    CHECK_STATUS(S-&gt;fmi3GetEventIndicators(s, previous_z, NZ));
+#endif
 
-    stateEvent = fmi3False;
+#if NX &gt; 0
+    // retrieve initial state x and
+    // nominal values of x (if absolute tolerance is needed)
+    CHECK_STATUS(S-&gt;fmi3GetContinuousStates(s, x, NX));
+    CHECK_STATUS(S-&gt;fmi3GetNominalsOfContinuousStates(s, x_nominal, NX));
+#endif
 
-    for (size_t i = 0; i &lt; NZ; i++) {
+    // retrieve solution at t=Tstart, for example, for outputs
+    // S-&gt;fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
 
-        // check for zero crossings
-        if (previous_z[i] &lt; 0 &amp;&amp; z[i] &gt;= 0) {
-            rootsFound[i] = 1;   // -\+
-        } else  if (previous_z[i] &gt; 0 &amp;&amp; z[i] &lt;= 0) {
-            rootsFound[i] = -1;  // +/-
-        } else {
-            rootsFound[i] = 0;   // no zero crossing
+    while (!terminateSimulation) {
+
+        // detect time event
+        timeEvent = nextEventTimeDefined &amp;&amp; time &gt;= nextEventTime;
+
+        // handle events
+        if (inputEvent || timeEvent || stateEvent || stepEvent) {
+
+            CHECK_STATUS(S-&gt;fmi3EnterEventMode(s, stepEvent, stateEvent, rootsFound, NZ, timeEvent));
+
+            nominalsOfContinuousStatesChanged = fmi3False;
+            valuesOfContinuousStatesChanged = fmi3False;
+
+            // event iteration
+            do {
+                // set inputs at super dense time point
+                // S-&gt;fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
+
+                fmi3Boolean nominalsChanged = fmi3False;
+                fmi3Boolean statesChanged = fmi3False;
+
+                // update discrete states
+                CHECK_STATUS(S-&gt;fmi3UpdateDiscreteStates(s, &amp;discreteStatesNeedUpdate, &amp;terminateSimulation, &amp;nominalsChanged, &amp;statesChanged, &amp;nextEventTimeDefined, &amp;nextEventTime));
+
+                // get output at super dense time point
+                // S-&gt;fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
+
+                nominalsOfContinuousStatesChanged |= nominalsChanged;
+                valuesOfContinuousStatesChanged |= statesChanged;
+
+                if (terminateSimulation) {
+                    goto TERMINATE;
+                }
+
+            } while (discreteStatesNeedUpdate);
+
+            // enter Continuous-Time Mode
+            CHECK_STATUS(S-&gt;fmi3EnterContinuousTimeMode(s));
+
+            // retrieve solution at simulation (re)start
+            CHECK_STATUS(recordVariables(outputFile, S, s, time));
+
+#if NX &gt; 0
+            if (valuesOfContinuousStatesChanged) {
+                // the model signals a value change of states, retrieve them
+                CHECK_STATUS(S-&gt;fmi3GetContinuousStates(s, x, NX));
+            }
+
+            if (nominalsOfContinuousStatesChanged) {
+                // the meaning of states has changed; retrieve new nominal values
+                CHECK_STATUS(S-&gt;fmi3GetNominalsOfContinuousStates(s, x_nominal, NX));
+            }
+#endif
         }
 
-        stateEvent |= rootsFound[i];
+        if (time &gt;= stopTime) {
+            goto TERMINATE;
+        }
 
-        previous_z[i] = z[i]; // remember the current value
+#if NX &gt; 0
+        // compute continous state derivatives
+        CHECK_STATUS(S-&gt;fmi3GetContinuousStateDerivatives(s, der_x, NX));
+#endif
+        // advance time
+        time += fixedStep;
+
+        CHECK_STATUS(S-&gt;fmi3SetTime(s, time));
+
+        // set continuous inputs at t = time
+        // S-&gt;fmi3SetFloat*(m, ...)
+
+#if NX &gt; 0
+        // set states at t = time and perform one step
+        for (size_t i = 0; i &lt; NX; i++) {
+            x[i] += fixedStep * der_x[i]; // forward Euler method
+        }
+
+        CHECK_STATUS(S-&gt;fmi3SetContinuousStates(s, x, NX));
+#endif
+
+#if NZ &gt; 0
+        // get event indicators at t = time
+        CHECK_STATUS(S-&gt;fmi3GetEventIndicators(s, z, NZ));
+
+        stateEvent = fmi3False;
+
+        for (size_t i = 0; i &lt; NZ; i++) {
+
+            // check for zero crossings
+            if (previous_z[i] &lt; 0 &amp;&amp; z[i] &gt;= 0) {
+                rootsFound[i] = 1;   // -\+
+            } else  if (previous_z[i] &gt; 0 &amp;&amp; z[i] &lt;= 0) {
+                rootsFound[i] = -1;  // +/-
+            } else {
+                rootsFound[i] = 0;   // no zero crossing
+            }
+
+            stateEvent |= rootsFound[i];
+
+            previous_z[i] = z[i]; // remember the current value
+        }
+#endif
+
+        // inform the model about an accepted step
+        CHECK_STATUS(S-&gt;fmi3CompletedIntegratorStep(s, fmi3True, &amp;stepEvent, &amp;terminateSimulation));
+
+        // get continuous output
+        // S-&gt;fmi3GetFloat*(m, ...)
+        CHECK_STATUS(recordVariables(outputFile, S, s, time));
     }
-
-    // inform the model about an accepted step
-    CHECK_STATUS(M_fmi3CompletedIntegratorStep(m, fmi3True, &amp;enterEventMode, &amp;terminateSimulation));
-
-    // get continuous output
-    // M_fmi3GetFloat*(m, ...)
-    CHECK_STATUS(recordVariables(outputFile, m, time));
-}
 
 TERMINATE:
 
-if (m &amp;&amp; status != fmi3Error &amp;&amp; status != fmi3Fatal) {
-    // retrieve final values and terminate simulation
-    CHECK_STATUS(recordVariables(outputFile, m, time));
-    fmi3Status s = M_fmi3Terminate(m);
-    status = max(status, s);
-}
+    if (s &amp;&amp; status &lt; fmi3Error) {
+        // retrieve final values and terminate simulation
+        CHECK_STATUS(recordVariables(outputFile, S, s, time));
+        const fmi3Status terminateStatus = S-&gt;fmi3Terminate(s);
+        status = max(status, terminateStatus);
+    }
 
-if (m &amp;&amp; status != fmi3Fatal) {
-    // clean up
-    M_fmi3FreeInstance(m);
-}</code></pre>
+    if (s &amp;&amp; status &lt; fmi3Fatal) {
+        // clean up
+        S-&gt;fmi3FreeInstance(s);
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -10045,7 +10062,7 @@ If <code>false</code> (the default), the function must be called after every com
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;fmiModelDescription
-  fmiVersion="3.0-beta.1"
+  fmiVersion="3.0-beta.2"
   modelName="MyLibrary.SpringMassDamper"
   instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f9e0}"
   description="Rotational Spring Mass Damper System"
@@ -10502,26 +10519,41 @@ The code demonstrates the simplest importer as shown in <a href="#state-machine-
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">////////////////////////////
 // Initialization sub-phase
+typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourceLocation,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    eventModeUsed,
+    fmi3Boolean                    earlyReturnAllowed,
+    const fmi3ValueReference       requiredIntermediateVariables[],
+    size_t                         nRequiredIntermediateVariables,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3CallbackLogMessage         logMessage,
+    fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 // instantiate both FMUs
-s1 = s1_fmi3InstantiateCoSimulation("instance1",      // instanceName
+s1 = s1_fmi3InstantiateCoSimulation("instance1",   // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
                                     fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeRequired
+                                    fmi3False,     // eventModeUsed
+                                    fmi3False,     // earlyReturnAllowed
                                     NULL,          // requiredIntermediateVariables
                                     0,             // nRequiredIntermediateVariables
                                     NULL,          // instanceEnvironment
                                     cb_logMessage, // logMessage
                                     NULL);         // intermediateUpdate
 
-s2 = s2_fmi3InstantiateCoSimulation("instance1",      // instanceName
+s2 = s2_fmi3InstantiateCoSimulation("instance1",   // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
                                     fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeRequired
+                                    fmi3False,     // eventModeUsed
+                                    fmi3False,     // earlyReturnAllowed
                                     NULL,          // requiredIntermediateVariables
                                     0,             // nRequiredIntermediateVariables
                                     NULL,          // instanceEnvironment
@@ -10568,18 +10600,18 @@ while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
     // fmi3SetReal(s2, ..., 1, &amp;y1);
 
     // call instance s1 and check status
-    fmi3Boolean terminate, earlyReturn;
+    fmi3Boolean eventEncountered, terminateSimulation, earlyReturn;
     fmi3Float64 lastSuccessfulTime;
 
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
+    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
-    if (terminate) {
+    if (terminateSimulation) {
         printf("Instance s1 requested to terminate simulation.");
         break;
     }
 
     // call instance s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;terminate, &amp;earlyReturn, &amp;lastSuccessfulTime);
+    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
     // ...
 
@@ -10692,7 +10724,7 @@ The only differences are the replacement of the element <code>&lt;ModelExchange&
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;fmiModelDescription
-  fmiVersion="3.0-beta.1"
+  fmiVersion="3.0-beta.2"
   modelName="MyLibrary.SpringMassDamper_Early_Return_example"
   instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f9e0}"
   description="Rotational Spring Mass Damper System"
@@ -11376,7 +11408,7 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;fmiModelDescription fmiVersion="3.0-beta.1" modelName="ThreeInputClocks" instantiationToken="ThreeInputClocks"&gt;
+&lt;fmiModelDescription fmiVersion="3.0-beta.2" modelName="ThreeInputClocks" instantiationToken="ThreeInputClocks"&gt;
 	&lt;ScheduledExecution modelIdentifier="ThreeInputClocks"/&gt;
 	&lt;LogCategories&gt;
 		&lt;Category name="logStatusError" description="Log error messages"/&gt;

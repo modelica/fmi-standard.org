@@ -2,22 +2,26 @@ import unittest
 import subprocess
 import os
 import shutil
-from fmpy import simulate_fmu, platform
+from fmpy import simulate_fmu, platform, read_model_description
 from fmpy.util import compile_platform_binary
+from fmpy.validation import validate_fmu
 
 
 fmus_dir = os.path.join(os.path.dirname(__file__), 'fmus')  # /path/to/fmi-cross-check/fmus
-test_fmus_version = '0.0.3'
+test_fmus_version = '0.0.9'
 
 test_fmus_dir = os.path.dirname(__file__)
 
 models = ['BouncingBall', 'Dahlquist', 'Resource', 'Stair', 'VanDerPol', 'Feedthrough']
 
-if os.name == 'nt':
-    generator = 'Visual Studio 15 2017 Win64'
+if 'CMAKE_GENERATOR' in os.environ:
+    generator = os.environ['CMAKE_GENERATOR']
 else:
-    generator = 'Unix Makefiles'
-
+    if os.name == 'nt':
+        generator = 'Visual Studio 15 2017 Win64'
+    else:
+        generator = 'Unix Makefiles'
+    
 
 def copy_to_cross_check(build_dir, model_names, fmi_version, fmi_types):
     if fmus_dir is None:
@@ -54,6 +58,10 @@ class BuildTest(unittest.TestCase):
             print(model)
 
             fmu_filename = os.path.join(build_dir, 'dist', model + '.fmu')
+
+            problems = validate_fmu(fmu_filename)
+
+            self.assertTrue(not problems)
 
             if model == 'Feedthrough':
                 start_values = {'real_fixed_param': 1, 'string_param': "FMI is awesome!"}
@@ -147,13 +155,18 @@ class BuildTest(unittest.TestCase):
 
         # run examples
         examples = [
+            'cs_early_return',
+            'cs_event_mode',
+            'cs_intermediate_update',
+            'BouncingBall_cs',
+            'BouncingBall_me',
+            'connected_cs',
             'import_shared_library',
             'import_static_library',
-            'co_simulation',
-            'bcs_early_return',
-            'bcs_intermediate_update',
             'jacobian',
-            'scs_synchronous'
+            'scs_synchronous',
+            'Stair_cs',
+            'Stair_me'
         ]
 
         is_windows = os.name == 'nt'
@@ -171,6 +184,11 @@ class BuildTest(unittest.TestCase):
         self.validate(build_dir, models=models, compile=True)
 
         copy_to_cross_check(build_dir=build_dir, model_names=models, fmi_version='3.0', fmi_types=['cs', 'me'])
+        copy_to_cross_check(build_dir=build_dir, model_names=['Clocks'], fmi_version='3.0', fmi_types=['se'])
+
+        for model in ['Clocks', 'LinearTransform']:
+            problems = validate_fmu(filename=os.path.join(build_dir, 'dist', model + '.fmu'))
+            self.assertTrue(not problems)
 
 
 if __name__ == '__main__':
