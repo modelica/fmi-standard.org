@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 1a11047,</span>
+<span id="revnumber">version a3644e7,</span>
 <span id="revdate">2021-07-27</span>
 </div>
 <div id="toc" class="toc2">
@@ -1928,7 +1928,7 @@ The output argument values are defined.</p>
 <dd>
 <p>A non-critical problem was detected, but the computation can continue.
 The output argument values are defined.
-Function <a href="#logMessage"><code>logMessage</code></a> was called by the FMU and the user is expected to handle the problem.<br>
+Function <a href="#logMessage"><code>logMessage</code></a> should be called by the FMU with further information before returning this status, respecting the current logging settings.<br>
 <em>[In certain applications, e.g. in a prototyping environment, warnings may be acceptable.</em>
 <em>For production environments warnings should be treated like errors unless they can be safely ignored.]</em></p>
 </dd>
@@ -1940,7 +1940,7 @@ Function <a href="#logMessage"><code>logMessage</code></a> was called by the FMU
 <dd>
 <p>The call was not successful and the FMU is in the same state as before the call.
 The output argument values are not defined, but the computation can continue.
-When debug logging is enabled (<code>loggingOn == fmi3True</code>) the function <a href="#logMessage"><code>logMessage</code></a> was called by the FMU.
+Function <a href="#logMessage"><code>logMessage</code></a> should be called by the FMU with further information before returning this status, respecting the current logging settings.
 Advanced simulation algorithms can try alternative approaches to drive the simulation by calling the function with different arguments or calling another function.
 Otherwise the simulation algorithm has to treat this return code like <a href="#fmi3Error"><code>fmi3Error</code></a> and has to terminate the simulation.<br>
 <em>[Examples for usage of <a href="#fmi3Discard"><code>fmi3Discard</code></a> are</em></p>
@@ -1963,7 +1963,7 @@ Otherwise the simulation algorithm has to treat this return code like <a href="#
 <dd>
 <p>The call failed.
 The output argument values are undefined and the simulation cannot be continued.
-Function <a href="#logMessage"><code>logMessage</code></a> was called by the FMU and the FMU is in state <a href="#Terminated"><strong>Terminated</strong></a>.
+Function <a href="#logMessage"><code>logMessage</code></a> should be called by the FMU with further information before returning this status, respecting the current logging settings.
 If a function returns <a href="#fmi3Error"><code>fmi3Error</code></a>, it is possible to restore a previously retrieved FMU state by calling <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>.
 Otherwise <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a> or <a href="#fmi3Reset"><code>fmi3Reset</code></a> must be called.
 When detecting illegal arguments or a function call not allowed in the current state according to the respective state machine, the FMU must return <a href="#fmi3Error"><code>fmi3Error</code></a>.
@@ -1977,7 +1977,7 @@ Other instances of this FMU are not affected by the error.</p>
 <dd>
 <p>The state of all instances of the model is irreparably corrupted.
 <em>[For example, due to a runtime exception such as access violation or integer division by zero during the execution of an FMI function.]</em>
-Function <a href="#logMessage"><code>logMessage</code></a> was called by the FMU.
+Function <a href="#logMessage"><code>logMessage</code></a> should be called by the FMU with further information before returning this status, respecting the current logging settings, if still possible.
 It is not allowed to call any other function for any instance of the FMU.</p>
 </dd>
 </dl>
