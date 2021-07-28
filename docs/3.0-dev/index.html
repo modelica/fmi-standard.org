@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version a3644e7,</span>
-<span id="revdate">2021-07-27</span>
+<span id="revnumber">version 77d1760,</span>
+<span id="revdate">2021-07-28</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1642,6 +1642,9 @@ Only during <a href="#InitializationMode"><strong>Initialization Mode</strong></
 <em>[For example, if the functions of one instance of an FMU are accessed from more than one thread;
 the multi-threaded simulation environment that uses the FMU must guarantee that there are no race conditions while invoking the FMI functions.
 The FMU itself does not implement any services to support this.]</em></p>
+</li>
+<li>
+<p>FMI callback functions are not allowed to call back into the FMU (<a href="#logMessage">fmi3CallbackLogMessage</a>, <a href="#preemption-support">fmi3CallbackLockPreemption</a>, <a href="#preemption-support">fmi3CallbackUnlockPreemption</a>), except <a href="#intermediateUpdate">fmi3CallbackIntermediateUpdate</a> which leads to the well-defined state <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> defining which function calls back into the FMU are allowed.</p>
 </li>
 <li>
 <p>FMI functions must not change global settings which affect other processes/threads.
@@ -4064,7 +4067,7 @@ If the character <code>#</code> shall be included in the message, it has to be p
 See <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> for details.</p>
 </li>
 <li>
-<p>Callback function <code>lockPreemption</code> and <code>unlockPreemption</code><br>
+<p>Callback function <a href="#preemption-support">lockPreemption</a> and <a href="#preemption-support">unlockPreemption</a><br>
 See <a href="#preemption-support">Section 5.1.2</a> for details.</p>
 </li>
 </ul>
@@ -10940,7 +10943,7 @@ Mostly this is required for internal inter-model-partition communication and in 
 The exporting tool has to consider the effect of <a href="#triggered"><code>triggered</code></a> <a href="#inputClock">'input Clocks'</a> and the influences of computing speed, because the exact occurrence of preemption points cannot be foreseen (within the given priority and period restrictions).</p>
 </div>
 <div class="paragraph">
-<p>To guard certain code parts against preemption the FMU may use the callback functions <code>fmi3CallbackLockPreemption</code> and <code>fmi3CallbackUnlockPreemption</code> provided by the simulation algorithm when instantiating the FMU via <a href="#fmi3InstantiateScheduledExecution"><code>fmi3InstantiateScheduledExecution</code></a>.</p>
+<p>To guard certain code parts against preemption the FMU may use the callback functions <a href="#preemption-support">fmi3CallbackLockPreemption</a> and <a href="#preemption-support">fmi3CallbackUnlockPreemption</a> provided by the simulation algorithm when instantiating the FMU via <a href="#fmi3InstantiateScheduledExecution"><code>fmi3InstantiateScheduledExecution</code></a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Such locks should be used with care and only if needed: Examples are given in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> and <a href="#example-scheduled-execution">Section 5.3</a>.]</em></p>
