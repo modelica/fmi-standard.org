@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 77d1760,</span>
-<span id="revdate">2021-07-28</span>
+<span id="revnumber">version 5e0f688,</span>
+<span id="revdate">2021-07-29</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1398,8 +1398,7 @@ The real part \(\mathbf{t}_R\) of this tuple is the <a href="#independent"><code
 During continuous-time integration \(\mathbf{t}_I = 0\).
 The integer part \(\mathbf{t}_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(\mathbf{t}_R\).
 This time definition is also called "super-dense time" in literature, see, for example, <a href="#LZ07">[LZ07]</a>.
-An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a href="#table-model-exchange-math-notation">Table 2</a>.
-<em>[The notation \(^{\bullet}\mathbf{t}\) is from <a href="#BCP10">BCP10</a>, adapted from non-standard analysis to super-dense time, in order to precisely define the value from the previous event iteration.]</em></p>
+An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a href="#table-model-exchange-math-notation">Table 2</a>.</p>
 </div>
 <table id="table-model-exchange-math-notation" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Conventions and notation used.</caption>
@@ -1436,11 +1435,6 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a
 <td class="tableblock halign-left valign-top"><p class="tableblock">left limit at \(\mathbf{t}\)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(^{\bullet}\mathbf{t}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(^{\bullet}{\left( \mathbf{t}_R,\mathbf{t}_I \right)\ } \Leftrightarrow \left\{ \begin{matrix} ^-t \ &amp; \mathbf{if} \ \mathbf{t}_I = 0 \\ (\mathbf{t}_R, \mathbf{t}_I - 1) \ &amp; \mathbf{if} \ \mathbf{t}_I &gt; 0 \\ \end{matrix} \right.\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">previous time instant (= either left limit or previous event instant).</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(v^+(\mathbf{t})\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(v(\mathbf{t}^+)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">value at the right limit of \(\mathbf{t}\)</p></td>
@@ -1452,8 +1446,21 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock">\(^{\bullet}v(\mathbf{t})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(v(^{\bullet}\mathbf{t})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">previous value (= either left limit or value from the previous super-dense time instant)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(
+\begin{cases}
+^{\bullet}v(t) \\
+^{\bullet}v(\left( \mathbf{t}_R,\mathbf{t}_I \right))
+\end{cases}
+\Leftrightarrow
+\begin{cases}
+ v(^-t) &amp; \text{ during } v(\left( \mathbf{t}_R, 0 \right)) \text{, v not clocked }  \\
+ v(\left( \mathbf{t}_R,\mathbf{t}_I - 1 \right)) &amp; \text{ for } v(\left( \mathbf{t}_R,\mathbf{t}_I \right)) \text{ with } I &gt; 0  \text{, v not clocked } \\
+ v \text{ at previous tick of C } &amp; \text{ if } v \text{ for clocked variable } v \text{ of clock C}
+\end{cases}
+\)</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>previous value</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -2981,13 +2988,13 @@ Must be retrieved in <a href="#InitializationMode"><strong>Initialization Mode</
 <h5 id="clocked-variable">2.2.9.3. Model Partitions and Clocked Variables</h5>
 <div class="paragraph">
 <p>Each Clock \(\mathbf{k}\) induces a discrete system.
-It&#8217;s state advances at each tick of \(\mathbf{k}\) at time \(\mathbf{t}_{k}\).
-Such a system, also called the <a href="#model-partition">model partition</a> of \(\mathbf{k}\), is commonly written as:</p>
+It&#8217;s state advances at each tick of \(\mathbf{k}\).
+Such a system, also called the <a href="#model-partition">model partition</a> of \(\mathbf{k}\), is written as:</p>
 </div>
 <div class="paragraph">
 <p>\(\begin{align*}
-\mathbf{x}_k(\mathbf{t}_{k}) &amp;= \mathbf{f}_k(\mathbf{x}_k(\mathbf{t}_{k-1}), \mathbf{u}(\mathbf{t}_k), \mathbf{t}_k) \\
-\mathbf{y}_k(\mathbf{t}_{k}) &amp;= \mathbf{g}_k(\mathbf{x}_k(\mathbf{t}_{k}), \mathbf{u}(\mathbf{t}_k), \mathbf{t}_k)
+(\mathbf{x}_k) &amp;:= \mathbf{f}_{disc}(^\bullet{\mathbf{x}_k}, \mathbf{u}, \mathbf{t}) \\
+(\mathbf{y}_k) &amp;:= \mathbf{f}_{event}(\mathbf{x}_k, \mathbf{u}, \mathbf{t})
 \end{align*}\)</p>
 </div>
 <div class="paragraph">
@@ -2996,25 +3003,10 @@ Such a system, also called the <a href="#model-partition">model partition</a> of
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>\(\mathbf{t}_k\) denotes the simulation time of Clock \(\mathbf{k}\) at time \(\mathbf{t}_{k}\) and</p>
+<p>\(\mathbf{f}_{disc}\) denotes the state transition function and</p>
 </li>
 <li>
-<p>\(\mathbf{x}_k(\mathbf{t}_k)\) denotes the state vector at the current Clock tick at time \(\mathbf{t}_{k}\) and</p>
-</li>
-<li>
-<p>\(\mathbf{x}_k(\mathbf{t}_{k-1})\) denotes the state vector at the previous Clock tick of \(\mathbf{k}\) at \(\mathbf{t}_{k-1}\),</p>
-</li>
-<li>
-<p>\(\mathbf{f}_k\) denotes the state transition function and</p>
-</li>
-<li>
-<p>\(\mathbf{g}_k\) denotes the output function of the <a href="#model-partition">model partition</a> of \(\mathbf{k}\),</p>
-</li>
-<li>
-<p>\(\mathbf{u}\) denotes the input vector and</p>
-</li>
-<li>
-<p>\(\mathbf{y}_k\) denotes output vector computed by the <a href="#model-partition">model partition</a> of \(\mathbf{k}\).</p>
+<p>\(\mathbf{f}_{event}\) denotes the output function of the <a href="#model-partition">model partition</a> of \(\mathbf{k}\).</p>
 </li>
 </ol>
 </div>
@@ -3023,12 +3015,16 @@ Such a system, also called the <a href="#model-partition">model partition</a> of
 <em>The name "model partition" refers to the fact that an model inside an FMU may declare multiple Clocks, each with its own partition of the overall model.]</em></p>
 </div>
 <div class="paragraph">
-<p>When \(\mathbf{k}\) is active (i.e., ticking) invoking the FMI functions <code>fmi3Get{VariableType}</code> on variables in the output vector \(\mathbf{y}_k\) will trigger the execution of the output function \(\mathbf{g}_k\) to compute such variables.
-When FMI function <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> is invoked, the state vector \(\mathbf{x}_k\) is updated according to state transition function \(\mathbf{f}_k\).
-The discrete-time variables \(\mathbf{x}_k\) and \(\mathbf{y}_k\) are called <a href="#clocked-variable">clocked variables</a>.</p>
+<p>When \(\mathbf{k}\) is active (i.e., ticking) invoking the FMI functions <code>fmi3Get{VariableType}</code> on variables in the output vector \(\mathbf{y}_k\) will trigger the execution of the output function \(\mathbf{f}_{event}\) to compute such variables.
+If <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>false</code>, then \(\mathbf{f}_{disc}\) cannot be called explicitly using <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>, but will be implicitly executed during \(\mathbf{f}_{event}\).
+When <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> is called, the state vector \(\mathbf{x}_k\) is updated according to state transition function \(\mathbf{f}_{disc}\).</p>
 </div>
 <div class="paragraph">
-<p>A clocked variable \(\mathbf{v}_k\) can acquire a new value and can be queried only when its Clock \(\mathbf{k}\) is active, except during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
+<p><em>[Separating</em> \(\mathbf{f}_{disc}\) <em>from</em> \(\mathbf{f}_{event}\) <em>allows manipulation of the current (discrete) state and compute the corresponding outputs.]</em></p>
+</div>
+<div class="paragraph">
+<p>The discrete-time variables \(\mathbf{x}_k\) and \(\mathbf{y}_k\) are called <a href="#clocked-variable">clocked variables</a>.
+A clocked variable \(\mathbf{v}_k\) can acquire a new value and can be queried only when its Clock \(\mathbf{k}\) is active, except during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 <em>[This is common in clock semantics. See, e.g., <a href="#MLS12">[MLS12]</a>.]</em>
 During <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, if a clocked variable is declared as an <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, then it must be initialized as a discrete variable.
 Declaring a clocked variable as an <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> is optional.
@@ -4638,24 +4634,24 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}(\mathbf{t})\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Activate clocks and output equations of the respective model partitions</p>
+<p>Activate clocks and output equations of the respective model partitions.</p>
 </li>
 <li>
 <p>Deactivate clocks and</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Reset respective clocked variables to their previous values: \(\mathbf{v}_{\mathit{k}} := {}^\bullet\mathbf{v}_{\mathit{k}}\)</p>
+<p>Reset respective clocked variables to their previous values: \(\mathbf{v}_{\mathit{k}} := {}^\bullet\mathbf{v}_{\mathit{k}}\), and</p>
 </li>
 <li>
-<p>Deactivate respective model partitions in \(\mathbf{f}_{\mathit{event}}\)</p>
+<p>Deactivate respective model partitions in \(\mathbf{f}_{\mathit{event}}\).</p>
 </li>
 </ul>
 </div>
@@ -4668,10 +4664,14 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Execute state transition function of the model partitions of the active clocks<br></p>
+<p>If <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>, then execute state transition function of the model partitions<br>
+\((\mathbf{x}_{d}) := \mathbf{f}_{\mathit{disc}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
 </li>
 <li>
-<p>\((\mathbf{x}_{d}) := \mathbf{f}_{\mathit{disc}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
+<p>else function is ignored.</p>
+</li>
+<li>
+<p>For all active Clocks \(\mathbf{k}\), the <a href="#clocked-variable">clocked variables</a> \(\mathbf{v}_k\) are part of the set of discrete variables \(\mathbf{v}_d\) computed by \(\mathbf{f}_{\mathit{disc}}\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -4681,10 +4681,23 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Executes output equations of models partitions of active clock.<br></p>
+<p>Computes \(\mathbf{f}_{\mathit{event}}\) depending on</p>
+<div class="ulist">
+<ul>
+<li>
+<p>if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>, then<br>
+\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{x}_{d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
 </li>
 <li>
-<p>\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{x}_{d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
+<p>else<br>
+\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)<br>
+  which includes \(\mathbf{f}_{\mathit{disc}}\).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>For all active Clocks \(\mathbf{k}\), the <a href="#clocked-variable">clocked variables</a> \(\mathbf{v}_k\) are part of the set of discrete variables \(\mathbf{v}_d\) computed by \(\mathbf{f}_{\mathit{event}}\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -4700,22 +4713,32 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <p>Signals end of super-dense time instant.</p>
 </li>
 <li>
-<p>Evaluate \(\mathbf{f}_{\mathit{disc}}\), if no <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> function was called in this instant of super-dense time.</p>
+<p>Compute</p>
+<div class="ulist">
+<ul>
+<li>
+<p>\(\mathbf{f}_{\mathit{disc}}\) if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code> and \(\mathbf{f}_{\mathit{disc}}\) (<a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>) was not called within this super-dense time, or</p>
+</li>
+<li>
+<p>\(\mathbf{f}_{\mathit{event}}\) if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>false</code> and \(\mathbf{f}_{\mathit{event}}\) was not called within this super-dense time.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>\((\mathbf{T}_\mathit{interval}) := \mathbf{f}_{\mathit{update}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
 </li>
 <li>
-<p>Update previous values of discrete states: \({}^\bullet\mathbf{x}_d:=\mathbf{x}_d\)</p>
+<p>Update previous values of discrete states: \({}^\bullet\mathbf{x}_d:=\mathbf{x}_d\).</p>
 </li>
 <li>
-<p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b}:=\mathbf{b}\)</p>
+<p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b}:=\mathbf{b}\).</p>
 </li>
 <li>
-<p>Deactivate active clocks and respective model partitions</p>
+<p>Deactivate active clocks and respective model partitions.</p>
 </li>
 <li>
-<p>Increment super-dense time: \(\mathbf{t}:=(\mathbf{t}_\mathit{R}, \mathbf{t}_\mathit{I} + 1)\)</p>
+<p>Increment super-dense time: \(\mathbf{t}:=(\mathbf{t}_\mathit{R}, \mathbf{t}_\mathit{I} + 1)\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -4725,13 +4748,13 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p><a id="updateRelations"></a>Update previous values of <a href="#relations">relations</a>: \({}^\bullet\mathbf{r}:=\mathbf{r}\)</p>
+<p><a id="updateRelations"></a>Update previous values of <a href="#relations">relations</a>: \({}^\bullet\mathbf{r}:=\mathbf{r}\).</p>
 </li>
 <li>
-<p>Deactivate event equations \(\mathbf{f}_\mathit{event}\)</p>
+<p>Deactivate event equations \(\mathbf{f}_\mathit{event}\).</p>
 </li>
 <li>
-<p>Model Exchange: Activate continuous-time equations \(\mathbf{f}_\mathit{cont}\)</p>
+<p>Model Exchange: Activate continuous-time equations \(\mathbf{f}_\mathit{cont}\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -4803,7 +4826,8 @@ Can only be called in Model Exchange.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a></dt>
 <dd>
-<p>Evaluate \(\mathbf{f}_{\mathit{disc}}\) to obtain current values of discrete states from previous values.</p>
+<p>The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> via the capability flag <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a>.
+Evaluate \(\mathbf{f}_{\mathit{disc}}\) to obtain current values of discrete states from previous values.</p>
 <div id="fmi3EvaluateDiscreteStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EvaluateDiscreteStatesTYPE(fmi3Instance instance);</code></pre>
@@ -5712,10 +5736,15 @@ This flag is ignored in <code>ModelExchange</code>.</p></td>
 This flag is ignored in <code>ModelExchange</code>.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesEvaluateDiscreteStates"></a> <code>providesEvaluateDiscreteStates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU supports <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>, if <code>true</code>.
+This flag is ignored in <code>ScheduledExecution</code>.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="recommendedIntermediateInputSmoothness"></a> <code>recommendedIntermediateInputSmoothness</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A value of \(k\) with \(k&gt;0\) signals to the co-simulation algorithm, that it is beneficial for the solver to receive intermediate inputs that are k-time continuously differentiable (\(C^k\)) on the current communication interval.
 \(k=0\) means continuous (see <a href="#smoothness">Section 4.1.1</a>).<br>
-This flag is not supported in <code>ModelExchange</code>.</p></td>
+This flag is ignored in <code>ModelExchange</code>.</p></td>
 </tr>
 </tbody>
 </table>
