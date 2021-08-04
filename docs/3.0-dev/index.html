@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.15">
+<meta name="generator" content="Asciidoctor 2.0.16">
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 <title>Functional Mock-up Interface Specification</title>
 <style>
@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version badcee2,</span>
-<span id="revdate">2021-08-03</span>
+<span id="revnumber">version e0b6bb7,</span>
+<span id="revdate">2021-08-04</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1707,7 +1707,7 @@ For simplicity, the function type for each function is composed of the function 
 <em>[Example of a definition in this header file:</em></p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance, fmi3Float64);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetTimeTYPE(fmi3Instance instance, fmi3Float64 time);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6606,7 +6606,10 @@ Local variable values must not be used as input to another model or FMU.</p>
 All variables are a function of this <a href="#independent"><code>independent</code></a> variable.
 <a href="#variability"><code>variability</code></a> must be <a href="#continuous"><code>continuous</code></a>.
 Exactly one variable of an FMU must be defined as <a href="#independent"><code>independent</code></a>.
-If the unit for the independent variable is not defined, it is implicitly`unit = s`.
+For Co-Simulation the value of the independent variable is <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> return by the last call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> or the value of argument <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> of <a href="#intermediateUpdate">fmi3CallbackIntermediateUpdate</a>.
+For Model Exchange the value is the last value set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>.
+The initial value of the independent variable is the value of the argument <a href="#startTime"><code>startTime</code></a> of <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> for both Co-Simulation and Model Exchange.
+If the unit for the independent variable is not defined, it is implicitly <code>s</code> (seconds).
 If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined with a floating point type without a <a href="#start"><code>start</code></a> attribute.
 It is not allowed to call function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> on an <a href="#independent"><code>independent</code></a> variable.
 Instead, its value is initialized with <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> and after initialization set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange and by arguments <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> and <a href="#communicationStepSize"><code>communicationStepSize</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation FMUs.
