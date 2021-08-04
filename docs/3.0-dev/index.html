@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version e0b6bb7,</span>
+<span id="revnumber">version a5db2b4,</span>
 <span id="revdate">2021-08-04</span>
 </div>
 <div id="toc" class="toc2">
@@ -6606,8 +6606,10 @@ Local variable values must not be used as input to another model or FMU.</p>
 All variables are a function of this <a href="#independent"><code>independent</code></a> variable.
 <a href="#variability"><code>variability</code></a> must be <a href="#continuous"><code>continuous</code></a>.
 Exactly one variable of an FMU must be defined as <a href="#independent"><code>independent</code></a>.
-For Co-Simulation the value of the independent variable is <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> return by the last call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> or the value of argument <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> of <a href="#intermediateUpdate">fmi3CallbackIntermediateUpdate</a>.
 For Model Exchange the value is the last value set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>.
+For Co-Simulation the value of the independent variable is <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> return by the last call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> or the value of argument <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> of <a href="#intermediateUpdate">fmi3CallbackIntermediateUpdate</a>.
+For <a href="#fmi-for-scheduled-execution">Scheduled Execution</a> the value of the independent variable is not defined.
+<em>[The main purpose of this variable in Scheduled Execution is to define a quantity and unit for the independent variable.]</em>
 The initial value of the independent variable is the value of the argument <a href="#startTime"><code>startTime</code></a> of <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> for both Co-Simulation and Model Exchange.
 If the unit for the independent variable is not defined, it is implicitly <code>s</code> (seconds).
 If one variable is defined as <a href="#independent"><code>independent</code></a>, it must be defined with a floating point type without a <a href="#start"><code>start</code></a> attribute.
