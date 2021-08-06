@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version c8cb7d0,</span>
+<span id="revnumber">version 9a3625f,</span>
 <span id="revdate">2021-08-06</span>
 </div>
 <div id="toc" class="toc2">
@@ -2200,7 +2200,7 @@ typedef fmi3Status fmi3GetStringTYPE (fmi3Instance instance,
 typedef fmi3Status fmi3GetBinaryTYPE (fmi3Instance instance,
                                       const fmi3ValueReference valueReferences[],
                                       size_t nValueReferences,
-                                      size_t sizes[],
+                                      size_t valueSizes[],
                                       fmi3Binary values[],
                                       size_t nValues);
 
@@ -2220,10 +2220,10 @@ typedef fmi3Status fmi3GetClockTYPE  (fmi3Instance instance,
 <p><code>values</code> is a vector with the actual values of these variables.</p>
 </li>
 <li>
-<p><code>sizes</code> is a vector with the actual sizes of the values for binary variables.</p>
+<p><code>valueSizes</code> is a vector with the actual sizes of the values for binary variables.</p>
 </li>
 <li>
-<p><code>nValues</code> provides the number of values in the <code>values</code> vector (and <code>sizes</code> vector, where applicable) which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar variables.
+<p><code>nValues</code> provides the number of values in the <code>values</code> vector (and <code>valueSizes</code> vector, where applicable) which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar variables.
 <em>[The passing of <code>nValues</code> is, strictly speaking, passing redundant information:
 The number of values can be reconstructed from the value references passed in and their corresponding variable definitions and (potentially dynamic) array sizes.
 It is added to ensure memory safety and other sanity checks to be preserved even in the face of potential divergence of array configuration.]</em></p>
@@ -2313,7 +2313,7 @@ typedef fmi3Status fmi3SetStringTYPE (fmi3Instance instance,
 typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
                                       const fmi3ValueReference valueReferences[],
                                       size_t nValueReferences,
-                                      const size_t sizes[],
+                                      const size_t valueSizes[],
                                       const fmi3Binary values[],
                                       size_t nValues);
 
@@ -2333,10 +2333,10 @@ typedef fmi3Status fmi3SetClockTYPE  (fmi3Instance instance,
 <p><code>values</code> is a vector with the actual values of these variables.</p>
 </li>
 <li>
-<p><code>sizes</code> is a vector with the actual sizes of the values of binary variables.</p>
+<p><code>valueSizes</code> is a vector with the actual sizes of the values of binary variables.</p>
 </li>
 <li>
-<p><code>nValues</code> provides the number of values in the <code>values</code> vector (and <code>sizes</code> vector, where applicable) which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar variables.</p>
+<p><code>nValues</code> provides the number of values in the <code>values</code> vector (and <code>valueSizes</code> vector, where applicable) which is only equal to <code>nValueReferences</code> if all <a href="#valueReference"><code>valueReference</code></a>s point to scalar variables.</p>
 </li>
 </ul>
 </div>
