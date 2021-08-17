@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 8e98770,</span>
-<span id="revdate">2021-08-06</span>
+<span id="revnumber">version b54cb01,</span>
+<span id="revdate">2021-08-17</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -6245,13 +6245,15 @@ The attribute <code>interval</code> declares the clock type, see <a href="#table
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>intervalDecimal</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="intervalDecimal"></a>
 The time interval \(\mathbf{T}_{interval}\) between consecutive <a href="#Clock">Clock</a> ticks.</p>
-<p class="tableblock">This value must be greater than 0.0.</p></td>
+<p class="tableblock">This value must be greater than 0.0.</p>
+<p class="tableblock">This attribute must only be used for <a href="#periodic-clock">periodic Clocks</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>shiftDecimal</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="shiftDecimal"></a>
 This value defines the delay of the first clock activation relative to \(\mathbf{t}_{\mathit{start}}\) (<a href="#startTime"><code>startTime</code></a>).</p>
-<p class="tableblock">This value must be equal or greater than 0.0.</p></td>
+<p class="tableblock">This value must be equal or greater than 0.0.</p>
+<p class="tableblock">This attribute must only be used for <a href="#periodic-clock">periodic Clocks</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>supportsFraction</code></p></td>
@@ -6262,7 +6264,8 @@ This attribute defines, if the functions <code>fmi3GetXXXFraction</code> and <co
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="resolution"></a><code>resolution</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Instead of defining clock timing using floating point numbers, FMI allows the definition of rational numbers using <a href="#intervalCounter"><code>intervalCounters</code></a> and <a href="#shiftCounter"><code>shiftCounters</code></a>.
 The <code>resolution</code> defines the minimal quanta clock timing can be resolved by.</p>
-<p class="tableblock">This attribute is required for <a href="#periodic-clock">time-based periodic clocks</a> if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and either <a href="#intervalCounter"><code>intervalCounter</code></a> or <a href="#shiftCounter"><code>shiftCounter</code></a> is present.</p></td>
+<p class="tableblock">This attribute is required for <a href="#periodic-clock">time-based periodic clocks</a> if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and either <a href="#intervalCounter"><code>intervalCounter</code></a> or <a href="#shiftCounter"><code>shiftCounter</code></a> is present.</p>
+<p class="tableblock">This attribute must only be used for <a href="#periodic-clock">periodic Clocks</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="intervalCounter"></a><code>intervalCounter</code></p></td>
@@ -6270,14 +6273,16 @@ The <code>resolution</code> defines the minimal quanta clock timing can be resol
 <p class="tableblock">\(\mathbf{T}_{interval} = \) <code>intervalCounter / resolution</code>.</p>
 <p class="tableblock"><code>intervalCounter</code> and <code>resolution</code> have no default value.</p>
 <p class="tableblock">This value must be greater than 0.</p>
-<p class="tableblock">This attribute is allowed if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and is required if <a href="#interval">interval == <code>constant</code></a> or <a href="#interval">interval == <code>fixed</code></a>.</p></td>
+<p class="tableblock">This attribute is allowed if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and is required if <a href="#interval">interval == <code>constant</code></a> or <a href="#interval">interval == <code>fixed</code></a>.</p>
+<p class="tableblock">This attribute must only be used for <a href="#periodic-clock">periodic Clocks</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="shiftCounter"></a><code>shiftCounter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This value defines (together with <a href="#resolution"><code>resolution</code></a>) the delay of the first clock activation relative to \(\mathbf{t}_{\mathit{start}}\) (<a href="#startTime"><code>startTime</code></a>):</p>
 <p class="tableblock">\(\mathbf{T}_{shift} = \) <code>shiftCounter / resolution</code>.</p>
 <p class="tableblock">This value must be greater than 0.</p>
-<p class="tableblock">This attribute is allowed if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and is required if <a href="#interval">interval == <code>constant</code></a> or <a href="#interval">interval == <code>fixed</code></a>.</p></td>
+<p class="tableblock">This attribute is allowed if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and is required if <a href="#interval">interval == <code>constant</code></a> or <a href="#interval">interval == <code>fixed</code></a>.</p>
+<p class="tableblock">This attribute must only be used for <a href="#periodic-clock">periodic Clocks</a>.</p></td>
 </tr>
 </tbody>
 </table>
