@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 5f2792b,</span>
-<span id="revdate">2021-08-17</span>
+<span id="revnumber">version 2a8b1ac,</span>
+<span id="revdate">2021-08-18</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2871,21 +2871,21 @@ The time instant of the first Clock tick is defined by a <a href="#shift"><code>
 </dd>
 <dt class="hdlist1">Constant periodic Clock</dt>
 <dd>
-<p>are time-based periodic clocks that define their <a href="#interval"><code>interval</code></a> and <a href="#shift"><code>shift</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
+<p>is a time-based periodic clock that defines its <a href="#interval"><code>interval</code></a> and <a href="#shift"><code>shift</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
 </dd>
 <dt class="hdlist1"><a id="fixed-periodic-clock"></a>Fixed periodic Clock</dt>
 <dd>
-<p>is a time-base periodic Clock which ticks with an arbitrary, but constant interval starting after an arbitrary <a href="#shift"><code>shift</code></a>.
+<p>is a time-based periodic Clock which ticks with an arbitrary, but constant interval starting after an arbitrary <a href="#shift"><code>shift</code></a> defined by the importer.
 The importer informs the FMU about the interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a>.</p>
 </dd>
 <dt class="hdlist1">Calculated periodic Clock</dt>
 <dd>
-<p>is a time-base periodic Clock whose interval and <a href="#shift"><code>shift</code></a> depend on <a href="#fixed"><code>fixed</code></a> <a href="#parameter">parameters</a>.
+<p>is a time-based periodic Clock whose <a href="#interval"><code>interval</code></a> and <a href="#shift"><code>shift</code></a> depend on <a href="#fixed"><code>fixed</code></a> <a href="#parameter">parameters</a>.
 The importer must use <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> and <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> to retrieve the Clock interval and <a href="#shift"><code>shift</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
 </dd>
 <dt class="hdlist1">Tunable periodic Clock</dt>
 <dd>
-<p>is a time-base periodic Clock whose interval depends on <a href="#tunable"><code>tunable</code></a> <a href="#parameter">parameters</a>.
+<p>is a time-based periodic Clock whose <a href="#interval"><code>interval</code></a> depends on <a href="#tunable"><code>tunable</code></a> <a href="#parameter">parameters</a>.
 The importer must use <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> to retrieve the Clock interval in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>, if any of the <a href="#tunable"><code>tunable</code></a> <a href="#parameter">parameters</a> it depends on was changed.
 <a href="#shift"><code>shift</code></a> may only depend on <a href="#fixed"><code>fixed</code></a> <a href="#parameter">parameters</a>.
 The importer must use <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> to retrieve the Clock <a href="#shift"><code>shift</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
@@ -3183,6 +3183,23 @@ The values of the arguments <code>interval</code>, <code>intervalCounter</code>,
     fmi3IntervalChanged
 } fmi3IntervalQualifier;</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>with the following meanings:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>fmi3IntervalNotYetKnown</code> is returned for <a href="#countdown-aperiodic-clock">countdown aperiodic Clock</a> for which the next interval is not yet known. The importer must query the next interval at each <a href="#EventMode"><strong>Event Mode</strong></a> for all <a href="#countdown-aperiodic-clock">countdown aperiodic Clock</a> because the next interval may change at any <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
+</li>
+<li>
+<p><code>fmi3IntervalUnchanged</code> is returned if a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> already returned a value which has not changed since.</p>
+</li>
+<li>
+<p><code>fmi3IntervalChanged</code> is returned to indicate that the value for the interval has changed for this <a href="#Clock">Clock</a>.
+The new <a href="#Clock">Clock</a> interval is relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
+</li>
+</ul>
 </div>
 <div id="fmi3GetIntervalFraction" class="listingblock">
 <div class="content">
