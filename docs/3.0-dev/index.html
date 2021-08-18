@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 2a8b1ac,</span>
+<span id="revnumber">version 51aae1f,</span>
 <span id="revdate">2021-08-18</span>
 </div>
 <div id="toc" class="toc2">
@@ -4802,11 +4802,12 @@ When a Clock is deactivated, the FMU must reset all clocked states of this Clock
 <em>[Rationale: a triggered output Clock \(c\) may depend on some variable \(v\) that is involved in an algebraic loop.</em>
 <em>As part of the iterations to solve the algebraic loop, \(v\) acquires a value that activates the Clock.</em>
 <em>If the final (or some intermediate) value of \(v\) no longer activates the Clock, then this Clock must be deactivated by the Importer during the same super-dense time instant.]</em><br>
-A Clock can only be set to inactive once activated if the attribute <a href="#canBeDeactivated"><code>canBeDeactivated == true</code></a>.<br>
+The importer can set a Clock to <code>fmi3ClockInactive</code> only if the Clock has the attribute <a href="#canBeDeactivated"><code>canBeDeactivated == true</code></a>.
+Any Clock active during <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> must be deactivated by the FMU itself.<br>
 Only <a href="#time-based-clock">time-based Clocks</a> must not be active for more than one call of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> per <a href="#EventMode"><strong>Event Mode</strong></a>.
 The importer must ensure that coinciding time-based Clocks are activated at the same instant of super-dense time.<br>
 <em>[The event iteration for handling discontinuities of the continuous part of the FMU should precede handling of time-based Clocks.</em>
-<em>For that reason no further constraints on activations of time-based Clocks are defined (e.g. activating at the first instant of super-dense time).]</em></p>
+<em>For that reason no further constraints on activations of time-based Clocks are defined, e.g. activating at the first instant of super-dense time.]</em></p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
 <dd>
