@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 7af5bfa,</span>
+<span id="revnumber">version a6d31bb,</span>
 <span id="revdate">2021-09-01</span>
 </div>
 <div id="toc" class="toc2">
@@ -4010,7 +4010,7 @@ In other words, the FMU is executed in batch mode.
 If <code>visible == fmi3True</code>, the FMU is executed in interactive mode, and the FMU might require to explicitly acknowledge start of simulation / instantiation / initialization (acknowledgment is non-blocking).</p>
 </li>
 <li>
-<p>If <code>loggingOn == fmi3False</code>, then any logging is disabled and the <a href="#logMessage"><code>logMessage</code></a> callback function is not called by the FMU.
+<p><a id="loggingOn"></a> If <code>loggingOn == fmi3False</code>, then any logging is disabled and the <a href="#logMessage"><code>logMessage</code></a> callback function is not called by the FMU.
 If <code>loggingOn == fmi3True</code>, the FMU enables a vendor defined set of <code>&lt;LogCategories&gt;</code>.
 This set should typically contain categories for messages that explain execution errors, like <a href="#fmi3Discard"><code>fmi3Discard</code></a>, <a href="#fmi3Error"><code>fmi3Error</code></a> and <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>.
 The function <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> gives more detailed control about required <code>&lt;LogCategories&gt;</code> (see <a href="#definition-of-log-categories">Section 2.4.5</a>).</p>
@@ -4064,7 +4064,7 @@ If <a href="#fmi3OK"><code>status == fmi3OK</code></a>, the message is a pure in
 <li>
 <p><code>category</code> is the category of the message.
 The allowed values for <code>category</code> are defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file via the element <a href="#definition-of-log-categories"><code>&lt;LogCategories&gt;</code></a>.
-<a href="#logMessage"><code>logMessage</code></a> should only be called for log categories that were enabled by a call to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> or via <code>loggingOn == fmi3True</code> in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
+<a href="#logMessage"><code>logMessage</code></a> should only be called for log categories that were enabled by a call to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> or via <a href="#loggingOn"><code>loggingOn == fmi3True</code></a> in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
 If the FMU does not define any log categories, <code>category</code> must be <code>NULL</code>.</p>
 </li>
 <li>
@@ -4093,7 +4093,10 @@ See <a href="#preemption-support">Section 5.1.2</a> for details.</p>
 <div class="paragraph">
 <p>The arguments <a href="#logMessage"><code>logMessage</code></a>, <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>, <a href="#preemption-support"><code>lockPreemption</code></a>, and <a href="#preemption-support"><code>unlockPreemption</code></a>, are function pointers provided by the simulation environment to be used by the FMU.
 Each of these pointers can be NULL to indicate missing support for the respective functionality.
-Additionally, a pointer to the environment is provided (<code>instanceEnvironment</code>) that needs to be passed to all of the callback functions, in order that those functions can utilize data from the environment, such as mapping a <a href="#valueReference"><code>valueReference</code></a> to a string, or assigning memory to a certain FMU instance.</p>
+If such functionality is used anyway, undefined behavior results.
+<em>[For example, if <a href="#logMessage"><code>logMessage == NULL</code>, calls to &lt;&lt;fmi3SetDebugLogging</a> result in undefined behavior of the FMU.</em>
+<em>If <a href="#intermediateUpdate"><code>intermediateUpdate == NULL</code></a> and arguments <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables != NULL</code></a> and/or <a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables != 0</code> the behavior of the FMU is undefined.]</em>
+Additionally, a pointer to the environment is provided (<code>instanceEnvironment</code>) that needs to be passed to all of the callback functions, in order that those functions can utilize data from the environment, such as mapping a &lt;&lt;valueReference</a> to a string, or assigning memory to a certain FMU instance.</p>
 </div>
 </dd>
 <dt class="hdlist1">Allowed Function Calls</dt>
@@ -4117,13 +4120,13 @@ Additionally, a pointer to the environment is provided (<code>instanceEnvironmen
 <div class="ulist">
 <ul>
 <li>
-<p>If <code>loggingOn == fmi3True</code>, debug logging is enabled for the log categories specified in <code>categories</code>, otherwise it is disabled.</p>
+<p>If <a href="#loggingOn"><code>loggingOn == fmi3True</code></a>, debug logging is enabled for the log categories specified in <code>categories</code>, otherwise it is disabled.</p>
 </li>
 <li>
 <p><code>nCategories</code> defines the length of the argument <code>categories</code>.</p>
 </li>
 <li>
-<p>If <code>nCategories == 0</code>, <code>loggingOn</code> applies to all log categories and the value of <code>categories</code> is undefined.</p>
+<p>If <code>nCategories == 0</code>, <a href="#loggingOn"><code>loggingOn</code></a> applies to all log categories and the value of <code>categories</code> is undefined.</p>
 </li>
 <li>
 <p><code>categories</code> is an array of <code>nCategories</code> elements.
@@ -10912,11 +10915,6 @@ The exporting tool has to consider the effect of <a href="#triggered"><code>trig
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3CallbackLockPreemption)   ();
 typedef void (*fmi3CallbackUnlockPreemption) ();</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Even if the scheduler does not support preemption, at least an empty implementation of these callback functions must be provided to allow the reuse of code for different modes together with an efficient preemption.
-<em>[This avoids checks for NULL function pointers.</em>
-<em>A function call to a void-void function with an immediate return is hardly any overhead.]</em></p>
 </div>
 </div>
 </div>
