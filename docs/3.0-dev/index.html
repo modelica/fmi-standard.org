@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 88e3d97,</span>
-<span id="revdate">2021-08-27</span>
+<span id="revnumber">version 7af5bfa,</span>
+<span id="revdate">2021-09-01</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1504,8 +1504,12 @@ Such a variable can change multiple times at the same continuous-time instant, b
 <td class="tableblock halign-left valign-top"><p class="tableblock">A <a href="#clocked-variable">clocked variable</a> is a discrete-time variable associated with a <a href="#Clock">Clock</a>. Clock variables synchronize events with the importer and across FMUs, they carry the information that a specific event happens.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code>+<code>d</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c+d</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A set of continuous-time and discrete-time variables.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>d-k</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A set of non-clocked, discrete-time variables.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>u</code></p></td>
@@ -10234,6 +10238,9 @@ Importers can directly switch a Co-Simulation FMU into <a href="#EventMode"><str
 <p>The state <a href="#StepMode"><strong>Step Mode</strong></a> is used to compute the values of all variables between communication points and events and to advance time in the FMU.
 If the FMU is connected in loops with other models, iterations over the FMU equations requires setting the FMU to a previous communication point and repeating the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
 </div>
+<div class="paragraph">
+<p>During <a href="#StepMode"><strong>Step Mode</strong></a>, <a href="#clocked-variable">clocked variables</a> can not be set or get because <a href="#Clock">Clocks</a> are only active during <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 66.6666%;">
@@ -10251,11 +10258,11 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d}(\mathbf{t})\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set non-clocked, continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d-k}(\mathbf{t})\).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get values of variables \(\mathbf{v}(\mathbf{t})\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get values of non-clocked variables \(\mathbf{v}_{-k}(\mathbf{t})\).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></p></td>
 </tr>
 <tr>
@@ -10266,10 +10273,10 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>\((\mathbf{y}_{c+d}, \mathbf{y}_c^{(j)}, \mathbf{x}_d, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{t}_\mathit{i+1}) := \mathbf{f}_{\mathit{doStep}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{c,u}, \mathbf{p}, {}^{\bullet}\mathbf{b}, \mathbf{t}_i, \mathbf{h}_i)\)<br></p>
+<p>\((\mathbf{y}_{c+d-k}, \mathbf{y}_c^{(j)}, \mathbf{x}_{d-k}, \mathbf{w}_{c+d-k}, \mathbf{b}, \mathbf{t}_\mathit{i+1}) := \mathbf{f}_{\mathit{doStep}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{c,u}, \mathbf{p}, {}^{\bullet}\mathbf{b}, \mathbf{t}_i, \mathbf{h}_i)\)<br></p>
 </li>
 <li>
-<p>Update previous values of discrete states: \({}^\bullet\mathbf{x}_d:=\mathbf{x}_d\).</p>
+<p>Update previous values of non-clocked, discrete states: \({}^\bullet\mathbf{x}_{d-k}:=\mathbf{x}_{d-k}\).</p>
 </li>
 <li>
 <p>Update previous values of buffers: \({}^\bullet\mathbf{b}:=\mathbf{b}\).</p>
@@ -10282,7 +10289,7 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3DoStep"><code>fmi3DoStep</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{v}_{u}, \mathbf{t}_u) := \mathbf{f}_{\mathit{inter}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{c,u}, \mathbf{p}, {}^{\bullet}\mathbf{b}, \mathbf{t}_i, \mathbf{h}_i)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{v}_{u-k}, \mathbf{t}_u) := \mathbf{f}_{\mathit{inter}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{c,u}, \mathbf{p}, {}^{\bullet}\mathbf{b}, \mathbf{t}_i, \mathbf{h}_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a></p></td>
 </tr>
 <tr>
