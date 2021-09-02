@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version a6d31bb,</span>
-<span id="revdate">2021-09-01</span>
+<span id="revnumber">version 224192d,</span>
+<span id="revdate">2021-09-02</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3017,7 +3017,7 @@ Such a system, also called the <a href="#model-partition">model partition</a> of
 </div>
 <div class="paragraph">
 <p><em>[Such a model partition may represent a task or an interrupt service routine of an embedded system, or a discretized part of a plant model.</em>
-<em>The name "model partition" refers to the fact that an model inside an FMU may declare multiple Clocks, each with its own partition of the overall model.]</em></p>
+<em>The name "model partition" refers to the fact that a model inside an FMU may declare multiple Clocks, each with its own partition of the overall model.]</em></p>
 </div>
 <div class="paragraph">
 <p>When \(\mathbf{k}\) is active (i.e., ticking) invoking the FMI functions <code>fmi3Get{VariableType}</code> on variables in the output vector \(\mathbf{y}_k\) will trigger the execution of the output function \(\mathbf{f}_{event}\) to compute such variables.
@@ -4016,7 +4016,7 @@ This set should typically contain categories for messages that explain execution
 The function <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> gives more detailed control about required <code>&lt;LogCategories&gt;</code> (see <a href="#definition-of-log-categories">Section 2.4.5</a>).</p>
 </li>
 <li>
-<p><a id="eventModeUsed"></a>If <code>eventModeUsed == fmi3True</code> the importer can handle events, otherwise <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> must not be called.
+<p><a id="eventModeUsed"></a>If <code>eventModeUsed == fmi3True</code> the importer can handle events.
 The flag may only be <code>fmi3True</code>, if <a href="#hasEventMode"><code>hasEventMode == true</code></a>, otherwise the FMU must raise an error.
 For FMUs that have clocks, <code>eventModeUsed == fmi3True</code> is required.</p>
 </li>
@@ -4414,14 +4414,29 @@ continuous-time <a href="#state"><code>states</code></a> \(\mathbf{x}_{c,\mathit
 <p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b}:=\mathbf{b}\)</p>
 </li>
 <li>
+<p>\(\mathbf{t}:=(\mathbf{t}_{\mathit{start}}, 0)\)</p>
+</li>
+<li>
 <p>Model Exchange:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Activate event equations \(\mathbf{f}_{\mathit{event}}\)</p>
+<p>activate event equations \(\mathbf{f}_{\mathit{event}}\)</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p>\(\mathbf{t}:=(\mathbf{t}_{\mathit{start}}, 0)\)</p>
+<p>Co-Simulation:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If <a href="#eventModeUsed"><code>eventModeUsed</code></a> of <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> is <code>fmi3True</code><br>
+activate event equations \(\mathbf{f}_{\mathit{event}}\)</p>
+</li>
+<li>
+<p>else<br>
+activate doStep equations \(\mathbf{f}_{\mathit{doStep}}\)</p>
 </li>
 </ul>
 </div>
@@ -4548,11 +4563,34 @@ This call is not allowed in Scheduled Execution.</p>
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3ExitInitializationModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Changes the state to</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Model Exchange: <a href="#EventMode"><strong>Event Mode</strong></a></p>
+</li>
+<li>
+<p>Co-Simulation:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#eventModeUsed"><code>eventModeUsed == fmi3True</code></a>: <a href="#EventMode"><strong>Event Mode</strong></a></p>
+</li>
+<li>
+<p><a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>: <a href="#StepMode"><strong>Step Mode</strong></a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Scheduled Execution: <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>.</p>
+</li>
+</ul>
+</div>
 </dd>
 </dl>
-</div>
-<div class="paragraph">
-<p>Changes the state to <a href="#EventMode"><strong>Event Mode</strong></a> (ME), <a href="#StepMode"><strong>Step Mode</strong></a> (CS) or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> (SE).</p>
 </div>
 </div>
 <div class="sect3">
@@ -10230,11 +10268,6 @@ This mechanism is called <a href="#early-return">"early return"</a>.</p>
 <div class="paragraph">
 <p>Common states are defined in <a href="#common-state-machine">Section 2.3</a>, such as super states <a href="#FMUStateSetable"><strong>FMU State Setable</strong></a> and  <a href="#Initialized"><strong>Initialized</strong></a>, states <a href="#Instantiated"><strong>Instantiated</strong></a>, <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a>, <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>, <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, <a href="#Terminated"><strong>Terminated</strong></a> and <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</p>
 </div>
-<div class="paragraph">
-<p>Compared to FMI for Model Exchange, <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> enters directly into <a href="#StepMode"><strong>Step Mode</strong></a>.
-This was designed in case the Co-Simulation FMU does not support <a href="#EventMode"><strong>Event Mode</strong></a>.
-Importers can directly switch a Co-Simulation FMU into <a href="#EventMode"><strong>Event Mode</strong></a> without calling <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> to handle events immediately after initialization.</p>
-</div>
 <div class="sect3">
 <h4 id="StepMode">4.2.1. State: Step Mode</h4>
 <div class="paragraph">
@@ -10297,7 +10330,7 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Activate event equations \(\mathbf{f}_{\mathit{event}}\).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -10387,7 +10420,7 @@ See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCom
 </div>
 </li>
 <li>
-<p><a id="eventEncountered"></a> <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
+<p><a id="eventEncountered"></a> <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
 <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.</p>
 </li>
 <li>
@@ -10436,10 +10469,14 @@ Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> w
 <dd>
 <p><a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> switches the FMU itself into the <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</p>
 </dd>
+</dl>
+</div>
+<div id="fmi3EnterEventModeCS" class="dlist">
+<dl>
 <dt class="hdlist1">Function <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a></dt>
 <dd>
 <p>Changes state to <a href="#EventMode"><strong>Event Mode</strong></a>.
-This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signaled <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>, which can be forced by the FMU with <a href="#hasEventMode"><code>hasEventMode == false</code></a>.</p>
+This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signaled <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>, which can be forced by the FMU with <a href="#hasEventMode"><code>hasEventMode == false</code></a>.<br></p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
 <dd>
@@ -10667,7 +10704,7 @@ The default value of this capability flag is <code>false</code>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hasEventMode"></a><code>hasEventMode</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code> the FMU supports <a href="#EventMode"><strong>Event Mode</strong></a>.
 Even if this flag is <code>true</code>, the co-simulation algorithm can chose to delegate event handling to the FMU by calling <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.
-If <code>eventModeUsed == fmi3True</code>, the co-simulation algorithm will have to actively trigger event handling in the FMU using <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
+If <code>eventModeUsed == fmi3True</code>, the co-simulation algorithm will have to actively trigger event handling in the FMU using <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
 <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> must only be called with <code>eventModeUsed == fmi3True</code> if <a href="#hasEventMode"><code>hasEventMode == true</code></a>.
 If the FMU has clocks, then  <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> must set <a href="#hasEventMode"><code>hasEventMode == true</code></a> and the importer must call <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed == fmi3True</code></a>.</p></td>
 </tr>
