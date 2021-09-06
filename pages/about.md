@@ -94,7 +94,7 @@ The purpose of the trademark registration is to protect the use of the word-mark
 The purpose of this guideline is to make sure that any use of the FMI trademark agrees with these guidelines and strengthens the brand and value of the FMI standard.
 Further, the guidelines will try to make sure that no confusion or misinformation can arise from the use of the FMI trademark.
 At the same time, the Modelica Association wants to encourage as many commercial companies and open source software developers to support the FMI standard in a high quality of implementation and put as little administrative burden as possible.
-The MA encourages to mention the FMI standard with a proper reference. The main reference in any tool documentation should contain a pointer to the official FMI website http://www.fmi-standard.org.
+The MA encourages to mention the FMI standard with a proper reference. The main reference in any tool documentation should contain a pointer to the official FMI website https://fmi-standard.org.
 The Modelica Association expects all tool vendors that implement the FMI standard to participate in the cross-check protocol, especially those using FMI in their product name.
 
 ### Trademark Usage Guidelines
