@@ -99,7 +99,7 @@ The Modelica Association expects all tool vendors that implement the FMI standar
 
 ### Trademark Usage Guidelines
 
-The use of the letters FMI in a product name or other relevant reference is allowed when
+The use of the letters `FMI` in a product name or other relevant reference is allowed when
 
 - The use is clearly a reference to adhering to the standard.
 
