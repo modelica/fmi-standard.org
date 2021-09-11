@@ -11,7 +11,6 @@ Development and promotion of the Functional Mock-up Interface (FMI) standard. Th
 The FMI specifications are published under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode) (Creative Common Attribution-ShareAlike 4.0 International) license.
 Source code, such as C-header and XML-schema files, that accompany the specification documents, are provided under the [2-Clause BSD License](https://www.opensource.org/licenses/bsd-license.html).
 
-`FMI` is a registered trademark. The rules for trademark usage are [here](https://svn.fmi-standard.org/fmi/branches/public/docs/Trademark%20Guidelines%20for%20the%20Use%20of%20the%20FMI%20Trademark%20V1.0.pdf).
 
 ## Modelica Association Project (MAP) FMI
 
