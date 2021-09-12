@@ -10,7 +10,7 @@ toc: true
 ## When will FMI 3.0 be released?
 
  The FMI Steering Committee has decided not to publish a release date.
- New versions will be released according to the [FMI Development Process](https://svn.fmi-standard.org/fmi/branches/public/docs/DevProcess/FMI_DevelopmentProcess_1.0.pdf) as soon as the quality gates are fulfilled.
+ New versions will be released according to the [FMI Development Process](https://github.com/modelica/fmi-standard.org/tree/master/assets/FMI_DevelopmentProcess_1.0.pdf) as soon as the quality gates are fulfilled.
  Currently four FMI Working Groups are working on new FMI features (see below).
  The Progress of the development can be tracked on [GitHub](https://github.com/modelica/fmi-standard).
 
