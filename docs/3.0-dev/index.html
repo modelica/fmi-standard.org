@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 224192d,</span>
-<span id="revdate">2021-09-02</span>
+<span id="revnumber">version 6a3ae73,</span>
+<span id="revdate">2021-11-03</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -4889,8 +4889,8 @@ Can only be called in Model Exchange.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a></dt>
 <dd>
-<p>The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> via the capability flag <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a>.
-Evaluate \(\mathbf{f}_{\mathit{disc}}\) to obtain current values of discrete states from previous values.</p>
+<p>This function is called to trigger the evaluation of \(\mathbf{f}_{\mathit{disc}}\) to compute the current values of discrete states from previous values.
+The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> via the capability flag <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a>.</p>
 <div id="fmi3EvaluateDiscreteStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EvaluateDiscreteStatesTYPE(fmi3Instance instance);</code></pre>
@@ -4899,7 +4899,8 @@ Evaluate \(\mathbf{f}_{\mathit{disc}}\) to obtain current values of discrete sta
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a></dt>
 <dd>
-<p>When the importer converges on a solution for event handling at the current super-dense time step it calls <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> to determine if another event iteration is required (introducing a new super-dense time instant) or <a href="#EventMode"><strong>Event Mode</strong></a> can be exited.</p>
+<p>This function is called to signal a converged solution at the current super-dense time instant.
+<a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> must be called at least once per super-dense time instant.</p>
 <div id="fmi3UpdateDiscreteStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
@@ -4917,7 +4918,7 @@ Evaluate \(\mathbf{f}_{\mathit{disc}}\) to obtain current values of discrete sta
 <div id="discreteStatesNeedUpdate" class="ulist">
 <ul>
 <li>
-<p>When <code>discreteStatesNeedUpdate == fmi3True</code>, the importer must stay in <a href="#EventMode"><strong>Event Mode</strong></a> for another event iteration.</p>
+<p>When <code>discreteStatesNeedUpdate == fmi3True</code>, the importer must stay in <a href="#EventMode"><strong>Event Mode</strong></a> for another event iteration, starting a new super-dense time instant.</p>
 </li>
 </ul>
 </div>
