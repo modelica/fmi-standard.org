@@ -24,10 +24,10 @@ layout: default
 
 FMI User meeting ([Agenda](https://2019.international.conference.modelica.org/proceedings/html/userpres.html)):
 
-* [Overview of the FMI, DCP and SSP standards](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/001_Overview_FMI_SSP_DCP.pdf)
-* [Usage of FMI at Bosch - status and outlook](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/2808_Usage_FMI_Bosch.pdf)
-* [Co-Simulation scenarios in industrial production plants](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/Presentation_CoSimulatedPlants_ModelicaFMI_2019_final.pdf)
-* [Enhancing the Model Integration Workflow in Aircraft System Simulation using FMI & SSP](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2019/Industrial_User_Presentations_Modelica2019/Saab_Eek_MC2019.pdf)
+* [Overview of the FMI, DCP and SSP standards](/assets/literature/FMI_User_Meeting_2019/001_Overview_FMI_SSP_DCP.pdf)
+* [Usage of FMI at Bosch - status and outlook](/assets/literature/FMI_User_Meeting_2019/2808_Usage_FMI_Bosch.pdf)
+* [Co-Simulation scenarios in industrial production plants](/assets/literature/FMI_User_Meeting_2019/Presentation_CoSimulatedPlants_ModelicaFMI_2019_final.pdf)
+* [Enhancing the Model Integration Workflow in Aircraft System Simulation using FMI & SSP](/assets/literature/FMI_User_Meeting_2019/Saab_Eek_MC2019.pdf)
 
 FMI related conference papers:
 
@@ -81,16 +81,16 @@ FMI related conference papers ([link to proceedings](https://www.modelica.org/ev
 
 ### [12th International Modelica Conference 2017](https://2017.international.conference.modelica.org/)
 
-FMI User meeting ([Agenda](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/000_Agenda.pdf)):
+FMI User meeting ([Agenda](/assets/literature/FMI_User_Meeting_2017/000_Agenda.pdf)):
 
-* [Overview of FMI Project](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/01_MAP-FMI_User_Meeting_Kickoff.pdf)
-* [FMI is great but not magic](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/02_FMI_not_magic.pdf)
-* [Requirements for using FMI/ SSP for Development of Autonomous Driving](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/03_2017-05-15-RequirementsForAutonomousDriving_JointPresentation.pdf)
-* [Verification of model connection by FMI using acausalmodeling tools](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/04_Introduction%20of%20JSAE%20FMI%20WG%20Activity_v20170510.pdf)
-* [ROboMObil HIL Simulator using FMI technology](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/06_2017_ModelicaConf_ROMO_FMI.pdf)
-* [The INTO-CPS Co-Simulation Orchestration Engine –Experiences with FMI 2.0 and proposed extensions](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/08_20170515_FMI_user_meeting_Prague.pdf)
-* [ACOSAR –Advanced Co-Simulation Open System Architecture](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/09_20170515_ACOSAR_FMI_UserMeeting%20-%20v04.pdf)
-* [MA-Project System Structure and Parameterization – Current Status and Plans](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2017/10_2017_FMI-Usermeeting_SSP-StatusandPlans.pdf)
+* [Overview of FMI Project](/assets/literature/FMI_User_Meeting_2017/01_MAP-FMI_User_Meeting_Kickoff.pdf)
+* [FMI is great but not magic](/assets/literature/FMI_User_Meeting_2017/02_FMI_not_magic.pdf)
+* [Requirements for using FMI/ SSP for Development of Autonomous Driving](/assets/literature/FMI_User_Meeting_2017/03_2017-05-15-RequirementsForAutonomousDriving_JointPresentation.pdf)
+* [Verification of model connection by FMI using acausalmodeling tools](/assets/literature/FMI_User_Meeting_2017/04_Introduction_of_JSAE_FMI_WG_Activity_v20170510.pdf)
+* [ROboMObil HIL Simulator using FMI technology](/assets/literature/FMI_User_Meeting_2017/06_2017_ModelicaConf_ROMO_FMI.pdf)
+* [The INTO-CPS Co-Simulation Orchestration Engine –Experiences with FMI 2.0 and proposed extensions](/assets/literature/FMI_User_Meeting_2017/08_20170515_FMI_user_meeting_Prague.pdf)
+* [ACOSAR –Advanced Co-Simulation Open System Architecture](/assets/literature/FMI_User_Meeting_2017/09_20170515_ACOSAR_FMI_UserMeeting_v03.pdf)
+* [MA-Project System Structure and Parameterization – Current Status and Plans](https://ssp-standard.org/publications/2017_ModelicaConference_Prague/2017_FMI-Usermeeting_SSP-StatusandPlans.pdf)
 
 FMI related conference papers:
 
@@ -118,7 +118,7 @@ FMI related conference papers:
 
 ### [11th International Modelica Conference 2015](https://www.modelica.org/events/modelica2015)
 
-[FMI User Meeting](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2015/FMI_User_Meeting_ModelicaConference2015.zip)
+[FMI User Meeting]/assets/literature/FMI_User_Meeting_2015/FMI_User_Meeting_ModelicaConference2015.zip)
 
 Other FMI related conference papers:
 
@@ -137,7 +137,7 @@ Other FMI related conference papers:
 
 ### [10th International Modelica Conference 2014](https://www.modelica.org/events/modelica2014)
 
-Tutorial: [Functional Mockup Interface 2.0 and HiL Applications](https://svn.fmi-standard.org/fmi/branches/public/docs/Modelica2014/FMI_Tutorial_ModelicaConference2014.zip) (16 presentations from FMI design group members, OEMs, suppliers, and tool vendors)
+Tutorial: [Functional Mockup Interface 2.0 and HiL Applications](/assets/literature/FMI_Tutorial_2014/FMI_Tutorial_ModelicaConference2014.zip) (16 presentations from FMI design group members, OEMs, suppliers, and tool vendors)
 
 Other FMI related conference papers:
 
@@ -158,16 +158,16 @@ Other FMI related conference papers:
 
 ### [9th International Modelica Conference 2012](https://www.modelica.org/events/modelica2012)
 
-* [Functional Mock-up Interface 2.0: The Standard for Tool independent Exchange of Simulation Models](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076173_BlochwitzOtter.pdf)
-* [Generation of Sparse Jacobians for the Function Mock-Up Interface 2.0](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076185_AkessonBraunLindholmBachmann.pdf)
-* [Designing models for online use with Modelica and FMI](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076197_KittilsenHaugerWasbo.pdf)
-* [Co-simulation with communication step size control in an FMI compatible master algorithm](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076205_SchierzArnoldClauss.pdf)
-* [FMI implementation in LMS Virtual.Lab Motion and application to a vehicle dynamics case](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076759_ErdelyiPrescottDondersAnthonis.pdf)
-* [Generating Functional Mock-up Units from Software Specifications](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076765_PohlmannSchaeferReddehaseRoeckemann.pdf)
-* [Functional Mock-up Interface in Mechatronic Gearshift Simulation for Commercial Vehicles](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076775_AbelBlochwitzEichbergerHamannRein.pdf)
-* [Using Functional Mock-up Units for Nonlinear Model Predictive Control](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076781_GraeberKirchesScharffTegethoff.pdf)
-* [Integration of Modelica models into an existing simulation software using FMI for Co-Simulation](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076949_PazoldBurhenneRadonHerkel.pdf)
-* [FMI Add-on for NI VeriStand for HiL Simulation](https://svn.modelica.org/fmi/branches/public/docs/Modelica2012/ecp12076963_PalmaRomanoni.pdf)
+* [Functional Mock-up Interface 2.0: The Standard for Tool independent Exchange of Simulation Models](https://ep.liu.se/ecp/076/017/ecp12076017.pdf)
+* [Generation of Sparse Jacobians for the Function Mock-Up Interface 2.0](https://ep.liu.se/ecp/076/018/ecp12076018.pdf)
+* [Designing models for online use with Modelica and FMI](https://ep.liu.se/ecp/076/019/ecp12076019.pdf)
+* [Co-simulation with communication step size control in an FMI compatible master algorithm](https://ep.liu.se/ecp/076/020/ecp12076020.pdf)
+* [FMI implementation in LMS Virtual.Lab Motion and application to a vehicle dynamics case](https://ep.liu.se/ecp/076/077/ecp12076077.pdf)
+* [Generating Functional Mock-up Units from Software Specifications](https://ep.liu.se/ecp/076/078/ecp12076078.pdf)
+* [Functional Mock-up Interface in Mechatronic Gearshift Simulation for Commercial Vehicles](https://ep.liu.se/ecp/076/079/ecp12076079.pdf)
+* [Using Functional Mock-up Units for Nonlinear Model Predictive Control](https://ep.liu.se/ecp/076/080/ecp12076080.pdf)
+* [Integration of Modelica models into an existing simulation software using FMI for Co-Simulation](http://dx.doi.org/10.3384/ecp12076949)
+* [FMI Add-on for NI VeriStand for HiL Simulation](https://ep.liu.se/ecp/076/101/ecp12076101.pdf)
 
 ### [EOOLT 2011](http://www.eoolt.org/)
 
@@ -175,11 +175,11 @@ Other FMI related conference papers:
 
 ### [8th International Modelica Conference 2011](https://www.modelica.org/events/modelica2011)
 
-* [The Functional Mock-up Interface for Tool independent Exchange of Simulation Models](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface_paper.pdf) (Slides: [PDF](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface.pdf), [PPT](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/The_Functional_Mockup_Interface.ppt))
-* [Master for Co-Simulation Using FMI](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_Master-for-CoSimulation.pdf)
-* [Import and Export of Functional Mock-up Units in JModelica.org](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_in_JModelica.pdf)
-* [Implementation of MODELISAR Functional Mock-up Interfaces in SimulationX](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_in_SimulationX.pdf)
-* [Using the Functional Mock-up Interface as an Intermediate Format in AUTOSAR Software Component Development](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_for_AUTOSAR.pdf)
-* [Combining Advantages of Specialized Simulation Tools and Modelica Models using Functional Mock-up Interface (FMI)](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_at_Siemens.pdf)
-* [Experiences with the new FMI Standard Selected Applications at Dresden University](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_at_Dresden-University.pdf)
-* [Nonlinear Observers based on the Functional Mock-up Interface with Applications to Electric Vehicles](https://svn.modelica.org/fmi/branches/public/docs/Modelica2011/FMI_for_State_Estimation.pdf)
+* [The Functional Mock-up Interface for Tool independent Exchange of Simulation Models](https://ep.liu.se/ecp/063/013/ecp11063013.pdf) ([PPT](/assets/literature/Modelica_Conference_2011/The_Functional_Mockup_Interface.ppt), ([PDF](/assets/literature/Modelica_Conference_2011/The_Functional_Mockup_Interface.pdf) )
+* [Master for Co-Simulation Using FMI](https://ep.liu.se/ecp/063/014/ecp11063014.pdf)
+* [Import and Export of Functional Mock-up Units in JModelica.org](https://ep.liu.se/ecp/063/036/ecp11063036.pdf)
+* [Implementation of MODELISAR Functional Mock-up Interfaces in SimulationX](https://ep.liu.se/ecp/063/037/ecp11063037.pdf)
+* [Using the Functional Mock-up Interface as an Intermediate Format in AUTOSAR Software Component Development](https://ep.liu.se/ecp/063/054/ecp11063054.pdf)
+* [Combining Advantages of Specialized Simulation Tools and Modelica Models using Functional Mock-up Interface (FMI)](https://ep.liu.se/ecp/063/055/ecp11063055.pdf)
+* [Experiences with the new FMI Standard Selected Applications at Dresden University](https://ep.liu.se/ecp/063/038/ecp11063038.pdf)
+* [Nonlinear Observers based on the Functional Mock-up Interface with Applications to Electric Vehicles](https://ep.liu.se/ecp/063/053/ecp11063053.pdf)
