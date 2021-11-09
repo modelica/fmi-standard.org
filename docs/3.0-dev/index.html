@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 5b80c29,</span>
-<span id="revdate">2021-11-03</span>
+<span id="revnumber">version 924d9ce,</span>
+<span id="revdate">2021-11-09</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1274,7 +1274,7 @@ Likewise, resources allocated by the importer are released by the importer.</p>
 </dd>
 <dt class="hdlist1">Named list elements</dt>
 <dd>
-<p>All lists defined in the <code>fmi3ModelDescription.xsd</code> XML schema file have a string attribute <code>name</code> to a list element.
+<p>Each element of lists defined in the <code>fmi3ModelDescription.xsd</code> have a string attribute called <code>name</code>.
 This attribute must be unique with respect to all other <code>name</code> attributes of the same list.</p>
 </dd>
 <dt class="hdlist1">Use C</dt>
@@ -4538,16 +4538,25 @@ This call is not allowed in Scheduled Execution.</p>
 <p>See <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetShift"><code>fmi3GetShift</code></a>.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a></dt>
 <dd>
 <p>See <a href="#fmi3GetShift"><code>fmi3GetShift</code></a>.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
 <dd>
 <p>See <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a></dt>
+<dd>
+<p>One of these functions must be called for all <a href="#fixed-periodic-clock">Fixed periodic Clocks</a>.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a></dt>
 <dd>
 <p>One of these functions must be called for all <a href="#fixed-periodic-clock">Fixed periodic Clocks</a>.</p>
@@ -4878,14 +4887,23 @@ Clock intervals are computed in <a href="#fmi3UpdateDiscreteStates"><code>fmi3Up
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a></dt>
 <dd>
 <p>This function must be called if <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> returned with <a href="#valuesOfContinuousStatesChanged"><code>valuesOfContinuousStatesChanged == fmi3True</code></a>.
-Can only be called in Model Exchange.</p>
+Not allowed in Co-Simulation and Scheduled Execution.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a></dt>
+<dd>
+<p>Not allowed in Co-Simulation and Scheduled Execution.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a></dt>
+<dd>
+<p>Not allowed in Co-Simulation and Scheduled Execution.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetNumberOfContinuousStates"><code>fmi3GetNumberOfContinuousStates</code></a></dt>
+<dd>
+<p>Not allowed in Co-Simulation and Scheduled Execution.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a></dt>
 <dd>
-<p>Can only be called in Model Exchange.</p>
+<p>Not allowed in Co-Simulation and Scheduled Execution.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a></dt>
 <dd>
@@ -5373,17 +5391,32 @@ The FMU sets the reported activation state immediately back to <code>fmi3ClockIn
 <em>[If <a href="#Terminated"><strong>Terminated</strong></a> is entered because of an <code>fmi3Error</code> return value, retrieved values should only be used for debugging purposes.]</em></p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a></dt>
+<dd>
+<p>Not allowed in Co-Simulation and Scheduled Execution.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a></dt>
+<dd>
+<p>Not allowed in Co-Simulation and Scheduled Execution.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a></dt>
+<dd>
+<p>Not allowed in Co-Simulation and Scheduled Execution.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a></dt>
+<dd>
+<p>Not allowed in Co-Simulation and Scheduled Execution.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
+<dd>
+<p>No restrictions.</p>
+</dd>
 <dt class="hdlist1">Function <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a></dt>
 <dd>
 <p>No restrictions.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
 <dd>
-<p>Not allowed in Model Exchange.</p>
+<p>Not allowed in Model Exchange and Scheduled Execution.</p>
 </dd>
 </dl>
 </div>
@@ -7207,8 +7240,7 @@ If <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>cal
 This value is also stored in the C functions.
 <em>[Therefore, calling</em> <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.</em>
 <em>It is not allowed to change the start values in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file of an FMU, as this would break the consistency with the hard-coded start values in the C-Code.</em>
-<em>This could lead to unpredictable behavior of the FMU in different importing tools, as it is not mandatory to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> to set start values during initialization.</em>
-<em>Instead it is recommended to use the SSP Standard (<a href="https://ssp-standard.org/" class="bare">https://ssp-standard.org/</a>) to handle modified parameters of FMUs or different parameter sets.]</em></p>
+<em>This could lead to unpredictable behavior of the FMU in different importing tools, as it is not mandatory to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> to set start values during initialization.]</em></p>
 </div>
 <div class="paragraph">
 <p>The <a href="#start"><code>start</code></a> is either a single value or a list of values.
@@ -7284,8 +7316,7 @@ All variables listed in this element must have attribute <code>derivative</code>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>reinit</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="reinit" class="paragraph">
-<p>Only for Model Exchange (if only a Co-Simulation FMU, this attribute must not be present.
-If both Model Exchange and a Co-Simulation FMU, this attribute is ignored for co-simulation):<br>
+<p>Only used in Model Exchange, ignored for the other interface types.
 Can only be present for a continuous-time <a href="#state"><code>state</code></a>.<br>
 If <code>true</code>, <a href="#state"><code>state</code></a> can be reinitialized at an event by the FMU.<br>
 If <code>false</code>, <a href="#state"><code>state</code></a> will not be reinitialized at an event by the FMU.</p>
@@ -7657,7 +7688,7 @@ Only <a href="#continuous"><code>continuous</code></a> variables of type <code>F
 <p class="tableblock"><em>[If an event indicator shall not be exposed from the FMU, or if event indicators are not statically associated with a variable (due to dynamic event indicator selection), then dummy variables have to be introduced, for example, <code>eventIndicator[4]</code>.</em>
 <em>The ordering of the variables in this list is defined by the exporting tool.]</em></p>
 <p class="tableblock">For Co-Simulation, elements <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> are ignored.</p>
-<p class="tableblock"><em>[If an FMU supports both Model Exchange and Co-Simulation, then the <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> elements might be present, since it is needed for Model Exchange.]</em></p></td>
+<p class="tableblock"><em>[If an FMU supports more than Model Exchange, then the <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> elements might be present, since it is needed for Model Exchange, but will be ignored for Co-Simulation and Scheduled Execution.]</em></p></td>
 </tr>
 </tbody>
 </table>
