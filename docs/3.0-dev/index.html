@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 22df4a5,</span>
+<span id="revnumber">version 2744f63,</span>
 <span id="revdate">2021-11-18</span>
 </div>
 <div id="toc" class="toc2">
@@ -790,8 +790,9 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_co_simulation">4.3.1. Co-Simulation</a></li>
 <li><a href="#_early_return">4.3.2. Early Return</a></li>
 <li><a href="#_event_mode">4.3.3. Event Mode</a></li>
-<li><a href="#_connected_fmus">4.3.4. Connected FMUs</a></li>
-<li><a href="#code-example-clocked-co-simulation">4.3.5. Clocks</a></li>
+<li><a href="#_intermediate_update">4.3.4. Intermediate Update</a></li>
+<li><a href="#_connected_fmus">4.3.5. Connected FMUs</a></li>
+<li><a href="#code-example-clocked-co-simulation">4.3.6. Clocks</a></li>
 </ul>
 </li>
 <li><a href="#co-simulation-schema">4.4. Description Schema</a>
@@ -10725,7 +10726,87 @@ TERMINATE:
 </div>
 </div>
 <div class="sect3">
-<h4 id="_connected_fmus">4.3.4. Connected FMUs</h4>
+<h4 id="_intermediate_update">4.3.4. Intermediate Update</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
+                           fmi3Float64 intermediateUpdateTime,
+                           fmi3Boolean clocksTicked,
+                           fmi3Boolean intermediateVariableSetRequested,
+                           fmi3Boolean intermediateVariableGetAllowed,
+                           fmi3Boolean intermediateStepFinished,
+                           fmi3Boolean canReturnEarly,
+                           fmi3Boolean *earlyReturnRequested,
+                           fmi3Float64 *earlyReturnTime) {
+
+    if (!instanceEnvironment) {
+        return;
+    }
+
+    FMIInstance *S = (FMIInstance *)instanceEnvironment;
+
+    S-&gt;time = intermediateUpdateTime;
+
+    *earlyReturnRequested = fmi3False;
+    *earlyReturnTime = 0;
+
+    fmi3Status status = fmi3OK;
+
+    // if getting intermediate output variables is allowed
+    if (intermediateVariableGetAllowed) {
+
+        // Get the output variables at time == intermediateUpdateTime
+        // fmi3Get{VariableType}();
+        status = recordVariables(S, outputFile);
+
+        // If integration step in FMU solver is finished
+        if (intermediateStepFinished) {
+            //Forward output variables to other FMUs or write to result files
+        }
+    }
+
+    // if setting intermediate output variables is allowed
+    if (intermediateVariableSetRequested) {
+        // Compute intermediate input variables from output variables and
+        // variables from other FMUs. Use latest available output
+        // variables, possibly from get functions above.
+        // inputVariables = ...
+
+        // Set the input variables at time == intermediateUpdateTime
+        // fmi3Set{VariableType}();
+    }
+
+    // Internal execution in FMU will now continue
+
+    // TODO: handle status
+
+    // log function call
+    fprintf(logFile, "intermediateUpdate("
+        "instanceEnvironment=0x%p, "
+        "intermediateUpdateTime=%.16g, "
+        "clocksTicked=%d, "
+        "intermediateVariableSetRequested=%d, "
+        "intermediateVariableGetAllowed=%d, "
+        "intermediateStepFinished=%d, "
+        "canReturnEarly=%d, "
+        "earlyReturnRequested=%d, "
+        "earlyReturnTime=%.16g)\n",
+        instanceEnvironment,
+        intermediateUpdateTime,
+        clocksTicked,
+        intermediateVariableSetRequested,
+        intermediateVariableGetAllowed,
+        intermediateStepFinished,
+        canReturnEarly,
+        *earlyReturnRequested,
+        *earlyReturnTime
+    );
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_connected_fmus">4.3.5. Connected FMUs</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 We consider two FMUs, where both have one <a href="#continuous"><code>continuous</code></a> floating point <a href="#input"><code>input</code></a> and one <a href="#continuous"><code>continuous</code></a> floating point <a href="#output"><code>output</code></a> which are connected in the following way:</p>
@@ -10872,7 +10953,7 @@ if (status != fmi3Fatal) {
 </div>
 </div>
 <div class="sect3">
-<h4 id="code-example-clocked-co-simulation">4.3.5. Clocks</h4>
+<h4 id="code-example-clocked-co-simulation">4.3.6. Clocks</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 We consider &#8230;&#8203;</p>
