@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version a8b3f86,</span>
+<span id="revnumber">version 63b1785,</span>
 <span id="revdate">2021-11-18</span>
 </div>
 <div id="toc" class="toc2">
@@ -787,7 +787,7 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#_code_examples">4.3. Code Examples</a>
 <ul class="sectlevel3">
-<li><a href="#_co_simulation">4.3.1. Co-Simulation</a></li>
+<li><a href="#_basic_co_simulation">4.3.1. Basic Co-Simulation</a></li>
 <li><a href="#_early_return">4.3.2. Early Return</a></li>
 <li><a href="#_event_mode">4.3.3. Event Mode</a></li>
 <li><a href="#_intermediate_update">4.3.4. Intermediate Update</a></li>
@@ -10508,7 +10508,7 @@ This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><cod
 <div class="sect2">
 <h3 id="_code_examples">4.3. Code Examples</h3>
 <div class="sect3">
-<h4 id="_co_simulation">4.3.1. Co-Simulation</h4>
+<h4 id="_basic_co_simulation">4.3.1. Basic Co-Simulation</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    CALL(FMI3InstantiateCoSimulation(S,
@@ -10556,6 +10556,15 @@ This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><cod
 
 TERMINATE:
     return tearDown();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The plot below shows the output for the <a href="https://github.com/modelica/Reference-FMUs">BouncingBall Reference FMU</a> with a communication step size of 0.1 s.
+Note that the points where the ball hits the floor are missed.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/BouncingBall_cs.svg" alt="BouncingBall cs" width="100%">
 </div>
 </div>
 </div>
@@ -10615,6 +10624,15 @@ TERMINATE:
 
 TERMINATE:
     return tearDown();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The plot below shows the output for the <a href="https://github.com/modelica/Reference-FMUs">BouncingBall Reference FMU</a> with a communication step size of 0.1 s.
+Note that the points where the ball hits the floor are available, but only the outputs after the events are recorded.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/cs_early_return.svg" alt="cs early return" width="100%">
 </div>
 </div>
 </div>
@@ -10724,6 +10742,15 @@ TERMINATE:
     return tearDown();</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The plot below shows the output for the <a href="https://github.com/modelica/Reference-FMUs">BouncingBall Reference FMU</a> with a communication step size of 0.1 s.
+Note that the points where the ball hits the floor are available and the outputs before and after the event are recorded.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/cs_event_mode.svg" alt="cs event mode" width="100%">
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_intermediate_update">4.3.4. Intermediate Update</h4>
@@ -10802,6 +10829,15 @@ TERMINATE:
         *earlyReturnTime
     );
 }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The plot below shows the output for the <a href="https://github.com/modelica/Reference-FMUs">BouncingBall Reference FMU</a> with a communication step size of 0.1 s.
+Note that the outputs at all intermediate steps are recorded, too.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/cs_intermediate_update.svg" alt="cs intermediate update" width="100%">
 </div>
 </div>
 </div>
