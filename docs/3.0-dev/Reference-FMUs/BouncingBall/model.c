@@ -2,9 +2,6 @@
 #include "config.h"
 #include "model.h"
 
-// shorthand to access the variables
-#define M(v) (comp->modelData->v)
-
 #define V_MIN (0.1)
 
 void setStartValues(ModelInstance *comp) {
@@ -14,9 +11,10 @@ void setStartValues(ModelInstance *comp) {
     M(e) =  0.7;
 }
 
-void calculateValues(ModelInstance *comp) {
-    UNUSED(comp)
-    // do nothing
+Status calculateValues(ModelInstance *comp) {
+    UNUSED(comp);
+    // nothing to do
+    return OK;
 }
 
 Status getFloat64(ModelInstance* comp, ValueReference vr, double *value, size_t *index) {
@@ -107,6 +105,11 @@ void eventUpdate(ModelInstance *comp) {
         }
 
         comp->valuesOfContinuousStatesChanged = true;
+    }
+
+    // reset the previous event indicators
+    for (int i = 0; i < NZ; i++) {
+        comp->prez[i] = 0;
     }
 
     comp->nominalsOfContinuousStatesChanged = false;

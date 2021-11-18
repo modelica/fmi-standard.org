@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version a2fc00f,</span>
-<span id="revdate">2021-11-10</span>
+<span id="revnumber">version 22df4a5,</span>
+<span id="revdate">2021-11-18</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -788,7 +788,10 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_code_examples">4.3. Code Examples</a>
 <ul class="sectlevel3">
 <li><a href="#_co_simulation">4.3.1. Co-Simulation</a></li>
-<li><a href="#code-example-clocked-co-simulation">4.3.2. Clocks</a></li>
+<li><a href="#_early_return">4.3.2. Early Return</a></li>
+<li><a href="#_event_mode">4.3.3. Event Mode</a></li>
+<li><a href="#_connected_fmus">4.3.4. Connected FMUs</a></li>
+<li><a href="#code-example-clocked-co-simulation">4.3.5. Clocks</a></li>
 </ul>
 </li>
 <li><a href="#co-simulation-schema">4.4. Description Schema</a>
@@ -3650,14 +3653,14 @@ g_2(x, u_1)
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    //   c[]      column vector
 
     // set time, states and inputs
-    CHECK_STATUS(S-&gt;fmi3SetTime(s, time))
-    CHECK_STATUS(S-&gt;fmi3SetContinuousStates(s, x, nx))
+    CALL(FMI3SetTime(S, time));
+    CALL(FMI3SetContinuousStates(S, x, nx));
     // fmi3Set{VariableType}(s, ...)
 
     // if required at this step, compute the Jacobian as a dense matrix
     for (i = 0; i &lt; nx; i++) {
         // construct the Jacobian matrix column wise
-        CHECK_STATUS(S-&gt;fmi3GetDirectionalDerivative(s, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, c, nx))
+        CALL(FMI3GetDirectionalDerivative(S, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, c, nx))
         for (j = 0; j &lt; nx; j++) {
             J[j][i] = c[j];
         }
@@ -3791,7 +3794,7 @@ h_2(u_1, u_2)
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    for (i = 0; i &lt; nx; i++) {
         // construct the Jacobian matrix column wise
-        CHECK_STATUS(S-&gt;fmi3GetAdjointDerivative(s, &amp;vr_dx[i], 1, vr_x, nx, &amp;dk, 1, &amp;J[i][0], nx))
+        CALL(FMI3GetAdjointDerivative(S, &amp;vr_dx[i], 1, vr_x, nx, &amp;dk, 1, &amp;J[i][0], nx));
     }</code></pre>
 </div>
 </div>
@@ -9136,11 +9139,6 @@ In the second case, all components necessary for execution of the FMU are includ
 
 #define INSTANTIATION_TOKEN "{8c4e810f-3da3-4a00-8276-176fa3c9f000}"
 
-#ifdef _WIN32
-#define RESOURCE_LOCATION "file:/C:/tmp/VanDerPol"
-#else
-#define RESOURCE_LOCATION "file:///var/tmp/VanDerPol"
-#endif
 
 static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3String instanceName, fmi3Status status, fmi3String category, fmi3String message) {
     // log message...
@@ -9181,13 +9179,13 @@ int main(int argc, char* argv[]) {
     }
 
     fmi3Instance m = instantiateModelExchange(
-        "instance1",             // instance name
-        INSTANTIATION_TOKEN,     // instantiation token (from XML)
-        RESOURCE_LOCATION,       // resource location (extracted FMU)
-        fmi3False,               // visible
-        fmi3False,               // debug logging disabled
-        NULL,                    // instance environment
-        cb_logMessage);          // logger callback
+        "instance1",         // instance name
+        INSTANTIATION_TOKEN, // instantiation token (from XML)
+        NULL,                // resource path
+        fmi3False,           // visible
+        fmi3False,           // debug logging disabled
+        NULL,                // instance environment
+        cb_logMessage);      // logger callback
 
 
     if (!m) {
@@ -9231,13 +9229,13 @@ static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3Strin
 int main(int argc, char* argv[]) {
 
     fmi3Instance m = VanDerPol_fmi3InstantiateModelExchange(
-        "instance1",             // instance name
-        INSTANTIATION_TOKEN,     // instantiation token (from XML)
-        "file:///tmp/VanDerPol", // resource location (extracted FMU)
-        fmi3False,               // visible
-        fmi3False,               // debug logging disabled
-        NULL,                    // instance environment
-        cb_logMessage);          // logger callback
+        "instance1",         // instance name
+        INSTANTIATION_TOKEN, // instantiation token (from XML)
+        NULL,                // resource location
+        fmi3False,           // visible
+        fmi3False,           // debug logging disabled
+        NULL,                // instance environment
+        cb_logMessage);      // logger callback
 
     // simulation ...
 
@@ -9840,39 +9838,32 @@ If the FMU would be used inside another model, additional code is needed, especi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">    fmi3Instance s = S-&gt;fmi3InstantiateModelExchange(
-        "intstance1",        // instanceName
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">    CALL(FMI3InstantiateModelExchange(S,
         INSTANTIATION_TOKEN, // instantiationToken
-        NULL,                // resourceLocation
+        resourcePath(),      // resourcePath
         fmi3False,           // visible
-        fmi3False,           // loggingOn
-        NULL,                // instanceEnvironment
-        cb_logMessage        // logMessage
-    );
-
-    if (s == NULL) {
-        status = fmi3Error;
-        goto TERMINATE;
-    }
+        fmi3False            // loggingOn
+    ));
 
     // set the start time
     fmi3Float64 time = 0;
 
-    // TODO: set all variable start values (of "ScalarVariable / &lt;type&gt; / start")
+    // set start values
+    CALL(applyStartValues(S));
 
     // initialize
     // determine continuous and discrete states
-    CHECK_STATUS(S-&gt;fmi3EnterInitializationMode(s, fmi3False, 0.0, time, fmi3True, stopTime));
+    CALL(FMI3EnterInitializationMode(S, fmi3False, 0.0, time, fmi3True, stopTime));
 
-    // TODO: apply input
+    CALL(applyContinuousInputs(S, false));
+    CALL(applyDiscreteInputs(S));
 
-    CHECK_STATUS(S-&gt;fmi3ExitInitializationMode(s));
+    CALL(FMI3ExitInitializationMode(S));
 
     // intial event iteration
     while (discreteStatesNeedUpdate) {
 
-        CHECK_STATUS(S-&gt;fmi3UpdateDiscreteStates(
-            s,
+        CALL(FMI3UpdateDiscreteStates(S,
             &amp;discreteStatesNeedUpdate,
             &amp;terminateSimulation,
             &amp;nominalsOfContinuousStatesChanged,
@@ -9885,35 +9876,45 @@ If the FMU would be used inside another model, additional code is needed, especi
         }
     }
 
-    CHECK_STATUS(S-&gt;fmi3EnterContinuousTimeMode(s));
+    CALL(FMI3EnterContinuousTimeMode(S));
 
 #if NZ &gt; 0
     // initialize previous event indicators
-    CHECK_STATUS(S-&gt;fmi3GetEventIndicators(s, previous_z, NZ));
+    CALL(FMI3GetEventIndicators(S, previous_z, NZ));
 #endif
 
 #if NX &gt; 0
     // retrieve initial state x and
     // nominal values of x (if absolute tolerance is needed)
-    CHECK_STATUS(S-&gt;fmi3GetContinuousStates(s, x, NX));
-    CHECK_STATUS(S-&gt;fmi3GetNominalsOfContinuousStates(s, x_nominal, NX));
+    CALL(FMI3GetContinuousStates(S, x, NX));
+    CALL(FMI3GetNominalsOfContinuousStates(S, x_nominal, NX));
 #endif
 
     // retrieve solution at t=Tstart, for example, for outputs
     // S-&gt;fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
 
+    CALL(recordVariables(S, outputFile));
+
+    int steps = 0;
+
     while (!terminateSimulation) {
 
-        // detect time event
+        // detect input and time events
+        inputEvent = time &gt;= nextInputEventTime(time);
         timeEvent = nextEventTimeDefined &amp;&amp; time &gt;= nextEventTime;
 
         // handle events
         if (inputEvent || timeEvent || stateEvent || stepEvent) {
 
-            CHECK_STATUS(S-&gt;fmi3EnterEventMode(s, stepEvent, stateEvent, rootsFound, NZ, timeEvent));
+            CALL(FMI3EnterEventMode(S, stepEvent, stateEvent, rootsFound, NZ, timeEvent));
+
+            if (inputEvent) {
+                CALL(applyContinuousInputs(S, true));
+                CALL(applyDiscreteInputs(S));
+            }
 
             nominalsOfContinuousStatesChanged = fmi3False;
-            valuesOfContinuousStatesChanged = fmi3False;
+            valuesOfContinuousStatesChanged   = fmi3False;
 
             // event iteration
             do {
@@ -9921,16 +9922,16 @@ If the FMU would be used inside another model, additional code is needed, especi
                 // S-&gt;fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
 
                 fmi3Boolean nominalsChanged = fmi3False;
-                fmi3Boolean statesChanged = fmi3False;
+                fmi3Boolean statesChanged   = fmi3False;
 
                 // update discrete states
-                CHECK_STATUS(S-&gt;fmi3UpdateDiscreteStates(s, &amp;discreteStatesNeedUpdate, &amp;terminateSimulation, &amp;nominalsChanged, &amp;statesChanged, &amp;nextEventTimeDefined, &amp;nextEventTime));
+                CALL(FMI3UpdateDiscreteStates(S, &amp;discreteStatesNeedUpdate, &amp;terminateSimulation, &amp;nominalsChanged, &amp;statesChanged, &amp;nextEventTimeDefined, &amp;nextEventTime));
 
                 // get output at super dense time point
                 // S-&gt;fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
 
                 nominalsOfContinuousStatesChanged |= nominalsChanged;
-                valuesOfContinuousStatesChanged |= statesChanged;
+                valuesOfContinuousStatesChanged   |= statesChanged;
 
                 if (terminateSimulation) {
                     goto TERMINATE;
@@ -9939,20 +9940,20 @@ If the FMU would be used inside another model, additional code is needed, especi
             } while (discreteStatesNeedUpdate);
 
             // enter Continuous-Time Mode
-            CHECK_STATUS(S-&gt;fmi3EnterContinuousTimeMode(s));
+            CALL(FMI3EnterContinuousTimeMode(S));
 
             // retrieve solution at simulation (re)start
-            CHECK_STATUS(recordVariables(outputFile, S, s, time));
+            CALL(recordVariables(S, outputFile));
 
 #if NX &gt; 0
             if (valuesOfContinuousStatesChanged) {
                 // the model signals a value change of states, retrieve them
-                CHECK_STATUS(S-&gt;fmi3GetContinuousStates(s, x, NX));
+                CALL(FMI3GetContinuousStates(S, x, NX));
             }
 
             if (nominalsOfContinuousStatesChanged) {
                 // the meaning of states has changed; retrieve new nominal values
-                CHECK_STATUS(S-&gt;fmi3GetNominalsOfContinuousStates(s, x_nominal, NX));
+                CALL(FMI3GetNominalsOfContinuousStates(S, x_nominal, NX));
             }
 #endif
         }
@@ -9963,15 +9964,15 @@ If the FMU would be used inside another model, additional code is needed, especi
 
 #if NX &gt; 0
         // compute continous state derivatives
-        CHECK_STATUS(S-&gt;fmi3GetContinuousStateDerivatives(s, der_x, NX));
+        CALL(FMI3GetContinuousStateDerivatives(S, der_x, NX));
 #endif
         // advance time
-        time += fixedStep;
+        time = ++steps * fixedStep;
 
-        CHECK_STATUS(S-&gt;fmi3SetTime(s, time));
+        CALL(FMI3SetTime(S, time));
 
-        // set continuous inputs at t = time
-        // S-&gt;fmi3SetFloat*(m, ...)
+        // apply continuous inputs
+        CALL(applyContinuousInputs(S, false));
 
 #if NX &gt; 0
         // set states at t = time and perform one step
@@ -9979,12 +9980,12 @@ If the FMU would be used inside another model, additional code is needed, especi
             x[i] += fixedStep * der_x[i]; // forward Euler method
         }
 
-        CHECK_STATUS(S-&gt;fmi3SetContinuousStates(s, x, NX));
+        CALL(FMI3SetContinuousStates(S, x, NX));
 #endif
 
 #if NZ &gt; 0
         // get event indicators at t = time
-        CHECK_STATUS(S-&gt;fmi3GetEventIndicators(s, z, NZ));
+        CALL(FMI3GetEventIndicators(S, z, NZ));
 
         stateEvent = fmi3False;
 
@@ -10006,26 +10007,14 @@ If the FMU would be used inside another model, additional code is needed, especi
 #endif
 
         // inform the model about an accepted step
-        CHECK_STATUS(S-&gt;fmi3CompletedIntegratorStep(s, fmi3True, &amp;stepEvent, &amp;terminateSimulation));
+        CALL(FMI3CompletedIntegratorStep(S, fmi3True, &amp;stepEvent, &amp;terminateSimulation));
 
         // get continuous output
-        // S-&gt;fmi3GetFloat*(m, ...)
-        CHECK_STATUS(recordVariables(outputFile, S, s, time));
+        CALL(recordVariables(S, outputFile));
     }
 
 TERMINATE:
-
-    if (s &amp;&amp; status &lt; fmi3Error) {
-        // retrieve final values and terminate simulation
-        CHECK_STATUS(recordVariables(outputFile, S, s, time));
-        const fmi3Status terminateStatus = S-&gt;fmi3Terminate(s);
-        status = max(status, terminateStatus);
-    }
-
-    if (s &amp;&amp; status &lt; fmi3Fatal) {
-        // clean up
-        S-&gt;fmi3FreeInstance(s);
-    }</code></pre>
+    return tearDown();</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -10033,7 +10022,7 @@ TERMINATE:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#define CHECK_STATUS(S) status = S; if (status != fmi3OK) goto TERMINATE;</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#define CALL(f) status = f; if (status &gt; FMIOK) goto TERMINATE;</code></pre>
 </div>
 </div>
 </div>
@@ -10519,6 +10508,224 @@ This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><cod
 <h3 id="_code_examples">4.3. Code Examples</h3>
 <div class="sect3">
 <h4 id="_co_simulation">4.3.1. Co-Simulation</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    CALL(FMI3InstantiateCoSimulation(S,
+        INSTANTIATION_TOKEN, // instantiationToken
+        resourcePath(),      // resourcePath
+        fmi3False,           // visible
+        fmi3False,           // loggingOn
+        fmi3False,           // eventModeUsed
+        fmi3False,           // earlyReturnAllowed
+        NULL,                // requiredIntermediateVariables
+        0,                   // nRequiredIntermediateVariables
+        NULL                 // intermediateUpdate
+    ));
+
+    // set start values
+    CALL(applyStartValues(S));
+
+    // initialize the FMU
+    CALL(FMI3EnterInitializationMode(S, fmi3False, 0.0, startTime, fmi3True, stopTime));
+
+    CALL(FMI3ExitInitializationMode(S));
+
+    for (int step = 0;; step++) {
+
+        CALL(recordVariables(S, outputFile));
+
+        // calculate the current time
+        const fmi3Float64 time = step * h;
+
+        CALL(applyContinuousInputs(S, false));
+        CALL(applyDiscreteInputs(S));
+
+        if (time &gt;= stopTime) {
+            break;
+        }
+
+        // call instance s1 and check status
+        CALL(FMI3DoStep(S, time, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime));
+
+        if (terminateSimulation) {
+            printf("The FMU requested to terminate the simulation.");
+            break;
+        }
+    }
+
+TERMINATE:
+    return tearDown();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_early_return">4.3.2. Early Return</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    CALL(FMI3InstantiateCoSimulation(S,
+        INSTANTIATION_TOKEN, // instantiationToken
+        NULL,                // resourcePath
+        fmi3False,           // visible
+        fmi3False,           // loggingOn
+        fmi3False,           // eventModeUsed
+        fmi3True,            // earlyReturnAllowed
+        NULL,                // requiredIntermediateVariables
+        0,                   // nRequiredIntermediateVariables
+        NULL                 // intermediateUpdate
+    ));
+
+    // set start values
+    CALL(applyStartValues(S));
+
+    fmi3Float64 time = startTime;
+
+    // initialize the FMU
+    CALL(FMI3EnterInitializationMode(S, fmi3False, 0.0, time, fmi3True, stopTime));
+
+    CALL(FMI3ExitInitializationMode(S));
+
+    // communication step size
+    const fmi3Float64 stepSize = 10 * FIXED_SOLVER_STEP;
+
+    while (true) {
+
+        // apply continuous and discrete inputs
+        CALL(applyContinuousInputs(S, true));
+        CALL(applyDiscreteInputs(S));
+
+        // record variables
+        CALL(recordVariables(S, outputFile));
+
+        if (terminateSimulation || time &gt;= stopTime) {
+            break;
+        }
+
+        // returns early on events
+        CALL(FMI3DoStep(S,
+            time,                 // currentCommunicationPoint
+            stepSize,             // communicationStepSize
+            fmi3True,             // noSetFMUStatePriorToCurrentPoint
+            &amp;eventEncountered,    // eventEncountered
+            &amp;terminateSimulation, // terminate
+            &amp;earlyReturn,         // earlyReturn
+            &amp;time                 // lastSuccessfulTime
+        ));
+    }
+
+TERMINATE:
+    return tearDown();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_event_mode">4.3.3. Event Mode</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    CALL(FMI3InstantiateCoSimulation(S,
+        INSTANTIATION_TOKEN, // instantiationToken
+        NULL,                // resourcePath
+        fmi3False,           // visible
+        fmi3False,           // loggingOn
+        fmi3True,            // eventModeUsed
+        fmi3False,           // earlyReturnAllowed
+        NULL,                // requiredIntermediateVariables
+        0,                   // nRequiredIntermediateVariables
+        NULL                 // intermediateUpdate
+    ));
+
+    // set start values
+    CALL(applyStartValues(S));
+
+    fmi3Float64 time = startTime;
+
+    // initialize the FMU
+    CALL(FMI3EnterInitializationMode(S, fmi3False, 0.0, time, fmi3True, stopTime));
+
+    // apply continuous and discrete inputs
+    CALL(applyContinuousInputs(S, true));
+    CALL(applyDiscreteInputs(S));
+
+    CALL(FMI3ExitInitializationMode(S));
+
+    // update discrete states
+    do {
+        CALL(FMI3UpdateDiscreteStates(S,
+            &amp;discreteStatesNeedUpdate,
+            &amp;terminateSimulation,
+            &amp;nominalsChanged,
+            &amp;statesChanged,
+            &amp;nextEventTimeDefined,
+            &amp;nextEventTime
+        ));
+
+        if (terminateSimulation) {
+            goto TERMINATE;
+        }
+    } while (discreteStatesNeedUpdate);
+
+    CALL(FMI3EnterStepMode(S));
+
+    // communication step size
+    const fmi3Float64 stepSize = 10 * FIXED_SOLVER_STEP;
+
+    while (true) {
+
+        CALL(recordVariables(S, outputFile));
+
+        if (terminateSimulation || time &gt;= stopTime) {
+            break;
+        }
+
+        CALL(FMI3DoStep(S,
+            time,                 // currentCommunicationPoint
+            stepSize,             // communicationStepSize
+            fmi3True,             // noSetFMUStatePriorToCurrentPoint
+            &amp;eventEncountered,    // eventEncountered
+            &amp;terminateSimulation, // terminate
+            &amp;earlyReturn,         // earlyReturn
+            &amp;time                 // lastSuccessfulTime
+        ));
+
+        if (eventEncountered) {
+
+            // record variables before event update
+            CALL(recordVariables(S, outputFile));
+
+            // enter Event Mode
+            CALL(FMI3EnterEventMode(S, fmi3False, fmi3False, NULL, 0, fmi3False));
+
+            // apply continuous and discrete inputs
+            CALL(applyContinuousInputs(S, true));
+            CALL(applyDiscreteInputs(S));
+
+            // update discrete states
+            do {
+                CALL(FMI3UpdateDiscreteStates(S,
+                    &amp;discreteStatesNeedUpdate,
+                    &amp;terminateSimulation,
+                    &amp;nominalsChanged,
+                    &amp;statesChanged,
+                    &amp;nextEventTimeDefined,
+                    &amp;nextEventTime
+                ));
+
+                if (terminateSimulation) {
+                    break;
+                }
+            } while (discreteStatesNeedUpdate);
+
+            // return to Step Mode
+            CALL(FMI3EnterStepMode(S));
+        }
+    }
+
+TERMINATE:
+    return tearDown();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_connected_fmus">4.3.4. Connected FMUs</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 We consider two FMUs, where both have one <a href="#continuous"><code>continuous</code></a> floating point <a href="#input"><code>input</code></a> and one <a href="#continuous"><code>continuous</code></a> floating point <a href="#output"><code>output</code></a> which are connected in the following way:</p>
@@ -10565,7 +10772,7 @@ typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
     fmi3CallbackIntermediateUpdate intermediateUpdate);
 
 // instantiate both FMUs
-s1 = s1_fmi3InstantiateCoSimulation("instance1",   // instanceName
+s1 = s1_fmi3InstantiateCoSimulation("s1",          // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
@@ -10578,7 +10785,7 @@ s1 = s1_fmi3InstantiateCoSimulation("instance1",   // instanceName
                                     cb_logMessage, // logMessage
                                     NULL);         // intermediateUpdate
 
-s2 = s2_fmi3InstantiateCoSimulation("instance1",   // instanceName
+s2 = s2_fmi3InstantiateCoSimulation("s2",          // instanceName
                                     guid,          // instantiationToken
                                     NULL,          // resourceLocation
                                     fmi3False,     // visible
@@ -10665,7 +10872,7 @@ if (status != fmi3Fatal) {
 </div>
 </div>
 <div class="sect3">
-<h4 id="code-example-clocked-co-simulation">4.3.2. Clocks</h4>
+<h4 id="code-example-clocked-co-simulation">4.3.5. Clocks</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in a simulation environment.
 We consider &#8230;&#8203;</p>
@@ -11483,7 +11690,7 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 <p><a id="ABL12"></a>[ABL12] &#197;kesson J., Braun W., Lindholm P., and Bachmann B. (2012): <strong>Generation of Sparse Jacobians for the Functional Mockup Interface 2.0</strong>. 9th International Modelica Conference, Munich, 2012. <a href="http://www.ep.liu.se/ecp/076/018/ecp12076018.pdf" class="bare">http://www.ep.liu.se/ecp/076/018/ecp12076018.pdf</a></p>
 </li>
 <li>
-<p><a id="BPRS15"></a>[BPRS15] Atilim Gunes Baydin, Barak A. Pearlmutter, Alexey Andreyevich Radul, Jeffrey Mark Siskind (2015): <strong>Automatic differentiation in machine learning: a survey</strong>. <a href="https://arxiv.org/abs/1502.05767" class="bare">https://arxiv.org/abs/1502.05767</a></p>
+<p><a id="BPRS15"></a>[BPRS15] Atilim Gunes Baydin, Barak A. Pearlmutter, Alexey Andreyevich Radul, Jeffrey Mark Siskind (2015): <strong>Automatic differentiation in machine learning: a survey</strong>. <a href="https://www.jmlr.org/papers/volume18/17-468/17-468.pdf" class="bare">https://www.jmlr.org/papers/volume18/17-468/17-468.pdf</a></p>
 </li>
 <li>
 <p><a id="BCP10"></a>[BCP10] Benveniste A., Caillaud B., Pouzet M. (2010): <strong>The Fundamentals of Hybrid Systems Modelers</strong>. In 49th IEEE International Conference on Decision and Control (CDC), Atlanta, Georgia, USA, December 15-17. <a href="http://www.di.ens.fr/~pouzet/bib/cdc10.pdf" class="bare">http://www.di.ens.fr/~pouzet/bib/cdc10.pdf</a></p>
@@ -11593,10 +11800,11 @@ For details see <a href="#MS93">[MS93]</a>.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>event</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Something that occurs instantaneously at a specific time or when a specific condition occurs.
-At an event, numerical integration is suspended and variables may change their values discontinuously.
-Internal events occur inside the FMU and should be signaled to the environment without any delay and can cause event handling and/or the activation of an output clock.
-Input clocks are activated by the environment to inform the FMU about the exact moment an event across FMUs has to be handled.
-See <a href="#state-event">state event</a>, <a href="#step-event">step event</a> and <a href="#time-event">time event</a>.</p></td>
+At an event in Model Exchange, numerical integration is suspended and variables may change their values discontinuously.
+In Co-Simulation, an event may interrupt a <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> to introduce an additional communication point.
+Internal events occur inside the FMU and should be signaled to the environment without any delay (in CS using <a href="#early-return">early return</a>, in SE using <a href="#IntermediateUpdateMode">intermediate update</a>) and can cause event handling and/or the activation of an output clock.
+Input clocks are activated by the environment to inform the FMU about the point in time an event has to be handled by the FMU.
+See also <a href="#state-event">state event</a>, <a href="#step-event">step event</a> and <a href="#time-event">time event</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="eventIndicator"></a><em>event indicator</em></p></td>

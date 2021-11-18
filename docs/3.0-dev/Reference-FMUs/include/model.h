@@ -144,8 +144,9 @@ typedef struct {
     // internal solver steps
     int nSteps;
 
-    // co-simulation
-    bool returnEarly;
+    // Co-Simulation
+    bool earlyReturnAllowed;
+    bool eventModeUsed;
 
 } ModelInstance;
 
@@ -157,16 +158,16 @@ ModelInstance *createModelInstance(
     const char *instantiationToken,
     const char *resourceLocation,
     bool loggingOn,
-    InterfaceType interfaceType,
-    bool returnEarly);
+    InterfaceType interfaceType);
 void freeModelInstance(ModelInstance *comp);
 
 void setStartValues(ModelInstance *comp);
-void calculateValues(ModelInstance *comp);
+Status calculateValues(ModelInstance *comp);
 
 Status getFloat64 (ModelInstance* comp, ValueReference vr, double      *value, size_t *index);
-Status getInt32   (ModelInstance* comp, ValueReference vr, int32_t     *value, size_t *index);
 Status getUInt16  (ModelInstance* comp, ValueReference vr, uint16_t    *value, size_t *index);
+Status getInt32   (ModelInstance* comp, ValueReference vr, int32_t     *value, size_t *index);
+Status getUInt64  (ModelInstance* comp, ValueReference vr, uint64_t    *value, size_t *index);
 Status getBoolean (ModelInstance* comp, ValueReference vr, bool        *value, size_t *index);
 Status getString  (ModelInstance* comp, ValueReference vr, const char **value, size_t *index);
 Status getBinary  (ModelInstance* comp, ValueReference vr, size_t size[], const char* value[], size_t *index);
@@ -174,6 +175,7 @@ Status getBinary  (ModelInstance* comp, ValueReference vr, size_t size[], const 
 Status setFloat64 (ModelInstance* comp, ValueReference vr, const double      *value, size_t *index);
 Status setUInt16  (ModelInstance* comp, ValueReference vr, const uint16_t    *value, size_t *index);
 Status setInt32   (ModelInstance* comp, ValueReference vr, const int32_t     *value, size_t *index);
+Status setUInt64  (ModelInstance* comp, ValueReference vr, const uint64_t    *value, size_t *index);
 Status setBoolean (ModelInstance* comp, ValueReference vr, const bool        *value, size_t *index);
 Status setString  (ModelInstance* comp, ValueReference vr, const char* const *value, size_t *index);
 Status setBinary  (ModelInstance* comp, ValueReference vr, const size_t size[], const char *const value[], size_t *index);
@@ -193,6 +195,7 @@ void getEventIndicators(ModelInstance *comp, double z[], size_t nz);
 void eventUpdate(ModelInstance *comp);
 //void updateEventTime(ModelInstance *comp);
 
+double epsilon(double value);
 bool invalidNumber(ModelInstance *comp, const char *f, const char *arg, size_t actual, size_t expected);
 bool invalidState(ModelInstance *comp, const char *f, int statesExpected);
 bool nullPointer(ModelInstance* comp, const char *f, const char *arg, const void *p);
@@ -204,35 +207,56 @@ void logError(ModelInstance *comp, const char *message, ...);
 // shorthand to access the variables
 #define M(v) (comp->modelData->v)
 
+// "stringification" macros
+#define xstr(s) str(s)
+#define str(s) #s
+
+#define ASSERT_NOT_NULL(p) \
+if (!p) { \
+    logError(S, "Argument %s must not be NULL.", xstr(p)); \
+    S->state = modelError; \
+    return (FMI_STATUS)Error; \
+}
+
 #define GET_VARIABLES(T) \
+ASSERT_NOT_NULL(vr); \
+ASSERT_NOT_NULL(value); \
 size_t index = 0; \
 Status status = OK; \
-for (int i = 0; i < nvr; i++) { \
-    if (vr[i] == 0) continue; \
-    Status s = get ## T((ModelInstance *)instance, vr[i], value, &index); \
+if (nvr == 0) return (FMI_STATUS)status; \
+if (S->isDirtyValues) { \
+    Status s = calculateValues(S); \
+    status = max(status, s); \
+    if (status > Warning) return (FMI_STATUS)status; \
+    S->isDirtyValues = false; \
+} \
+for (size_t i = 0; i < nvr; i++) { \
+    Status s = get ## T(S, vr[i], value, &index); \
     status = max(status, s); \
     if (status > Warning) return (FMI_STATUS)status; \
 } \
 return (FMI_STATUS)status;
 
 #define SET_VARIABLES(T) \
+ASSERT_NOT_NULL(vr); \
+ASSERT_NOT_NULL(value); \
 size_t index = 0; \
 Status status = OK; \
-for (int i = 0; i < nvr; i++) { \
-    Status s = set ## T((ModelInstance *)instance, vr[i], value, &index); \
+for (size_t i = 0; i < nvr; i++) { \
+    Status s = set ## T(S, vr[i], value, &index); \
     status = max(status, s); \
     if (status > Warning) return (FMI_STATUS)status; \
 } \
-if (nvr > 0) ((ModelInstance *)instance)->isDirtyValues = true; \
+if (nvr > 0) S->isDirtyValues = true; \
 return (FMI_STATUS)status;
 
 // TODO: make this work with arrays
 #define GET_BOOLEAN_VARIABLES \
 Status status = OK; \
-for (int i = 0; i < nvr; i++) { \
+for (size_t i = 0; i < nvr; i++) { \
     bool v = false; \
     size_t index = 0; \
-    Status s = getBoolean((ModelInstance *)instance, vr[i], &v, &index); \
+    Status s = getBoolean(S, vr[i], &v, &index); \
     value[i] = v; \
     status = max(status, s); \
     if (status > Warning) return (FMI_STATUS)status; \
@@ -242,10 +266,10 @@ return (FMI_STATUS)status;
 // TODO: make this work with arrays
 #define SET_BOOLEAN_VARIABLES \
 Status status = OK; \
-for (int i = 0; i < nvr; i++) { \
+for (size_t i = 0; i < nvr; i++) { \
     bool v = value[i]; \
     size_t index = 0; \
-    Status s = setBoolean((ModelInstance *)instance, vr[i], &v, &index); \
+    Status s = setBoolean(S, vr[i], &v, &index); \
     status = max(status, s); \
     if (status > Warning) return (FMI_STATUS)status; \
 } \

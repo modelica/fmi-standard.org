@@ -3,6 +3,6 @@
 
 #include "model.h"
 
-Status doStep(ModelInstance *comp, double t, double tNext, int* earlyReturn, double* lastSuccessfulTime);
+void doFixedStep(ModelInstance *comp, bool* stateEvent, bool* timeEvent);
 
 #endif /* cosimulation_h */
