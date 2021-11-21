@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 63b1785,</span>
-<span id="revdate">2021-11-18</span>
+<span id="revnumber">version 1da3a76,</span>
+<span id="revdate">2021-11-21</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2366,6 +2366,11 @@ Exceptions:</p>
 <div class="paragraph">
 <p>All strings passed as arguments to <code>fmi3SetString</code>, as well as all binary values passed as arguments to <code>fmi3SetBinary</code>, must be copied during these function calls, because there is no guarantee of the lifetime of strings or binary values, when these functions return.</p>
 </div>
+<div class="paragraph">
+<p><em>[Note: In Scheduled Execution, Clocks are neither activated nor deactivated by the importer using <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>.</em>
+<em>Instead: The activation of a clock requires the importer to call <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.</em>
+<em>For <a href="#triggered"><code>triggered</code></a> <a href="#outputClock">output Clocks</a>, the importer calls <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> during <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.]</em></p>
+</div>
 </div>
 <div class="sect4">
 <h5 id="min-max-violations">2.2.6.3. Handling min/max Range Violations</h5>
@@ -2681,10 +2686,10 @@ This allows different use cases to be implemented with different semantics.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>communicating exactly which specific event happens and</p>
+<p>communicating exactly which specific event happens (using <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in ME and CS or <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in SE) and</p>
 </li>
 <li>
-<p>exactly at which time instant, independent from continuous time specified by the arguments of <code>fmi3SetTime</code> or <code>fmi3DoStep</code>.</p>
+<p>exactly at which time instant, independent from continuous time specified by the arguments of <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> or <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
 </li>
 </ol>
 </div>
@@ -3860,6 +3865,10 @@ The inner level does not exist for scalar variables.</p>
 </ul>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>In Scheduled Execution, all variables are time-discrete.
+Therefore, calling <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> is not allowed in Scheduled Execution.</p>
 </div>
 <div class="paragraph">
 <p><em>[ Example:</em><br>
