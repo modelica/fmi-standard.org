@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version c21a954,</span>
+<span id="revnumber">version 6918d08,</span>
 <span id="revdate">2021-11-24</span>
 </div>
 <div id="toc" class="toc2">
@@ -2800,15 +2800,15 @@ The importer calls <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to inqu
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
 <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
 <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>,
-<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in both <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if and only if this Clock ticked using <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a></p></td>
+<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in both <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if and only if this Clock ticked</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">simulation of the behavior of a control algorithm with variable execution time, generation of pulse sequences</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="countdown"></a><code>countdown</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
 <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
-<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, in every <a href="#EventMode"><strong>Event Mode</strong></a>, and in <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
-In Scheduled Execution the FMU has to inform the importer by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that the Clock is about to tick using <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a></p></td>
+<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, in every <a href="#EventMode"><strong>Event Mode</strong></a> and in <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
+In Scheduled Execution the FMU has to inform the importer by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> that the Clock is about to tick using <a href="#clockHandlingRequested"><code>clockHandlingRequested == fmi3True</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">time-delayed actions after an event, for example, ignition signal some time after specific crank shaft angle</p></td>
 </tr>
 <tr>
@@ -2816,14 +2816,13 @@ In Scheduled Execution the FMU has to inform the importer by calling <a href="#f
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#input"><code>input</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#triggered"><code>triggered</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
-<a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
-argument <a href="#clocksTicked"><code>clocksTicked</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a></p></td>
+<a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">triggered by a hardware interrupt of an embedded system, e.g. a control algorithm, triggered by a crankshaft angle</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#output"><code>output</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#triggered"><code>triggered</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetClock"><code>fmi3GetClock</code></a> in both <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>, and argument <a href="#clocksTicked"><code>clocksTicked</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetClock"><code>fmi3GetClock</code></a> in both <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>, argument <a href="#clockHandlingRequested"><code>clockHandlingRequested</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">crankshaft angle sensor ticking several times per revolution</p></td>
 </tr>
 </tbody>
@@ -2962,7 +2961,7 @@ Must be retrieved in <a href="#EventMode"><strong>Event Mode</strong></a> or <a 
 <dl>
 <dt class="hdlist1">Countdown aperiodic Clock</dt>
 <dd>
-<p>is a time-based Clock whose next interval is not yet known right after the Clock just ticked, forcing the importer to call <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in every <a href="#EventMode"><strong>Event Mode</strong></a> and in <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> if <a href="#clocksTicked"><code>clocksTicked</code></a> == <code>fmi3True</code> in <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
+<p>is a time-based Clock whose next interval is not yet known right after the Clock just ticked, forcing the importer to call <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in every <a href="#EventMode"><strong>Event Mode</strong></a> and in <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> if <a href="#clockHandlingRequested"><code>clockHandlingRequested</code></a> == <code>fmi3True</code> in <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
 The return argument <a href="#qualifier"><code>qualifier</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> is used to indicate if the next interval is already known.</p>
 <div class="paragraph">
 <p>The next Clock tick at time instant \(t_i\) is defined as:<br>
@@ -2985,7 +2984,7 @@ Must be retrieved in <a href="#InitializationMode"><strong>Initialization Mode</
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{interval, i} \geq 0, \qquad i = 1,2,3,{...}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from the event time at which the argument <a href="#qualifier"><code>qualifier == fmi3IntervalChanged</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> to the next Clock tick.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from the event time or the point in time when <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> is called (see <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a>) at which the argument <a href="#qualifier"><code>qualifier</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> returns <code>fmi3IntervalChanged</code> to the next Clock tick.</p></td>
 </tr>
 </tbody>
 </table>
@@ -3079,11 +3078,10 @@ To retrieve this information the importer calls <a href="#fmi3GetInterval"><code
 </div>
 <div class="paragraph">
 <p>The FMU may request to schedule another model partition even while currently a model partition is being executed.
-<a href="#countdown"><code>countdown</code></a> Clocks can tick at any time during the execution of any model partition.
-The FMU signals their ticking by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with argument <a href="#clocksTicked"><code>clocksTicked</code></a> == <code>fmi3True</code>.
-The importer calls <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> for all countdown Clocks.
-If a new interval is provided, the importer initiates the scheduling of the associated model partitions with the returned <a href="#interval"><code>interval</code></a>.
-<a href="#qualifier"><code>qualifier</code></a> == <code>fmi3IntervalChanged</code> indicates that the corresponding Clock has to be scheduled.</p>
+A new interval for a <a href="#countdown"><code>countdown</code></a> Clock can be provided at any time during the execution of any model partition.
+The FMU signals that a <a href="#countdown"><code>countdown</code></a> Clock is about to tick by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with argument <a href="#clockHandlingRequested"><code>clockHandlingRequested</code></a> == <code>fmi3True</code>.
+The importer calls <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> for all <a href="#countdown"><code>countdown</code></a> Clocks.
+If a new <a href="#countdown-aperiodic-clock"><code>interval</code></a> \(\mathbf{T}_{interval, i}\) is provided, i.e. return argument <a href="#qualifier"><code>qualifier</code></a> == <code>fmi3IntervalChanged</code>, the importer initiates the scheduling of the associated model partitions regarding the delay of the returned interval.</p>
 </div>
 <div class="paragraph">
 <p>In case more than one Clock ticks at the same time instant, the scheduler needs a priority to define the activation sequence of the associated model partitions.
@@ -3191,6 +3189,10 @@ The values of the arguments <code>interval</code>, <code>intervalCounter</code>,
 <li>
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the <code>Clock</code> variables.</p>
 </li>
+</ul>
+</div>
+<div id="intervals" class="ulist">
+<ul>
 <li>
 <p><code>intervals</code> is an array of size <code>nIntervals</code> to retrieve the Clock intervals.</p>
 </li>
@@ -3217,14 +3219,15 @@ The values of the arguments <code>interval</code>, <code>intervalCounter</code>,
 <div class="ulist">
 <ul>
 <li>
-<p><code>fmi3IntervalNotYetKnown</code> is returned for <a href="#countdown-aperiodic-clock">countdown aperiodic Clock</a> for which the next interval is not yet known. The importer must query the next interval at each <a href="#EventMode"><strong>Event Mode</strong></a> for all <a href="#countdown-aperiodic-clock">countdown aperiodic Clock</a> because the next interval may change at any <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
+<p><code>fmi3IntervalNotYetKnown</code> is returned for a <a href="#countdown-aperiodic-clock">countdown aperiodic Clock</a> for which the next interval is not yet known.
+The importer must query the next interval at each <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> if <a href="#clockHandlingRequested"><code>clockHandlingRequested == fmi3True</code></a> in <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, respectively, for all <a href="#countdown-aperiodic-clock">countdown aperiodic Clocks</a> because the next interval may change at any <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</p>
 </li>
 <li>
 <p><code>fmi3IntervalUnchanged</code> is returned if a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> already returned a value which has not changed since.</p>
 </li>
 <li>
 <p><code>fmi3IntervalChanged</code> is returned to indicate that the value for the interval has changed for this <a href="#Clock">Clock</a>.
-The new <a href="#Clock">Clock</a> interval is relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
+The new <a href="#Clock">Clock</a> interval is relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> in contrast to the interval of a periodic <a href="#Clock">Clock</a>, where the interval is defined as the time between consecutive <a href="#Clock">Clock</a> ticks.</p>
 </li>
 </ul>
 </div>
@@ -3908,7 +3911,7 @@ State-machine states specific to a single interface type will be described in th
 <div class="content">
 <img src="images/state-machines-common-states.svg" alt="state machines common states" width="80%">
 </div>
-<div class="title">Figure 6. Common calling sequence for C functions of common states for all three FMI types.</div>
+<div class="title">Figure 6. Common calling sequence for C functions of common states for at least two of the interface types.</div>
 </div>
 <div class="paragraph">
 <p>The state machine is given here as UML 2.0 state machine.
@@ -5162,13 +5165,10 @@ This state must not be entered, if the FMU contains no <a href="#tunable"><code>
 <p><em><a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> enables the same input approximation that was possible in FMI 2.0 with <code>fmi2SetInputDerivatives</code>, by evaluation of the approximation polynomial by the importer and not within the FMU as in FMI 2.0</em></p>
 </li>
 <li>
-<p><em>FMUs can inform the importer about an event, which occurs during an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> in case of CS (see <a href="#fmi-for-co-simulation">Section 4</a>).</em></p>
-</li>
-<li>
 <p><em>The Co-Simulation algorithm can request an <a href="#early-return">early return</a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, because of an event between communication points (see <a href="#early-return">Section 4.1.2</a>).</em></p>
 </li>
 <li>
-<p><em>A model partition of a Scheduled Execution FMU calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to signal clock activations with <code>clocksTicked == fmi3True</code>.</em></p>
+<p><em>A model partition of a Scheduled Execution FMU calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to signal that a <a href="#triggered"><code>triggered output</code></a> <a href="#Clock">Clock</a> ticked or a new interval for a <a href="#countdown"><code>countdown</code></a> <a href="#Clock">Clock</a> is provided with <a href="#clockHandlingRequested"><code>clockHandlingRequested == fmi3True</code></a>.</em></p>
 </li>
 </ul>
 </div>
@@ -5219,7 +5219,7 @@ The co-simulation algorithm signals the support for <a href="#IntermediateUpdate
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3CallbackIntermediateUpdate) (
     fmi3InstanceEnvironment instanceEnvironment,
     fmi3Float64  intermediateUpdateTime,
-    fmi3Boolean  clocksTicked,
+    fmi3Boolean  clockHandlingRequested,
     fmi3Boolean  intermediateVariableSetRequested,
     fmi3Boolean  intermediateVariableGetAllowed,
     fmi3Boolean  intermediateStepFinished,
@@ -5235,16 +5235,17 @@ The co-simulation algorithm signals the support for <a href="#IntermediateUpdate
 If an event happens or an <a href="#outputClock"><code>output Clock</code></a> ticks, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the time of event or <a href="#outputClock"><code>output Clock</code></a> tick.
 In Co-Simulation, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is restricted by the arguments to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as follows:<br>
 <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> \(\leq\) <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> \(\leq\) (<a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>).<br>
-The FMU must not call the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <code>intermediateStepFinished == fmi3True</code>.
-In Scheduled Execution the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> should be ignored since in this case the simulation algorithm controls the time and not the FMU.</p>
+The FMU must not call the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <code>intermediateStepFinished == fmi3True</code>.<br>
+In Scheduled Execution the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is used as base for the argument <a href="#intervals"><code>intervals</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> if <a href="#clockHandlingRequested"><code>clockHandlingRequested == fmi3True</code></a>.
+<em>[It is up to the FMU if the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is based on wall-clock time (e.g. in real-time mode) or if this is just returning the last <a href="#activationTime"><code>activationTime</code></a> of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> because it can adjust the <a href="#intervals"><code>intervals</code></a> returned by <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> to properly declare the next clock activation.]</em></p>
 </li>
 </ul>
 </div>
-<div id="clocksTicked" class="ulist">
+<div id="clockHandlingRequested" class="ulist">
 <ul>
 <li>
-<p>The <a href="#clocksTicked"><code>clocksTicked</code></a> parameter is only used in Scheduled Execution and is ignored in Co-Simulation.
-When <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a>, it means that <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function must be called for gathering all <a href="#Clock">Clock</a> related information about ticking <a href="#outputClock">output Clocks</a>, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> must be called for all <a href="#countdown"><code>countdown</code></a> <a href="#Clock">Clocks</a> and then activate the respective model partitions accordingly.</p>
+<p>The <a href="#clockHandlingRequested"><code>clockHandlingRequested</code></a> parameter is only used in Scheduled Execution and is ignored in Co-Simulation.
+When <a href="#clockHandlingRequested"><code>clockHandlingRequested == fmi3True</code></a>, it means that <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> must be called for gathering all <a href="#Clock">Clock</a> related information about ticking <a href="#outputClock">output Clocks</a> and <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> must be called for all <a href="#countdown"><code>countdown</code></a> <a href="#Clock">Clocks</a> whose associated model partitions have to be scheduled afterwards if a new interval is provided.</p>
 </li>
 </ul>
 </div>
@@ -5365,7 +5366,7 @@ In Co-Simulation, <a href="#discrete"><code>discrete</code></a> <a href="#input"
 <dt class="hdlist1">Function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
 <dd>
 <p>The scheduling algorithm uses <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to determine which clock is active.<br>
-<em>[For efficiency, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> should only be called if <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a>.]</em><br>
+<em>[For efficiency, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> should only be called if <a href="#clockHandlingRequested"><code>clockHandlingRequested == fmi3True</code></a>.]</em><br>
 Depending on the clock activation state, the scheduling algorithm can call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> for variables associated with the corresponding <a href="#Clock">Clock</a>.
 For an <a href="#outputClock"><code>output Clock</code></a> only the first call of <code>fmi3GetClock</code> for a specific activation of this <a href="#Clock">Clock</a> signals <code>fmi3ClockActive</code>.
 The FMU sets the reported activation state immediately back to <code>fmi3ClockInactive</code> for following <code>fmi3GetClock</code> calls for that <a href="#Clock">Clock</a> until this <a href="#outputClock"><code>output Clock</code></a> is activated again.</p>
@@ -6800,7 +6801,7 @@ Model Exchange: No restrictions on value changes (see <a href="#smoothness">Sect
 <p>The default is <a href="#continuous"><code>continuous</code></a> for variables of type <code>&lt;Float32&gt;</code> and <code>&lt;Float64&gt;</code>, and <a href="#discrete"><code>discrete</code></a> for all other types.</p>
 </div>
 <div class="paragraph">
-<p>For variables of type <code>Clock</code> and <a href="#clocked-variable"><code>clocked variables</code></a> the <a href="#variability"><code>variability</code></a> is always <a href="#discrete"><code>discrete</code></a>.</p>
+<p>For variables of type <code>Clock</code> and <a href="#clocked-variable"><code>clocked variables</code></a> the <a href="#variability"><code>variability</code></a> is always <a href="#discrete"><code>discrete</code></a> or <a href="#tunable"><code>tunable</code></a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Note that the information about continuous <a href="#state"><code>states</code></a> is defined with elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> in <code>&lt;ModelStructure&gt;</code>.]</em></p>
@@ -11218,9 +11219,23 @@ The <a href="#importer">importer</a> is providing lock/unlock functions to the F
 <div class="sect3">
 <h4 id="preemption-support">5.1.1. Preemption Support</h4>
 <div class="paragraph">
-<p>In Scheduled Execution the importer has to ensure that model partitions are scheduled according to their priorities (refer to <a href="#scheduled-execution">Section 2.2.9.4</a>).
-If a model partition of lower <a href="#priority"><code>priority</code></a> is executed when a model partition of higher priority is activated the scheduler must ensure that the execution of the latter one is not delayed and causing violations of timing constraints.
-<em>[On a real-time simulator a violation of a timing constraint usually results in an overrun exception i.e. a model partition is supposed to be executed when an instance of the same model partition has not yet finished its execution.]</em></p>
+<p>For real-time applications the simulation time equals the real wall clock time, thus each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> computation step has to be finished in real-time within its current period time length (computation time is not only defined by the runtime of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> but also by the time for setting and getting variables and related operations).
+Usually a preemptive scheduling of the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls is required to respect this constraint.</p>
+</div>
+<div class="paragraph">
+<p>The FMU&#8217;s code has to be prepared for being able to correctly handle preemptive calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> and <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a>.
+In general for Scheduled Execution this requires a secured internal and external access to global states and variable values to ensure the correct handling of the preemption of model partition computations.
+<em>[For <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in particular a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended.]</em>
+It is also required that the FMU reports the active state of an <a href="#outputClock"><code>output Clock</code></a> only with the first call of <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> for a specific activation of this <a href="#Clock">Clock</a> and sets the reported activation state immediately back to <code>false</code> for the following <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> calls for that <a href="#Clock">Clock</a> until this <a href="#outputClock"><code>output Clock</code></a> is internally activated again.
+Similarly for <a href="#countdown"><code>countdown Clocks</code></a> a call to <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> has to ensure that the interval qualifier of the <a href="#Clock">Clock</a> is reset to <a href="#fmi3GetIntervalDecimal"><code>fmi3IntervalUnchanged</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>If a preemptive multitasking regime is intended, an individual task (or thread&#8201;&#8212;&#8201;task and thread are used synonymously here) for each model partition (associated to an <a href="#inputClock"><code>input Clock</code></a>) has to be created.
+The task for computing each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> is created and controlled by the simulation algorithm, not by the FMU.
+So the FMU exporting tool does not need to take care for that (except for preparing its code to support preemption).</p>
+</div>
+<div class="paragraph">
+<p><em>[If only one single model partition is available via the interface of an FMU, preemptive calls of the related <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function are possible by default since there are no external cross dependencies within one model partition between communication points.]</em></p>
 </div>
 <div class="paragraph">
 <p>Preemption support means that the scheduler can immediately interrupt the current execution of a model partition in order to execute a model partition of higher priority.
@@ -11575,14 +11590,14 @@ By evaluating the returned values <a href="#qualifier"><code>qualifier</code></a
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void CallbackIntermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
-    fmi3Float64  intermediateUpdateTime, fmi3Boolean  clocksTicked,
+    fmi3Float64  intermediateUpdateTime, fmi3Boolean  clockHandlingRequested,
     fmi3Boolean  intermediateVariableSetRequested, fmi3Boolean  intermediateVariableGetAllowed,
     fmi3Boolean  intermediateStepFinished, fmi3Boolean  canReturnEarly,
     fmi3Boolean* earlyReturnRequested, fmi3Float64* earlyReturnTime) {
 
     fmi3Float64 interval[] = { 0.0 };
     fmi3IntervalQualifier intervalQualifier[] = { fmi3IntervalNotYetKnown };
-    if (clocksTicked == fmi3True) {
+    if (clockHandlingRequested == fmi3True) {
         // ask FMU if countdown clock is about to tick
         const fmi3ValueReference aperiodicClockReferences[] = { 6 };
         fmi3GetIntervalDecimal(fmu, aperiodicClockReferences, 1, interval, intervalQualifier, 1);
@@ -11642,8 +11657,8 @@ By evaluating the returned values <a href="#qualifier"><code>qualifier</code></a
         inst-&gt;CountdownClockQualifier = fmi3IntervalChanged;
         inst-&gt;CountdownClockInterval = 0.0;
         // inform simulation algorithm that the countdown clock has ticked
-        fmi3Boolean clocksTicked = fmi3True;
-        inst-&gt;callbackIntermediateUpdate(inst-&gt;instanceEnvironment, activationTime, clocksTicked,
+        fmi3Boolean clockHandlingRequested = fmi3True;
+        inst-&gt;callbackIntermediateUpdate(inst-&gt;instanceEnvironment, activationTime, clockHandlingRequested,
             fmi3False, fmi3False, fmi3False, fmi3False, NULL, NULL);
     }
     fmi3Boolean conditionForOutputClockMet = (inst-&gt;AIn2 &gt; 42.0);
@@ -11651,8 +11666,8 @@ By evaluating the returned values <a href="#qualifier"><code>qualifier</code></a
         // outputClock ticks
         inst-&gt;OutputClockTicked = fmi3ClockActive;
         // inform simulation algorithm that output clock has ticked
-        fmi3Boolean clocksTicked = fmi3True;
-        inst-&gt;callbackIntermediateUpdate(inst-&gt;instanceEnvironment, activationTime, clocksTicked,
+        fmi3Boolean clockHandlingRequested = fmi3True;
+        inst-&gt;callbackIntermediateUpdate(inst-&gt;instanceEnvironment, activationTime, clockHandlingRequested,
             fmi3False, fmi3False, fmi3False, fmi3False, NULL, NULL);
     }
     inst-&gt;AOut = inst-&gt;AIn1 + inst-&gt;AIn2;
