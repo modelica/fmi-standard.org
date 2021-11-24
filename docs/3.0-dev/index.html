@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 1da3a76,</span>
-<span id="revdate">2021-11-21</span>
+<span id="revnumber">version c21a954,</span>
+<span id="revdate">2021-11-24</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -811,8 +811,7 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel2">
 <li><a href="#concepts-scheduled-execution">5.1. Concepts</a>
 <ul class="sectlevel3">
-<li><a href="#concepts-timing-scheduled-execution">5.1.1. Timing Concepts and Clocks</a></li>
-<li><a href="#preemption-support">5.1.2. Preemption Support</a></li>
+<li><a href="#preemption-support">5.1.1. Preemption Support</a></li>
 </ul>
 </li>
 <li><a href="#state-machine-scheduled-execution">5.2. State Machine for Scheduled Execution</a>
@@ -907,7 +906,7 @@ Concrete features to support vECU export are:</p>
 <p>introduction of structural parameters that allow description and changing of array sizes, even during runtime to support advanced online calibration of control code, and</p>
 </li>
 <li>
-<p>addition of the new interface type "Scheduled Execution" (see <a href="#fmi-for-scheduled-execution">Section 5</a>) that allows activation of individual model partitions (or tasks) by an external scheduler, e.g. on real-time platforms.</p>
+<p>addition of the new interface type "Scheduled Execution" (see <a href="#fmi-for-scheduled-execution">Section 5</a>) that allows activation of individual model partitions by an external scheduler, e.g. on real-time platforms.</p>
 </li>
 </ul>
 </div>
@@ -1038,12 +1037,9 @@ That integration algorithm of the importing tool, usually a DAE solver, is respo
 <div class="sect3">
 <h4 id="_fmi_for_scheduled_execution_se">1.2.3. FMI for Scheduled Execution (SE)</h4>
 <div class="paragraph">
-<p>The Scheduled Execution interface exposes individual model partitions (e.g. tasks of a control algorithm), to be called by a scheduler that acts as external scheduler.
-The scheduler is responsible for advancing the overall simulation time, triggering of time-based and triggered <a href="#Clock">Clocks</a> for all exposed model partitions of a set of FMUs, and handling events (e.g. clock ticks) signaled by the FMUs.</p>
-</div>
-<div class="paragraph">
-<p>In many ways, the Scheduled Execution interface is the equivalent of the Model Exchange interface: the first externalizes a scheduling algorithm usually found in a controller algorithm and the second interface externalizes the ODE solver.
-(See <a href="#fmi-for-scheduled-execution">Section 5</a>.)</p>
+<p>The Scheduled Execution interface exposes individual <a href="#model-partition">model partitions</a> for an FMU.
+A scheduler provided by the <a href="#importer">importer</a> can thus control the execution of each model partition separately.
+In some ways the Scheduled Execution interface has similarities to the Model Exchange interface: the first externalizes a scheduling algorithm usually found in a controller algorithm (see <a href="#fmi-for-scheduled-execution">Section 5</a>) and the second interface externalizes the ODE solver.</p>
 </div>
 <div id="figure-scheduled-execution-data-flow" class="imageblock text-center">
 <div class="content">
@@ -2023,7 +2019,7 @@ This function call is allowed always and in all interface types.</p>
 Depending on the instantiated FMI type, the importer is restricted in what functions it is allowed to call in order to drive the simulation.</p>
 </div>
 <div class="paragraph">
-<p>In Model Exchange, time is under the sole control of the importer and its integration algorithm.
+<p>In Model Exchange, time is under the sole control of the <a href="#importer">importer</a> and its integration algorithm.
 The model itself receives the current time to be used in its computation with <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>.
 In fact, time is not necessarily always advancing as solvers might need to jump back and forth in time to localize events using zero-crossings of <a href="#eventIndicator">event indicators</a>.</p>
 </div>
@@ -2035,9 +2031,25 @@ The FMU may use <a href="#earlyReturn"><code>earlyReturn</code></a> argument of 
 The output argument <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> allows the FMU to signal the importer its current internal time.</p>
 </div>
 <div class="paragraph">
-<p>In Scheduled Execution, time has a more discrete form.
-The scheduler of the importer activates specific tasks according to the time of the importer.
+<p>In Scheduled Execution just like in Model Exchange, time is under the sole control of the importer i.e. its scheduler.
+By scheduling the exposed <a href="#model-partition">model partitions</a> of an FMU and executing them for dedicated points in time it is the scheduler that defines how time progresses.
+For FMUs these points in time are <a href="#event">events</a> defined by time-based or triggered <a href="#Clock">Clocks</a> for all exposed model partitions of a set of FMUs, or clock ticks signaled by the FMUs.
 The time itself is communicated to the FMU as <a href="#activationTime"><code>activationTime</code></a> argument of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.</p>
+</div>
+<div class="paragraph">
+<p><em>[Examples for Scheduled Execution:</em></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>A simple scheduler calls the model partitions of periods 5ms and 10ms of an FMU in a loop.</em>
+<em>The latter one is activated only every second loop iteration.</em>
+<em>Thus the time of the simulation advances discretely by 5ms in every step of the loop.</em></p>
+</li>
+<li>
+<p><em>On a real-time simulator the scheduler activates the model partitions of the same example whenever the wall clock&#8217;s time has progressed for 5ms or 10ms respectively.]</em></p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect3">
@@ -2726,7 +2738,7 @@ While the importer is the source of the actual Clock activations, the timing of 
 </div>
 <div id="outputClock" class="paragraph">
 <p>is a variable of type Clock with <a href="#causality"><code>causality</code></a> == <a href="#output"><code>output</code></a>.
-The attribute <a href="#interval"><code>interval</code></a> must be <a href="#triggered"><code>triggered</code></a> for output Clocks.
+The attribute <a href="#interval"><code>interval</code></a> must be <a href="#triggered"><code>triggered</code></a> for <a href="#outputClock">output Clocks</a>.
 The importer calls <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to inquire the clock activation state.</p>
 </div>
 <table id="table-overview-clocks" class="tableblock frame-all grid-all stretch">
@@ -2993,8 +3005,8 @@ Must be retrieved in <a href="#InitializationMode"><strong>Initialization Mode</
 </dl>
 </div>
 <div class="paragraph">
-<p><em>[Output Clocks are intended to enable an FMU to provide a trigger to the outside world, e.g. to a <a href="#triggered"><code>triggered input Clock</code></a> of another FMU.</em>
-<em>Note, that if intended to activate model partitions or a Clock of the same FMU calling <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> for a <a href="#countdown"><code>countdown Clock</code></a> and evaluating the <a href="#qualifier"><code>qualifier</code></a> is recommended.</em>
+<p><em>[<a href="#outputClock">Output Clocks</a> are intended to enable an FMU to provide a trigger to the outside world, e.g. to a <a href="#triggered">triggered input Clock</a> of another FMU.</em>
+<em>Note, that if intended to activate model partitions or a Clock of the same FMU calling <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> for a <a href="#countdown">countdown Clock</a> and evaluating the <a href="#qualifier"><code>qualifier</code></a> is recommended.</em>
 <em>An example is provided in <a href="#example-scheduled-execution">Section 5.3</a>.]</em></p>
 </div>
 </div>
@@ -3075,7 +3087,8 @@ If a new interval is provided, the importer initiates the scheduling of the asso
 </div>
 <div class="paragraph">
 <p>In case more than one Clock ticks at the same time instant, the scheduler needs a priority to define the activation sequence of the associated model partitions.
-This ordering is defined by the <a href="#priority"><code>priority</code></a> attributes of the Clock.</p>
+This ordering is defined by the <a href="#priority"><code>priority</code></a> attributes of the Clock.
+For Scheduled Execution this attribute is mandatory for every Clock.</p>
 </div>
 <div class="paragraph">
 <p><em>[For real-time computation use cases, the priority information is used also for task preemption configurations.</em>
@@ -4095,7 +4108,7 @@ See <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpda
 </li>
 <li>
 <p>Callback function <a href="#preemption-support">lockPreemption</a> and <a href="#preemption-support">unlockPreemption</a><br>
-See <a href="#preemption-support">Section 5.1.2</a> for details.</p>
+See <a href="#preemption-support">Section 5.1.1</a> for details.</p>
 </li>
 </ul>
 </div>
@@ -4139,7 +4152,7 @@ Additionally, a pointer to the environment is provided (<code>instanceEnvironmen
 </li>
 <li>
 <p><code>categories</code> is an array of <code>nCategories</code> elements.
-The allowed values of <code>categories</code> are defined in the modelDescription.xml via element <a href="#definition-of-log-categories"><code>&lt;LogCategories&gt;</code></a>.</p>
+The allowed values of <code>categories</code> are defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> via element <a href="#definition-of-log-categories"><code>&lt;LogCategories&gt;</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -4863,7 +4876,7 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <p>For <a href="#inputClock"><code>input Clocks</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> is called to set the activation status of <a href="#Clock"><code>Clocks</code></a> to <code>fmi3ClockActive</code> or <code>fmi3ClockInactive</code>.
 During the solution of algebraic loops, the activation condition of triggered input clocks may change and therefore <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> can be called multiple times per super-dense time instant.
 When a Clock is deactivated, the FMU must reset all clocked states of this Clock to the values computed during the last <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> when this Clock was active (\({}^\bullet\mathbf{v}_{\mathit{k}}\)).<br>
-<em>[Rationale: a triggered output Clock \(c\) may depend on some variable \(v\) that is involved in an algebraic loop.</em>
+<em>[Rationale: a triggered <a href="#outputClock">output Clock</a> \(c\) may depend on some variable \(v\) that is involved in an algebraic loop.</em>
 <em>As part of the iterations to solve the algebraic loop, \(v\) acquires a value that activates the Clock.</em>
 <em>If the final (or some intermediate) value of \(v\) no longer activates the Clock, then this Clock must be deactivated by the Importer during the same super-dense time instant.]</em><br>
 The importer can set a Clock to <code>fmi3ClockInactive</code> only if the Clock has the attribute <a href="#canBeDeactivated"><code>canBeDeactivated == true</code></a>.
@@ -5231,7 +5244,7 @@ In Scheduled Execution the <a href="#intermediateUpdateTime"><code>intermediateU
 <ul>
 <li>
 <p>The <a href="#clocksTicked"><code>clocksTicked</code></a> parameter is only used in Scheduled Execution and is ignored in Co-Simulation.
-When <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a>, it means that <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function must be called for gathering all <a href="#Clock">Clock</a> related information about ticking <a href="#outputClock"><code>output clocks</code></a>, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> must be called for all <a href="#countdown"><code>countdown</code></a> <a href="#Clock">Clocks</a> and then activate the respective model partitions accordingly.</p>
+When <a href="#clocksTicked"><code>clocksTicked == fmi3True</code></a>, it means that <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> function must be called for gathering all <a href="#Clock">Clock</a> related information about ticking <a href="#outputClock">output Clocks</a>, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> must be called for all <a href="#countdown"><code>countdown</code></a> <a href="#Clock">Clocks</a> and then activate the respective model partitions accordingly.</p>
 </li>
 </ul>
 </div>
@@ -6335,10 +6348,11 @@ An <code>&lt;Enumeration&gt;</code> element must have at least one <code>&lt;Ite
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>priority</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="priority"></a>
-<a href="#Clock"><code>Clocks</code></a> that have to be activated at the same time instant are ordered according to this attribute.
+This attribute is only considered for <a href="#Clock"><code>Clocks</code></a> in Scheduled Execution that are associated to a <a href="#model-partition">model partitions</a>.
+In Scheduled Execution this attribute is mandatory.
 Smaller values signal higher priorities.
-No ordering is defined for multiple <a href="#Clock"><code>Clocks</code></a> with the same <a href="#priority"><code>priority</code></a>.</p>
-<p class="tableblock">This attribute is only considered in Scheduled Execution.</p></td>
+<a href="#Clock"><code>Clocks</code></a> that have to be activated at the same time instant are ordered according to this attribute.
+For multiple <a href="#Clock"><code>Clocks</code></a> with the same priority the order is undefined.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>interval</code></p></td>
@@ -7631,7 +7645,7 @@ Ordered list of all outputs, in other words, a list of value references where ev
 <em>Usually, it is best to order according to the declaration order in the source model, since then the <a href="#Output"><code>&lt;Output&gt;</code></a> list does not change if the declaration order of <a href="#output"><code>outputs</code></a> in the source model is not changed.</em>
 <em>This is for example, important for linearization, in order that the interpretation of the output vector does not change for a re-exported FMU.]</em>
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns at the current super-dense time instant in Event and in <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> (ME) and at the current communication point (CS and SE).
-Attribute <a href="#dependencies"><code>dependencies</code></a> for <a href="#output"><code>output</code></a> <a href="#Clock"><code>Clocks</code></a> lists all known variables (including input clocks) that contribute to trigger a clock tick for that output clock.
+Attribute <a href="#dependencies"><code>dependencies</code></a> for <a href="#output"><code>output</code></a> <a href="#Clock"><code>Clocks</code></a> lists all known variables (including input clocks) that contribute to trigger a clock tick for that <a href="#outputClock">output Clock</a>.
 Beside the knowns, the <a href="#output"><code>outputs</code></a> also depend on "frozen" variables (= variables which cannot be changed in the current mode) but these "frozen" variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
 The functional dependency is defined as (dependencies of variables that are fixed in Event and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> and at communication points are not shown):<br>
 \({(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{\mathit{output}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{\mathit{tune}})}\)</p></td>
@@ -11167,146 +11181,71 @@ The XML file may have the following content:</p>
 <h2 id="fmi-for-scheduled-execution">5. FMI for Scheduled Execution</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <a href="#fmi-for-co-simulation">Co-Simulation</a> interface provides an indirect control over the computation of model partitions.
-With Scheduled Execution, a simulation algorithm can directly control the time of computation (i.e. scheduling) for such model partitions.</p>
+<p>The Scheduled Execution interface provides support for concurrent computation of <a href="#model-partition">model partitions</a> on a single computational resource (e.g. CPU-core).
+The FMU exposes model partitions defined by its associated Clocks while the <a href="#importer">importer</a> is enabled to explicitly schedule each model partition&#8217;s execution.
+As mentioned in <a href="#advancing-time">Section 2.2.5</a>, it is the importer respectively its scheduler that controls how time is progressing.</p>
 </div>
 <div class="paragraph">
-<p>The Scheduled Execution interface addresses simulation use cases with the following requirements:</p>
+<p>The following use cases and requirements motivate the introduction of this interface type:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>At any time (even for unpredictable events), an event can be signaled to an FMU;</p>
+<p>The scheduler can execute a model partition at any time.
+It can execute model partitions periodically or reacting to an <a href="#event">event</a> e.g. an event of an external I/O or an event sent from an FMU (see below).</p>
 </li>
 <li>
-<p>If multiple FMUs share resources (e.g. control tasks), the time requirements (e.g. execution time, communication deadlines) of all model partitions have to be observed and respected;</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Time requirements may exist due to communication constraints (that are not apparent at FMU simulation level) which have to be fulfilled by the simulation algorithm;</p>
+<p>The scheduler can run model partitions of one FMU together with model partitions of other FMUs or model partitions provided by other sources such as other models or functions in a single process.</p>
 </li>
 <li>
-<p>That requires a global evaluation order and preemption policy for all model partitions of the multiple FMUs</p>
+<p>The scheduler regards <a href="#priority">priorities</a> of the model partitions defined by the FMU.</p>
 </li>
 <li>
-<p>Priority information provided by the FMUs has to be evaluated and merged to an overall priority for available model partitions</p>
-</li>
-</ul>
-</div>
+<p>The Scheduled Execution interface allows the scheduler to preempt the execution of an FMU&#8217;s model partition.
+The <a href="#importer">importer</a> is providing lock/unlock functions to the FMU to secure sections that should not be interrupted (e.g. the exchange of data between two model partitions of the same FMU).</p>
 </li>
 <li>
-<p>Data shall move between the different FMU model partitions for the same or next activation time.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Get/set operations must also be possible for the same activation time for different model partitions between the computation of these model partitions.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>The Scheduled Execution interface provides support for concurrent computation of model partitions (i.e. a support of multiple rates) on a single computational resource (e.g. CPU-core) of an FMU.
-For that a preemptive multitasking regime is intended (cooperative multitasking is not covered by this description).</p>
+<p>The Scheduled Execution interface allows the FMU to send an event to the scheduler while a model partition is executed.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p><em>[A parallel computation of model partitions is not part of the FMI 3.0 API.</em>
-<em>An FMU may still internally use parallel computation on multiple cores, but handling this is (currently) not part of the FMI standard. Such an internal parallel computation is not visible to the simulation algorithm.</em>
-<em>It is a tool vendor specific solution that has ties to the used OS and the co-simulation environment.]</em></p>
+<em>An FMU may still internally use parallel computation on multiple cores, but handling this is (currently) not part of the FMI standard.]</em></p>
 </div>
 <div class="sect2">
 <h3 id="concepts-scheduled-execution">5.1. Concepts</h3>
 <div class="sect3">
-<h4 id="concepts-timing-scheduled-execution">5.1.1. Timing Concepts and Clocks</h4>
+<h4 id="preemption-support">5.1.1. Preemption Support</h4>
 <div class="paragraph">
-<p>The Scheduled Execution interface has a different timing concept compared to FMI for Co-Simulation.
-This is required to handle <a href="#triggered">triggered input Clocks</a> which may tick at a time instant that is unpredictable for the simulation algorithm.
-Typically, hardware I/O or virtual ECU software events belong to this category.</p>
+<p>In Scheduled Execution the importer has to ensure that model partitions are scheduled according to their priorities (refer to <a href="#scheduled-execution">Section 2.2.9.4</a>).
+If a model partition of lower <a href="#priority"><code>priority</code></a> is executed when a model partition of higher priority is activated the scheduler must ensure that the execution of the latter one is not delayed and causing violations of timing constraints.
+<em>[On a real-time simulator a violation of a timing constraint usually results in an overrun exception i.e. a model partition is supposed to be executed when an instance of the same model partition has not yet finished its execution.]</em></p>
 </div>
 <div class="paragraph">
-<p>A simulation algorithm&#8217;s activation of a model partition will invoke the computation of the model partition defined by an <a href="#input">input Clock</a> for the current <a href="#Clock">Clock</a> tick time \(\mathbf{t}_i\).</p>
-</div>
-<div class="paragraph">
-<p>A model partition can only be activated once per activation time point \(\mathbf{t}_i\).</p>
-</div>
-<div class="paragraph">
-<p>During the computation of a model partition of an <a href="#inputClock"><code>input Clock</code></a> the FMU may inform the importer that an <a href="#outputClock"><code>output Clock</code></a> ticked or a <a href="#countdown"><code>countdown Clock</code></a> has to be ticked.
-To do so the FMU switches into <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
-Subsequently it is up to the importer to react on this information.
-I.e. the importer may activate potential sinks (e.g. a model partition of another FMU) connected to this <a href="#outputClock"><code>output Clock</code></a> or it may activate the model partition of the respective <a href="#countdown"><code>countdown Clock</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>More details can be found in <a href="#Clock">Clocks</a>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="preemption-support">5.1.2. Preemption Support</h4>
-<div class="paragraph">
-<p>For real-time applications the simulation time equals the real wall clock time, thus each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> computation step has to be finished in real-time within its current period time length (computation time is not only defined by the runtime of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> but also by the time for setting and getting variables and related operations).
-Usually a preemptive scheduling of the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls is required to respect this constraint.</p>
-</div>
-<div class="paragraph">
-<p>The FMU&#8217;s code has to be prepared for being able to correctly handle preemptive calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> and <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a>.
-In general for Scheduled Execution this requires a secured internal and external access to global states and variable values to ensure the correct handling of the preemption of model partition computations.
-<em>[For <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in particular a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended.]</em>
-It is also required that the FMU reports the active state of an <a href="#outputClock"><code>output Clock</code></a> only with the first call of <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> for a specific activation of this <a href="#Clock">Clock</a> and sets the reported activation state immediately back to <code>false</code> for the following <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> calls for that <a href="#Clock">Clock</a> until this <a href="#outputClock"><code>output Clock</code></a> is internally activated again.
-Similarly for <a href="#countdown"><code>countdown Clocks</code></a> a call to <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> has to ensure that the Clock&#8217;s interval qualifier is reset to <a href="#fmi3GetIntervalDecimal"><code>fmi3IntervalUnchanged</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>If a preemptive multitasking regime is intended, an individual task (or thread&#8201;&#8212;&#8201;task and thread are used synonymously here) for each model partition (associated to an <a href="#inputClock"><code>input Clock</code></a>) has to be created.
-The task for computing each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> is created and controlled by the simulation algorithm, not by the FMU.
-So the FMU exporting tool does not need to take care for that (except for preparing its code to support preemption).</p>
-</div>
-<div class="paragraph">
-<p><em>[If only one single model partition is available via the interface of an FMU, preemptive calls of the related <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function are possible by default since there are no external cross dependencies within one model partition between communication points.]</em></p>
-</div>
-<div class="paragraph">
-<p>Based on the settings defined in the XML for <a href="#inputClock">input Clocks</a> the simulation algorithm calls <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, or <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>.
-Set/get calls for each task are only allowed for variables that are associated to the <a href="#inputClock"><code>input Clock</code></a> associated to that task or - here preemption issues become important - to variables that are associated to no <a href="#Clock">Clock</a>, based on the XML information.</p>
-</div>
-<div class="paragraph">
-<p><em>[The recommendation is to avoid variables associated to no or more than one model partition or <a href="#inputClock">input Clocks</a> as much as possible in the XML.</em>
-<em>Because they also introduce complexity it is recommended to reduce dependencies (defined in XML model structure) between variables located in different model partitions of one FMU, too.]</em></p>
-</div>
-<div class="paragraph">
-<p>The simulation algorithm has no knowledge about the FMU internal communication between the model partitions of a single FMU and does not handle it.</p>
-</div>
-<div class="paragraph">
-<p>The simulation algorithm schedules the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (as well as related <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <code>fmi3Set{VariableType}</code>) calls based on given priorities for <a href="#inputClock">inputClocks</a> defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>Priority (see <a href="#priority"><code>priority</code></a>):</p>
+<p>Preemption support means that the scheduler can immediately interrupt the current execution of a model partition in order to execute a model partition of higher priority.
+The computation of the interrupted model partition is proceeded afterwards.
+So by regarding priorities and supporting preemption the scheduler can ensure that most critical model partitions are never delayed by less important model parts.
+<em>[This is particularly important for real-time simulators as the wall clock time is dictating the time for the next execution.]</em></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Same priority: Model partitions (e.g. tasks) cannot preempt each other.
-Arbitrary evaluation order is possible for model partitions of the same priority.</p>
+<p>Same <a href="#priority"><code>priority</code></a>: The scheduler does not preempt the execution of a model partition in favor of a model partition of the same priority.
+For model partitions with the same priority, it decides on the execution order based on (customer) configurations in the importer.</p>
 </li>
 <li>
-<p>Different priorities: Model partitions of a higher priority preempt partitions of a lower priority as soon as the higher priority partition needs to be computed.</p>
+<p>Different priorities: The scheduler preempts the execution of a model partition of a lower priority as soon as a model partition of higher priority partition needs to be computed.
+<em>[Simply stated: The model partition of higher priority preempts the model partition of lower priority.]</em></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><em>[If multiple tasks are needed to be scheduled for computation at a certain time instant a simulation algorithm must schedule a task of a higher priority always before a task of a lower priority]</em></p>
+<p><em>[An example for scheduling based on priorities and preempting model partitions is given in section <a href="#example-scheduled-execution">Section 5.3</a>.]</em></p>
 </div>
 <div class="paragraph">
-<p>An <a href="#inputClock"><code>input Clock</code></a> can hold fixed or modifiable periods, or be triggered unpredictably.
-Refer to chapter on <a href="#Clock">Clocks</a> for details.</p>
-</div>
-<div class="paragraph">
-<p>Based on the period and priority definitions the exporting tool can restrict the code evaluation order.
-It nevertheless has to secure its code against concurrent evaluation <em>[not against parallel evaluation, as this is not supported for model partitions of an FMU in the interface description of this mode]</em> along the defined priority restrictions.
-Mostly this is required for internal inter-model-partition communication and in general for the joint use of variables that are associated to more than one model partition of the FMU.
-The exporting tool has to consider the effect of <a href="#triggered"><code>triggered</code></a> <a href="#inputClock">'input Clocks'</a> and the influences of computing speed, because the exact occurrence of preemption points cannot be foreseen (within the given priority and period restrictions).</p>
-</div>
-<div class="paragraph">
-<p>To guard certain code parts against preemption the FMU may use the callback functions <a href="#preemption-support">fmi3CallbackLockPreemption</a> and <a href="#preemption-support">fmi3CallbackUnlockPreemption</a> provided by the simulation algorithm when instantiating the FMU via <a href="#fmi3InstantiateScheduledExecution"><code>fmi3InstantiateScheduledExecution</code></a>.</p>
-</div>
-<div class="paragraph">
-<p><em>[Such locks should be used with care and only if needed: Examples are given in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> and <a href="#example-scheduled-execution">Section 5.3</a>.]</em></p>
+<p>It may be important for the FMU to secure particular sections of its code against being preempted.
+Callback functions <a href="#preemption-support"><code>fmi3CallbackLockPreemption</code></a> and <a href="#preemption-support"><code>fmi3CallbackUnlockPreemption</code></a> are provided by the simulation algorithm when instantiating the FMU via <a href="#fmi3InstantiateScheduledExecution"><code>fmi3InstantiateScheduledExecution</code></a> to allow the FMU to signal entering and exiting such code sections.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -11314,25 +11253,87 @@ The exporting tool has to consider the effect of <a href="#triggered"><code>trig
 typedef void (*fmi3CallbackUnlockPreemption) ();</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The FMU&#8217;s code has to be prepared to correctly handle preemption of</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>,</p>
+</li>
+<li>
+<p><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>,</p>
+</li>
+<li>
+<p><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>,</p>
+</li>
+<li>
+<p><a href="#fmi3GetClock"><code>fmi3GetClock</code></a></p>
+</li>
+<li>
+<p>and <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In general this means that the FMU&#8217;s code has to secure access to its global states and variables wherever data inconsistencies due to potential preemptions are anticipated.</p>
+</div>
+<div class="paragraph">
+<p><em>[Note that</em></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>in order to avoid data inconsistencies and safeguard predictable behavior with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended.</em>
+<em>Observe the example below:</em>
+<em>If every variable is assigned uniquely to a model partition it is not necessary to use <a href="#preemption-support"><code>preemption locks</code></a> in the context of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.</em></p>
+</li>
+<li>
+<p><em>for <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> the FMU has to ensure that the active state of an <a href="#outputClock">output Clock</a> is securely reset and cannot be observed twice for the same Clock tick in case this call is preempted.</em>
+<em>An example is given in <a href="#example-scheduled-execution">Section 5.3</a>.</em></p>
+</li>
+<li>
+<p><em>for <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> the FMU has to ensure that the <a href="#countdown">countdown Clock&#8217;s</a> interval qualifier is reset to <a href="#fmi3GetIntervalDecimal"><code>fmi3IntervalUnchanged</code></a> and cannot be observed twice for the same Clock tick in case this call is preempted.</em>
+<em>An example is given in <a href="#example-scheduled-execution">Section 5.3</a>.</em></p>
+</li>
+<li>
+<p><em>depending on their implementation <a href="#preemption-support"><code>fmi3CallbackLockPreemption</code></a> and <a href="#preemption-support"><code>fmi3CallbackUnlockPreemption</code></a> have a strong impact on the simulator&#8217;s OS so their use should be as rare and short as possible.</em>
+<em>So in general it is recommended to reduce dependencies between different model partitions of one FMU by design.</em>
+<em>One may also consider if the code can be preempted by other parts of the same FMU: E.g. a model partition cannot be interrupted if it is the only model partition of the FMU or if it holds the highest priority.</em>
+<em>I such cases no locks are necessary.]</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>[Example to observe why every variable should be assigned uniquely to a model partition via its associated <a href="#Clock">Clock</a>:</em></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>An output variable is changed by two different model partitions.</em>
+<em>The values returned by <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> that is placed after <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> may return the values computed by the other model partition if that model partition has higher priority and preempted the execution meanwhile.</em></p>
+</li>
+<li>
+<p><em>An input variable is used by two different model partitions.</em>
+<em>The variable values of a model partitions of lower priority may have been overwritten by a call to <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> for a model partition of higher priority.]</em></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="state-machine-scheduled-execution">5.2. State Machine for Scheduled Execution</h3>
 <div class="paragraph">
-<p>This section contains the description of the Scheduled Execution interface for a C program.</p>
-</div>
-<div class="paragraph">
-<p>The direct scheduling of model partitions based on <a href="#Clock">Clock</a> ticks requires an additional handling mode for FMUs.
-The FMU signals its support for direct model partition scheduling in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> via the element <code>&lt;fmiModelDescription&gt;&lt;ScheduledExecution&gt;</code>.
+<p>The FMU signals its support for Scheduled Execution in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> via the element <code>&lt;fmiModelDescription&gt;&lt;ScheduledExecution&gt;</code>.
 The simulation algorithm signals to the FMU that it supports and has recognized the <a href="#Clock">Clocks</a> and model partition scheduling capabilities of the FMU by instantiating it as Scheduled Execution.</p>
 </div>
 <div class="paragraph">
 <p>Error, reset or terminate information is a global state of the FMU.
-If e.g. a function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> this is also assumed for all active or preempted model partitions.
-In case of <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> no repetition of the step is possible, the only possible way to go forward is to enter the <a href="#Terminated"><strong>Terminated</strong></a> state and to end or to reset the simulation or - if supported - to set the FMU back to a former state.</p>
+If any function call returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a>, all active or preempted model partitions are in the same state.
+In case of <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> no repetition of the step is possible, the only possible way to continue is to enter the <a href="#Terminated"><strong>Terminated</strong></a> state and to end or to reset the simulation or - if supported by the FMU - to set the FMU back to a previous state.</p>
 </div>
 <div class="paragraph">
-<p>This section summarizes the available states and the allowed function calls in the respective states.</p>
+<p>The state machine in <a href="#figure-scheduled-execution-state-machine">Figure 45</a> defines the allowed calling sequences for FMI for Scheduled Execution.</p>
 </div>
 <div id="figure-scheduled-execution-state-machine" class="imageblock text-center">
 <div class="content">
@@ -11341,9 +11342,9 @@ In case of <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3
 <div class="title">Figure 45. Calling sequence of Scheduled Execution C functions.</div>
 </div>
 <div class="paragraph">
-<p>If the simulation algorithm intends to enter the state <a href="#Terminated"><strong>Terminated</strong></a> it must ensure that all tasks related to model partitions of the FMU have ended.
-Hence if in states <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>, <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>, or <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a> a function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> the simulation algorithm may prematurely end all tasks related to the computation of model partitions of this FMU.
-If in these states a function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> the simulation algorithm may wait until all other tasks of the model partitions of this FMU have ended, but new tasks must not be started.</p>
+<p>If the simulation algorithm intends to enter the state <a href="#Terminated"><strong>Terminated</strong></a>, it must ensure that all computations related to model partitions of the FMU have ended.
+Hence, if in states <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>, <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>, or <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a> a function returns <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>, the simulation algorithm may prematurely end all computations of model partitions of this FMU.
+If in these states a function returns <a href="#fmi3Discard"><code>fmi3Discard</code></a> or <a href="#fmi3Error"><code>fmi3Error</code></a> the simulation algorithm may wait until all other model partitions of this FMU have ended, but new model partitions must not be started.</p>
 </div>
 <div class="paragraph">
 <p>Each state of the state machine corresponds to a certain phase of a simulation.
@@ -11352,9 +11353,9 @@ Common states are defined in <a href="#common-state-machine">Section 2.3</a>, su
 <div class="sect3">
 <h4 id="Initialized-SE">5.2.1. Super State: Initialized</h4>
 <div class="paragraph">
-<p>Special to Scheduled Execution, the following additional constrains apply to the state <a href="#Initialized"><strong>Initialized</strong></a>.
-The FMU enters state <a href="#Terminated"><strong>Terminated</strong></a> only after all other tasks related to the computation of model partitions of this FMU have ended.
-After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no new tasks can be started (e.g. related to <a href="#countdown"><code>countdown Clock</code></a> ticks) and all other function calls for this FMU must return <a href="#fmi3Error"><code>fmi3Error</code></a> until the state <a href="#Terminated"><strong>Terminated</strong></a> is reached.</p>
+<p>The following specific constraints apply to the state <a href="#Initialized"><strong>Initialized</strong></a> of Scheduled Execution.
+The FMU enters state <a href="#Terminated"><strong>Terminated</strong></a> only after all computations of model partitions of this FMU have ended.
+After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called, no new model partitions can be started (e.g. related to <a href="#countdown">countdown Clock</a> ticks) and all other function calls for this FMU must return <a href="#fmi3Error"><code>fmi3Error</code></a> until the state <a href="#Terminated"><strong>Terminated</strong></a> is reached.</p>
 </div>
 </div>
 <div class="sect3">
@@ -11363,7 +11364,21 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 <p>The FMU enters this state when the simulation algorithm calls <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> in state <a href="#InitializationMode"><strong>Initialization Mode</strong></a> or <a href="#fmi3ExitConfigurationMode"><code>fmi3ExitConfigurationMode</code></a> in state <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>.</p>
 </div>
 <div class="paragraph">
-<p>In this state the simulation algorithm can create multiple concurrent tasks related to an FMU. In each task, the simulation algorithm can activate one or multiple model partitions of an FMU based on the defined <a href="#inputClock">input Clocks</a> properties via a <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call for each Clock.</p>
+<p>An FMU of type Schedule Execution exposes its provided <a href="#model-partition">model partitions</a> by defining associated Clocks.
+The FMU&#8217;s <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> contains a <a href="#Clock">Clock</a> for every <a href="#model-partition">model partition</a> of the FMU.
+It is on the scheduler to activate the model partitions by calling <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (as well as related <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <code>fmi3Set{VariableType}</code>) for each associated Clock.
+When activating the model partitions of an FMU the scheduler is expected to respect the Clock properties, e.g. <a href="#intervalDecimal"><code>intervalDecimal</code></a> and <a href="#priority"><code>priority</code></a>.
+Detailed information on Clocks can be found in chapter <a href="#Clock">Clocks</a>.
+By scheduling the exposed <a href="#model-partition">model partitions</a> of an FMU and executing them at dedicated points in time it is the scheduler that defines how time progresses.
+The current time \(\mathbf{t}_i\) is communicated to the FMU as <a href="#activationTime"><code>activationTime</code></a> argument of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.
+<a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> must only be called once for the same Clock and time.
+<em>[The basic differences of the three interface types on how time is advanced is pointed out in <a href="#advancing-time">Section 2.2.5</a>.]</em></p>
+</div>
+<div class="paragraph">
+<p>During the computation of a model partition of an <a href="#inputClock">input Clock</a>, the FMU may inform the importer that an <a href="#outputClock"><code>output Clock</code></a> ticked or a <a href="#countdown">countdown Clock</a> has to be ticked.
+To do so the FMU switches into <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
+Subsequently it is up to the importer to react on this information.
+I.e. the importer may activate potential sinks (e.g. a model partition of another FMU) connected to this <a href="#outputClock"><code>output Clock</code></a> or the model partition of the respective <a href="#countdown">countdown Clock</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -11416,53 +11431,37 @@ After <a href="#fmi3Terminate"><code>fmi3Terminate</code></a> has been called no
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a></dt>
 <dd>
-<p>This function can be called before scheduling a model partition for variables assigned to that model partition via its associated <a href="#Clock">Clock</a> and all variables not associated to any <a href="#Clock">Clock</a>.</p>
+<p>This function can be called before scheduling a model partition for variables assigned to that model partition via its associated <a href="#Clock">Clock</a> and all variables not associated with any <a href="#Clock">Clock</a>.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a></dt>
 <dd>
-<p>These functions can be called after the computation of a model partition for variables assigned to that model partition via its associated <a href="#Clock">Clock</a> and all variables not associated to any <a href="#Clock">Clock</a>.</p>
+<p>These functions can be called after the computation of a model partition for variables assigned to that model partition via its associated <a href="#Clock">Clock</a> and all variables not associated with any <a href="#Clock">Clock</a>.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
 <p>Because of real-time constraints, the computational effort has to be predictable for all operations in Scheduled Execution.
 Therefore, all computationally expensive operations to compute a model partition have to be contained within the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function.
-The simulation algorithm can assume that <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> operations are not computationally expensive.
-<em>[It is recommended, to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> in the same task as <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.]</em></p>
+The simulation algorithm can assume that <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> operations are not computationally expensive.</p>
 </div>
 <div class="paragraph">
 <p>The restrictions related to variable <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> defined for <a href="#StepMode"><strong>Step Mode</strong></a> in <a href="#fmi-for-co-simulation"><code>Co-Simulation</code></a> apply.</p>
 </div>
 <div class="paragraph">
-<p>It is not allowed to call <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> functions after <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> functions without an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call in between.</p>
+<p>It is not allowed to call <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> functions after <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> functions without an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call in between.
+<em>[It is recommended, to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> in a sequence.</em>
+<em>The reason is to avoid different interpretations of the caching, since contrary to <a href="#fmi-for-model-exchange"><code>FMI for Model Exchange</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will perform the actual calculation instead of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a>, and therefore, dummy algebraic loops at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> calls as for Model Exchange.]</em></p>
 </div>
 <div class="paragraph">
-<p><em>[The reason is to avoid different interpretations of the caching, since contrary to <a href="#fmi-for-model-exchange"><code>FMI for Model Exchange</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will perform the actual calculation instead of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a>, and therefore, dummy algebraic loops at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> calls as for Model Exchange.</em></p>
-</div>
-<div class="paragraph">
-<p><em>To ensure predictable behavior every variable should be assigned uniquely to a model partition via its associated <a href="#Clock">Clock</a>.</em>
-<em>Observe two examples:</em></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><em>An output variable is written by two different model partitions.</em>
-<em>The values returned by <a href="#get-and-set-variable-values"><code>fmi3Get</code></a> that is placed after <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> may return the values computed by the other model partition if that model partition has higher priority and preempted the task execution meanwhile.</em></p>
-</li>
-<li>
-<p><em>An input variable is read by two different model partitions.</em>
-<em>The variable values of a model partitions of lower priority may have been overwritten by a call to <a href="#get-and-set-variable-values"><code>fmi3Set</code></a> in the context of a task executed for a model partition of higher priority.</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><em>Note that if every variable is assigned uniquely to a model partition it is also not necessary to use <a href="#preemption-support"><code>preemption locks</code></a> in the context of <a href="#get-and-set-variable-values"><code>fmi3Get</code></a> and <a href="#get-and-set-variable-values"><code>fmi3set</code></a>.]</em></p>
+<p>Set/get calls before and after <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> are only allowed for variables that define a reference to the <a href="#inputClock"><code>input Clock</code></a> by the <a href="#clocks"><code>clocks</code></a> attribute or variables that are associated to no <a href="#Clock">Clock</a>.
+<em>[Note, that to avoid data inconsistencies and safeguard predictable behavior with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended.</em>
+<em>Observe the example in <a href="#preemption-support">Section 5.1.1</a>.]</em></p>
 </div>
 <div id="fmi3ActivateModelPartition" class="dlist">
 <dl>
 <dt class="hdlist1">Function <code>fmi3ActivateModelPartition</code></dt>
 <dd>
-<p>Each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call is now associated to the computation of a (publicly disclosed, externally controlled) model partition of the model and therefore to a single defined <a href="#inputClock"><code>input Clock</code></a>.</p>
+<p>Each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call is associated with the computation of an exposed model partition of the FMU and therefore to an <a href="#inputClock"><code>input Clock</code></a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3ActivateModelPartitionTYPE(fmi3Instance instance,
@@ -11480,8 +11479,8 @@ The simulation algorithm can assume that <a href="#get-and-set-variable-values">
 <p><a id="clockReference"></a> <code>clockReference</code>: <a href="#valueReference"><code>valueReference</code></a> of the <a href="#inputClock"><code>input Clock</code></a> associated to the model partition which shall be activated.</p>
 </li>
 <li>
-<p><a id="clockElementIndex"></a> <code>clockElementIndex</code>: The element index of the <a href="#Clock">Clock</a> variable associated to the model partition which shall be activated.
-For a scalar <a href="#Clock">Clock</a> variable this must be 0; for array <a href="#Clock">Clock</a> variables, the element clock is specified using the 1-based element index.
+<p><a id="clockElementIndex"></a> <code>clockElementIndex</code>: The element index of the <a href="#Clock">Clock</a> variable associated with the model partition which shall be activated.
+For a scalar <a href="#Clock">Clock</a> variable the index must be 0; for an array <a href="#Clock">Clock</a> variable, the index is 1-based.
 Using the element index 0 means all elements of the <a href="#Clock">Clock</a> variable.
 (Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.6.1</a>).</p>
 </li>
@@ -11489,22 +11488,20 @@ Using the element index 0 means all elements of the <a href="#Clock">Clock</a> v
 <p><a id="activationTime"></a> <code>activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the assigned <a href="#Clock">Clock</a> tick time \(\mathbf{t}_i\) <em>[typically: simulation (i.e. virtual) time]</em> (which is known to the simulation algorithm).</p>
 <div class="paragraph">
 <p>The importer schedules calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for each FMU.
-Calls are based on ticks of <a href="#inputClock">input Clocks</a>.
-These <a href="#Clock">Clock</a> ticks can be based on <a href="#Clock">Clock</a> ticks from FMU external sources, e.g. <a href="#outputClock"><code>output Clock</code></a> ticks of another FMU.
+These calls are based on ticks of <a href="#inputClock">input Clocks</a>.
 The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function must not be called on <a href="#outputClock">output Clocks</a> of an FMU.</p>
 </div>
 <div class="paragraph">
-<p>This is a different timing concept compared to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> calls for Co-Simulation FMUs or the <a href="#fmi3SetTime"><code>fmi3SetTime</code></a> for Model Exchange FMUs.
-An <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call will compute the results of the model partition defined by <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of the variable that defines a <a href="#Clock">Clock</a> and an element index into that for arrays) for the current <a href="#Clock">Clock</a> tick \(\mathbf{t}_i\).</p>
+<p><em>[Note, that other than <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will compute the results of the model partition for the current <a href="#Clock">Clock</a> tick \(\mathbf{t}_i\).]</em></p>
 </div>
 <div class="paragraph">
-<p>If required, the FMU can internally derive the <a href="#Clock">Clock</a> interval \(\mathbf{T}_\mathit{interval, i}\) based on the last <a href="#Clock">Clock</a> tick time \(\mathbf{t}_\mathit{i-1}\) i.e. last <code>activationTime</code> for this <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).</p>
+<p><em>[If required, the FMU can internally derive the <a href="#Clock">Clock</a> interval \(\mathbf{T}_\mathit{interval, i}\) based on the last <a href="#Clock">Clock</a> tick time \(\mathbf{t}_\mathit{i-1}\) i.e. last <a href="#activationTime"><code>activationTime</code></a> for this <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).]</em></p>
 </div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Consecutive calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#Clock">Clock</a> variable and element index into that for arrays) must have strictly monotonically increasing <code>activationTime</code> \(\mathbf{t}_i\).</p>
+<p>Consecutive calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#Clock">Clock</a> variable and element index into that for arrays) must have strictly monotonically increasing <a href="#activationTime"><code>activationTime</code></a> \(\mathbf{t}_i\).</p>
 </div>
 </dd>
 </dl>
@@ -11514,7 +11511,7 @@ An <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code>
 <dt class="hdlist1">Function <code>fmi3CallbackIntermediateUpdate</code></dt>
 <dd>
 <p><a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> switches the FMU itself into the <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
-The callback may be called from concurrent tasks within <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.</p>
+The callback may be called from several <a href="#model-partition">model partitions</a>.</p>
 </dd>
 <dt class="hdlist1">Functions <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a>, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a></dt>
 <dd>
@@ -11528,80 +11525,80 @@ The callback may be called from concurrent tasks within <a href="#fmi3ActivateMo
 <div class="sect2">
 <h3 id="example-scheduled-execution">5.3. Code Example</h3>
 <div class="paragraph">
-<p>The FMU ThreeInputClocks sketches the usage of the FMI functions.
-The example is given in a mix of pseudo-code and C, in order to keep it small and understandable.
-We consider one FMU with three model partitions.
-Two model partitions associated to two <a href="#periodic-clock">periodic Clocks</a> <code>10msClock</code> and <code>50msClock</code> (periods 10 ms and 50 ms) and one aperiodic <a href="#countdown"><code>countdown clock</code></a> <code>AperiodicClock</code>.</p>
+<p>The FMU <code>ThreeInputClocks</code> sketches the usage of the Scheduled Execution.
+The example consists of one FMU with three model partitions.
+Two model partitions are associated with two <a href="#periodic-clock">periodic Clocks</a> <code>10msClock</code> and <code>50msClock</code> (periods 10 ms and 50 ms) and one is associated with an aperiodic <a href="#countdown">countdown clock</a> <code>AperiodicClock</code>.</p>
 </div>
 <div class="paragraph">
-<p>During the execution of the model partition of <a href="#Clock">Clock</a> <code>10msClock</code> the FMU sets the <a href="#interval"><code>interval</code></a> for <a href="#countdown"><code>countdown clock</code></a> <code>AperiodicClock</code> and calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to invoke the execution of the corresponding model partition.</p>
+<p>During the execution of the model partition of <a href="#Clock">Clock</a> <code>10msClock</code>, the FMU changes the <a href="#interval"><code>interval</code></a> for <a href="#countdown">countdown clock</a> <code>AperiodicClock</code> and calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to inform the importer that the interval has changed. The importer retrieves this interval and activates the corresponding model partition.</p>
 </div>
 <div class="paragraph">
-<p>The function calls <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> are executed in the context of preemptable tasks whose priorities are derived from the respective <a href="#Clock">Clock</a> configurations of the FMU.
-In this example the execution of the task of <a href="#countdown"><code>countdown clock</code></a> <code>AperiodicClock</code> is waiting for the task of <a href="#Clock">Clock</a> <code>10msClock</code> to finish.
-Likewise the task of <code>AperiodicClock</code> is suspended when the task of higher priority is scheduled again.</p>
+<p>In this example, the calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (as well as related <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <code>fmi3Set{VariableType}</code>) for each associated Clock are placed into a task.
+A task can be thought of as a simple interface of the scheduler that allows to connect the FMU interface by implementing a void/void function and set up the task&#8217;s priorities as derived from the respective <a href="#Clock">Clock</a> configurations of the FMU.</p>
 </div>
 <div class="paragraph">
-<p>The example also depicts how a task associated to an even lower prior <a href="#Clock">Clock</a> <code>50msClock</code> is delayed several times by tasks of higher priority.
-Note that the point of time when the task was scheduled is the <code>activationTime</code> of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (&#8230;&#8203;Activate&#8230;&#8203;(<code>clock</code>, <code>activationTime</code>)).</p>
+<p>As a result of the FMU&#8217;s configuration and implementation the following can be observed:
+The task of <a href="#countdown">countdown clock</a> <code>AperiodicClock</code> is waiting for the task of <a href="#Clock">Clock</a> <code>10msClock</code> to finish.
+Likewise the task of <code>AperiodicClock</code> is suspended when the task of higher priority is scheduled again.
+The example also depicts how a task associated with an even lower priority <a href="#Clock">Clock</a> (<code>50msClock</code>) is delayed several times by tasks of higher priority.
+Note that the point in time when the task was scheduled is the <a href="#activationTime"><code>activationTime</code></a> of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (&#8230;&#8203;Activate&#8230;&#8203;(<a href="#inputClock"><code>input Clock</code></a>, <a href="#activationTime"><code>activationTime</code></a>)).</p>
 </div>
 <div id="figure-scs_example" class="imageblock text-center">
 <div class="content">
 <img src="images/se_example.png" alt="se example" width="90%">
 </div>
-<div class="title">Figure 46. Scheduled Execution Example ThreeInputClocks</div>
+<div class="title">Figure 46. Scheduled Execution Example <code>ThreeInputClocks</code></div>
 </div>
 <div class="sect3">
 <h4 id="_simulation_algorithm_implementation">5.3.1. Simulation Algorithm Implementation</h4>
 <div class="paragraph">
-<p>To enable the computation of a Scheduled Execution FMU a simulation algorithm has to provide a task scheduler.
-Depending on the particular configuration the simulation algorithm sets up tasks for every <a href="#inputClock"><code>input Clock</code></a>.
-When executed each task calls <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for its respective <a href="#Clock">Clock</a>.
-The <code>activationTime</code> is provided by the simulation algorithm.
+<p>Depending on the particular configuration the simulation algorithm uses the interface of a scheduler to set up tasks for every <a href="#inputClock"><code>input Clock</code></a>.
 Periodic tasks can be scheduled on initialization of the simulation application.
-Aperiodic tasks are scheduled explicitly during the execution.</p>
+Aperiodic tasks are scheduled explicitly during the execution.
+When executed, each task calls <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (as well as related <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <code>fmi3Set{VariableType}</code>) for each associated Clock.
+The <a href="#activationTime"><code>activationTime</code></a> is provided by the simulation algorithm.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void ExecuteModelPartition10ms() {
-	fmi3SetFloat64(fmu, AInputReferences, 2, AInput, 2);
-	fmi3ActivateModelPartition(fmu, ClockReference10ms, ClockElementIndex, ActivationTime);
-	fmi3GetFloat64(fmu, AOutputReferences, 1, AOutput, 1);
+    fmi3SetFloat64(fmu, AInputReferences, 2, AInput, 2);
+    fmi3ActivateModelPartition(fmu, ClockReference10ms, ClockElementIndex, ActivationTime);
+    fmi3GetFloat64(fmu, AOutputReferences, 1, AOutput, 1);
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The FMU requests to schedule the model partition of <code>AperiodicClock</code>.
 It calls <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to enable the importer to check whether the FMU has defined a new interval for <code>AperiodicClock</code>.
-Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and <a href="#interval"><code>interval</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> the simulation algorithms determines if the respective task has to be scheduled and which delay has to be applied.</p>
+By evaluating the returned values <a href="#qualifier"><code>qualifier</code></a> and <a href="#interval"><code>interval</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> the simulation algorithms determines if the respective task has to be scheduled and which delay has to be applied.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void CallbackIntermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
-	fmi3Float64  intermediateUpdateTime, fmi3Boolean  clocksTicked,
-	fmi3Boolean  intermediateVariableSetRequested, fmi3Boolean  intermediateVariableGetAllowed,
-	fmi3Boolean  intermediateStepFinished, fmi3Boolean  canReturnEarly,
-	fmi3Boolean* earlyReturnRequested, fmi3Float64* earlyReturnTime) {
+    fmi3Float64  intermediateUpdateTime, fmi3Boolean  clocksTicked,
+    fmi3Boolean  intermediateVariableSetRequested, fmi3Boolean  intermediateVariableGetAllowed,
+    fmi3Boolean  intermediateStepFinished, fmi3Boolean  canReturnEarly,
+    fmi3Boolean* earlyReturnRequested, fmi3Float64* earlyReturnTime) {
 
-	fmi3Float64 interval[] = { 0.0 };
-	fmi3IntervalQualifier intervalQualifier[] = { fmi3IntervalNotYetKnown };
-	if (clocksTicked == fmi3True) {
-		// ask FMU if countdown clock is about to tick
-		const fmi3ValueReference aperiodicClockReferences[] = { 6 };
-		fmi3GetIntervalDecimal(fmu, aperiodicClockReferences, 1, interval, intervalQualifier, 1);
-		if (intervalQualifier[0] == fmi3IntervalChanged) {
-			// schedule task for AperiodicClock with a delay
-			ScheduleAperiodicTask(interval[0]);
-		}
-		// ask FMU if output clock has ticked
-		fmi3ValueReference outputClockReferences[] = { 7 };
-		fmi3Boolean clocksActivationState[] = { fmi3ClockInactive };
-		fmi3GetClock(fmu, outputClockReferences, 1, clocksActivationState, 1);
-		if (clocksActivationState[0]) {
-			// schedule some external task
-			ScheduleExternalTask();
-		}
-	}
+    fmi3Float64 interval[] = { 0.0 };
+    fmi3IntervalQualifier intervalQualifier[] = { fmi3IntervalNotYetKnown };
+    if (clocksTicked == fmi3True) {
+        // ask FMU if countdown clock is about to tick
+        const fmi3ValueReference aperiodicClockReferences[] = { 6 };
+        fmi3GetIntervalDecimal(fmu, aperiodicClockReferences, 1, interval, intervalQualifier, 1);
+        if (intervalQualifier[0] == fmi3IntervalChanged) {
+            // schedule task for AperiodicClock with a delay
+            ScheduleAperiodicTask(interval[0]);
+        }
+        // ask FMU if output clock has ticked
+        fmi3ValueReference outputClockReferences[] = { 7 };
+        fmi3Boolean clocksActivationState[] = { fmi3ClockInactive };
+        fmi3GetClock(fmu, outputClockReferences, 1, clocksActivationState, 1);
+        if (clocksActivationState[0]) {
+            // schedule some external task
+            ScheduleExternalTask();
+        }
+    }
 }</code></pre>
 </div>
 </div>
@@ -11609,58 +11606,56 @@ Evaluating the return values <a href="#qualifier"><code>qualifier</code></a> and
 <div class="sect3">
 <h4 id="_fmu_implementation">5.3.2. FMU Implementation</h4>
 <div class="paragraph">
-<p>The FMU implements <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> dispatching for every <a href="#inputClock"><code>input Clock</code></a> so the code might look like this:</p>
+<p>The FMU implements <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> regarding every <a href="#inputClock"><code>input Clock</code></a> so the code might look like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3ActivateModelPartition(fmi3Instance instance, fmi3ValueReference clockReference,
-	size_t clockElementIndex, fmi3Float64 activationTime) {
+    size_t clockElementIndex, fmi3Float64 activationTime) {
 
-	switch (clockReference) {
-	case 5:
-		// Input clock 10msClock
-		activateModelPartition10ms(instance, activationTime);
-		break;
-	case 6:
-		// Input clock AperiodicClock
-		activateModelPartitionAperiodic(instance, activationTime);
-		break;
-	case 8:
-		// Input clock 50msClock
-		activateModelPartition50ms(instance, activationTime);
-		break;
-		// ...
-	}
-	return fmi3OK;
+    switch (clockReference) {
+    case 5:    // Input clock 10msClock
+        activateModelPartition10ms(instance, activationTime);
+        break;
+    case 6:    // Input clock AperiodicClock
+        activateModelPartitionAperiodic(instance, activationTime);
+        break;
+    case 8:    // Input clock 50msClock
+        activateModelPartition50ms(instance, activationTime);
+        break;
+    // ...
+    }
+    return fmi3OK;
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In the context of the task being executed every 10 ms, the FMU initiates the scheduling of a task by setting a new interval to <a href="#countdown"><code>countdown Clock</code></a> <code>AperiodicClock</code> and evoking <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</p>
+<p>In the task being executed every 10 ms, the FMU initiates the scheduling of a task by setting a new interval to <a href="#countdown">countdown Clock</a> <code>AperiodicClock</code> and evoking <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void activateModelPartition10ms(ModelInstance* instance, fmi3Float64 activationTime) {
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void activateModelPartition10ms(fmi3Instance instance, fmi3Float64 activationTime) {
+    ModelInstance * inst = (ModelInstance *) instance;
 
-	fmi3Boolean conditionForCountdownClockMet = (AIn1 &gt; AIn2);
-	if (conditionForCountdownClockMet) {
-		CountdownClockQualifier = fmi3IntervalChanged;
-		CountdownClockInterval = 0.0;
-		// inform simulation algorithm that the countdown clock has ticked
-		fmi3Boolean clocksTicked = fmi3True;
-		instance-&gt;callbackIntermediateUpdate(instance-&gt;instanceEnvironment, activationTime, clocksTicked,
-			fmi3False, fmi3False, fmi3False, fmi3False, NULL, NULL);
-	}
-	fmi3Boolean conditionForOutputClockMet = (AIn2 &gt; 42.0);
-	if (conditionForOutputClockMet) {
-		// outputClock ticks
-		OutputClockTicked = fmi3ClockActive;
-		// inform simulation algorithm that output clock has ticked
-		fmi3Boolean clocksTicked = fmi3True;
-		instance-&gt;callbackIntermediateUpdate(instance-&gt;instanceEnvironment, activationTime, clocksTicked,
-			fmi3False, fmi3False, fmi3False, fmi3False, NULL, NULL);
-	}
-	AOut = AIn1 + AIn2;
+    fmi3Boolean conditionForCountdownClockMet = (inst-&gt;AIn1 &gt; inst-&gt;AIn2);
+    if (conditionForCountdownClockMet) {
+        inst-&gt;CountdownClockQualifier = fmi3IntervalChanged;
+        inst-&gt;CountdownClockInterval = 0.0;
+        // inform simulation algorithm that the countdown clock has ticked
+        fmi3Boolean clocksTicked = fmi3True;
+        inst-&gt;callbackIntermediateUpdate(inst-&gt;instanceEnvironment, activationTime, clocksTicked,
+            fmi3False, fmi3False, fmi3False, fmi3False, NULL, NULL);
+    }
+    fmi3Boolean conditionForOutputClockMet = (inst-&gt;AIn2 &gt; 42.0);
+    if (conditionForOutputClockMet) {
+        // outputClock ticks
+        inst-&gt;OutputClockTicked = fmi3ClockActive;
+        // inform simulation algorithm that output clock has ticked
+        fmi3Boolean clocksTicked = fmi3True;
+        inst-&gt;callbackIntermediateUpdate(inst-&gt;instanceEnvironment, activationTime, clocksTicked,
+            fmi3False, fmi3False, fmi3False, fmi3False, NULL, NULL);
+    }
+    inst-&gt;AOut = inst-&gt;AIn1 + inst-&gt;AIn2;
 }</code></pre>
 </div>
 </div>
@@ -11672,21 +11667,22 @@ In this example it is actually not needed since CallbackIntermediateUpdate is on
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance, const fmi3ValueReference valueReferences[],
-	size_t nValueReferences, fmi3Float64 interval[], fmi3IntervalQualifier qualifier[], size_t nValues) {
+    size_t nValueReferences, fmi3Float64 interval[], fmi3IntervalQualifier qualifier[], size_t nValues) {
+    ModelInstance * inst = (ModelInstance *) instance;
 
-	for (int i = 0; i &lt; nValues; i++) {
-		if (valueReferences[i] == 6) {
+    for (int i = 0; i &lt; nValues; i++) {
+        if (valueReferences[i] == 6) {
             env-&gt;lockPreemption(); // Optional: Preventing preemption is actually not needed here.
-			interval[i] = CountdownClockInterval;
-			qualifier[i] = CountdownClockQualifier;
-			CountdownClockQualifier = fmi3IntervalUnchanged;
+            interval[i] = inst-&gt;CountdownClockInterval;
+            qualifier[i] = inst-&gt;CountdownClockQualifier;
+            inst-&gt;CountdownClockQualifier = fmi3IntervalUnchanged;
             env-&gt;unlockPreemption();
-		}
-		else {
-			qualifier[i] = fmi3IntervalNotYetKnown;
-		}
-	}
-	return fmi3OK;
+        }
+        else {
+            qualifier[i] = fmi3IntervalNotYetKnown;
+        }
+    }
+    return fmi3OK;
 }</code></pre>
 </div>
 </div>
@@ -11698,20 +11694,21 @@ Here it is just as well not needed for the same reason.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetClock(fmi3Instance instance, const fmi3ValueReference valueReferences[],
-	size_t nValueReferences, fmi3Clock values[], size_t nValues) {
+    size_t nValueReferences, fmi3Clock values[], size_t nValues) {
+    ModelInstance * inst = (ModelInstance *) instance;
 
-	for (int i = 0; i &lt; nValues; i++) {
-		if (valueReferences[i] == 7) {
+    for (int i = 0; i &lt; nValues; i++) {
+        if (valueReferences[i] == 7) {
             env-&gt;lockPreemption(); // Optional: Preventing preemption is actually not needed here.
-			values[i] = OutputClockTicked;
-			OutputClockTicked = fmi3ClockInactive;
+            values[i] = inst-&gt;OutputClockTicked;
+            inst-&gt;OutputClockTicked = fmi3ClockInactive;
             env-&gt;unlockPreemption();
-		}
-		else {
-			values[i] = fmi3ClockInactive;
-		}
-	}
-	return fmi3OK;
+        }
+        else {
+            values[i] = fmi3ClockInactive;
+        }
+    }
+    return fmi3OK;
 }</code></pre>
 </div>
 </div>
@@ -11761,8 +11758,8 @@ See also <a href="#header-files-and-naming-of-functions">Section 2.2.1</a>.</p><
 <div class="paragraph">
 <p>The simulation algorithm collects the information about the number and properties of <a href="#Clock"><code>Clocks</code></a> supported by the FMU via analyzing the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> as defined in <a href="#fmi-description-schema">Section 2.4</a>.
 For every <a href="#inputClock"><code>input Clock</code></a> the simulation algorithm defines a task.
-The properties <code>period</code> and <code>priority</code> are defined based on the <a href="#inputClock"><code>input clocks'</code></a> <code>period</code> and <code>priority</code> defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
-The simulation algorithm can read from the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> that <a href="#outputClock"><code>output Clock</code></a> OutClock may tick triggered by <a href="#inputClock"><code>input Clock</code></a> 10msClock and that <a href="#inputClock"><code>input Clock</code></a> AperiodicClock is triggered by OutClock.</p>
+The properties <a href="#intervalDecimal"><code>intervalDecimal</code></a> (or <a href="#intervalCounter"><code>intervalCounter</code></a>) and <a href="#priority"><code>priority</code></a> are defined based on the <a href="#inputClock">input clocks'</a> <a href="#intervalDecimal"><code>intervalDecimal</code></a> (or <a href="#intervalCounter"><code>intervalCounter</code></a>) and <a href="#priority"><code>priority</code></a> defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
+The simulation algorithm can read from the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> that <a href="#outputClock"><code>output Clock</code></a> <code>OutClock</code> may tick triggered by <a href="#inputClock"><code>input Clock</code></a> <code>10msClock</code> and that <a href="#inputClock"><code>input Clock</code></a> <code>AperiodicClock</code> is triggered by <code>OutClock</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -11924,11 +11921,11 @@ For details see <a href="#MS93">[MS93]</a>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Electronic Control Unit (Microprocessor that is used to control a technical system).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>event</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="event"></a><em>event</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Something that occurs instantaneously at a specific time or when a specific condition occurs.
 At an event in Model Exchange, numerical integration is suspended and variables may change their values discontinuously.
 In Co-Simulation, an event may interrupt a <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> to introduce an additional communication point.
-Internal events occur inside the FMU and should be signaled to the environment without any delay (in CS using <a href="#early-return">early return</a>, in SE using <a href="#IntermediateUpdateMode">intermediate update</a>) and can cause event handling and/or the activation of an output clock.
+Internal events occur inside the FMU and should be signaled to the environment without any delay (in CS using <a href="#early-return">early return</a>, in SE using <a href="#IntermediateUpdateMode">intermediate update</a>) and can cause event handling and/or the activation of an <a href="#outputClock">output Clock</a>.
 Input clocks are activated by the environment to inform the FMU about the point in time an event has to be handled by the FMU.
 See also <a href="#state-event">state event</a>, <a href="#step-event">step event</a> and <a href="#time-event">time event</a>.</p></td>
 </tr>
@@ -11991,7 +11988,7 @@ The implementations can be in source or binary form.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#Clock">Clock</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>importer</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="importer"></a><em>importer</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The tool that imports or loads one or more FMUs.
 Also called simulation environment, environment, calling environment, (co-)simulation algorithm, target platform, target environment, integrator (in ME).</p></td>
 </tr>
