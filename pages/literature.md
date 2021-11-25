@@ -6,6 +6,41 @@ layout: default
 
 ## FMI Related Publications
 
+
+### [14th International Modelica Conference 2021](https://2021.international.conference.modelica.org/)
+
+FMI User meeting ([Agenda](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/00_Modelica21_FMI_User_Meeting_Overview.pdf)):
+* [Initial Steps in Deploying and Calibrating Power System Models on a Synchrophasor Data Cloud Platform using FMI](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/01_FMI_Dominion_Model_Calibration_Slides.pdf)
+* [FMI-based simulation workflows based on open source and commercial tools](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/02_FMI-based-simulation-workflows.pdf)
+* [FMI3 development (Status, roadmap, layered standards)](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/04_FMI3_development.pdf)
+* [Model-based development of a traction control unit with SSP and FMI](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/07_MBD-SSP_ModelicaConf-Esen.pdf)
+* [SSP Traceability Demonstrator](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/08_SSPTraceabilitySlides.pdf)
+* [Status and Outlook DCP Standard](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/09_DCP_Status_2021.pdf)
+* [Status and Outlook eFMI Standard](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/10_eFMI-status-and-outlook.pdf)
+
+FMI related conference papers:
+* [The Functional Mock-up Interface 3.0 - New Features Enabling New Applications](https://doi.org/10.3384/ecp2118117)
+* [The FMI 3.0 Standard Interface for Clocked and Scheduled Simulations](https://doi.org/10.3384/ecp2118127)
+* [Engineering Domain Interoperability Using the System Structure and Parameterization (SSP) Standard](https://doi.org/10.3384/ecp2118137)
+* [Modelica, FMI and SSP for LOTAR of Analytical mBSE models: First Implementation and Feedback](https://doi.org/10.3384/ecp2118149)
+* [eFMI: An open standard for physical models in embedded software](https://doi.org/10.3384/ecp2118157)
+* [The Potential of FMI for the Development of Digital Twins for Large Modular Multi-Domain Systems](https://doi.org/10.3384/ecp21181235)
+* [Seismic Hybrid Testing using FMI-based Co-Simulation](https://doi.org/10.3384/ecp21181287)
+* [NeuralFMU: Towards Structural Integration of FMUs into Neural Networks](https://doi.org/10.3384/ecp21181297)
+* [Sensitivity Analysis of a Car Shock Absorber Through a Functional Mock-up Units-Based Modelling Strategy](https://doi.org/10.3384/ecp21181307)
+* [Software Architecture and Implementation of Modelica Buildings Library Coupling for Spawn of EnergyPlus](https://doi.org/10.3384/ecp21181325)
+* [A Cloud-native Implementation of the Simulation as a Service-Concept Based on FMI](https://doi.org/10.3384/ecp21181393)
+* [A Graph-Based Meta-Data Model for DevOps in Simulation-Driven Development and Generation of DCP Configurations](https://doi.org/10.3384/ecp21181411)
+* [Portable runtime environments for Python-based FMUs: Adding Docker support to UniFMU](https://ecp.ep.liu.se/index.php/modelica/article/view/220)
+* [A Portable and Secure Package Format for Executable Simulation Modules based on WebAssembly](https://doi.org/10.3384/ecp21181443)
+* [Parallel Fast: An Efficient Coupling Approach for Co-Simulation with Different Coupling Step Sizes](https://doi.org/10.3384/ecp21181649)
+* [Accurate Robot Simulation for Industrial Manufacturing Processes using FMI and DCP Standards](https://doi.org/10.3384/ecp21181673)
+* [Optimizing life-cycle costs for pumps and powertrains using FMI co-simulation](https://doi.org/10.3384/ecp21181681)
+
+Tutorial:
+* [FMI in the Cloud](https://github.com/t-sommer/fmi-cloud-tutorial)
+
+
 ### [Asian Modelica Conference 2020](https://doi.org/10.3384/ecp202017413)
 * [Introducing the Virtual Systems Interface for Dynamic Coupling of Continuous Time Systems with Discontinuities](http://www.ep.liu.se/ecp/174/001/ecp2020174001.pdf)
 * [Collaborative Development and Simulation of an Aircraft Hydraulic Actuator Model](https://doi.org/10.3384/ecp202017467)
