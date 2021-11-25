@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version c4033ff,</span>
+<span id="revnumber">version a28f1ab,</span>
 <span id="revdate">2021-11-25</span>
 </div>
 <div id="toc" class="toc2">
@@ -959,7 +959,7 @@ New features, like</p>
 <div class="sect2">
 <h3 id="_overview">1.2. Overview</h3>
 <div class="paragraph">
-<p>The Functional Mock-up Interface (FMI) defines a container and an aplication programming interface (API) to exchange dynamic models using a combination of XML files, binaries and C code, distributed as a ZIP archive, the Functional Mock-up Unit (FMU).
+<p>The Functional Mock-up Interface (FMI) defines a container and an application programming interface (API) to exchange dynamic models using a combination of XML files, binaries and C code, distributed as a ZIP archive, the Functional Mock-up Unit (FMU).
 The API is used by a simulation environment, the importer, to create one or more instances of an FMU and to simulate them, typically together with other models.
 The FMI defines three interface types:</p>
 </div>
@@ -987,8 +987,12 @@ In particular:</p>
 <ul>
 <li>
 <p>FMI Application Programming Interface (C)&#8201;&#8212;&#8201;<a href="#general-mechanisms">Section 2.2</a><br>
-All required equations or tool coupling computations are evaluated by calling standardized C functions.
-C is used because it is the most portable programming language today and is the only programming language that can be utilized in all embedded control systems.</p>
+All required equations or tool coupling computations are evaluated by calling standardized C functions from the importer into the FMU.
+The FMU can signal certain events back to the importer using callback functions provided by the importer.
+C is used because it is the most portable programming language today and is the only programming language that can be utilized in all embedded control systems.
+The FMI API does not restrict what operating system services an FMU can use on the platform it runs on.
+However, for maximal portability, any dependency on the target platform should be minimized and operating system services should be accessed only through standard libraries.
+Special run-time requirements should be documented in the appropriate directory inside the <a href="#fmu-distribution">ZIP file</a>.</p>
 </li>
 <li>
 <p>FMI Description Schema (XML)&#8201;&#8212;&#8201;<a href="#fmi-description-schema">Section 2.4</a><br>
@@ -1132,15 +1136,15 @@ Else: <span class="icon"><i class="fa fa-times"></i></span></p></td>
 <div class="sect2">
 <h3 id="_properties_and_guiding_ideas">1.3. Properties and Guiding Ideas</h3>
 <div class="paragraph">
-<p>In this section, properties are listed and some principles are defined that guided the low-level design of the FMI.
-This shall increase self consistency of the FMI functions.
-The listed issues are sorted, starting from high-level properties to low-level implementation issues.</p>
+<p>In this section, properties are listed and some principles are defined that guide the design of the FMI API and XML schema itself (not the content of the FMUs).
+Following these principles shall help increase self consistency of the FMI API functions.
+The listed principles are sorted, starting from high-level properties to low-level implementation issues.</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Expressivity</dt>
 <dd>
-<p>The FMI provides the necessary features to package models of different domains, such as multibody and virtual ECUs, into an FMU.</p>
+<p>The FMI provides the necessary features to package models of different domains, such as multi-body and virtual ECUs, into an FMU.</p>
 </dd>
 <dt class="hdlist1">Stability</dt>
 <dd>
@@ -1159,7 +1163,8 @@ Existing manually coded models can be transformed manually to a model according 
 <p>It is possible to distribute an FMU without knowing the target processor.
 This allows an FMU to run on a PC, a Hardware-in-the-Loop simulation platform or as part of the controller software of an ECU.
 Keeping the FMU independent of the target processor increases the usability of the FMU.
-To be processor independent, the FMU must include its C (or C++) sources.</p>
+To be processor independent, the FMU must include its C (or C++) sources.
+To be maximally portable, FMUs must reduce their dependency on OS services and use these only through standard library calls.</p>
 </dd>
 <dt class="hdlist1">Simulator independence</dt>
 <dd>
@@ -1674,7 +1679,7 @@ An FMI function may change settings of the thread in which it is called (such as
 </li>
 <li>
 <p>The FMI Standard does not provide a runtime platform or portability layer.
-Access to operating system resources and services, such as memory and file system, must be implemented with special care because the availability of such resources and services is not guaranteed.
+Access to operating system resources and services, such as memory, network or file system, must be implemented with special care because the availability of such resources and services is not guaranteed on every target platform and/or simulator.
 If some resource is required by the FMU but is not available, the FMU must log what resource failed and return with error.</p>
 </li>
 </ul>
