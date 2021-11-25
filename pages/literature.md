@@ -12,7 +12,7 @@ layout: default
 FMI User meeting ([Agenda](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/00_Modelica21_FMI_User_Meeting_Overview.pdf)):
 * [Initial Steps in Deploying and Calibrating Power System Models on a Synchrophasor Data Cloud Platform using FMI](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/01_FMI_Dominion_Model_Calibration_Slides.pdf)
 * [FMI-based simulation workflows based on open source and commercial tools](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/02_FMI-based-simulation-workflows.pdf)
-* [FMI3 development (Status, roadmap, layered standards)](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/04_FMI3_development.pdf)
+* [FMI3 development (status, roadmap, layered standards)](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/04_FMI3_development.pdf)
 * [Model-based development of a traction control unit with SSP and FMI](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/07_MBD-SSP_ModelicaConf-Esen.pdf)
 * [SSP Traceability Demonstrator](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/08_SSPTraceabilitySlides.pdf)
 * [Status and Outlook DCP Standard](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/09_DCP_Status_2021.pdf)
