@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version a28f1ab,</span>
-<span id="revdate">2021-11-25</span>
+<span id="revnumber">version b74f5cb,</span>
+<span id="revdate">2021-11-30</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2070,7 +2070,8 @@ All variables are listed in the <a href="#definition-of-model-variables"><code>m
 <p>The attribute <a href="#causality"><code>causality</code></a> defines the direction of the information flow with respect to the FMU (e.g. <a href="#input"><code>input</code></a>, <a href="#output"><code>output</code></a>, <a href="#parameter"><code>parameter</code></a>).</p>
 </div>
 <div class="paragraph">
-<p>A variable can be a scalar or a multi-dimensional array.</p>
+<p>A variable, except for Clocks, can be a scalar or a multi-dimensional array.
+Clocks are always scalar.</p>
 </div>
 <div class="sect4">
 <h5 id="serialization-of_variables">2.2.6.1. Serialization of Array Variables</h5>
@@ -2720,7 +2721,8 @@ This allows different use cases to be implemented with different semantics.</p>
 <div class="sect4">
 <h5 id="_clock_types">2.2.9.2. Clock Types</h5>
 <div class="paragraph">
-<p>Clocks are <a href="#discrete"><code>discrete</code></a> <a href="#fmu-variables">variables</a> with a special semantic.</p>
+<p>Clocks are <a href="#discrete"><code>discrete</code></a> <a href="#fmu-variables">variables</a> with a special semantic.
+They are restricted to being scalar variables.</p>
 </div>
 <div id="intervalVariability" class="paragraph">
 <p>The variable&#8217;s XML attribute <a href="#intervalVariability"><code>intervalVariability</code></a> declares the type of Clock, described in detail after the table.</p>
@@ -6574,7 +6576,8 @@ The schema definition is present in a separate file <code>fmi3Variable.xsd</code
 <div class="sect4">
 <h5 id="_array_variables_and_structural_parameters">2.4.7.2. Array variables and structural parameters</h5>
 <div class="paragraph">
-<p>Variable elements representing array variables must contain at least one <code>&lt;Dimension&gt;</code> element.
+<p>Except for Clocks, variable elements can represent an array variable.
+Variable elements representing array variables must contain at least one <code>&lt;Dimension&gt;</code> element.
 Each <code>&lt;Dimension&gt;</code> element specifies the size of one dimension of the array:</p>
 </div>
 <div class="ulist">
@@ -11526,7 +11529,6 @@ The simulation algorithm can assume that <a href="#get-and-set-variable-values">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3ActivateModelPartitionTYPE(fmi3Instance instance,
                                                   fmi3ValueReference clockReference,
-                                                  size_t clockElementIndex,
                                                   fmi3Float64 activationTime);</code></pre>
 </div>
 </div>
@@ -11539,12 +11541,6 @@ The simulation algorithm can assume that <a href="#get-and-set-variable-values">
 <p><a id="clockReference"></a> <code>clockReference</code>: <a href="#valueReference"><code>valueReference</code></a> of the <a href="#inputClock"><code>input Clock</code></a> associated to the model partition which shall be activated.</p>
 </li>
 <li>
-<p><a id="clockElementIndex"></a> <code>clockElementIndex</code>: The element index of the <a href="#Clock">Clock</a> variable associated with the model partition which shall be activated.
-For a scalar <a href="#Clock">Clock</a> variable the index must be 0; for an array <a href="#Clock">Clock</a> variable, the index is 1-based.
-Using the element index 0 means all elements of the <a href="#Clock">Clock</a> variable.
-(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.6.1</a>).</p>
-</li>
-<li>
 <p><a id="activationTime"></a> <code>activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the assigned <a href="#Clock">Clock</a> tick time \(\mathbf{t}_i\) <em>[typically: simulation (i.e. virtual) time]</em> (which is known to the simulation algorithm).</p>
 <div class="paragraph">
 <p>The importer schedules calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for each FMU.
@@ -11555,13 +11551,13 @@ The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code
 <p><em>[Note, that other than <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will compute the results of the model partition for the current <a href="#Clock">Clock</a> tick \(\mathbf{t}_i\).]</em></p>
 </div>
 <div class="paragraph">
-<p><em>[If required, the FMU can internally derive the <a href="#Clock">Clock</a> interval \(\mathbf{T}_\mathit{interval, i}\) based on the last <a href="#Clock">Clock</a> tick time \(\mathbf{t}_\mathit{i-1}\) i.e. last <a href="#activationTime"><code>activationTime</code></a> for this <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).]</em></p>
+<p><em>[If required, the FMU can internally derive the <a href="#Clock">Clock</a> interval \(\mathbf{T}_\mathit{interval, i}\) based on the last <a href="#Clock">Clock</a> tick time \(\mathbf{t}_\mathit{i-1}\) i.e. last <a href="#activationTime"><code>activationTime</code></a> for this <a href="#clockReference"><code>clockReference</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).]</em></p>
 </div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Consecutive calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> and <a href="#clockElementIndex"><code>clockElementIndex</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#Clock">Clock</a> variable and element index into that for arrays) must have strictly monotonically increasing <a href="#activationTime"><code>activationTime</code></a> \(\mathbf{t}_i\).</p>
+<p>Consecutive calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#Clock">Clock</a> variable) must have strictly monotonically increasing <a href="#activationTime"><code>activationTime</code></a> \(\mathbf{t}_i\).</p>
 </div>
 </dd>
 </dl>
@@ -11622,7 +11618,7 @@ The <a href="#activationTime"><code>activationTime</code></a> is provided by the
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void ExecuteModelPartition10ms() {
     fmi3SetFloat64(fmu, AInputReferences, 2, AInput, 2);
-    fmi3ActivateModelPartition(fmu, ClockReference10ms, ClockElementIndex, ActivationTime);
+    fmi3ActivateModelPartition(fmu, ClockReference10ms, ActivationTime);
     fmi3GetFloat64(fmu, AOutputReferences, 1, AOutput, 1);
 }</code></pre>
 </div>
@@ -11671,7 +11667,7 @@ By evaluating the returned values <a href="#qualifiers"><code>qualifiers</code><
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3ActivateModelPartition(fmi3Instance instance, fmi3ValueReference clockReference,
-    size_t clockElementIndex, fmi3Float64 activationTime) {
+    fmi3Float64 activationTime) {
 
     switch (clockReference) {
     case 5:    // Input clock 10msClock
