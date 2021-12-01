@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 3dcf2aa,</span>
+<span id="revnumber">version 1df7fe3,</span>
 <span id="revdate">2021-12-01</span>
 </div>
 <div id="toc" class="toc2">
@@ -4023,8 +4023,6 @@ typedef fmi3Instance fmi3InstantiateScheduledExecutionTYPE(
     fmi3String                     resourcePath,
     fmi3Boolean                    visible,
     fmi3Boolean                    loggingOn,
-    const fmi3ValueReference       requiredIntermediateVariables[],
-    size_t                         nRequiredIntermediateVariables,
     fmi3InstanceEnvironment        instanceEnvironment,
     fmi3CallbackLogMessage         logMessage,
     fmi3CallbackClockUpdate        clockUpdate,
@@ -11544,7 +11542,7 @@ The callback may be called from several <a href="#model-partition">model partiti
 <dt class="hdlist1">Allowed Functions</dt>
 <dt class="hdlist1">Function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
 <dd>
-<p>The scheduling algorithm uses <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to determine which clock is active.<br>
+<p>The scheduling algorithm uses <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to determine which <a href="#triggered">triggered output clock</a> is active.<br>
 For an <a href="#outputClock"><code>output Clock</code></a> only the first call of <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> for a specific activation of this <a href="#Clock">Clock</a> signals <code>fmi3ClockActive</code>.
 The FMU sets the reported activation state immediately back to fmi3ClockInactive` for following <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> calls for that <a href="#Clock">Clock</a> until this <a href="#outputClock"><code>output Clock</code></a> is activated again.</p>
 </dd>
@@ -11954,7 +11952,7 @@ For details see <a href="#MS93">[MS93]</a>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Something that occurs instantaneously at a specific time or when a specific condition occurs.
 At an event in Model Exchange, numerical integration is suspended and variables may change their values discontinuously.
 In Co-Simulation, an event may interrupt a <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> to introduce an additional communication point.
-Internal events occur inside the FMU and should be signaled to the environment without any delay (in CS using <a href="#early-return">early return</a>, in SE using <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>) and can cause event handling and/or the activation of an <a href="#outputClock">output Clock</a>.
+Internal events occur inside the FMU and should be signaled to the environment without any delay (in CS using <a href="#early-return">early return</a>, in SE using <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>) and can cause event handling and/or the activation of an <a href="#outputClock">output Clock</a> or the scheduling of a <a href="#countdown-aperiodic-clock">countdown Clock</a>.
 Input clocks are activated by the environment to inform the FMU about the point in time an event has to be handled by the FMU.
 See also <a href="#state-event">state event</a>, <a href="#step-event">step event</a> and <a href="#time-event">time event</a>.</p></td>
 </tr>
@@ -12066,7 +12064,7 @@ It can be used to compute its expected behavior under specified conditions.</p><
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>model description file</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The model description file is an XML file <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>, which supplies a description of all properties of a <em>model</em> (for example, <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> variables).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The model description file is an XML file named <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>, which supplies a description of all properties of a <em>model</em> (for example, <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> variables).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>model description interface</em></p></td>
