@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 1df7fe3,</span>
-<span id="revdate">2021-12-01</span>
+<span id="revnumber">version fe7f04b,</span>
+<span id="revdate">2021-12-06</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -4747,7 +4747,7 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <p><a href="#step-event">Step events</a></p>
 </li>
 <li>
-<p>Co-Simulation: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a>.</p>
+<p>Co-Simulation: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#eventHandlingIsRequired"><code>eventHandlingIsRequired == fmi3True</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -5657,6 +5657,12 @@ This flag is ignored in Model Exchange.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesIntermediateUpdate"></a> <code>providesIntermediateUpdate</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The FMU supports <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> and will call <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, if provided.
+This flag is ignored in Model Exchange and Scheduled Execution.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="mightReturnEarlyFromDoStep"></a> <code>mightReturnEarlyFromDoStep</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU announces that it might <a href="#earlyReturn">return early</a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
+If this flag is <code>false</code> (the default), the importer can assume that the FMU computes the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as instructed up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>.
 This flag is ignored in Model Exchange and Scheduled Execution.</p></td>
 </tr>
 <tr>
@@ -10233,7 +10239,7 @@ Repeating a communication step requires to reset the FMU state to the previous c
                                   fmi3Float64 currentCommunicationPoint,
                                   fmi3Float64 communicationStepSize,
                                   fmi3Boolean noSetFMUStatePriorToCurrentPoint,
-                                  fmi3Boolean* eventEncountered,
+                                  fmi3Boolean* eventHandlingIsRequired,
                                   fmi3Boolean* terminateSimulation,
                                   fmi3Boolean* earlyReturn,
                                   fmi3Float64* lastSuccessfulTime);</code></pre>
@@ -10267,8 +10273,9 @@ See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCom
 </div>
 </li>
 <li>
-<p><a id="eventEncountered"></a> <a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
-<a href="#eventEncountered"><code>eventEncountered == fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.</p>
+<p><a id="eventHandlingIsRequired"></a> <a href="#eventHandlingIsRequired"><code>eventHandlingIsRequired == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
+<a href="#eventHandlingIsRequired"><code>eventHandlingIsRequired == fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.
+<em>[This is different from <a href="#earlyReturn"><code>earlyReturn</code></a> which only indicates that the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> did not complete the intended step up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a> and does not require event handling in itself.]</em></p>
 </li>
 <li>
 <p><a id="terminateSimulationDS"></a> When <a href="#terminateSimulationDS"><code>terminateSimulation == fmi3True</code></a>, the FMU requests to stop the simulation and the importer must call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
@@ -10281,7 +10288,7 @@ Reasons for <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> are<
 <div class="ulist">
 <ul>
 <li>
-<p>expressed by the return arguments <a href="#eventEncountered"><code>eventEncountered</code></a> or <a href="#terminateSimulationDS"><code>terminateSimulation</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, or</p>
+<p>expressed by the return arguments <a href="#eventHandlingIsRequired"><code>eventHandlingIsRequired</code></a> or <a href="#terminateSimulationDS"><code>terminateSimulation</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, or</p>
 </li>
 <li>
 <p>the FMU&#8217;s reaction to the importers request for <a href="#earlyReturn"><code>earlyReturn</code></a> by the return argument <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, or</p>
