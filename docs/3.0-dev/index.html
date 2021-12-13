@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version fe7f04b,</span>
-<span id="revdate">2021-12-06</span>
+<span id="revnumber">version d5ef1c1,</span>
+<span id="revdate">2021-12-13</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2236,8 +2236,7 @@ typedef fmi3Status fmi3GetBinaryTYPE (fmi3Instance instance,
 typedef fmi3Status fmi3GetClockTYPE  (fmi3Instance instance,
                                       const fmi3ValueReference valueReferences[],
                                       size_t nValueReferences,
-                                      fmi3Clock values[],
-                                      size_t nValues);</code></pre>
+                                      fmi3Clock values[]);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2349,8 +2348,7 @@ typedef fmi3Status fmi3SetBinaryTYPE (fmi3Instance instance,
 typedef fmi3Status fmi3SetClockTYPE  (fmi3Instance instance,
                                       const fmi3ValueReference valueReferences[],
                                       size_t nValueReferences,
-                                      const fmi3Clock values[],
-                                      size_t nValues);</code></pre>
+                                      const fmi3Clock values[]);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -3125,14 +3123,12 @@ For Scheduled Execution this attribute is mandatory for every Clock.</p>
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetClockTYPE  (fmi3Instance instance,
                                       const fmi3ValueReference valueReferences[],
                                       size_t nValueReferences,
-                                      fmi3Clock values[],
-                                      size_t nValues);
+                                      fmi3Clock values[]);
 
 typedef fmi3Status fmi3SetClockTYPE  (fmi3Instance instance,
                                       const fmi3ValueReference valueReferences[],
                                       size_t nValueReferences,
-                                      const fmi3Clock values[],
-                                      size_t nValues);</code></pre>
+                                      const fmi3Clock values[]);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3150,8 +3146,7 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetIntervalDecimalTYPE(fmi3Instance instance,
                                               const fmi3ValueReference valueReferences[],
                                               size_t nValueReferences,
-                                              const fmi3Float64 intervals[],
-                                              size_t nIntervals);</code></pre>
+                                              const fmi3Float64 intervals[]);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -3164,7 +3159,7 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <div id="intervals" class="ulist">
 <ul>
 <li>
-<p><code>intervals</code> is an array of size <code>nIntervals</code> holding the Clock intervals to be set.</p>
+<p><code>intervals</code> is an array of size <code>nValueReferences</code> holding the Clock intervals to be set.</p>
 </li>
 </ul>
 </div>
@@ -3174,8 +3169,7 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
                                                const fmi3ValueReference valueReferences[],
                                                size_t nValueReferences,
                                                const fmi3UInt64 intervalCounters[],
-                                               const fmi3UInt64 resolutions[],
-                                               size_t nIntervals);</code></pre>
+                                               const fmi3UInt64 resolutions[]);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -3188,7 +3182,7 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <div id="resolutions" class="ulist">
 <ul>
 <li>
-<p><code>intervalCounters</code> and <a href="#resolutions"><code>resolutions</code></a> are arrays of size <code>nIntervals</code> holding the Clock <a href="#intervalCounters"><code>intervalCounters</code></a> and <a href="#resolutions"><code>resolutions</code></a> to be set.</p>
+<p><code>intervalCounters</code> and <a href="#resolutions"><code>resolutions</code></a> are arrays of size <code>nValueReferences</code> holding the Clock <a href="#intervalCounters"><code>intervalCounters</code></a> and <a href="#resolutions"><code>resolutions</code></a> to be set.</p>
 </li>
 </ul>
 </div>
@@ -3201,8 +3195,7 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
                                               const fmi3ValueReference valueReferences[],
                                               size_t nValueReferences,
                                               fmi3Float64 intervals[],
-                                              fmi3IntervalQualifier qualifiers[],
-                                              size_t nIntervals);</code></pre>
+                                              fmi3IntervalQualifier qualifiers[]);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -3211,14 +3204,14 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the <code>Clock</code> variables.</p>
 </li>
 <li>
-<p><code>intervals</code> is an array of size <code>nIntervals</code> to retrieve the Clock intervals.</p>
+<p><code>intervals</code> is an array of size <code>nValueReferences</code> to retrieve the Clock intervals.</p>
 </li>
 </ul>
 </div>
 <div id="qualifiers" class="ulist">
 <ul>
 <li>
-<p><code>qualifiers</code> is an array of size <code>nIntervals</code> to retrieve the Clocks <a href="#qualifiers"><code>qualifiers</code></a>.
+<p><code>qualifiers</code> is an array of size <code>nValueReferences</code> to retrieve the Clocks <a href="#qualifiers"><code>qualifiers</code></a>.
 <code>qualifiers</code> describes how to treat the <a href="#intervals"><code>intervals</code></a> and <a href="#intervalCounters"><code>intervalCounters</code></a> arguments and is defined as:</p>
 </li>
 </ul>
@@ -3235,28 +3228,35 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <div class="paragraph">
 <p>with the following meanings:</p>
 </div>
-<div id="fmi3IntervalNotYetKnown" class="ulist">
+<div id="fmi3IntervalChanged" class="ulist">
 <ul>
 <li>
-<p><code>fmi3IntervalNotYetKnown</code> is returned for a <a href="#countdown-aperiodic-clock">countdown aperiodic Clock</a> for which the next interval is not yet known.
-The importer must query the next interval at each <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>, for all <a href="#countdown-aperiodic-clock">countdown aperiodic Clocks</a> because the next interval may change at any <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.</p>
+<p><code>fmi3IntervalChanged</code> is returned to indicate that the value for the interval has changed for this <a href="#Clock">Clock</a>.
+Any previously returned intervals (if any) are overwritten with the current value.
+The new <a href="#Clock">Clock</a> interval is relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a> in contrast to the interval of a periodic <a href="#Clock">Clock</a>, where the interval is defined as the time between consecutive <a href="#Clock">Clock</a> ticks.
+In Scheduled Execution this means that the corresponding model partition has to be scheduled or re-scheduled (if a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> returned <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a>).</p>
 </li>
 </ul>
 </div>
 <div id="fmi3IntervalUnchanged" class="ulist">
 <ul>
 <li>
-<p><code>fmi3IntervalUnchanged</code> is returned if a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> already returned a value which has not changed since.</p>
+<p><code>fmi3IntervalUnchanged</code> is returned if a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> already returned a value qualified with <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> which has not changed since.
+In Scheduled Execution this means the corresponding model partition has already been scheduled.</p>
 </li>
 </ul>
 </div>
-<div id="fmi3IntervalChanged" class="ulist">
+<div id="fmi3IntervalNotYetKnown" class="ulist">
 <ul>
 <li>
-<p><code>fmi3IntervalChanged</code> is returned to indicate that the value for the interval has changed for this <a href="#Clock">Clock</a>.
-The new <a href="#Clock">Clock</a> interval is relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a> in contrast to the interval of a periodic <a href="#Clock">Clock</a>, where the interval is defined as the time between consecutive <a href="#Clock">Clock</a> ticks.</p>
+<p><code>fmi3IntervalNotYetKnown</code> is returned for a <a href="#countdown-aperiodic-clock">countdown aperiodic Clock</a> for which the next interval is not yet known.
+This qualifier value can only be returned directly after the Clock was active and previous calls to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> never returned <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> (nor <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a>).
+In Scheduled Execution this return value means that the corresponding model partition cannot be scheduled yet.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>The importer must query the next interval at each <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>, for all <a href="#countdown-aperiodic-clock">countdown aperiodic Clocks</a> because the next interval may become available or may change at any <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.</p>
 </div>
 <div id="fmi3GetIntervalFraction" class="listingblock">
 <div class="content">
@@ -3265,8 +3265,7 @@ The new <a href="#Clock">Clock</a> interval is relative to the time of the curre
                                                size_t nValueReferences,
                                                fmi3UInt64 intervalCounters[],
                                                fmi3UInt64 resolutions[],
-                                               fmi3IntervalQualifier qualifiers[],
-                                               size_t nIntervals);</code></pre>
+                                               fmi3IntervalQualifier qualifiers[]);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -3279,10 +3278,10 @@ The new <a href="#Clock">Clock</a> interval is relative to the time of the curre
 <div id="intervalCounters" class="ulist">
 <ul>
 <li>
-<p><code>intervalCounters</code> and <a href="#resolutions"><code>resolutions</code></a> are arrays of size <code>nIntervals</code> to retrieve the Clock <a href="#intervalCounters"><code>intervalCounters</code></a> and <a href="#resolutions"><code>resolutions</code></a>.</p>
+<p><code>intervalCounters</code> and <a href="#resolutions"><code>resolutions</code></a> are arrays of size <code>nValueReferences</code> to retrieve the Clock <a href="#intervalCounters"><code>intervalCounters</code></a> and <a href="#resolutions"><code>resolutions</code></a>.</p>
 </li>
 <li>
-<p><code>qualifiers</code> is an array of size <code>nIntervals</code> to retrieve the Clock <a href="#qualifiers"><code>qualifiers</code></a>.</p>
+<p><code>qualifiers</code> is an array of size <code>nValueReferences</code> to retrieve the Clock <a href="#qualifiers"><code>qualifiers</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -3294,8 +3293,7 @@ The new <a href="#Clock">Clock</a> interval is relative to the time of the curre
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetShiftDecimalTYPE(fmi3Instance instance,
                                            const fmi3ValueReference valueReferences[],
                                            size_t nValueReferences,
-                                           fmi3Float64 shifts[],
-                                           size_t nShifts);</code></pre>
+                                           fmi3Float64 shifts[]);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -3304,7 +3302,7 @@ The new <a href="#Clock">Clock</a> interval is relative to the time of the curre
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the Clock variables.</p>
 </li>
 <li>
-<p><a href="#shifts"><code>shifts</code></a> is an array of length <code>nShifts</code> that defines the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
+<p><a href="#shifts"><code>shifts</code></a> is an array of length <code>nValueReferences</code> that defines the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
 </li>
 </ul>
 </div>
@@ -3314,8 +3312,7 @@ The new <a href="#Clock">Clock</a> interval is relative to the time of the curre
                                             const fmi3ValueReference valueReferences[],
                                             size_t nValueReferences,
                                             fmi3UInt64 shiftCounters[],
-                                            fmi3UInt64 resolutions[],
-                                            size_t nShifts);</code></pre>
+                                            fmi3UInt64 resolutions[]);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -3331,7 +3328,7 @@ The new <a href="#Clock">Clock</a> interval is relative to the time of the curre
 <div id="shiftCounters" class="ulist">
 <ul>
 <li>
-<p><a href="#shiftCounters"><code>shiftCounters</code></a> are arrays of length <code>nShifts</code> that define the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
+<p><a href="#shiftCounters"><code>shiftCounters</code></a> are arrays of length <code>nValueReferences</code> that define the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
 </li>
 </ul>
 </div>
@@ -3423,7 +3420,7 @@ The dependency information returned by these functions depend on the current ope
 
 typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Instance instance,
                                                    fmi3ValueReference dependent,
-                                                   size_t elementIndicesOfDependent[],
+                                                   size_t elementIndicesOfDependents[],
                                                    fmi3ValueReference independents[],
                                                    size_t elementIndicesOfIndependents[],
                                                    fmi3DependencyKind dependencyKinds[],
@@ -3442,7 +3439,7 @@ typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Instance instance,
 <p><code>nDependencies</code> specifies the number of dependencies that the calling environment allocated space for in the result buffers, and should correspond to value obtained by calling <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
 </li>
 <li>
-<p><code>elementIndicesOfDependent</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
+<p><code>elementIndicesOfDependents</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the element index of the dependent variable that dependency information is provided for.
 The element indices start with 1. Using the element index 0 means all elements of the variable.
 (Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.6.1</a>.)</p>
@@ -4600,27 +4597,15 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 <dd>
 <p>See <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.</p>
 </dd>
-<dt class="hdlist1">Function <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a></dt>
+<dt class="hdlist1">Functions <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a> &amp; <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a></dt>
 <dd>
 <p>See <a href="#fmi3GetShift"><code>fmi3GetShift</code></a>.</p>
 </dd>
-<dt class="hdlist1">Function <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a></dt>
-<dd>
-<p>See <a href="#fmi3GetShift"><code>fmi3GetShift</code></a>.</p>
-</dd>
-<dt class="hdlist1">Function <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a></dt>
+<dt class="hdlist1">Functions <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> &amp; <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
 <dd>
 <p>See <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>.</p>
 </dd>
-<dt class="hdlist1">Function <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
-<dd>
-<p>See <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>.</p>
-</dd>
-<dt class="hdlist1">Function <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a></dt>
-<dd>
-<p>One of these functions must be called for all <a href="#fixed-periodic-clock">Fixed periodic Clocks</a>.</p>
-</dd>
-<dt class="hdlist1">Function <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a></dt>
+<dt class="hdlist1">Functions <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> &amp; <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a></dt>
 <dd>
 <p>One of these functions must be called for all <a href="#fixed-periodic-clock">Fixed periodic Clocks</a>.</p>
 </dd>
@@ -4747,7 +4732,7 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <p><a href="#step-event">Step events</a></p>
 </li>
 <li>
-<p>Co-Simulation: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#eventHandlingIsRequired"><code>eventHandlingIsRequired == fmi3True</code></a>.</p>
+<p>Co-Simulation: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#needsEventHandling"><code>needsEventHandling == fmi3True</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -4931,8 +4916,7 @@ Only <a href="#time-based-clock">time-based Clocks</a> must not be active for mo
 <dd>
 <p>is used to inquire the status of <a href="#Clock">Clocks</a>.</p>
 </dd>
-<dt class="hdlist1">Function <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a></dt>
-<dt class="hdlist1">Function <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
+<dt class="hdlist1">Functions <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> &amp; <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
 <dd>
 <p>For <a href="#inputClock"><code>input Clocks</code></a> it is allowed to call these functions to query the next activation interval.<br>
 For <a href="#changing-aperiodic-clock">changing aperiodic Clock</a>, these functions must be called in every <a href="#EventMode"><strong>Event Mode</strong></a> where this clock was activated.<br>
@@ -4985,7 +4969,7 @@ The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3E
 <div id="fmi3UpdateDiscreteStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
-                                                fmi3Boolean* discreteStatesNeedUpdate,
+                                                fmi3Boolean* needsDiscreteStatesUpdate,
                                                 fmi3Boolean* terminateSimulation,
                                                 fmi3Boolean* nominalsOfContinuousStatesChanged,
                                                 fmi3Boolean* valuesOfContinuousStatesChanged,
@@ -4996,10 +4980,10 @@ The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3E
 </dd>
 </dl>
 </div>
-<div id="discreteStatesNeedUpdate" class="ulist">
+<div id="needsDiscreteStatesUpdate" class="ulist">
 <ul>
 <li>
-<p>When <code>discreteStatesNeedUpdate == fmi3True</code>, the importer must stay in <a href="#EventMode"><strong>Event Mode</strong></a> for another event iteration, starting a new super-dense time instant.</p>
+<p>When <code>needsDiscreteStatesUpdate == fmi3True</code>, the importer must stay in <a href="#EventMode"><strong>Event Mode</strong></a> for another event iteration, starting a new super-dense time instant.</p>
 </li>
 </ul>
 </div>
@@ -9538,7 +9522,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 </div>
 </div>
 <div class="paragraph">
-<p>This function is called after every completed step of the integrator provided the capability flag <code>completedIntegratorStepNotNeeded = false</code>.
+<p>This function is called after every completed step of the integrator provided the capability flag <code>needsCompletedIntegratorStep == true</code>.
 The importer must have set valid values for <a href="#time"><code>time</code></a>, <a href="#continuous"><code>continuous</code></a> <a href="#input"><code>inputs</code></a> and <a href="#continuous"><code>continuous</code></a> <a href="#state"><code>states</code></a> prior to calling this function to evaluate \(\mathbf{f}_{\mathit{comp}}\) with valid right-hand side data.</p>
 </div>
 <div class="ulist">
@@ -9900,10 +9884,9 @@ Used as prefix for FMI functions if the functions are provided in C source code 
 See also <a href="#header-files-and-naming-of-functions">Section 2.2.1</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>completedIntegratorStepNotNeeded</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> need not be called.
-If it is called, it has no effect.<br>
-If <code>false</code> (the default), the function must be called after every completed integrator step, see <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>needsCompletedIntegratorStep</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code> (the default), the function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after every completed integrator step.
+If <code>false</code> and the function is called anyway, it has no effect.</p></td>
 </tr>
 </tbody>
 </table>
@@ -10239,7 +10222,7 @@ Repeating a communication step requires to reset the FMU state to the previous c
                                   fmi3Float64 currentCommunicationPoint,
                                   fmi3Float64 communicationStepSize,
                                   fmi3Boolean noSetFMUStatePriorToCurrentPoint,
-                                  fmi3Boolean* eventHandlingIsRequired,
+                                  fmi3Boolean* needsEventHandling,
                                   fmi3Boolean* terminateSimulation,
                                   fmi3Boolean* earlyReturn,
                                   fmi3Float64* lastSuccessfulTime);</code></pre>
@@ -10273,8 +10256,8 @@ See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCom
 </div>
 </li>
 <li>
-<p><a id="eventHandlingIsRequired"></a> <a href="#eventHandlingIsRequired"><code>eventHandlingIsRequired == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
-<a href="#eventHandlingIsRequired"><code>eventHandlingIsRequired == fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.
+<p><a id="needsEventHandling"></a> <a href="#needsEventHandling"><code>needsEventHandling == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
+<a href="#needsEventHandling"><code>needsEventHandling == fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.
 <em>[This is different from <a href="#earlyReturn"><code>earlyReturn</code></a> which only indicates that the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> did not complete the intended step up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a> and does not require event handling in itself.]</em></p>
 </li>
 <li>
@@ -10288,7 +10271,7 @@ Reasons for <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> are<
 <div class="ulist">
 <ul>
 <li>
-<p>expressed by the return arguments <a href="#eventHandlingIsRequired"><code>eventHandlingIsRequired</code></a> or <a href="#terminateSimulationDS"><code>terminateSimulation</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, or</p>
+<p>expressed by the return arguments <a href="#needsEventHandling"><code>needsEventHandling</code></a> or <a href="#terminateSimulationDS"><code>terminateSimulation</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, or</p>
 </li>
 <li>
 <p>the FMU&#8217;s reaction to the importers request for <a href="#earlyReturn"><code>earlyReturn</code></a> by the return argument <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, or</p>
@@ -11223,7 +11206,7 @@ Usually a preemptive scheduling of the <a href="#fmi3ActivateModelPartition"><co
 In general for Scheduled Execution this requires a secured internal and external access to global states and variable values to ensure the correct handling of the preemption of model partition computations.
 <em>[For <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in particular a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended.]</em>
 It is also required that the FMU reports the active state of an <a href="#outputClock"><code>output Clock</code></a> only with the first call of <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> for a specific activation of this <a href="#Clock">Clock</a> and sets the reported activation state immediately back to <code>false</code> for the following <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> calls for that <a href="#Clock">Clock</a> until this <a href="#outputClock"><code>output Clock</code></a> is internally activated again.
-Similarly for <a href="#countdown"><code>countdown Clocks</code></a> a call to <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> has to ensure that the Clock&#8217;s interval qualifier is reset to <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a>.</p>
+Similarly for <a href="#countdown"><code>countdown</code></a> Clocks a call to <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> has to ensure that the Clock&#8217;s interval qualifier is reset to <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>If a preemptive multitasking regime is intended, an individual task (or thread&#8201;&#8212;&#8201;task and thread are used synonymously here) for each model partition (associated to an <a href="#inputClock"><code>input Clock</code></a>) has to be created.
@@ -11511,6 +11494,10 @@ The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code
 <p>Consecutive calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#Clock">Clock</a> variable) must have strictly monotonically increasing <a href="#activationTime"><code>activationTime</code></a> \(\mathbf{t}_i\).</p>
 </div>
 </dd>
+<dt class="hdlist1">Functions <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> &amp; <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
+<dd>
+<p>These function calls are allowed for <a href="#tunableClock"><code>tunable</code></a> and <a href="#changing"><code>changing</code></a> Clocks.</p>
+</dd>
 </dl>
 </div>
 <div id="fmi3CallbackClockUpdate" class="dlist">
@@ -11555,7 +11542,7 @@ The FMU sets the reported activation state immediately back to fmi3ClockInactive
 </dd>
 <dt class="hdlist1">Functions <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> &amp; <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
 <dd>
-<p>These function calls are allowed for <a href="#countdown">countdown Clocks</a>.</p>
+<p>These function calls are allowed for <a href="#countdown"><code>countdown</code></a> Clocks.</p>
 </dd>
 </dl>
 </div>
@@ -11578,7 +11565,7 @@ The importer retrieves this interval and activates the corresponding model parti
 </div>
 <div class="paragraph">
 <p>In this example, the calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (as well as related <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <code>fmi3Set{VariableType}</code>) for each associated Clock are placed into a task.
-A task can be thought of as a simple interface of the scheduler that allows to connect the FMU interface by implementing a void/void function and set up the task&#8217;s priorities as derived from the respective <a href="#Clock">Clock</a> configurations of the FMU.</p>
+A task can be thought of as a simple interface of the scheduler that allows to connect the FMU interface by implementing a void/void function and set up the priorities of the tasks as derived from the respective <a href="#Clock">Clock</a> configurations of the FMU.</p>
 </div>
 <div class="paragraph">
 <p>As a result of the FMU&#8217;s configuration and implementation the following can be observed:
@@ -11619,21 +11606,21 @@ By evaluating the returned values <a href="#qualifiers"><code>qualifiers</code><
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void CallbackClockUpdate(fmi3InstanceEnvironment instanceEnvironment) {
-
     fmi3Float64 interval[] = { 0.0 };
     fmi3IntervalQualifier intervalQualifier[] = { fmi3IntervalNotYetKnown };
-    // ask FMU if countdown clock is about to tick
+
+    // ask FMU if countdown clock AperiodicClock is about to tick
     const fmi3ValueReference aperiodicClockReferences[] = { 6 };
-    fmi3GetIntervalDecimal(fmu, aperiodicClockReferences, 1, interval, intervalQualifier, 1);
+    fmi3GetIntervalDecimal(fmu, aperiodicClockReferences, 1, interval, intervalQualifier);
     if (intervalQualifier[0] == fmi3IntervalChanged) {
         // schedule task for AperiodicClock with a delay
         ScheduleAperiodicTask(interval[0]);
     }
-    // ask FMU if output clock has ticked
+    // ask FMU if OutputClock has ticked
     fmi3ValueReference outputClockReferences[] = { 7 };
-    fmi3Boolean clocksActivationState[] = { fmi3ClockInactive };
-    fmi3GetClock(fmu, outputClockReferences, 1, clocksActivationState, 1);
-    if (clocksActivationState[0]) {
+    fmi3Boolean clockActivationStates[] = { fmi3ClockInactive };
+    fmi3GetClock(fmu, outputClockReferences, 1, clockActivationStates);
+    if (clockActivationStates[0]) {
         // schedule some external task
         ScheduleExternalTask();
     }
@@ -11648,9 +11635,9 @@ By evaluating the returned values <a href="#qualifiers"><code>qualifiers</code><
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3ActivateModelPartition(fmi3Instance instance, fmi3ValueReference clockReference,
-    fmi3Float64 activationTime) {
-
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3ActivateModelPartition(fmi3Instance instance,
+                                      fmi3ValueReference clockReference,
+                                      fmi3Float64 activationTime) {
     switch (clockReference) {
     case 5:    // Input clock 10msClock
         activateModelPartition10ms(instance, activationTime);
@@ -11679,14 +11666,15 @@ By evaluating the returned values <a href="#qualifiers"><code>qualifiers</code><
     if (conditionForCountdownClockMet) {
         inst-&gt;CountdownClockQualifier = fmi3IntervalChanged;
         inst-&gt;CountdownClockInterval = 0.0;
-        // inform simulation algorithm that the countdown clock has ticked
+        // inform the simulation algorithm that countdown clock AperiodicClock is about to tick
         inst-&gt;callbackClockUpdate(inst-&gt;instanceEnvironment);
     }
+
     fmi3Boolean conditionForOutputClockMet = (inst-&gt;AIn2 &gt; 42.0);
     if (conditionForOutputClockMet) {
-        // outputClock ticks
+        // OutputClock ticks
         inst-&gt;OutputClockTicked = fmi3ClockActive;
-        // inform simulation algorithm that output clock has ticked
+        // inform the simulation algorithm that OutputClock has ticked
         inst-&gt;callbackClockUpdate(inst-&gt;instanceEnvironment);
     }
     inst-&gt;AOut = inst-&gt;AIn1 + inst-&gt;AIn2;
@@ -11700,23 +11688,47 @@ In this example it is actually not needed since CallbackClockUpdate is only call
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance, const fmi3ValueReference valueReferences[],
-    size_t nValueReferences, fmi3Float64 interval[], fmi3IntervalQualifier qualifier[], size_t nValues) {
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
+                                  const fmi3ValueReference valueReferences[],
+                                  size_t nValueReferences,
+                                  fmi3Float64 interval[],
+                                  fmi3IntervalQualifier qualifier[]) {
     ModelInstance * inst = (ModelInstance *) instance;
 
-    for (int i = 0; i &lt; nValues; i++) {
-        if (valueReferences[i] == 6) {
+    for (int i = 0; i &lt; nValueReferences; i++) {
+        switch (valueReferences[i]) {
+        case 5:    // Input clock 10msClock
+            interval[i] = 0.01;
+            qualifier[i] = fmi3IntervalUnchanged;
+            break;
+        case 6:    // Input clock AperiodicClock
             env-&gt;lockPreemption(); // Optional: Preventing preemption is actually not needed here.
             interval[i] = inst-&gt;CountdownClockInterval;
             qualifier[i] = inst-&gt;CountdownClockQualifier;
-            inst-&gt;CountdownClockQualifier = fmi3IntervalUnchanged;
+            if (inst-&gt;CountdownClockQualifier == fmi3IntervalChanged) {
+                inst-&gt;CountdownClockQualifier = fmi3IntervalUnchanged;
+            }
             env-&gt;unlockPreemption();
-        }
-        else {
-            qualifier[i] = fmi3IntervalNotYetKnown;
+            break;
+        case 8:    // Input clock 50msClock
+            interval[i] = 0.05;
+            qualifier[i] = fmi3IntervalUnchanged;
+        // ...
         }
     }
     return fmi3OK;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the aperiodic model partition the interval qualifier is reset to <a href="#fmi3IntervalNotYetKnown"><code>fmi3IntervalNotYetKnown</code></a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void activateModelPartitionAperiodic(fmi3Instance instance, fmi3Float64 activationTime) {
+    ModelInstance* inst = (ModelInstance*)instance;
+    inst-&gt;CountdownClockQualifier = fmi3IntervalNotYetKnown;
+    // ...
 }</code></pre>
 </div>
 </div>
@@ -11727,19 +11739,21 @@ Here it is just as well not needed for the same reason.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetClock(fmi3Instance instance, const fmi3ValueReference valueReferences[],
-    size_t nValueReferences, fmi3Clock values[], size_t nValues) {
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">fmi3Status fmi3GetClock(fmi3Instance instance,
+                        const fmi3ValueReference valueReferences[],
+                        size_t nValueReferences,
+                        fmi3Clock values[]) {
     ModelInstance * inst = (ModelInstance *) instance;
 
-    for (int i = 0; i &lt; nValues; i++) {
-        if (valueReferences[i] == 7) {
+    for (int i = 0; i &lt; nValueReferences; i++) {
+        switch (valueReferences[i]) {
+        case 7:    // OutputClock
             env-&gt;lockPreemption(); // Optional: Preventing preemption is actually not needed here.
             values[i] = inst-&gt;OutputClockTicked;
             inst-&gt;OutputClockTicked = fmi3ClockInactive;
             env-&gt;unlockPreemption();
-        }
-        else {
-            values[i] = fmi3ClockInactive;
+            break;
+        // ...
         }
     }
     return fmi3OK;
