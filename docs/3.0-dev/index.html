@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version b7d2bfe,</span>
-<span id="revdate">2021-12-20</span>
+<span id="revnumber">version 9048fd3,</span>
+<span id="revdate">2021-12-21</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -11201,23 +11201,9 @@ The <a href="#importer">importer</a> is providing lock/unlock functions to the F
 <div class="sect3">
 <h4 id="preemption-support">5.1.1. Preemption Support</h4>
 <div class="paragraph">
-<p>For real-time applications the simulation time equals the real wall clock time, thus each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> computation step has to be finished in real-time within its current period time length (computation time is not only defined by the runtime of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> but also by the time for setting and getting variables and related operations).
-Usually a preemptive scheduling of the <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls is required to respect this constraint.</p>
-</div>
-<div class="paragraph">
-<p>The FMU&#8217;s code has to be prepared for being able to correctly handle preemptive calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> and <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a>.
-In general for Scheduled Execution this requires a secured internal and external access to global states and variable values to ensure the correct handling of the preemption of model partition computations.
-<em>[For <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in particular a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended.]</em>
-It is also required that the FMU reports the active state of an <a href="#outputClock"><code>output Clock</code></a> only with the first call of <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> for a specific activation of this <a href="#Clock">Clock</a> and sets the reported activation state immediately back to <code>false</code> for the following <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> calls for that <a href="#Clock">Clock</a> until this <a href="#outputClock"><code>output Clock</code></a> is internally activated again.
-Similarly for <a href="#countdown"><code>countdown</code></a> Clocks a call to <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> has to ensure that the Clock&#8217;s interval qualifier is reset to <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>If a preemptive multitasking regime is intended, an individual task (or thread&#8201;&#8212;&#8201;task and thread are used synonymously here) for each model partition (associated to an <a href="#inputClock"><code>input Clock</code></a>) has to be created.
-The task for computing each <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> is created and controlled by the simulation algorithm, not by the FMU.
-So the FMU exporting tool does not need to take care for that (except for preparing its code to support preemption).</p>
-</div>
-<div class="paragraph">
-<p><em>[If only one single model partition is available via the interface of an FMU, preemptive calls of the related <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function are possible by default since there are no external cross dependencies within one model partition between communication points.]</em></p>
+<p>In Scheduled Execution the importer has to ensure that model partitions are scheduled according to their priorities (refer to <a href="#scheduled-execution">Section 2.2.9.4</a>).
+If a model partition of lower <a href="#priority"><code>priority</code></a> is executed when a model partition of higher priority is activated the scheduler must ensure that the execution of the latter one is not delayed and causing violations of timing constraints.
+<em>[On a real-time simulator a violation of a timing constraint usually results in an overrun exception i.e. a model partition is supposed to be executed when an instance of the same model partition has not yet finished its execution.]</em></p>
 </div>
 <div class="paragraph">
 <p>Preemption support means that the scheduler can immediately interrupt the current execution of a model partition in order to execute a model partition of higher priority.
