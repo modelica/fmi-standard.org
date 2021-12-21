@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 9048fd3,</span>
+<span id="revnumber">version 9a2ebc1,</span>
 <span id="revdate">2021-12-21</span>
 </div>
 <div id="toc" class="toc2">
@@ -1050,7 +1050,7 @@ In some ways the Scheduled Execution interface has similarities to the Model Exc
 <div class="content">
 <img src="images/scheduled-execution-data-flow.svg" alt="scheduled execution data flow" width="40%">
 </div>
-<div class="title">Figure 3. Schematic view of data flow between user, the scheduler of the importer and tasks of the FMU for Scheduled Execution</div>
+<div class="title">Figure 3. Schematic view of data flow between user, the scheduler of the importer and model partitions of the FMU for Scheduled Execution</div>
 </div>
 </div>
 <div class="sect3">
@@ -1799,7 +1799,7 @@ The name of the library is <code>MyModel.dll</code> on Windows or <code>MyModel.
 </div>
 <div class="paragraph">
 <p><em>[An FMU can be optionally shipped so that it basically contains only the communication to another simulation tool (<code>needsExecutionTool = true</code>, see <a href="#fmi-for-co-simulation">Section 4</a>).</em>
-<em>This is particularly common for co-simulation tasks.</em>
+<em>This is particularly common for co-simulation use cases.</em>
 <em>In this tool coupling case one DLL/Shared Object can be used for all models due to no function prefixing.]</em></p>
 </div>
 <div class="paragraph">
@@ -3071,7 +3071,7 @@ Clocked states declare the <a href="#valueReference"><code>valueReference</code>
 <div class="paragraph">
 <p>The association between <a href="#clocked-variable">clocked variables</a> and their <a href="#Clock">Clocks</a> is defined by the attribute <a href="#clocks"><code>clocks</code></a>.
 <a href="#clocked-variable">Clocked variables</a> can depend on multiple Clocks.
-<em>[For example, a global counter could be incremented by multiple tasks, each controlled by a different Clock.]</em></p>
+<em>[For example, a global counter could be incremented by multiple model partitions, each controlled by a different Clock.]</em></p>
 </div>
 <div class="paragraph">
 <p>Clocks may depend on input Clocks.
@@ -3100,14 +3100,15 @@ This ordering is defined by the <a href="#priority"><code>priority</code></a> at
 For Scheduled Execution this attribute is mandatory for every Clock.</p>
 </div>
 <div class="paragraph">
-<p><em>[For real-time computation use cases, the priority information is used also for task preemption configurations.</em>
+<p><em>[A clock&#8217;s <a href="#priority"><code>priority</code></a> information is required to support the scheduled execution of several model partitions.</em>
+<em>In particular the <a href="#preemption-support">preemption support</a> is based these priorities.</em>
 <em>It is therefore important to restrict the number of distinct priority levels for an FMU to available priority levels on the target platform and/or to avoid unnecessary computational overhead.</em>
 <em>A common number of different priority levels is, e.g., 100 (0 to 99), as defined in Linux based operating systems.]</em></p>
 </div>
 <div class="paragraph">
 <p><em>[The Clock priorities are local to an FMU.</em>
 <em>It is not possible for an FMU exporting tool to know in advance the priorities of other FMUs that will be connected to an FMU in a simulation setup.</em>
-<em>It is the task of the importer to derive a computational order for the computation of two or more distinct FMUs based on the local FMU Clock priorities and input-output relationships of connected FMUs.]</em></p>
+<em>It is the responsibility of the importer to derive a computational order for the computation of two or more distinct FMUs based on the local FMU Clock priorities and input-output relationships of connected FMUs.]</em></p>
 </div>
 <div class="paragraph">
 <p><em>[For <a href="#periodic-clock"><code>periodic Clocks</code></a> it is recommended to derive the priorities based on a rate monotonic scheduling scheme (smallest period leads to highest priority, that is, has the smallest priority value.]</em></p>
@@ -11794,7 +11795,7 @@ See also <a href="#header-files-and-naming-of-functions">Section 2.2.1</a>.</p><
 <h4 id="_example_xml_description_file_2">5.4.1. Example XML Description File</h4>
 <div class="paragraph">
 <p>The simulation algorithm collects the information about the number and properties of <a href="#Clock"><code>Clocks</code></a> supported by the FMU via analyzing the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> as defined in <a href="#fmi-description-schema">Section 2.4</a>.
-For every <a href="#inputClock"><code>input Clock</code></a> the simulation algorithm defines a task.
+For every <a href="#inputClock"><code>input Clock</code></a> the simulation algorithm identifies a model partition of the FMU.
 The properties <a href="#intervalDecimal"><code>intervalDecimal</code></a> (or <a href="#intervalCounter"><code>intervalCounter</code></a>) and <a href="#priority"><code>priority</code></a> are defined based on the <a href="#inputClock">input clocks'</a> <a href="#intervalDecimal"><code>intervalDecimal</code></a> (or <a href="#intervalCounter"><code>intervalCounter</code></a>) and <a href="#priority"><code>priority</code></a> defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
 The simulation algorithm can read from the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> that <a href="#outputClock"><code>output Clock</code></a> <code>OutClock</code> may tick triggered by <a href="#inputClock"><code>input Clock</code></a> <code>10msClock</code> and that <a href="#inputClock"><code>input Clock</code></a> <code>AperiodicClock</code> is triggered by <code>OutClock</code>.</p>
 </div>
@@ -12003,14 +12004,19 @@ In analogy to the term digital mock-up (see <em>mock-up</em>), functional mock-u
 <td class="tableblock halign-left valign-top"><p class="tableblock">The function of the FMI C-API.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for co-simulation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for Co-Simulation</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Co-Simulation:<br>
-One of the MODELISAR <em>Functional Mock-up Interface types.</em> It connects the <em>importer</em> with one or more <em>FMU</em>.</p></td>
+It connects the <em>importer</em> with one or more <em>FMUs</em> using co-simulation algorithms.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for model exchange</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for Model Exchange</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Model Exchange:<br>
-One of the MODELISAR <em>Functional Mock-up Interface types.</em> It consists of the <em>model description</em> and the <em>C API</em>.<br></p></td>
+FMU type that externalizes the ODE/DAE solver to allow tightly coupling multiple FMUs and avoid co-simulation delays.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for Scheduled Execution</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Scheduled Execution:<br>
+FMI type that externalizes the scheduler to run <em>model partitions</em>, potentially synchronized between more than one FMU and exchanging input and output variables accordingly.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMU</em></p></td>
@@ -12123,10 +12129,6 @@ These parameters are different from <a href="#calculatedParameter">calculated pa
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>runtime environment</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See co-simulation environment</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>scheduled execution</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">FMI type that externalizes the scheduler to run <em>model partitions</em>, potentially synchronized between more than one FMU and exchanging input and output variables accordingly.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>simulation</em></p></td>
