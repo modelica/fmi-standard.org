@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 848f13a,</span>
-<span id="revdate">2021-12-21</span>
+<span id="revnumber">version babf826,</span>
+<span id="revdate">2021-12-23</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3421,7 +3421,7 @@ The dependency information returned by these functions depend on the current ope
 
 typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Instance instance,
                                                    fmi3ValueReference dependent,
-                                                   size_t elementIndicesOfDependents[],
+                                                   size_t elementIndicesOfDependent[],
                                                    fmi3ValueReference independents[],
                                                    size_t elementIndicesOfIndependents[],
                                                    fmi3DependencyKind dependencyKinds[],
@@ -3440,7 +3440,7 @@ typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Instance instance,
 <p><code>nDependencies</code> specifies the number of dependencies that the calling environment allocated space for in the result buffers, and should correspond to value obtained by calling <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
 </li>
 <li>
-<p><code>elementIndicesOfDependents</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
+<p><code>elementIndicesOfDependent</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the element index of the dependent variable that dependency information is provided for.
 The element indices start with 1. Using the element index 0 means all elements of the variable.
 (Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.6.1</a>.)</p>
@@ -4733,7 +4733,7 @@ In <a href="#EventMode"><strong>Event Mode</strong></a> all continuous-time, dis
 <p><a href="#step-event">Step events</a></p>
 </li>
 <li>
-<p>Co-Simulation: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#needsEventHandling"><code>needsEventHandling == fmi3True</code></a>.</p>
+<p>Co-Simulation: <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns with <a href="#eventHandlingNeeded"><code>eventHandlingNeeded == fmi3True</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -4970,7 +4970,7 @@ The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3E
 <div id="fmi3UpdateDiscreteStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3UpdateDiscreteStatesTYPE(fmi3Instance instance,
-                                                fmi3Boolean* needsDiscreteStatesUpdate,
+                                                fmi3Boolean* discreteStatesNeedUpdate,
                                                 fmi3Boolean* terminateSimulation,
                                                 fmi3Boolean* nominalsOfContinuousStatesChanged,
                                                 fmi3Boolean* valuesOfContinuousStatesChanged,
@@ -4981,10 +4981,10 @@ The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3E
 </dd>
 </dl>
 </div>
-<div id="needsDiscreteStatesUpdate" class="ulist">
+<div id="discreteStatesNeedUpdate" class="ulist">
 <ul>
 <li>
-<p>When <code>needsDiscreteStatesUpdate == fmi3True</code>, the importer must stay in <a href="#EventMode"><strong>Event Mode</strong></a> for another event iteration, starting a new super-dense time instant.</p>
+<p>When <code>discreteStatesNeedUpdate == fmi3True</code>, the importer must stay in <a href="#EventMode"><strong>Event Mode</strong></a> for another event iteration, starting a new super-dense time instant.</p>
 </li>
 </ul>
 </div>
@@ -9889,8 +9889,8 @@ See also <a href="#header-files-and-naming-of-functions">Section 2.2.1</a>.</p><
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>needsCompletedIntegratorStep</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code> (the default), the function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after every completed integrator step.
-If <code>false</code> and the function is called anyway, it has no effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after every completed integrator step.
+If <code>false</code> (the default) and the function is called anyway, it has no effect.</p></td>
 </tr>
 </tbody>
 </table>
@@ -10226,7 +10226,7 @@ Repeating a communication step requires to reset the FMU state to the previous c
                                   fmi3Float64 currentCommunicationPoint,
                                   fmi3Float64 communicationStepSize,
                                   fmi3Boolean noSetFMUStatePriorToCurrentPoint,
-                                  fmi3Boolean* needsEventHandling,
+                                  fmi3Boolean* eventHandlingNeeded,
                                   fmi3Boolean* terminateSimulation,
                                   fmi3Boolean* earlyReturn,
                                   fmi3Float64* lastSuccessfulTime);</code></pre>
@@ -10260,8 +10260,8 @@ See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCom
 </div>
 </li>
 <li>
-<p><a id="needsEventHandling"></a> <a href="#needsEventHandling"><code>needsEventHandling == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
-<a href="#needsEventHandling"><code>needsEventHandling == fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.
+<p><a id="eventHandlingNeeded"></a> <a href="#eventHandlingNeeded"><code>eventHandlingNeeded == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
+<a href="#eventHandlingNeeded"><code>eventHandlingNeeded == fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.
 <em>[This is different from <a href="#earlyReturn"><code>earlyReturn</code></a> which only indicates that the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> did not complete the intended step up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a> and does not require event handling in itself.]</em></p>
 </li>
 <li>
@@ -10275,7 +10275,7 @@ Reasons for <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> are<
 <div class="ulist">
 <ul>
 <li>
-<p>expressed by the return arguments <a href="#needsEventHandling"><code>needsEventHandling</code></a> or <a href="#terminateSimulationDS"><code>terminateSimulation</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, or</p>
+<p>expressed by the return arguments <a href="#eventHandlingNeeded"><code>eventHandlingNeeded</code></a> or <a href="#terminateSimulationDS"><code>terminateSimulation</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, or</p>
 </li>
 <li>
 <p>the FMU&#8217;s reaction to the importers request for <a href="#earlyReturn"><code>earlyReturn</code></a> by the return argument <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, or</p>
@@ -12004,14 +12004,19 @@ In analogy to the term digital mock-up (see <em>mock-up</em>), functional mock-u
 <td class="tableblock halign-left valign-top"><p class="tableblock">The function of the FMI C-API.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for co-simulation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for Co-Simulation</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Co-Simulation:<br>
-One of the MODELISAR <em>Functional Mock-up Interface types.</em> It connects the <em>importer</em> with one or more <em>FMU</em>.</p></td>
+It connects the <em>importer</em> with one or more <em>FMUs</em> using co-simulation algorithms.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for model exchange</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for Model Exchange</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Model Exchange:<br>
-One of the MODELISAR <em>Functional Mock-up Interface types.</em> It consists of the <em>model description</em> and the <em>C API</em>.<br></p></td>
+FMU type that externalizes the ODE/DAE solver to allow tightly coupling multiple FMUs and avoid co-simulation delays.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMI for Scheduled Execution</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Functional Mock-up Interface for Scheduled Execution:<br>
+FMI type that externalizes the scheduler to run <em>model partitions</em>, potentially synchronized between more than one FMU and exchanging input and output variables accordingly.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>FMU</em></p></td>
@@ -12124,10 +12129,6 @@ These parameters are different from <a href="#calculatedParameter">calculated pa
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>runtime environment</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See co-simulation environment</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>scheduled execution</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">FMI type that externalizes the scheduler to run <em>model partitions</em>, potentially synchronized between more than one FMU and exchanging input and output variables accordingly.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>simulation</em></p></td>
