@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 722fc5a,</span>
+<span id="revnumber">version eb1226f,</span>
 <span id="revdate">2021-12-29</span>
 </div>
 <div id="toc" class="toc2">
@@ -710,13 +710,13 @@ document.addEventListener('keydown', (event) => {
 <ul class="sectlevel3">
 <li><a href="#structure-of-zip">2.5.1. Structure of the ZIP file</a>
 <ul class="sectlevel4">
-<li><a href="#documentation-directory">2.5.1.1. Directory Documentation</a>
+<li><a href="#documentation-directory">2.5.1.1. Directory <code>documentation</code></a>
 <ul class="sectlevel5">
-<li><a href="#license-information">2.5.1.1.1. Directory Licenses</a></li>
+<li><a href="#license-information">2.5.1.1.1. Directory <code>licenses</code></a></li>
 </ul>
 </li>
-<li><a href="#Icons-directory">2.5.1.2. Directory Icons</a></li>
-<li><a href="#sources-directory">2.5.1.3. Directory Sources</a>
+<li><a href="#terminalsAndIcons-directory">2.5.1.2. Directory <code>terminalsAndIcons</code></a></li>
+<li><a href="#sources-directory">2.5.1.3. Directory <code>sources</code></a>
 <ul class="sectlevel5">
 <li><a href="#_sourcefileset">2.5.1.3.1. SourceFileSet</a></li>
 <li><a href="#SourceFile">2.5.1.3.2. SourceFile</a></li>
@@ -727,15 +727,15 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_examples">2.5.1.3.7. Examples</a></li>
 </ul>
 </li>
-<li><a href="#binaries-directory">2.5.1.4. Directory Binaries</a>
+<li><a href="#binaries-directory">2.5.1.4. Directory <code>binaries</code></a>
 <ul class="sectlevel5">
 <li><a href="#platform-tupe-definition">2.5.1.4.1. Platform Tuple Definition</a></li>
 <li><a href="#platform-tuple-examples">2.5.1.4.2. Platform Tuple Examples</a></li>
 <li><a href="#external-libraries">2.5.1.4.3. External Libraries</a></li>
 </ul>
 </li>
-<li><a href="#resources-directory">2.5.1.5. Directory Resources</a></li>
-<li><a href="#extra-directory">2.5.1.6. Directory Extra</a></li>
+<li><a href="#resources-directory">2.5.1.5. Directory <code>resources</code></a></li>
+<li><a href="#extra-directory">2.5.1.6. Directory <code>extra</code></a></li>
 </ul>
 </li>
 <li><a href="#_multiple_interface_types">2.5.2. Multiple Interface Types</a></li>
@@ -5242,7 +5242,7 @@ This state must not be entered, if the FMU contains no <a href="#tunable"><code>
 Especially, the FMU variables and their attributes such as <code>name</code>, <code>unit</code>, default <a href="#initial"><code>initial</code></a> value, etc. are stored in this file.</p>
 </div>
 <div class="paragraph">
-<p>Additional optional information about the graphical representation and the grouping of FMU variables into terminals is stored in the optional text file <code>icons/terminalsAndIcons.xml</code> in XML format as specified by the XML schema file <code>fmi3TerminalsAndIcons.xsd</code>.</p>
+<p>Additional optional information about the graphical representation and the grouping of FMU variables into terminals is stored in the optional text file <code>terminalsAndIcons/terminalsAndIcons.xml</code> in XML format as specified by the XML schema file <code>fmi3TerminalsAndIcons.xsd</code>.</p>
 </div>
 <div class="paragraph">
 <p>Build information for source code FMUs is provided together with a <code>buildDescription.xml</code> file in the <code>sources</code> directory that adheres to the <code>fmi3BuildDescription.xsd</code> schema file.</p>
@@ -7765,7 +7765,7 @@ It does not change the <a href="#causality"><code>causality</code></a> of the va
 Icons define a graphical representation of an FMU and its terminals.</p>
 </div>
 <div class="paragraph">
-<p>Both features are optional and can be defined in the separate XML file <code>icons/terminalsAndIcons.xml</code>.<br>
+<p>Both features are optional and can be defined in the separate XML file <code>terminalsAndIcons/terminalsAndIcons.xml</code>.<br>
 <em>[The usage of a separate file enables backporting of this feature to previous FMI versions.]</em></p>
 </div>
 <div id="terminals_and_icons_overview" class="imageblock text-center">
@@ -7792,9 +7792,9 @@ Icons define a graphical representation of an FMU and its terminals.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmiVersion</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This attribute declares the FMI version defining the XSD of the <code>icons/terminalsAndIcons.xml</code> file.
+<td class="tableblock halign-left valign-top"><p class="tableblock">This attribute declares the FMI version defining the XSD of the <code>terminalsAndIcons/terminalsAndIcons.xml</code> file.
 Starting with FMI 3.0, this <code>fmiVersion</code> attribute must match the <code>fmiVersion</code> attribute of element <a href="#fmiModelDescription">Section 2.4.1</a> of the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file.
-If used in previous FMI versions, this attribute points to the FMI version defining this <code>icons/terminalsAndIcons.xml</code> file (e.g. XSD, file location).</p></td>
+If used in previous FMI versions, this attribute points to the FMI version defining this <code>terminalsAndIcons/terminalsAndIcons.xml</code> file (e.g. XSD, file location).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;GraphicalRepresentation&gt;</code></p></td>
@@ -7883,9 +7883,9 @@ Flipping of the FMU icon or a terminal can be realized by setting its attributes
 </div>
 <div class="paragraph">
 <p>The extent and position of the FMU icon are defined in the <code>&lt;Icon&gt;</code> element.
-The optional image file of the FMU icon is placed at the path <code>icons/icon.png</code> in the ZIP archive of the FMU.
+The optional image file of the FMU icon is placed at the path <code>terminalsAndIcons/icon.png</code> in the ZIP archive of the FMU.
 The terminals should not be visible in the image.
-Optionally an SVG file with path <code>icons/icon.svg</code> can be provided if also the PNG file is present.
+Optionally an SVG file with path <code>terminalsAndIcons/icon.svg</code> can be provided if also the PNG file is present.
 This enables high quality rendering and printing in importing tools.</p>
 </div>
 <div class="paragraph">
@@ -8197,14 +8197,14 @@ q_{i, \mathit{inStream}} &amp;\textit{if $\dot{m}$ is inflowing through terminal
 <div class="paragraph">
 <p>The <code>iconBaseName</code> attribute is mandatory.
 This attribute defines the base name of the image file as a relative URI according to RFC 3986.
-The base URI that this relative URI is resolved against is the URI of the <code>icons/terminalsAndIcons.xml</code> file in the FMU ZIP archive.
+The base URI that this relative URI is resolved against is the URI of the <code>terminalsAndIcons/terminalsAndIcons.xml</code> file in the FMU ZIP archive.
 Implementations are required to support relative URIs, excluding relative URIs that move beyond the baseURI (i.e. go "up" a level via ..).
 Implementations are not required to support any absolute URIs and any specific URI schemes.
 The PNG file with the extension '.png' has to be provided.
 An additional SVG file with extension '.svg' is optional.</p>
 </div>
 <div class="paragraph">
-<p><em>[Note that this specification is functionally equivalent to looking up image sources from the icons folder of the FMU ZIP archive after dot removal from the path as per section 5.2.4 of RFC 3986.]</em></p>
+<p><em>[Note that this specification is functionally equivalent to looking up image sources from the <code>terminalsAndIcons</code> folder of the FMU ZIP archive after dot removal from the path as per section 5.2.4 of RFC 3986.]</em></p>
 </div>
 <div class="paragraph">
 <p>The <code>defaultConnectionStrokeSize</code> and <code>defaultConnectionColor</code> can be provided to define the intended connection line layout in the importing tool.
@@ -8216,7 +8216,7 @@ The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</co
 <em>However, if and how nested terminals are displayed, is up to the importing tool.]</em></p>
 </div>
 <div class="paragraph">
-<p><em>[The order of painting of the <code>&lt;TerminalGraphicalRepresentation&gt;</code> of terminals on each level is equal to the order of appearance in the <code>&lt;Terminal&gt;</code> element.</em>
+<p><em>[The order of painting of the <code>&lt;TerminalGraphicalRepresentation&gt;</code> of terminals on each level is equal to the order in the <code>&lt;Terminal&gt;</code> element.</em>
 <em>So graphical representations appearing first, are painted first, are behind graphical representations which appear below.]</em></p>
 </div>
 <div class="paragraph">
@@ -8314,17 +8314,19 @@ documentation                       // directory containing the documentation (o
    index.html                       // entry point of the documentation
    diagram.png                      // descriptive diagram view of the model (optional)
    diagram.svg                      // if provided, diagram.png is also required (optional)
-   externalDependencies.{txt|html}  // documentation of external resources required to load or simulate the FMU
+   externalDependencies.{txt|html}  // documentation of external resources required to load
+                                    // or simulate the FMU
    &lt;other documentation files&gt;
    licenses                         // directory for licenses (optional)
       license.{txt|html}            // entry point for license information
-      &lt;license files&gt;               // for example BSD licenses
-   staticLinking.{txt|html}         // entry point for static linking information (optional)
-icons                               // FMU and terminal icons (optional)
+      &lt;license files&gt;               // for example BSD licenses (optional)
+   staticLinking.{txt|html}         // entry point for static link information (optional)
+terminalsAndIcons                   // FMU and terminal icons (optional)
    terminalsAndIcons.xml            // description of terminals and icons (optional)
    icon.png                         // image file of icon without terminals (optional)
    icon.svg                         // if existing the icon.png is required (optional)
-                                    // all terminal and fmu icons referenced in the graphical representation
+                                    // all terminal and fmu icons referenced in the
+                                    // graphical representation
 sources                             // directory containing the C sources (optional)
    buildDescription.xml
 binaries                            // directory containing the binaries (optional)
@@ -8342,13 +8344,13 @@ extra                               // Additional (meta-)data of the FMU (option
 </div>
 </div>
 <div class="sect4">
-<h5 id="documentation-directory">2.5.1.1. Directory Documentation</h5>
+<h5 id="documentation-directory">2.5.1.1. Directory <code>documentation</code></h5>
 <div class="paragraph">
 <p><a href="#figure-zip-structure">Structure of the ZIP file</a> defines the files expected in the <code>documentation</code> directory.
 If the FMU depends on external resources <em>[e.g. shared libraries, files, or servers]</em> to be loaded or simulated <code>documentation/externalDependencies.{txt|html}</code> must be present to document these dependencies and how to provide them.</p>
 </div>
 <div class="sect5">
-<h6 id="license-information">2.5.1.1.1. Directory Licenses</h6>
+<h6 id="license-information">2.5.1.1.1. Directory <code>licenses</code></h6>
 <div class="paragraph">
 <p>This optional subdirectory can be used to bundle all license texts for the code, binaries or other material (documentation, content of resources folder) contained in the FMU.
 If it is present, it must contain either a <a href="https://spdx.dev">license.spdx</a>, <code>license.txt</code> or <code>license.html</code> file as entry point.</p>
@@ -8360,13 +8362,13 @@ If it is present, it must contain either a <a href="https://spdx.dev">license.sp
 </div>
 </div>
 <div class="sect4">
-<h5 id="Icons-directory">2.5.1.2. Directory Icons</h5>
+<h5 id="terminalsAndIcons-directory">2.5.1.2. Directory <code>terminalsAndIcons</code></h5>
 <div class="paragraph">
-<p>See <a href="#fmiTerminalsAndIcons">Section 2.4.9</a> for a definition of the directory <code>icons</code>.</p>
+<p>See <a href="#fmiTerminalsAndIcons">Section 2.4.9</a> for a definition of the directory <code>terminalsAndIcons</code>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="sources-directory">2.5.1.3. Directory Sources</h5>
+<h5 id="sources-directory">2.5.1.3. Directory <code>sources</code></h5>
 <div id="BuildConfiguration" class="paragraph">
 <p>A source code FMU contains the sources of the model in the <code>sources</code> directory together with a <code>buildDescription.xml</code> that contains at least one <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> element for the supported platforms.
 The header files <code>fmi3PlatformTypes.h</code>, <code>fmi3FunctionTypes.h</code> and <code>fmi3Functions.h</code> are not included in the FMU, but supplied by the importer to potentially reflect their specific platform and compiler tool set.</p>
@@ -8720,7 +8722,7 @@ The default is <code>false</code>.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="binaries-directory">2.5.1.4. Directory Binaries</h5>
+<h5 id="binaries-directory">2.5.1.4. Directory <code>binaries</code></h5>
 <div class="paragraph">
 <p>If an FMU is run through one of its binaries all items in that binary folder must be unpacked at the same location as the binary <code>&lt;modelIdentifier&gt;.{dll|dylib|so}</code>.</p>
 </div>
@@ -8880,7 +8882,7 @@ The requirements and the expected processing should be documented in the <code>d
 </div>
 </div>
 <div class="sect4">
-<h5 id="resources-directory">2.5.1.5. Directory Resources</h5>
+<h5 id="resources-directory">2.5.1.5. Directory <code>resources</code></h5>
 <div class="paragraph">
 <p>In the optional directory <code>resources</code>, additional data can be provided in FMU specific formats, typically for tables and maps used in the FMU.
 More folders can be added under <code>resources</code> (tool/model specific).
@@ -8897,7 +8899,7 @@ In the case of an FMU implementation of <code>needsExecutionTool = true</code> t
 </div>
 </div>
 <div class="sect4">
-<h5 id="extra-directory">2.5.1.6. Directory Extra</h5>
+<h5 id="extra-directory">2.5.1.6. Directory <code>extra</code></h5>
 <div class="paragraph">
 <p>The ZIP archive may contain additional entries with the prefix <code>extra/</code> that can be used to store additional data and meta-data.
 In order to avoid ambiguities and conflicts, the extra files should be provided in subdirectories using a reverse domain notation of a domain that is controlled by the entity defining the semantics and content of the additional entries <em>[(for example <code>extra/com.example/SimTool/meta.xml</code> or <code>extra/org.example.stdname/data.asd</code>)]</em>.
