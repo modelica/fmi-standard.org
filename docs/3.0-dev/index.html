@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 5ff4763,</span>
+<span id="revnumber">version 37672a3,</span>
 <span id="revdate">2021-12-30</span>
 </div>
 <div id="toc" class="toc2">
@@ -954,7 +954,7 @@ New features, like</p>
 <p>While a number of desirable features had to be postponed, the resulting FMI 3.0 is certainly a significant step forward towards meeting the most important requirements of the system simulation community for the years to come.</p>
 </div>
 <div class="paragraph">
-<p>The asynchronous mode for FMUs known from FMI 2.0 has been removed since this mode was not supported by tools and it can be suitably replaced by Co-Simulation implementations that control the asynchronous computation of FMUs via separate tasks/threads created for each FMU.</p>
+<p>The asynchronous mode for FMUs known from FMI 2.0 has been removed since this mode was not supported by tools and it can be suitably replaced by Co-Simulation implementations that control the asynchronous computation of FMUs via separate processes/threads created for each FMU.</p>
 </div>
 </div>
 <div class="sect2">
@@ -3045,7 +3045,7 @@ Such a system, also called the <a href="#model-partition">model partition</a> of
 </ol>
 </div>
 <div class="paragraph">
-<p><em>[Such a model partition may represent a task or an interrupt service routine of an embedded system, or a discretized part of a plant model.</em>
+<p><em>[Such a model partition may represent a <a href="#task">task</a> or an interrupt service routine of an embedded system, or a discretized part of a plant model.</em>
 <em>The name "model partition" refers to the fact that a model inside an FMU may declare multiple Clocks, each with its own partition of the overall model.]</em></p>
 </div>
 <div class="paragraph">
@@ -10020,7 +10020,7 @@ The co-simulation algorithm of the importer controls the data exchange and the s
 <div class="paragraph">
 <p>For FMI for Co-Simulation the co-simulation algorithm is shielded from how the FMU advances time internally.
 <em>[For example, FMUs containing ODEs and implementing FMI for Co-Simulation require to include an ODE solver inside the FMU to internally advance time between the communication points.</em>
-<em>As another example, FMUs representing controller code, an internal scheduling algorithm can trigger tasks at the correct time and order while advancing time to the next communication point.]</em></p>
+<em>As another example, FMUs representing controller code, an internal scheduling algorithm can trigger computations at the correct time and order while advancing time to the next communication point.]</em></p>
 </div>
 <div class="paragraph">
 <p>FMI for Co-Simulation enables the following features, allowing co-simulation algorithms of arbitrary sophistication:</p>
@@ -11570,7 +11570,7 @@ Two model partitions are associated with two <a href="#periodic-clock">periodic 
 The importer retrieves this interval and activates the corresponding model partition.</p>
 </div>
 <div class="paragraph">
-<p>In this example, the calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (as well as related <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <code>fmi3Set{VariableType}</code>) for each associated Clock are placed into a task.
+<p>In this example, the calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> (as well as related <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <code>fmi3Set{VariableType}</code>) for each associated Clock are placed into a <a href="#task">task</a>.
 A task can be thought of as a simple interface of the scheduler that allows to connect the FMU interface by implementing a void/void function and set up the priorities of the tasks as derived from the respective <a href="#Clock">Clock</a> configurations of the FMU.</p>
 </div>
 <div class="paragraph">
@@ -12108,11 +12108,6 @@ It can be used to compute its expected behavior under specified conditions.</p><
 Most important, data for every variable is defined (variable name, handle, data type, variability, unit, etc.), see <a href="#fmi-description-schema">Section 2.4</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>model rate</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Inverse of time interval between two communication points associated to an exposed model partition within the FMU (i.e. <a href="#Clock">Clock</a> is defined in interface).
-In general multiple rates i.e. multiple model partitions can be defined for an Co-Simulation FMU.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="model-partition"></a><em>model partition</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Model partitions can be associated to a discrete or (piecewise) continuous part of the FMU.
 The computation of model partitions can be externally controlled based on <a href="#Clock">Clock</a> ticks of associated <a href="#inputClock"><code>input clocks</code></a>.</p>
@@ -12166,7 +12161,7 @@ The software includes a <em>solver</em>, may include a user interface and method
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>simulator</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A simulator can include one or more <em>simulation programs</em>, which solve a common simulation task.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A simulator can include one or more <em>simulation programs</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>simulator coupling</em></p></td>
@@ -12208,8 +12203,9 @@ The integer part \(\mathbf{t}_I\) of this tuple is a counter to enumerate (and t
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#time-instant">time instant</a> and <a href="#super-dense-time">super-dense time</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>task</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Special kind of <em>model partition</em> that is used in control code.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="task"></a><em>task</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Special kind of or part of a <em>model partition</em> that represents controller code.
+This term is used and defined for example in the embedded systems domain (RTOS, OSEK).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="time-event"></a><em>time event</em></p></td>
