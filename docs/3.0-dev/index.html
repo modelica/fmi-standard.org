@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 934e5f5,</span>
-<span id="revdate">2022-01-03</span>
+<span id="revnumber">version 7dd7b6e,</span>
+<span id="revdate">2022-01-05</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1661,7 +1661,7 @@ the multi-threaded simulation environment that uses the FMU must guarantee that 
 The FMU itself does not implement any services to support this.]</em></p>
 </li>
 <li>
-<p>FMI callback functions are not allowed to call back into the FMU (<a href="#logMessage"><code>fmi3CallbackLogMessage</code></a>, <a href="#preemption-support"><code>fmi3CallbackLockPreemption</code></a>, <a href="#preemption-support"><code>fmi3CallbackUnlockPreemption</code></a>), except <a href="#intermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a> which lead to the well-defined states <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> and <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>, respectively, defining which function calls back into the FMU are allowed.</p>
+<p>FMI callback functions are not allowed to call back into the FMU (<a href="#logMessage"><code>fmi3LogMessageCallback</code></a>, <a href="#preemption-support"><code>fmi3LockPreemptionCallback</code></a>, <a href="#preemption-support"><code>fmi3UnlockPreemptionCallback</code></a>), except <a href="#intermediateUpdate"><code>fmi3IntermediateUpdateCallback</code></a> and <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a> which lead to the well-defined states <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> and <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>, respectively, defining which function calls back into the FMU are allowed.</p>
 </li>
 <li>
 <p>FMI functions must not change global settings which affect other processes/threads.
@@ -2034,7 +2034,7 @@ In fact, time is not necessarily always advancing as solvers might need to jump 
 The importer calls <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with the <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> and a target <a href="#communicationStepSize"><code>communicationStepSize</code></a> (required to be larger than 0.0).
 During this <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, both importer and FMU might encounter events (or other situations) that require reduction of the <a href="#communicationStepSize"><code>communicationStepSize</code></a> (potentially even down to 0.0).
 The FMU may use the return argument <a href="#earlyReturn"><code>earlyReturn</code></a> of the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function to tell the importer that the FMU returned earlier.
-The importer may use the return argument <a href="#earlyReturnRequested"><code>earlyReturnRequested</code></a> of the callback <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> to signal the FMU to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
+The importer may use the return argument <a href="#earlyReturnRequested"><code>earlyReturnRequested</code></a> of the callback <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> to signal the FMU to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
 The output argument <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> allows the FMU to signal the importer its current internal time.</p>
 </div>
 <div class="paragraph">
@@ -2817,7 +2817,7 @@ The importer calls <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to inqu
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
 <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
 <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, in every <a href="#EventMode"><strong>Event Mode</strong></a> and in every <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.
-In Scheduled Execution the FMU has to inform the importer by calling <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a> that the Clock is about to tick</p></td>
+In Scheduled Execution the FMU has to inform the importer by calling <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a> that the Clock is about to tick</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">time-delayed actions after an event, for example, ignition signal some time after specific crank shaft angle</p></td>
 </tr>
 <tr>
@@ -3090,7 +3090,7 @@ To retrieve this information the importer calls <a href="#fmi3GetInterval"><code
 </div>
 <div class="paragraph">
 <p>A new interval for a <a href="#countdown"><code>countdown</code></a> Clock can be provided at any time during the execution of any model partition.
-The FMU signals that a <a href="#countdown"><code>countdown</code></a> Clock is about to tick by calling <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a>.
+The FMU signals that a <a href="#countdown"><code>countdown</code></a> Clock is about to tick by calling <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a>.
 The importer calls <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> for all <a href="#countdown"><code>countdown</code></a> Clocks.
 If a new interval \(\mathbf{T}_{interval, i}\) is provided, i.e. return argument <a href="#qualifiers"><code>qualifiers</code></a> == <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a>, the importer initiates the scheduling of the associated model partitions regarding the delay of the returned interval.</p>
 </div>
@@ -3999,7 +3999,7 @@ It is allowed to call this function only if <a href="#modelDescription.xml"><cod
     fmi3Boolean                visible,
     fmi3Boolean                loggingOn,
     fmi3InstanceEnvironment    instanceEnvironment,
-    fmi3CallbackLogMessage     logMessage);
+    fmi3LogMessageCallback     logMessage);
 
 typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
     fmi3String                     instanceName,
@@ -4012,8 +4012,8 @@ typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
     const fmi3ValueReference       requiredIntermediateVariables[],
     size_t                         nRequiredIntermediateVariables,
     fmi3InstanceEnvironment        instanceEnvironment,
-    fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackIntermediateUpdate intermediateUpdate);
+    fmi3LogMessageCallback         logMessage,
+    fmi3IntermediateUpdateCallback intermediateUpdate);
 
 typedef fmi3Instance fmi3InstantiateScheduledExecutionTYPE(
     fmi3String                     instanceName,
@@ -4022,10 +4022,10 @@ typedef fmi3Instance fmi3InstantiateScheduledExecutionTYPE(
     fmi3Boolean                    visible,
     fmi3Boolean                    loggingOn,
     fmi3InstanceEnvironment        instanceEnvironment,
-    fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackClockUpdate        clockUpdate,
-    fmi3CallbackLockPreemption     lockPreemption,
-    fmi3CallbackUnlockPreemption   unlockPreemption);</code></pre>
+    fmi3LogMessageCallback         logMessage,
+    fmi3ClockUpdateCallback        clockUpdate,
+    fmi3LockPreemptionCallback     lockPreemption,
+    fmi3UnlockPreemptionCallback   unlockPreemption);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4088,7 +4088,7 @@ For FMUs that have clocks, <code>eventModeUsed == fmi3True</code> is required.</
 Only in this case, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may return with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a>.</p>
 </li>
 <li>
-<p><code>instanceEnvironment</code> is a pointer that must be passed to <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a> to allow the simulation environment an efficient way to identify the calling FMU.</p>
+<p><code>instanceEnvironment</code> is a pointer that must be passed to <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> and <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a> to allow the simulation environment an efficient way to identify the calling FMU.</p>
 </li>
 <li>
 <p><a id="requiredIntermediateVariables"></a> <code>requiredIntermediateVariables</code> is an array of the value references of all <a href="#input"><code>input</code></a> variables that the simulation algorithm intends to set and all <a href="#output"><code>output</code></a> variables it intends to get during intermediate updates.
@@ -4105,7 +4105,7 @@ If <a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariable
 <p><a id="logMessage"></a>Callback function <code>logMessage</code></p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void  (*fmi3CallbackLogMessage) (fmi3InstanceEnvironment instanceEnvironment,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void  (*fmi3LogMessageCallback) (fmi3InstanceEnvironment instanceEnvironment,
                                          fmi3Status status,
                                          fmi3String category,
                                          fmi3String message);</code></pre>
@@ -4142,11 +4142,11 @@ If the character <code>#</code> shall be included in the message, it has to be p
 </li>
 <li>
 <p>Callback function <code>intermediateUpdate</code><br>
-See <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> for details.</p>
+See <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> for details.</p>
 </li>
 <li>
 <p>Callback function <code>clockUpdate</code><br>
-See <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a> for details.</p>
+See <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a> for details.</p>
 </li>
 <li>
 <p>Callback function <a href="#preemption-support"><code>lockPreemption</code></a> and <a href="#preemption-support"><code>unlockPreemption</code></a><br>
@@ -4155,7 +4155,7 @@ See <a href="#preemption-support">Section 5.1.1</a> for details.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The arguments <a href="#logMessage"><code>logMessage</code></a>, <a href="#fmi3CallbackIntermediateUpdate"><code>intermediateUpdate</code></a>, <a href="#fmi3CallbackClockUpdate"><code>clockUpdate</code></a>, <a href="#preemption-support"><code>lockPreemption</code></a>, and <a href="#preemption-support"><code>unlockPreemption</code></a>, are function pointers provided by the simulation environment to be used by the FMU.
+<p>The arguments <a href="#logMessage"><code>logMessage</code></a>, <a href="#fmi3IntermediateUpdateCallback"><code>intermediateUpdate</code></a>, <a href="#fmi3ClockUpdateCallback"><code>clockUpdate</code></a>, <a href="#preemption-support"><code>lockPreemption</code></a>, and <a href="#preemption-support"><code>unlockPreemption</code></a>, are function pointers provided by the simulation environment to be used by the FMU.
 Each of these pointers can be NULL to indicate missing support for the respective functionality.
 If such functionality is used anyway, undefined behavior results.
 <em>[For example, if <a href="#logMessage"><code>logMessage == NULL</code></a>, calls to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> result in undefined behavior of the FMU.</em>
@@ -4718,7 +4718,7 @@ While the reasons for entering <a href="#EventMode"><strong>Event Mode</strong><
 <ul>
 <li>
 <p><a href="#input-event">Input events</a> indicate a non-continuous change of at least one input, in both Model Exchange and Co-Simulation.
-Additionally, in Co-Simulation, the exact event time can be communicated to the FMU by the return argument <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.</p>
+Additionally, in Co-Simulation, the exact event time can be communicated to the FMU by the return argument <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>.</p>
 </li>
 <li>
 <p><a href="#time-event">Time events</a> are announced to the importer in advance by the FMU through</p>
@@ -5647,7 +5647,7 @@ This flag is ignored in Model Exchange.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesIntermediateUpdate"></a> <code>providesIntermediateUpdate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU supports <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> and will call <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, if provided.
+<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU supports <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> and will call <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, if provided.
 This flag is ignored in Model Exchange and Scheduled Execution.</p></td>
 </tr>
 <tr>
@@ -6536,7 +6536,7 @@ All variables are a function of this <a href="#independent"><code>independent</c
 <a href="#variability"><code>variability</code></a> must be <a href="#continuous"><code>continuous</code></a>.
 Exactly one variable of an FMU must be defined as <a href="#independent"><code>independent</code></a>.
 For Model Exchange the value is the last value set by <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>.
-For Co-Simulation the value of the independent variable is <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> return by the last call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> or the value of argument <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>.
+For Co-Simulation the value of the independent variable is <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> return by the last call to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> or the value of argument <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>.
 For <a href="#fmi-for-scheduled-execution">Scheduled Execution</a> the value of the independent variable is not defined.
 <em>[The main purpose of this variable in Scheduled Execution is to define a quantity and unit for the independent variable.]</em>
 The initial value of the independent variable is the value of the argument <a href="#startTime"><code>startTime</code></a> of <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> for both Co-Simulation and Model Exchange.
@@ -10182,7 +10182,7 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{v}_{u-k}, \mathbf{t}_u) := \mathbf{f}_{\mathit{inter}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{c,u}, \mathbf{p}, {}^{\bullet}\mathbf{b}, \mathbf{t}_i, \mathbf{h}_i)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Activate event equations \(\mathbf{f}_{\mathit{event}}\).</p></td>
@@ -10294,7 +10294,7 @@ Reasons for <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> are<
 <p>expressed by the return arguments <a href="#eventHandlingNeeded"><code>eventHandlingNeeded</code></a> or <a href="#terminateSimulationDS"><code>terminateSimulation</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, or</p>
 </li>
 <li>
-<p>the FMU&#8217;s reaction to the importers request for <a href="#earlyReturn"><code>earlyReturn</code></a> by the return argument <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a>, or</p>
+<p>the FMU&#8217;s reaction to the importers request for <a href="#earlyReturn"><code>earlyReturn</code></a> by the return argument <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, or</p>
 </li>
 <li>
 <p>the FMU&#8217;s request for a communication point at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> for any other reason.</p>
@@ -10322,9 +10322,9 @@ Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> w
 </ul>
 </div>
 </dd>
-<dt class="hdlist1">Function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a></dt>
 <dd>
-<p><a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> switches the FMU itself into the <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</p>
+<p><a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> switches the FMU itself into the <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</p>
 </dd>
 </dl>
 </div>
@@ -10362,7 +10362,7 @@ This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><cod
 </ul>
 </div>
 <div class="paragraph">
-<p><em>Note that the call to <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> and thus entering the <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> can only be triggered by the FMU itself.</em>
+<p><em>Note that the call to <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> and thus entering the <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> can only be triggered by the FMU itself.</em>
 <em>The importer cannot actively trigger this and hence for some use cases (e.g. cooperative multitasking and setting of intermediate input values) it relies on the callbacks from the FMUs to be able to realize these use cases properly.]</em></p>
 </div>
 <div class="paragraph">
@@ -10398,14 +10398,14 @@ It distinguishes the level of trust that can be placed in the tentative outputs 
 </div>
 <div class="paragraph">
 <p>The FMU signals the support of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> via the capability flag <a href="#providesIntermediateUpdate"><code>providesIntermediateUpdate</code></a>.
-The co-simulation algorithm signals the support for <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> by providing a non-NULL callback-function pointer for <a href="#fmi3CallbackIntermediateUpdate"><code>intermediateUpdate</code></a>.</p>
+The co-simulation algorithm signals the support for <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> by providing a non-NULL callback-function pointer for <a href="#fmi3IntermediateUpdateCallback"><code>intermediateUpdate</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The FMU enters <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> by calling <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> within <a href="#StepMode"><strong>Step Mode</strong></a> and leaves the state towards <a href="#StepMode"><strong>Step Mode</strong></a> when the function returns.</p>
+<p>The FMU enters <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> by calling <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> within <a href="#StepMode"><strong>Step Mode</strong></a> and leaves the state towards <a href="#StepMode"><strong>Step Mode</strong></a> when the function returns.</p>
 </div>
-<div id="fmi3CallbackIntermediateUpdate" class="listingblock">
+<div id="fmi3IntermediateUpdateCallback" class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3CallbackIntermediateUpdate) (
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3IntermediateUpdateCallback) (
     fmi3InstanceEnvironment instanceEnvironment,
     fmi3Float64  intermediateUpdateTime,
     fmi3Boolean  intermediateVariableSetRequested,
@@ -10423,7 +10423,7 @@ The co-simulation algorithm signals the support for <a href="#IntermediateUpdate
 If an event happens or an <a href="#outputClock"><code>output Clock</code></a> ticks, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the time of event or <a href="#outputClock"><code>output Clock</code></a> tick.
 In Co-Simulation, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is restricted by the arguments to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as follows:<br>
 <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> \(\leq\) <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> \(\leq\) (<a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>).<br>
-The FMU must not call the callback function <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3CallbackIntermediateUpdate"><code>fmi3CallbackIntermediateUpdate</code></a> with <code>intermediateStepFinished == fmi3True</code>.<br></p>
+The FMU must not call the callback function <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with <code>intermediateStepFinished == fmi3True</code>.<br></p>
 </li>
 </ul>
 </div>
@@ -11245,12 +11245,12 @@ For model partitions with the same priority, it decides on the execution order b
 </div>
 <div class="paragraph">
 <p>It may be important for the FMU to secure particular sections of its code against being preempted.
-Callback functions <a href="#preemption-support"><code>fmi3CallbackLockPreemption</code></a> and <a href="#preemption-support"><code>fmi3CallbackUnlockPreemption</code></a> are provided by the simulation algorithm when instantiating the FMU via <a href="#fmi3InstantiateScheduledExecution"><code>fmi3InstantiateScheduledExecution</code></a> to allow the FMU to signal entering and exiting such code sections.</p>
+Callback functions <a href="#preemption-support"><code>fmi3LockPreemptionCallback</code></a> and <a href="#preemption-support"><code>fmi3UnlockPreemptionCallback</code></a> are provided by the simulation algorithm when instantiating the FMU via <a href="#fmi3InstantiateScheduledExecution"><code>fmi3InstantiateScheduledExecution</code></a> to allow the FMU to signal entering and exiting such code sections.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3CallbackLockPreemption)   ();
-typedef void (*fmi3CallbackUnlockPreemption) ();</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3LockPreemptionCallback)   ();
+typedef void (*fmi3UnlockPreemptionCallback) ();</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -11297,7 +11297,7 @@ typedef void (*fmi3CallbackUnlockPreemption) ();</code></pre>
 <em>An example is given in <a href="#example-scheduled-execution">Section 5.3</a>.</em></p>
 </li>
 <li>
-<p><em>depending on their implementation <a href="#preemption-support"><code>fmi3CallbackLockPreemption</code></a> and <a href="#preemption-support"><code>fmi3CallbackUnlockPreemption</code></a> have a strong impact on the simulator&#8217;s OS so their use should be as rare and short as possible.</em>
+<p><em>depending on their implementation <a href="#preemption-support"><code>fmi3LockPreemptionCallback</code></a> and <a href="#preemption-support"><code>fmi3UnlockPreemptionCallback</code></a> have a strong impact on the simulator&#8217;s OS so their use should be as rare and short as possible.</em>
 <em>So in general it is recommended to reduce dependencies between different model partitions of one FMU by design.</em>
 <em>One may also consider if the code can be preempted by other parts of the same FMU: E.g. a model partition cannot be interrupted if it is the only model partition of the FMU or if it holds the highest priority.</em>
 <em>I such cases no locks are necessary.]</em></p>
@@ -11506,18 +11506,18 @@ The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code
 </dd>
 </dl>
 </div>
-<div id="fmi3CallbackClockUpdate" class="dlist">
+<div id="fmi3ClockUpdateCallback" class="dlist">
 <dl>
-<dt class="hdlist1">Function <code>fmi3CallbackClockUpdate</code></dt>
+<dt class="hdlist1">Function <code>fmi3ClockUpdateCallback</code></dt>
 <dd>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3CallbackClockUpdate) (
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef void (*fmi3ClockUpdateCallback) (
     fmi3InstanceEnvironment  instanceEnvironment);</code></pre>
 </div>
 </div>
 <div id="activateClockReferences" class="paragraph">
-<p><a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a> switches the FMU itself into the <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.
+<p><a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a> switches the FMU itself into the <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.
 The callback may be called from several <a href="#model-partition">model partitions</a>.</p>
 </div>
 </dd>
@@ -11532,7 +11532,7 @@ The callback may be called from several <a href="#model-partition">model partiti
 <div class="sect3">
 <h4 id="ClockUpdateMode">5.2.3. State: Clock Update Mode</h4>
 <div class="paragraph">
-<p>A model partition of a Scheduled Execution FMU calls <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a> to signal that a <a href="#triggered"><code>triggered output</code></a> <a href="#Clock">Clock</a> ticked or a new interval for a <a href="#countdown"><code>countdown</code></a> <a href="#Clock">Clock</a> is available.</p>
+<p>A model partition of a Scheduled Execution FMU calls <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a> to signal that a <a href="#triggered"><code>triggered output</code></a> <a href="#Clock">Clock</a> ticked or a new interval for a <a href="#countdown"><code>countdown</code></a> <a href="#Clock">Clock</a> is available.</p>
 </div>
 <div class="paragraph">
 <p>This means that <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> must be called for gathering all <a href="#Clock">Clock</a> related information about ticking <a href="#outputClock">output Clocks</a> and <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> must be called for all <a href="#countdown"><code>countdown</code></a> <a href="#Clock">Clocks</a> whose associated model partitions have to be scheduled afterwards if a new interval is provided.</p>
@@ -11553,7 +11553,7 @@ The FMU sets the reported activation state immediately back to fmi3ClockInactive
 </dl>
 </div>
 <div class="paragraph">
-<p><em>[In Scheduled Execution it cannot be determined which model partition has called <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a>, because multiple model partitions can be active at the same time.</em>
+<p><em>[In Scheduled Execution it cannot be determined which model partition has called <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a>, because multiple model partitions can be active at the same time.</em>
 <em>Since all information about which model partition to activate is coded into its corresponding Clock, there is no need to know which potentially other model partition activated this Clock.]</em></p>
 </div>
 </div>
@@ -11566,7 +11566,7 @@ The example consists of one FMU with three model partitions.
 Two model partitions are associated with two <a href="#periodic-clock">periodic Clocks</a> <code>10msClock</code> and <code>50msClock</code> (periods 10 ms and 50 ms) and one is associated with an aperiodic <a href="#countdown">countdown clock</a> <code>AperiodicClock</code>.</p>
 </div>
 <div class="paragraph">
-<p>During the execution of the model partition of <a href="#Clock">Clock</a> <code>10msClock</code>, the FMU changes the <a href="#interval"><code>interval</code></a> for <a href="#countdown">countdown clock</a> <code>AperiodicClock</code> and calls <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a> to inform the importer that the interval has changed.
+<p>During the execution of the model partition of <a href="#Clock">Clock</a> <code>10msClock</code>, the FMU changes the <a href="#interval"><code>interval</code></a> for <a href="#countdown">countdown clock</a> <code>AperiodicClock</code> and calls <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a> to inform the importer that the interval has changed.
 The importer retrieves this interval and activates the corresponding model partition.</p>
 </div>
 <div class="paragraph">
@@ -11606,7 +11606,7 @@ The <a href="#activationTime"><code>activationTime</code></a> is provided by the
 </div>
 <div class="paragraph">
 <p>The FMU requests to schedule the model partition of <code>AperiodicClock</code>.
-It calls <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a> to enable the importer to check whether the FMU has defined a new interval for <code>AperiodicClock</code>.
+It calls <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a> to enable the importer to check whether the FMU has defined a new interval for <code>AperiodicClock</code>.
 By evaluating the returned values <a href="#qualifiers"><code>qualifiers</code></a> and <a href="#intervals"><code>intervals</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> the simulation algorithms determines if the respective task has to be scheduled and which delay has to be applied.</p>
 </div>
 <div class="listingblock">
@@ -11661,7 +11661,7 @@ By evaluating the returned values <a href="#qualifiers"><code>qualifiers</code><
 </div>
 </div>
 <div class="paragraph">
-<p>In the task being executed every 10 ms, the FMU initiates the scheduling of a task by setting a new interval to <a href="#countdown">countdown Clock</a> <code>AperiodicClock</code> and evoking <a href="#fmi3CallbackClockUpdate"><code>fmi3CallbackClockUpdate</code></a>.</p>
+<p>In the task being executed every 10 ms, the FMU initiates the scheduling of a task by setting a new interval to <a href="#countdown">countdown Clock</a> <code>AperiodicClock</code> and evoking <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
