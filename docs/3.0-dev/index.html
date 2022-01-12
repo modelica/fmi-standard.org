@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 3d31fd6,</span>
+<span id="revnumber">version bf5d8bd,</span>
 <span id="revdate">2022-01-12</span>
 </div>
 <div id="toc" class="toc2">
@@ -3074,9 +3074,9 @@ Clocked states declare the <a href="#valueReference"><code>valueReference</code>
 <em>[For example, a global counter could be incremented by multiple model partitions, each controlled by a different Clock.]</em></p>
 </div>
 <div class="paragraph">
-<p>Clocks may depend on input Clocks.
-This dependency is also defined by the <a href="#clocks"><code>clocks</code></a> attribute.
-<em>[E.g. if an <a href="#outputClock"><code>output Clock</code></a> depends on an <a href="#inputClock"><code>input Clock</code></a>, then Clock ticks of the <a href="#inputClock"><code>input Clock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> may create <a href="#outputClock"><code>output Clock</code></a> ticks during this event handling.]</em></p>
+<p>Output clocks may depend on input Clocks and other variables.
+Such dependencies are declared in the <a href="#ModelStructure">Section 2.4.8</a>.
+A Clock \(\mathbf{k}\) depends on a Clock or variable \(\mathbf{v}\) if a tick or the value of \(\mathbf{v}\) may trigger a tick of \(\mathbf{k}\) during the same super-dense time instant.</p>
 </div>
 </div>
 <div class="sect4">
@@ -4908,8 +4908,22 @@ The exact event localization is hidden from the importer.</p>
 <dd>
 <p>For <a href="#inputClock"><code>input Clocks</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> is called to set the activation status of <a href="#Clock"><code>Clocks</code></a> to <code>fmi3ClockActive</code> or <code>fmi3ClockInactive</code>.
 During the solution of algebraic loops, the activation condition of triggered input clocks may change and therefore <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> can be called multiple times per super-dense time instant.
-When a Clock is deactivated, the FMU must reset all clocked states of this Clock to the values computed during the last <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> when this Clock was active (\({}^\bullet\mathbf{v}_{\mathit{k}}\)).<br>
-<em>[Rationale: a triggered <a href="#outputClock">output Clock</a> \(c\) may depend on some variable \(v\) that is involved in an algebraic loop.</em>
+When a Clock \(\mathbf{k}\) is deactivated, the FMU must</p>
+<div class="ulist">
+<ul>
+<li>
+<p>reset all clocked states of this Clock to the values computed during the last <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> when this Clock was active (\({}^\bullet\mathbf{v}_{\mathit{k}}\)); and, as a result:</p>
+</li>
+<li>
+<p>deactivate all Clocks that were activated as a result of \(\mathbf{k}\)'s activation during the current super-dense time instant.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><em>[Rationale: a triggered <a href="#outputClock">output Clock</a> \(c\) may depend on some variable \(v\) that is involved in an algebraic loop.</em>
 <em>As part of the iterations to solve the algebraic loop, \(v\) acquires a value that activates the Clock.</em>
 <em>If the final (or some intermediate) value of \(v\) no longer activates the Clock, then this Clock must be deactivated by the Importer during the same super-dense time instant.]</em><br>
 The importer can set a Clock to <code>fmi3ClockInactive</code> only if the Clock has the attribute <a href="#canBeDeactivated"><code>canBeDeactivated == true</code></a>.
@@ -4918,7 +4932,9 @@ Only <a href="#time-based-clock">time-based Clocks</a> must not be active for mo
 <em>[The event iteration for handling discontinuities of the continuous part of the FMU should precede handling of time-based Clocks.</em>
 <em>No further constraints on activations of <a href="#time-based-clock">time-based Clocks</a> are defined, e.g. activating at the first instant of super-dense time.</em>
 <em>If the semantics of some Clocks require any specific treatment, e.g. activation at the same super-dense time instant, only the importer will know and must therefore enforce proper activation of the respective Clocks.]</em></p>
-</dd>
+</div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1">Function <a href="#fmi3GetClock"><code>fmi3GetClock</code></a></dt>
 <dd>
 <p>is used to inquire the status of <a href="#Clock">Clocks</a>.</p>
@@ -6671,8 +6687,8 @@ The following constraints apply:</p>
 <p>If present, this variable is clocked.
 The value of <a href="#clocks"><code>clocks</code></a> is a list of value references of <a href="#Clock">Clock</a> variables this variable depends on.
 Only variables with <a href="#variability"><code>variability == discrete</code></a> or <a href="#variability"><code>variability == tunable</code></a> can have this attribute.
-<em>[Some importers might require a variable to be dependent on a single clock for technical reasons.</em>
-<em>They could reject FMUs violating this restriction.</em><br>
+<em>[Some importers might require a variable to be dependent on a single Clock for technical reasons.</em>
+<em>They could reject FMUs violating this restriction.</em>
 <em>Note: It is not further restricted, which variables can be clocked to not restrict currently unknown use cases.</em>
 <em>For example, an <a href="#input"><code>input</code></a> Clock could be a clocked variable of another (<a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a>) clock to indicate that it can only be activated when that Clock is active.]</em></p>
 </div></div></td>
