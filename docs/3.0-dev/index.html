@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version e494637,</span>
-<span id="revdate">2022-01-13</span>
+<span id="revnumber">version 106f3ce,</span>
+<span id="revdate">2022-01-20</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -5604,13 +5604,13 @@ Currently standardized are:</p>
 <div class="sect3">
 <h4 id="common-capability-flags">2.4.2. Definition of Capability Flags</h4>
 <div class="paragraph">
-<p>The elements <code>&lt;ModelExchange&gt;</code>, <code>&lt;CoSimulation&gt;</code> and <code>&lt;ScheduledExecution&gt;</code> contain attributes representing capability flags describing which optional functionalities the FMU supports.</p>
+<p>The elements <code>&lt;ModelExchange&gt;</code>, <code>&lt;CoSimulation&gt;</code> and <code>&lt;ScheduledExecution&gt;</code> contain attributes, some representing capability flags describing which optional functionalities the FMU supports.</p>
 </div>
 <div class="paragraph">
 <p>The following table contains capability flags common to all three interface types.</p>
 </div>
 <table id="table-common-capability-flags" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Common capability flags.</caption>
+<caption class="title">Table 13. Common attributes and capability flags.</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -5622,6 +5622,13 @@ Currently standardized are:</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="modelIdentifier"></a><code>modelIdentifier</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Short class name according to C syntax, for example, <code>A_B_C</code>.
+Used as prefix for FMI functions if the functions are provided in C source code or in static libraries, but not if the functions are provided by a DLL/SharedObject.
+<a href="#modelIdentifier"><code>modelIdentifier</code></a> is also used as name of the static library or DLL/SharedObject.
+See also <a href="#header-files-and-naming-of-functions">Section 2.2.1</a>.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>needsExecutionTool</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, a tool is needed to execute the model and the FMU just contains the communication to this tool.
@@ -5656,32 +5663,9 @@ If this is the case, then flag <a href="#canGetAndSetFMUState"><code>canGetAndSe
 <td class="tableblock halign-left valign-top"><p class="tableblock">The FMU is able to provide detailed dependency information at runtime using <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a> and <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="maxOutputDerivativeOrder"></a> <code>maxOutputDerivativeOrder</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU is able to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> with maximum order.
-Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defined by <code>maxOutputDerivativeOrder</code>.
-This flag is ignored in Model Exchange.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesIntermediateUpdate"></a> <code>providesIntermediateUpdate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU supports <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> and will call <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, if provided.
-This flag is ignored in Model Exchange and Scheduled Execution.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="mightReturnEarlyFromDoStep"></a> <code>mightReturnEarlyFromDoStep</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU announces that it might <a href="#earlyReturn">return early</a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
-If this flag is <code>false</code> (the default), the importer can assume that the FMU computes the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as instructed up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>.
-This flag is ignored in Model Exchange and Scheduled Execution.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesEvaluateDiscreteStates"></a> <code>providesEvaluateDiscreteStates</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The FMU supports <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>, if <code>true</code>.
 This flag is ignored in Scheduled Execution.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="recommendedIntermediateInputSmoothness"></a> <code>recommendedIntermediateInputSmoothness</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A value of \(k\) with \(k&gt;0\) signals to the co-simulation algorithm, that it is beneficial for the solver to receive intermediate inputs that are k-time continuously differentiable (\(C^k\)) on the current communication interval.
-\(k=0\) means continuous (see <a href="#smoothness">Section 4.1.1</a>).<br>
-This flag is ignored in Model Exchange and Scheduled Execution.</p></td>
 </tr>
 </tbody>
 </table>
@@ -8370,7 +8354,7 @@ It is also recommended to use a descriptive name (e.g. <code>&lt;model_identifie
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="modelIdentifier"></a><code>modelIdentifier</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>modelIdentifier</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>The attribute <a href="#modelIdentifier"><code>modelIdentifier</code></a> of the <code>&lt;ModelExchange&gt;</code>, <code>&lt;CoSimulation&gt;</code> or <code>&lt;ScheduledExecution&gt;</code> elements this build configuration is associated with.</p>
 </div></div></td>
@@ -9864,13 +9848,6 @@ It is defined as:</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#modelIdentifier"><code>modelIdentifier</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Short class name according to C syntax, for example, <code>A_B_C</code>.
-Used as prefix for FMI functions if the functions are provided in C source code or in static libraries, but not if the functions are provided by a DLL/SharedObject.
-<a href="#modelIdentifier"><code>modelIdentifier</code></a> is also used as name of the static library or DLL/SharedObject.
-See also <a href="#header-files-and-naming-of-functions">Section 2.2.1</a>.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>needsCompletedIntegratorStep</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after every completed integrator step.
 If <code>false</code> (the default) and the function is called anyway, it has no effect.</p></td>
@@ -11020,20 +10997,8 @@ It is defined as:</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#modelIdentifier"><code>modelIdentifier</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Short class name according to C syntax, for example, <code>A_B_C</code>.
-Used as prefix for FMI functions if the functions are provided in C source code or in static libraries, but not if the functions are provided by a DLL/SharedObject.
-<a href="#modelIdentifier"><code>modelIdentifier</code></a> is also used as name of the static library or DLL/SharedObject.
-See also <a href="#header-files-and-naming-of-functions">Section 2.2.1</a>.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canHandleVariableCommunicationStepSize"></a> <code>canHandleVariableCommunicationStepSize</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>canHandleVariableCommunicationStepSize = true</code>, then the communication step size (argument <a href="#communicationStepSize"><code>communicationStepSize</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>) can vary for each call.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canReturnEarlyAfterIntermediateUpdate"></a> <code>canReturnEarlyAfterIntermediateUpdate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the co-simulation algorithm returns <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a>.
-The default value of this capability flag is <code>false</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="fixedInternalStepSize"></a><code>fixedInternalStepSize</code></p></td>
@@ -11041,6 +11006,30 @@ The default value of this capability flag is <code>false</code>.</p></td>
 +
 <em>[This information can be used by the co-simulation algorithm to synchronize the communication interval with the internal step size of the FMU.</em>
 <em>The co-simulation algorithm should calculate the communication points by multiplying (<code>number_of_steps * step_size</code>) instead of repeatedly incrementing (<code>time += step_size</code>) to avoid the accumulation of numerical errors.]</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="maxOutputDerivativeOrder"></a> <code>maxOutputDerivativeOrder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU is able to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> with maximum order.
+Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defined by <code>maxOutputDerivativeOrder</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="recommendedIntermediateInputSmoothness"></a> <code>recommendedIntermediateInputSmoothness</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A value of \(k\) with \(k&gt;0\) signals to the co-simulation algorithm, that it is beneficial for the solver to receive intermediate inputs that are k-time continuously differentiable (\(C^k\)) on the current communication interval.
+\(k=0\) means continuous (see <a href="#smoothness">Section 4.1.1</a>).<br></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesIntermediateUpdate"></a> <code>providesIntermediateUpdate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU supports <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> and will call <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, if provided.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="mightReturnEarlyFromDoStep"></a> <code>mightReturnEarlyFromDoStep</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU announces that it might <a href="#earlyReturn">return early</a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
+If this flag is <code>false</code> (the default), the importer can assume that the FMU computes the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as instructed up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canReturnEarlyAfterIntermediateUpdate"></a> <code>canReturnEarlyAfterIntermediateUpdate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the co-simulation algorithm returns <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a>.
+The default value of this capability flag is <code>false</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hasEventMode"></a><code>hasEventMode</code></p></td>
@@ -11750,30 +11739,8 @@ It is defined as:</p>
 <div class="title">Figure 47. ScheduledExecution element.</div>
 </div>
 <div class="paragraph">
-<p>The attribute in the following table is defined on top of the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
+<p>The element <code>&lt;ScheduledExecution&gt;</code> does not have any attributes other than defined as <a href="#common-capability-flags">common attributes</a>.</p>
 </div>
-<table id="table-ScheduledExecution-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 37. ScheduledExecution attribute details.</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Attribute</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#modelIdentifier"><code>modelIdentifier</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Short class name according to C syntax, for example, <code>A_B_C</code>.
-Used as prefix for FMI functions if the functions are provided in C source code or in static libraries, but not if the functions are provided by a DLL/SharedObject.
-<a href="#modelIdentifier"><code>modelIdentifier</code></a> is also used as name of the static library or DLL/SharedObject.
-See also <a href="#header-files-and-naming-of-functions">Section 2.2.1</a>.</p></td>
-</tr>
-</tbody>
-</table>
 <div class="sect3">
 <h4 id="_example_xml_description_file_2">5.4.1. Example XML Description File</h4>
 <div class="paragraph">
