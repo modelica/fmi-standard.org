@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 106f3ce,</span>
-<span id="revdate">2022-01-20</span>
+<span id="revnumber">version f3d70e9,</span>
+<span id="revdate">2022-01-25</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1665,7 +1665,8 @@ The FMU itself does not implement any services to support this.]</em></p>
 </li>
 <li>
 <p>FMI functions must not change global settings which affect other processes/threads.
-An FMI function may change settings of the thread in which it is called (such as floating point control registers), provided these changes are restored before leaving the function or before a callback function is called.<br>
+An FMI function may change settings of the thread in which it is called (such as floating point control registers), provided these changes are restored before leaving the function or before a callback function is called.
+To prepare the FMU code to run reliably on <a href="#preemption-support">preemptive systems</a> FMI functions must not change global settings.<br>
 <em>[This property ensures that functions of different FMU instances can be called safely in any order.</em>
 <em>Additionally, they can be called in parallel provided the functions are called in different processes.</em>
 <em>If an FMI function changes for example the floating point control word of the CPU, it must restore the previous value before return of the function.</em>
