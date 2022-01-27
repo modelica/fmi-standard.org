@@ -25,7 +25,77 @@
 #include "fmiModelFunctions.h"
 #endif
 
-#define FMI_STATUS fmiStatus
+#define ASSERT_NOT_NULL(p) \
+do { \
+    if (!p) { \
+        logError(S, "Argument %s must not be NULL.", xstr(p)); \
+        S->state = modelError; \
+        return (fmiStatus)Error; \
+    } \
+} while (0)
+
+#define GET_VARIABLES(T) \
+do { \
+    ASSERT_NOT_NULL(vr); \
+    ASSERT_NOT_NULL(value); \
+    size_t index = 0; \
+    Status status = OK; \
+    if (nvr == 0) return (fmiStatus)status; \
+    if (S->isDirtyValues) { \
+        Status s = calculateValues(S); \
+        status = max(status, s); \
+        if (status > Warning) return (fmiStatus)status; \
+        S->isDirtyValues = false; \
+    } \
+    for (size_t i = 0; i < nvr; i++) { \
+        Status s = get ## T(S, vr[i], value, &index); \
+        status = max(status, s); \
+        if (status > Warning) return (fmiStatus)status; \
+    } \
+    return (fmiStatus)status; \
+} while (0)
+
+#define SET_VARIABLES(T) \
+do { \
+    ASSERT_NOT_NULL(vr); \
+    ASSERT_NOT_NULL(value); \
+    size_t index = 0; \
+    Status status = OK; \
+    for (size_t i = 0; i < nvr; i++) { \
+        Status s = set ## T(S, vr[i], value, &index); \
+        status = max(status, s); \
+        if (status > Warning) return (fmiStatus)status; \
+    } \
+    if (nvr > 0) S->isDirtyValues = true; \
+    return (fmiStatus)status; \
+} while (0)
+
+#define GET_BOOLEAN_VARIABLES \
+do { \
+    Status status = OK; \
+    for (size_t i = 0; i < nvr; i++) { \
+        bool v = false; \
+        size_t index = 0; \
+        Status s = getBoolean(S, vr[i], &v, &index); \
+        value[i] = v; \
+        status = max(status, s); \
+        if (status > Warning) return (fmiStatus)status; \
+    } \
+    return (fmiStatus)status; \
+} while (0)
+
+#define SET_BOOLEAN_VARIABLES \
+do { \
+    Status status = OK; \
+    for (size_t i = 0; i < nvr; i++) { \
+        bool v = value[i]; \
+        size_t index = 0; \
+        Status s = setBoolean(S, vr[i], &v, &index); \
+        status = max(status, s); \
+        if (status > Warning) return (fmiStatus)status; \
+    } \
+    return (fmiStatus)status; \
+} while (0)
 
 #ifndef max
 #define max(a,b) ((a)>(b) ? (a) : (b))
@@ -36,7 +106,8 @@
 #endif
 
 #define ASSERT_STATE(F, A) \
-    if (!c) return fmiError; \
+    if (!c) \
+        return fmiError; \
     ModelInstance* S = (ModelInstance *)c; \
     if (invalidState(S, F, not_modelError)) \
         return fmiError;
@@ -258,10 +329,11 @@ fmiStatus fmiDoStep(fmiComponent c, fmiReal currentCommunicationPoint, fmiReal c
         bool stateEvent, timeEvent;
 
         doFixedStep(instance, &stateEvent, &timeEvent);
-
+#ifdef EVENT_UPDATE
         if (stateEvent || timeEvent) {
             eventUpdate(instance);
         }
+#endif
     }
 
     return fmiOK;
@@ -356,9 +428,11 @@ fmiStatus fmiInitialize(fmiComponent c, fmiBoolean toleranceControlled, fmiReal 
 
     fmiStatus status = init(c);
 
+#ifdef EVENT_UPDATE
     eventUpdate(instance);
+#endif
 
-    eventInfo->iterationConverged          = instance->newDiscreteStatesNeeded ? fmiFalse : fmiTrue;
+    eventInfo->iterationConverged          = instance->newDiscreteStatesNeeded;
     eventInfo->stateValueReferencesChanged = fmiFalse;
     eventInfo->stateValuesChanged          = instance->valuesOfContinuousStatesChanged;
     eventInfo->terminateSimulation         = instance->terminateSimulation;
@@ -410,7 +484,9 @@ fmiStatus fmiEventUpdate(fmiComponent c, fmiBoolean intermediateResults, fmiEven
     if (nullPointer(instance, "fmiEventUpdate", "eventInfo", eventInfo))
          return fmiError;
 
+#ifdef EVENT_UPDATE
     eventUpdate(instance);
+#endif
 
     // copy internal eventInfo of component to output eventInfo
     eventInfo->iterationConverged          = fmiTrue;

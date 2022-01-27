@@ -37,21 +37,33 @@ ModelInstance *createModelInstance(
 
     if (!instanceName || strlen(instanceName) == 0) {
         if (cbLogger) {
+#if FMI_VERSION < 3
             cbLogger(componentEnvironment, "?", Error, "error", "Missing instance name.");
+#else
+            cbLogger(componentEnvironment, Error, "error", "Missing instance name.");
+#endif
         }
         return NULL;
     }
 
     if (!instantiationToken || strlen(instantiationToken) == 0) {
         if (cbLogger) {
+#if FMI_VERSION < 3
             cbLogger(componentEnvironment, instanceName, Error, "error", "Missing GUID.");
+#else
+            cbLogger(componentEnvironment, Error, "error", "Missing instantiationToken.");
+#endif
         }
         return NULL;
     }
 
     if (strcmp(instantiationToken, INSTANTIATION_TOKEN)) {
         if (cbLogger) {
+#if FMI_VERSION < 3
             cbLogger(componentEnvironment, instanceName, Error, "error", "Wrong GUID.");
+#else
+            cbLogger(componentEnvironment, Error, "error", "Wrong instantiationToken.");
+#endif
         }
         return NULL;
     }
@@ -84,7 +96,6 @@ ModelInstance *createModelInstance(
     comp->type                              = interfaceType;
 
     comp->state                             = Instantiated;
-    comp->isNewEventIteration               = false;
 
     comp->newDiscreteStatesNeeded           = false;
     comp->terminateSimulation               = false;
@@ -206,7 +217,11 @@ static void logMessage(ModelInstance *comp, int status, const char *category, co
     va_end(args1);
 
     // no need to distinguish between FMI versions since we're not using variadic arguments
+#if FMI_VERSION < 3
     comp->logger(comp->componentEnvironment, comp->instanceName, status, category, buf);
+#else
+    comp->logger(comp->componentEnvironment, status, category, buf);
+#endif
 
     free(buf);
 }
@@ -234,207 +249,207 @@ void logError(ModelInstance *comp, const char *message, ...) {
 // default implementations
 #if NZ < 1
 void getEventIndicators(ModelInstance *comp, double z[], size_t nz) {
-    UNUSED(comp)
-    UNUSED(z)
-    UNUSED(nz)
+    UNUSED(comp);
+    UNUSED(z);
+    UNUSED(nz);
     // do nothing
 }
 #endif
 
 #ifndef GET_UINT16
 Status getUInt16(ModelInstance* comp, ValueReference vr, uint16_t *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef GET_INT32
 Status getInt32(ModelInstance* comp, ValueReference vr, int *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef GET_UINT64
 Status getUInt64(ModelInstance* comp, ValueReference vr, uint64_t *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef GET_BOOLEAN
 Status getBoolean(ModelInstance* comp, ValueReference vr, bool *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef GET_STRING
 Status getString(ModelInstance* comp, ValueReference vr, const char **value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef GET_BINARY
 Status getBinary(ModelInstance* comp, ValueReference vr, size_t size[], const char *value[], size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(size)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(size);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef SET_FLOAT64
 Status setFloat64(ModelInstance* comp, ValueReference vr, const double *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef SET_UINT16
 Status setUInt16(ModelInstance* comp, ValueReference vr, const uint16_t *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef SET_INT32
 Status setInt32(ModelInstance* comp, ValueReference vr, const int *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef SET_UINT64
 Status setUInt64(ModelInstance* comp, ValueReference vr, const uint64_t *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef SET_BOOLEAN
 Status setBoolean(ModelInstance* comp, ValueReference vr, const bool *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef SET_STRING
 Status setString(ModelInstance* comp, ValueReference vr, const char *const *value, size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef SET_BINARY
 Status setBinary(ModelInstance* comp, ValueReference vr, const size_t size[], const char *const value[], size_t *index) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(size)
-    UNUSED(value)
-    UNUSED(index)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(size);
+    UNUSED(value);
+    UNUSED(index);
     return Error;
 }
 #endif
 
 #ifndef ACTIVATE_CLOCK
 Status activateClock(ModelInstance* comp, ValueReference vr) {
-    UNUSED(comp)
-    UNUSED(vr)
+    UNUSED(comp);
+    UNUSED(vr);
     return Error;
 }
 #endif
 
 #ifndef GET_CLOCK
 Status getClock(ModelInstance* comp, ValueReference vr, bool* value) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(value)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(value);
     return Error;
 }
 #endif
 
 #ifndef GET_INTERVAL
 Status getInterval(ModelInstance* comp, ValueReference vr, double* interval, int* qualifier) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(interval)
-    UNUSED(qualifier)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(interval);
+    UNUSED(qualifier);
     return Error;
 }
 #endif
 
 #ifndef ACTIVATE_MODEL_PARTITION
 Status activateModelPartition(ModelInstance* comp, ValueReference vr, double activationTime) {
-    UNUSED(comp)
-    UNUSED(vr)
-    UNUSED(activationTime)
+    UNUSED(comp);
+    UNUSED(vr);
+    UNUSED(activationTime);
     return Error;
 }
 #endif
 
 #if NX < 1
 void getContinuousStates(ModelInstance *comp, double x[], size_t nx) {
-    UNUSED(comp)
-    UNUSED(x)
-    UNUSED(nx)
+    UNUSED(comp);
+    UNUSED(x);
+    UNUSED(nx);
 }
 
 void setContinuousStates(ModelInstance *comp, const double x[], size_t nx) {
-    UNUSED(comp)
-    UNUSED(x)
-    UNUSED(nx)
+    UNUSED(comp);
+    UNUSED(x);
+    UNUSED(nx);
 }
 
 void getDerivatives(ModelInstance *comp, double dx[], size_t nx) {
-    UNUSED(comp)
-    UNUSED(dx)
-    UNUSED(nx)
+    UNUSED(comp);
+    UNUSED(dx);
+    UNUSED(nx);
 }
 #endif
 
 #ifndef GET_PARTIAL_DERIVATIVE
 Status getPartialDerivative(ModelInstance *comp, ValueReference unknown, ValueReference known, double *partialDerivative) {
-    UNUSED(comp)
-    UNUSED(unknown)
-    UNUSED(known)
-    UNUSED(partialDerivative)
+    UNUSED(comp);
+    UNUSED(unknown);
+    UNUSED(known);
+    UNUSED(partialDerivative);
     return Error;
 }
 #endif
@@ -488,7 +503,6 @@ void doFixedStep(ModelInstance *comp, bool* stateEvent, bool* timeEvent) {
         comp->intermediateUpdate(
             comp->componentEnvironment, // instanceEnvironment
             comp->time,                 // intermediateUpdateTime
-            false,                      // clocksTicked
             false,                      // intermediateVariableSetRequested
             true,                       // intermediateVariableGetAllowed
             true,                       // intermediateStepFinished

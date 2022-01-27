@@ -13,9 +13,10 @@
 #define NZ 1
 
 #define SET_FLOAT64
+#define GET_OUTPUT_DERIVATIVE
 #define EVENT_UPDATE
 
-#define FIXED_SOLVER_STEP 1e-2
+#define FIXED_SOLVER_STEP 1e-3
 #define DEFAULT_STOP_TIME 3
 
 typedef enum {

@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 2dbbcee,</span>
-<span id="revdate">2022-01-26</span>
+<span id="revnumber">version ac0c702,</span>
+<span id="revdate">2022-01-27</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -8926,7 +8926,7 @@ In the second case, all components necessary for execution of the FMU are includ
 #define INSTANTIATION_TOKEN "{8c4e810f-3da3-4a00-8276-176fa3c9f000}"
 
 
-static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3String instanceName, fmi3Status status, fmi3String category, fmi3String message) {
+static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3Status status, fmi3String category, fmi3String message) {
     // log message...
 }
 
@@ -9008,7 +9008,7 @@ int main(int argc, char* argv[]) {
 #define INSTANTIATION_TOKEN "{8c4e810f-3da3-4a00-8276-176fa3c9f000}"
 
 
-static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3String instanceName, fmi3Status status, fmi3String category, fmi3String message) {
+static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3Status status, fmi3String category, fmi3String message) {
     // log message
 }
 
@@ -9697,8 +9697,10 @@ If the FMU would be used inside another model, additional code is needed, especi
         inputEvent = time &gt;= nextInputEventTime(time);
         timeEvent = nextEventTimeDefined &amp;&amp; time &gt;= nextEventTime;
 
+        const bool eventOccurred = inputEvent || timeEvent || stateEvent || stepEvent;
+
         // handle events
-        if (inputEvent || timeEvent || stateEvent || stepEvent) {
+        if (eventOccurred) {
 
             CALL(FMI3EnterEventMode(S, stepEvent, stateEvent, rootsFound, NZ, timeEvent));
 
@@ -9778,25 +9780,30 @@ If the FMU would be used inside another model, additional code is needed, especi
 #endif
 
 #if NZ &gt; 0
-        // get event indicators at t = time
-        CALL(FMI3GetEventIndicators(S, z, NZ));
-
         stateEvent = fmi3False;
 
-        for (size_t i = 0; i &lt; NZ; i++) {
+        if (eventOccurred) {
+            // reset the previous event indicators
+            CALL(FMI3GetEventIndicators(S, previous_z, NZ));
+        } else {
+            // get event indicators at t = time
+            CALL(FMI3GetEventIndicators(S, z, NZ));
 
-            // check for zero crossings
-            if (previous_z[i] &lt; 0 &amp;&amp; z[i] &gt;= 0) {
-                rootsFound[i] = 1;   // -\+
-            } else  if (previous_z[i] &gt; 0 &amp;&amp; z[i] &lt;= 0) {
-                rootsFound[i] = -1;  // +/-
-            } else {
-                rootsFound[i] = 0;   // no zero crossing
+            for (size_t i = 0; i &lt; NZ; i++) {
+
+                // check for zero crossings
+                if (previous_z[i] &lt; 0 &amp;&amp; z[i] &gt;= 0) {
+                    rootsFound[i] = 1;   // -\+
+                } else  if (previous_z[i] &gt; 0 &amp;&amp; z[i] &lt;= 0) {
+                    rootsFound[i] = -1;  // +/-
+                } else {
+                    rootsFound[i] = 0;   // no zero crossing
+                }
+
+                stateEvent |= rootsFound[i];
+
+                previous_z[i] = z[i]; // remember the current value
             }
-
-            stateEvent |= rootsFound[i];
-
-            previous_z[i] = z[i]; // remember the current value
         }
 #endif
 
@@ -10728,7 +10735,6 @@ Note that the points where the ball hits the floor are available and the outputs
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
                            fmi3Float64 intermediateUpdateTime,
-                           fmi3Boolean clocksTicked,
                            fmi3Boolean intermediateVariableSetRequested,
                            fmi3Boolean intermediateVariableGetAllowed,
                            fmi3Boolean intermediateStepFinished,
@@ -10781,7 +10787,6 @@ Note that the points where the ball hits the floor are available and the outputs
     fprintf(logFile, "intermediateUpdate("
         "instanceEnvironment=0x%p, "
         "intermediateUpdateTime=%.16g, "
-        "clocksTicked=%d, "
         "intermediateVariableSetRequested=%d, "
         "intermediateVariableGetAllowed=%d, "
         "intermediateStepFinished=%d, "
@@ -10790,7 +10795,6 @@ Note that the points where the ball hits the floor are available and the outputs
         "earlyReturnTime=%.16g)\n",
         instanceEnvironment,
         intermediateUpdateTime,
-        clocksTicked,
         intermediateVariableSetRequested,
         intermediateVariableGetAllowed,
         intermediateStepFinished,

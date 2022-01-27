@@ -91,6 +91,26 @@ Status setFloat64(ModelInstance* comp, ValueReference vr, const double *value, s
     }
 }
 
+Status getOutputDerivative(ModelInstance *comp, ValueReference valueReference, int order, double *value) {
+
+    if (order != 1) {
+        logError(comp, "The output derivative order %d for value reference %u is not available.", order, valueReference);
+        return Error;
+    }
+
+    switch (valueReference) {
+    case vr_h:
+        *value = M(v);
+        return OK;
+    case vr_v:
+        *value = M(g);
+        return OK;
+    default:
+        logError(comp, "The output derivative for value reference %u is not available.", valueReference);
+        return Error;
+    }
+}
+
 void eventUpdate(ModelInstance *comp) {
 
     if (M(h) <= 0 && M(v) < 0) {
@@ -118,24 +138,24 @@ void eventUpdate(ModelInstance *comp) {
 }
 
 void getContinuousStates(ModelInstance *comp, double x[], size_t nx) {
-    UNUSED(nx)
+    UNUSED(nx);
     x[0] = M(h);
     x[1] = M(v);
 }
 
 void setContinuousStates(ModelInstance *comp, const double x[], size_t nx) {
-    UNUSED(nx)
+    UNUSED(nx);
     M(h) = x[0];
     M(v) = x[1];
 }
 
 void getDerivatives(ModelInstance *comp, double dx[], size_t nx) {
-    UNUSED(nx)
+    UNUSED(nx);
     dx[0] = M(v);
     dx[1] = M(g);
 }
 
 void getEventIndicators(ModelInstance *comp, double z[], size_t nz) {
-    UNUSED(nz)
+    UNUSED(nz);
     z[0] = (M(h) == 0 && M(v) == 0) ? 1 : M(h);
 }

@@ -5,7 +5,7 @@
 #error FMI_VERSION must be one of 1, 2 or 3
 #endif
 
-#define UNUSED(x) (void)(x);
+#define UNUSED(x) (void)(x)
 
 #include <stddef.h>  // for size_t
 #include <stdbool.h> // for bool
@@ -85,7 +85,7 @@ typedef enum {
 #if FMI_VERSION < 3
 typedef void (*loggerType) (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message, ...);
 #else
-typedef void (*loggerType) (void *componentEnvironment, const char *instanceName, int status, const char *category, const char *message);
+typedef void (*loggerType) (void *componentEnvironment, int status, const char *category, const char *message);
 #endif
 
 typedef void (*lockPreemptionType)   ();
@@ -93,13 +93,14 @@ typedef void (*unlockPreemptionType) ();
 
 typedef void (*intermediateUpdateType) (void *instanceEnvironment,
                                         double intermediateUpdateTime,
-                                        bool clocksTicked,
                                         bool intermediateVariableSetRequested,
                                         bool intermediateVariableGetAllowed,
                                         bool intermediateStepFinished,
                                         bool canReturnEarly,
                                         bool *earlyReturnRequested,
                                         double *earlyReturnTime);
+
+typedef void(*clockUpdateType) (void *instanceEnvironment);
 
 typedef struct {
 
@@ -113,6 +114,7 @@ typedef struct {
     // callback functions
     loggerType logger;
     intermediateUpdateType intermediateUpdate;
+    clockUpdateType clockUpdate;
 
     lockPreemptionType lockPreemtion;
     unlockPreemptionType unlockPreemtion;
@@ -133,7 +135,6 @@ typedef struct {
     bool clocksTicked;
 
     bool isDirtyValues;
-    bool isNewEventIteration;
 
     ModelData *modelData;
 
@@ -190,6 +191,7 @@ Status activateModelPartition(ModelInstance* comp, ValueReference vr, double act
 void getContinuousStates(ModelInstance *comp, double x[], size_t nx);
 void setContinuousStates(ModelInstance *comp, const double x[], size_t nx);
 void getDerivatives(ModelInstance *comp, double dx[], size_t nx);
+Status getOutputDerivative(ModelInstance *comp, ValueReference valueReference, int order, double *value);
 Status getPartialDerivative(ModelInstance *comp, ValueReference unknown, ValueReference known, double *partialDerivative);
 void getEventIndicators(ModelInstance *comp, double z[], size_t nz);
 void eventUpdate(ModelInstance *comp);
@@ -210,69 +212,5 @@ void logError(ModelInstance *comp, const char *message, ...);
 // "stringification" macros
 #define xstr(s) str(s)
 #define str(s) #s
-
-#define ASSERT_NOT_NULL(p) \
-if (!p) { \
-    logError(S, "Argument %s must not be NULL.", xstr(p)); \
-    S->state = modelError; \
-    return (FMI_STATUS)Error; \
-}
-
-#define GET_VARIABLES(T) \
-ASSERT_NOT_NULL(vr); \
-ASSERT_NOT_NULL(value); \
-size_t index = 0; \
-Status status = OK; \
-if (nvr == 0) return (FMI_STATUS)status; \
-if (S->isDirtyValues) { \
-    Status s = calculateValues(S); \
-    status = max(status, s); \
-    if (status > Warning) return (FMI_STATUS)status; \
-    S->isDirtyValues = false; \
-} \
-for (size_t i = 0; i < nvr; i++) { \
-    Status s = get ## T(S, vr[i], value, &index); \
-    status = max(status, s); \
-    if (status > Warning) return (FMI_STATUS)status; \
-} \
-return (FMI_STATUS)status;
-
-#define SET_VARIABLES(T) \
-ASSERT_NOT_NULL(vr); \
-ASSERT_NOT_NULL(value); \
-size_t index = 0; \
-Status status = OK; \
-for (size_t i = 0; i < nvr; i++) { \
-    Status s = set ## T(S, vr[i], value, &index); \
-    status = max(status, s); \
-    if (status > Warning) return (FMI_STATUS)status; \
-} \
-if (nvr > 0) S->isDirtyValues = true; \
-return (FMI_STATUS)status;
-
-// TODO: make this work with arrays
-#define GET_BOOLEAN_VARIABLES \
-Status status = OK; \
-for (size_t i = 0; i < nvr; i++) { \
-    bool v = false; \
-    size_t index = 0; \
-    Status s = getBoolean(S, vr[i], &v, &index); \
-    value[i] = v; \
-    status = max(status, s); \
-    if (status > Warning) return (FMI_STATUS)status; \
-} \
-return (FMI_STATUS)status;
-
-// TODO: make this work with arrays
-#define SET_BOOLEAN_VARIABLES \
-Status status = OK; \
-for (size_t i = 0; i < nvr; i++) { \
-    bool v = value[i]; \
-    size_t index = 0; \
-    Status s = setBoolean(S, vr[i], &v, &index); \
-    status = max(status, s); \
-    if (status > Warning) return (FMI_STATUS)status; \
-} \
-return (FMI_STATUS)status;
 
 #endif  /* model_h */
