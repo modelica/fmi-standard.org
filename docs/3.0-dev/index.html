@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 8ff2b26,</span>
+<span id="revnumber">version 3a93afe,</span>
 <span id="revdate">2022-02-07</span>
 </div>
 <div id="toc" class="toc2">
@@ -2148,7 +2148,9 @@ In addition to those state-specific restrictions, setting and getting of <a href
 </div>
 <div class="paragraph">
 <p>The value of a variable must be accessed with the respective <a href="#get-and-set-variable-values"><code>fmi3Get/Set{VariableType}</code></a> (see also <a href="#VariableType"><code>{VariableType}</code></a> and <a href="#VariableTypeExclClock"><code>{VariableTypeExclClock}</code></a>) for the <a href="#definition-of-model-variables">type defined</a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
-To set or inquire variables of type <a href="#figure-schema-Enumeration"><code>Enumeration</code></a>, <code>fmi3SetInt64</code> and <code>fmi3GetInt64</code> must be used.</p>
+To set or inquire variables of type <a href="#figure-schema-Enumeration"><code>Enumeration</code></a>, <code>fmi3SetInt64</code> and <code>fmi3GetInt64</code> must be used.<br>
+<em>[Since C allows negative values for enumerations, signed integers are used.</em>
+<em>With enums being defined as int in the programming language C and compilers are free to choose any bit-width for int, 64 bit getters and setters are needed to be platform and compiler agnostic.]</em></p>
 </div>
 <div class="paragraph">
 <p>The current values of the variables can be inquired with the following functions:</p>
