@@ -153,7 +153,7 @@ FMI related conference papers:
 
 ### [11th International Modelica Conference 2015](https://www.modelica.org/events/modelica2015)
 
-[FMI User Meeting]/assets/literature/FMI_User_Meeting_2015/FMI_User_Meeting_ModelicaConference2015.zip)
+[FMI User Meeting](/assets/literature/FMI_User_Meeting_2015/FMI_User_Meeting_ModelicaConference2015.zip)
 
 Other FMI related conference papers:
 
