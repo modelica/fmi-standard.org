@@ -210,7 +210,7 @@ Other FMI related conference papers:
 
 ### [8th International Modelica Conference 2011](https://www.modelica.org/events/modelica2011)
 
-* [The Functional Mock-up Interface for Tool independent Exchange of Simulation Models](https://ep.liu.se/ecp/063/013/ecp11063013.pdf) ([PPT](/assets/literature/Modelica_Conference_2011/The_Functional_Mockup_Interface.ppt), ([PDF](/assets/literature/Modelica_Conference_2011/The_Functional_Mockup_Interface.pdf) )
+* [The Functional Mock-up Interface for Tool independent Exchange of Simulation Models](https://ep.liu.se/ecp/063/013/ecp11063013.pdf) ([PPT](/assets/literature/Modelica_Conference_2011/The_Functional_Mockup_Interface.ppt), [PDF](/assets/literature/Modelica_Conference_2011/The_Functional_Mockup_Interface.pdf) )
 * [Master for Co-Simulation Using FMI](https://ep.liu.se/ecp/063/014/ecp11063014.pdf)
 * [Import and Export of Functional Mock-up Units in JModelica.org](https://ep.liu.se/ecp/063/036/ecp11063036.pdf)
 * [Implementation of MODELISAR Functional Mock-up Interfaces in SimulationX](https://ep.liu.se/ecp/063/037/ecp11063037.pdf)
