@@ -72,8 +72,11 @@ See also: #456, #789
 The [tools page](https://fmi-standard.org/tools/) is the central location to find and get information about tools that support FMI.
 The page is generated from [tools.csv](_data/tools.csv).
 To add, edit or remove a tool from the list, update the respective line and make a [pull request](#pull-requests).
-To get green buttons the tool has to pass the [FMI Cross-Check](https://github.com/modelica/fmi-cross-check).
 Please respect the rules below when editing the file.
+
+~To get green buttons the tool has to pass the [FMI Cross-Check](https://github.com/modelica/fmi-cross-check).~
+
+:construction: We're currently reworking the FMI Cross-Check process.
 
 ### Format
 
