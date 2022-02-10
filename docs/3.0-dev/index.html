@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 6272130,</span>
+<span id="revnumber">version af70c38,</span>
 <span id="revdate">2022-02-10</span>
 </div>
 <div id="toc" class="toc2">
@@ -5347,6 +5347,10 @@ It is required that the encoding scheme is always UTF-8:</p>
 <em>Furthermore, note the FMI calling interface requires that strings are encoded in UTF-8.</em>
 <em>Since the XML files are also required to be encoded in UTF-8, string variables need not to be transformed when reading from the XML files in to C string variables.].</em></p>
 </div>
+<div id="uniqueNameAttribute" class="paragraph">
+<p><code>name</code> attributes of list elements (for example <a href="#table-type-details">VariableType</a> or <a href="#table-variableBase-attributes">Variable</a>) must be unique within that list and must not be empty strings.
+Additional restrictions for these <code>name</code> attributes are listed in their respective sections.</p>
+</div>
 <div class="paragraph">
 <p><em>[Note that child information items, such as elements in a sequence are ordered lists according to document order, whereas attribute information items are unordered sets (see <a href="http://www.w3.org/TR/XML-infoset/#infoitem.element" class="bare">http://www.w3.org/TR/XML-infoset/#infoitem.element</a>).</em>
 <em>The FMI schema is based on ordered lists in a sequence and therefore parsing must preserve this order.</em>
@@ -5615,7 +5619,8 @@ The FMI unit descriptions are more secure than using humanly readable unit strin
 <div class="title">Figure 10. <code>UnitDefinitions</code> element.</div>
 </div>
 <div class="paragraph">
-<p>The <code>name</code> of a <code>Unit</code> must be unique with respect to all other <code>&lt;Unit&gt;</code> elements.
+<p>Units are referenced via its <a href="#uniqueNameAttribute">unique</a> attribute <code>name</code> by the attribute <code>unit</code> and <code>displayUnit</code> of <a href="#table-type-details">variable types</a> and <a href="#table-type-attributes">variables</a>.
+The <code>name</code> of a <code>Unit</code> must be <a href="#uniqueNameAttribute">unique</a> with respect to all other <code>&lt;Unit&gt;</code> elements.
 If a variable is associated with a <code>Unit</code>, the value passed to <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> (resp. retrieved with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>) has this unit.
 <em>[The purpose of the name is to uniquely identify a unit and, for example, use it to display the unit in menus or in plots.</em>
 <em>Since there is no standard to represent units in strings, and there are different ways how this is performed in different tools, no specific format for the string representation of the unit is required.]</em></p>
@@ -5925,10 +5930,7 @@ The attribute <code>name</code> must be unique with respect to all other names o
 <div class="title">Figure 13. TypeDefinitions element.</div>
 </div>
 <div class="paragraph">
-<p>This element consists of a set of <code>&lt;TypeDefinition&gt;</code> elements according to schema <code>fmi3TypeDefinition</code> in file <code>fmi3Type.xsd</code>.
-Each <code>&lt;TypeDefinition&gt;</code> has attributes <code>name</code> and <code>description</code>.
-Attribute <code>name</code> must be unique with respect to all other elements of the <code>&lt;TypeDefinitions&gt;</code> list.
-Furthermore, <code>name</code> of a <code>&lt;TypeDefinition&gt;</code> must be different to all <code>name</code> attributes of variables <em>[if the same names would be used, then this would nearly always give problems when importing the FMU in an environment using the Modelica language, where a type name cannot be used as instance name]</em>.</p>
+<p>This element consists of a set of <code>&lt;TypeDefinition&gt;</code> elements according to schema <code>fmi3TypeDefinition</code> in file <code>fmi3Type.xsd</code>.</p>
 </div>
 <div class="paragraph">
 <p>Each variable type has its own set of attributes.
@@ -5989,6 +5991,15 @@ The attributes and elements have the following meaning:</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <a href="#uniqueNameAttribute">unique</a> name of the variable type referenced using the attribute <a href="#table-type-attributes"><code>declaredType</code></a>.
+This attribute must be different to all <code>name</code> attributes of variables <em>[if the same names would be used, then this would nearly always give problems when importing the FMU in an environment using the Modelica language, where a type name cannot be used as instance name]</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An optional description string describing the meaning of the variable type.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quantity</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Physical quantity of the variable.
@@ -6138,7 +6149,7 @@ This attribute must only be used for <a href="#periodic-clock">periodic Clocks</
 <div class="paragraph">
 <p><code>&lt;LogCategories&gt;</code> defines an unordered set of category strings that classify output of the callback function <a href="#logMessage"><code>logMessage</code></a>.
 The importer may use the function <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> to control for which <code>&lt;LogCategories&gt;</code> the callback function <a href="#logMessage"><code>logMessage</code></a> is allowed to be called.
-The <code>name</code> attribute of <code>&lt;Category&gt;</code> must be unique with respect to all other elements of the <code>&lt;LogCategories&gt;</code> list.</p>
+The <code>name</code> attribute of <code>&lt;Category&gt;</code> must be <a href="#uniqueNameAttribute">unique</a> with respect to all other elements of the <code>&lt;LogCategories&gt;</code> list.</p>
 </div>
 <div class="paragraph">
 <p><a href="#table-standard-categories">Table 16</a> shows the standardized values for <code>name</code> of <code>&lt;Category&gt;</code>.
@@ -6369,8 +6380,8 @@ Variable aliases of floating point variables may additionally have a <a href="#d
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The full, unique name of the variable.
-The <code>name</code> must be unique for all variables of an FMU and may follow a defined <a href="#namingSection">naming convention</a>.</p>
+<p>The <a href="#uniqueNameAttribute">unique</a> name of the variable.
+This attribute may follow a defined <a href="#namingSection">naming convention</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -6933,6 +6944,21 @@ For all other types, this attribute is optional.</p>
 </div></div></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unit of the variable referencing to a <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code> with the same <code>name</code>, which must exist.
+Variables without unit must not have a <code>unit</code> attribute.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">displayUnit`</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default display unit of the variable referencing to a <code>&lt;DisplayUnit&gt;</code> which must exist under <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code> with the <code>name</code> of <code>unit</code>.
+The conversion to the <code>unit</code> is defined with the element <code>&lt;fmiModelDescription&gt;&lt;UnitDefinitions&gt;&lt;Unit&gt;&lt;DisplayUnit&gt;</code>.
+If <code>displayUnit</code> is defined a <code>unit</code> must also be defined.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>initial</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="initial" class="paragraph">
 <p>Enumeration that defines how the variable is initialized, i.e. if a <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> is allowed and how the FMU internally treats this value in <a href="#Instantiated"><strong>Instantiated</strong></a> and <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
@@ -7164,8 +7190,7 @@ If this information is known, the environment may be able to represent the names
 </div>
 </div>
 <div class="paragraph">
-<p>The names must be unique, non-empty strings.<br>
-<em>[It is recommended that the names are visually clearly different from each other; but it is not required.]</em></p>
+<p>The names must be unique, non-empty strings.</p>
 </div>
 <div class="paragraph">
 <p>The following conventions for scalar names are defined:</p>
@@ -7872,7 +7897,7 @@ Domain specific connection rules, terminals and their member variables can be pr
 <div class="title">Figure 35. Terminals element.</div>
 </div>
 <div class="paragraph">
-<p>The normalized string attribute <code>name</code> of the <code>&lt;Terminal&gt;</code> element is the instance name of the terminal.
+<p>The normalized string attribute <code>name</code> of the <code>&lt;Terminal&gt;</code> element is the <a href="#uniqueNameAttribute">unique</a> instance name of the terminal.
 The terminal name must be unique on each level.</p>
 </div>
 <div class="paragraph">
@@ -8259,7 +8284,7 @@ An importer of the FMU has to regard every <code>&lt;SourceFileSet&gt;</code> of
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the <code>&lt;SourceFileSet&gt;</code></p>
+<p><a href="#uniqueNameAttribute">Unique</a> name of the <code>&lt;SourceFileSet&gt;</code></p>
 </div></div></td>
 </tr>
 <tr>
@@ -8301,7 +8326,7 @@ An importer of the FMU has to regard every <code>&lt;SourceFileSet&gt;</code> of
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path of the source file relative to the <code>sources</code> directory</p>
+<p>Path of the source file relative to the <code>sources</code> directory.</p>
 </div></div></td>
 </tr>
 </tbody>
