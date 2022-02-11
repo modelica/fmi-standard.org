@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 5a7d759,</span>
-<span id="revdate">2022-02-10</span>
+<span id="revnumber">version 5b1ad81,</span>
+<span id="revdate">2022-02-11</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1499,8 +1499,8 @@ The following variable subscripts are used to describe the timing behavior of th
 <table id="table-subscripts" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Conventions and notation used for variable subscripts.</caption>
 <colgroup>
-<col style="width: 9.0909%;">
-<col style="width: 90.9091%;">
+<col style="width: 20%;">
+<col style="width: 80%;">
 </colgroup>
 <thead>
 <tr>
@@ -1541,7 +1541,7 @@ These variables are continuous-time variables.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A variable at the start time of the simulation as defined by the argument <a href="#startTime"><code>startTime</code></a> of <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>attribute=value</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>attribute = value</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A set of variables which have an XML attribute-value combination as defined.
 <em>[Example:</em> \(\mathbf{v}_{\mathit{initial=exact}}\) <em>are variables defined with attribute <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> (see <a href="#ModelVariables"><code>&lt;ModelVariables&gt;</code></a>).]</em></p></td>
 </tr>
@@ -2008,7 +2008,7 @@ If a function returns <a href="#fmi3Error"><code>fmi3Error</code></a>, it is pos
 Otherwise <a href="#fmi3FreeInstance"><code>fmi3FreeInstance</code></a> or <a href="#fmi3Reset"><code>fmi3Reset</code></a> must be called.
 When detecting illegal arguments or a function call not allowed in the current state according to the respective state machine, the FMU must return <a href="#fmi3Error"><code>fmi3Error</code></a>.
 Other instances of this FMU are not affected by the error.<br>
-<em>[For example, when setting a constant with a call to <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, then the function must return with an error (<a href="#fmi3Error"><code>fmi3Status == fmi3Error</code></a>.]</em></p>
+<em>[For example, when setting a constant with a call to <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, then the function must return with an error (<a href="#fmi3Error"><code>fmi3Status = fmi3Error</code></a>.]</em></p>
 </dd>
 </dl>
 </div>
@@ -2526,7 +2526,7 @@ With the functions of this section, the entire internal FMU state can be stored 
 <div class="paragraph">
 <p><a id="FMUState"></a>This function copies the internal FMU state and returns a pointer to this copy in <a href="#FMUState"><code>FMUState</code></a>.
 <a href="#FMUState"><code>FMUState</code></a> must contain all information required to allow continuing the simulation from the current FMU state without additional FMI C-API calls.
-If on entry <code>*FMUState == NULL</code>, a new allocation is required.
+If on entry <code>*FMUState = NULL</code>, a new allocation is required.
 If <code>*FMUState != NULL</code>, then <code>*FMUState</code> points to a previously returned <a href="#FMUState"><code>FMUState</code></a> that is no longer needed and can be overwritten.
 In particular, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a> had not been called with this <a href="#FMUState"><code>FMUState</code></a> as an argument.
 <em>[Function <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a> typically reuses the memory of this <a href="#FMUState"><code>FMUState</code></a> in this case and returns the same pointer to it, but with the current <a href="#FMUState"><code>FMUState</code></a>.]</em></p>
@@ -2657,7 +2657,7 @@ After <a href="#table-overview-clocks">Table 5</a> Clock types are explained in 
 </dl>
 </div>
 <div id="inputClock" class="paragraph">
-<p>is a variable of type Clock with <a href="#causality"><code>causality</code></a> == <a href="#input"><code>input</code></a>.
+<p>is a variable of type Clock with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
 In Model Exchange and Co-Simulation, when input Clocks tick, the importer will activate the input Clocks using <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>.
 In Scheduled Execution, when input Clocks tick, the importer will activate the associated model partitions (but not the input Clocks) using <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.
 While the importer is the source of the actual Clock activations, the timing of the Clocks is defined by the FMU, either through the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> or calling <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>, or by another Clock connected to a <a href="#triggered"><code>triggered</code></a> input Clock.</p>
@@ -2668,7 +2668,7 @@ While the importer is the source of the actual Clock activations, the timing of 
 </dl>
 </div>
 <div id="outputClock" class="paragraph">
-<p>is a variable of type Clock with <a href="#causality"><code>causality</code></a> == <a href="#output"><code>output</code></a>.</p>
+<p>is a variable of type Clock with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>The attribute <a href="#intervalVariability"><code>intervalVariability</code></a> must be <a href="#triggered"><code>triggered</code></a> for <a href="#outputClock">output Clocks</a>.
@@ -2805,7 +2805,7 @@ The importer must activate the Clock by calling <a href="#fmi3SetClock"><code>fm
 </dd>
 <dt class="hdlist1"><a id="periodic-clock"></a>Periodic Clock</dt>
 <dd>
-<p>is a time-based Clock with a constant interval, except when <a href="#intervalVariability"><code>intervalVariability</code></a> == <a href="#tunable"><code>tunable</code></a>, which indicates that the interval can change when tunable <a href="#parameter">parameters</a> change.
+<p>is a time-based Clock with a constant interval, except when <a href="#intervalVariability"><code>intervalVariability</code></a> = <a href="#tunable"><code>tunable</code></a>, which indicates that the interval can change when tunable <a href="#parameter">parameters</a> change.
 The time instant of the first Clock tick is defined by a <a href="#shiftCounter"><code>shiftCounter</code></a> or <a href="#shiftDecimal"><code>shiftDecimal</code></a>.</p>
 <div class="paragraph">
 <p>The next Clock tick at time instant \(t_i\) is defined as:<br>
@@ -4003,30 +4003,30 @@ This argument must not be a NULL pointer.</p>
 </div>
 </li>
 <li>
-<p><code>visible == fmi3False</code> defines that the interaction with the user should be reduced to a minimum (no application window, no plotting, no animation, etc.).
+<p><code>visible = fmi3False</code> defines that the interaction with the user should be reduced to a minimum (no application window, no plotting, no animation, etc.).
 In other words, the FMU is executed in batch mode.
-If <code>visible == fmi3True</code>, the FMU is executed in interactive mode, and the FMU might require to explicitly acknowledge start of simulation / instantiation / initialization (acknowledgment is non-blocking).</p>
+If <code>visible = fmi3True</code>, the FMU is executed in interactive mode, and the FMU might require to explicitly acknowledge start of simulation / instantiation / initialization (acknowledgment is non-blocking).</p>
 </li>
 <li>
-<p><a id="loggingOn"></a> If <code>loggingOn == fmi3False</code>, then any logging is disabled and the <a href="#logMessage"><code>logMessage</code></a> callback function must not be called by the FMU.
-If <code>loggingOn == fmi3True</code>, then all <code>&lt;LogCategories&gt;</code> are enabled.
+<p><a id="loggingOn"></a> If <code>loggingOn = fmi3False</code>, then any logging is disabled and the <a href="#logMessage"><code>logMessage</code></a> callback function must not be called by the FMU.
+If <code>loggingOn = fmi3True</code>, then all <code>&lt;LogCategories&gt;</code> are enabled.
 The function <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> gives more detailed control about enabling specific <code>&lt;LogCategories&gt;</code> (see <a href="#definition-of-log-categories">Section 2.4.5</a>).</p>
 </li>
 <li>
-<p><a id="eventModeUsed"></a>If <code>eventModeUsed == fmi3True</code> the importer can handle events.
-The flag may only be <code>fmi3True</code>, if <a href="#hasEventMode"><code>hasEventMode == true</code></a>, otherwise the FMU must raise an error.
-For FMUs that have clocks, <code>eventModeUsed == fmi3True</code> is required.</p>
+<p><a id="eventModeUsed"></a>If <code>eventModeUsed = fmi3True</code> the importer can handle events.
+The flag may only be <code>fmi3True</code>, if <a href="#hasEventMode"><code>hasEventMode = true</code></a>, otherwise the FMU must raise an error.
+For FMUs that have clocks, <code>eventModeUsed = fmi3True</code> is required.</p>
 </li>
 <li>
-<p><a id="earlyReturnAllowed"></a>If <code>earlyReturnAllowed == fmi3True</code> the importer can handle <a href="#early-return">early return</a>.
-Only in this case, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may return with <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a>.</p>
+<p><a id="earlyReturnAllowed"></a>If <code>earlyReturnAllowed = fmi3True</code> the importer can handle <a href="#early-return">early return</a>.
+Only in this case, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may return with <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a>.</p>
 </li>
 <li>
 <p><code>instanceEnvironment</code> is a pointer that must be passed to <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a>, and <a href="#logMessage"><code>fmi3LogMessageCallback</code></a> to allow the simulation environment an efficient way to identify the calling FMU.</p>
 </li>
 <li>
 <p><a id="requiredIntermediateVariables"></a> <code>requiredIntermediateVariables</code> is an array of the value references of all <a href="#input"><code>input</code></a> variables that the simulation algorithm intends to set and all <a href="#output"><code>output</code></a> variables it intends to get during intermediate updates.
-This set may be empty (<a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables</code></a> == 0) when the simulation algorithm does not intend to use intermediate update.
+This set may be empty (<a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables</code></a> = 0) when the simulation algorithm does not intend to use intermediate update.
 Only the variables in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> may be accessed by the simulation algorithm using <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> during <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
 All variables referenced in this set must be marked with the attribute <a href="#intermediateUpdate"><code>intermediateUpdate = "true"</code></a> in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
 For Co-Simulation, these intermediate variables must be continuous-time variables.</p>
@@ -4052,13 +4052,13 @@ If <a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariable
 <ul>
 <li>
 <p><code>status</code> contains the severity of the message, see <code>fmi3Status</code>.
-If <a href="#fmi3OK"><code>status == fmi3OK</code></a>, the message is a pure information message.
+If <a href="#fmi3OK"><code>status = fmi3OK</code></a>, the message is a pure information message.
 If a function does not return <a href="#fmi3OK"><code>fmi3OK</code></a>, it must provide the reason by calling <a href="#logMessage"><code>logMessage</code></a> at least once with this <code>status</code>.</p>
 </li>
 <li>
 <p><code>category</code> is the category of the message.
 The allowed values for <code>category</code> are defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file via the element <a href="#definition-of-log-categories"><code>&lt;LogCategories&gt;</code></a>.
-<a href="#logMessage"><code>logMessage</code></a> must only be called for log categories that were enabled by calls to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> or via <a href="#loggingOn"><code>loggingOn == fmi3True</code></a> in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
+<a href="#logMessage"><code>logMessage</code></a> must only be called for log categories that were enabled by calls to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> or via <a href="#loggingOn"><code>loggingOn = fmi3True</code></a> in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
 If the FMU does not define any log categories, <code>category</code> must be <code>NULL</code>.</p>
 </li>
 <li>
@@ -4092,8 +4092,8 @@ See <a href="#preemption-support">Section 5.1.2</a> for details.</p>
 <p>The arguments <a href="#logMessage"><code>logMessage</code></a>, <a href="#fmi3IntermediateUpdateCallback"><code>intermediateUpdate</code></a>, <a href="#fmi3ClockUpdateCallback"><code>clockUpdate</code></a>, <a href="#preemption-support"><code>lockPreemption</code></a>, and <a href="#preemption-support"><code>unlockPreemption</code></a>, are function pointers provided by the simulation environment to be used by the FMU.
 Each of these pointers can be NULL to indicate missing support for the respective functionality.
 If such functionality is used anyway, undefined behavior results.
-<em>[For example, if <a href="#logMessage"><code>logMessage == NULL</code></a>, calls to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> result in undefined behavior of the FMU.</em>
-<em>If <a href="#intermediateUpdate"><code>intermediateUpdate == NULL</code></a> and arguments <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables != NULL</code></a> and/or <a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables != 0</code></a> the behavior of the FMU is undefined.]</em>
+<em>[For example, if <a href="#logMessage"><code>logMessage = NULL</code></a>, calls to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> result in undefined behavior of the FMU.</em>
+<em>If <a href="#intermediateUpdate"><code>intermediateUpdate = NULL</code></a> and arguments <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables != NULL</code></a> and/or <a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables != 0</code></a> the behavior of the FMU is undefined.]</em>
 Additionally, a pointer to the environment is provided (<code>instanceEnvironment</code>) that needs to be passed to the callback functions <a href="#logMessage"><code>logMessage</code></a>, <a href="#fmi3IntermediateUpdateCallback"><code>intermediateUpdate</code></a>, <a href="#fmi3ClockUpdateCallback"><code>clockUpdate</code></a>, in order that those functions can utilize data from the environment, such as mapping a <a href="#valueReference"><code>valueReference</code></a> to a string, or assigning memory to a certain FMU instance.</p>
 </div>
 </dd>
@@ -4120,12 +4120,12 @@ If this function is never called, logging for all log categories is allowed.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>If <a href="#loggingOn"><code>loggingOn == fmi3True</code></a>, debug logging is enabled for the log categories specified in <code>categories</code>.
-If <a href="#loggingOn"><code>loggingOn == fmi3False</code></a>, debug logging is disabled for the log categories specified in <code>categories</code>.</p>
+<p>If <a href="#loggingOn"><code>loggingOn = fmi3True</code></a>, debug logging is enabled for the log categories specified in <code>categories</code>.
+If <a href="#loggingOn"><code>loggingOn = fmi3False</code></a>, debug logging is disabled for the log categories specified in <code>categories</code>.</p>
 </li>
 <li>
 <p><code>nCategories</code> defines the length of the array of argument <code>categories</code>.
-If <code>nCategories == 0</code>, <a href="#loggingOn"><code>loggingOn</code></a> applies to all log categories and the value of <code>categories</code> is undefined.</p>
+If <code>nCategories = 0</code>, <a href="#loggingOn"><code>loggingOn</code></a> applies to all log categories and the value of <code>categories</code> is undefined.</p>
 </li>
 <li>
 <p><code>categories</code> is an array of <code>nCategories</code> elements.
@@ -4138,8 +4138,8 @@ The importer must only use values specified in the <a href="#modelDescription.xm
 </div>
 <div class="paragraph">
 <p><em>[For example: If <a href="#logMessage"><code>logMessage</code></a> shall be called only for log category <code>logStatusFatal</code>, two calls are required:</em>
-* <em>first, all log categories are turned off using <a href="#loggingOn"><code>loggingOn == fmi3False</code></a> with <code>nCategories == 0</code>, and</em>
-* <em>second, only <code>logStatusFatal</code> is placed in <code>categories</code> with <a href="#loggingOn"><code>loggingOn == fmi3True</code></a>.]</em></p>
+* <em>first, all log categories are turned off using <a href="#loggingOn"><code>loggingOn = fmi3False</code></a> with <code>nCategories = 0</code>, and</em>
+* <em>second, only <code>logStatusFatal</code> is placed in <code>categories</code> with <a href="#loggingOn"><code>loggingOn = fmi3True</code></a>.]</em></p>
 </div>
 <div id="fmi3Reset" class="dlist">
 <dl>
@@ -4336,11 +4336,11 @@ As long as no <a href="#structuralParameter"><code>structural parameters</code><
 <div class="ulist">
 <ul>
 <li>
-<p>Model Exchange: If <a href="#toleranceDefined"><code>toleranceDefined == fmi3True</code></a>, then the model is called with a numerical integration scheme where the step size is controlled by using <a href="#tolerance"><code>tolerance</code></a> for error estimation (usually as relative tolerance).
+<p>Model Exchange: If <a href="#toleranceDefined"><code>toleranceDefined = fmi3True</code></a>, then the model is called with a numerical integration scheme where the step size is controlled by using <a href="#tolerance"><code>tolerance</code></a> for error estimation (usually as relative tolerance).
 In such a case all numerical algorithms used inside the model (for example, to solve nonlinear algebraic equations) should also operate with an error estimation of an appropriate smaller relative tolerance.</p>
 </li>
 <li>
-<p>Co-Simulation: If <a href="#toleranceDefined"><code>toleranceDefined == fmi3True</code></a>, then the communication step size of the FMU is controlled by error estimation.
+<p>Co-Simulation: If <a href="#toleranceDefined"><code>toleranceDefined = fmi3True</code></a>, then the communication step size of the FMU is controlled by error estimation.
 In case the FMU utilizes a numerical integrator with variable step size and error estimation, it is suggested to use <a href="#tolerance"><code>tolerance</code></a> for the error estimation of the integrator (usually as relative tolerance).<br>
 An FMU for Co-Simulation might ignore this argument.</p>
 </li>
@@ -4359,9 +4359,9 @@ An FMU for Co-Simulation might ignore this argument.</p>
 </div>
 </li>
 <li>
-<p><a id="stopTimeDefined"></a> If <code>stopTimeDefined == fmi3True</code>, then <a href="#stopTime"><code>stopTime</code></a> is the final value of the <a href="#independent"><code>independent</code></a> variable and inherits its unit.
-If the environment tries to compute past <a href="#stopTime"><code>stopTime</code></a>, the FMU has to return <a href="#fmi3Error"><code>fmi3Status == fmi3Error</code></a>.
-If <a href="#stopTimeDefined"><code>stopTimeDefined == fmi3False</code></a>, then no final value of the <a href="#independent"><code>independent</code></a> variable is defined and argument <a href="#stopTime"><code>stopTime</code></a> is meaningless.</p>
+<p><a id="stopTimeDefined"></a> If <code>stopTimeDefined = fmi3True</code>, then <a href="#stopTime"><code>stopTime</code></a> is the final value of the <a href="#independent"><code>independent</code></a> variable and inherits its unit.
+If the environment tries to compute past <a href="#stopTime"><code>stopTime</code></a>, the FMU has to return <a href="#fmi3Error"><code>fmi3Status = fmi3Error</code></a>.
+If <a href="#stopTimeDefined"><code>stopTimeDefined = fmi3False</code></a>, then no final value of the <a href="#independent"><code>independent</code></a> variable is defined and argument <a href="#stopTime"><code>stopTime</code></a> is meaningless.</p>
 </li>
 </ul>
 </div>
@@ -4415,10 +4415,10 @@ continuous-time <a href="#state">states</a> \(\mathbf{x}_{c,\mathit{initial=exac
 <p>Deactivate initialization equations \(\mathbf{f}_{\mathit{init}}\)</p>
 </li>
 <li>
-<p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b}:=\mathbf{b}\)</p>
+<p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b} := \mathbf{b}\)</p>
 </li>
 <li>
-<p>\(\mathbf{t}:=(\mathbf{t}_{\mathit{start}}, 0)\)</p>
+<p>\(\mathbf{t} := (\mathbf{t}_{\mathit{start}}, 0)\)</p>
 </li>
 <li>
 <p>Model Exchange:</p>
@@ -4516,7 +4516,7 @@ This function can only be called in Model Exchange.</p>
 <ul>
 <li>
 <p>Return argument <code>nominals</code> contains the nominal values for each <a href="#state">continuous state</a> with the same convention for the order as defined for <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.
-If the FMU does not have information about the nominal value of a continuous <a href="#state">state</a> <code>i</code>, a nominal value <code>nominals[i] == 1.0</code> should be returned.
+If the FMU does not have information about the nominal value of a continuous <a href="#state">state</a> <code>i</code>, a nominal value <code>nominals[i] = 1.0</code> should be returned.
 It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 </li>
 <li>
@@ -4525,7 +4525,7 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>This function should always be called after calling function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged == fmi3True</code>, since then the nominal values of the continuous <a href="#state">states</a> have changed <em>[for example, because the mapping of the continuous <a href="#state">states</a> to variables has changed because of internal <a href="#dynamic-state-selection">dynamic state selection</a>]</em>.</p>
+<p>This function should always be called after calling function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged = fmi3True</code>, since then the nominal values of the continuous <a href="#state">states</a> have changed <em>[for example, because the mapping of the continuous <a href="#state">states</a> to variables has changed because of internal <a href="#dynamic-state-selection">dynamic state selection</a>]</em>.</p>
 </div>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
@@ -4576,10 +4576,10 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#eventModeUsed"><code>eventModeUsed == fmi3True</code></a>: <a href="#EventMode"><strong>Event Mode</strong></a></p>
+<p><a href="#eventModeUsed"><code>eventModeUsed = fmi3True</code></a>: <a href="#EventMode"><strong>Event Mode</strong></a></p>
 </li>
 <li>
-<p><a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>: <a href="#StepMode"><strong>Step Mode</strong></a></p>
+<p><a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>: <a href="#StepMode"><strong>Step Mode</strong></a></p>
 </li>
 </ul>
 </div>
@@ -4675,7 +4675,7 @@ Additionally, in Co-Simulation, the exact event time can be communicated to the 
 </li>
 <li>
 <p><a href="#state-event">State events</a> are signaled to the importer by <a href="#eventIndicators"><code>eventIndicators</code></a> in Model Exchange (see <a href="#localizationStateEvents">Section 3.1.1</a>).
-In Co-Simulation, the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#eventHandlingNeeded"><code>eventHandlingNeeded == fmi3True</code></a>.
+In Co-Simulation, the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a>.
 The exact event localization is hidden from the importer.</p>
 </li>
 <li>
@@ -4696,7 +4696,7 @@ The exact event localization is hidden from the importer.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{variability == tunable}}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{variability = tunable}}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
@@ -4795,16 +4795,16 @@ The exact event localization is hidden from the importer.</p>
 <p>\((\mathbf{T}_\mathit{interval}) := \mathbf{f}_{\mathit{update}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
 </li>
 <li>
-<p>Update previous values of discrete states: \({}^\bullet\mathbf{x}_d:=\mathbf{x}_d\).</p>
+<p>Update previous values of discrete states: \({}^\bullet\mathbf{x}_d := \mathbf{x}_d\).</p>
 </li>
 <li>
-<p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b}:=\mathbf{b}\).</p>
+<p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b} := \mathbf{b}\).</p>
 </li>
 <li>
 <p>Deactivate active clocks and respective model partitions.</p>
 </li>
 <li>
-<p>Increment super-dense time: \(\mathbf{t}:=(\mathbf{t}_\mathit{R}, \mathbf{t}_\mathit{I} + 1)\).</p>
+<p>Increment super-dense time: \(\mathbf{t} := (\mathbf{t}_\mathit{R}, \mathbf{t}_\mathit{I} + 1)\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -4814,7 +4814,7 @@ The exact event localization is hidden from the importer.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p><a id="updateRelations"></a>Update previous values of <a href="#relations">relations</a>: \({}^\bullet\mathbf{r}:=\mathbf{r}\).</p>
+<p><a id="updateRelations"></a>Update previous values of <a href="#relations">relations</a>: \({}^\bullet\mathbf{r} := \mathbf{r}\).</p>
 </li>
 <li>
 <p>Deactivate event equations \(\mathbf{f}_\mathit{event}\).</p>
@@ -4834,7 +4834,7 @@ The exact event localization is hidden from the importer.</p>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
-<p>This function can be called for variables with <a href="#causality"><code>causality == input</code></a> and for variables with <a href="#causality"><code>causality == parameter</code></a> and <a href="#variability"><code>variability == tunable</code></a>.</p>
+<p>This function can be called for variables with <a href="#causality"><code>causality = input</code></a> and for variables with <a href="#causality"><code>causality = parameter</code></a> and <a href="#variability"><code>variability = tunable</code></a>.</p>
 </dd>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
@@ -4866,7 +4866,7 @@ When a Clock \(\mathbf{k}\) is deactivated, the FMU must</p>
 <p><em>[Rationale: a triggered <a href="#outputClock">output Clock</a> \(c\) may depend on some variable \(v\) that is involved in an algebraic loop.</em>
 <em>As part of the iterations to solve the algebraic loop, \(v\) acquires a value that activates the Clock.</em>
 <em>If the final (or some intermediate) value of \(v\) no longer activates the Clock, then this Clock must be deactivated by the Importer during the same super-dense time instant.]</em><br>
-The importer can set a Clock to <code>fmi3ClockInactive</code> only if the Clock has the attribute <a href="#canBeDeactivated"><code>canBeDeactivated == true</code></a>.
+The importer can set a Clock to <code>fmi3ClockInactive</code> only if the Clock has the attribute <a href="#canBeDeactivated"><code>canBeDeactivated = true</code></a>.
 Any Clock active during <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> must be deactivated by the FMU itself.<br>
 Only <a href="#time-based-clock">time-based Clocks</a> must not be active for more than one call of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> per <a href="#EventMode"><strong>Event Mode</strong></a>.<br>
 <em>[The event iteration for handling discontinuities of the continuous part of the FMU should precede handling of time-based Clocks.</em>
@@ -4896,7 +4896,7 @@ Clock intervals are computed in <a href="#fmi3UpdateDiscreteStates"><code>fmi3Up
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a></dt>
 <dd>
-<p>This function must be called if <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> returned with <a href="#valuesOfContinuousStatesChanged"><code>valuesOfContinuousStatesChanged == fmi3True</code></a>.
+<p>This function must be called if <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> returned with <a href="#valuesOfContinuousStatesChanged"><code>valuesOfContinuousStatesChanged = fmi3True</code></a>.
 Not allowed in Co-Simulation and Scheduled Execution.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a></dt>
@@ -4946,21 +4946,21 @@ The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3E
 <div id="discreteStatesNeedUpdate" class="ulist">
 <ul>
 <li>
-<p>When <code>discreteStatesNeedUpdate == fmi3True</code>, the importer must stay in <a href="#EventMode"><strong>Event Mode</strong></a> for another event iteration, starting a new super-dense time instant.</p>
+<p>When <code>discreteStatesNeedUpdate = fmi3True</code>, the importer must stay in <a href="#EventMode"><strong>Event Mode</strong></a> for another event iteration, starting a new super-dense time instant.</p>
 </li>
 </ul>
 </div>
 <div id="terminateSimulationUDS" class="ulist">
 <ul>
 <li>
-<p>When <a href="#terminateSimulationUDS"><code>terminateSimulation == fmi3True</code></a>, the FMU requests to stop the simulation and the importer must call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
+<p>When <a href="#terminateSimulationUDS"><code>terminateSimulation = fmi3True</code></a>, the FMU requests to stop the simulation and the importer must call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
 </li>
 </ul>
 </div>
 <div id="nominalsOfContinuousStatesChanged" class="ulist">
 <ul>
 <li>
-<p>If argument <code>nominalsOfContinuousStatesChanged == fmi3True</code>, then at least one nominal value of the <a href="#state">states</a> has changed and can be inquired with <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a>.<br>
+<p>If argument <code>nominalsOfContinuousStatesChanged = fmi3True</code>, then at least one nominal value of the <a href="#state">states</a> has changed and can be inquired with <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a>.<br>
 This argument is only valid in Model Exchange.</p>
 </li>
 </ul>
@@ -4968,7 +4968,7 @@ This argument is only valid in Model Exchange.</p>
 <div id="valuesOfContinuousStatesChanged" class="ulist">
 <ul>
 <li>
-<p>If argument <code>valuesOfContinuousStatesChanged == fmi3True</code>, then at least one continuous state has changed its value because it was re-initialized (see <a href="#reinit"><code>reinit</code></a>).<br></p>
+<p>If argument <code>valuesOfContinuousStatesChanged = fmi3True</code>, then at least one continuous state has changed its value because it was re-initialized (see <a href="#reinit"><code>reinit</code></a>).<br></p>
 <div class="paragraph">
 <p>The new values of the <a href="#state">states</a> can be inquired with <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a> or individually for each state for which <a href="#reinit"><code>reinit = true</code></a> by calling <code>fmi3GetFloat64</code>.<br>
 This argument is only valid in Model Exchange.</p>
@@ -4979,16 +4979,16 @@ This argument is only valid in Model Exchange.</p>
 <div id="nextEventTimeDefined" class="ulist">
 <ul>
 <li>
-<p>When <a href="#nextEventTimeDefined"><code>nextEventTimeDefined == fmi3True</code></a>, the next time event is known and <a href="#nextEventTime"><code>nextEventTime</code></a> has a valid value.</p>
+<p>When <a href="#nextEventTimeDefined"><code>nextEventTimeDefined = fmi3True</code></a>, the next time event is known and <a href="#nextEventTime"><code>nextEventTime</code></a> has a valid value.</p>
 </li>
 </ul>
 </div>
 <div id="nextEventTime" class="ulist">
 <ul>
 <li>
-<p>The return argument <a href="#nextEventTime"><code>nextEventTime</code></a> contains the absolute time of the next time event \(\mathbf{T}_\mathit{next}\) if <a href="#nextEventTimeDefined"><code>nextEventTimeDefined == fmi3True</code></a>.
-The importer must compute up to <a href="#nextEventTime"><code>nextEventTime</code></a> (or if needed slightly further) and then enter <a href="#EventMode"><strong>Event Mode</strong></a> using <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> with argument <a href="#timeEvent"><code>timeEvent == fmi3True</code></a>.
-The FMU must handle this time event at the first call to <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> with <a href="#timeEvent"><code>timeEvent == fmi3True</code></a> at or after <a href="#nextEventTime"><code>nextEventTime</code></a>.<br>
+<p>The return argument <a href="#nextEventTime"><code>nextEventTime</code></a> contains the absolute time of the next time event \(\mathbf{T}_\mathit{next}\) if <a href="#nextEventTimeDefined"><code>nextEventTimeDefined = fmi3True</code></a>.
+The importer must compute up to <a href="#nextEventTime"><code>nextEventTime</code></a> (or if needed slightly further) and then enter <a href="#EventMode"><strong>Event Mode</strong></a> using <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> with argument <a href="#timeEvent"><code>timeEvent = fmi3True</code></a>.
+The FMU must handle this time event at the first call to <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> with <a href="#timeEvent"><code>timeEvent = fmi3True</code></a> at or after <a href="#nextEventTime"><code>nextEventTime</code></a>.<br>
 <em>[This might be needed if, for example, the time resolution of the importer does not allow hitting the precise <a href="#nextEventTime"><code>nextEventTime</code></a>.</em>
 <em>If the time offset proves to be too large, the FMU could issue a log message and return fmi3Error.</em>
 <em>The user can improve time settings of the importer to alleviate the issues.]</em><br>
@@ -5861,7 +5861,7 @@ J \cdot \alpha = f \rightarrow [kg.m^2]*[rad/s^2] = [kg.m/s^2] &amp; \quad \text
 <p>A <code>&lt;DisplayUnit&gt;</code> is defined by <code>name</code>, <code>factor</code>, <code>offset</code>, and <code>inverse</code>.
 The attribute <code>name</code> must be unique with respect to all other names of the <code>&lt;DisplayUnit&gt;</code> definitions of the same <code>Unit</code>.
 <em>[Different <code>Unit</code> elements may have the same <code>&lt;DisplayUnit&gt;</code> names].</em><br>
-<code>inverse == true</code> is only allowed if <code>offset == 0</code>.<br>
+<code>inverse = true</code> is only allowed if <code>offset = 0</code>.<br>
 <em>[Reason: no use case is known for the combination of inverse and offset, which would also be more complicated.]</em></p>
 </div>
 <div class="paragraph">
@@ -5871,8 +5871,8 @@ The attribute <code>name</code> must be unique with respect to all other names o
 <div class="content">
 \[v_{display} =
 \left\{\begin{array}{ll}
-\texttt{factor} *          v_{unit}  + \texttt{offset} &amp;\text{if} \; \texttt{inverse == false} \\
-\texttt{factor} * \frac{1}{v_{unit}}  &amp;\text{if} \; \texttt{inverse == true}
+\texttt{factor} *          v_{unit}  + \texttt{offset} &amp;\text{if} \; \texttt{inverse = false} \\
+\texttt{factor} * \frac{1}{v_{unit}}  &amp;\text{if} \; \texttt{inverse = true}
 \end{array}\right.\]
 </div>
 </div>
@@ -6076,7 +6076,7 @@ If not defined and no other information about the nominal value is available, th
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canBeDeactivated</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canBeDeactivated"></a>
-<a href="#Clock"><code>Clocks</code></a> with the attribute <a href="#canBeDeactivated"><code>canBeDeactivated == true</code></a> may be actively deactivated using <a href="#fmi3SetClockEM"><code>fmi3SetClock</code></a>.</p></td>
+<a href="#Clock"><code>Clocks</code></a> with the attribute <a href="#canBeDeactivated"><code>canBeDeactivated = true</code></a> may be actively deactivated using <a href="#fmi3SetClockEM"><code>fmi3SetClock</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>priority</code></p></td>
@@ -6127,14 +6127,14 @@ This attribute must only be used for <a href="#periodic-clock">periodic Clocks</
 <p class="tableblock">\(\mathbf{T}_{interval} = \) <code>intervalCounter / resolution</code>.</p>
 <p class="tableblock"><a href="#intervalCounter"><code>intervalCounter</code></a> and <a href="#resolution"><code>resolution</code></a> have no default value.
 This value must be greater than 0.
-This attribute is allowed if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and is required if <a href="#intervalVariability">intervalVariability == <code>constant</code></a> or <a href="#intervalVariability">intervalVariability == <code>fixed</code></a>.
+This attribute is allowed if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and is required if <a href="#intervalVariability"><code>intervalVariability = constant</code></a> or <a href="#intervalVariability"><code>intervalVariability = fixed</code></a>.
 This attribute must only be used for <a href="#periodic-clock">periodic Clocks</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="shiftCounter"></a><code>shiftCounter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This value defines (together with <a href="#resolution"><code>resolution</code></a>) the delay of the first clock activation relative to \(\mathbf{t}_{\mathit{start}}\) (<a href="#startTime"><code>startTime</code></a>):</p>
 <p class="tableblock">\(\mathbf{T}_{shift} = \) <code>shiftCounter / resolution</code>.</p>
-<p class="tableblock">This attribute is allowed if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and is required if <a href="#intervalVariability">intervalVariability == <code>constant</code></a> or <a href="#intervalVariability">intervalVariability == <code>fixed</code></a>.
+<p class="tableblock">This attribute is allowed if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and is required if <a href="#intervalVariability"><code>intervalVariability = constant</code></a> or <a href="#intervalVariability"><code>intervalVariability = fixed</code></a>.
 This attribute must only be used for <a href="#periodic-clock">periodic Clocks</a>.</p></td>
 </tr>
 </tbody>
@@ -6304,7 +6304,7 @@ However different <a href="#Dimension"><code>&lt;Dimension&gt;</code></a> sizes 
 <div class="paragraph">
 <p><em>[Example:</em>
 <em>`V` is a floating point vector parameter.</em>
-<em>The length of the vector depends on the <a href="#structuralParameter"><code>structural parameter</code></a> <code>len</code>, connected via the <code>valueReference="100"</code>.</em>
+<em>The length of the vector depends on the <a href="#structuralParameter"><code>structural parameter</code></a> <code>len</code>, connected via the <code>valueReference = "100"</code>.</em>
 <em>The default length of the vector is 7.</em>
 <em>This length can be changed in <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> because the <a href="#variability"><code>variability</code></a> of the <a href="#structuralParameter"><code>structural parameter</code></a> <code>len</code> is <a href="#fixed"><code>fixed</code></a>.</em>
 <em>The values of <code>V</code> can be changed whenever <a href="#tunable"><code>tunable</code></a> parameters can be changed.</em></p>
@@ -6513,10 +6513,10 @@ Whenever a <a href="#parameter"><code>parameter</code></a> with <a href="#variab
 Model Exchange: The value of the variable is constant between external and internal events (= <a href="#time-event">time event</a>, <a href="#state-event">state event</a>, <a href="#step-event">step events</a> defined implicitly in the FMU).<br>
 Co-Simulation: By convention, the variable is from a real sampled data system and its value is only changed at communication points (including event handling).
 During <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>, <a href="#discrete"><code>discrete</code></a> variables are not allowed to change.
-<em>[If the simulation algorithm notices a change in a discrete variable during <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>, the simulation algorithm will delay the change, raise an event with <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> and during the communication point it can change the <a href="#discrete"><code>discrete</code></a> variable, followed by event handling.]</em></p>
+<em>[If the simulation algorithm notices a change in a discrete variable during <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>, the simulation algorithm will delay the change, raise an event with <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a> and during the communication point it can change the <a href="#discrete"><code>discrete</code></a> variable, followed by event handling.]</em></p>
 </div>
 <div id="continuous" class="paragraph">
-<p><code>= continuous</code>: Only a variable of <code>type == fmi3GetFloat32</code> or <code>type == fmi3GetFloat64</code> can be <a href="#continuous"><code>continuous</code></a>.<br>
+<p><code>= continuous</code>: Only a variable of <code>type = fmi3GetFloat32</code> or <code>type = fmi3GetFloat64</code> can be <a href="#continuous"><code>continuous</code></a>.<br>
 Model Exchange: No restrictions on value changes (see <a href="#smoothness">Section 4.1.1</a>).</p>
 </div>
 <div class="paragraph">
@@ -6565,7 +6565,7 @@ The following constraints apply:</p>
 <p>Only clocked variables (i.e. variables with the attribute <a href="#clocks"><code>clocks</code></a>) may have the <a href="#previous"><code>previous</code></a> attribute.</p>
 </li>
 <li>
-<p>Only variables with <a href="#variability"><code>variability == discrete</code></a> may have the <a href="#previous"><code>previous</code></a> attribute.</p>
+<p>Only variables with <a href="#variability"><code>variability = discrete</code></a> may have the <a href="#previous"><code>previous</code></a> attribute.</p>
 </li>
 <li>
 <p>Variables of type <a href="#Clock">Clock</a> must not have the <a href="#previous"><code>previous</code></a> attribute.</p>
@@ -6577,12 +6577,13 @@ The following constraints apply:</p>
 <p>A variable must not refer to itself in the <a href="#previous"><code>previous</code></a> attribute.</p>
 </li>
 <li>
-<p>The variable referenced by the <a href="#previous"><code>previous</code></a> attribute must have the same numeric type, <a href="#variability"><code>variability == discrete</code></a>, and must not have <a href="#causality"><code>causality == input</code></a>.</p>
+<p>The variable referenced by the <a href="#previous"><code>previous</code></a> attribute must have the same numeric type, <a href="#variability"><code>variability = discrete</code></a>, and must not have <a href="#causality"><code>causality = input</code></a>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><em>[For example, if <code>previous == 3</code> for variable <code>8</code>, then variable <code>3</code> is the previous value of variable <code>8</code>. See also <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</em>
+<p><em>[For example, if <code>previous = 3</code> for variable <code>8</code>, then variable <code>3</code> is the previous value of variable <code>8</code>.</em>
+<em>See also <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</em>
 <em>Note: This is reverse compared to the <a href="#derivative"><code>derivative</code></a> attribute.]</em></p>
 </div></div></td>
 </tr>
@@ -6591,7 +6592,7 @@ The following constraints apply:</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="clocks" class="paragraph">
 <p>If present, this variable is clocked.
 The value of <a href="#clocks"><code>clocks</code></a> is a list of value references of <a href="#Clock">Clock</a> variables this variable depends on.
-Only variables with <a href="#variability"><code>variability == discrete</code></a> or <a href="#variability"><code>variability == tunable</code></a> can have this attribute.
+Only variables with <a href="#variability"><code>variability = discrete</code></a> or <a href="#variability"><code>variability = tunable</code></a> can have this attribute.
 <em>[Some importers might require a variable to be dependent on a single Clock for technical reasons.</em>
 <em>They could reject FMUs violating this restriction.</em>
 <em>Note: It is not further restricted, which variables can be clocked to not restrict currently unknown use cases.</em>
@@ -7371,7 +7372,7 @@ The functional dependency is defined as (dependencies of variables that are fixe
 A <a href="#ClockedState"><code>ClockedState</code></a> is part of the discrete state of a model partition and represented by a clocked variable.
 To which Clock or Clocks it belongs is described by the attribute <a href="#clocks"><code>clocks</code></a>.
 Each <a href="#ClockedState"><code>ClockedState</code></a> must have the attribute <a href="#previous"><code>previous</code></a> to represent the previous value of this <a href="#ClockedState"><code>ClockedState</code></a>.
-All clocked states must have <a href="#variability"><code>variability == discrete</code></a> and must not be of type <a href="#fmi3Clock"><code>fmi3Clock</code></a>.</p></td>
+All clocked states must have <a href="#variability"><code>variability = discrete</code></a> and must not be of type <a href="#fmi3Clock"><code>fmi3Clock</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>InitialUnknown</code></p></td>
@@ -9281,7 +9282,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 \((\mathbf{y}_{c}, \mathbf{\dot{x}}_c, \mathbf{z}, \mathbf{w}_{c}, \mathbf{b},\)<a href="#enterEventMode"><code>enterEventMode</code></a>\() := \mathbf{f}_{\mathit{comp}}(\mathbf{x}_{c}, {}^\bullet\mathbf{x}_{d}, \mathbf{u}_{c}, {}^\bullet\mathbf{u}_{d}, \mathbf{p}, {}^\bullet\mathbf{r}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
 </li>
 <li>
-<p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b}:=\mathbf{b}\)</p>
+<p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b} := \mathbf{b}\)</p>
 </li>
 </ul>
 </div></div></td>
@@ -9300,7 +9301,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 <p>Activate event equations \(\mathbf{f}_{\mathit{event}}\)</p>
 </li>
 <li>
-<p>\(\mathbf{t}:=(\mathbf{t}_\mathit{R}, 0)\)</p>
+<p>\(\mathbf{t} := (\mathbf{t}_\mathit{R}, 0)\)</p>
 </li>
 </ul>
 </div></div></td>
@@ -9383,7 +9384,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 <li>
 <p>Argument <code>nContinuousStates</code> is the size of the <code>continuousStates</code> vector.</p>
 <div class="paragraph">
-<p><em>[<a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> should be returned if the FMU rejects any of the state values because they, for example, violate min/max value restrictions.]</em></p>
+<p><em>[<a href="#fmi3Discard"><code>fmi3Status = fmi3Discard</code></a> should be returned if the FMU rejects any of the state values because they, for example, violate min/max value restrictions.]</em></p>
 </div>
 </li>
 </ul>
@@ -9421,7 +9422,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 <li>
 <p>Argument <code>nContinuousStates</code> is the size of the <code>derivatives</code> vector.</p>
 <div class="paragraph">
-<p><em>[<a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> should be returned if the FMU was not able to compute the derivatives according to</em> \(\mathbf{f}_{\mathit{cont}}\) <em>because, for example, a numerical issue, such as division by zero, occurred.]</em></p>
+<p><em>[<a href="#fmi3Discard"><code>fmi3Status = fmi3Discard</code></a> should be returned if the FMU was not able to compute the derivatives according to</em> \(\mathbf{f}_{\mathit{cont}}\) <em>because, for example, a numerical issue, such as division by zero, occurred.]</em></p>
 </div>
 </li>
 </ul>
@@ -9454,7 +9455,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 </ul>
 </div>
 <div class="paragraph">
-<p><em>[<a href="#fmi3Discard"><code>fmi3Status == fmi3Discard</code></a> should be returned if the FMU was not able to compute the event indicators according to</em> \(\mathbf{f}_{\mathit{cont}}\) <em>because, for example, a numerical issue, such as division by zero, occurred.]</em></p>
+<p><em>[<a href="#fmi3Discard"><code>fmi3Status = fmi3Discard</code></a> should be returned if the FMU was not able to compute the event indicators according to</em> \(\mathbf{f}_{\mathit{cont}}\) <em>because, for example, a numerical issue, such as division by zero, occurred.]</em></p>
 </div>
 </dd>
 </dl>
@@ -9472,7 +9473,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 </div>
 </div>
 <div class="paragraph">
-<p>This function is called after every completed step of the integrator provided the capability flag <code>needsCompletedIntegratorStep == true</code>.
+<p>This function is called after every completed step of the integrator provided the capability flag <code>needsCompletedIntegratorStep = true</code>.
 The importer must have set valid values for <a href="#time"><code>time</code></a>, <a href="#continuous"><code>continuous</code></a> <a href="#input"><code>inputs</code></a> and <a href="#continuous"><code>continuous</code></a> <a href="#state">states</a> prior to calling this function to evaluate \(\mathbf{f}_{\mathit{comp}}\) with valid right-hand side data.</p>
 </div>
 <div class="openblock">
@@ -9480,13 +9481,13 @@ The importer must have set valid values for <a href="#time"><code>time</code></a
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>noSetFMUStatePriorToCurrentPoint == fmi3True</code> if <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> will no longer be called for time instants prior to current time in this simulation run.</p>
+<p>Argument <code>noSetFMUStatePriorToCurrentPoint = fmi3True</code> if <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> will no longer be called for time instants prior to current time in this simulation run.</p>
 </li>
 <li>
 <p><a id="enterEventMode"></a> The return argument <code>enterEventMode</code> signals that the importer must call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> to handle a <a href="#step-event">step event</a>.</p>
 </li>
 <li>
-<p><a id="terminateSimulationCIS"></a> When <a href="#terminateSimulationUDS"><code>terminateSimulation == fmi3True</code></a>, the FMU requests to stop the simulation and the importer must call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
+<p><a id="terminateSimulationCIS"></a> When <a href="#terminateSimulationUDS"><code>terminateSimulation = fmi3True</code></a>, the FMU requests to stop the simulation and the importer must call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -9515,14 +9516,14 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 <li>
 <p><em>Detect <a href="#step-event">step events</a> and request handling of <a href="#step-event">step events</a> for <a href="#dynamic-state-selection">dynamic state selection</a>:</em><br>
 <em>The FMU checks whether the dynamically selected states are still numerically appropriate.</em>
-<em>If not, the function returns with <code>enterEventMode == fmi3True</code>, the importer will call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> and in <a href="#EventMode"><strong>Event Mode</strong></a> the new mapping is computed by the FMU.</em>
-<em>This new mapping might require a reinitialization of continuous states, which must be signaled to the importer by returning from <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> with <a href="#valuesOfContinuousStatesChanged"><code>valuesOfContinuousStatesChanged == fmi3True</code></a>.</em></p>
+<em>If not, the function returns with <code>enterEventMode = fmi3True</code>, the importer will call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> and in <a href="#EventMode"><strong>Event Mode</strong></a> the new mapping is computed by the FMU.</em>
+<em>This new mapping might require a reinitialization of continuous states, which must be signaled to the importer by returning from <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> with <a href="#valuesOfContinuousStatesChanged"><code>valuesOfContinuousStatesChanged = fmi3True</code></a>.</em></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p><em>The function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> is not used to detect <a href="#time-event">time events</a> or <a href="#state-event">state events</a>, for example, by comparing event indicators of the previous with the current call of <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a>.</em>
-<em><a href="#time-event">Time events</a> and <a href="#state-event">state events</a> must be detected by the importer, which has to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> in these cases, even if the returning from <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> with <code>enterEventMode == fmi3False</code>.]</em></p>
+<em><a href="#time-event">Time events</a> and <a href="#state-event">state events</a> must be detected by the importer, which has to call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> in these cases, even if the returning from <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> with <code>enterEventMode = fmi3False</code>.]</em></p>
 </div>
 </dd>
 </dl>
@@ -9547,10 +9548,10 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 <div class="ulist">
 <ul>
 <li>
-<p>Model Exchange only: <code>stepEvent == fmi3True</code> signals that a <a href="#step-event">step event</a> occurs.</p>
+<p>Model Exchange only: <code>stepEvent = fmi3True</code> signals that a <a href="#step-event">step event</a> occurs.</p>
 </li>
 <li>
-<p>Model Exchange only: <code>stateEvent == fmi3True</code> signals that a <a href="#state-event">state event</a> occurs.</p>
+<p>Model Exchange only: <code>stateEvent = fmi3True</code> signals that a <a href="#state-event">state event</a> occurs.</p>
 </li>
 <li>
 <p>Model Exchange only: <code>rootsFound</code> is an array of length <code>nEventIndicators</code> that informs the FMU which event indicator has a root.<br>
@@ -9558,18 +9559,18 @@ For <code>i = 0, &#8230;&#8203; nEventIndicators-1, rootsFound[i]</code> informs
 <div class="ulist">
 <ul>
 <li>
-<p><code>rootsFound[i] == 0</code> no root,</p>
+<p><code>rootsFound[i] = 0</code> no root,</p>
 </li>
 <li>
-<p><code>rootsFound[i] == +1</code> indicates the direction of the zero-crossing from negative to positive,</p>
+<p><code>rootsFound[i] = +1</code> indicates the direction of the zero-crossing from negative to positive,</p>
 </li>
 <li>
-<p><code>rootsFound[i] == -1</code> indicates the direction of the zero-crossing from positive to negative.</p>
+<p><code>rootsFound[i] = -1</code> indicates the direction of the zero-crossing from positive to negative.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>If <code>nEventIndicators == 0</code> the value of <code>rootsFound</code> is not defined.
+<p>If <code>nEventIndicators = 0</code> the value of <code>rootsFound</code> is not defined.
 The order in the <code>rootsFound</code> array is the same as in <a href="#eventIndicators"><code>eventIndicators</code></a> of <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.</p>
 </div>
 </li>
@@ -9577,7 +9578,7 @@ The order in the <code>rootsFound</code> array is the same as in <a href="#event
 <p>Model Exchange only: <code>nEventIndicators</code> contains the number of event indicators as deduced from the list <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> or <code>0</code> if the importer cannot provide this information.</p>
 </li>
 <li>
-<p><a id="timeEvent"></a><code>timeEvent == fmi3True</code> signals that this event is a <a href="#time-event">time event</a> triggered by <a href="#nextEventTime"><code>nextEventTime</code></a> of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
+<p><a id="timeEvent"></a><code>timeEvent = fmi3True</code> signals that this event is a <a href="#time-event">time event</a> triggered by <a href="#nextEventTime"><code>nextEventTime</code></a> of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -10077,8 +10078,8 @@ The inner level does not exist for scalar variables.</p>
 </div>
 <div class="paragraph">
 <p><em>[ Example:</em><br>
-<em>Assuming an FMU has outputs \(y_1\)[2*3] with value reference 1, \(y_2\) with value reference 2, \( y_3\)[2] value reference 3, \(y_4\) with value reference 4 and <code>maxOutputDerivativeOrder</code>=2.</em><br>
-<em>With <code>valueReferences</code>= [1, 1, 3, 3, 4, 4], and <code>orders</code>= [1, 2, 1, 2, 1, 2], <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> will provide first and second time derivatives of the outputs y1, y3, y4, which in <code>values</code> are serialized in the following way:</em>
+<em>Assuming an FMU has outputs \(y_1\)[2*3] with value reference 1, \(y_2\) with value reference 2, \( y_3\)[2] value reference 3, \(y_4\) with value reference 4 and <code>maxOutputDerivativeOrder = 2</code>.</em><br>
+<em>With <code>valueReferences = [1, 1, 3, 3, 4, 4]</code>, and <code>orders = [1, 2, 1, 2, 1, 2]</code>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> will provide first and second time derivatives of the outputs y1, y3, y4, which in <code>values</code> are serialized in the following way:</em>
 <em>((array serialization of \(\dot y_1\)), (array serialization of \(\ddot y_1\)), (array serialization of \(\dot y_3\)), (array serialization of \(\ddot y_3\)), \(\dot y_4\), \(\ddot y_4\)).]</em></p>
 </div>
 </div>
@@ -10151,7 +10152,7 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{variability == tunable}}\) .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{variability = tunable}}\) .</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
@@ -10173,13 +10174,13 @@ If the FMU is connected in loops with other models, iterations over the FMU equa
 <p>\((\mathbf{y}_{c+d-k}, \mathbf{y}_c^{(j)}, \mathbf{x}_{d-k}, \mathbf{w}_{c+d-k}, \mathbf{b}, \mathbf{t}_\mathit{i+1}) := \mathbf{f}_{\mathit{doStep}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{c,u}, \mathbf{p}, {}^{\bullet}\mathbf{b}, \mathbf{t}_i, \mathbf{h}_i)\)<br></p>
 </li>
 <li>
-<p>Update previous values of non-clocked, discrete states: \({}^\bullet\mathbf{x}_{d-k}:=\mathbf{x}_{d-k}\).</p>
+<p>Update previous values of non-clocked, discrete states: \({}^\bullet\mathbf{x}_{d-k} := \mathbf{x}_{d-k}\).</p>
 </li>
 <li>
-<p>Update previous values of buffers: \({}^\bullet\mathbf{b}:=\mathbf{b}\).</p>
+<p>Update previous values of buffers: \({}^\bullet\mathbf{b} := \mathbf{b}\).</p>
 </li>
 <li>
-<p>\(\mathbf{t}:=(\mathbf{t}_\mathit{i+1}, 0)\)</p>
+<p>\(\mathbf{t} := (\mathbf{t}_\mathit{i+1}, 0)\)</p>
 </li>
 </ul>
 </div></div></td>
@@ -10275,31 +10276,31 @@ See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCom
 </div>
 </li>
 <li>
-<p><a id="noSetFMUStatePriorToCurrentPoint"></a> <code>noSetFMUStatePriorToCurrentPoint == fmi3True</code> if <code>fmi3SetFMUState</code> will no longer be called for time instants prior to <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> in this simulation run.</p>
+<p><a id="noSetFMUStatePriorToCurrentPoint"></a> <code>noSetFMUStatePriorToCurrentPoint = fmi3True</code> if <code>fmi3SetFMUState</code> will no longer be called for time instants prior to <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> in this simulation run.</p>
 <div class="paragraph">
 <p><em>[The FMU can use this flag to flush a result buffer.]</em></p>
 </div>
 </li>
 <li>
-<p><a id="eventHandlingNeeded"></a> <a href="#eventHandlingNeeded"><code>eventHandlingNeeded == fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
-<a href="#eventHandlingNeeded"><code>eventHandlingNeeded == fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.
+<p><a id="eventHandlingNeeded"></a> <a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
+<a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>.
 <em>[This is different from <a href="#earlyReturn"><code>earlyReturn</code></a> which only indicates that the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> did not complete the intended step up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a> and does not require event handling in itself.]</em></p>
 </li>
 <li>
-<p><a id="terminateSimulationDS"></a> When <a href="#terminateSimulationDS"><code>terminateSimulation == fmi3True</code></a>, the FMU requests to stop the simulation and the importer must call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
+<p><a id="terminateSimulationDS"></a> When <a href="#terminateSimulationDS"><code>terminateSimulation = fmi3True</code></a>, the FMU requests to stop the simulation and the importer must call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
 </li>
 <li>
 <p><a id="earlyReturn"></a> <code>earlyReturn</code> signals to the importer that the FMU returns at \(\mathbf{t}_\mathit{i+1} &lt; \mathbf{t}_i +\)<a href="#communicationStepSize"><code>communicationStepSize</code></a> from the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
-<a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> is only allowed if <a href="#earlyReturnAllowed"><code>earlyReturnAllowed == fmi3True</code></a> in <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a>.
+<a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> is only allowed if <a href="#earlyReturnAllowed"><code>earlyReturnAllowed = fmi3True</code></a> in <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a>.
 The time reached is specified in <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a>.
-Reasons for <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> are</p>
+Reasons for <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> are</p>
 <div class="ulist">
 <ul>
 <li>
 <p>expressed by the return arguments <a href="#eventHandlingNeeded"><code>eventHandlingNeeded</code></a> or <a href="#terminateSimulationDS"><code>terminateSimulation</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, or</p>
 </li>
 <li>
-<p>the FMU&#8217;s reaction to the importers request for <a href="#earlyReturn"><code>earlyReturn</code></a> by the return argument <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, or</p>
+<p>the FMU&#8217;s reaction to the importers request for <a href="#earlyReturn"><code>earlyReturn</code></a> by the return argument <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a> of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, or</p>
 </li>
 <li>
 <p>the FMU&#8217;s request for a communication point at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> for any other reason.</p>
@@ -10309,8 +10310,8 @@ Reasons for <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> are<
 </li>
 <li>
 <p><a id="lastSuccessfulTime"></a> <code>lastSuccessfulTime</code> represents the internal time \(\mathbf{t}_\mathit{i+1}\) of the FMU when <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns, for any value of <a href="#earlyReturn"><code>earlyReturn</code></a>.
-It is possible that the <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> is equal to <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> when <a href="#earlyReturn"><code>earlyReturn == fmi3True</code></a> to indicate, for example, the detection of an event at <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a>.
-Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#fmi3OK"><code>fmi3OK</code></a> and <a href="#earlyReturn"><code>earlyReturn == fmi3False</code></a>, it is allowed that <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> deviates from the expected <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <code>+</code> <a href="#communicationStepSize"><code>communicationStepSize</code></a>.
+It is possible that the <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> is equal to <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> when <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> to indicate, for example, the detection of an event at <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a>.
+Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#fmi3OK"><code>fmi3OK</code></a> and <a href="#earlyReturn"><code>earlyReturn = fmi3False</code></a>, it is allowed that <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> deviates from the expected <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <code>+</code> <a href="#communicationStepSize"><code>communicationStepSize</code></a>.
 <em>[Examples:</em></p>
 <div class="ulist">
 <ul>
@@ -10338,7 +10339,7 @@ Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> w
 <dt class="hdlist1">Function <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a></dt>
 <dd>
 <p>Changes state to <a href="#EventMode"><strong>Event Mode</strong></a>.
-This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signaled <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>, which can be forced by the FMU with <a href="#hasEventMode"><code>hasEventMode == false</code></a>.<br></p>
+This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signaled <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>, which can be forced by the FMU with <a href="#hasEventMode"><code>hasEventMode = false</code></a>.<br></p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
 <dd>
@@ -10428,14 +10429,14 @@ The co-simulation algorithm signals the support for <a href="#IntermediateUpdate
 If an event happens or an <a href="#outputClock"><code>output Clock</code></a> ticks, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the time of event or <a href="#outputClock"><code>output Clock</code></a> tick.
 In Co-Simulation, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is restricted by the arguments to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as follows:<br>
 <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> \(\leq\) <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> \(\leq\) (<a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>).<br>
-The FMU must not call the callback function <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with <code>intermediateStepFinished == fmi3True</code>.<br></p>
+The FMU must not call the callback function <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with <code>intermediateStepFinished = fmi3True</code>.<br></p>
 </li>
 </ul>
 </div>
 <div id="intermediateVariableSetRequested" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>, the co-simulation algorithm may provide intermediate values for continuous <a href="#input"><code>input</code></a> variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> by calling <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.
+<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested = fmi3True</code></a>, the co-simulation algorithm may provide intermediate values for continuous <a href="#input"><code>input</code></a> variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> by calling <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.
 The set of variables for which the co-simulation algorithm will provide intermediate values is declared through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
 If a co-simulation algorithm does not provide a new value for any of the variables contained in the set it registered, the last value set remains.</p>
 </li>
@@ -10444,7 +10445,7 @@ If a co-simulation algorithm does not provide a new value for any of the variabl
 <div id="intermediateVariableGetAllowed" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>, the co-simulation algorithm may collect intermediate output variables by calling <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> for variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.
+<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed = fmi3True</code></a>, the co-simulation algorithm may collect intermediate output variables by calling <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> for variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.
 The set of variables for which the co-simulation algorithm can get values is supplied through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 </li>
 </ul>
@@ -10452,29 +10453,29 @@ The set of variables for which the co-simulation algorithm can get values is sup
 <div id="intermediateStepFinished" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3False</code></a>, the intermediate outputs of the FMU that the co-simulation algorithm inquires with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> resulting from tentative internal solver states and may still change for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> <em>[e.g., if the solver deems the tentative state to cause a too high approximation error, it may go back in time and try to re-estimate the state using smaller internal time steps]</em>.<br>
-If <a href="#intermediateStepFinished"><code>intermediateStepFinished == fmi3True</code></a>, intermediate outputs inquired by the co-simulation algorithm with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> correspond to accepted internal solver step.</p>
+<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3False</code></a>, the intermediate outputs of the FMU that the co-simulation algorithm inquires with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> resulting from tentative internal solver states and may still change for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> <em>[e.g., if the solver deems the tentative state to cause a too high approximation error, it may go back in time and try to re-estimate the state using smaller internal time steps]</em>.<br>
+If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3True</code></a>, intermediate outputs inquired by the co-simulation algorithm with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> correspond to accepted internal solver step.</p>
 </li>
 </ul>
 </div>
 <div id="canReturnEarly" class="ulist">
 <ul>
 <li>
-<p>When <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a> the FMU signals to the co-simulation algorithm its ability to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
+<p>When <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a> the FMU signals to the co-simulation algorithm its ability to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
 </li>
 </ul>
 </div>
 <div id="earlyReturnRequested" class="ulist">
 <ul>
 <li>
-<p><code>earlyReturnRequested</code>: If and only if <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a>, the co-simulation algorithm may request the FMU to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> by setting <code>earlyReturnRequested == fmi3True</code>.</p>
+<p><code>earlyReturnRequested</code>: If and only if <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a>, the co-simulation algorithm may request the FMU to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> by setting <code>earlyReturnRequested = fmi3True</code>.</p>
 </li>
 </ul>
 </div>
 <div id="earlyReturnTime" class="ulist">
 <ul>
 <li>
-<p><code>earlyReturnTime</code> is used to signal the FMU at which time to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, if the return value of <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a>.
+<p><code>earlyReturnTime</code> is used to signal the FMU at which time to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, if the return value of <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a>.
 If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater than the last signaled <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a>, the FMU may integrate up to the time instant <a href="#earlyReturnTime"><code>earlyReturnTime</code></a>.</p>
 </li>
 </ul>
@@ -10513,7 +10514,7 @@ If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater th
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
-<p>This function can be called for intermediate variables, if <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed == fmi3True</code></a>.
+<p>This function can be called for intermediate variables, if <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed = fmi3True</code></a>.
 Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
 <div class="paragraph">
 <p>For details on <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> see <a href="#getting-output-derivatives">Section 4.1.2</a>.</p>
@@ -10521,7 +10522,7 @@ Intermediate variables are variables that are marked with attribute <a href="#in
 </dd>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
-<p>This function can be called for intermediate input variables, if <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested == fmi3True</code></a>.
+<p>This function can be called for intermediate input variables, if <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested = fmi3True</code></a>.
 Intermediate input variables are input variables that are marked with attribute <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument of <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
 In Co-Simulation, <a href="#discrete"><code>discrete</code></a> <a href="#input"><code>inputs</code></a> must not be set.</p>
 </dd>
@@ -11063,7 +11064,7 @@ Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defi
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="recommendedIntermediateInputSmoothness"></a> <code>recommendedIntermediateInputSmoothness</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A value of \(k\) with \(k&gt;0\) signals to the co-simulation algorithm, that it is beneficial for the solver to receive intermediate inputs that are k-time continuously differentiable (\(C^k\)) on the current communication interval.
-\(k=0\) means continuous (see <a href="#smoothness">Section 4.1.1</a>).<br></p></td>
+\(k = 0\) means continuous (see <a href="#smoothness">Section 4.1.1</a>).<br></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesIntermediateUpdate"></a> <code>providesIntermediateUpdate</code></p></td>
@@ -11076,16 +11077,16 @@ If this flag is <code>false</code> (the default), the importer can assume that t
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canReturnEarlyAfterIntermediateUpdate"></a> <code>canReturnEarlyAfterIntermediateUpdate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the co-simulation algorithm returns <a href="#earlyReturnRequested"><code>earlyReturnRequested == fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and <a href="#canReturnEarly"><code>canReturnEarly == fmi3True</code></a>.
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the co-simulation algorithm returns <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a>.
 The default value of this capability flag is <code>false</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hasEventMode"></a><code>hasEventMode</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code> the FMU supports <a href="#EventMode"><strong>Event Mode</strong></a>.
-Even if this flag is <code>true</code>, the co-simulation algorithm can chose to delegate event handling to the FMU by calling <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed == fmi3False</code></a>.
-If <code>eventModeUsed == fmi3True</code>, the co-simulation algorithm will have to actively trigger event handling in the FMU using <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
-<a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> must only be called with <code>eventModeUsed == fmi3True</code> if <a href="#hasEventMode"><code>hasEventMode == true</code></a>.
-If the FMU has clocks, then  <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> must set <a href="#hasEventMode"><code>hasEventMode == true</code></a> and the importer must call <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed == fmi3True</code></a>.</p></td>
+Even if this flag is <code>true</code>, the co-simulation algorithm can chose to delegate event handling to the FMU by calling <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>.
+If <code>eventModeUsed = fmi3True</code>, the co-simulation algorithm will have to actively trigger event handling in the FMU using <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
+<a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> must only be called with <code>eventModeUsed = fmi3True</code> if <a href="#hasEventMode"><code>hasEventMode = true</code></a>.
+If the FMU has clocks, then  <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> must set <a href="#hasEventMode"><code>hasEventMode = true</code></a> and the importer must call <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed = fmi3True</code></a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -11223,7 +11224,7 @@ To retrieve this information the importer calls <a href="#fmi3GetInterval"><code
 <p>A new interval for a <a href="#countdown-aperiodic-clock"><code>countdown</code></a> Clock can be provided at any time during the execution of any model partition.
 The FMU signals that a <a href="#countdown-aperiodic-clock"><code>countdown</code></a> Clock is about to tick by calling <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a>.
 The importer calls <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> for all <a href="#countdown-aperiodic-clock"><code>countdown</code></a> Clocks.
-If a new interval \(\mathbf{T}_{interval, i}\) is provided, i.e. return argument <a href="#qualifiers"><code>qualifiers</code></a> == <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a>, the importer initiates the scheduling of the associated model partitions regarding the delay of the returned interval.</p>
+If a new interval \(\mathbf{T}_{interval, i}\) is provided, i.e. return argument <a href="#qualifiers"><code>qualifiers</code></a> = <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a>, the importer initiates the scheduling of the associated model partitions regarding the delay of the returned interval.</p>
 </div>
 <div class="paragraph">
 <p>In case more than one Clock ticks at the same time instant, the scheduler needs a priority to define the activation sequence of the associated model partitions.
@@ -11421,7 +11422,7 @@ I.e. the importer may activate potential sinks (e.g. a model partition of anothe
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{variability == tunable}}\) .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> \(\mathbf{p}_{\mathit{variability = tunable}}\) .</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
@@ -11442,7 +11443,7 @@ I.e. the importer may activate potential sinks (e.g. a model partition of anothe
 <p>\((\mathbf{y}_\mathit{d,k_i}, \mathbf{x}_\mathit{d,k_i}, \mathbf{w}_\mathit{d,k_i}) := \mathbf{f}_{\mathit{activate}}({}^{\bullet}\mathbf{x}_\mathit{d}, \mathbf{w}_d, \mathbf{u}_\mathit{d}, \mathbf{p}, \mathbf{k_i})\)<br></p>
 </li>
 <li>
-<p>Update previous values of discrete states of the corresponding model partition: \({}^\bullet\mathbf{x}_\mathit{d,k_i}:=\mathbf{x}_\mathit{d,k_i}\).</p>
+<p>Update previous values of discrete states of the corresponding model partition: \({}^\bullet\mathbf{x}_\mathit{d,k_i} := \mathbf{x}_\mathit{d,k_i}\).</p>
 </li>
 </ul>
 </div></div></td>
