@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version da5be74,</span>
+<span id="revnumber">version 62ebf51,</span>
 <span id="revdate">2022-02-16</span>
 </div>
 <div id="toc" class="toc2">
@@ -8252,11 +8252,11 @@ It is also recommended to use a descriptive name (e.g. <code>&lt;model_identifie
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="platform"></a><code>platform</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Platform tuple of the platform the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> is intended for (e.g. <code>x86_64-linux</code>).
-All <a href="#platform"><code>platform</code></a> attributes defined in the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> elements for the same <code>&lt;modelIdentifier&gt;</code> must be unique.
-For each <a href="#platform"><code>platform</code></a> there can only be one matching <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a>.
 This attribute is optional.
 Thus there must not be more than one <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> without a <a href="#platform"><code>platform</code></a> attribute.
-If a <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> without a <a href="#platform"><code>platform</code></a> attribute is provided this is the fallback <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> an importer can use if it cannot find any other <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> with a matching <a href="#platform"><code>platform</code></a> attribute.</p>
+If a <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> without a <a href="#platform"><code>platform</code></a> attribute is provided this is the fallback <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> an importer can use if it cannot find any other <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> with a matching <a href="#platform"><code>platform</code></a> attribute.
+<em>[A BuildDescription may contain multiple BuildConfigurations for the same <a href="#platform"><code>platform</code></a> to support e.g. different compilers.</em>
+<em>In this case the importer has to select the BuildConfiguration based on the other attributes of the BuildConfiguration and the contained SourceFileSets.]</em></p>
 </div></div></td>
 </tr>
 <tr>
@@ -8272,7 +8272,7 @@ If a <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> w
 <div class="paragraph">
 <p>The <code>&lt;SourceFileSet&gt;</code> element groups source files that can be compiled with the same compiler and compiler options.
 Every build configuration must contain at least one <code>&lt;SourceFileSet&gt;</code>.
-An importer of the FMU has to regard every <code>&lt;SourceFileSet&gt;</code> of the matching <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a>.</p>
+An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> of the matching <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a>.</p>
 </div>
 <table id="table-SourceFileSet-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 28. SourceFileSet attribute details.</caption>
