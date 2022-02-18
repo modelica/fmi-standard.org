@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 0be17be,</span>
-<span id="revdate">2022-02-17</span>
+<span id="revnumber">version 8861c6f,</span>
+<span id="revdate">2022-02-18</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -7444,7 +7444,8 @@ The functional dependency is defined as:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EventIndicator</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="EventIndicator"></a>
 An ordered list of all event indicators, in other words, a list of value references where every referenced variable must be an event indicator.
-The serialized and concatenated values of the variables referenced by the attribute <code>valueReference</code> form the array that can be retrieved with <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.
+The serialized (if value reference points to array variable) and concatenated values of the variables referenced by the attribute <code>valueReference</code> form the array that can be retrieved with <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.
+The number of event indicators may change if one or more value references listed in <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> point to array variables of variable size (see <a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a>).
 Only <a href="#continuous"><code>continuous</code></a> variables of type <code>Float32</code> and <code>Float64</code> can be referenced by <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a>.</p>
 <p class="tableblock"><em>[If an event indicator shall not be exposed from the FMU, or if event indicators are not statically associated with a variable (due to dynamic event indicator selection), then dummy variables have to be introduced, for example, <code>eventIndicator[4]</code>.</em>
 <em>The ordering of the variables in this list is defined by the exporting tool.]</em></p>
@@ -9206,7 +9207,7 @@ For <a href="#state-event">state events</a> event indicators are used.</p>
 <div class="paragraph">
 <p><a id="state-event"></a>An <a href="#fmi3GetEventIndicators">event indicator</a> signals a <a href="#state-event">state event</a> with the change from \(\mathbf{z}_j &gt; 0\) to \(\mathbf{z}_j \leq 0\) or vice versa.<br>
 <em>[This definition is slightly different from the usual standard definition of state events:</em> \(\mathbf{z}(\mathbf{t}) \cdot \mathbf{z}(\mathbf{t}_\mathit{i-1}) \leq 0\) <em>which has the severe drawback that the value of the event indicator at the previous event instant,</em> \(\mathbf{z}(\mathbf{t}_\mathit{i-1}) \neq 0\), <em>must be non-zero and this condition cannot be guaranteed.</em>
-<em>The often used term "zero crossing function" for \(\mathbf{z}\) is misleading (and is therefore not used in this document), since a state event is defined by a change of a domain and not by a zero crossing of a variable.]</em></p>
+<em>The often used term "zero-crossing function" for \(\mathbf{z}\) is misleading (and is therefore not used in this document), since a state event is defined by a change of a domain and not by a zero-crossing of a variable.]</em></p>
 </div>
 <div class="paragraph">
 <p>The FMU must guarantee that after leaving <a href="#EventMode"><strong>Event Mode</strong></a> \(\mathbf{z}_j \neq 0\), for example, by shifting \(\mathbf{z}_j\) with a small value.<br>
@@ -9491,10 +9492,10 @@ This order is also used in the arguments of the following functions: <a href="#f
 <div class="ulist">
 <ul>
 <li>
-<p><a id="eventIndicators"></a>Return argument <code>eventIndicators</code> contains the values for the event indicators in the order defined by the ordered list of elements <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a>.</p>
+<p><a id="eventIndicators"></a>Return argument <code>eventIndicators</code> contains the values for the event indicators in the order defined by the ordered list of XML elements <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a>.</p>
 </li>
 <li>
-<p>Argument <code>nEventIndicators</code> is the size of the <code>eventIndicators</code> vector.</p>
+<p>Argument <code>nEventIndicators</code> is the current size of the <code>eventIndicators</code> vector (see <a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a>).</p>
 </li>
 </ul>
 </div>
@@ -9586,23 +9587,71 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
-                                          fmi3Boolean stepEvent,
-                                          fmi3Boolean stateEvent,
+                                          fmi3EventQualifier stepEvent,
+                                          fmi3EventQualifier stateEvent,
                                           const fmi3Int32 rootsFound[],
                                           size_t nEventIndicators,
-                                          fmi3Boolean timeEvent);</code></pre>
+                                          fmi3EventQualifier timeEvent);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>This function changes the state to <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
 </div>
+<div class="paragraph">
+<p>The arguments <code>stepEvent</code>, <code>stateEvent</code>, and <code>timeEvent</code> enable efficient and robust event handling.
+They are of enumeration type <code>fmi3EventQualifier</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef enum {
+    fmi3EventTrue,
+    fmi3EventFalse,
+    fmi3EventUnknown
+} fmi3EventQualifier;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>with the following meanings:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div id="fmi3EventTrue" class="ulist">
+<ul>
+<li>
+<p><code>fmi3EventTrue</code> indicates that the given event type happens.</p>
+</li>
+</ul>
+</div>
+<div id="fmi3EventFalse" class="ulist">
+<ul>
+<li>
+<p><code>fmi3EventFalse</code> indicates that the given event type does not happen.</p>
+</li>
+</ul>
+</div>
+<div id="fmi3EventUnknown" class="ulist">
+<ul>
+<li>
+<p><code>fmi3EventUnknown</code> indicates that the importer is unable to provide this information about this event type.
+In this case, the FMU must determine itself if this event type happens.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The arguments of the function have the following meaning:</p>
+</div>
+<div class="openblock">
+<div class="content">
 <div class="ulist">
 <ul>
 <li>
-<p>Model Exchange only: <code>stepEvent = fmi3True</code> signals that a <a href="#step-event">step event</a> occurs.</p>
+<p>Model Exchange only: <code>stepEvent</code> signals a <a href="#step-event">step event</a>.
+<code>stepEvent</code> must be <code>fmi3EventTrue</code> if <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> returned with <code>enterEventMode = fmi3True</code>.</p>
 </li>
 <li>
-<p>Model Exchange only: <code>stateEvent = fmi3True</code> signals that a <a href="#state-event">state event</a> occurs.</p>
+<p>Model Exchange only: <code>stateEvent</code> signals a <a href="#state-event">state event</a>, triggered by a zero-crossing of an event indicator.</p>
 </li>
 <li>
 <p>Model Exchange only: <code>rootsFound</code> is an array of length <code>nEventIndicators</code> that informs the FMU which event indicator has a root.<br>
@@ -9626,15 +9675,19 @@ The order in the <code>rootsFound</code> array is the same as in <a href="#event
 </div>
 </li>
 <li>
-<p>Model Exchange only: <code>nEventIndicators</code> contains the number of event indicators as deduced from the list <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> or <code>0</code> if the importer cannot provide this information.</p>
+<p>Model Exchange only: <code>nEventIndicators</code> contains the current number of event indicators (see <a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a>) or <code>0</code>.
+If <code>nEventIndicators = 0</code> and <code>stateEvent != fmi3EventFalse</code> the importer is unable to provide this information and the FMU must determine itself which event indicator has a zero-crossing.</p>
 </li>
 <li>
-<p><a id="timeEvent"></a><code>timeEvent = fmi3True</code> signals that this event is a <a href="#time-event">time event</a> triggered by <a href="#nextEventTime"><code>nextEventTime</code></a> of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
+<p><a id="timeEvent"></a><code>timeEvent</code> signals a <a href="#time-event">time event</a> triggered by <a href="#nextEventTime"><code>nextEventTime</code></a> of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
 <div class="paragraph">
-<p><em>[An <a href="#input-event">input event</a> can be detected by the FMU by keeping track of the calls of <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>.]</em></p>
+<p><em>[An <a href="#input-event">input event</a> can be detected by the FMU by keeping track of the calls of <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>.</em><br>
+<em>Please note: if all event types are given as <code>fmi3EventUnknown</code> then the functionality is the same as in FMI 2.0.]</em></p>
 </div>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
