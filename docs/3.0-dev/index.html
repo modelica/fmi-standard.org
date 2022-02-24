@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version ce9d764,</span>
+<span id="revnumber">version c8e30e7,</span>
 <span id="revdate">2022-02-24</span>
 </div>
 <div id="toc" class="toc2">
@@ -6453,28 +6453,27 @@ The <code>valueReference</code> must be unique for all variables of an FMU.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>causality</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="causality" class="paragraph">
 <p>Enumeration that defines the causality of the variable.
-Allowed values of this enumeration are:</p>
+Allowed combinations of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and their semantics are defined in <a href="#table-allowed-variability-causality-combinations">Table 18</a>.</p>
+</div>
+<div class="paragraph">
+<p>Values of this enumeration are:</p>
 </div>
 <div id="parameter" class="paragraph">
 <p><code>= parameter</code>: A data value that is provided by the importer or user to change the behavior of the FMU.
 It is constant during the simulation (except for <a href="#tunable"><code>tunable</code></a> parameters) and should not be used in connections, except for parameter propagation in terminals as described in <a href="#GeneralRemarkOnSignal">Section 2.4.9.2.6</a>.
-<a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
-These parameters can be changed independently, unlike <a href="#calculatedParameter">calculated parameters</a>.
-<a href="#initial"><code>initial</code></a> must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).</p>
+These parameters can be changed independently, unlike <a href="#calculatedParameter">calculated parameters</a>.</p>
 </div>
 <div id="calculatedParameter" class="paragraph">
-<p><code>= calculatedParameter</code>: A data value that is constant during the simulation and is computed during initialization or when <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> change.
-<a href="#variability"><code>variability</code></a> must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
-<a href="#initial"><code>initial</code></a> must be <a href="#approx"><code>approx</code></a>, <a href="#calculated"><code>calculated</code></a> or not present (meaning <a href="#calculated"><code>calculated</code></a>).</p>
+<p><code>= calculatedParameter</code>: A data value that is constant during the simulation and is computed during initialization or when <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> change.</p>
 </div>
 <div id="input" class="paragraph">
-<p><code>= input</code>: The variable value can be provided by the importer.<br>
+<p><code>= input</code>: The variable value may be provided by the importer.<br>
 <em>[For example, the importer could forward the output of another FMU into this input.]</em></p>
 </div>
 <div id="output" class="paragraph">
-<p><code>= output</code>: The variable value can be used by the importer.<br>
+<p><code>= output</code>: The variable value may be used by the importer.<br>
 <em>[For example, this value can be forwarded to an input of another FMU.]</em><br>
-The algebraic relationships to the <a href="#input"><code>inputs</code></a> can be defined via the <a href="#dependencies"><code>dependencies</code></a> attribute of <a href="#Output"><code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;&lt;Output&gt;</code></a>.</p>
+The algebraic relationships to the <a href="#input"><code>inputs</code></a> may be defined via the <a href="#dependencies"><code>dependencies</code></a> attribute of <a href="#Output"><code>&lt;fmiModelDescription&gt;&lt;ModelStructure&gt;&lt;Output&gt;</code></a>.</p>
 </div>
 <div id="local" class="paragraph">
 <p><code>= local</code>: Local variables are:<br></p>
@@ -6482,11 +6481,15 @@ The algebraic relationships to the <a href="#input"><code>inputs</code></a> can 
 <div class="ulist">
 <ul>
 <li>
-<p>continuous <a href="#state">states</a> and their <a href="#ContinuousStateDerivative"><code>ContinuousStateDerivatives</code></a>, <a href="#ClockedState"><code>ClockedStates</code></a>, <a href="#EventIndicator"><code>EventIndicators</code></a> or <a href="#InitialUnknown"><code>InitialUnknowns</code></a>.
+<p>continuous <a href="#state">states</a>.
+These variables are referenced by the <a href="#derivative"><code>derivative</code></a> attribute of a <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>.</p>
+</li>
+<li>
+<p><a href="#ContinuousStateDerivative"><code>ContinuousStateDerivatives</code></a>, <a href="#ClockedState"><code>ClockedStates</code></a>, <a href="#EventIndicator"><code>EventIndicators</code></a> or <a href="#InitialUnknown"><code>InitialUnknowns</code></a>.
 These variables are listed in the <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.<br></p>
 </li>
 <li>
-<p><a id="localClock"></a> internal, intermediate variables or local clocks which can be read for debugging purposes and are not listed in the <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.</p>
+<p><a id="localClock"></a> internal, intermediate variables or local clocks which may be read for debugging purposes and are not listed in the <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -6510,7 +6513,6 @@ Only in Model Exchange, continuous <a href="#state">states</a> can be set with <
 <div id="independent" class="paragraph">
 <p><code>= independent</code>: The independent variable (usually <code>time</code> <em>[but could also be, for example, <code>angle</code>]</em>).
 All variables are a function of this <a href="#independent"><code>independent</code></a> variable.
-<a href="#variability"><code>variability</code></a> must be <a href="#continuous"><code>continuous</code></a>.
 Exactly one variable of an FMU must be defined as <a href="#independent"><code>independent</code></a>.
 If the unit for the independent variable is not defined, it is implicitly <code>s</code> (seconds).
 The independent variable must be defined as a floating point type without a <a href="#start"><code>start</code></a> attribute.
@@ -6520,8 +6522,6 @@ The actual value may be inquired with <a href="#get-and-set-variable-values"><co
 </div>
 <div id="structuralParameter" class="paragraph">
 <p><code>= structuralParameter</code>: The variable value can only be changed in <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> or <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>.
-The <a href="#variability"><code>variability</code></a> attribute must be <a href="#fixed"><code>fixed</code></a> or <a href="#tunable"><code>tunable</code></a>.
-The <a href="#initial"><code>initial</code></a> attribute must be <a href="#exact"><code>exact</code></a> or not present (meaning <a href="#exact"><code>exact</code></a>).
 The <a href="#start"><code>start</code></a> attribute is mandatory.
 A <a href="#structuralParameter"><code>structural parameter</code></a> must not have a <a href="#Dimension"><code>&lt;Dimension&gt;</code></a> element.
 A <a href="#structuralParameter"><code>structural parameter</code></a> may be referenced in <a href="#Dimension"><code>&lt;Dimension&gt;</code></a> elements.
@@ -6530,19 +6530,24 @@ The <code>min</code> attribute might still be 0.</p>
 </div>
 <div class="paragraph">
 <p>The default of <a href="#causality"><code>causality</code></a> is <a href="#local"><code>local</code></a>.<br>
-A continuous-time <a href="#state">state</a> or an event indicator must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>The causality of variables of type <a href="#Clock">Clock</a> must be either <a href="#input"><code>input</code></a>, <a href="#output"><code>output</code></a> or <a href="#local"><code>local</code></a>.</p>
+A continuous-time <a href="#state">state</a> or an event indicator must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.<br>
+The causality of variables of type <a href="#Clock">Clock</a> must be either <a href="#input"><code>input</code></a>, <a href="#output"><code>output</code></a> or <a href="#local"><code>local</code></a>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>variability</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="variability" class="paragraph">
-<p>Enumeration that defines the time dependency of the variable, in other words, it defines the time instants when a variable can change its value.
-<em>[The purpose of this attribute is to define when a result value needs to be inquired and to be stored.</em>
-<em>For example, <a href="#discrete"><code>discrete</code></a> variables change their values only at event instants (ME) or at a communication point (CS and SE) and it is therefore only necessary to inquire them with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and store them at event times.]</em>
-Allowed values of this enumeration:</p>
+<p>Enumeration that defines the time dependency of the variable, in other words, it defines the time instants when a variable can change its value.</p>
+</div>
+<div class="paragraph">
+<p><em>[The purpose of this attribute is to define when a variable can be set and when it makes sense to inquire its potentially changed value.</em>
+<em>For example, <a href="#discrete"><code>discrete</code></a> variables change their values only at event instants (ME) or at communication points (CS and SE) and it is therefore only necessary to inquire them with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> them at these points in time.]</em></p>
+</div>
+<div class="paragraph">
+<p>Allowed combinations of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and their semantics are defined in <a href="#table-allowed-variability-causality-combinations">Table 18</a>.</p>
+</div>
+<div class="paragraph">
+<p>Values of this enumeration are:</p>
 </div>
 <div id="constant" class="paragraph">
 <p><code>= constant</code>: The value of the variable never changes.</p>
@@ -6551,29 +6556,23 @@ Allowed values of this enumeration:</p>
 <p><code>= fixed</code>: The value of the variable is fixed after initialization, in other words, after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called the variable value does not change anymore.</p>
 </div>
 <div id="tunable" class="paragraph">
-<p><code>= tunable</code>: The value of the variable is constant between events (ME) and between communication points (CS and SE) due to changing variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>.
-Whenever a <a href="#parameter"><code>parameter</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> changes, an event is triggered externally (ME or CS if events are supported), or the change is performed at the next communication point (CS and SE) and the variables with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> and <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a> or <a href="#output"><code>output</code></a> must be newly computed.
-<em>[<a href="#tunable"><code>tunable</code></a> <a href="#input">inputs</a> are not allowed, see <a href="#table-allowed-variability-causality-combinations">Table 18</a>.]</em></p>
+<p><code>= tunable</code>: The value of the variable is constant between events (ME and CS if <a href="#EventMode"><strong>Event Mode</strong></a> is supported) and between communication points (CS and SE).
+A <a href="#parameter"><code>parameter</code></a> with <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a> may be changed only in <a href="#EventMode"><strong>Event Mode</strong></a> or, if <a href="#EventMode"><strong>Event Mode</strong></a> is not supported, at communication points (CS and SE).</p>
 </div>
 <div id="discrete" class="paragraph">
 <p><code>= discrete</code>:<br>
-Model Exchange: The value of the variable is constant between external and internal events (= <a href="#time-event">time event</a>, <a href="#state-event">state event</a>, <a href="#step-event">step events</a> defined implicitly in the FMU).<br>
-Co-Simulation: By convention, the variable is from a real sampled data system and its value is only changed at communication points (including event handling).
-During <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>, <a href="#discrete"><code>discrete</code></a> variables are not allowed to change.
-<em>[If the simulation algorithm notices a change in a discrete variable during <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>, the simulation algorithm will delay the change, raise an event with <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a> and during the communication point it can change the <a href="#discrete"><code>discrete</code></a> variable, followed by event handling.]</em></p>
+The value of the variable may change only in <a href="#EventMode"><strong>Event Mode</strong></a>.<br>
+Co-Simulation without <a href="#EventMode"><strong>Event Mode</strong></a> and Scheduled Execution: The value may change only at communication points.
+During <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>, <a href="#discrete"><code>discrete</code></a> variables are not allowed to change.
+The <a href="#variability"><code>variability</code></a> of <a href="#clocked-variable"><code>clocked variables</code></a> must have <a href="#discrete"><code>discrete</code></a>.</p>
 </div>
 <div id="continuous" class="paragraph">
-<p><code>= continuous</code>: Only a variable of <code>type = fmi3GetFloat32</code> or <code>type = fmi3GetFloat64</code> can be <a href="#continuous"><code>continuous</code></a>.<br>
-Model Exchange: No restrictions on value changes (see <a href="#smoothness">Section 4.1.1</a>).</p>
+<p><code>= continuous</code>: Only variables of type <code>&lt;Float32&gt;</code> or <code>&lt;Float64&gt;</code> may be <a href="#continuous"><code>continuous</code></a>.
+The default for variables of type <code>&lt;Float32&gt;</code> and <code>&lt;Float64&gt;</code> is <a href="#continuous"><code>continuous</code></a>.
+Variables with <a href="#variability"><code>variability</code></a> <code>continuous</code> may change in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> and super state <a href="#Initialized"><strong>Initialized</strong></a>.</p>
 </div>
 <div class="paragraph">
-<p>The default is <a href="#continuous"><code>continuous</code></a> for variables of type <code>&lt;Float32&gt;</code> and <code>&lt;Float64&gt;</code>, and <a href="#discrete"><code>discrete</code></a> for all other types.</p>
-</div>
-<div class="paragraph">
-<p>For variables of type <code>Clock</code> and <a href="#clocked-variable"><code>clocked variables</code></a> the <a href="#variability"><code>variability</code></a> is always <a href="#discrete"><code>discrete</code></a> or <a href="#tunable"><code>tunable</code></a>.</p>
-</div>
-<div class="paragraph">
-<p><em>[Note that the information about continuous <a href="#state">states</a> is defined with elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.]</em></p>
+<p>For more explanations on value changes see <a href="#smoothness">Section 4.1.1</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -6663,13 +6662,11 @@ Only variables with <a href="#variability"><code>variability = discrete</code></
 <col style="width: 12.5%;">
 <col style="width: 12.5%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top" rowspan="2"><a href="#variability"><code>variability</code></a></th>
-<th class="tableblock halign-center valign-top" colspan="7"><a href="#causality"><code>causality</code></a></th>
-</tr>
-</thead>
 <tbody>
+<tr>
+<th class="tableblock halign-left valign-top" rowspan="2"><p class="tableblock"><a href="#variability"><code>variability</code></a></p></th>
+<th class="tableblock halign-center valign-top" colspan="7"><p class="tableblock"><a href="#causality"><code>causality</code></a></p></th>
+</tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#structuralParameter"><code>structural Parameter</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#parameter"><code>parameter</code></a></p></td>
@@ -6680,7 +6677,7 @@ Only variables with <a href="#variability"><code>variability = discrete</code></
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#independent"><code>independent</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#constant"><code>constant</code></a> data</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#constant"><code>constant</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(a)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(a)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(a)</p></td>
@@ -6690,7 +6687,7 @@ Only variables with <a href="#variability"><code>variability = discrete</code></
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#fixed"><code>fixed</code></a> data</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#fixed"><code>fixed</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(16)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(1)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(3)</p></td>
@@ -6700,7 +6697,7 @@ Only variables with <a href="#variability"><code>variability = discrete</code></
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#tunable"><code>tunable</code></a> data</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#tunable"><code>tunable</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(17)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(2)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">(4)</p></td>
@@ -6710,7 +6707,7 @@ Only variables with <a href="#variability"><code>variability = discrete</code></
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#discrete"><code>discrete</code></a> variables</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#discrete"><code>discrete</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
@@ -6720,7 +6717,7 @@ Only variables with <a href="#variability"><code>variability = discrete</code></
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#continuous"><code>continuous</code></a> variables</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#continuous"><code>continuous</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
@@ -6971,10 +6968,11 @@ Only variables with <a href="#variability"><code>variability = discrete</code></
 <div class="title">Figure 29. Clock element.</div>
 </div>
 <div class="paragraph">
-<p>The attributes are defined in <a href="#table-type-details">Table 15</a> and <a href="#table-variableBase-attributes">Table 17</a>, except:</p>
+<p>The attributes common to all variable types are defined in <a href="#table-type-details">Table 15</a> and <a href="#table-variableBase-attributes">Table 17</a>.
+Type specific attributes are listed in the following table.</p>
 </div>
 <table id="table-type-attributes" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 21. TypeDefinition attribute details.</caption>
+<caption class="title">Table 21. Type specific attributes.</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 87.5%;">
@@ -7033,19 +7031,18 @@ If <code>displayUnit</code> is defined a <code>unit</code> must also be defined.
 It is not allowed to provide a <a href="#start"><code>start</code></a> value.</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#initial"><code>initial</code></a> is not present, it is defined by <a href="#table-definition-initial">Table 22</a> based on <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a>.
-If <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>, or <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, a <a href="#start"><code>start</code></a> value must be provided.
+<p><a href="#table-definition-initial">Table 22</a> defines the allowed values for <a href="#initial"><code>initial</code></a> as combination of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and the default value if <a href="#initial"><code>initial</code></a> is not present.</p>
+</div>
+<div class="paragraph">
+<p>If <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>, or <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, a <a href="#start"><code>start</code></a> value must be provided.
 If <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>, or <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, it is not allowed to provide a <a href="#start"><code>start</code></a> value.</p>
 </div>
 <div class="paragraph">
-<p><em>[The environment decides when to use the <a href="#start"><code>start</code></a> value of a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.</em>
-<em>Examples:</em>
- * <em>Automatic tests of FMUs are performed, and the FMU is tested by providing the <a href="#start"><code>start</code></a> value as <a href="#constant"><code>constant</code></a> <a href="#input"><code>input</code></a>.</em>
- * <em>For a Model Exchange FMU, the FMU might be part of an algebraic loop.</em>
-<em>If the <a href="#input"><code>input</code></a> variable is iteration variable of this algebraic loop, then initialization starts with its <a href="#start"><code>start</code></a> value.]</em></p>
+<p><em>[The importer decides when to use the <a href="#start"><code>start</code></a> value of a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.</em>
+<em>For example, if the <a href="#input"><code>input</code></a> variable is an iteration variable of an algebraic loop in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, then the <a href="#start"><code>start</code></a> value can be used as start value for the iteration.]</em></p>
 </div>
 <div class="paragraph">
-<p>If <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> is not called on a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, then the FMU must use the <a href="#start"><code>start</code></a> value as value of this <a href="#input"><code>input</code></a>.</p>
+<p>If <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> is not called on a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, then the FMU must keep the <a href="#start"><code>start</code></a> value as value of this <a href="#input"><code>input</code></a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -7153,13 +7150,11 @@ If <code>false</code>, <a href="#state">state</a> will not be reinitialized at a
 <col style="width: 12.5%;">
 <col style="width: 12.5%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-center valign-top" rowspan="2"><a href="#variability"><code>variability</code></a></th>
-<th class="tableblock halign-center valign-top" colspan="7"><a href="#causality"><code>causality</code></a></th>
-</tr>
-</thead>
 <tbody>
+<tr>
+<th class="tableblock halign-center valign-top" rowspan="2"><p class="tableblock"><a href="#variability"><code>variability</code></a></p></th>
+<th class="tableblock halign-center valign-top" colspan="7"><p class="tableblock"><a href="#causality"><code>causality</code></a></p></th>
+</tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#structuralParameter"><code>structural Parameter</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#parameter"><code>parameter</code></a></p></td>
@@ -7170,7 +7165,7 @@ If <code>false</code>, <a href="#state">state</a> will not be reinitialized at a
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#independent"><code>independent</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#constant"><code>constant</code></a> data</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#constant"><code>constant</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
@@ -7180,51 +7175,59 @@ If <code>false</code>, <a href="#state">state</a> will not be reinitialized at a
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#fixed"><code>fixed</code></a> data</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#fixed"><code>fixed</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">exact</span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">exact</span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span>, approx</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span><br>
+approx</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span>, approx</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span><br>
+approx</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#tunable"><code>tunable</code></a> data</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#tunable"><code>tunable</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">exact</span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">exact</span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span>, approx</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span><br>
+approx</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span>, approx</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span><br>
+approx</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#discrete"><code>discrete</code></a> variables</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#discrete"><code>discrete</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">exact</span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span>, exact, approx</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span>, exact, approx</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span><br>
+exact<br>
+approx</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span><br>
+exact<br>
+approx</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#continuous"><code>continuous</code></a> variables</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#continuous"><code>continuous</code></a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">exact</span></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span>, exact, approx</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span>, exact, approx</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span><br>
+exact<br>
+approx</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="underline">calculated</span><br>
+exact<br>
+approx</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><em>[Note: For <a href="#local"><code>local</code></a> and <a href="#output"><code>output</code></a> variables and <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>, then the variable is explicitly set in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</em>
-<em>The value of the variable is either the <a href="#start"><code>start</code></a> value stored in a variable element <code>&lt;XXX start=YYY/&gt;</code> or the value set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.]</em></p>
-</div>
 <div class="sect5">
 <h6 id="namingSection">2.4.7.5.1. Variable Naming Conventions</h6>
 <div class="paragraph">
