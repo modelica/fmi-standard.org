@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version a51c4b4,</span>
-<span id="revdate">2022-02-23</span>
+<span id="revnumber">version ce9d764,</span>
+<span id="revdate">2022-02-24</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2696,9 +2696,9 @@ The importer calls <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to inqu
 <th class="tableblock halign-left valign-top"><p class="tableblock"><a href="#intervalVariability"><code>intervalVariability</code></a></p></th>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" rowspan="7"><p class="tableblock"><a href="#time-based-clock">time-based</a></p></td>
-<td class="tableblock halign-left valign-top" rowspan="5"><p class="tableblock"><a id="periodic-clock"></a>periodic</p></td>
-<td class="tableblock halign-left valign-top" rowspan="5"><p class="tableblock"><a href="#input"><code>input</code></a></p></td>
+<td class="tableblock halign-left valign-top" rowspan="5"><p class="tableblock"><a href="#time-based-clock">time-based</a></p></td>
+<td class="tableblock halign-left valign-top" rowspan="3"><p class="tableblock"><a id="periodic-clock"></a>periodic</p></td>
+<td class="tableblock halign-left valign-top" rowspan="3"><p class="tableblock"><a href="#input"><code>input</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>constant</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="constant-clock"></a><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
 <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
@@ -2707,34 +2707,39 @@ The importer calls <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to inqu
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixed</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="fixed-clock"></a><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
-<a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
-<a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">clocked PI-controller with an adaptable interval</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="fixed-clock"></a><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
+<a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>if <a href="#intervalDecimal"><code>intervalDecimal</code></a> is defined, <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>,</p>
+</li>
+<li>
+<p>if <a href="#intervalDecimal"><code>intervalDecimal</code></a> is not defined, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> and <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">clocked PI-controller with directly or indirectly adaptable interval</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>tunable</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="tunable-clock"></a><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
-<a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
-<a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> and in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">clocked PI-controller with an adaptable interval</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixed</code> and<br>
-<code>computed = true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="fixed-computed-clock"></a><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
-<a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
-<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> and <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">clocked PI-controller with interval defined by fixed parameter(s) of the FMU</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tunable</code> and<br>
-<code>computed = true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="tunable-computed-clock"></a><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
-<a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
-<a href="#fmi3GetShift"><code>fmi3GetShift</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>,
-<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> and in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">clocked PI-controller with interval defined by tunable parameter(s) of the FMU</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="tunable-clock"></a><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
+<a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>if <a href="#intervalDecimal"><code>intervalDecimal</code></a> is defined, <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> and in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a></p>
+</li>
+<li>
+<p>if <a href="#intervalDecimal"><code>intervalDecimal</code></a> is not defined, <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> and in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">clocked PI-controller with directly or indirectly tunable interval</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" rowspan="2"><p class="tableblock"><a id="aperiodic-clock"></a>aperiodic</p></td>
@@ -2843,30 +2848,34 @@ The time instant of the first Clock tick is defined by a <a href="#shiftCounter"
 </dd>
 <dt class="hdlist1">Fixed periodic Clock</dt>
 <dd>
-<p>is a time-based periodic Clock which ticks with an arbitrary, but fixed interval \(\mathbf{T}_{\mathit{interval}}\) starting after an arbitrary \(\mathbf{T}_{\mathit{shift}}\), both interval and shift can be changed by the importer.
-The importer informs the FMU about the Clock&#8217;s <code>fixed</code> interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
-If the function is not called the value given in <a href="#intervalDecimal"><code>intervalDecimal</code></a> and <a href="#intervalCounter"><code>intervalCounter</code></a> is used.<br>
-<em>[This information enables the FMU to adapt internal computations to the <code>fixed</code> Clock interval determined by the importer.]</em></p>
+<p>is a time-based periodic Clock which ticks with an arbitrary, but fixed interval \(\mathbf{T}_{\mathit{interval}}\) starting after an arbitrary \(\mathbf{T}_{\mathit{shift}}\), both interval and shift can be changed by the importer.</p>
+<div class="paragraph">
+<p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is specified, the importer sets the Clock&#8217;s <code>fixed</code> interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
+If the function is not called the value given in <a href="#intervalDecimal"><code>intervalDecimal</code></a> and <a href="#intervalCounter"><code>intervalCounter</code></a> is used.</p>
+</div>
+<div class="paragraph">
+<p><em>[Calling <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> informs the FMU about the interval determined by the importer to enable the FMU to adapt internal computations to this <code>fixed</code> interval.]</em></p>
+</div>
+<div class="paragraph">
+<p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is not specified, then the importer must use <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> and <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> to retrieve the Clock interval and shift in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> because they depend on <a href="#fixed"><code>fixed</code></a> <a href="#parameter">parameters</a>.</p>
+</div>
 </dd>
 <dt class="hdlist1">Tunable periodic Clock</dt>
 <dd>
-<p>is a time-based periodic Clock which ticks with an arbitrary and changeble interval \(\mathbf{T}_{\mathit{interval}}\) starting after an arbitrary \(\mathbf{T}_{\mathit{shift}}\), both interval and shift can be changed by the importer.
-The importer informs the FMU about the Clock&#8217;s <code>tunable</code> interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
+<p>is a time-based periodic Clock which ticks with an arbitrary and changeable interval \(\mathbf{T}_{\mathit{interval}}\) starting after an arbitrary \(\mathbf{T}_{\mathit{shift}}\), both interval and shift can be changed by the importer.</p>
+<div class="paragraph">
+<p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is specified, the importer sets the Clock&#8217;s <code>tunable</code> interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 It can later change this interval in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>.
-If the function is not called the value given in <a href="#intervalDecimal"><code>intervalDecimal</code></a> and <a href="#intervalCounter"><code>intervalCounter</code></a> is used.<br>
-<em>[This information enables the FMU to adapt internal computations to the <code>tunable</code> Clock interval determined by the importer.]</em></p>
-</dd>
-<dt class="hdlist1">Fixed computed periodic Clock</dt>
-<dd>
-<p>is a time-based periodic Clock whose interval and shift depend on <a href="#fixed"><code>fixed</code></a> <a href="#parameter">parameters</a>.
-The importer must use <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> and <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> to retrieve the Clock interval and shift in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
-</dd>
-<dt class="hdlist1">Tunable computed periodic Clock</dt>
-<dd>
-<p>is a time-based periodic Clock whose interval depends on <a href="#tunable"><code>tunable</code></a> <a href="#parameter">parameters</a>.
+If the function is not called, the value given in <a href="#intervalDecimal"><code>intervalDecimal</code></a> and <a href="#intervalCounter"><code>intervalCounter</code></a> is used by the importer.</p>
+</div>
+<div class="paragraph">
+<p><em>[Calling <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> informs the FMU about the interval determined by the importer to enable the FMU to adapt internal computations to this <code>tunable</code> interval.]</em></p>
+</div>
+<div class="paragraph">
+<p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is not specified, then the importer must use <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> to retrieve the Clock interval in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, and later in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>, if any of the <a href="#tunable"><code>tunable</code></a> <a href="#parameter">parameters</a> the Clock&#8217;s interval depends on was changed.
 The shift may only depend on <a href="#fixed"><code>fixed</code></a> <a href="#parameter">parameters</a>.
-The importer must use <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> to retrieve the Clock interval in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, and later in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>, if any of the <a href="#tunable"><code>tunable</code></a> <a href="#parameter">parameters</a> it depends on was changed.
 The importer must use <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> to retrieve the Clock shift in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
+</div>
 </dd>
 <dt class="hdlist1">Aperiodic Clock</dt>
 <dd>
@@ -6126,12 +6135,6 @@ For multiple <a href="#Clock"><code>Clocks</code></a> with the same priority the
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>intervalVariability</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="intervalVariability"></a>
 The attribute <code>intervalVariability</code> declares the Clock type, see <a href="#table-overview-clocks">Table 5</a>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>computed</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="computed"></a>
-The attribute <code>computed</code> may only be used if <a href="#intervalVariability"><code>intervalVariability</code></a> is <a href="#fixed-computed-clock"><code>fixed</code></a> or <a href="#tunable-computed-clock"><code>tunable</code></a> and indicates that interval and shift of the Clock is defined by fixed or tunable parameters of the FMU.
-The values of interval and shift must be retrieved by <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> and <a href="#fmi3GetShift"><code>fmi3GetShift</code></a>, see <a href="#table-overview-clocks">Table 5</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">The values of the following float and integer attributes refer to the unit of the <a href="#independent"><code>independent</code></a> variable.</p></td>
@@ -11318,7 +11321,7 @@ The <a href="#importer">importer</a> is providing lock/unlock functions to the F
 This is realized in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> by calling <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> triggering their respective Clocks.</p>
 </div>
 <div class="paragraph">
-<p>After <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> has been called for a <a href="#fixed-computed-clock"><code>fixed</code></a>, <a href="#tunable-computed-clock"><code>tunable</code></a> or <a href="#changing-aperiodic-clock">aperiodic</a> Clock the FMU provides the information on when the Clock will tick again, i.e. when the corresponding model partition must be scheduled the next time.
+<p>After <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> has been called for a <a href="#fixed-clock"><code>fixed</code></a>, <a href="#tunable-clock"><code>tunable</code></a> or <a href="#changing-aperiodic-clock">aperiodic</a> Clock the FMU provides the information on when the Clock will tick again, i.e. when the corresponding model partition must be scheduled the next time.
 To retrieve this information the importer calls <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> on the Clock.</p>
 </div>
 <div class="paragraph">
