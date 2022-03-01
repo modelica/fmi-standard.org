@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 30c523e,</span>
+<span id="revnumber">version a01670e,</span>
 <span id="revdate">2022-03-01</span>
 </div>
 <div id="toc" class="toc2">
@@ -2595,14 +2595,14 @@ With this information, the environment must allocate an <code>fmi3Byte</code> ve
 <div class="paragraph">
 <p>This function serializes the data which is referenced by pointer <a href="#FMUState"><code>FMUState</code></a> and copies this data in to the byte vector <code>serializedState</code> of length <code>size</code>, that must be provided by the environment.</p>
 </div>
-<div id="fmi3DeSerializeFMUState" class="dlist">
+<div id="fmi3DeserializeFMUState" class="dlist">
 <dl>
-<dt class="hdlist1">Function <code>fmi3DeSerializeFMUState</code></dt>
+<dt class="hdlist1">Function <code>fmi3DeserializeFMUState</code></dt>
 </dl>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3DeSerializeFMUStateTYPE   (fmi3Instance instance,
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3DeserializeFMUStateTYPE   (fmi3Instance instance,
                                                   const fmi3Byte serializedState[],
                                                   size_t size,
                                                   fmi3FMUState* FMUState);</code></pre>
@@ -4218,7 +4218,7 @@ If a NULL pointer is provided for argument <code>instance</code>, the function c
 <dt class="hdlist1">Function <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a></dt>
 <dt class="hdlist1">Function <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a></dt>
 <dt class="hdlist1">Function <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a></dt>
-<dt class="hdlist1">Function <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a></dt>
+<dt class="hdlist1">Function <a href="#fmi3DeserializeFMUState"><code>fmi3DeserializeFMUState</code></a></dt>
 <dd>
 <p>All these allowed functions are described in <a href="#get-set-fmu-state">Section 2.2.7.4</a>.</p>
 </dd>
@@ -5628,7 +5628,7 @@ That is, functions <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canSerializeFMUState"></a><code>canSerializeFMUState</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the environment may serialize the internal FMU state, in other words, functions <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a> are supported by the FMU.
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the environment may serialize the internal FMU state, in other words, functions <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeserializeFMUState"><code>fmi3DeserializeFMUState</code></a> are supported by the FMU.
 If <code>true</code>, the flag <a href="#canGetAndSetFMUState"><code>canGetAndSetFMUState</code></a> must be <code>true</code> as well.</p></td>
 </tr>
 <tr>
@@ -11678,7 +11678,7 @@ The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code
 The callback may be called from several <a href="#model-partition">model partitions</a>.</p>
 </div>
 </dd>
-<dt class="hdlist1">Functions <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a>, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeSerializeFMUState"><code>fmi3DeSerializeFMUState</code></a></dt>
+<dt class="hdlist1">Functions <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a>, <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeserializeFMUState"><code>fmi3DeserializeFMUState</code></a></dt>
 <dd>
 <p>These functions must not be called if any model partition is currently active or preempted.
 <em>[This is because these functions apply to the whole FMU and not only to a specific model partition.]</em></p>
