@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 5f1c22b,</span>
+<span id="revnumber">version ce27120,</span>
 <span id="revdate">2022-03-02</span>
 </div>
 <div id="toc" class="toc2">
@@ -672,7 +672,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#Dimension">2.4.7.2. Array variables and structural parameters</a></li>
 <li><a href="#_alias_variables">2.4.7.3. Alias variables</a></li>
 <li><a href="#_variable_attributes">2.4.7.4. Variable Attributes</a></li>
-<li><a href="#_type_specific_properties">2.4.7.5. Type specific properties</a>
+<li><a href="#_type_specific_properties">2.4.7.5. Type-specific properties</a>
 <ul class="sectlevel5">
 <li><a href="#namingSection">2.4.7.5.1. Variable Naming Conventions</a></li>
 </ul>
@@ -3008,7 +3008,7 @@ Declaring a clocked variable as an <a href="#InitialUnknown"><code>&lt;InitialUn
 Uninitialized clocked variables must be initialized in the corresponding Clock&#8217;s first tick.</p>
 </div>
 <div class="paragraph">
-<p>A <a href="#ClockedState"><code>ClockedState</code></a> is a clocked variable belonging to the state vector \(\mathbf{x}_k\), whose value depends on its previous value (i.e., the value computed at the last Clock tick).
+<p>A <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> is a clocked variable belonging to the state vector \(\mathbf{x}_k\), whose value depends on its previous value (i.e., the value computed at the last Clock tick).
 Clocked states declare the <a href="#valueReference"><code>valueReference</code></a> of their previous variable using the <a href="#previous"><code>previous</code></a> attribute.</p>
 </div>
 <div class="paragraph">
@@ -4264,6 +4264,7 @@ If a NULL pointer is provided for argument <code>instance</code>, the function c
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
 <p>This function can be called for variables with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> and with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>.
+<em>[<a href="#input">Inputs</a> \(\mathbf{u}\), <a href="#parameter">parameters</a> \(\mathbf{p}\) and continuous-time <a href="#state">states</a> \(\mathbf{x}_{c,\mathit{initial=exact}}\) are included here.]</em>
 The intention is to set <a href="#start"><code>start</code></a> and guess values for these variables.</p>
 </dd>
 </dl>
@@ -4425,9 +4426,7 @@ Artificial or real algebraic loops over connected FMUs in <a href="#Initializati
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{\mathit{initial=exact}}\)<br>
-<em>[<a href="#parameter"><code>parameters</code></a> \(\mathbf{p}\) and
-continuous-time <a href="#state">states</a> \(\mathbf{x}_{c,\mathit{initial=exact}}\) are included here]</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set variables \(\mathbf{v}_{\mathit{initial=exact}}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
@@ -4435,7 +4434,7 @@ continuous-time <a href="#state">states</a> \(\mathbf{x}_{c,\mathit{initial=exac
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, ^{\bullet}\mathbf{x}_d, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{shift}}, \mathbf{T}_\mathit{interval}) := \mathbf{f}_{\mathit{init}}(\mathbf{u}_{c+d}, \mathbf{t}_{start}, \mathbf{v}_{\mathit{initial=exact}})\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, ^{\bullet}\mathbf{x}_d, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{shift}}, \mathbf{T}_\mathit{interval}) := \mathbf{f}_{\mathit{init}}(\mathbf{u}_{c+d}, \mathbf{p}, \mathbf{t}_{start}, \mathbf{v}_{\mathit{initial=exact}})\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetShift"><code>fmi3GetShift</code></a>, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a></p></td>
 </tr>
 <tr>
@@ -4489,7 +4488,8 @@ activate doStep equations \(\mathbf{f}_{\mathit{doStep}}\)</p>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
-<p>This function can be called for variables with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> and with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>.</p>
+<p>This function can be called for variables with <a href="#variability"><code>variability</code></a> \(\neq\) <a href="#constant"><code>constant</code></a> and with <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>.
+<em>[<a href="#input">Inputs</a> \(\mathbf{u}\), <a href="#parameter">parameters</a> \(\mathbf{p}\) and continuous-time <a href="#state">states</a> \(\mathbf{x}_{c,\mathit{initial=exact}}\) are included here.]</em></p>
 </dd>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
@@ -5526,8 +5526,8 @@ Future minor revisions will be denoted as <code>3.1</code>, <code>3.2</code> &#8
 <td class="tableblock halign-left valign-top"><p class="tableblock">The name of the model as used in the modeling environment that generated the XML file, such as <code>Modelica.Mechanics.Rotational.Examples.CoupledClutches</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="instantiationToken"></a><code>instantiationToken</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <a href="#instantiationToken"><code>instantiationToken</code></a> is a string that may be used by the FMU to check that the XML file is compatible with the implementation of the FMU.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>instantiationToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="instantiationToken"></a>The <a href="#instantiationToken"><code>instantiationToken</code></a> is a string that may be used by the FMU to check that the XML file is compatible with the implementation of the FMU.
 For this purpose the importer must pass the <a href="#instantiationToken"><code>instantiationToken</code></a> from the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> to the <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> function call.</p></td>
 </tr>
 <tr>
@@ -5596,8 +5596,8 @@ For all Boolean attributes the default is <code>false</code>.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="modelIdentifier"></a><code>modelIdentifier</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Short class name according to C syntax, for example, <code>A_B_C</code>.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>modelIdentifier</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="modelIdentifier"></a>Short class name according to C syntax, for example, <code>A_B_C</code>.
 Used as prefix for FMI functions if the functions are provided in C source code or in static libraries, but not if the functions are provided by a DLL/SharedObject.
 <a href="#modelIdentifier"><code>modelIdentifier</code></a> is also used as name of the static library or DLL/SharedObject.
 See also <a href="#header-files-and-naming-of-functions">Section 2.2.2</a>.</p></td>
@@ -5615,30 +5615,30 @@ The FMU implements the communication to this tool.
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU must be instantiated only once per process.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canGetAndSetFMUState"></a><code>canGetAndSetFMUState</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the environment may inquire the internal FMU state and may restore it.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canGetAndSetFMUState</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canGetAndSetFMUState"></a>If <code>true</code>, the environment may inquire the internal FMU state and may restore it.
 That is, functions <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, and <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a> are supported by the FMU.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canSerializeFMUState"></a><code>canSerializeFMUState</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the environment may serialize the internal FMU state, in other words, functions <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeserializeFMUState"><code>fmi3DeserializeFMUState</code></a> are supported by the FMU.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canSerializeFMUState</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canSerializeFMUState"></a>If <code>true</code>, the environment may serialize the internal FMU state, in other words, functions <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeserializeFMUState"><code>fmi3DeserializeFMUState</code></a> are supported by the FMU.
 If <code>true</code>, the flag <a href="#canGetAndSetFMUState"><code>canGetAndSetFMUState</code></a> must be <code>true</code> as well.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesDirectionalDerivatives"></a><code>providesDirectionalDerivatives</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the directional derivative of the equations may be retrieved using <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesDirectionalDerivatives</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesDirectionalDerivatives"></a>If <code>true</code>, the directional derivative of the equations may be retrieved using <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesAdjointDerivatives"></a><code>providesAdjointDerivatives</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the adjoint derivatives of the equations may be retrieved using <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesAdjointDerivatives</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesAdjointDerivatives"></a>If <code>true</code>, the adjoint derivatives of the equations may be retrieved using <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesPerElementDependencies</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU is able to provide detailed dependency information at runtime using <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a> and <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesEvaluateDiscreteStates"></a> <code>providesEvaluateDiscreteStates</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU supports <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesEvaluateDiscreteStates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesEvaluateDiscreteStates"></a>If <code>true</code>, the FMU supports <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>.
 This flag is ignored in Scheduled Execution.</p></td>
 </tr>
 </tbody>
@@ -6054,8 +6054,8 @@ This attribute must be different to all <code>name</code> attributes of variable
 Type definitions without unit must not have a <code>unit</code> attribute.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="displayUnit"></a> <code>displayUnit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default display unit of the variable referencing to a <code>&lt;DisplayUnit&gt;</code> which must exist under <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code> with the <code>name</code> of <code>unit</code>.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>displayUnit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="displayUnit"></a>Default display unit of the variable referencing to a <code>&lt;DisplayUnit&gt;</code> which must exist under <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code> with the <code>name</code> of <code>unit</code>.
 The conversion to the <code>unit</code> is defined with the element <code>&lt;fmiModelDescription&gt;&lt;UnitDefinitions&gt;&lt;Unit&gt;&lt;DisplayUnit&gt;</code>.
 If <code>displayUnit</code> is defined a <code>unit</code> must also be defined.</p></td>
 </tr>
@@ -6075,15 +6075,15 @@ Implementations may use this information to provide guidance about valid/useful 
 <em>[For example, 10 degree Celsius = 10 Kelvin if <code>relativeQuantity = true</code> and not 283.15 Kelvin.]</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="min"></a><code>min</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum value of variable (variable value \(\geq\) <code>min</code>).
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>min</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="min"></a>Minimum value of variable (variable value \(\geq\) <code>min</code>).
 If not defined, the minimum is the largest negative number that can be represented on the machine for that <code>&lt;TypeDefinition&gt;</code>.
 The <code>min</code> defines the region in which the FMU is designed to operate (see <a href="#min-max-violations">Section 2.2.7.3</a>).
 <em>[If, for example, an <code>&lt;Enumeration&gt;</code> is defined with <code>name1 = -4</code>, <code>name2 = 1</code>, <code>name3 = 5</code>, <code>name4 = 11</code> and <code>min = -2</code>, <code>max = 5</code>, then only <code>name2</code> and <code>name3</code> are allowed.]</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="max"></a><code>max</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum value of variable (variable value \(\leq\) <code>max</code>).
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="max"></a>Maximum value of variable (variable value \(\leq\) <code>max</code>).
 If not defined, the maximum is the largest positive number that can be represented on the machine for that <code>&lt;TypeDefinition&gt;</code>.
 The <code>max</code> defines the region in which the FMU is designed to operate (see <a href="#min-max-violations">Section 2.2.7.3</a>).
 <em>[If, for example, an <code>&lt;Enumeration&gt;</code> is defined with <code>name1 = -4</code>, <code>name2 = 1</code>, <code>name3 = 5</code>, <code>name4 = 11</code> and <code>min = -2</code>, <code>max = 5</code>, then only <code>name2</code> and <code>name3</code> are allowed.]</em></p></td>
@@ -6155,15 +6155,15 @@ Default value is 0.0.</p></td>
 This attribute defines, if the functions <code>fmi3GetXXXFraction</code> and <code>fmi3SetIntervalFraction</code> are allowed to be called for all <a href="#time-based-clock">time-based Clocks</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="resolution"></a><code>resolution</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instead of defining clock timing using floating point numbers, FMI allows the definition of rational numbers using <a href="#intervalCounter"><code>intervalCounter</code></a> and <a href="#shiftCounter"><code>shiftCounter</code></a>.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resolution</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="resolution"></a>Instead of defining clock timing using floating point numbers, FMI allows the definition of rational numbers using <a href="#intervalCounter"><code>intervalCounter</code></a> and <a href="#shiftCounter"><code>shiftCounter</code></a>.
 The <code>resolution</code> defines the minimal quanta clock timing can be resolved by.
 This attribute is required for <a href="#periodic-clock">time-based periodic clocks</a> if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and <a href="#intervalCounter"><code>intervalCounter</code></a> is present.
 This attribute must only be used for <a href="#periodic-clock">periodic Clocks</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="intervalCounter"></a><code>intervalCounter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This attribute defines (together with <a href="#resolution"><code>resolution</code></a>) the interval between consecutive clock ticks:</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>intervalCounter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="intervalCounter"></a>This attribute defines (together with <a href="#resolution"><code>resolution</code></a>) the interval between consecutive clock ticks:</p>
 <p class="tableblock">\(\mathbf{T}_{interval} = \) <code>intervalCounter / resolution</code>.</p>
 <p class="tableblock"><a href="#intervalCounter"><code>intervalCounter</code></a> and <a href="#resolution"><code>resolution</code></a> have no default value.
 If present the value of this attribute must be greater than 0.
@@ -6171,8 +6171,8 @@ This attribute may be present if <a href="#supportsFraction"><code>supportsFract
 It must not be used otherwise.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="shiftCounter"></a><code>shiftCounter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This value defines (together with <a href="#resolution"><code>resolution</code></a>) the delay of the first clock activation relative to \(\mathbf{t}_{\mathit{start}}\) (<a href="#startTime"><code>startTime</code></a>):</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>shiftCounter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="shiftCounter"></a>This value defines (together with <a href="#resolution"><code>resolution</code></a>) the delay of the first clock activation relative to \(\mathbf{t}_{\mathit{start}}\) (<a href="#startTime"><code>startTime</code></a>):</p>
 <p class="tableblock">\(\mathbf{T}_{shift} = \) <code>shiftCounter / resolution</code>.</p>
 <p class="tableblock">This attribute requires that <a href="#intervalCounter"><code>intervalCounter</code></a> is present.
 The value of this attribute value must be equal to or greater than <code>0</code>.
@@ -6611,7 +6611,7 @@ The default value of this attribute is <code>false</code>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>previous</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="previous" class="paragraph">
-<p>If present, this variable is a <a href="#ClockedState"><code>ClockedState</code></a> and this attribute contains the value reference of the variable with the previous value.
+<p>If present, this variable is a <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> and this attribute contains the value reference of the variable with the previous value.
 The following constraints apply:</p>
 </div>
 <div class="ulist">
@@ -6646,7 +6646,7 @@ The following constraints apply:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>clocks</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="clocks" class="paragraph">
 <p>If present, this variable is clocked.
-The value of <a href="#clocks"><code>clocks</code></a> is a list of value references of <a href="#Clock">Clocks</a> this variable depends on.
+The value of the attribute <a href="#clocks"><code>clocks</code></a> is a non-empty list of value references of <a href="#Clock">Clocks</a> this variable belongs to.
 Only variables with <a href="#variability"><code>variability = discrete</code></a> or <a href="#variability"><code>variability = tunable</code></a> can have this attribute.
 <em>[Some importers might require a variable to be dependent on a single Clock for technical reasons.</em>
 <em>They could reject FMUs violating this restriction.</em>
@@ -6897,7 +6897,7 @@ Only variables with <a href="#variability"><code>variability = discrete</code></
 <div class="paragraph">
 <p><em>A <a href="#parameter"><code>parameter</code></a> p is a variable that does not change its value during simulation, in other words, dp/dt = 0.</em>
 <em>If the <a href="#parameter"><code>parameter</code></a> p is changing, then Dirac impulses are introduced since dp/dt of a discontinuous <a href="#constant"><code>constant</code></a> variable <code>p</code> is a Dirac impulse.</em>
-<em>Even if this Dirac impulse would be modeled correctly by the modeling environment, it would introduce unwanted <code>vibrations</code>.</em>
+<em>Even if this Dirac impulse would be modeled correctly by the FMU, it would introduce unwanted <code>vibrations</code>.</em>
 <em>Furthermore, in many cases the model equations are derived under the assumption of a <a href="#constant"><code>constant</code></a> value (like mass or capacity), and the model equations would be different if <code>p</code> would be time varying.</em></p>
 </div>
 <div class="paragraph">
@@ -6929,18 +6929,17 @@ Only variables with <a href="#variability"><code>variability = discrete</code></
 <div class="paragraph">
 <p><em>FMI for Co-Simulation:</em>
 <em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>).</em>
-<em>The FMU internally carries out event handling if necessary.]</em></p>
+<em>The FMU internally carries out event handling if necessary.</em></p>
 </div>
 <div class="paragraph">
 <p><em>FMI for Scheduled Execution:</em>
-<em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>).</em></p>
+<em>Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameters</code></a> is allowed before an <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call (so, whenever an <a href="#input"><code>input</code></a> can be set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>) and before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (that is before and during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>).]</em></p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_type_specific_properties">2.4.7.5. Type specific properties</h5>
+<h5 id="_type_specific_properties">2.4.7.5. Type-specific properties</h5>
 <div class="paragraph">
-<p>Type specific properties are defined in the required choice element, where exactly one float, integer, boolean, binary, enumeration, or Clock, must be present in the XML file:
-<a href="#figure-schema-Float64">Figure 24</a>, <a href="#figure-schema-Int32">Figure 25</a>, <a href="#figure-schema-Boolean">Figure 26</a>, <a href="#figure-schema-Binary">Figure 27</a>, <a href="#figure-schema-Enumeration">Figure 28</a> and <a href="#figure-schema-Clock">Figure 29</a>, are representative examples.</p>
+<p><a href="#ModelVariables"><code>&lt;ModelVariables&gt;</code></a> can be of different types, for example <a href="#figure-schema-Float64">Float64</a>, <a href="#figure-schema-Int32">Int32</a>, <a href="#figure-schema-Boolean">Boolean</a>, <a href="#figure-schema-Binary">Binary</a>, <a href="#figure-schema-Enumeration">Enumeration</a> and <a href="#figure-schema-Clock">Clock</a>.</p>
 </div>
 <div id="figure-schema-Float64" class="imageblock text-center">
 <div class="content">
@@ -6999,8 +6998,8 @@ Type specific attributes are listed in the following table.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>declaredType</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>If present, name of type defined with <code>&lt;TypeDefinitions&gt;&lt;TypeDefinition&gt;</code>.
-The value defined in the corresponding <code>&lt;TypeDefinition&gt;</code> (see <a href="#definition-of-types">Section 2.4.4</a>) is used as default.
-<em>[For example, if <code>min</code> is present both in variable type element of <code>&lt;TypeDefinition&gt;</code> and in the concrete variable type element of the variable, then the <code>min</code> of the variable is actually used.]</em>
+The attributes defined in the corresponding <code>&lt;TypeDefinition&gt;</code> (see <a href="#definition-of-types">Section 2.4.4</a>) are used as defaults.
+<em>[For example, if <code>min</code> is present both in variable type element of <code>&lt;TypeDefinition&gt;</code> and in the specific variable type element of the variable, then the <code>min</code> of the variable is actually used.]</em>
 For <code>&lt;Enumeration&gt;</code> the attribute <code>declaredType</code> is required because the <code>&lt;Enumeration&gt;</code> items are defined in <code>&lt;TypeDefinitions&gt;&lt;TypeDefinition&gt;</code>.
 For all other types, this attribute is optional.</p>
 </div></div></td>
@@ -7008,12 +7007,12 @@ For all other types, this attribute is optional.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Unit of the variable referencing to a <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code> with the same <code>name</code>, which must exist.
+<p>This attribute defines the unit of the variable by referencing a <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code> with the same <code>name</code>, which must exist.
 Variables without unit must not have a <code>unit</code> attribute.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">displayUnit`</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>displayUnit</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Default display unit of the variable referencing to a <code>&lt;DisplayUnit&gt;</code> which must exist under <code>&lt;UnitDefinitions&gt;&lt;Unit&gt;</code> with the <code>name</code> of <code>unit</code>.
 The conversion to the <code>unit</code> is defined with the element <code>&lt;fmiModelDescription&gt;&lt;UnitDefinitions&gt;&lt;Unit&gt;&lt;DisplayUnit&gt;</code>.
@@ -7032,41 +7031,33 @@ If <code>displayUnit</code> is defined a <code>unit</code> must also be defined.
 <p>The attribute <a href="#initial"><code>initial</code></a> for other variables can have the following values and meanings:</p>
 </div>
 <div id="exact" class="paragraph">
-<p><code>= exact</code>: The variable is initialized with the <a href="#start"><code>start</code></a> value (provided under the variable type element).</p>
+<p><code>= exact</code>: The variable is initialized with the <a href="#start"><code>start</code></a> value by the FMU.
+The importer may set a different initial value using <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.</p>
 </div>
 <div id="approx" class="paragraph">
-<p><code>= approx</code>: The <a href="#start"><code>start</code></a> value provides an approximation that may be modified during initialization, e.g., if the FMU is part of an algebraic loop where the variable might be an iteration variable and <a href="#start"><code>start</code></a> value is taken as initial value for an iterative solution process.</p>
+<p><code>= approx</code>: The variable is an iteration variable of an algebraic loop within the FMU and the
+iteratative solution process in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> starts with the <a href="#start"><code>start</code></a> value as guess value.
+<em>[The importer may call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in <a href="#Instantiated"><strong>Instantiated</strong></a> to help the FMU find a solution.]</em></p>
 </div>
 <div id="calculated" class="paragraph">
-<p><code>= calculated</code>: The variable is calculated from other variables during initialization.
-It is not allowed to provide a <a href="#start"><code>start</code></a> value.</p>
+<p><code>= calculated</code>: The variable is calculated by the FMU from other variables during initialization.
+For <code>calculated</code> variables a <a href="#start"><code>start</code></a> attribute must not be provided.</p>
 </div>
 <div class="paragraph">
 <p><a href="#table-definition-initial">Table 22</a> defines the allowed values for <a href="#initial"><code>initial</code></a> as combination of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and the default value if <a href="#initial"><code>initial</code></a> is not present.</p>
-</div>
-<div class="paragraph">
-<p>If <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>, or <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, a <a href="#start"><code>start</code></a> value must be provided.
-If <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>, or <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, it is not allowed to provide a <a href="#start"><code>start</code></a> value.</p>
-</div>
-<div class="paragraph">
-<p><em>[The importer decides when to use the <a href="#start"><code>start</code></a> value of a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.</em>
-<em>For example, if the <a href="#input"><code>input</code></a> variable is an iteration variable of an algebraic loop in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, then the <a href="#start"><code>start</code></a> value can be used as start value for the iteration.]</em></p>
-</div>
-<div class="paragraph">
-<p>If <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> is not called on a variable with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, then the FMU must keep the <a href="#start"><code>start</code></a> value as value of this <a href="#input"><code>input</code></a>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>start</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="start" class="paragraph">
-<p>Initial or guess value of variable.
-This value is also stored in the C functions.
+<p>Initial or guess value of the variable.
+During instantiation, the FMU initializes its variables with their <a href="#start"><code>start</code></a> values.
 <em>[Therefore, calling</em> <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> <em>to set <a href="#start"><code>start</code></a> values is only necessary, if a different value as stored in the XML file is desired.</em>
-<em>It is not allowed to change the start values in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file of an FMU, as this would break the consistency with the hard-coded start values in the C-Code.</em>
-<em>This could lead to unpredictable behavior of the FMU in different importers, as it is not mandatory to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> to set start values during initialization.]</em></p>
+<em>It is not allowed to change the start values in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file of an FMU, as this would break the consistency with the hard-coded start values within the FMU.</em>
+<em>This could lead to unpredictable behavior of the FMU in different importers, as it is not mandatory to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> to set <a href="#start"><code>start</code></a> values during initialization.]</em></p>
 </div>
 <div class="paragraph">
-<p>The <a href="#start"><code>start</code></a> is either a single value or a list of values.
+<p>The <a href="#start"><code>start</code></a> attribute is either a single value or a list of values.
 The serialization of a multi-dimensional array variable is described in <a href="#serialization-of_variables">Section 2.2.7.1</a>.
 If only a single value is given for a multi-dimensional array, all values of the multi-dimensional array are equal to this value.</p>
 </div>
@@ -7091,37 +7082,25 @@ If only a single value is given for a multi-dimensional array, all values of the
 <p><em>]</em></p>
 </div>
 <div class="paragraph">
-<p>The interpretation of <a href="#start"><code>start</code></a> is defined by variable attribute <a href="#initial"><code>initial</code></a>.
-A different <a href="#start"><code>start</code></a> value can be provided with an <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> function before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called (but not for variables with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>).</p>
+<p>The interpretation of <a href="#start"><code>start</code></a> is defined by variable attribute <a href="#initial"><code>initial</code></a>.<br>
+If <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>, a <a href="#start"><code>start</code></a> attribute must be provided.<br>
+If <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a> or <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, it is not allowed to provide a <a href="#start"><code>start</code></a> attribute.</p>
 </div>
 <div class="paragraph">
-<p><em>[The standard approach is to set the <a href="#start"><code>start</code></a> value before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</em>
-<em>However, if the initialization shall be modified in the calling environment (for example, changing from initialization of states to steady-state initialization), it is also possible to use the <a href="#start"><code>start</code></a> value as iteration variable of an algebraic loop: using an additional condition in the environment, such as</em> \({\dot{x} = 0}\) <em>, the actual <a href="#start"><code>start</code></a> value is determined.]</em></p>
-</div>
-<div class="paragraph">
-<p>If <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> or <a href="#approx"><code>approx</code></a>, a <a href="#start"><code>start</code></a> value must be provided.</p>
-</div>
-<div class="paragraph">
-<p>If <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a> or <a href="#causality"><code>causality</code></a> = <a href="#independent"><code>independent</code></a>, it is not allowed to provide a <a href="#start"><code>start</code></a> value.</p>
-</div>
-<div class="paragraph">
-<p>Variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a>, as well as variables with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>, must have a <a href="#start"><code>start</code></a> value.</p>
+<p>Variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> or <a href="#input"><code>input</code></a>, as well as variables with <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>, must have a <a href="#start"><code>start</code></a> attribute wich has the following meaning:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>If <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>, the <a href="#start"><code>start</code></a> value is the value of it.</p>
+<p>If <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>, the <a href="#start"><code>start</code></a> attribute defines the default value of the parameter.</p>
 </li>
 <li>
-<p>If <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, the <a href="#start"><code>start</code></a> value is used by the model as value of the <a href="#input"><code>input</code></a>, if the <a href="#input"><code>input</code></a> is not set by the environment, except for variables of type <a href="#Clock">Clock</a>.</p>
+<p>If <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>, the <a href="#start"><code>start</code></a> attribute defines the value of the constant.</p>
 </li>
 <li>
-<p>If <a href="#variability"><code>variability</code></a> = <a href="#constant"><code>constant</code></a>, the <a href="#start"><code>start</code></a> value is the value of the constant.</p>
+<p>If <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, the <a href="#start"><code>start</code></a> value is used by the FMU as value of the <a href="#input"><code>input</code></a>, if it is not set by the importer, except for variables of type <a href="#Clock">Clock</a>.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>If <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> or <a href="#local"><code>local</code></a>, then the <a href="#start"><code>start</code></a> value is either an <a href="#initial"><code>initial</code></a> or a <code>guess</code> value, depending on the setting of attribute <a href="#initial"><code>initial</code></a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -7139,9 +7118,9 @@ All variables listed in these elements must have attribute <code>derivative</cod
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>reinit</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="reinit" class="paragraph">
 <p>Only used in Model Exchange, ignored for the other interface types.
-Can only be present for a continuous-time <a href="#state">state</a>.<br>
-If <code>true</code>, <a href="#state">state</a> can be reinitialized at an event by the FMU.<br>
-If <code>false</code>, <a href="#state">state</a> will not be reinitialized at an event by the FMU.</p>
+May only be present for a continuous-time <a href="#state">state</a>.<br>
+If <code>true</code>, <a href="#state">state</a> may be reinitialized by the FMU in <a href="#EventMode"><strong>Event Mode</strong></a>.<br>
+If <code>false</code>, <a href="#state">state</a> will not be reinitialized.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -7243,10 +7222,10 @@ approx</p></td>
 <h6 id="namingSection">2.4.7.5.1. Variable Naming Conventions</h6>
 <div class="paragraph">
 <p>With attribute <a href="#variableNamingConvention"><code>variableNamingConvention</code></a> in <code>&lt;fmiModelDescription&gt;</code>, the convention is defined how the variable names have been constructed.
-If this information is known, the environment may be able to represent the names in a better way (for example, as a tree and not as a linear list).</p>
+The importer may use this information to represent the names in a better way (for example, as a tree and not as a linear list).</p>
 </div>
 <div class="paragraph">
-<p>In the following definitions, the <a href="http://en.wikipedia.org/wiki/Extended_BNF">EBNF</a> is used:</p>
+<p>In the following definitions, the <a href="http://en.wikipedia.org/wiki/Extended_BNF">Extended Backus-Naur Form (EBNF)</a> is used:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7276,7 +7255,7 @@ line feed (#xA) nor tab (#x9)</pre>
 <p><strong><a href="#variableNamingConvention"><code>variableNamingConvention = structured</code></a></strong></p>
 </div>
 <div class="paragraph">
-<p>Structured names are hierarchical using "." as a separator between hierarchies.
+<p>Structured names are using "." as a separator between hierarchies.
 A name consists of "_", letters and digits or may consist of any characters enclosed in single apostrophes.
 A name may identify an array element on every hierarchical level using "[&#8230;&#8203;]" to identify the respective array index.
 If an array is a leaf node of the variable hierarchy then the array can also be represented as a single variable of type array.
@@ -7314,7 +7293,7 @@ unsignedInteger = digit { digit }</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><em>[This definition is identical to the syntax of an identifier in Modelica version 3.2.]</em></p>
+<p><em>[This definition is identical to the syntax of an identifier in the <a href="#MLS12">Modelica Language Specification</a>.]</em></p>
 </div>
 <div class="paragraph">
 <p>Example:</p>
@@ -7357,11 +7336,11 @@ vehicle.engine.temperature</pre>
 It defines the <a href="#model-dependencies">dependencies</a> between variables.</p>
 </div>
 <div class="paragraph">
-<p>The required part of the model structure defines an ordering of the <a href="#output"><code>outputs</code></a>, the (exposed) <a href="#derivative"><code>derivatives</code></a>, the event indicators, and the unknowns that are available during Initialization.
-A Model Exchange FMU must expose all <a href="#derivative"><code>derivatives</code></a> of its continuous-time <a href="#state">states</a> in <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> elements and must expose all event indicators in <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> elements.</p>
+<p>The required part of the model structure for all FMI types defines the ordering of outputs in <a href="#Output"><code>&lt;Output&gt;</code></a> and unknowns during initialization in <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>.
+A Model Exchange FMU must also expose all derivatives of continuous states in <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> and all event indicators in <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The optional part of the model structure defines in which way <a href="#derivative"><code>derivatives</code></a>, <a href="#output"><code>outputs</code></a>, and initial unknowns depend on <a href="#input"><code>inputs</code></a> and/or <a href="#parameter"><code>parameters</code></a>, and continuous-time <a href="#state">states</a>, at the current super-dense time instant (ME) or at the current communication point (CS and SE).
+<p>The optional part of the model structure defines in which way <a href="#derivative"><code>derivatives</code></a>, <a href="#output"><code>outputs</code></a>, and initial unknowns depend on <a href="#input"><code>inputs</code></a> and/or <a href="#parameter"><code>parameters</code></a>, and continuous-time <a href="#state">states</a>.
 The listed <a href="#dependencies"><code>dependencies</code></a> declare the dependencies between whole (multi-dimensional-)variables and not individual elements of the variables.
 <em>[Dependencies of individual array elements can be retrieved during runtime using <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.]</em></p>
 </div>
@@ -7378,7 +7357,7 @@ The listed <a href="#dependencies"><code>dependencies</code></a> declare the dep
 <p>Note that attribute <a href="#dependenciesKind"><code>dependenciesKind</code></a> for element <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> has less enumeration values as <a href="#dependenciesKind"><code>dependenciesKind</code></a> in the other lists, as detailed in <a href="#table-model-structure-elements">Table 23</a>.</p>
 </div>
 <div class="paragraph">
-<p><a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> consists of the elements detailed in <a href="#table-model-structure-elements">Table 23</a> (see also <a href="#figure-schema-ModelStructure">Figure 30</a>; the symbols of the mathematical equations describing the dependency are defined in <a href="#concepts-model-exchange">Section 3.1</a>):</p>
+<p><a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> consists of the elements detailed in <a href="#table-model-structure-elements">Table 23</a> (see also <a href="#figure-schema-ModelStructure">Figure 30</a>; the symbols of the mathematical equations describing the dependencies are defined in <a href="#concepts-model-exchange">Section 3.1</a>):</p>
 </div>
 <table id="table-model-structure-elements" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 23. ModelStructure elements.</caption>
@@ -7397,15 +7376,10 @@ The listed <a href="#dependencies"><code>dependencies</code></a> declare the dep
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Output</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="Output"></a>
 Ordered list of all outputs, in other words, a list of value references where every corresponding variable must have <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> (and every variable with <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> must be listed here).
-<em>[Note that all <a href="#output"><code>output</code></a> variables are listed here, especially <a href="#discrete"><code>discrete</code></a> and <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a>.</em>
-<em>The ordering of the variables in this list is defined by the exporting tool.</em>
-<em>Usually, it is best to order according to the declaration order in the source model, since then the <a href="#Output"><code>&lt;Output&gt;</code></a> list does not change if the declaration order of <a href="#output"><code>outputs</code></a> in the source model is not changed.</em>
-<em>This is for example, important for linearization, in order that the interpretation of the output vector does not change for a re-exported FMU.]</em>
-Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns at the current super-dense time instant in Event and in <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> (ME) and at the current communication point (CS and SE).
+Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns after the <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 Attribute <a href="#dependencies"><code>dependencies</code></a> for <a href="#output"><code>output</code></a> <a href="#Clock"><code>Clocks</code></a> lists all known variables (including input clocks) that contribute to trigger a clock tick for that <a href="#outputClock">output Clock</a>.
-Beside the knowns, the <a href="#output"><code>outputs</code></a> also depend on "frozen" variables (= variables which cannot be changed in the current mode) but these "frozen" variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
-The functional dependency is defined as (dependencies of variables that are fixed in Event and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> and at communication points are not shown):<br>
-\({(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{\mathit{output}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{\mathit{tune}})}\)</p></td>
+The functional dependency is defined as:<br>
+\({(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{\mathit{output}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, \mathbf{t}, \mathbf{p})}\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ContinuousStateDerivative</code></p></td>
@@ -7414,68 +7388,89 @@ Ordered list of value references of all derivatives of continuous <a href="#stat
 The order defined by this list defines the order of the elements for <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, and <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>.
 <em>[Note that only <a href="#continuous"><code>continuous</code></a> floating point variables are listed here.</em>
 <em>If a <a href="#state">state</a> or a <a href="#derivative"><code>derivative</code></a> of a <a href="#state">state</a> shall not be exposed from the FMU, or if states are not statically associated with a variable (due to <a href="#dynamic-state-selection">dynamic state selection</a>), then dummy variables have to be introduced, for example, <code>x[4]</code>, or <code>xDynamicStateSet2[5]</code>.]</em></p>
-<p class="tableblock">The corresponding continuous-time <a href="#state">states</a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding variable state derivative element.
+<p class="tableblock">The corresponding continuous-time <a href="#state">states</a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding variable state-derivative element.
 <em>[Note that higher order derivatives must be mapped to first order derivatives but the mapping definition can be preserved due to attribute <a href="#derivative"><code>derivative</code></a>.</em>
 <em>Example: if</em> \({\frac{\text{ds}}{\text{dt}} = v,\ \frac{\text{dv}}{\text{dt}} =f(..)}\) <em>,then</em> \({\left\{ v,\ \frac{\text{dv}}{\text{dt}} \right\}}\) <em>is the vector of state derivatives and attribute <a href="#derivative"><code>derivative</code></a> of</em> \({v}\) <em>references</em> \({s}\) <em>, and attribute <a href="#derivative"><code>derivative</code></a> of</em> \({\frac{\text{dv}}{\text{dt}}}\) <em>references</em> \({v}\) <em>.]</em><br>
 For Co-Simulation, elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> are ignored if capability flag <a href="#providesDirectionalDerivatives"><code>providesDirectionalDerivatives</code></a> has a value of <code>false</code>, in other words, it cannot be computed.
-<em>[This is the default.</em>
-<em>If an FMU supports more than Model Exchange , then the <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> elements might be present, since it is needed for Model Exchange.</em>
-<em>If the above flag is set to <code>false</code> for the Co-Simulation cases, then the <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> elements are ignored for Co-Simulation.</em>
-<em>If "inline integration" is used for a co-simulation FMU, then the model still has continuous-time <a href="#state">states</a> and just a special solver is used (internally the implementation results in a discrete-time system, but from the outside, it is still a continuous-time system).]</em><br>
-Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the state derivatives from the knowns at the current super-dense time instant in Event and in <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> (ME) and at the current communication point (CS and SE).
-Beside the knowns the derivatives also depend on the "frozen" variables (= variables which cannot be changed in the current mode) but these "frozen" variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
-The functional dependency is defined as (dependencies of variables that are fixed in Event and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> and at communication points are not shown):<br>
-\({\dot{\mathbf{x}_c} := \mathbf{f}_{\mathit{der}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p}_{\mathit{tune}})}\)</p></td>
+The functional dependency is defined as:<br>
+\({\dot{\mathbf{x}_c} := \mathbf{f}_{\mathit{der}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, \mathbf{t}, \mathbf{p})}\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClockedState</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="ClockedState"></a>
-A <a href="#ClockedState"><code>ClockedState</code></a> is part of the discrete state of a model partition and represented by a clocked variable.
-To which Clock or Clocks it belongs is described by the attribute <a href="#clocks"><code>clocks</code></a>.
-Each <a href="#ClockedState"><code>ClockedState</code></a> must have the attribute <a href="#previous"><code>previous</code></a> to represent the previous value of this <a href="#ClockedState"><code>ClockedState</code></a>.
-All clocked states must have <a href="#variability"><code>variability = discrete</code></a> and must not be of type <a href="#fmi3Clock"><code>fmi3Clock</code></a>.</p></td>
+A <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> is part of the discrete state of a model partition and represented by a clocked variable.
+To which Clock or Clocks it belongs is described by the attribute <a href="#clocks"><code>clocks</code></a> of that variable.
+Each <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> must have the attribute <a href="#previous"><code>previous</code></a> to represent the previous value of this <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>.
+All clocked states must have <a href="#variability"><code>variability = discrete</code></a>, must have the attribute <a href="#clocks"><code>clocks</code></a>, and must not be of type <a href="#fmi3Clock"><code>fmi3Clock</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>InitialUnknown</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="InitialUnknown"></a>
-Ordered list of all exposed unknowns in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
-This list consists of all variables which</p>
-<p class="tableblock">- are not <a href="#clocked-variable">clocked variables</a> and have <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> (with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), or</p>
-<p class="tableblock">- have <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>, or</p>
-<p class="tableblock">- are continuous-time <a href="#state">states</a> or state derivatives (defined with elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a> <em>[if a Co-Simulation FMU does not define the <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> elements, (3) cannot be present]</em>, or</p>
-<p class="tableblock">- are <a href="#clocked-variable">clocked variables</a> that the FMU wishes to initialize in initialization mode.</p>
-<p class="tableblock">The resulting list is not allowed to have duplicates (for example, if a <a href="#state">state</a> is also an <a href="#output"><code>output</code></a>, it is included only once in the list).<br>
-Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the unknowns from the knowns in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> at the initial time.
-Beside the knowns the initial unknowns also depend on the "frozen" variables (= variables which cannot be changed in the current mode) but these "frozen" variables are not listed as <a href="#dependencies"><code>dependencies</code></a>.
+<td class="tableblock halign-left valign-top"><div class="content"><div id="InitialUnknown" class="paragraph">
+<p>Ordered list of all exposed unknowns in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
+This list consists of all variables which:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>are not <a href="#clocked-variable">clocked variables</a> and have <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a> (with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), or</p>
+</li>
+<li>
+<p>have <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>, or</p>
+</li>
+<li>
+<p>are continuous-time <a href="#state">states</a> or state derivatives (defined with elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>, or</p>
+</li>
+<li>
+<p>are <a href="#clocked-variable">clocked variables</a> that the FMU wishes to initialize in initialization mode.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The resulting list is not allowed to have duplicates (for example, if a <a href="#state">state</a> is also an <a href="#output"><code>output</code></a>, it is included only once in the list).<br>
+Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the unknowns from the knowns in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 The functional dependency is defined as:</p>
-<p class="tableblock">\({\mathbf{v}_{\mathit{initialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, t_0, \mathbf{v}_{\mathit{initial=exact}})}\)</p>
-<p class="tableblock">Since, <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state">states</a> and state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
-<p class="tableblock"><a href="#EventIndicator"><code>EventIndicators</code></a> are available during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, however their dependencies are intended for debugging purposes only (and not for connection with other FMU&#8217;s), and therefore they must not be listed as <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>.</p>
-<p class="tableblock"><em>[Example: Assume an FMU is defined in the following way:</em></p>
-<p class="tableblock">\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{init}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_0, \mathbf{p})}\)<br></p>
-<p class="tableblock">\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{sim}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_i, \mathbf{p})}\)<br></p>
-<p class="tableblock"><em>Therefore, the initial state \({\mathbf{x}_c(t_0)}\) has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and the initial state derivative \({\dot{\mathbf{x}}_c(t_0)}\) has <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>.</em>
-<em>The environment can still initialize this FMU in steady-state, by using \({\mathbf{x}_c(t_0)}\) as iteration variables and adding the equations \({\dot{\mathbf{x}}_c(t_0) = \mathbf{0}}\) in the environment.]</em></p></td>
+</div>
+<div class="paragraph">
+<p>\({\mathbf{v}_{\mathit{initialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, \mathbf{t}_{start}, \mathbf{v}_{\mathit{initial=exact}})}\)</p>
+</div>
+<div class="paragraph">
+<p>Since, <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state">states</a> and state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
+</div>
+<div class="paragraph">
+<p><a href="#EventIndicator"><code>EventIndicators</code></a> are available during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, however their dependencies are intended for debugging purposes only (and not for connection with other FMU&#8217;s), and therefore they must not be listed as <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>.</p>
+</div>
+<div class="paragraph">
+<p><em>[Example: Assume an FMU is defined in the following way:</em></p>
+</div>
+<div class="paragraph">
+<p>\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{init}}(\mathbf{x}_c, \mathbf{u}_{c+d}, \mathbf{t}_{start}, \mathbf{p})}\)<br></p>
+</div>
+<div class="paragraph">
+<p>\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{sim}}(\mathbf{x}_c, \mathbf{u}_{c+d}, \mathbf{t}_i, \mathbf{p})}\)<br></p>
+</div>
+<div class="paragraph">
+<p><em>Therefore, the initial state</em> \({\mathbf{x}_c(\mathbf{t}_{start})}\) <em>has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and the initial state derivative</em> \({\dot{\mathbf{x}}_c(\mathbf{t}_{start})}\) <em>has <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>.</em>
+<em>The importer can still initialize this FMU in steady-state, by using</em> \({\mathbf{x}_c(\mathbf{t}_{start})}\) <em>as iteration variables and adding the equations</em> \({\dot{\mathbf{x}}_c(\mathbf{t}_{start}) = \mathbf{0}}\) <em>in the importer.]</em></p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EventIndicator</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="EventIndicator"></a>
-An ordered list of all event indicators, in other words, a list of value references where every referenced variable must be an event indicator.
+An ordered list of value references where every referenced variable must be an event indicator.
 The serialized (if value reference points to array variable) and concatenated values of the variables referenced by the attribute <code>valueReference</code> form the array that can be retrieved with <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.
 The number of event indicators may change if one or more value references listed in <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> point to array variables of variable size (see <a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a>).
 Only <a href="#continuous"><code>continuous</code></a> variables of type <code>Float32</code> and <code>Float64</code> can be referenced by <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a>.</p>
-<p class="tableblock"><em>[If an event indicator shall not be exposed from the FMU, or if event indicators are not statically associated with a variable (due to dynamic event indicator selection), then dummy variables have to be introduced, for example, <code>eventIndicator[4]</code>.</em>
-<em>The ordering of the variables in this list is defined by the exporting tool.]</em></p>
-<p class="tableblock">For Co-Simulation, elements <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> are ignored.</p>
-<p class="tableblock"><em>[If an FMU supports more than Model Exchange, then the <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> elements might be present, since it is needed for Model Exchange, but will be ignored for Co-Simulation and Scheduled Execution.]</em></p></td>
+<p class="tableblock">For Co-Simulation and Scheduled Execution, <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> elements are ignored.</p>
+<p class="tableblock"><em>[The intention for connecting event indicators to variables via <code>valueReferences</code> is to facilitate debugging of the FMU.</em>
+<em>If an event indicator shall not be exposed, or if event indicators are not statically associated with a variable (due to dynamic event indicator selection), then dummy variables have to be introduced, for example, <code>eventIndicator[4]</code>.]</em></p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Elements <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>ClockedState</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> have (partially) the following attributes:</p>
+<p>Elements <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> have (partially) the following attributes:</p>
 </div>
 <table id="table-output-der-initialUknown-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 24. <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>ClockedState</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> attribute details.</caption>
+<caption class="title">Table 24. <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> attribute details.</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 83.3334%;">
@@ -7496,7 +7491,7 @@ Only <a href="#continuous"><code>continuous</code></a> variables of type <code>F
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dependencies</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="dependencies" class="paragraph">
-<p>Optional attribute defining the dependencies of the unknown \({\mathbf{v}_{\mathit{unknown}}}\) (directly or indirectly via other variables) with respect to \({\mathbf{v}_{\mathit{known}}}\).
+<p>Optional attribute defining the dependencies as list of value references of the unknown \({\mathbf{v}_{\mathit{unknown}}}\) (directly or indirectly via other variables) with respect to \({\mathbf{v}_{\mathit{known}}}\).
 If not present, it must be assumed that the unknown depends on all knowns.
 If present as empty list, the unknown depends on none of the knowns.
 Otherwise the unknown depends on the knowns defined by the given value references.<br>
@@ -7544,29 +7539,29 @@ In other words, the respective partial derivatives cannot be computed.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dependenciesKind</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="dependenciesKind" class="paragraph">
 <p>If <a href="#dependenciesKind"><code>dependenciesKind</code></a> is present, <a href="#dependencies"><code>dependencies</code></a> must be present and must have the same number of list elements.
-If not present, it must be assumed that the unknown \({\mathbf{v}_{\mathit{unknow}}}\) depends on the knowns \({\mathbf{v}_{\mathit{known}}}\) without a particular structure.
-Otherwise, the corresponding known \({\mathbf{f}_{\mathit{known},i}}\) enters the equation as:</p>
+If <a href="#dependenciesKind"><code>dependenciesKind</code></a> is not present, it must be assumed that the unknown \({\mathbf{v}_{\mathit{unknow}}}\) depends on the knowns \({\mathbf{v}_{\mathit{known}}}\) without a particular structure.
+Otherwise, the corresponding known \({\mathbf{v}_{\mathit{known},i}}\) enters the equation as:</p>
 </div>
 <div class="paragraph">
-<p><code>= dependent</code>: no particular structure, \({{\mathbf{f}(..,\ v}_{\mathit{known},i}}\),..)</p>
+<p><code>= dependent</code>: no particular structure, \({{\mathbf{f}(..,\ \mathbf{v}}_{\mathit{known},i}},..)\)</p>
 </div>
 <div class="paragraph">
-<p>Only for floating point type unknowns \({\mathbf{v}_{\mathit{unknown}}}\):</p>
+<p>The following <a href="#dependenciesKind"><code>dependenciesKind</code></a> is only allowed for floating point \({\mathbf{v}_{\mathit{unknown}}}\):</p>
 </div>
 <div class="paragraph">
-<p><code>=</code> <a href="#constant"><code>constant</code></a>: constant factor, \({c \cdot \mathbf{v}_{\mathit{known},i}}\) where \({c}\) is an expression that is evaluated before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.</p>
+<p><code>=</code> <a href="#constant"><code>constant</code></a>: constant factor, \({\mathbf{c} \cdot \mathbf{v}_{\mathit{known},i}}\) where \(\mathbf{c}\) is an expression that is evaluated before <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a> is called.</p>
 </div>
 <div class="paragraph">
-<p>Only for floating point type unknowns \({\mathbf{v}_{\mathit{unknown}}}\) in Event and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> (ME) and at communication points (CS and SE), and not for <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> for <a href="#InitializationMode"><strong>Initialization Mode</strong></a>:</p>
+<p>The following <a href="#dependenciesKind"><code>dependenciesKind</code></a> is only allowed for floating point \({\mathbf{v}_{\mathit{unknown}}}\) in <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> (ME) and at communication points (CS and SE), and not for <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> for <a href="#InitializationMode"><strong>Initialization Mode</strong></a>:</p>
 </div>
 <div class="paragraph">
-<p><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \({p \cdot \mathbf{v}_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
+<p><code>=</code> <a href="#fixed"><code>fixed</code></a>: fixed factor, \({\mathbf{p} \cdot \mathbf{v}_{\mathit{known},i}}\) where \(\mathbf{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called.</p>
 </div>
 <div class="paragraph">
-<p><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \({p \cdot \mathbf{v}_{\mathit{known},i}}\) where \({p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <a href="#EventMode"><strong>Event Mode</strong></a> due to event handling (ME) or at a communication point (CS and SE)</p>
+<p><code>=</code> <a href="#tunable"><code>tunable</code></a>: tunable factor, \({\mathbf{p} \cdot \mathbf{v}_{\mathit{known},i}}\) where \(\mathbf{p}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <a href="#EventMode"><strong>Event Mode</strong></a> or at a communication point (ME and CS) due to a change of a <a href="#tunable"><code>tunable</code></a> parameter.</p>
 </div>
 <div class="paragraph">
-<p><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \({d \cdot \mathbf{v}_{\mathit{known},i}}\) where \({d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <a href="#EventMode"><strong>Event Mode</strong></a> due to an external or internal event or at a communication point (CS and SE).</p>
+<p><code>=</code> <a href="#discrete"><code>discrete</code></a>: discrete factor, \({\mathbf{d} \cdot \mathbf{v}_{\mathit{known},i}}\) where \(\mathbf{d}\) is an expression that is evaluated before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called and in <a href="#EventMode"><strong>Event Mode</strong></a> or at a communication point (CS and SE).</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -7678,8 +7673,8 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 </div>
 </div>
 <div class="paragraph">
-<p><em>[Note that</em> \({y = d \cdot u}\) <em>where</em> \({d}\) <em>changes only during <a href="#EventMode"><strong>Event Mode</strong></a> (</em> \({d = 2 \cdot u}\) <em>or</em> \({3 \cdot u\ }\) <em>depending on relation</em> \({u &gt; 0}\) <em>that changes only at <a href="#EventMode"><strong>Event Mode</strong></a>).</em>
-<em>Therefore <a href="#dependenciesKind"><code>dependenciesKind</code></a> = <a href="#discrete"><code>discrete</code></a>.]</em></p>
+<p><em>Note that</em> \({y = d \cdot u}\) <em>where</em> \({d}\) <em>changes only during <a href="#EventMode"><strong>Event Mode</strong></a> (</em> \({d = 2 \cdot u}\) <em>or</em> \({3 \cdot u\ }\) <em>depending on relation</em> \({u &gt; 0}\) <em>that changes only at <a href="#EventMode"><strong>Event Mode</strong></a>).</em>
+<em>Therefore <a href="#dependenciesKind"><code>dependenciesKind</code></a> = <a href="#discrete"><code>discrete</code></a>.</em></p>
 </div>
 <div class="paragraph">
 <p><em>Example 3:</em></p>
@@ -7705,8 +7700,8 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 </div>
 </div>
 <div class="paragraph">
-<p><em>[Note that</em> \({y = c}\) <em>where</em> \({c}\) <em>changes only during <a href="#EventMode"><strong>Event Mode</strong></a> (</em> \({c = 2}\) <em>or</em> \({3\ }\) <em>depending on relation</em> \({u &gt; 0}\) <em>that changes only at <a href="#EventMode"><strong>Event Mode</strong></a>).</em>
-<em>Therefore <a href="#dependenciesKind"><code>dependenciesKind</code></a> = <a href="#dependenciesKind"><code>dependent</code></a> because it is not a linear relationship on</em> \({u}\). <em>]</em></p>
+<p><em>Note that</em> \({y = c}\) <em>where</em> \({c}\) <em>changes only during <a href="#EventMode"><strong>Event Mode</strong></a> (</em> \({c = 2}\) <em>or</em> \({3\ }\) <em>depending on relation</em> \({u &gt; 0}\) <em>that changes only at <a href="#EventMode"><strong>Event Mode</strong></a>).</em>
+<em>Therefore <a href="#dependenciesKind"><code>dependenciesKind</code></a> = <a href="#dependenciesKind"><code>dependent</code></a> because it is not a linear relationship on</em> \({u}\) <em>.</em></p>
 </div>
 <div class="paragraph">
 <p><em>Example 4:</em></p>
@@ -7717,8 +7712,8 @@ x_{3} &amp;= g_{1}^{- 1}( x_{2}, y)
 </div>
 </div>
 <div class="paragraph">
-<p>where <code>u</code> is continuous-time input value reference <code>1</code>, <code>y</code> is a continuous-time output with value reference <code>2</code> and <code>dxdt</code> is a continuous-time derivative with value reference <code>4</code>.
-The definition of the model structure is then:</p>
+<p><em>where <code>u</code> is continuous-time input value reference <code>1</code>, <code>y</code> is a continuous-time output with value reference <code>2</code> and <code>dxdt</code> is a continuous-time derivative with value reference <code>4</code>.</em>
+<em>The definition of the model structure is then:</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7735,26 +7730,6 @@ The definition of the model structure is then:</p>
 &lt;/ModelStructure&gt;</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><em>Defining FMU features with the</em> <a href="#dependencies"><code>dependencies</code></a> <em>list:</em></p>
-</div>
-<div class="paragraph">
-<p><em>[Note that via the <a href="#dependencies"><code>dependencies</code></a> list the supported features of the FMU can be defined.</em>
-<em>Examples:</em></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><em>If a state derivative <code>der_x</code> is a function of a <a href="#parameter"><code>parameter</code></a> p (so of a <a href="#start"><code>start</code></a> value of a variable with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#fixed"><code>fixed</code></a>), and the FMU does not support an iteration over <code>p</code> during <a href="#InitializationMode"><strong>Initialization Mode</strong></a> (for example, to iterate over p such that the state derivative <code>der_x</code> is zero), then the <a href="#dependencies"><code>dependencies</code></a> list of <code>der_x</code> should not include <code>p</code>.</em>
-<em>If an FMU is imported in an environment and such an iteration is set up, then the tool can figure out that the resulting algebraic system of equations is structurally singular and therefore can reject such a definition.</em></p>
-</li>
-<li>
-<p><em>For Co-Simulation FMUs, it is common that no algebraic loops over the <a href="#input"><code>input</code></a> / <a href="#output"><code>output</code></a> variables nor over <a href="#start"><code>start</code></a> values is supported.</em>
-<em>In such a case, all <a href="#dependencies"><code>dependencies</code></a> lists for <a href="#output"><code>output</code></a> variables under the <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> element should be defined as empty lists defining that the setting of <a href="#input"><code>inputs</code></a> and/or of <a href="#start"><code>start</code></a> values does not influence the <a href="#output"><code>outputs</code></a>.</em>
-<em>As a result, it is not possible to formulate algebraic loops of connected FMUs during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.]</em></p>
-</li>
-</ul>
-</div>
 </div>
 <div class="sect3">
 <h4 id="fmiTerminalsAndIcons">2.4.9. Terminals and Icons</h4>
@@ -7765,7 +7740,7 @@ It does not change the <a href="#causality"><code>causality</code></a> of the va
 Icons define a graphical representation of an FMU and its terminals.</p>
 </div>
 <div class="paragraph">
-<p>Both features are optional and can be defined in the separate XML file <code>terminalsAndIcons/terminalsAndIcons.xml</code>.<br>
+<p>Both features are optional and may be defined in the separate XML file <code>terminalsAndIcons/terminalsAndIcons.xml</code>.<br>
 <em>[The usage of a separate file enables backporting of this feature to previous FMI versions.]</em></p>
 </div>
 <div id="terminals_and_icons_overview" class="imageblock text-center">
@@ -7802,7 +7777,7 @@ If used in previous FMI versions, this attribute points to the FMI version defin
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;Terminals&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining input and output variables into logical groups to ease connections on a system level and add semantic information required for system-level connections.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining variables (e.g. inputs, outputs and parameters) into logical groups to ease connections on a system level and add semantic information required for system-level connections.</p></td>
 </tr>
 </tbody>
 </table>
@@ -8136,7 +8111,7 @@ Restricted to <a href="#input"><code>input</code></a> and <a href="#output"><cod
 It is restricted to <a href="#input"><code>input</code></a> and <a href="#output"><code>output</code></a>, <a href="#parameter"><code>parameter</code></a> and <a href="#calculatedParameter"><code>calculatedParameter</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The Stream concept is described in the appendix D.3 of the Modelica specification.
+<p>The Stream concept is described in the appendix D "Derivations of Stream Equations" of the <a href="#MLS12">Modelica Language Specification</a>.
 Only one terminal member variable with the <code>variableKind</code> <code>inflow</code> or <code>outflow</code> per terminal is allowed, if a <code>&lt;TerminalStreamMemberVariable&gt;</code> is present.
 <em>[More sophisticated structures can be implemented using hierarchical terminals.]</em></p>
 </div>
@@ -8311,9 +8286,9 @@ It is also recommended to use a descriptive name (e.g. <code>&lt;model_identifie
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="platform"></a><code>platform</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>platform</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Platform tuple of the platform the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> is intended for (e.g. <code>x86_64-linux</code>).
+<p><a id="platform"></a>Platform tuple of the platform the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> is intended for (e.g. <code>x86_64-linux</code>).
 This attribute is optional.
 Thus there must not be more than one <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> without a <a href="#platform"><code>platform</code></a> attribute.
 If a <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> without a <a href="#platform"><code>platform</code></a> attribute is provided this is the fallback <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> an importer can use if it cannot find any other <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> with a matching <a href="#platform"><code>platform</code></a> attribute.
@@ -8659,10 +8634,9 @@ Links must not be used inside the ZIP archive.
 <div class="sect3">
 <h4 id="structure-of-zip">2.5.1. Structure of the ZIP file</h4>
 <div id="figure-zip-structure" class="listingblock">
-<div class="title">Structure of the ZIP file</div>
+<div class="title">Structure of the ZIP file of an FMU</div>
 <div class="content">
-<pre>// Structure of ZIP file of an FMU
-modelDescription.xml                // description of FMU (required file)
+<pre>modelDescription.xml                // description of FMU (required file)
 documentation                       // directory containing the documentation (optional)
    index.html                       // entry point of the documentation
    diagram.png                      // descriptive diagram view of the model (optional)
@@ -8699,7 +8673,7 @@ extra                               // Additional (meta-)data of the FMU (option
 <div class="sect4">
 <h5 id="documentation-directory">2.5.1.1. Directory <code>documentation</code></h5>
 <div class="paragraph">
-<p><a href="#figure-zip-structure">Structure of the ZIP file</a> defines the files expected in the <code>documentation</code> directory.
+<p>Figure <a href="#figure-zip-structure">Structure of the ZIP file of an FMU</a> defines the files expected in the <code>documentation</code> directory.
 If the FMU depends on external resources <em>[e.g. shared libraries, files, or servers]</em> to be loaded or simulated <code>documentation/externalDependencies.{txt|html}</code> must be present to document these dependencies and how to provide them.</p>
 </div>
 <div class="sect5">
@@ -8730,7 +8704,8 @@ The header files <code>fmi3PlatformTypes.h</code>, <code>fmi3FunctionTypes.h</co
 <div class="sect4">
 <h5 id="binaries-directory">2.5.1.4. Directory <code>binaries</code></h5>
 <div class="paragraph">
-<p>If an FMU is run through one of its binaries all items in that binary folder must be unpacked at the same location as the binary <code>&lt;modelIdentifier&gt;.{dll|dylib|so}</code>.</p>
+<p>A binary FMU must contain the binary files for all supported platforms in this folder.
+To use the binaries of a specific platform, all items in that platform-specific binary folder must be unpacked at the same location as the binary <code>&lt;modelIdentifier&gt;.{dll|dylib|so}</code>.</p>
 </div>
 <div class="sect5">
 <h6 id="platform-tupe-definition">2.5.1.4.1. Platform Tuple Definition</h6>
@@ -8812,8 +8787,8 @@ All external dependencies must be documented (see <a href="#documentation-direct
 </dl>
 </div>
 <div class="paragraph">
-<p>When shipping the implementation as a static library an optional ABI (Application Binary Interface) section <code>&lt;arch&gt;-&lt;sys&gt;{-&lt;abi&gt;}</code> may be added to separate binaries for different toolchains on the same platform and a description must be provided in <code>documentation/staticLinking.{txt|html}</code> that contains all necessary information to link against the provided library <em>[e.g. supported compilers]</em>.
-The ABI section must only contain lowercase characters <code>a&#8230;&#8203;z</code>, digits <code>0&#8230;&#8203;9</code>, and underscores <code><em></code> and start with a lowercase character <code>a&#8230;&#8203;z</code> _[e.g. <code>x86_64-windows-msvc140mt</code> for a static library for 64-bit Windows generated with Visual Studio 2015 with <code>/MT</code> flag]</em>.</p>
+<p>When shipping the implementation as a static library an optional ABI (Application Binary Interface) directory <code>&lt;arch&gt;-&lt;sys&gt;{-&lt;abi&gt;}</code> may be added to separate binaries for different toolchains on the same platform and a description must be provided in <code>documentation/staticLinking.{txt|html}</code> that contains all necessary information to link against the provided library <em>[e.g. supported compilers]</em>.
+The ABI directory must only contain lowercase characters <code>a&#8230;&#8203;z</code>, digits <code>0&#8230;&#8203;9</code>, and underscores <code><em></code> and start with a lowercase character <code>a&#8230;&#8203;z</code> _[e.g. <code>x86_64-windows-msvc140mt</code> for a static library for 64-bit Windows generated with Visual Studio 2015 with <code>/MT</code> flag]</em>.</p>
 </div>
 </div>
 <div class="sect5">
@@ -8883,7 +8858,7 @@ The ABI section must only contain lowercase characters <code>a&#8230;&#8203;z</c
 <div class="paragraph">
 <p>If runtime libraries are needed by the FMU that have to be present on the target machine and cannot be shipped within the FMU (e.g., due to licensing issues), then automatic processing is likely impossible.
 In such cases special handling is needed, for example, by providing the runtime libraries at appropriate places by the receiver.
-The requirements and the expected processing should be documented in the <code>documentation</code> directory in this case.<br></p>
+The requirements and the expected processing must be documented in the <code>documentation</code> directory in the file <code>externalDependencies.{txt|html}</code>.<br></p>
 </div>
 </div>
 </div>
@@ -11167,43 +11142,43 @@ It is defined as:</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canHandleVariableCommunicationStepSize"></a> <code>canHandleVariableCommunicationStepSize</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>canHandleVariableCommunicationStepSize = true</code>, then the communication step size (argument <a href="#communicationStepSize"><code>communicationStepSize</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>) can vary for each call.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canHandleVariableCommunicationStepSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canHandleVariableCommunicationStepSize"></a>If <code>canHandleVariableCommunicationStepSize = true</code>, then the communication step size (argument <a href="#communicationStepSize"><code>communicationStepSize</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>) can vary for each call.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="fixedInternalStepSize"></a><code>fixedInternalStepSize</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The fixed internal step size of the FMU (optional).
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixedInternalStepSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="fixedInternalStepSize"></a>The fixed internal step size of the FMU (optional).
 +
 <em>[This information can be used by the co-simulation algorithm to synchronize the communication interval with the internal step size of the FMU.</em>
 <em>The co-simulation algorithm should calculate the communication points by multiplying (<code>number_of_steps * step_size</code>) instead of repeatedly incrementing (<code>time += step_size</code>) to avoid the accumulation of numerical errors.]</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="maxOutputDerivativeOrder"></a> <code>maxOutputDerivativeOrder</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU is able to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> with maximum order.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxOutputDerivativeOrder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="maxOutputDerivativeOrder"></a>The FMU is able to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> with maximum order.
 Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defined by <code>maxOutputDerivativeOrder</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="recommendedIntermediateInputSmoothness"></a> <code>recommendedIntermediateInputSmoothness</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A value of \(k\) with \(k&gt;0\) signals to the co-simulation algorithm, that it is beneficial for the solver to receive intermediate inputs that are k-time continuously differentiable (\(C^k\)) on the current communication interval.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>recommendedIntermediateInputSmoothness</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="recommendedIntermediateInputSmoothness"></a>A value of \(k\) with \(k&gt;0\) signals to the co-simulation algorithm, that it is beneficial for the solver to receive intermediate inputs that are k-time continuously differentiable (\(C^k\)) on the current communication interval.
 \(k = 0\) means continuous (see <a href="#smoothness">Section 4.1.1</a>).<br></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesIntermediateUpdate"></a> <code>providesIntermediateUpdate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU supports <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> and will call <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, if provided.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesIntermediateUpdate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesIntermediateUpdate"></a>The FMU supports <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> and will call <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, if provided.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="mightReturnEarlyFromDoStep"></a> <code>mightReturnEarlyFromDoStep</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The FMU announces that it might <a href="#earlyReturn">return early</a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mightReturnEarlyFromDoStep</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="mightReturnEarlyFromDoStep"></a>The FMU announces that it might <a href="#earlyReturn">return early</a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
 If this flag is <code>false</code> (the default), the importer can assume that the FMU computes the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as instructed up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canReturnEarlyAfterIntermediateUpdate"></a> <code>canReturnEarlyAfterIntermediateUpdate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the co-simulation algorithm returns <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a>.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canReturnEarlyAfterIntermediateUpdate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canReturnEarlyAfterIntermediateUpdate"></a>If <code>true</code>, the FMU is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the co-simulation algorithm returns <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a>.
 The default value of this capability flag is <code>false</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hasEventMode"></a><code>hasEventMode</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code> the FMU supports <a href="#EventMode"><strong>Event Mode</strong></a>.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hasEventMode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hasEventMode"></a>If <code>true</code> the FMU supports <a href="#EventMode"><strong>Event Mode</strong></a>.
 Even if this flag is <code>true</code>, the co-simulation algorithm can chose to delegate event handling to the FMU by calling <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>.
 If <code>eventModeUsed = fmi3True</code>, the co-simulation algorithm will have to actively trigger event handling in the FMU using <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
 <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> must only be called with <code>eventModeUsed = fmi3True</code> if <a href="#hasEventMode"><code>hasEventMode = true</code></a>.
