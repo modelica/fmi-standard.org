@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 83b5c68,</span>
-<span id="revdate">2022-03-01</span>
+<span id="revnumber">version 5f1c22b,</span>
+<span id="revdate">2022-03-02</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2803,12 +2803,12 @@ The importer must activate the Clock by calling <a href="#fmi3SetClock"><code>fm
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{\mathit{shift}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The delay for the first Clock tick relative to \(\mathbf{t}_{\mathit{start}}\). \(\mathbf{T}_{\mathit{shift}}\) is defined differently for the different Clock types, and can be set with <a href="#fmi3SetShiftDecimal"><code>fmi3SetShiftDecimal</code></a> or retrieved from the FMU with <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetShiftFraction"><code>fmi3SetShiftFraction</code></a> or <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a> with <a href="#shiftCounters"><code>shiftCounters</code></a> / <a href="#resolutions"><code>resolutions</code></a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The delay for the first Clock tick relative to \(\mathbf{t}_{\mathit{start}}\). \(\mathbf{T}_{\mathit{shift}}\) is defined differently for the different Clock types, and can be set with <a href="#fmi3SetShiftDecimal"><code>fmi3SetShiftDecimal</code></a> or retrieved from the FMU with <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetShiftFraction"><code>fmi3SetShiftFraction</code></a> or <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{interval, i}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The time interval until the next Clock tick, defined differently for the different Clock types.
-\(\mathbf{T}_{interval, i}\) can be set with <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or retrieved with <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> or <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a> with <a href="#intervalCounters"><code>intervalCounters</code></a> / <a href="#resolutions"><code>resolutions</code></a>.</p></td>
+\(\mathbf{T}_{interval, i}\) can be set with <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or retrieved with <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> or <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t}_\mathit{event}\)</p></td>
@@ -3038,7 +3038,7 @@ For restrictions on when to call which of the following functions for <a href="#
 </div>
 <div id="fmi3SetInterval" class="paragraph">
 <p>For <a href="#table-overview-clocks">some Clock types</a>, the interval must be set by the environment for the current time instant by the function <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>.
-The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a href="#intervalCounters"><code>intervalCounters</code></a>, <a href="#resolutions"><code>resolutions</code></a>, <a href="#shifts"><code>shifts</code></a> and <a href="#shiftCounters"><code>shiftCounters</code></a> refer to the unit of the <a href="#independent"><code>independent</code></a> variable.</p>
+The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a href="#shifts"><code>shifts</code></a>, and <a href="#counters"><code>counters</code></a> / <a href="#resolutions"><code>resolutions</code></a> refer to the unit of the <a href="#independent"><code>independent</code></a> variable.</p>
 </div>
 <div class="paragraph">
 <p>The attribute <a href="#supportsFraction"><code>supportsFraction</code></a> of a Clock declares if the <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> and/or <code>fmi3GetXXXFraction</code> functions may be called.</p>
@@ -3061,7 +3061,7 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <div id="intervals" class="ulist">
 <ul>
 <li>
-<p><code>intervals</code> is an array of size <code>nValueReferences</code> holding the Clock intervals to be set.</p>
+<p><a href="#intervals"><code>intervals</code></a> is an array of size <code>nValueReferences</code> holding the Clock intervals to be set.</p>
 </li>
 </ul>
 </div>
@@ -3070,7 +3070,7 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetIntervalFractionTYPE(fmi3Instance instance,
                                                const fmi3ValueReference valueReferences[],
                                                size_t nValueReferences,
-                                               const fmi3UInt64 intervalCounters[],
+                                               const fmi3UInt64 counters[],
                                                const fmi3UInt64 resolutions[]);</code></pre>
 </div>
 </div>
@@ -3081,10 +3081,17 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 </li>
 </ul>
 </div>
+<div id="counters" class="ulist">
+<ul>
+<li>
+<p><a href="#counters"><code>counters</code></a> <em>[Note: This variable may increment by values other than 1.]</em> and</p>
+</li>
+</ul>
+</div>
 <div id="resolutions" class="ulist">
 <ul>
 <li>
-<p><code>intervalCounters</code> and <code>resolutions</code> are arrays of size <code>nValueReferences</code> holding the Clock <code>intervalCounters</code> and <code>resolutions</code> to be set.</p>
+<p><a href="#resolutions"><code>resolutions</code></a> are arrays of size <code>nValueReferences</code> holding the Clock <a href="#counters"><code>counters</code></a> and <a href="#resolutions"><code>resolutions</code></a> to be set.</p>
 </li>
 </ul>
 </div>
@@ -3106,15 +3113,15 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the Clock variables.</p>
 </li>
 <li>
-<p><code>intervals</code> is an array of size <code>nValueReferences</code> to retrieve the Clock intervals.</p>
+<p><a href="#intervals"><code>intervals</code></a> is an array of size <code>nValueReferences</code> to retrieve the Clock intervals.</p>
 </li>
 </ul>
 </div>
 <div id="qualifiers" class="ulist">
 <ul>
 <li>
-<p><code>qualifiers</code> is an array of size <code>nValueReferences</code> to retrieve the Clocks <code>qualifiers</code>.
-<code>qualifiers</code> describes how to treat the <a href="#intervals"><code>intervals</code></a> and <a href="#intervalCounters"><code>intervalCounters</code></a> arguments and is defined as:</p>
+<p><a href="#qualifiers"><code>qualifiers</code></a> is an array of size <code>nValueReferences</code> to retrieve the Clocks <a href="#qualifiers"><code>qualifiers</code></a>.
+<a href="#qualifiers"><code>qualifiers</code></a> describes how to treat the <a href="#intervals"><code>intervals</code></a> and <a href="#counters"><code>counters</code></a> arguments and is defined as:</p>
 </li>
 </ul>
 </div>
@@ -3162,7 +3169,7 @@ In Scheduled Execution this return value means that the corresponding model part
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetIntervalFractionTYPE(fmi3Instance instance,
                                                const fmi3ValueReference valueReferences[],
                                                size_t nValueReferences,
-                                               fmi3UInt64 intervalCounters[],
+                                               fmi3UInt64 counters[],
                                                fmi3UInt64 resolutions[],
                                                fmi3IntervalQualifier qualifiers[]);</code></pre>
 </div>
@@ -3172,15 +3179,11 @@ In Scheduled Execution this return value means that the corresponding model part
 <li>
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the <code>Clock</code> variables.</p>
 </li>
-</ul>
-</div>
-<div id="intervalCounters" class="ulist">
-<ul>
 <li>
-<p><code>intervalCounters</code> and <a href="#resolutions"><code>resolutions</code></a> are arrays of size <code>nValueReferences</code> to retrieve the Clock <a href="#intervalCounters"><code>intervalCounters</code></a> and <a href="#resolutions"><code>resolutions</code></a>.</p>
+<p><a href="#counters"><code>counters</code></a> and <a href="#resolutions"><code>resolutions</code></a> are arrays of size <code>nValueReferences</code> to retrieve the Clock intervals as a fraction <code>counters / resolutions</code>.</p>
 </li>
 <li>
-<p><code>qualifiers</code> is an array of size <code>nValueReferences</code> to retrieve the Clock <a href="#qualifiers"><code>qualifiers</code></a>.</p>
+<p><a href="#qualifiers"><code>qualifiers</code></a> is an array of size <code>nValueReferences</code> to retrieve the Clock <a href="#qualifiers"><code>qualifiers</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -3200,7 +3203,7 @@ In Scheduled Execution this return value means that the corresponding model part
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetShiftFractionTYPE(fmi3Instance instance,
                                             const fmi3ValueReference valueReferences[],
                                             size_t nValueReferences,
-                                            fmi3UInt64 shiftCounters[],
+                                            fmi3UInt64 counters[],
                                             fmi3UInt64 resolutions[]);</code></pre>
 </div>
 </div>
@@ -3210,10 +3213,7 @@ In Scheduled Execution this return value means that the corresponding model part
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the Clock variables.</p>
 </li>
 <li>
-<p><a href="#shifts"><code>shifts</code></a> and</p>
-</li>
-<li>
-<p><a href="#shiftCounters"><code>shiftCounters</code></a> are arrays of length <code>nValueReferences</code> that define the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
+<p><a href="#shifts"><code>shifts</code></a> and <a href="#counters"><code>counters</code></a> are arrays of length <code>nValueReferences</code> that define the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
 </li>
 </ul>
 </div>
@@ -3233,7 +3233,7 @@ In Scheduled Execution this return value means that the corresponding model part
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetShiftFractionTYPE(fmi3Instance instance,
                                             const fmi3ValueReference valueReferences[],
                                             size_t nValueReferences,
-                                            const fmi3UInt64 shiftCounters[],
+                                            const fmi3UInt64 counters[],
                                             const fmi3UInt64 resolutions[]);</code></pre>
 </div>
 </div>
@@ -3243,14 +3243,7 @@ In Scheduled Execution this return value means that the corresponding model part
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the Clock variables.</p>
 </li>
 <li>
-<p><a href="#shifts"><code>shifts</code></a> and</p>
-</li>
-</ul>
-</div>
-<div id="shiftCounters" class="ulist">
-<ul>
-<li>
-<p><a href="#shiftCounters"><code>shiftCounters</code></a> are arrays of length <code>nValueReferences</code> that define the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
+<p><a href="#shifts"><code>shifts</code></a> and <a href="#counters"><code>counters</code></a> is an array of length <code>nValueReferences</code> that defines the time of the first Clock tick (see <a href="#shiftCounter"><code>shiftCounter</code></a>).</p>
 </li>
 </ul>
 </div>
