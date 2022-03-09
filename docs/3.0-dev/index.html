@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 8d6a7ec,</span>
-<span id="revdate">2022-03-05</span>
+<span id="revnumber">version a165bb7,</span>
+<span id="revdate">2022-03-09</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -845,7 +845,7 @@ document.addEventListener('keydown', (event) => {
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <a href="https://fmi-standard.org/">Functional Mock-up Interface (FMI)</a> is a free standard that defines a container and an interface to exchange dynamic models using a combination of XML files, binaries and C code, distributed as a ZIP file.
-It is supported by <a href="https://fmi-standard.org/tools/">more than 150 tools</a> and maintained as a <a href="https://www.modelica.org/projects">Modelica Association Project</a>.
+<a id="MAP"></a>It is supported by <a href="https://fmi-standard.org/tools/">more than 170 tools</a> and maintained as a <a href="https://www.modelica.org/projects">Modelica Association Project</a> (MAP FMI).
 <a href="https://github.com/modelica/fmi-standard/releases">Releases</a> and <a href="https://github.com/modelica/fmi-standard/issues">issues</a> can be found on <a href="https://github.com/modelica/fmi-standard">github.com/modelica/fmi-standard</a>.</p>
 </div>
 <div class="paragraph">
@@ -3999,7 +3999,7 @@ typedef fmi3Instance fmi3InstantiateScheduledExecutionTYPE(
 <div class="paragraph">
 <p>These functions return a new instance of an FMU with the respective interface type.
 If a NULL pointer is returned, then instantiation failed.
-In that case, <a href="#logMessage"><code>logMessage</code></a> is called with detailed information about the reason.
+In that case, the FMU must call <a href="#logMessage"><code>logMessage</code></a> with detailed information about the reason.
 An FMU can be instantiated many times (provided capability flag <code>canBeInstantiatedOnlyOncePerProcess = false</code>).</p>
 </div>
 <div class="paragraph">
@@ -4029,10 +4029,12 @@ This argument must not be a NULL pointer.</p>
 <p>the FMU does not contain a <code>resources</code> folder, or</p>
 </li>
 <li>
-<p>the environment is not able to provide the file path to the resources folder <em>[e.g., if the environment does not have a file system.</em>
-<em>If the FMU in such a case cannot be simulated, as it depends on the resources folder, it shall terminate with an error.]</em></p>
+<p>the environment is not able to provide the file path to the resources folder <em>[e.g., if the environment does not have a file system.].</em></p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>If the FMU cannot work without content of the <code>resources</code> folder, <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a> must return NULL.</p>
 </div>
 </li>
 <li>
@@ -5394,7 +5396,7 @@ Additional restrictions for these <code>name</code> attributes are listed in the
 <em>For example, the order of the <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> elements defines the order to be used in <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, and <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>.]</em></p>
 </div>
 <div id="Annotations" class="paragraph">
-<p>All XML-based file formats defined in this standard allow optional <code>Annotation</code> elements to be inserted in all XML elements that represent entities of the underlying data model.
+<p>All XML-based file formats defined in this standard allow optional <code>Annotation</code> elements to be inserted in certain XML elements.
 This is achieved through the <code>Annotations</code> element:</p>
 </div>
 <div id="figure-schema-Annotations" class="imageblock">
@@ -5604,11 +5606,11 @@ See also <a href="#header-files-and-naming-of-functions">Section 2.2.2</a>.</p><
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>needsExecutionTool</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, a tool is needed to execute the FMU.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="needsExecutionTool"></a>If <code>true</code>, a tool is needed to execute the FMU.
 The FMU implements the communication to this tool.
+These tool dependencies must be <a href="#documentation-directory">documented</a>.
 <em>[Typically, this information is only utilized for information purposes.</em>
-<em>For example, when loading an FMU with <code>needsExecutionTool = true</code>, the environment can inform the user that a tool has to be available on the computer where the FMU is instantiated.</em>
-<em>The name of the tool can be taken from attribute <code>generationTool</code> in <code>&lt;fmiModelDescription&gt;</code>.]</em></p></td>
+<em>For example, when loading an FMU with <code>needsExecutionTool = true</code>, the importer should inform the user that a tool has to be available on the computer where the FMU is instantiated.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canBeInstantiatedOnlyOncePerProcess</code></p></td>
@@ -6061,7 +6063,7 @@ If <code>displayUnit</code> is defined a <code>unit</code> must also be defined.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mimeType</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates the type of data passed as a binary.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="mimeType"></a>Indicates the type of data passed as a binary.
 Defaults to <code>application/octet-stream</code>, which is unspecific.
 Implementations may use this information to provide guidance about valid/useful connections.</p></td>
 </tr>
@@ -7939,7 +7941,7 @@ Domain specific connection rules, terminals and their member variables can be pr
 <p>The normalized string attribute <code>name</code> of the <code>&lt;Terminal&gt;</code> element is the <a href="#uniqueNameAttribute">unique</a> instance name of the terminal.
 The terminal name must be unique on each level.</p>
 </div>
-<div class="paragraph">
+<div id="matchingRule" class="paragraph">
 <p>The normalized string attribute <code>matchingRule</code> describes the rules for variable matching in a connection of terminals.
 As detailed in <a href="#table-predefined-matching-rules">Table 26</a>, there are three predefined matching rules: <code>plug</code>, <code>bus</code>, and <code>sequence</code>.
 Other standards may define new matching rules.
@@ -7980,7 +7982,7 @@ An importer should connect terminals only if the number of member variables matc
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
+<div id="terminalKind" class="paragraph">
 <p>The normalized string <code>terminalKind</code> is an optional attribute.
 Other standards may define terminal kinds.
 It is intended that the <code>terminalKind</code> is used to define domain specific member variable sequences, member names and order, or high level restrictions for connections.</p>
@@ -8867,20 +8869,15 @@ For the FMU to access these resource files, the resources directory shall be ava
 The resources directory must be available for the lifetime of the FMU instance.
 The FMU instance must not write to or delete the directory or parts of it.</p>
 </div>
-<div class="paragraph">
-<p>The <code>resource</code> data must be read into the model at the latest during initialization (that is, before <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> is called).
-The actual file names in the ZIP file to access the data files can either be hard-coded in the generated FMU functions, or the file names can be provided as string arguments via the <code>fmi3SetString</code> function.
-<em>[Note that an URI pointing to the resources directory is provided by the initialization functions.</em>
-<em>If the environment is not able to do so, a NULL pointer will be provided instead, and the FMU can react with an error, if it requires access to the content of the resources folder.]</em>
-In the case of an FMU implementation of <code>needsExecutionTool = true</code> type, the <code>resources</code> directory can contain the model file in the tool specific file format.</p>
-</div>
 </div>
 <div class="sect4">
 <h5 id="extra-directory">2.5.1.6. Directory <code>extra</code></h5>
 <div class="paragraph">
-<p>The ZIP archive may contain additional entries with the prefix <code>extra/</code> that can be used to store additional data and meta-data.
-In order to avoid ambiguities and conflicts, the extra files should be provided in subdirectories using a reverse domain notation of a domain that is controlled by the entity defining the semantics and content of the additional entries <em>[(for example <code>extra/com.example/SimTool/meta.xml</code> or <code>extra/org.example.stdname/data.asd</code>)]</em>.
-The use of subdirectories beginning with <code>org.modelica</code> and <code>org.fmi-standard</code> is explicitly reserved for use by MAP FMI-defined layered standards, i.e. other uses must not use subdirectory names beginning with these prefixes.
+<p>The ZIP archive may contain additional subdirectories within <code>extra/</code> that can be used to store additional data, e.g. for the implementation of <a href="#VersioningLayered">layered standards</a>.</p>
+</div>
+<div class="paragraph">
+<p>In order to avoid ambiguities and conflicts, the names of these subdirectories should use the reverse domain notation of a domain that is controlled by the entity defining the semantics and content of the additional entries <em>[(for example <code>extra/com.example/SimTool/meta.xml</code> or <code>extra/org.example.stdname/data.asd</code>)]</em>.
+The use of subdirectories beginning with <code>org.modelica</code> and <code>org.fmi-standard</code> is explicitly reserved for use by <a href="#MAP">MAP</a> FMI-defined <a href="#VersioningLayered">layered standards</a>, i.e. other uses must not use subdirectory names beginning with these prefixes.
 It is explicitly allowed for tools and users other than the original creator of an FMU to modify, add or delete entries in the <code>extra/</code> directory without affecting the validity of the FMU in all other aspects.
 Specifically all validation or digital signature schemes used to protect the content of the FMU should take the variability of extra file content into account <em>[(for example by having separate checksums or signatures for FMU core content and extra content, or not having signatures at all for extra content)]</em>.</p>
 </div>
@@ -8889,11 +8886,10 @@ Specifically all validation or digital signature schemes used to protect the con
 <div class="sect3">
 <h4 id="multipleInterfaceTypes">2.5.2. Multiple Interface Types</h4>
 <div class="paragraph">
-<p>Exporters may support multiple FMI types in one FMU, so it can be used in differently capable simulation algorithms and for different use cases.
-To indicate support for a specific interface type, the <code>&lt;fmiModelDescription&gt;</code> must have the respective element present, irrespective if a specific interface type is contained in binary or source format.</p>
-</div>
-<div class="paragraph">
-<p><em>[The described multi-mode support is often based on wrapping functionality into the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> function by emulating missing features of the Model Exchange and Scheduled Execution interface types.]</em></p>
+<p>One FMU may implement multiple FMI types.
+Such an FMU may be used by differently capable simulation algorithms and for different use cases.
+To indicate support for a specific interface type, the <code>&lt;fmiModelDescription&gt;</code> must have the respective element present.
+Supported interface types may be provided differently, as binary and/or source code.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8914,9 +8910,8 @@ To indicate support for a specific interface type, the <code>&lt;fmiModelDescrip
 <div class="sect3">
 <h4 id="dependency-on-exteranl-tool">2.5.3. Dependency on Installed Tool</h4>
 <div class="paragraph">
-<p>FMI provides the means for two kinds of implementation: <code>needsExecutionTool = true</code> and <code>needsExecutionTool = false</code>.
-In the first case, a tool specific wrapper DLL/SharedObject/Source is part of the FMU.
-In the second case, all components necessary for execution of the FMU are included with the FMU.</p>
+<p>If an FMU depends on services provided by an external tool, then <a href="#needsExecutionTool"><code>needsExecutionTool = true</code></a>.
+These tool dependencies must be <a href="#documentation-directory">documented</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -9060,7 +9055,7 @@ int main(int argc, char* argv[]) {
 <div class="ulist">
 <ul>
 <li>
-<p>Major versions will introduce changes that are neither backward nor forward-compatible, including changes to the XML schemas to include new non-ignorable content.</p>
+<p>Major versions will introduce changes that are neither backward nor forward compatible, including changes to the XML schemas to include new non-ignorable content.</p>
 </li>
 <li>
 <p>Minor versions will only contain clarifications and include new layered standards, which may add new ignorable XML content, as defined below, into the core standard document, indicating that the standard needs to be supported by all conforming implementations.</p>
@@ -9071,29 +9066,51 @@ int main(int argc, char* argv[]) {
 </ul>
 </div>
 <div class="paragraph">
-<p>In order to enable the backward-compatible extension of the FMI standard in minor releases and between minor releases, the FMI project intends the use of the layered standard mechanism to introduce new features in a fully backward-compatible and optional way.<br>
-A layered standard defines extensions to the base FMI standard by specifying either standardized annotations, standardized extra files in the FMU, and/or support for additional MIME types/file formats, defined in <a href="#definition-of-types">Section 2.4.4</a>. <br>
-A layered standard can include a single or combined set of extension mechanisms from this set.<br>
-The layered standard is thus considered to be layered on top of the definitions and extensions mechanisms provided by this base standard.</p>
+<p>In order to enable the backward-compatible extension of the FMI standard in minor releases and between minor releases, the FMI project intends the use of the layered standard mechanism to introduce new features in a fully backward-compatible and optional way.</p>
 </div>
 <div class="paragraph">
-<p>Layered standards can fall into three categories:</p>
+<p>A layered standard defines extensions to the base FMI standard by specifying, for example:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Layered standards defined by third parties, without any representations by the FMI project for their suitability or content, or even knowledge by the FMI project about their existence.</p>
+<p><a href="#Annotations">standardized annotations</a>,</p>
 </li>
 <li>
-<p>Layered standards defined by third parties that are endorsed by the FMI project and listed on the FMI project website.</p>
+<p><a href="#extra-directory">standardized extra files in the FMU</a>,</p>
 </li>
 <li>
-<p>Layered standards can be defined/adopted and published by the FMI project itself, making them FMI project layered standards.</p>
+<p>support for additional <a href="#mimeType">MIME types</a>,</p>
+</li>
+<li>
+<p>new values for <a href="#matchingRule"><code>matchingRule</code></a> or <a href="#terminalKind"><code>terminalKind</code></a> for <a href="#section-terminals">Terminals</a> and/or</p>
+</li>
+<li>
+<p>adding C-API functions/variables.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Layered standards that have achieved enough adoption or importance to be included into the base standard set could be incorporated into a new minor or major release version of the base standard as an optional or mandatory appendix, making support for this layered standard optional or required for conformance with the newly published minor release version of the base standard.</p>
+<p>Any FMU following a layered standard on top of FMI 3.0 must still be a compliant FMI 3.0 FMU.</p>
+</div>
+<div class="paragraph">
+<p>Layered standards can fall into one of three categories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>defined by third parties, completely independent from the <a href="#MAP">MAP</a> FMI,</p>
+</li>
+<li>
+<p>defined by third parties that are endorsed by the FMI project and listed on the FMI project website, and</p>
+</li>
+<li>
+<p>defined/adopted and published by the <a href="#MAP">MAP</a> FMI project itself, making them FMI project layered standards.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Layered standards that have achieved enough adoption or importance to be included into the base standard could be incorporated into a new minor or major release version of the base standard, making support for this layered standard optional or required for conformance with the newly published release of the FMI standard.</p>
 </div>
 </div>
 </div>
@@ -9143,19 +9160,19 @@ A Model Exchange FMU might consist of discrete-time equations only, for example,
 <div class="ulist">
 <ul>
 <li>
-<p>fixed or variable step, explicit or implicit integration algorithms,</p>
-</li>
-<li>
-<p>exact localization of <a href="#state-event">state events</a> using <a href="#fmi3GetEventIndicators">event indicators</a>,</p>
+<p>explicit or implicit integration algorithms with constant or variable step size,</p>
 </li>
 <li>
 <p>dedicated <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, which allows computation of consistent initial conditions over <a href="#algebraic-loops">algebraic loops</a>,</p>
 </li>
 <li>
+<p>exact localization of <a href="#state-event">state events</a> using <a href="#fmi3GetEventIndicators">event indicators</a>,</p>
+</li>
+<li>
 <p>handling of <a href="#Clock">Clocks</a> and <a href="#EventMode">events</a>,</p>
 </li>
 <li>
-<p>solution of algebraic loops involving inputs and output variables of this FMU (see <a href="#algebraic-loops">algebraic loops</a>),</p>
+<p>solution of algebraic loops involving input and output variables of this FMU (see <a href="#algebraic-loops">algebraic loops</a>),</p>
 </li>
 <li>
 <p>selective computation of FMU variables required by the solver algorithm, e.g. outputs, event indicators, derivatives (see <a href="#selectiv-computation">Section 2.2.10</a>),</p>
@@ -9166,7 +9183,7 @@ A Model Exchange FMU might consist of discrete-time equations only, for example,
 </ul>
 </div>
 <div class="paragraph">
-<p>Which of the features above are supported by a specific FMU is defined by capability flags of the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> (see <a href="#model-exchange-schema">Section 3.4</a>).</p>
+<p>Which of the features above are supported by a specific FMU is defined by <a href="#model-exchange-schema">capability flags</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="concepts-model-exchange">3.1. Concepts</h3>
@@ -9216,7 +9233,7 @@ This allows an integration algorithm to properly finish the current integration 
 <div class="paragraph">
 <p>In <a href="#table-variable-types">Table 4</a>, vector \(\mathbf{r}\) is used to label all relations.
 In <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> all these relations are "frozen".
-This is indicated in <a href="#updateRelations">the mathematical description</a> of <a href="#EventMode"><strong>Event Mode</strong></a> by computing_ \({}^\bullet\mathbf{r}\) when leaving <a href="#EventMode"><strong>Event Mode</strong></a> and using \({}^\bullet\mathbf{r}\) in the right-hand side of \({\mathbf{f}_{\mathit{cont}}}\) and \({\mathbf{f}_{\mathit{comp}}}\) in <a href="#table-math-model-exchange">mathematical description</a> of <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>.</p>
+This is indicated in <a href="#updateRelations">the mathematical description</a> of <a href="#EventMode"><strong>Event Mode</strong></a> by computing \({}^\bullet\mathbf{r}\) when leaving <a href="#EventMode"><strong>Event Mode</strong></a> and using \({}^\bullet\mathbf{r}\) in the right-hand side of \({\mathbf{f}_{\mathit{cont}}}\) and \({\mathbf{f}_{\mathit{comp}}}\) in <a href="#table-math-model-exchange">mathematical description</a> of <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>.</p>
 </div>
 <div class="paragraph">
 <p><em>[Example:</em>
@@ -9275,8 +9292,8 @@ All discrete-time variables are fixed during this phase and the corresponding di
 </div>
 <table id="table-math-model-exchange" class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 70%;">
-<col style="width: 30%;">
+<col style="width: 72.7272%;">
+<col style="width: 27.2728%;">
 </colgroup>
 <thead>
 <tr>
@@ -9312,7 +9329,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 <ul>
 <li>
 <p>Evaluate model equations with valid values for the right-hand side:<br>
-\((\mathbf{y}_{c}, \mathbf{\dot{x}}_c, \mathbf{z}, \mathbf{w}_{c}, \mathbf{b},\)<a href="#enterEventMode"><code>enterEventMode</code></a>\() := \mathbf{f}_{\mathit{comp}}(\mathbf{x}_{c}, {}^\bullet\mathbf{x}_{d}, \mathbf{u}_{c}, {}^\bullet\mathbf{u}_{d}, \mathbf{p}, {}^\bullet\mathbf{r}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
+\((\mathbf{y}_{c}, \mathbf{\dot{x}}_c, \mathbf{z}, \mathbf{w}_{c}, \mathbf{b},\)<a href="#enterEventMode"><code>enterEventMode</code></a>\()\) \(:= \mathbf{f}_{\mathit{comp}}(\mathbf{x}_{c}, {}^\bullet\mathbf{x}_{d}, \mathbf{u}_{c}, {}^\bullet\mathbf{u}_{d}, \mathbf{p}, {}^\bullet\mathbf{r}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
 </li>
 <li>
 <p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b} := \mathbf{b}\)</p>
@@ -10027,7 +10044,7 @@ If <code>false</code> (the default) and the function is called anyway, it has no
 In contrast to FMI for Model Exchange, a Co-Simulation FMU implements not only the model algorithm, but also the required solution method.
 The data exchange between FMUs is restricted to discrete communication points \(\mathbf{t}_i\) (unless <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> is used).
 In the time between two communication points (or between entering <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>), the subsystem inside an FMU is solved independently by internal means.
-This leads to a delay for information "traveling through" the FMU, so there cannot be an immediate reaction (direct feedthrough) as in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>.
+This leads to a delay for information "traveling through" the FMU, so there cannot be an immediate reaction (direct feedthrough) as in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> of Model Exchange.
 The co-simulation algorithm of the importer controls the data exchange and the synchronization between FMUs.</p>
 </div>
 <div class="paragraph">
@@ -10072,7 +10089,7 @@ The co-simulation algorithm of the importer controls the data exchange and the s
 <p>update inputs and retrieve outputs at intermediate points within a communication step (see <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>),</p>
 </li>
 <li>
-<p>return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> at \(\mathbf{t} \leq \mathbf{t}_{i+1}\), because, for example, an event influencing the environment was detected by the FMU (see <a href="#early-return">Section 4.1.3</a>),</p>
+<p>return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> at \(\mathbf{t} \leq \mathbf{t}_{i+1}\), because, for example, an event influencing the environment was detected by the FMU (see <a href="#early-return">early return</a>),</p>
 </li>
 <li>
 <p>dedicated <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, which allows computation of consistent initial conditions over <a href="#algebraic-loops">algebraic loops</a>,</p>
@@ -10084,12 +10101,12 @@ The co-simulation algorithm of the importer controls the data exchange and the s
 <p>the ability of the FMU to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> w.r.t. time, to allow approximation techniques (<a href="#getting-output-derivatives">Section 4.1.2</a>), and</p>
 </li>
 <li>
-<p>the ability of the FMU to provide <a href="#directionDerivatives">directional</a> and <a href="#adjointDerivatives">adjoint</a> partial derivatives.</p>
+<p>the ability of the FMU to provide <a href="#directionDerivatives">directional</a> and <a href="#adjointDerivatives">adjoint</a> derivatives.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Which of the features above are supported by a specific FMU is defined by capability flags of the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> (see <a href="#co-simulation-schema">Section 4.4</a>).</p>
+<p>Which of the features above are supported by a specific FMU is defined by <a href="#model-exchange-schema">capability flags</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="concepts-co-simulation">4.1. Concepts</h3>
@@ -10115,7 +10132,7 @@ Since the FMU itself can detect such changes, the co-simulation algorithm does n
 <div class="sect3">
 <h4 id="getting-output-derivatives">4.1.2. Getting Derivatives of Continuous Outputs</h4>
 <div class="paragraph">
-<p>In FMI for Co-Simulation, the n-th <a href="#derivative"><code>derivatives</code></a> with respect to time of continuous <a href="#output"><code>outputs</code></a> may be retrieved with <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, for example, to allow interpolation/extrapolation of connected input variables between communication points by the importer in <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.<br></p>
+<p>In FMI for Co-Simulation, the n-th <a href="#derivative"><code>derivatives</code></a> with respect to time of continuous <a href="#output"><code>outputs</code></a> may be retrieved with <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a>, for example, to allow interpolation/extrapolation of connected input variables between communication points by the importer.<br></p>
 </div>
 <div class="paragraph">
 <p>Whether the FMU is able to provide the <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> is given by the capability flag <a href="#maxOutputDerivativeOrder"><code>maxOutputDerivativeOrder</code></a> that represents the maximum order of the <a href="#output"><code>output</code></a> <a href="#derivative"><code>derivatives</code></a>.
@@ -10170,7 +10187,7 @@ The inner level does not exist for scalar variables.</p>
 </div>
 <div class="paragraph">
 <p><em>[ Example:</em><br>
-<em>Assuming an FMU has outputs \(y_1\)[2*3] with value reference 1, \(y_2\) with value reference 2, \( y_3\)[2] value reference 3, \(y_4\) with value reference 4 and <code>maxOutputDerivativeOrder = 2</code>.</em><br>
+<em>Assuming an FMU has outputs \(y_1\)[2x3] with value reference 1, \(y_2\) with value reference 2, \( y_3\)[2] value reference 3, \(y_4\) with value reference 4 and <code>maxOutputDerivativeOrder = 2</code>.</em><br>
 <em>With <code>valueReferences = [1, 1, 3, 3, 4, 4]</code>, and <code>orders = [1, 2, 1, 2, 1, 2]</code>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> will provide first and second time derivatives of the outputs y1, y3, y4, which in <code>values</code> are serialized in the following way:</em>
 <em>((array serialization of \(\dot y_1\)), (array serialization of \(\ddot y_1\)), (array serialization of \(\dot y_3\)), (array serialization of \(\ddot y_3\)), \(\dot y_4\), \(\ddot y_4\)).]</em></p>
 </div>
@@ -10198,13 +10215,13 @@ This mechanism is called <a href="#early-return">"early return"</a>.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>For details see <a href="#earlyReturn"><code>earlyReturn</code></a>.</p>
+<p>For details see the argument <a href="#earlyReturn"><code>earlyReturn</code></a> of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The following capability flags describe which features the FMU supports:  <a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate</code></a> and <a href="#hasEventMode"><code>hasEventMode</code></a>.</p>
+<p>The capability flag <a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate</code></a> describes if the FMU supports early return after <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> if requested by the importer.</p>
 </div>
 <div class="paragraph">
-<p>The argument <a href="#earlyReturnAllowed"><code>earlyReturnAllowed</code></a> of <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signals to the FMU if the importer allows <a href="#early-return">"early return"</a>.</p>
+<p>The argument <a href="#earlyReturnAllowed"><code>earlyReturnAllowed</code></a> of <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signals to the FMU if the importer allows early return.</p>
 </div>
 </div>
 </div>
@@ -11182,10 +11199,6 @@ If the FMU has clocks, then  <a href="#modelDescription.xml"><code>modelDescript
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>Note that if <code>needsExecutionTool = true</code>, then it is required that the original tool is available to be executed during co-simulation.
-If <code>needsExecutionTool = false</code>, the FMU is completely contained inside the FMU in source code or binary format (DLL/SharedObject).</p>
-</div>
 <div class="sect3">
 <h4 id="_example_xml_description_file">4.4.1. Example XML Description File</h4>
 <div class="sect4">
