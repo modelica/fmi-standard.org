@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 5c7bebe,</span>
+<span id="revnumber">version 24c01f2,</span>
 <span id="revdate">2022-03-12</span>
 </div>
 <div id="toc" class="toc2">
@@ -766,7 +766,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_code_example">3.3. Code Example</a></li>
 <li><a href="#model-exchange-schema">3.4. Description Schema</a>
 <ul class="sectlevel3">
-<li><a href="#xml-example-model-exchange">3.4.1. Example XML Description File</a></li>
+<li><a href="#xml-example-model-exchange">3.4.1. Example Model Description File</a></li>
 </ul>
 </li>
 </ul>
@@ -797,9 +797,9 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#co-simulation-schema">4.4. Description Schema</a>
 <ul class="sectlevel3">
-<li><a href="#_example_xml_description_file">4.4.1. Example XML Description File</a>
+<li><a href="#_example_model_description_file">4.4.1. Example Model Description File</a>
 <ul class="sectlevel4">
-<li><a href="#xml-example-co-simulation">4.4.1.1. Example XML Description File with Early Return</a></li>
+<li><a href="#xml-example-co-simulation">4.4.1.1. Example Model Description File with Early Return</a></li>
 </ul>
 </li>
 </ul>
@@ -829,7 +829,7 @@ document.addEventListener('keydown', (event) => {
 </li>
 <li><a href="#scheduled-execution-schema">5.4. Description Schema</a>
 <ul class="sectlevel3">
-<li><a href="#_example_xml_description_file_2">5.4.1. Example XML Description File</a></li>
+<li><a href="#_example_model_description_file_2">5.4.1. Example Model Description File</a></li>
 </ul>
 </li>
 </ul>
@@ -9290,11 +9290,11 @@ y = (r1 || r2) ? +1 : -1;</pre>
 <div class="sect3">
 <h4 id="ContinuousTimeMode">3.2.1. State: Continuous-Time Mode</h4>
 <div class="paragraph">
-<p>The <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> is used to compute the values of all continuous-time variables between events by numerically solving ordinary differential and algebraic equations.
+<p>The <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> is used to compute the values of all continuous-time variables between events by numerically solving ordinary differential and <a href="#algebraic-loops">algebraic equations</a>.
 All discrete-time variables are fixed during this phase and the corresponding discrete-time equations are not evaluated.</p>
 </div>
 <div class="paragraph">
-<p>In this state, the continuous-time equations are active and integrator steps are performed.</p>
+<p>In this state, the continuous-time equations are active and integrator steps are performed by the importer.</p>
 </div>
 <table id="table-math-model-exchange" class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -9403,6 +9403,10 @@ It refers to the unit of the <a href="#independent"><code>independent</code></a>
 </div>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p><em>[This allows limited simulation backward in time.</em>
+<em>As soon as an event occurs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is impossible, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> can only compute the next discrete state, not the previous one.]</em></p>
 </div>
 </dd>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
@@ -9705,20 +9709,6 @@ If <code>nEventIndicators = 0</code> and <code>stateEvent != fmi3EventFalse</cod
 <dd>
 <p>See <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</p>
 </dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Note that simulation backward in time is only allowed over continuous time intervals.
-As soon as an event occurs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is forbidden, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
-</div>
-<div class="paragraph">
-<p>Note that during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>, <a href="#input"><code>input</code></a> variables can be set with <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and output variables can be retrieved with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> interchangeably according to the model structure defined under element <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> in the XML file.
-<em>[For example, if one <a href="#output"><code>output</code></a> <code>y1</code> depends on two <a href="#input"><code>inputs</code></a> <code>u1</code>, <code>u2</code>, then these two <a href="#input"><code>inputs</code></a> must be set, before <code>y1</code> can be retrieved.</em>
-<em>If additionally an <a href="#output"><code>output</code></a> <code>y2</code> depends on an <a href="#input"><code>input</code></a> <code>u3</code>, then <code>u3</code> can be set and <code>y2</code> can be retrieved afterwards.</em>
-<em>As a result, artificial or <code>real</code> algebraic loops over connected FMUs in any of these three modes can be handled by using appropriate numerical algorithms.]</em></p>
-</div>
-<div class="dlist">
-<dl>
 <dt class="hdlist1">Function <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a></dt>
 <dd>
 <p>See <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a>.</p>
@@ -9934,7 +9924,7 @@ TERMINATE:
 <div class="sect2">
 <h3 id="model-exchange-schema">3.4. Description Schema</h3>
 <div class="paragraph">
-<p>The common XML elements and attributes are defined in <a href="#modelDescription.xml">FMI Description Schema</a>.
+<p>XML elements and attributes common to all interface types are defined in <a href="#modelDescription.xml">FMI Description Schema</a>.
 Additional elements and attributes are defined subsequently.
 If the FMU implements the Model Exchange interface type, the element <code>&lt;ModelExchange&gt;</code> must be present.
 It is defined as:</p>
@@ -9946,7 +9936,7 @@ It is defined as:</p>
 <div class="title">Figure 41. ModelExchange element.</div>
 </div>
 <div class="paragraph">
-<p>The attributes in the following table are defined on top of the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
+<p>The attribute in the following table is defined in addition to the <a href="#common-capability-flags">common attributes</a> and has the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-ModelExchange-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 34. ModelExchange attribute details.</caption>
@@ -9964,12 +9954,12 @@ It is defined as:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>needsCompletedIntegratorStep</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after every completed integrator step.
-If <code>false</code> (the default) and the function is called anyway, it has no effect.</p></td>
+If <code>false</code> and the function is called anyway, it has no effect.</p></td>
 </tr>
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="xml-example-model-exchange">3.4.1. Example XML Description File</h4>
+<h4 id="xml-example-model-exchange">3.4.1. Example Model Description File</h4>
 <div class="paragraph">
 <p>When generating an FMU from the hypothetical model <code>MyLibrary.SpringMassDamper</code>, the XML file may have the following content:</p>
 </div>
@@ -9982,7 +9972,7 @@ If <code>false</code> (the default) and the function is called anyway, it has no
   instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f9e0}"
   description="Rotational Spring Mass Damper System"
   version="1.0"
-  generationDateAndTime="2011-09-23T16:57:33Z"
+  generationDateAndTime="2022-05-01T16:57:33Z"
   variableNamingConvention="structured"&gt;
   &lt;ModelExchange modelIdentifier="MyLibrary_SpringMassDamper"/&gt;
   &lt;UnitDefinitions&gt;
@@ -10131,8 +10121,7 @@ In the case of Co-Simulation without <a href="#EventMode"><strong>Event Mode</st
 </div>
 <div class="paragraph">
 <p><a href="#discrete"><code>Discrete</code></a> inputs keep their values between communication points.
-Furthermore, changing <a href="#discrete"><code>discrete</code></a> variables at communication points will likely require special handling within the FMU.
-Since the FMU itself can detect such changes, the co-simulation algorithm does not need to enter <a href="#EventMode"><strong>Event Mode</strong></a> in such a case, but must do so, in case event iteration is required.</p>
+Furthermore, changing <a href="#discrete"><code>discrete</code></a> variables at communication points will likely require special handling within the FMU.</p>
 </div>
 </div>
 <div class="sect3">
@@ -10249,7 +10238,7 @@ This mechanism is called <a href="#early-return">"early return"</a>.</p>
 <h4 id="StepMode">4.2.1. State: Step Mode</h4>
 <div class="paragraph">
 <p>The state <a href="#StepMode"><strong>Step Mode</strong></a> is used to compute the values of all variables between communication points and events and to advance time in the FMU.
-If the FMU is connected in loops with other models, iterations over the FMU equations requires setting the FMU to a previous communication point and repeating the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
+If the FMU is connected in <a href="#algebraic-loops">algebraic loops</a> with other models, iterations over the FMU equations requires <a href="#get-set-fmu-state">setting the FMU to a state previously stored</a> (using <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a> and <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>) and repeating <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>During <a href="#StepMode"><strong>Step Mode</strong></a>, <a href="#clocked-variable">clocked variables</a> can not be set or get because <a href="#Clock">Clocks</a> are only active during <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
@@ -10371,16 +10360,16 @@ Repeating a communication step requires to reset the FMU state to the previous c
 </div>
 <div class="paragraph">
 <p>Only <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> can change the time of a Co-Simulation FMU from the outside (<a href="#advancing-time">time advances internally during <code>fmi3DoStep</code></a>).
-Arguments referring to time inherit the the unit of the <a href="#independent"><code>independent</code></a> variable.</p>
+Arguments referring to time inherit the unit of the <a href="#independent"><code>independent</code></a> variable.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a id="currentCommunicationPoint"></a> <code>currentCommunicationPoint</code> is the current communication point of the importer (\(\mathbf{t}_\mathit{i}\)) with the unit of the <a href="#independent"><code>independent</code></a> variable.
+<p><a id="currentCommunicationPoint"></a> <code>currentCommunicationPoint</code> is the current communication point of the importer (\(\mathbf{t}_\mathit{i}\)).
 At the first call of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> must be equal to the argument <a href="#startTime"><code>startTime</code></a> of <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</p>
 </li>
 <li>
-<p><a id="communicationStepSize"></a> <code>communicationStepSize</code> is the expected communication step size (\(\mathbf{h}_\mathit{i}\)) with the unit of the <a href="#independent"><code>independent</code></a> variable.
+<p><a id="communicationStepSize"></a> <code>communicationStepSize</code> is the communication step size (\(\mathbf{h}_\mathit{i}\)).
 <a href="#communicationStepSize"><code>communicationStepSize</code></a> must be \(&gt; 0.0\).
 The FMU is expected to compute until time \(\mathbf{t}_{i+1} = \mathbf{t}_\mathit{i} + \mathbf{h}_\mathit{i}\).
 See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCommunicationStepSize</code></a> for restrictions.</p>
@@ -10391,21 +10380,21 @@ See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCom
 </div>
 </li>
 <li>
-<p><a id="noSetFMUStatePriorToCurrentPoint"></a> <code>noSetFMUStatePriorToCurrentPoint = fmi3True</code> if <code>fmi3SetFMUState</code> will no longer be called for time instants prior to <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> in this simulation run.</p>
+<p><a id="noSetFMUStatePriorToCurrentPoint"></a> <code>noSetFMUStatePriorToCurrentPoint = fmi3True</code> if <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> will no longer be called for time instants prior to <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> in this simulation run.</p>
 <div class="paragraph">
 <p><em>[The FMU can use this flag to flush a result buffer.]</em></p>
 </div>
 </li>
 <li>
-<p><a id="eventHandlingNeeded"></a> <a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a> indicates that an event was encountered at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
+<p><a id="eventHandlingNeeded"></a> <a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a> indicates that an event was encountered by the FMU at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
 <a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>.
-<em>[This is different from <a href="#earlyReturn"><code>earlyReturn</code></a> which only indicates that the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> did not complete the intended step up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a> and does not require event handling in itself.]</em></p>
+<em>[This is different from <a href="#earlyReturn"><code>earlyReturn</code></a> which only indicates that the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> did not complete the intended step up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a> and does not require event handling.]</em></p>
 </li>
 <li>
 <p><a id="terminateSimulationDS"></a> When <a href="#terminateSimulationDS"><code>terminateSimulation = fmi3True</code></a>, the FMU requests to stop the simulation and the importer must call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
 </li>
 <li>
-<p><a id="earlyReturn"></a> <code>earlyReturn</code> signals to the importer that the FMU returns at \(\mathbf{t}_\mathit{i+1} &lt; \mathbf{t}_i +\)<a href="#communicationStepSize"><code>communicationStepSize</code></a> from the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
+<p><a id="earlyReturn"></a> <code>earlyReturn</code> signals to the importer that the FMU returns at \(\mathbf{t}_\mathit{i+1} &lt; \mathbf{t}_i +\)<a href="#communicationStepSize"><code>communicationStepSize</code></a>.
 <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> is only allowed if <a href="#earlyReturnAllowed"><code>earlyReturnAllowed = fmi3True</code></a> in <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a>.
 The time reached is specified in <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a>.
 Reasons for <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> are</p>
@@ -10432,7 +10421,7 @@ Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> w
 <ul>
 <li>
 <p><em>A fixed-step integrator inside the FMU cannot reach the requested time exactly.</em>
-<em><a href="#fixedInternalStepSize"><code>fixedInternalStepSize</code></a> was introduced to reduce these effects.</em></p>
+<em><a href="#fixedInternalStepSize"><code>fixedInternalStepSize</code></a> was introduced to counter these effects.</em></p>
 </li>
 <li>
 <p><em>A variable-step integrator with minimal step size is not able to land exactly at</em> \(\mathbf{t}_\mathit{i+1}\)<em>.]</em></p>
@@ -10467,31 +10456,29 @@ This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><cod
 <div class="sect3">
 <h4 id="IntermediateUpdateMode">4.2.2. State: Intermediate Update Mode</h4>
 <div class="paragraph">
-<p><em>[The following use cases are enabled:</em></p>
+<p><a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> can only be entered by the FMU itself using the callback function <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>.
+An FMU may enter <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> in order to exchange input and output values between communication points.
+Furthermore, the <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> allows the importer to request an <a href="#early-return">early return</a> from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> because of an event between communication points.</p>
+</div>
+<div class="paragraph">
+<p>The importer cannot request entering <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> from the FMU and hence for some use cases (e.g. cooperative multitasking and setting of intermediate input values) the importer relies on the callbacks from the FMUs.</p>
+</div>
+<div class="paragraph">
+<p><a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> enables:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><em>Access to intermediate variables enables advanced Co-Simulation with interpolation/extrapolation techniques (such as polynomial extrapolation, <a href="#transmission-line-modeling">Transmission Line Modeling</a> (<a href="#tlm">TLM</a>) co-simulation, anti-alias filtering, smoothing of input among others).</em></p>
+<p>enables advanced Co-Simulation with interpolation/extrapolation techniques of inputs and outputs (such as polynomial extrapolation, <a href="#transmission-line-modeling">Transmission Line Modeling</a> (<a href="#tlm">TLM</a>) co-simulation, anti-alias filtering, smoothing of input among others).</p>
 </li>
 <li>
-<p><em><a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> enables the same input approximation that was possible in FMI 2.0 with <code>fmi2SetInputDerivatives</code>, by evaluation of the approximation polynomial by the importer and not within the FMU as in FMI 2.0</em></p>
-</li>
-<li>
-<p><em>The Co-Simulation algorithm can request an <a href="#early-return">early return</a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, because of an event between communication points (see <a href="#early-return">Section 4.1.3</a>).</em></p>
+<p>the same input approximation that was possible in FMI 2.0 with <code>fmi2SetInputDerivatives</code>, by evaluation of the approximation polynomial by the importer and not within the FMU as in FMI 2.0.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><em>Note that the call to <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> and thus entering the <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> can only be triggered by the FMU itself.</em>
-<em>The importer cannot actively trigger this and hence for some use cases (e.g. cooperative multitasking and setting of intermediate input values) it relies on the callbacks from the FMUs to be able to realize these use cases properly.]</em></p>
-</div>
-<div class="paragraph">
-<p>A Co-Simulation FMU can provide values for its <a href="#output"><code>output</code></a> variables at intermediate points between two consecutive communication points, and is able to receive new values for <a href="#input"><code>input</code></a> variables at these intermediate points.
-This is typically required when the FMU uses a numerical solver to integrate the FMU&#8217;s internal state between communication points in <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
-This numerical solver assumes that the inputs are continuous in the integration interval, dictated by <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
-In FMI 2.0 Co-simulation, the intermediate inputs are provided by the use of extrapolations.
-The intermediate update functions allow FMUs to receive inputs, and provide outputs, directly to the co-simulation algorithm, in those intermediate time points.</p>
+<p>The FMU signals the support of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> via the capability flag <a href="#providesIntermediateUpdate"><code>providesIntermediateUpdate</code></a>.
+The co-simulation algorithm signals the support for <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> by providing a non-NULL callback-function pointer for <a href="#fmi3IntermediateUpdateCallback"><code>intermediateUpdate</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>Intermediate values for <a href="#continuous"><code>continuous</code></a> inputs are computed by the importer for example by an extrapolation polynomial build with the output derivatives of connected FMUs.
@@ -10502,9 +10489,8 @@ FMUs can signal with the optional attribute <a href="#recommendedIntermediateInp
 <p>The importer must ensure that the input approximation function \(\mathbf{u}_u\) is consistent with the values of the input variable (\(\mathbf{u}_u(\mathbf{t}_{i+1})= \mathbf{u}(\mathbf{t}_{i+1})\)).</p>
 </div>
 <div class="paragraph">
-<p>Due to the way numerical solvers estimate and correct the approximation error, these intermediate <a href="#output"><code>output</code></a> values may be tentative or may be final.
-It is possible for the FMU to inform the co-simulation algorithm whether the internal solver is in a tentative state, meaning that the output values computed from that state are also tentative, or if the internal solver has successfully completed the integration step, meaning that the FMU&#8217;s internal state is final, and will never be changed in the current execution of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
-If the internal integration step has been successfully completed, the co-simulation algorithm can forward intermediate outputs to other FMUs, where they can be used, for e.g., for extrapolation, interpolation, filtering or asynchronous co-simulation.</p>
+<p>Due to the way FMU internal solvers may estimate and correct the approximation error, tentative states may occur and lead to tentative intermediate <a href="#output"><code>output</code></a> values (see <a href="#intermediateStepFinished"><code>intermediateStepFinished</code></a>).
+If an FMU internal integration step has been completed successfully, the importer can forward intermediate outputs to other FMUs, where they can be used to approximate inputs.</p>
 </div>
 <div class="paragraph">
 <p><a href="#figure-IntermediateUpdateMode">Figure 43</a> summarizes the above description.
@@ -10516,10 +10502,6 @@ It distinguishes the level of trust that can be placed in the tentative outputs 
 <img src="images/intermediateupdate.svg" alt="intermediateupdate" width="65%">
 </div>
 <div class="title">Figure 43. Overview of solver states and intermediate update during a communication step</div>
-</div>
-<div class="paragraph">
-<p>The FMU signals the support of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> via the capability flag <a href="#providesIntermediateUpdate"><code>providesIntermediateUpdate</code></a>.
-The co-simulation algorithm signals the support for <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> by providing a non-NULL callback-function pointer for <a href="#fmi3IntermediateUpdateCallback"><code>intermediateUpdate</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>The FMU enters <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> by calling <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> within <a href="#StepMode"><strong>Step Mode</strong></a> and leaves the state towards <a href="#StepMode"><strong>Step Mode</strong></a> when the function returns.</p>
@@ -10540,9 +10522,8 @@ The co-simulation algorithm signals the support for <a href="#IntermediateUpdate
 <div id="intermediateUpdateTime" class="ulist">
 <ul>
 <li>
-<p><a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the internal value of the <a href="#independent"><code>independent</code></a> variable <em>[typically simulation time]</em> of the FMU at which the callback has been called for intermediate and final steps.
-If an event happens or an <a href="#outputClock"><code>output Clock</code></a> ticks, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the time of event or <a href="#outputClock"><code>output Clock</code></a> tick.
-In Co-Simulation, <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is restricted by the arguments to <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as follows:<br>
+<p><a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the internal value of the <a href="#independent"><code>independent</code></a> variable <em>[typically simulation time]</em> of the FMU at which the callback has been called.
+<a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is restricted by the arguments of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as follows:<br>
 <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> \(\leq\) <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> \(\leq\) (<a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>).<br>
 The FMU must not call the callback function <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with <code>intermediateStepFinished = fmi3True</code>.<br></p>
 </li>
@@ -10551,47 +10532,49 @@ The FMU must not call the callback function <a href="#fmi3IntermediateUpdateCall
 <div id="intermediateVariableSetRequested" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested = fmi3True</code></a>, the co-simulation algorithm may provide intermediate values for continuous <a href="#input"><code>input</code></a> variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> by calling <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.
-The set of variables for which the co-simulation algorithm will provide intermediate values is declared through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
-If a co-simulation algorithm does not provide a new value for any of the variables contained in the set it registered, the last value set remains.</p>
+<p>If <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested = fmi3True</code></a>, the importer may provide intermediate values for continuous <a href="#input"><code>input</code></a> variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> by calling <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.
+The set of variables for which the importer may provide intermediate values is declared through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument of <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a>.
+If the importer does not provide a new value for any of the variables contained in the set it registered, the values set last remain.</p>
 </li>
 </ul>
 </div>
 <div id="intermediateVariableGetAllowed" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed = fmi3True</code></a>, the co-simulation algorithm may collect intermediate output variables by calling <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> for variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.
-The set of variables for which the co-simulation algorithm can get values is supplied through the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
+<p>If <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed = fmi3True</code></a>, the importer may obtain intermediate output values by calling <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> for variables with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.
+The set of variables for which the importer may get values is defined by the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument of <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a>.</p>
 </li>
 </ul>
 </div>
 <div id="intermediateStepFinished" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3False</code></a>, the intermediate outputs of the FMU that the co-simulation algorithm inquires with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> resulting from tentative internal solver states and may still change for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> <em>[e.g., if the solver deems the tentative state to cause a too high approximation error, it may go back in time and try to re-estimate the state using smaller internal time steps]</em>.<br>
-If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3True</code></a>, intermediate outputs inquired by the co-simulation algorithm with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> correspond to accepted internal solver step.</p>
+<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3False</code></a>, the intermediate output values of the FMU that the importer inquires with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> resulting from tentative internal solver states and may still change for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> <em>[e.g., if the solver deems the tentative state to cause an unacceptable approximation error, it may go back in time and try to re-estimate the state using smaller internal time steps]</em>.<br>
+If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3True</code></a>, intermediate output values inquired by the importer with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> correspond to accepted internal solver steps.</p>
 </li>
 </ul>
 </div>
 <div id="canReturnEarly" class="ulist">
 <ul>
 <li>
-<p>When <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a> the FMU signals to the co-simulation algorithm its ability to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
+<p>When <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a> the FMU signals to the importer its ability to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
 </li>
 </ul>
 </div>
 <div id="earlyReturnRequested" class="ulist">
 <ul>
 <li>
-<p><code>earlyReturnRequested</code>: If and only if <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a>, the co-simulation algorithm may request the FMU to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> by setting <code>earlyReturnRequested = fmi3True</code>.</p>
+<p><code>earlyReturnRequested</code>: If and only if <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a>, the importer may request the FMU to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> by setting <code>earlyReturnRequested = fmi3True</code>.</p>
 </li>
 </ul>
 </div>
 <div id="earlyReturnTime" class="ulist">
 <ul>
 <li>
-<p><code>earlyReturnTime</code> is used to signal the FMU at which time to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, if the return value of <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a>.
-If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater than the last signaled <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a>, the FMU may integrate up to the time instant <a href="#earlyReturnTime"><code>earlyReturnTime</code></a>.</p>
+<p><code>earlyReturnTime</code> is used to signal the FMU at which time to return early from the current <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, if <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a>.
+If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater than the current <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a>, the FMU may compute up to <a href="#earlyReturnTime"><code>earlyReturnTime</code></a>.
+<a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is restricted by the arguments of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as follows:<br>
+<a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> \(\leq\) <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> \(\leq\) (<a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>).</p>
 </li>
 </ul>
 </div>
@@ -10630,22 +10613,24 @@ If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater th
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
 <p>This function can be called for intermediate variables, if <a href="#intermediateVariableGetAllowed"><code>intermediateVariableGetAllowed = fmi3True</code></a>.
-Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument to <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.</p>
-<div class="paragraph">
-<p>For details on <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> see <a href="#getting-output-derivatives">Section 4.1.2</a>.</p>
-</div>
+Intermediate variables are variables that are marked with attribute <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument of <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <code>fmi3GetOutputDerivatives</code></dt>
+<dd>
+<p>For details on <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> see <a href="#getting-output-derivatives">Section 4.1.2</a>.
+Furthermore, calling <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a> is only allowed on variables as defined for <code>fmi3Get{VariableType}</code> above.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
 <p>This function can be called for intermediate input variables, if <a href="#intermediateVariableSetRequested"><code>intermediateVariableSetRequested = fmi3True</code></a>.
-Intermediate input variables are input variables that are marked with attribute <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument of <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
-In Co-Simulation, <a href="#discrete"><code>discrete</code></a> <a href="#input"><code>inputs</code></a> must not be set.</p>
+Intermediate input variables are input variables that are marked with attribute <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> and have been included in the <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> argument of <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a>.
+<a href="#discrete">Discrete</a> <a href="#input"><code>inputs</code></a> must not be set.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
 <p>There is a defined order of calling these functions: first all <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> calls must be performed, then <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> may be called.<br>
-<em>[This is analogous to the calling sequence of</em> <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> <em>and</em> <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> <em>calls at communication points.]</em></p>
+<em>[This is analogous to the calling sequence of</em> <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> <em>and</em> <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> <em>calls in <a href="#StepMode"><strong>Step Mode</strong></a>.]</em></p>
 </div>
 </div>
 </div>
@@ -11133,7 +11118,7 @@ if (status != fmi3Fatal) {
 <div class="sect2">
 <h3 id="co-simulation-schema">4.4. Description Schema</h3>
 <div class="paragraph">
-<p>The common XML elements and attributes are defined in <a href="#modelDescription.xml">FMI Description Schema</a>.
+<p>XML elements and attributes common to all interface types are defined in <a href="#modelDescription.xml">FMI Description Schema</a>.
 Additional elements and attributes are defined subsequently.
 If the FMU implements the Co-Simulation interface type, the element <code>&lt;CoSimulation&gt;</code> must be present.
 It is defined as:</p>
@@ -11145,7 +11130,7 @@ It is defined as:</p>
 <div class="title">Figure 45. CoSimulation element.</div>
 </div>
 <div class="paragraph">
-<p>The attributes in the following table are defined on top of the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
+<p>The attributes in the following table are defined in addition to the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with the exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-CoSimulation-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 36. CoSimulation attribute details.</caption>
@@ -11166,20 +11151,19 @@ It is defined as:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixedInternalStepSize</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="fixedInternalStepSize"></a>The fixed internal step size of the FMU (optional).
-+
-<em>[This information can be used by the co-simulation algorithm to synchronize the communication interval with the internal step size of the FMU.</em>
-<em>The co-simulation algorithm should calculate the communication points by multiplying (<code>number_of_steps * step_size</code>) instead of repeatedly incrementing (<code>time += step_size</code>) to avoid the accumulation of numerical errors.]</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="fixedInternalStepSize"></a>If the FMU has a fixed internal step size, this optional attribute communicates it.<br>
+<em>[This information can be used by the importer to synchronize the communication interval with that fixed internal step size of the FMU.</em>
+<em>The importer should use an integer multiple of this value as <a href="#communicationStepSize">communication step size</a>.]</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxOutputDerivativeOrder</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="maxOutputDerivativeOrder"></a>The FMU is able to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> with maximum order.
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="maxOutputDerivativeOrder"></a>The FMU is able to provide <a href="#derivative"><code>derivatives</code></a> of <a href="#output"><code>outputs</code></a> up to the order of <code>maxOutputDerivativeOrder</code>.
 Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defined by <code>maxOutputDerivativeOrder</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>recommendedIntermediateInputSmoothness</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="recommendedIntermediateInputSmoothness"></a>A value of \(k\) with \(k&gt;0\) signals to the co-simulation algorithm, that it is beneficial for the solver to receive intermediate inputs that are k-time continuously differentiable (\(C^k\)) on the current communication interval.
-\(k = 0\) means continuous (see <a href="#smoothness">Section 4.1.1</a>).<br></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="recommendedIntermediateInputSmoothness"></a>A value of \(k\) with \(k&gt;0\) signals to the importer, that it is beneficial for the solver within the FMU to receive intermediate inputs that are \(k\)-time continuously differentiable (\(C^k\)) on the current communication interval.
+\(k = 0\) means continuous (see <a href="#smoothness">Section 4.1.1</a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesIntermediateUpdate</code></p></td>
@@ -11188,33 +11172,32 @@ Calling of <code>fmi3GetOutputDerivatives</code> is allowed up to the order defi
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mightReturnEarlyFromDoStep</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="mightReturnEarlyFromDoStep"></a>The FMU announces that it might <a href="#earlyReturn">return early</a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.
-If this flag is <code>false</code> (the default), the importer can assume that the FMU computes the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as instructed up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>.</p></td>
+If this flag is <code>false</code>, the importer can assume that the FMU computes the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as instructed up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>canReturnEarlyAfterIntermediateUpdate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canReturnEarlyAfterIntermediateUpdate"></a>If <code>true</code>, the FMU is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the co-simulation algorithm returns <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> and <a href="#canReturnEarly"><code>canReturnEarly = fmi3True</code></a>.
-The default value of this capability flag is <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="canReturnEarlyAfterIntermediateUpdate"></a>If <code>true</code>, the FMU is able to return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> if the importer returns <a href="#earlyReturnRequested"><code>earlyReturnRequested = fmi3True</code></a> from the callback <a href="#intermediateUpdate"><code>intermediateUpdate</code></a>.
+<code>canReturnEarlyAfterIntermediateUpdate</code> may only be <code>true</code>, if <a href="#providesIntermediateUpdate"><code>providesIntermediateUpdate</code></a> is <code>true</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>hasEventMode</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hasEventMode"></a>If <code>true</code> the FMU supports <a href="#EventMode"><strong>Event Mode</strong></a>.
-Even if this flag is <code>true</code>, the co-simulation algorithm can chose to delegate event handling to the FMU by calling <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>.
-If <code>eventModeUsed = fmi3True</code>, the co-simulation algorithm will have to actively trigger event handling in the FMU using <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
-<a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> must only be called with <code>eventModeUsed = fmi3True</code> if <a href="#hasEventMode"><code>hasEventMode = true</code></a>.
-If the FMU has clocks, then  <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> must set <a href="#hasEventMode"><code>hasEventMode = true</code></a> and the importer must call <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed = fmi3True</code></a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hasEventMode"></a>If <code>true</code> the FMU supports <a href="#EventMode"><strong>Event Mode</strong></a>.<br>
+If the importer does not support <a href="#EventMode"><strong>Event Mode</strong></a>, then it must call <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a> to force the FMU to detect and handle events internally.<br>
+If <code>eventModeUsed = fmi3True</code>, the importer must actively trigger event handling at communication points in the FMU using <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.<br>
+If the FMU has clocks, then <a href="#hasEventMode"><code>hasEventMode</code></a> must be <code>true</code>.</p></td>
 </tr>
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="_example_xml_description_file">4.4.1. Example XML Description File</h4>
+<h4 id="_example_model_description_file">4.4.1. Example Model Description File</h4>
 <div class="sect4">
-<h5 id="xml-example-co-simulation">4.4.1.1. Example XML Description File with Early Return</h5>
+<h5 id="xml-example-co-simulation">4.4.1.1. Example Model Description File with Early Return</h5>
 <div class="paragraph">
-<p>The <a href="#xml-example-fmimodeldescription-cosimulation">Example fmiModelDescription</a> below is the same as shown in <a href="#xml-example-model-exchange">Section 3.4.1</a> for a Model Exchange FMU.
-The only differences are the replacement of the element <code>&lt;ModelExchange&gt;</code> with the element <code>&lt;CoSimulation&gt;</code> (with additional attributes),  and the removal of <a href="#local"><code>local</code></a> variables, which are associated with continuous <a href="#state">states</a> and their <a href="#derivative"><code>derivatives</code></a> and presence of the capability flags <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCommunicationStepSize</code></a> and <a href="#canReturnEarlyAfterIntermediateUpdate"><code>canReturnEarlyAfterIntermediateUpdate</code></a> with value <code>true</code>.</p>
+<p>The <a href="#xml-example-fmimodeldescription-cosimulation">Example <code>&lt;fmiModelDescription&gt;</code></a> below is the same as shown in <a href="#xml-example-model-exchange">Section 3.4.1</a> for a Model Exchange FMU.
+The only differences are the replacement of the element <code>&lt;ModelExchange&gt;</code> with the element <code>&lt;CoSimulation&gt;</code> with additional Co-Simulation-specific attributes, and the removal of <a href="#local"><code>local</code></a> variables, which are associated with continuous <a href="#state">states</a> and their <a href="#derivative"><code>derivatives</code></a>.</p>
 </div>
 <div id="xml-example-fmimodeldescription-cosimulation" class="listingblock">
-<div class="title">Example fmiModelDescription</div>
+<div class="title">Example <code>&lt;fmiModelDescription&gt;</code></div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;fmiModelDescription
@@ -11223,11 +11206,12 @@ The only differences are the replacement of the element <code>&lt;ModelExchange&
   instantiationToken="{8c4e810f-3df3-4a00-8276-176fa3c9f9e0}"
   description="Rotational Spring Mass Damper System"
   version="1.0"
-  generationDateAndTime="2011-09-23T16:57:33Z"
+  generationDateAndTime="2022-05-01T16:57:33Z"
   variableNamingConvention="structured"&gt;
   &lt;CoSimulation
     modelIdentifier="MyLibrary_SpringMassDamper"
     canHandleVariableCommunicationStepSize="true"
+    providesIntermediateUpdate="true"
     canReturnEarlyAfterIntermediateUpdate="true"
     hasEventMode="true"/&gt;
   &lt;UnitDefinitions&gt;
@@ -11912,7 +11896,7 @@ Here it is just as well not needed for the same reason.</p>
 <div class="sect2">
 <h3 id="scheduled-execution-schema">5.4. Description Schema</h3>
 <div class="paragraph">
-<p>The common XML elements and attributes are defined in <a href="#modelDescription.xml">FMI Description Schema</a>.
+<p>XML elements and attributes common to all interface types are defined in <a href="#modelDescription.xml">FMI Description Schema</a>.
 Additional elements and attributes are defined subsequently.
 If the FMU implements the Scheduled Execution interface type, the element <code>&lt;ScheduledExecution&gt;</code> must be present.
 It is defined as:</p>
@@ -11927,7 +11911,7 @@ It is defined as:</p>
 <p>The element <code>&lt;ScheduledExecution&gt;</code> does not have any attributes other than defined as <a href="#common-capability-flags">common attributes</a>.</p>
 </div>
 <div class="sect3">
-<h4 id="_example_xml_description_file_2">5.4.1. Example XML Description File</h4>
+<h4 id="_example_model_description_file_2">5.4.1. Example Model Description File</h4>
 <div class="paragraph">
 <p>The simulation algorithm collects the information about the number and properties of <a href="#Clock"><code>Clocks</code></a> supported by the FMU via analyzing the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
 For every <a href="#inputClock"><code>input Clock</code></a> the simulation algorithm identifies a model partition of the FMU.
