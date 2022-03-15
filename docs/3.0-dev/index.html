@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 9dbf53e,</span>
+<span id="revnumber">version 56c3140,</span>
 <span id="revdate">2022-03-15</span>
 </div>
 <div id="toc" class="toc2">
@@ -1414,10 +1414,10 @@ The properties and semantics of variables are described in the <a href="#modelDe
 Access to variable values is possible via appropriate API functions.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#independent"><code>independent</code></a> variable \(\mathbf{t} \in \mathbb{T}\) <em>[typically: time]</em> is a tuple \(\mathbf{t} = (\mathbf{t}_R,\mathbf{t}_I)\), where \(\mathbf{t}_R \in \mathbb{R},\ \mathbf{t}_{I} \in \mathbb{N} = \{0, 1, 2, \ldots\}\).
-The real part \(\mathbf{t}_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
-During continuous-time integration the integer part of time \(\mathbf{t}_I = 0\).
-\(\mathbf{t}_I\) is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(\mathbf{t}_R\).
+<p>The <a href="#independent"><code>independent</code></a> variable \(t \in \mathbb{T}\) <em>[typically: time]</em> is a tuple \(t = (t_R,t_I)\), where \(t_R \in \mathbb{R},\ t_{I} \in \mathbb{N} = \{0, 1, 2, \ldots\}\).
+The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
+During continuous-time integration the integer part of time \(t_I = 0\).
+\(t_I\) is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).
 This time definition is also called "super-dense time" in literature, see, for example, <a href="#LZ07">[LZ07]</a>.
 An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a href="#table-model-exchange-math-notation">Table 2</a>.</p>
 </div>
@@ -1437,48 +1437,48 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{t}_1 &lt; \mathbf{t}_2\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{t}_{\mathit{R1}},\mathbf{t}_{\mathit{I1}}) &lt; (\mathbf{t}_{\mathit{R2}}, \mathbf{t}_{\mathit{I2}})\ \Leftrightarrow \ \mathbf{t}_{\mathit{R1}} &lt; \mathbf{t}_{\mathit{R2}}\ \textbf{or} \ \mathbf{t}_{\mathit{R1}}= \mathbf{t}_{\mathit{R2}} \ \textbf{and} \ \mathbf{t}_{\mathit{I1}} &lt; \mathbf{t}_{\mathit{I2}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t}_1\) is before \(\mathbf{t}_2\)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(t_1 &lt; t_2\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((t_{\mathit{R1}},t_{\mathit{I1}}) &lt; (t_{\mathit{R2}}, t_{\mathit{I2}})\ \Leftrightarrow \ t_{\mathit{R1}} &lt; t_{\mathit{R2}}\ \textbf{or} \ t_{\mathit{R1}}= t_{\mathit{R2}} \ \textbf{and} \ t_{\mathit{I1}} &lt; t_{\mathit{I2}}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(t_1\) is before \(t_2\)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{t}_1 = \mathbf{t}_2\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{t}_{\mathit{R1}},\mathbf{t}_{\mathit{I1}}) = (\mathbf{t}_{\mathit{R2}},\mathbf{t}_{\mathit{I2}}) \ \Leftrightarrow  \mathbf{t}_{\mathit{R1}}= \mathbf{t}_{\mathit{R2}}\ \textbf{and} \ \mathbf{t}_{\mathit{I1}} = \mathbf{t}_{\mathit{I2}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t}_1\) is identical to \(\mathbf{t}_2\)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(t_1 = t_2\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((t_{\mathit{R1}},t_{\mathit{I1}}) = (t_{\mathit{R2}},t_{\mathit{I2}}) \ \Leftrightarrow  t_{\mathit{R1}}= t_{\mathit{R2}}\ \textbf{and} \ t_{\mathit{I1}} = t_{\mathit{I2}}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(t_1\) is identical to \(t_2\)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(\mathbf{t}^{+}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\({(\mathbf{t}_R,\mathbf{t}_I)}^{+} \Leftrightarrow (\lim_{\mathit{\epsilon \rightarrow 0}}{\left(\mathbf{t}_R + \varepsilon \right),\mathbf{t}_{\mathit{Imax}})}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">right limit at \(\mathbf{t}\).
-\(\mathbf{t}_{\mathit{Imax}}\) is the largest occurring integer index of super-dense time at this \(\mathbf{t}_R\)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(t^{+}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\({(t_R,t_I)}^{+} \Leftrightarrow (\lim_{\mathit{\epsilon \rightarrow 0}}{\left(t_R + \varepsilon \right),t_{\mathit{Imax}})}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">right limit at \(t\).
+\(t_{\mathit{Imax}}\) is the largest occurring integer index of super-dense time at this \(t_R\)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(^-\mathbf{t}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(^{-}{(\mathbf{t}_R,\mathbf{t}_I)} \Leftrightarrow (\lim_{\mathit{\epsilon \rightarrow 0}}{\left( \mathbf{t}_R - \varepsilon \right),0)}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">left limit at \(\mathbf{t}\)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(^-t\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(^{-}{(t_R,t_I)} \Leftrightarrow (\lim_{\mathit{\epsilon \rightarrow 0}}{\left( t_R - \varepsilon \right),0)}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">left limit at \(t\)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(v^+(\mathbf{t})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(v(\mathbf{t}^+)\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value at the right limit of \(\mathbf{t}\)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(v^+(t)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(v(t^+)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value at the right limit of \(t\)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(^{-}v(\mathbf{t})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(v(^-\mathbf{t})\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value at the left limit of \(\mathbf{t}\)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(^{-}v(t)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(v(^-t)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value at the left limit of \(t\)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">\(^{\bullet}v(\mathbf{t})\)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">\(^{\bullet}v(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(
 \begin{cases}
 ^{\bullet}v(t) \\
-^{\bullet}v(\left( \mathbf{t}_R,\mathbf{t}_I \right))
+^{\bullet}v(\left( t_R,t_I \right))
 \end{cases}
 \Leftrightarrow
 \begin{cases}
- v(^-t) &amp; \text{ during } v(\left( \mathbf{t}_R, 0 \right)) \text{, v not clocked }  \\
- v(\left( \mathbf{t}_R,\mathbf{t}_I - 1 \right)) &amp; \text{ for } v(\left( \mathbf{t}_R,\mathbf{t}_I \right)) \text{ with } I &gt; 0  \text{, v not clocked } \\
- v \text{ at previous tick of C } &amp; \text{ if } v \text{ for clocked variable } v \text{ of clock C}
+ v(^-t) &amp; \text{ during } v(\left( t_R, 0 \right)) \text{, v not clocked }  \\
+ v(\left( t_R,t_I - 1 \right)) &amp; \text{ for } v(\left( t_R,t_I \right)) \text{ with } I &gt; 0  \text{, v not clocked } \\
+ v \text{ at previous tick of k } &amp; \text{ if } v \text{ for clocked variable } v \text{ of clock k}
 \end{cases}
 \)</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -1488,12 +1488,12 @@ An ordering is defined on \(\mathbb{\text{T}}\) that leads to the notation in <a
 </tbody>
 </table>
 <div class="paragraph">
-<p><em>[Assume that an FMU has an event at \(\mathbf{t}_R=2.1s\) and here a variable changes discontinuously.</em>
+<p><em>[Assume that an FMU has an event at \(t_R=2.1s\) and here a variable changes discontinuously.</em>
 <em>If no event iteration occurs, the time instant when the event occurs is defined as (2.1, 0), and the time instant when the integration is restarted is defined as (2.1, 1).]</em></p>
 </div>
 <div class="paragraph">
 <p>The hybrid differential equations exposed by FMI for Model Exchange or wrapped by FMI for Co-Simulation are described as piecewise continuous-time systems.
-Discontinuities can occur at time instants \(\mathbf{t}_0, \mathbf{t}_1, \ldots, \mathbf{t}_n\) where \(\mathbf{t}_i &lt; \mathbf{t}_{i+1}\).
+Discontinuities can occur at time instants \(t_0, t_1, \ldots, t_n\) where \(t_i &lt; t_{i+1}\).
 These time instants are called <code>events</code>.
 Events can be known beforehand (<a href="#time-event">time events</a>), or are defined implicitly (<a href="#state-event">state event</a> and <a href="#step-event">step events</a>), see below.
 Between events, variables are either <a href="#continuous"><code>continuous</code></a> or do not change their value.
@@ -1517,12 +1517,12 @@ The following variable subscripts are used to describe the timing behavior of th
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>c</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A continuous-time variable is a floating-point variable representing a continuous function of time inside each interval \(\mathbf{t}_i^+ &lt; \ ^-\mathbf{t}_{i+1}\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A continuous-time variable is a floating-point variable representing a continuous function of time inside each interval \(t_i^+ &lt; \ ^-t_{i+1}\).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>d</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A discrete-time variable changes its value only at event instants \(\mathbf{t} = (\mathbf{t}_i,n)\).
-Such a variable can change multiple times at the same continuous-time instant, but only at subsequent super-dense time instants \(n \in \mathbb{N} = \{0, 1, 2, \ldots\}\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A discrete-time variable changes its value only at event instants \(t = (t_R, t_I)\).
+Such a variable can change multiple times at the same continuous-time instant, but only at subsequent super-dense time instants \(t_I \in \mathbb{N} = \{0, 1, 2, \ldots\}\).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>k</code></p></td>
@@ -1554,7 +1554,7 @@ These variables are continuous-time variables.</p></td>
 </tbody>
 </table>
 <div class="paragraph">
-<p>At every event instant \(\mathbf{t}_i\), continuous-time variables might change discontinuously (see <a href="#figure-piecewise-continuous-variables">Figure 5</a>):</p>
+<p>At every event instant \(t_i\), continuous-time variables might change discontinuously (see <a href="#figure-piecewise-continuous-variables">Figure 5</a>):</p>
 </div>
 <div id="figure-piecewise-continuous-variables" class="imageblock">
 <div class="content">
@@ -1563,7 +1563,7 @@ These variables are continuous-time variables.</p></td>
 <div class="title">Figure 5. Piecewise-continuous variables of an FMU: continuous-time (\(\mathbf{v}_c\)), discrete-time (\(\mathbf{v}_d\)) and clocked (\(\mathbf{v}_k\)).</div>
 </div>
 <div class="paragraph">
-<p>The mathematical description of an FMU uses the following variables:</p>
+<p>The mathematical description of an FMU uses the following variables, where bold variables (e.g. \(\mathbf{v}\)) indicate vectors and italic variables (e.g. \(t\)) denote scalars:</p>
 </div>
 <table id="table-variable-types" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Symbols for specific variable types.</caption>
@@ -1580,7 +1580,7 @@ These variables are continuous-time variables.</p></td>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>\(\mathbf{t}\)</p>
+<p>\(t\)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a href="#independent"><code>independent</code></a> variable <em>[typically: time]</em> \(\in \mathbb{T}\).
@@ -1593,10 +1593,10 @@ All other variables are functions of this independent variable.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The i-th communication point is denoted as \(\mathbf{t}_i\).<br></p>
+<p>The i-th communication point is denoted as \(t_i\).<br></p>
 </li>
 <li>
-<p>The communication step size is denoted as \(\mathbf{h}_i = \mathbf{t}_{i+1} - \mathbf{t}_i\).<br></p>
+<p>The communication step size is denoted as \(h_i = t_{i+1} - t_i\).<br></p>
 </li>
 </ul>
 </div></div></td>
@@ -1621,11 +1621,11 @@ A subset of inputs is selected via a <a href="#table-subscripts">subscript</a>.<
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{y}\)<br>
-\(\mathbf{y^{(j)}}\)</p></td>
+\(\mathbf{y}^{(j)}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Output variables.
 The values of these variables are computed in the FMU and they are designed to be used outside the FMU.
 Variables of this type are defined with attribute <a href="#causality"><code>causality</code></a> = <a href="#output"><code>output</code></a>.
-For CS and SE: Also j-th derivatives \(\mathbf{y}^{(j)}(\mathbf{t}_{i+1})\) can be provided if supported by the FMU.
+For CS and SE: Also j-th derivatives \(\mathbf{y}^{(j)}(t_{i+1})\) can be provided if supported by the FMU.
 A subset of outputs is selected via a <a href="#table-subscripts">subscript</a>.</p></td>
 </tr>
 <tr>
@@ -1651,9 +1651,9 @@ A vector of floating point continuous-time variables representing the first deri
 \({}^{\bullet}\mathbf{x}_d\) is the value of \(\mathbf{x}_d\) at the previous super-dense time instant.<br></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{\mathit{next}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">At an event instant, an FMU can define the next time instant \(\mathbf{T}_{\mathit{next}}\), at which the next time event occurs (see also the definition of <a href="#EventMode">events</a>).
-Every event removes automatically a previous definition of \(\mathbf{T}_{\mathit{next}}\), and it must be explicitly defined again, even if a previously defined \(\mathbf{T}_{\mathit{next}}\) was not yet reached (see <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{next}}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">At an event instant, an FMU can define the next time instant \(T_{\mathit{next}}\), at which the next time event occurs (see also the definition of <a href="#EventMode">events</a>).
+Every event removes automatically a previous definition of \(T_{\mathit{next}}\), and it must be explicitly defined again, even if a previously defined \(T_{\mathit{next}}\) was not yet reached (see <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="relations"></a> \(\mathbf{r}\)</p></td>
@@ -2800,24 +2800,24 @@ The importer must activate the Clock by calling <a href="#fmi3SetClock"><code>fm
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t}_0\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(t_0\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The time instant when the Clock ticks the first time.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t}_\mathit{i-1}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(t_{i-1}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The previous time instant, when the Clock ticked.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{\mathit{shift}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The delay for the first Clock tick relative to \(\mathbf{t}_{\mathit{start}}\). \(\mathbf{T}_{\mathit{shift}}\) is defined differently for the different Clock types, and can be set with <a href="#fmi3SetShiftDecimal"><code>fmi3SetShiftDecimal</code></a> or retrieved from the FMU with <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetShiftFraction"><code>fmi3SetShiftFraction</code></a> or <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{shift}}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The delay for the first Clock tick relative to \(t_{\mathit{start}}\). \(T_{\mathit{shift}}\) is defined differently for the different Clock types, and can be set with <a href="#fmi3SetShiftDecimal"><code>fmi3SetShiftDecimal</code></a> or retrieved from the FMU with <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetShiftFraction"><code>fmi3SetShiftFraction</code></a> or <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{interval, i}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, i}}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The time interval until the next Clock tick, defined differently for the different Clock types.
-\(\mathbf{T}_{interval, i}\) can be set with <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or retrieved with <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> or <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>.</p></td>
+\(T_{\mathit{interval, i}}\) can be set with <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or retrieved with <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> or <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t}_\mathit{event}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(t_{\mathit{event}}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The current event time in <a href="#EventMode"><strong>Event Mode</strong></a>, or the current time in Scheduled Execution.</p></td>
 </tr>
 </tbody>
@@ -2830,8 +2830,8 @@ The time instant of the first Clock tick is defined by a <a href="#shiftCounter"
 <div class="paragraph">
 <p>The next Clock tick at time instant \(t_i\) is defined as:<br>
 \(\begin{align*}
-\mathbf{t}_0 &amp;:= \mathbf{t}_{\mathit{start}} + \mathbf{T}_{\mathit{shift}} \\
-\mathbf{t}_i &amp;:= \mathbf{t}_{i-1} + \mathbf{T}_{interval, i} \qquad i = 1,2,3,{...}
+t_0 &amp;:= t_{\mathit{start}} + T_{\mathit{shift}} \\
+t_i &amp;:= t_{i-1} + T_{\mathit{interval, i}} \qquad i = 1,2,3,{...}
 \end{align*}\)</p>
 </div>
 <table id="periodic-clock-restrictions" class="tableblock frame-all grid-all stretch">
@@ -2842,7 +2842,7 @@ The time instant of the first Clock tick is defined by a <a href="#shiftCounter"
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{interval, i} &gt; 0\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, i}} &gt; 0\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from the previous Clock tick to the current Clock tick, specified differently for the different Clock types.</p></td>
 </tr>
 </tbody>
@@ -2854,7 +2854,7 @@ The time instant of the first Clock tick is defined by a <a href="#shiftCounter"
 </dd>
 <dt class="hdlist1">Fixed periodic Clock</dt>
 <dd>
-<p>is a time-based periodic Clock which ticks with an arbitrary, but fixed interval \(\mathbf{T}_{\mathit{interval}}\) starting after an arbitrary \(\mathbf{T}_{\mathit{shift}}\), both interval and shift can be changed by the importer.</p>
+<p>is a time-based periodic Clock which ticks with an arbitrary, but fixed interval \(T_{\mathit{interval}}\) starting after an arbitrary \(T_{\mathit{shift}}\), both interval and shift can be changed by the importer.</p>
 <div class="paragraph">
 <p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is specified, the importer sets the Clock&#8217;s <code>fixed</code> interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 If the function is not called the value given in <a href="#intervalDecimal"><code>intervalDecimal</code></a> and <a href="#intervalCounter"><code>intervalCounter</code></a> is used.</p>
@@ -2868,7 +2868,7 @@ If the function is not called the value given in <a href="#intervalDecimal"><cod
 </dd>
 <dt class="hdlist1">Tunable periodic Clock</dt>
 <dd>
-<p>is a time-based periodic Clock which ticks with an arbitrary and changeable interval \(\mathbf{T}_{\mathit{interval}}\) starting after an arbitrary \(\mathbf{T}_{\mathit{shift}}\), both interval and shift can be changed by the importer.</p>
+<p>is a time-based periodic Clock which ticks with an arbitrary and changeable interval \(T_{\mathit{interval}}\) starting after an arbitrary \(T_{\mathit{shift}}\), both interval and shift can be changed by the importer.</p>
 <div class="paragraph">
 <p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is specified, the importer sets the Clock&#8217;s <code>tunable</code> interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 It can later change this interval in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>.
@@ -2894,8 +2894,8 @@ Calling <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> or <a href="#fmi3S
 <div class="paragraph">
 <p>The next Clock tick at time instant \(t_i\) is defined as:<br>
 \(\begin{align*}
-\mathbf{t}_0 &amp;:= \mathbf{t}_{\mathit{start}} + \mathbf{T}_{interval, 0} \\
-\mathbf{t}_i &amp;:= \mathbf{t}_{i-1} + \mathbf{T}_{interval, i} \qquad i = 1,2,3,{...}
+t_0 &amp;:= t_{\mathit{start}} + T_{\mathit{interval, 0}} \\
+t_i &amp;:= t_{i-1} + T_{\mathit{interval, i}} \qquad i = 1,2,3,{...}
 \end{align*}\)</p>
 </div>
 <table id="changing-clock-restrictions" class="tableblock frame-all grid-all stretch">
@@ -2906,12 +2906,12 @@ Calling <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> or <a href="#fmi3S
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{interval, 0} \geq 0\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from \(\mathbf{t}_{\mathit{start}}\) to first Clock tick.
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, 0}} \geq 0\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from \(t_{\mathit{start}}\) to first Clock tick.
 Must be retrieved using <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{interval, i} \geq 0, \qquad i = 1,2,3,{...}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, i}} \geq 0, \qquad i = 1,2,3,{...}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from the current Clock tick to the next Clock tick.
 Must be retrieved using <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if and only if the corresponding Clock ticked.</p></td>
 </tr>
@@ -2925,8 +2925,8 @@ The return argument <a href="#qualifiers"><code>qualifiers</code></a> of <a href
 <div class="paragraph">
 <p>The next Clock tick at time instant \(t_i\) is defined as:<br>
 \(\begin{align*}
-\mathbf{t}_0 &amp;:= \mathbf{t}_{\mathit{start}} + \mathbf{T}_{interval, 0} \\
-\mathbf{t}_i &amp;:= \mathbf{t}_{event} + \mathbf{T}_{interval, i} \qquad i = 1,2,3,{...}
+t_0 &amp;:= t_{\mathit{start}} + T_{\mathit{interval, 0}} \\
+t_i &amp;:= t_{\mathit{event}} + T_{\mathit{interval, i}} \qquad i = 1,2,3,{...}
 \end{align*}\)</p>
 </div>
 <table id="countdown-clock-restrictions" class="tableblock frame-all grid-all stretch">
@@ -2937,12 +2937,12 @@ The return argument <a href="#qualifiers"><code>qualifiers</code></a> of <a href
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{interval, 0} \geq 0\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from \(\mathbf{t}_\mathit{start}\) to the first Clock tick.
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, 0}} \geq 0\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from \(t_{\mathit{event}}\) to the first Clock tick.
 Must be retrieved using <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{T}_{interval, i} \geq 0, \qquad i = 1,2,3,{...}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, i}} \geq 0, \qquad i = 1,2,3,{...}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The time interval starting at the current <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a> when <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> is called.</p></td>
 </tr>
 </tbody>
@@ -2971,17 +2971,17 @@ Must be retrieved using <a href="#fmi3GetInterval"><code>fmi3GetInterval</code><
 <div class="sect4">
 <h5 id="clocked-variable">2.2.8.3. Model Partitions and Clocked Variables</h5>
 <div class="paragraph">
-<p>Each Clock \(\mathbf{k}\) induces a discrete subsystem.
-Its state advances at each tick of \(\mathbf{k}\).
-Such a system, also called the <a href="#model-partition">model partition</a> of \(\mathbf{k}\), may represent a part of control code, an interrupt service routine of an embedded system, or a discretized part of a plant model.</p>
+<p>Each Clock \(k\) induces a discrete subsystem.
+Its state advances at each tick of \(k\).
+Such a system, also called the <a href="#model-partition">model partition</a> of \(k\), may represent a part of control code, an interrupt service routine of an embedded system, or a discretized part of a plant model.</p>
 </div>
 <div class="paragraph">
 <p>A model partition is written as:</p>
 </div>
 <div class="paragraph">
 <p>\(\begin{align*}
-(\mathbf{x}_k) &amp;:= \mathbf{f}_{disc}(^\bullet{\mathbf{x}_k}, \mathbf{u}, \mathbf{t}) \\
-(\mathbf{y}_k) &amp;:= \mathbf{f}_{event}(\mathbf{x}_k, \mathbf{u}, \mathbf{t})
+(\mathbf{x}_k) &amp;:= \mathbf{f}_{\mathit{event}}(^\bullet{\mathbf{x}_k}, \mathbf{u}, t) \\
+(\mathbf{y}_k) &amp;:= \mathbf{f}_{\mathit{event}}(\mathbf{x}_k, \mathbf{u}, t)
 \end{align*}\)</p>
 </div>
 <div class="paragraph">
@@ -2990,24 +2990,24 @@ Such a system, also called the <a href="#model-partition">model partition</a> of
 <div class="ulist">
 <ul>
 <li>
-<p>\(\mathbf{f}_{disc}\) denotes the state transition function and</p>
+<p>\(\mathbf{f}_{\mathit{event}}\) denotes the state transition function and</p>
 </li>
 <li>
-<p>\(\mathbf{f}_{event}\) denotes the output function of the <a href="#model-partition">model partition</a> of \(\mathbf{k}\).</p>
+<p>\(\mathbf{f}_{\mathit{event}}\) denotes the output function of the <a href="#model-partition">model partition</a> of \(k\).</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>When \(\mathbf{k}\) is active (i.e., ticking) invoking the FMI functions <code>fmi3Get{VariableType}</code> on variables in the output vector \(\mathbf{y}_k\) will trigger the execution of the output function \(\mathbf{f}_{event}\) to compute such variables.
-If <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>false</code>, then \(\mathbf{f}_{disc}\) cannot be called explicitly using <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>, but will be implicitly executed during \(\mathbf{f}_{event}\).
-When <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> is called, the state vector \(\mathbf{x}_k\) is updated according to state transition function \(\mathbf{f}_{disc}\).</p>
+<p>When \(k\) is active (i.e., ticking) invoking the FMI functions <code>fmi3Get{VariableType}</code> on variables in the output vector \(\mathbf{y}_k\) will trigger the execution of the output function \(\mathbf{f}_{\mathit{event}}\) to compute such variables.
+If <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>false</code>, then \(\mathbf{f}_{\mathit{event}}\) cannot be called explicitly using <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>, but will be implicitly executed during \(\mathbf{f}_{\mathit{event}}\).
+When <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> is called, the state vector \(\mathbf{x}_k\) is updated according to state transition function \(\mathbf{f}_{\mathit{event}}\).</p>
 </div>
 <div class="paragraph">
-<p><em>[Separating</em> \(\mathbf{f}_{disc}\) <em>from</em> \(\mathbf{f}_{event}\) <em>allows manipulation of the current (discrete) state and compute the corresponding outputs, for instance for model-based control applications.]</em></p>
+<p><em>[Separating</em> \(\mathbf{f}_{\mathit{event}}\) <em>from</em> \(\mathbf{f}_{\mathit{event}}\) <em>allows manipulation of the current (discrete) state and compute the corresponding outputs, for instance for model-based control applications.]</em></p>
 </div>
 <div class="paragraph">
 <p>The discrete-time variables \(\mathbf{x}_k\) and \(\mathbf{y}_k\) are called clocked variables.
-A clocked variable \(\mathbf{v}_k\) can acquire a new value and can be queried only when its Clock \(\mathbf{k}\) is active, except during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
+Clocked variables \(\mathbf{v}_k\) can acquire a new values and can be queried only when their Clock \(k\) is active, except during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 <em>[This is common in clock semantics, see for example <a href="#MLS12">[MLS12]</a>.]</em>
 During <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, if a clocked variable is declared as an <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, then it must be initialized as all other discrete variable of the FMU.
 Declaring a clocked variable as an <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> is optional.
@@ -3025,7 +3025,7 @@ Clocked states declare the <a href="#valueReference"><code>valueReference</code>
 <div class="paragraph">
 <p>Output clocks may depend on input Clocks and other variables.
 Such <a href="#dependencies"><code>dependencies</code></a> are declared in the <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.
-A Clock \(\mathbf{k}\) depends on a Clock or variable \(\mathbf{v}\) if a tick or the value of \(\mathbf{v}\) may trigger a tick of \(\mathbf{k}\) during the same super-dense time instant.</p>
+A Clock \(k\) depends on a Clock or variable \(v\) if a tick or the value of \(v\) may trigger a tick of \(k\) during the same super-dense time instant.</p>
 </div>
 <div class="paragraph">
 <p>Declaring a variable as <a href="#clocked-variable">clocked variable</a> using the <a href="#clocks"><code>clocks</code></a> attribute specifies a <a href="#dependencies">dependency</a> too, but also declares that such a clocked variable can only be <a href="#get-and-set-variable-values">accessed</a> when one of the referenced Clocks is active.
@@ -3402,7 +3402,7 @@ This enables computation on demand with subsequent calls returning the same valu
 <p>Because specific set functions exist (<a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>), caching algorithms can be applied to reuse already computed values.</p>
 </div>
 <div class="paragraph">
-<p>In all tables describing the mathematical model of a state (e.g. <a href="#table-math-model-exchange">ContinuousTimeMode</a>), for notational convenience one function (e.g. \(\mathbf{f}_\mathit{cont}\)) is defined to compute all outputs from all input arguments.
+<p>In all tables describing the mathematical model of a state (e.g. <a href="#table-math-model-exchange">ContinuousTimeMode</a>), for notational convenience one function (e.g. \(\mathbf{f}_{\mathit{event}}\)) is defined to compute all outputs from all input arguments.
 However, in an efficiently implemented FMU, computation of each output may be triggered by its specific get function.
 Additionally, the outputs may be a function of a subset of the input arguments, as defined in the <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.</p>
 </div>
@@ -3610,14 +3610,14 @@ Details about which variables are in \(\mathbf{v}_{\mathit{known}}\) are given i
 \[\mathbf{J}
 =
 \begin{bmatrix}
-\frac{\partial h_1}{\partial v_{\mathit{known},1}} &amp; \cdots &amp; \frac{\partial h_1}{\partial v_{\mathit{known},n}} \\
+\frac{\partial g_1}{\partial v_{\mathit{known},1}} &amp; \cdots &amp; \frac{\partial g_1}{\partial v_{\mathit{known},n}} \\
 \vdots &amp; \ddots &amp; \vdots \\
-\frac{\partial h_m}{\partial v_{\mathit{known},1}} &amp; \cdots &amp; \frac{\partial h_m}{\partial v_{\mathit{known},n}}
+\frac{\partial g_m}{\partial v_{\mathit{known},1}} &amp; \cdots &amp; \frac{\partial g_m}{\partial v_{\mathit{known},n}}
 \end{bmatrix}\]
 </div>
 </div>
 <div class="paragraph">
-<p>where \(\mathbf{v}_{\mathit{known}}\) are the \(n\) knowns, and \(\mathbf{h}\) are the \(m\) functions to calculate the \(m\) unknwon variables \(\mathbf{v}_{\mathit{unknwon}}\)  from the knowns.</p>
+<p>where \(\mathbf{v}_{\mathit{known}}\) are the \(n\) knowns, and \(\mathbf{g}\) are the \(m\) functions to calculate the \(m\) unknown variables \(\mathbf{v}_{\mathit{unknwon}}\)  from the knowns.</p>
 </div>
 <div class="paragraph">
 <p>Both functions can also be used to construct the partial derivative matrices.
@@ -3877,14 +3877,14 @@ y_2
 \end{bmatrix}
 =
 \begin{bmatrix}
-h_1(u_1, u_2)
+g_1(u_1, u_2)
 \\
-h_2(u_1, u_2)
+g_2(u_1, u_2)
 \end{bmatrix}\]
 </div>
 </div>
 <div class="paragraph">
-<p><em>and \(\left( w_1,  w_2 \right)^T \cdot \mathbf{ \frac{\partial h}{\partial u} }\) for some vector \(\left( w_1,  w_2 \right)^T\) is needed.</em>
+<p><em>and \(\left( w_1,  w_2 \right)^T \cdot \mathbf{ \frac{\partial g}{\partial u} }\) for some vector \(\left( w_1,  w_2 \right)^T\) is needed.</em>
 <em>Then one can get this with one function call of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (with arguments</em> \(\mathbf{v}_{\mathit{unknown}} = \text{valueReferences of} \left \{ y_1, y_2 \right \},  \mathbf{v}_{\mathit{known}} = \text{valueReferences of} \left \{ u_1, u_2 \right \},  \mathbf{v}_{\mathit{seed}} = \left( w_1, w_2 \right)^T\) <em>), while with <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> at least two calls would be necessary to first construct the Jacobian column-wise and then multiplying from the right with</em> \(\left( w_1,  w_2 \right)^T\) <em>.</em></p>
 </div>
 <div class="paragraph">
@@ -4255,7 +4255,7 @@ If a NULL pointer is provided for argument <code>instance</code>, the function c
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>\(\mathbf{t}_{\mathit{start}} := (\)<a href="#startTime"><code>startTime</code></a>\(,0)\)</p>
+<p>\(t_{\mathit{start}} := (\)<a href="#startTime"><code>startTime</code></a>\(,0)\)</p>
 </li>
 <li>
 <p>Activate initialization equations \(\mathbf{f}_{\mathit{init}}\).</p>
@@ -4419,7 +4419,7 @@ Equations are active to determine the initial FMU state, as well as all <a href=
 Artificial or real algebraic loops over connected FMUs in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> may be handled by using appropriate numerical algorithms.</p>
 </div>
 <div class="paragraph">
-<p>In <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, the FMU computes initial values at the start time \(\mathbf{t}_\mathit{start}\) using function \(\mathbf{f}_\mathit{init}\), not present in the other modes, for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state">state</a> or for the derivative of a <a href="#state">state</a>.</p>
+<p>In <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, the FMU computes initial values at the start time \(t_{\mathit{start}}\) using function \(\mathbf{f}_{\mathit{start}}\), not present in the other modes, for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state">state</a> or for the derivative of a <a href="#state">state</a>.</p>
 </div>
 <table id="table-math-initializationMode" class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -4438,11 +4438,11 @@ Artificial or real algebraic loops over connected FMUs in <a href="#Initializati
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a>  \(\mathbf{u}_{c+d}(\mathbf{t}_{start})\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time and discrete-time <a href="#input"><code>inputs</code></a>  \(\mathbf{u}_{c+d}(t_{\mathit{start}})\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, ^{\bullet}\mathbf{x}_d, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{shift}}, \mathbf{T}_\mathit{interval}) := \mathbf{f}_{\mathit{init}}(\mathbf{u}_{c+d}, \mathbf{p}, \mathbf{t}_{start}, \mathbf{v}_{\mathit{initial=exact}})\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, ^{\bullet}\mathbf{x}_d, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{shift}}, \mathbf{T}_{\mathit{start}}) := \mathbf{f}_{\mathit{init}}(\mathbf{u}_{c+d}, \mathbf{p}, t_{\mathit{start}}, \mathbf{v}_{\mathit{initial=exact}})\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetShift"><code>fmi3GetShift</code></a>, <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a></p></td>
 </tr>
 <tr>
@@ -4458,7 +4458,7 @@ Artificial or real algebraic loops over connected FMUs in <a href="#Initializati
 <p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b} := \mathbf{b}\)</p>
 </li>
 <li>
-<p>\(\mathbf{t} := (\mathbf{t}_{\mathit{start}}, 0)\)</p>
+<p>\(t := (t_{\mathit{start}}, 0)\)</p>
 </li>
 <li>
 <p>Model Exchange:</p>
@@ -4776,13 +4776,13 @@ The exact event localization is hidden from the importer.</p>
 <ul>
 <li>
 <p>If <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>, then execute state transition function of the model partitions<br>
-\((\mathbf{x}_{d}) := \mathbf{f}_{\mathit{disc}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
+\((\mathbf{x}_{d}) := \mathbf{f}_{\mathit{disc}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, t)\)</p>
 </li>
 <li>
 <p>else function is ignored.</p>
 </li>
 <li>
-<p>For all active Clocks \(\mathbf{k}\), the <a href="#clocked-variable">clocked variables</a> \(\mathbf{v}_k\) are part of the set of discrete variables \(\mathbf{v}_d\) computed by \(\mathbf{f}_{\mathit{disc}}\).</p>
+<p>For all active Clocks \(\mathbf{k}\), the <a href="#clocked-variable">clocked variables</a> \(\mathbf{v}_{\mathbf{k}}\) are part of the set of discrete variables \(\mathbf{v}_d\) computed by \(\mathbf{f}_{\mathit{disc}}\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -4797,18 +4797,18 @@ The exact event localization is hidden from the importer.</p>
 <ul>
 <li>
 <p>if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>, then<br>
-\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{x}_{d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
+\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{x}_{d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, t)\)</p>
 </li>
 <li>
 <p>else<br>
-\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)<br>
+\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, t)\)<br>
   which includes \(\mathbf{f}_{\mathit{disc}}\).</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>For all active Clocks \(\mathbf{k}\), the <a href="#clocked-variable">clocked variables</a> \(\mathbf{v}_k\) are part of the set of discrete variables \(\mathbf{v}_d\) computed by \(\mathbf{f}_{\mathit{event}}\).</p>
+<p>For all active Clocks \(\mathbf{k}\), the <a href="#clocked-variable">clocked variables</a> \(\mathbf{v}_{\mathbf{k}}\) are part of the set of discrete variables \(\mathbf{v}_d\) computed by \(\mathbf{f}_{\mathit{event}}\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -4837,7 +4837,10 @@ The exact event localization is hidden from the importer.</p>
 </div>
 </li>
 <li>
-<p>\((\mathbf{T}_\mathit{interval}) := \mathbf{f}_{\mathit{update}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
+<p>\((\mathbf{T}_{\mathit{interval}}) := \mathbf{f}_{\mathit{update}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, t)\)</p>
+</li>
+<li>
+<p>\((\mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{update}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, t)\)</p>
 </li>
 <li>
 <p>Update previous values of discrete states: \({}^\bullet\mathbf{x}_d := \mathbf{x}_d\).</p>
@@ -4849,7 +4852,7 @@ The exact event localization is hidden from the importer.</p>
 <p>Deactivate active clocks and respective model partitions.</p>
 </li>
 <li>
-<p>Increment super-dense time: \(\mathbf{t} := (\mathbf{t}_\mathit{R}, \mathbf{t}_\mathit{I} + 1)\).</p>
+<p>Increment super-dense time: \(t := (t_{R}, t_{I} + 1)\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -4862,10 +4865,10 @@ The exact event localization is hidden from the importer.</p>
 <p><a id="updateRelations"></a>Update previous values of <a href="#relations">relations</a>: \({}^\bullet\mathbf{r} := \mathbf{r}\).</p>
 </li>
 <li>
-<p>Deactivate event equations \(\mathbf{f}_\mathit{event}\).</p>
+<p>Deactivate event equations \(\mathbf{f}_{\mathit{event}}\).</p>
 </li>
 <li>
-<p>Model Exchange: Activate continuous-time equations \(\mathbf{f}_\mathit{cont}\).</p>
+<p>Model Exchange: Activate continuous-time equations \(\mathbf{f}_{\mathit{start}}\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -4893,14 +4896,14 @@ The exact event localization is hidden from the importer.</p>
 <dd>
 <p>For <a href="#inputClock"><code>input Clocks</code></a>, <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> is called to set the activation status of <a href="#Clock"><code>Clocks</code></a> to <code>fmi3ClockActive</code> or <code>fmi3ClockInactive</code>.
 During the solution of algebraic loops, the activation condition of triggered input clocks may change and therefore <a href="#fmi3SetClock"><code>fmi3SetClock</code></a> can be called multiple times per super-dense time instant.
-When a Clock \(\mathbf{k}\) is deactivated, the FMU must</p>
+When a Clock \(k\) is deactivated, the FMU must</p>
 <div class="ulist">
 <ul>
 <li>
 <p>reset all clocked states of this Clock to the values computed during the last <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> when this Clock was active (\({}^\bullet\mathbf{v}_{\mathit{k}}\)); and, as a result:</p>
 </li>
 <li>
-<p>deactivate all Clocks that were activated as a result of \(\mathbf{k}\)'s activation during the current super-dense time instant.</p>
+<p>deactivate all Clocks that were activated as a result of \(k\)'s activation during the current super-dense time instant.</p>
 </li>
 </ul>
 </div>
@@ -5031,7 +5034,7 @@ This argument is only valid in Model Exchange.</p>
 <div id="nextEventTime" class="ulist">
 <ul>
 <li>
-<p>The return argument <a href="#nextEventTime"><code>nextEventTime</code></a> contains the absolute time of the next time event \(\mathbf{T}_\mathit{next}\) if <a href="#nextEventTimeDefined"><code>nextEventTimeDefined = fmi3True</code></a>.
+<p>The return argument <a href="#nextEventTime"><code>nextEventTime</code></a> contains the absolute time of the next time event \(T_{\mathit{next}}\) if <a href="#nextEventTimeDefined"><code>nextEventTimeDefined = fmi3True</code></a>.
 The importer must compute up to <a href="#nextEventTime"><code>nextEventTime</code></a> (or if needed slightly further) and then enter <a href="#EventMode"><strong>Event Mode</strong></a> using <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> with argument <a href="#timeEvent"><code>timeEvent = fmi3True</code></a>.
 The FMU must handle this time event at the first call to <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> with <a href="#timeEvent"><code>timeEvent = fmi3True</code></a> at or after <a href="#nextEventTime"><code>nextEventTime</code></a>.<br>
 <em>[This might be needed if, for example, the time resolution of the importer does not allow hitting the precise <a href="#nextEventTime"><code>nextEventTime</code></a>.</em>
@@ -5196,7 +5199,7 @@ This state must not be entered, if the FMU contains no <a href="#tunable"><code>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{term}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, \mathbf{t})\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c+d}, \mathbf{z}, \mathbf{w}_{c+d}) := \mathbf{f}_{\mathit{term}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p></td>
 </tr>
 </tbody>
@@ -5686,11 +5689,11 @@ If a variable is associated with a <code>Unit</code>, the value passed to <a hre
 <div class="title">Figure 11. <code>BaseUnit</code> element.</div>
 </div>
 <div class="paragraph">
-<p>A value \(v_{unit}\) in <code>Unit</code> is converted to the base unit \(v_{base}\) by the equation</p>
+<p>A value \(v_{\mathit{unit}}\) in <code>Unit</code> is converted to the base unit \(v_{\mathit{base}}\) by the equation</p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[v_{base} = \texttt{factor} * v_{unit} + \texttt{if relativeQuantity then 0 else offset}\]
+\[v_{\mathit{base}} = \texttt{factor} * v_{\mathit{unit}} + \texttt{if relativeQuantity then 0 else offset}\]
 </div>
 </div>
 <div class="paragraph">
@@ -5910,14 +5913,14 @@ The attribute <code>name</code> must be unique with respect to all other names o
 <em>[Reason: no use case is known for the combination of inverse and offset, which would also be more complicated.]</em></p>
 </div>
 <div class="paragraph">
-<p>A value \(v_{unit}\) in <code>Unit</code> is converted to a value \(v_{display}\) in <code>DisplayUnit</code> by the equation:</p>
+<p>A value \(v_{\mathit{unit}}\) in <code>Unit</code> is converted to a value \(v_{\mathit{display}}\) in <code>DisplayUnit</code> by the equation:</p>
 </div>
 <div class="stemblock">
 <div class="content">
-\[v_{display} =
+\[v_{\mathit{display}} =
 \left\{\begin{array}{ll}
-\texttt{factor} *          v_{unit}  + \texttt{offset} &amp;\text{if} \; \texttt{inverse = false} \\
-\texttt{factor} * \frac{1}{v_{unit}}  &amp;\text{if} \; \texttt{inverse = true}
+\texttt{factor} *          v_{\mathit{unit}}  + \texttt{offset} &amp;\text{if} \; \texttt{inverse = false} \\
+\texttt{factor} * \frac{1}{v_{\mathit{unit}}}  &amp;\text{if} \; \texttt{inverse = true}
 \end{array}\right.\]
 </div>
 </div>
@@ -6144,7 +6147,7 @@ The attribute <code>intervalVariability</code> declares the Clock type, see <a h
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>intervalDecimal</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="intervalDecimal"></a>
-This attribute defines the time interval \(\mathbf{T}_{interval}\) between consecutive <a href="#Clock">Clock</a> ticks.
+This attribute defines the time interval \(T_{\mathit{interval}}\) between consecutive <a href="#Clock">Clock</a> ticks.
 This value must be greater than 0.0.
 This attribute is required if Clock type is <a href="#constant-clock"><code>constant</code></a>, <a href="#fixed-clock"><code>fixed</code></a> or <a href="#tunable-clock"><code>tunable</code></a> <a href="#periodic-clock">periodic Clocks</a>.
 It must not be used otherwise.</p></td>
@@ -6152,7 +6155,7 @@ It must not be used otherwise.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>shiftDecimal</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="shiftDecimal"></a>
-This attribute defines the delay of the first clock activation relative to \(\mathbf{t}_{\mathit{start}}\) (<a href="#startTime"><code>startTime</code></a>).
+This attribute defines the delay of the first clock activation relative to \(t_{\mathit{start}}\) (<a href="#startTime"><code>startTime</code></a>).
 This attribute requires that <a href="#intervalDecimal"><code>intervalDecimal</code></a> is present.
 The value of this attribute value must be equal to or greater than 0.0.
 Default value is 0.0.</p></td>
@@ -6172,7 +6175,7 @@ This attribute must only be used for <a href="#periodic-clock">periodic Clocks</
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>intervalCounter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="intervalCounter"></a>This attribute defines (together with <a href="#resolution"><code>resolution</code></a>) the interval between consecutive clock ticks:</p>
-<p class="tableblock">\(\mathbf{T}_{interval} = \) <code>intervalCounter / resolution</code>.</p>
+<p class="tableblock">\(T_{\mathit{interval}} = \) <code>intervalCounter / resolution</code>.</p>
 <p class="tableblock"><a href="#intervalCounter"><code>intervalCounter</code></a> and <a href="#resolution"><code>resolution</code></a> have no default value.
 If present the value of this attribute must be greater than 0.
 This attribute may be present if <a href="#supportsFraction"><code>supportsFraction = true</code></a> and Clock type is <a href="#constant-clock"><code>constant</code></a>, <a href="#fixed-clock"><code>fixed</code></a> or <a href="#tunable-clock"><code>tunable</code></a> <a href="#periodic-clock">periodic Clocks</a>.
@@ -6180,8 +6183,8 @@ It must not be used otherwise.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>shiftCounter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="shiftCounter"></a>This value defines (together with <a href="#resolution"><code>resolution</code></a>) the delay of the first clock activation relative to \(\mathbf{t}_{\mathit{start}}\) (<a href="#startTime"><code>startTime</code></a>):</p>
-<p class="tableblock">\(\mathbf{T}_{shift} = \) <code>shiftCounter / resolution</code>.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="shiftCounter"></a>This value defines (together with <a href="#resolution"><code>resolution</code></a>) the delay of the first clock activation relative to \(t_{\mathit{start}}\) (<a href="#startTime"><code>startTime</code></a>):</p>
+<p class="tableblock">\(T_{\mathit{shift}} = \) <code>shiftCounter / resolution</code>.</p>
 <p class="tableblock">This attribute requires that <a href="#intervalCounter"><code>intervalCounter</code></a> is present.
 The value of this attribute value must be equal to or greater than <code>0</code>.
 Default value is <code>0</code>.</p></td>
@@ -6599,7 +6602,7 @@ The default value is <code>true</code>.
 If <code>canHandleMultipleSetPerTimeInstant = false</code>, then only one <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> call is allowed for this variable per super-dense time instant in <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
 </div>
 <div class="paragraph">
-<p><em>[This flag can be set to <code>false</code> for variables where discrete-time states are directly updated when assigned (</em> \(\mathbf{x}_\mathit{d} := f(\mathbf{x}_\mathit{d},\mathbf{u}_\mathit{c+d})\) <em>instead of</em> \(\mathbf{x}_\mathit{d} := f({}^\bullet\mathbf{x}_\mathit{d},\mathbf{u}_\mathit{c+d})\) <em>).</em>
+<p><em>[This flag can be set to <code>false</code> for variables where discrete-time states are directly updated when assigned (</em> \(\mathbf{x}_{d} := f(\mathbf{x}_{d},\mathbf{u}_{c+d})\) <em>instead of</em> \(\mathbf{x}_{d} := f({}^\bullet\mathbf{x}_{d},\mathbf{u}_{c+d})\) <em>).</em>
 <em>If an <a href="#output"><code>output</code></a> depends on this <a href="#input"><code>input</code></a> and on discrete-time states, then an algebraic loop could be formed with such an <a href="#input"><code>input</code></a>.</em>
 <em>Such loops cannot be solved iteratively because of the limitation on <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.</em>
 <em>Therefore, such an <a href="#input"><code>input</code></a> should not appear in an algebraic loop.]</em></p>
@@ -7388,7 +7391,7 @@ Ordered list of all outputs, in other words, a list of value references where ev
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the <a href="#output"><code>outputs</code></a> from the knowns after the <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 Attribute <a href="#dependencies"><code>dependencies</code></a> for <a href="#output"><code>output</code></a> <a href="#Clock"><code>Clocks</code></a> lists all known variables (including input clocks) that contribute to trigger a clock tick for that <a href="#outputClock">output Clock</a>.
 The functional dependency is defined as:<br>
-\({(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{\mathit{output}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, \mathbf{t}, \mathbf{p})}\)</p></td>
+\({(\mathbf{y}_c, \mathbf{y}_d) := \mathbf{f}_{\mathit{output}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p})}\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ContinuousStateDerivative</code></p></td>
@@ -7402,7 +7405,7 @@ The order defined by this list defines the order of the elements for <a href="#f
 <em>Example: if</em> \({\frac{\text{ds}}{\text{dt}} = v,\ \frac{\text{dv}}{\text{dt}} =f(..)}\) <em>,then</em> \({\left\{ v,\ \frac{\text{dv}}{\text{dt}} \right\}}\) <em>is the vector of state derivatives and attribute <a href="#derivative"><code>derivative</code></a> of</em> \({v}\) <em>references</em> \({s}\) <em>, and attribute <a href="#derivative"><code>derivative</code></a> of</em> \({\frac{\text{dv}}{\text{dt}}}\) <em>references</em> \({v}\) <em>.]</em><br>
 For Co-Simulation, elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> are ignored if capability flag <a href="#providesDirectionalDerivatives"><code>providesDirectionalDerivatives</code></a> has a value of <code>false</code>, in other words, it cannot be computed.
 The functional dependency is defined as:<br>
-\({\dot{\mathbf{x}_c} := \mathbf{f}_{\mathit{der}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, \mathbf{t}, \mathbf{p})}\)</p></td>
+\({\dot{\mathbf{x}}_c := \mathbf{f}_{\mathit{der}}(\mathbf{x}_c, \mathbf{u}_c, \mathbf{u}_d, t, \mathbf{p})}\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClockedState</code></p></td>
@@ -7440,7 +7443,7 @@ Attribute <a href="#dependencies"><code>dependencies</code></a> defines the depe
 The functional dependency is defined as:</p>
 </div>
 <div class="paragraph">
-<p>\({\mathbf{v}_{\mathit{initialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, \mathbf{t}_{start}, \mathbf{v}_{\mathit{initial=exact}})}\)</p>
+<p>\({\mathbf{v}_{\mathit{initialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, t_{\mathit{start}}, \mathbf{v}_{\mathit{initial=exact}})}\)</p>
 </div>
 <div class="paragraph">
 <p>Since, <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state">states</a> and state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
@@ -7452,14 +7455,14 @@ The functional dependency is defined as:</p>
 <p><em>[Example: Assume an FMU is defined in the following way:</em></p>
 </div>
 <div class="paragraph">
-<p>\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{init}}(\mathbf{x}_c, \mathbf{u}_{c+d}, \mathbf{t}_{start}, \mathbf{p})}\)<br></p>
+<p>\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{init}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_{\mathit{start}}, \mathbf{p})}\)<br></p>
 </div>
 <div class="paragraph">
-<p>\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{sim}}(\mathbf{x}_c, \mathbf{u}_{c+d}, \mathbf{t}_i, \mathbf{p})}\)<br></p>
+<p>\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{sim}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_i, \mathbf{p})}\)<br></p>
 </div>
 <div class="paragraph">
-<p><em>Therefore, the initial state</em> \({\mathbf{x}_c(\mathbf{t}_{start})}\) <em>has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and the initial state derivative</em> \({\dot{\mathbf{x}}_c(\mathbf{t}_{start})}\) <em>has <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>.</em>
-<em>The importer can still initialize this FMU in steady-state, by using</em> \({\mathbf{x}_c(\mathbf{t}_{start})}\) <em>as iteration variables and adding the equations</em> \({\dot{\mathbf{x}}_c(\mathbf{t}_{start}) = \mathbf{0}}\) <em>in the importer.]</em></p>
+<p><em>Therefore, the initial state</em> \({\mathbf{x}_c(t_{\mathit{start}})}\) <em>has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and the initial state derivative</em> \({\dot{\mathbf{x}}_c(t_{\mathit{start}})}\) <em>has <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>.</em>
+<em>The importer can still initialize this FMU in steady-state, by using</em> \({\mathbf{x}_c(t_{\mathit{start}})}\) <em>as iteration variables and adding the equations</em> \({\dot{\mathbf{x}}_c(t_{\mathit{start}}) = \mathbf{0}}\) <em>in the importer.]</em></p>
 </div></div></td>
 </tr>
 <tr>
@@ -9218,7 +9221,7 @@ For <a href="#state-event">state events</a> event indicators are used.</p>
 </div>
 <div class="paragraph">
 <p><a id="state-event"></a>An <a href="#fmi3GetEventIndicators">event indicator</a> signals a <a href="#state-event">state event</a> with the change from \(\mathbf{z}_j &gt; 0\) to \(\mathbf{z}_j \leq 0\) or vice versa.<br>
-<em>[This definition is slightly different from the usual standard definition of state events:</em> \(\mathbf{z}(\mathbf{t}) \cdot \mathbf{z}(\mathbf{t}_\mathit{i-1}) \leq 0\) <em>which has the severe drawback that the value of the event indicator at the previous event instant,</em> \(\mathbf{z}(\mathbf{t}_\mathit{i-1}) \neq 0\), <em>must be non-zero and this condition cannot be guaranteed.</em>
+<em>[This definition is slightly different from the usual standard definition of state events:</em> \(\mathbf{z}(t) \cdot \mathbf{z}(t_{i-1}) \leq 0\) <em>which has the severe drawback that the value of the event indicator at the previous event instant,</em> \(\mathbf{z}(t_{i-1}) \neq 0\), <em>must be non-zero and this condition cannot be guaranteed.</em>
 <em>The often used term "zero-crossing function" for \(\mathbf{z}\) is misleading (and is therefore not used in this document), since a state event is defined by a change of a domain and not by a zero-crossing of a variable.]</em></p>
 </div>
 <div class="paragraph">
@@ -9310,20 +9313,20 @@ All discrete-time variables are fixed during this phase and the corresponding di
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{t} := (\)<a href="#time"><code>time</code></a>\(, 0)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(t := (\)<a href="#time"><code>time</code></a>\(, 0)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetTime"><code>fmi3SetTime</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}(\mathbf{t})\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c}(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time <a href="#state">states</a> \(\mathbf{x}_{c}(\mathbf{t})\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time <a href="#state">states</a> \(\mathbf{x}_{c}(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3SetFloat64</code>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>\((\mathbf{y}_{c}, \mathbf{\dot{x}}_c, \mathbf{z}, \mathbf{w}_{c}) := \mathbf{f}_{\mathit{cont}}(\mathbf{x}_{c}, {}^\bullet\mathbf{x}_{d}, \mathbf{u}_{c}, {}^\bullet\mathbf{u}_{d}, \mathbf{p}, {}^\bullet\mathbf{r}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
+<p>\((\mathbf{y}_{c}, \mathbf{\dot{x}}_c, \mathbf{z}, \mathbf{w}_{c}) := \mathbf{f}_{\mathit{cont}}(\mathbf{x}_{c}, {}^\bullet\mathbf{x}_{d}, \mathbf{u}_{c}, {}^\bullet\mathbf{u}_{d}, \mathbf{p}, {}^\bullet\mathbf{r}, {}^\bullet\mathbf{b}, t)\)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>,
@@ -9336,7 +9339,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 <ul>
 <li>
 <p>Evaluate model equations with valid values for the right-hand side:<br>
-\((\mathbf{y}_{c}, \mathbf{\dot{x}}_c, \mathbf{z}, \mathbf{w}_{c}, \mathbf{b},\)<a href="#enterEventMode"><code>enterEventMode</code></a>\()\) \(:= \mathbf{f}_{\mathit{comp}}(\mathbf{x}_{c}, {}^\bullet\mathbf{x}_{d}, \mathbf{u}_{c}, {}^\bullet\mathbf{u}_{d}, \mathbf{p}, {}^\bullet\mathbf{r}, {}^\bullet\mathbf{b}, \mathbf{t})\)</p>
+\((\mathbf{y}_{c}, \mathbf{\dot{x}}_c, \mathbf{z}, \mathbf{w}_{c}, \mathbf{b},\)<a href="#enterEventMode"><code>enterEventMode</code></a>\()\) \(:= \mathbf{f}_{\mathit{comp}}(\mathbf{x}_{c}, {}^\bullet\mathbf{x}_{d}, \mathbf{u}_{c}, {}^\bullet\mathbf{u}_{d}, \mathbf{p}, {}^\bullet\mathbf{r}, {}^\bullet\mathbf{b}, t)\)</p>
 </li>
 <li>
 <p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b} := \mathbf{b}\)</p>
@@ -9358,7 +9361,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 <p>Activate event equations \(\mathbf{f}_{\mathit{event}}\)</p>
 </li>
 <li>
-<p>\(\mathbf{t} := (\mathbf{t}_\mathit{R}, 0)\)</p>
+<p>\(t := (t_{R}, 0)\)</p>
 </li>
 </ul>
 </div></div></td>
@@ -9386,7 +9389,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 <div class="ulist">
 <ul>
 <li>
-<p><a id="time"></a> Argument <code>time</code> is the new value for the real part \(\mathbf{t}_\mathit{R}\) of \(\mathbf{t} := (\mathbf{t}_\mathit{R}, 0)\).
+<p><a id="time"></a> Argument <code>time</code> is the new value for the real part \(t_{R}\) of \(t := (t_{R}, 0)\).
 It refers to the unit of the <a href="#independent"><code>independent</code></a> variable.
 <a href="#time"><code>time</code></a> must be larger or equal to:</p>
 <div class="ulist">
@@ -10039,7 +10042,7 @@ If <code>false</code> and the function is called anyway, it has no effect.</p></
 <div class="paragraph">
 <p>FMI for Co-Simulation provides a standardized interface for execution of simulation models or tools in a co-simulation environment.
 In contrast to FMI for Model Exchange, a Co-Simulation FMU implements not only the model algorithm, but also the required solution method.
-The data exchange between FMUs is restricted to discrete communication points \(\mathbf{t}_i\) (unless <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> is used).
+The data exchange between FMUs is restricted to discrete communication points \(t_i\) (unless <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> is used).
 In the time between two communication points (or between entering <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>), the subsystem inside an FMU is solved independently by internal means.
 This leads to a delay for information "traveling through" the FMU, so there cannot be an immediate reaction (direct feedthrough) as in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> of Model Exchange.
 The co-simulation algorithm of the importer controls the data exchange and the synchronization between FMUs.</p>
@@ -10077,7 +10080,7 @@ The co-simulation algorithm of the importer controls the data exchange and the s
 <div class="ulist">
 <ul>
 <li>
-<p>variable or constant communication step sizes \(\mathbf{h}_i\) (see <a href="#communicationStepSize"><code>communicationStepSize</code></a>),</p>
+<p>variable or constant communication step sizes \(h_i\) (see <a href="#communicationStepSize"><code>communicationStepSize</code></a>),</p>
 </li>
 <li>
 <p>reject and repeat communication steps (see <a href="#get-set-fmu-state">Section 2.2.7.4</a>), e.g. with reduced communication step size or a different set of input values,</p>
@@ -10086,7 +10089,7 @@ The co-simulation algorithm of the importer controls the data exchange and the s
 <p>update inputs and retrieve outputs at intermediate points within a communication step (see <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>),</p>
 </li>
 <li>
-<p>return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> at \(\mathbf{t} \leq \mathbf{t}_{i+1}\), because, for example, an event influencing the environment was detected by the FMU (see <a href="#early-return">early return</a>),</p>
+<p>return early from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> at \(t \leq t_{i+1}\), because, for example, an event influencing the environment was detected by the FMU (see <a href="#early-return">early return</a>),</p>
 </li>
 <li>
 <p>dedicated <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, which allows computation of consistent initial conditions over <a href="#algebraic-loops">algebraic loops</a>,</p>
@@ -10261,22 +10264,22 @@ If the FMU is connected in <a href="#algebraic-loops">algebraic loops</a> with o
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set non-clocked, continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d-k}(\mathbf{t})\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set non-clocked, continuous-time and discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{c+d-k}(t)\).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get values of non-clocked variables \(\mathbf{v}_{-k}(\mathbf{t})\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get values of non-clocked variables \(\mathbf{v}_{-k}(t)\).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get time derivatives of <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a> \(\mathbf{y}_c^{(j)}(\mathbf{t})\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get time derivatives of <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a> \(\mathbf{y}_c^{(j)}(t)\).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>\((\mathbf{y}_{c+d-k}, \mathbf{y}_c^{(j)}, \mathbf{x}_{d-k}, \mathbf{w}_{c+d-k}, \mathbf{b}, \mathbf{t}_\mathit{i+1}) := \mathbf{f}_{\mathit{doStep}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{c,u}, \mathbf{p}, {}^{\bullet}\mathbf{b}, \mathbf{t}_i, \mathbf{h}_i)\)<br></p>
+<p>\((\mathbf{y}_{c+d-k}, \mathbf{y}_c^{(j)}, \mathbf{x}_{d-k}, \mathbf{w}_{c+d-k}, \mathbf{b}, t_{i+1}) := \mathbf{f}_{\mathit{doStep}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{\mathit{c,u}}, \mathbf{p}, {}^{\bullet}\mathbf{b}, t_i, h_i)\)<br></p>
 </li>
 <li>
 <p>Update previous values of non-clocked, discrete states: \({}^\bullet\mathbf{x}_{d-k} := \mathbf{x}_{d-k}\).</p>
@@ -10285,14 +10288,14 @@ If the FMU is connected in <a href="#algebraic-loops">algebraic loops</a> with o
 <p>Update previous values of buffers: \({}^\bullet\mathbf{b} := \mathbf{b}\).</p>
 </li>
 <li>
-<p>\(\mathbf{t} := (\mathbf{t}_\mathit{i+1}, 0)\)</p>
+<p>\(t := (t_{i+1}, 0)\)</p>
 </li>
 </ul>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3DoStep"><code>fmi3DoStep</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{v}_{u-k}, \mathbf{t}_u) := \mathbf{f}_{\mathit{inter}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{c,u}, \mathbf{p}, {}^{\bullet}\mathbf{b}, \mathbf{t}_i, \mathbf{h}_i)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\((\mathbf{v}_{u-k}, t_u) := \mathbf{f}_{\mathit{inter}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{\mathit{c,u}}, \mathbf{p}, {}^{\bullet}\mathbf{b}, t_i, h_i)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a></p></td>
 </tr>
 <tr>
@@ -10318,13 +10321,13 @@ If the FMU is connected in <a href="#algebraic-loops">algebraic loops</a> with o
 </ul>
 </div>
 <div class="paragraph">
-<p>at time \(\mathbf{t}\).</p>
+<p>at time \(t\).</p>
 </div>
 </dd>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
-<p>returns values for all variables at \(\mathbf{t}\).
-<a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> does not trigger an evaluation of \(\mathbf{f}_\mathit{doStep}\).
+<p>returns values for all variables at \(t\).
+<a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> does not trigger an evaluation of \(\mathbf{f}_{\mathit{doStep}}\).
 Therefore, <a href="#algebraic-loops">algebraic loops</a> at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls <em>[contrary to <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>]</em>.
 Repeating a communication step requires to reset the FMU state to the previous communication point with <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> and repeating the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with new input values.</p>
 <div class="paragraph">
@@ -10366,18 +10369,18 @@ Arguments referring to time inherit the unit of the <a href="#independent"><code
 <div class="ulist">
 <ul>
 <li>
-<p><a id="currentCommunicationPoint"></a> <code>currentCommunicationPoint</code> is the current communication point of the importer (\(\mathbf{t}_\mathit{i}\)).
+<p><a id="currentCommunicationPoint"></a> <code>currentCommunicationPoint</code> is the current communication point of the importer (\(t_{i}\)).
 At the first call of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> must be equal to the argument <a href="#startTime"><code>startTime</code></a> of <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</p>
 </li>
 <li>
-<p><a id="communicationStepSize"></a> <code>communicationStepSize</code> is the communication step size (\(\mathbf{h}_\mathit{i}\)).
+<p><a id="communicationStepSize"></a> <code>communicationStepSize</code> is the communication step size (\(h_{i}\)).
 <a href="#communicationStepSize"><code>communicationStepSize</code></a> must be \(&gt; 0.0\).
-The FMU is expected to compute until time \(\mathbf{t}_{i+1} = \mathbf{t}_\mathit{i} + \mathbf{h}_\mathit{i}\).
+The FMU is expected to compute until time \(t_{i+1} = t_{i} + h_{i}\).
 See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCommunicationStepSize</code></a> for restrictions.</p>
 <div class="paragraph">
 <p><em>[Formally, argument <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> is not needed.</em>
 <em>It is present in order to handle a potential mismatch between the importer&#8217;s and the FMU&#8217;s time representations and/or computations.</em>
-<em>Both arguments <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> and <a href="#communicationStepSize"><code>communicationStepSize</code></a> allow computing of</em> \(\mathbf{t}_\mathit{i+1}\) <em>by one addition, avoiding accumulation of numerical errors.]</em></p>
+<em>Both arguments <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> and <a href="#communicationStepSize"><code>communicationStepSize</code></a> allow computing of</em> \(t_{i+1}\) <em>by one addition, avoiding accumulation of numerical errors.]</em></p>
 </div>
 </li>
 <li>
@@ -10395,7 +10398,7 @@ See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCom
 <p><a id="terminateSimulationDS"></a> When <a href="#terminateSimulationDS"><code>terminateSimulation = fmi3True</code></a>, the FMU requests to stop the simulation and the importer must call <a href="#fmi3Terminate"><code>fmi3Terminate</code></a>.</p>
 </li>
 <li>
-<p><a id="earlyReturn"></a> <code>earlyReturn</code> signals to the importer that the FMU returns at \(\mathbf{t}_\mathit{i+1} &lt; \mathbf{t}_i +\)<a href="#communicationStepSize"><code>communicationStepSize</code></a>.
+<p><a id="earlyReturn"></a> <code>earlyReturn</code> signals to the importer that the FMU returns at \(t_{i+1} &lt; t_i +\)<a href="#communicationStepSize"><code>communicationStepSize</code></a>.
 <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> is only allowed if <a href="#earlyReturnAllowed"><code>earlyReturnAllowed = fmi3True</code></a> in <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a>.
 The time reached is specified in <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a>.
 Reasons for <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> are</p>
@@ -10414,7 +10417,7 @@ Reasons for <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> are</
 </div>
 </li>
 <li>
-<p><a id="lastSuccessfulTime"></a> <code>lastSuccessfulTime</code> represents the internal time \(\mathbf{t}_\mathit{i+1}\) of the FMU when <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns, for any value of <a href="#earlyReturn"><code>earlyReturn</code></a>.
+<p><a id="lastSuccessfulTime"></a> <code>lastSuccessfulTime</code> represents the internal time \(t_{i+1}\) of the FMU when <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returns, for any value of <a href="#earlyReturn"><code>earlyReturn</code></a>.
 It is possible that the <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> is equal to <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> when <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> to indicate, for example, the detection of an event at <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a>.
 Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#fmi3OK"><code>fmi3OK</code></a> and <a href="#earlyReturn"><code>earlyReturn = fmi3False</code></a>, it is allowed that <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> deviates from the expected <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> <code>+</code> <a href="#communicationStepSize"><code>communicationStepSize</code></a>.
 <em>[Examples:</em></p>
@@ -10425,7 +10428,7 @@ Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> w
 <em><a href="#fixedInternalStepSize"><code>fixedInternalStepSize</code></a> was introduced to counter these effects.</em></p>
 </li>
 <li>
-<p><em>A variable-step integrator with minimal step size is not able to land exactly at</em> \(\mathbf{t}_\mathit{i+1}\)<em>.]</em></p>
+<p><em>A variable-step integrator with minimal step size is not able to land exactly at</em> \(t_{i+1}\)<em>.]</em></p>
 </li>
 </ul>
 </div>
@@ -10483,11 +10486,11 @@ The co-simulation algorithm signals the support for <a href="#IntermediateUpdate
 </div>
 <div class="paragraph">
 <p>Intermediate values for <a href="#continuous"><code>continuous</code></a> inputs are computed by the importer for example by an extrapolation polynomial build with the output derivatives of connected FMUs.
-FMUs can signal with the optional attribute <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\) to the co-simulation algorithm that best convergence rates can be achieved if these approximation functions are of smoothness \(C^{k}([\mathbf{t}_i, \mathbf{t}_{i+1}])\), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.<br>
+FMUs can signal with the optional attribute <a href="#recommendedIntermediateInputSmoothness"><code>recommendedIntermediateInputSmoothness</code></a> of value \(k\) to the co-simulation algorithm that best convergence rates can be achieved if these approximation functions are of smoothness \(C^{k}([t_i, t_{i+1}])\), that is k-time continuously differentiable, with \(C^{0}\) meaning continuous.<br>
 <em>[This can increase simulation speed for higher order multi-step solvers that in this case do not have to reset at communication points.]</em></p>
 </div>
 <div class="paragraph">
-<p>The importer must ensure that the input approximation function \(\mathbf{u}_u\) is consistent with the values of the input variable (\(\mathbf{u}_u(\mathbf{t}_{i+1})= \mathbf{u}(\mathbf{t}_{i+1})\)).</p>
+<p>The importer must ensure that the input approximation function \(\mathbf{u}_u\) is consistent with the values of the input variable (\(\mathbf{u}_u(t_{i+1})= \mathbf{u}(t_{i+1})\)).</p>
 </div>
 <div class="paragraph">
 <p>Due to the way FMU internal solvers may estimate and correct the approximation error, tentative states may occur and lead to tentative intermediate <a href="#output"><code>output</code></a> values (see <a href="#intermediateStepFinished"><code>intermediateStepFinished</code></a>).
@@ -10593,16 +10596,16 @@ If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater th
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get intermediate variable values \(\mathbf{v}_u(\mathbf{t}_u)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get intermediate variable values \(\mathbf{v}_u(t_u)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get time derivatives of <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a> \(\mathbf{y}_\mathit{c,u}^{(j)}(\mathbf{t_\mathit{u}})\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get time derivatives of <a href="#continuous"><code>continuous</code></a> <a href="#output"><code>outputs</code></a> \(\mathbf{y}_{\mathit{c,u}}^{(j)}(t_u)\).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Set continuous intermediate input variables \(\mathbf{u}_{\mathit{c,u}}(\mathbf{t}_u)\)</p>
+<p>Set continuous intermediate input variables \(\mathbf{u}_{\mathit{c,u}}(t_u)\)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
@@ -11320,7 +11323,7 @@ To retrieve this information the importer calls <a href="#fmi3GetInterval"><code
 <p>A new interval for a <a href="#countdown-aperiodic-clock"><code>countdown</code></a> Clock can be provided at any time during the execution of any model partition.
 The FMU signals that a <a href="#countdown-aperiodic-clock"><code>countdown</code></a> Clock is about to tick by calling <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a>.
 The importer calls <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> for all <a href="#countdown-aperiodic-clock"><code>countdown</code></a> Clocks.
-If a new interval \(\mathbf{T}_{interval, i}\) is provided, i.e. return argument <a href="#qualifiers"><code>qualifiers</code></a> = <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a>, the importer initiates the scheduling of the associated model partitions regarding the delay of the returned interval.</p>
+If a new interval \(T_{\mathit{interval, i}}\) is provided, i.e. return argument <a href="#qualifiers"><code>qualifiers</code></a> = <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a>, the importer initiates the scheduling of the associated model partitions regarding the delay of the returned interval.</p>
 </div>
 <div class="paragraph">
 <p>In case more than one Clock ticks at the same time instant, the scheduler needs a priority to define the activation sequence of the associated model partitions.
@@ -11495,7 +11498,7 @@ It is on the scheduler to activate the model partitions by calling <a href="#fmi
 When activating the model partitions of an FMU the scheduler is expected to respect the Clock properties, e.g. <a href="#intervalDecimal"><code>intervalDecimal</code></a> and <a href="#priority"><code>priority</code></a>.
 Detailed information on Clocks can be found in chapter <a href="#Clock">Clocks</a>.
 By scheduling the exposed <a href="#model-partition">model partitions</a> of an FMU and executing them at dedicated points in time it is the scheduler that defines how time progresses.
-The current time \(\mathbf{t}_i\) is communicated to the FMU as <a href="#activationTime"><code>activationTime</code></a> argument of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.
+The current time \(t_i\) is communicated to the FMU as <a href="#activationTime"><code>activationTime</code></a> argument of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.
 <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> must only be called once for the same Clock and time.
 <em>[The basic differences of the three interface types on how time is advanced is pointed out in <a href="#advancing-time">Section 2.2.6</a>.]</em></p>
 </div>
@@ -11522,24 +11525,24 @@ I.e. the importer may activate potential sinks (e.g. a model partition of anothe
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d}(\mathbf{t})\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set discrete-time <a href="#input"><code>inputs</code></a> \(\mathbf{u}_{d}(t)\).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get values of variables \(\mathbf{v}(\mathbf{t})\).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get values of variables \(\mathbf{v}(t)\).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>When an input Clock \(\mathbf{k}_i\) ticks, activate the corresponding model partition:</p>
+<p>When an input Clock \(k_i\) ticks, activate the corresponding model partition:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>\((\mathbf{y}_\mathit{d,k_i}, \mathbf{x}_\mathit{d,k_i}, \mathbf{w}_\mathit{d,k_i}) := \mathbf{f}_{\mathit{activate}}({}^{\bullet}\mathbf{x}_\mathit{d}, \mathbf{w}_d, \mathbf{u}_\mathit{d}, \mathbf{p}, \mathbf{k_i})\)<br></p>
+<p>\((\mathbf{y}_{d,k_i}, \mathbf{x}_{d,k_i}, \mathbf{w}_{d,k_i}) := \mathbf{f}_{\mathit{activate}}({}^{\bullet}\mathbf{x}_{d}, \mathbf{w}_d, \mathbf{u}_{d}, \mathbf{p},k_i)\)<br></p>
 </li>
 <li>
-<p>Update previous values of discrete states of the corresponding model partition: \({}^\bullet\mathbf{x}_\mathit{d,k_i} := \mathbf{x}_\mathit{d,k_i}\).</p>
+<p>Update previous values of discrete states of the corresponding model partition: \({}^\bullet\mathbf{x}_{d,k_i} := \mathbf{x}_{d,k_i}\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -11607,23 +11610,23 @@ The simulation algorithm can assume that <a href="#get-and-set-variable-values">
 <p><a id="clockReference"></a> <code>clockReference</code>: <a href="#valueReference"><code>valueReference</code></a> of the <a href="#inputClock"><code>input Clock</code></a> associated to the model partition which shall be activated.</p>
 </li>
 <li>
-<p><a id="activationTime"></a> <code>activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the assigned <a href="#Clock">Clock</a> tick time \(\mathbf{t}_i\) <em>[typically: simulation (i.e. virtual) time]</em> (which is known to the simulation algorithm).</p>
+<p><a id="activationTime"></a> <code>activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the assigned <a href="#Clock">Clock</a> tick time \(t_i\) <em>[typically: simulation (i.e. virtual) time]</em> (which is known to the simulation algorithm).</p>
 <div class="paragraph">
 <p>The importer schedules calls of <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for each FMU.
 These calls are based on ticks of <a href="#inputClock">input Clocks</a>.
 The <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> function must not be called on <a href="#outputClock">output Clocks</a> of an FMU.</p>
 </div>
 <div class="paragraph">
-<p><em>[Note, that other than <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will compute the results of the model partition for the current <a href="#Clock">Clock</a> tick \(\mathbf{t}_i\).]</em></p>
+<p><em>[Note, that other than <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-Simulation, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will compute the results of the model partition for the current <a href="#Clock">Clock</a> tick \(t_i\).]</em></p>
 </div>
 <div class="paragraph">
-<p><em>[If required, the FMU can internally derive the <a href="#Clock">Clock</a> interval</em> \(\mathbf{T}_\mathit{interval, i}\) <em>based on the last <a href="#Clock">Clock</a> tick time</em> \(\mathbf{t}_\mathit{i-1}\) <em>i.e. last <a href="#activationTime"><code>activationTime</code></a> for this <a href="#clockReference"><code>clockReference</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).]</em></p>
+<p><em>[If required, the FMU can internally derive the <a href="#Clock">Clock</a> interval</em> \(T_{\mathit{interval, i}}\) <em>based on the last <a href="#Clock">Clock</a> tick time</em> \(t_{i-1}\) <em>i.e. last <a href="#activationTime"><code>activationTime</code></a> for this <a href="#clockReference"><code>clockReference</code></a> (based on last <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> call).]</em></p>
 </div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Consecutive calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#Clock">Clock</a> variable) must have strictly monotonically increasing <a href="#activationTime"><code>activationTime</code></a> \(\mathbf{t}_i\).</p>
+<p>Consecutive calls to <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> for a <a href="#clockReference"><code>clockReference</code></a> (i.e. <a href="#valueReference"><code>valueReference</code></a> of <a href="#Clock">Clock</a> variable) must have strictly monotonically increasing <a href="#activationTime"><code>activationTime</code></a> \(t_i\).</p>
 </div>
 </dd>
 <dt class="hdlist1">Functions <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> &amp; <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
@@ -12296,10 +12299,10 @@ Step events are, for example, used to change the mapping of the continuous state
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="super-dense-time"></a><em>super-dense time</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A precise definition of time taking into account iterations at an event.
-For an <em>FMU</em>, the <a href="#independent"><code>independent</code></a> variable time \(\mathbf{t} \in \mathbb{T}\) is a tuple \(\mathbf{t} = (\mathbf{t}_R, \mathbf{t}_I)\) where \(\mathbf{t}_R \in  \mathbb{R}, \mathbf{t}_I \in \mathbb{N} = \{0,1,2,\ldots\}\).
-The real part \(\mathbf{t}_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
-During continuous-time integration \(\mathbf{t}_I = 0\).
-The integer part \(\mathbf{t}_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(\mathbf{t}_R\).</p></td>
+For an <em>FMU</em>, the <a href="#independent"><code>independent</code></a> variable time \(t \in \mathbb{T}\) is a tuple \(t = (t_R, t_I)\) where \(t_R \in \mathbb{R}, t_I \in \mathbb{N} = \{0,1,2,\ldots\}\).
+The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
+During continuous-time integration \(t_I = 0\).
+The integer part \(t_I\) of this tuple is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>super-dense time instant</em></p></td>
@@ -12313,7 +12316,7 @@ Therefore, this event can be handled efficiently.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="time-instant"></a><em>time instant</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A moment in time, either a continuous-time instant \(\mathbf{t} = \mathbf{t}_R\), or a super-dense time instant \(\mathbf{t} = (\mathbf{t}_R, \mathbf{t}_I)\), see also <a href="#super-dense-time">super-dense time</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A moment in time, either a continuous-time instant \(t = t_R\), or a super-dense time instant \(t = (t_R, t_I)\), see also <a href="#super-dense-time">super-dense time</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="tlm"></a><em>TLM</em></p></td>
