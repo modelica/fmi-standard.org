@@ -136,11 +136,12 @@ typedef struct {
 
     bool isDirtyValues;
 
-    ModelData *modelData;
+    ModelData modelData;
 
+#if NZ > 0
     // event indicators
-    double *z;
-    double *prez;
+    double z[NZ];
+#endif
 
     // internal solver steps
     int nSteps;
@@ -160,9 +161,13 @@ ModelInstance *createModelInstance(
     const char *resourceLocation,
     bool loggingOn,
     InterfaceType interfaceType);
+
 void freeModelInstance(ModelInstance *comp);
 
-void setStartValues(ModelInstance *comp);
+void reset(ModelInstance* comp);
+
+void setStartValues(ModelInstance* comp);
+
 Status calculateValues(ModelInstance *comp);
 
 Status getFloat64 (ModelInstance* comp, ValueReference vr, double      *value, size_t *index);
@@ -197,7 +202,6 @@ void getEventIndicators(ModelInstance *comp, double z[], size_t nz);
 void eventUpdate(ModelInstance *comp);
 //void updateEventTime(ModelInstance *comp);
 
-double epsilon(double value);
 bool invalidNumber(ModelInstance *comp, const char *f, const char *arg, size_t actual, size_t expected);
 bool invalidState(ModelInstance *comp, const char *f, int statesExpected);
 bool nullPointer(ModelInstance* comp, const char *f, const char *arg, const void *p);
@@ -206,8 +210,11 @@ Status setDebugLogging(ModelInstance *comp, bool loggingOn, size_t nCategories, 
 void logEvent(ModelInstance *comp, const char *message, ...);
 void logError(ModelInstance *comp, const char *message, ...);
 
+void* getFMUState(ModelInstance* comp);
+void setFMUState(ModelInstance* comp, void* FMUState);
+
 // shorthand to access the variables
-#define M(v) (comp->modelData->v)
+#define M(v) (comp->modelData.v)
 
 // "stringification" macros
 #define xstr(s) str(s)

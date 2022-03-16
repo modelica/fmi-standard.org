@@ -47,7 +47,7 @@ if (${FMI_VERSION} GREATER 2)
   if ("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
     set (FMI_PLATFORM x86_64-${FMI_PLATFORM})
   else ()
-    set (FMI_PLATFORM i686-${FMI_PLATFORM})
+    set (FMI_PLATFORM x86-${FMI_PLATFORM})
   endif ()
 
 else ()
@@ -137,6 +137,14 @@ if(MSVC)
   target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
 else()
   target_compile_options(${TARGET_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+  target_link_options(${TARGET_NAME} PRIVATE "-static-libgcc")
+endif()
+
+if(CMAKE_C_COMPILER_ID STREQUAL "Intel")
+  target_link_options(${TARGET_NAME} PRIVATE "-static-intel" "-static-libgcc")
 endif()
 
 if (${FMI_VERSION} EQUAL 1 AND "${FMI_TYPE}" STREQUAL CS)
@@ -268,8 +276,5 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/dist/${MODEL_NAME}.fmu DESTINATION .)
 
 endforeach(MODEL_NAME)
 
-
 # Examples
-if (${FMI_VERSION} EQUAL 2 OR ${FMI_VERSION} EQUAL 3)
-  include(examples/Examples.cmake)
-endif()
+include(examples/Examples.cmake)

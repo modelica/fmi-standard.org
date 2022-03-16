@@ -9,7 +9,6 @@
 #include <direct.h>
 #include "Shlwapi.h"
 #pragma comment(lib, "shlwapi.lib")
-#define strdup _strdup
 #else
 #include <stdarg.h>
 #include <dlfcn.h>
@@ -191,7 +190,7 @@ static fmi3Status loadSymbols3(FMIInstance *instance) {
     LOAD_SYMBOL(FreeFMUState);
     LOAD_SYMBOL(SerializedFMUStateSize);
     LOAD_SYMBOL(SerializeFMUState);
-    LOAD_SYMBOL(DeSerializeFMUState);
+    LOAD_SYMBOL(DeserializeFMUState);
 
     /* Getting partial derivatives */
     LOAD_SYMBOL(GetDirectionalDerivative);
@@ -475,11 +474,11 @@ fmi3Status FMI3ExitInitializationMode(FMIInstance *instance) {
 }
 
 fmi3Status FMI3EnterEventMode(FMIInstance *instance,
-    fmi3Boolean stepEvent,
-    fmi3Boolean stateEvent,
+    fmi3EventQualifier stepEvent,
+    fmi3EventQualifier stateEvent,
     const fmi3Int32 rootsFound[],
     size_t nEventIndicators,
-    fmi3Boolean timeEvent) {
+    fmi3EventQualifier timeEvent) {
 
     fmi3Status status = instance->fmi3Functions->fmi3EnterEventMode(instance->component, stepEvent, stateEvent, rootsFound, nEventIndicators, timeEvent);
 
@@ -807,11 +806,11 @@ fmi3Status FMI3SerializeFMUState(FMIInstance *instance,
     CALL_ARGS(SerializeFMUState, "FMUstate=0x%p, serializedState=0x%p, size=%zu", FMUState, serializedState, size);
 }
 
-fmi3Status FMI3DeSerializeFMUState(FMIInstance *instance,
+fmi3Status FMI3DeserializeFMUState(FMIInstance *instance,
     const fmi3Byte serializedState[],
     size_t size,
     fmi3FMUState* FMUState) {
-    CALL_ARGS(DeSerializeFMUState, "serializedState=0x%p, size=%zu, FMUState=0x%p", serializedState, size, FMUState);
+    CALL_ARGS(DeserializeFMUState, "serializedState=0x%p, size=%zu, FMUState=0x%p", serializedState, size, FMUState);
 }
 
 /* Getting partial derivatives */
@@ -911,6 +910,25 @@ fmi3Status FMI3SetIntervalFraction(FMIInstance *instance,
     CALL_ARGS(SetIntervalFraction,
         "valueReferences=0x%p, nValueReferences=%zu, intervalCounters=0x%p, resolutions=0x%p",
         valueReferences, nValueReferences, intervalCounters, resolutions);
+}
+
+fmi3Status FMI3SetShiftDecimal(FMIInstance *instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    const fmi3Float64 shifts[]) {
+    CALL_ARGS(SetShiftDecimal,
+        "valueReferences=0x%p, nValueReferences=%zu, shifts=0x%p",
+        valueReferences, nValueReferences, shifts);
+}
+
+fmi3Status FMI3SetShiftFraction(FMIInstance *instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    const fmi3UInt64 shiftCounters[],
+    const fmi3UInt64 resolutions[]) {
+    CALL_ARGS(SetShiftFraction,
+        "valueReferences=0x%p, nValueReferences=%zu, shiftCounters=0x%p, resolutions=0x%p",
+        valueReferences, nValueReferences, shiftCounters, resolutions);
 }
 
 fmi3Status FMI3EvaluateDiscreteStates(FMIInstance *instance) {
@@ -1094,7 +1112,6 @@ fmi3Status FMI3DoStep(FMIInstance *instance,
 
 fmi3Status FMI3ActivateModelPartition(FMIInstance *instance,
     fmi3ValueReference clockReference,
-    size_t clockElementIndex,
     fmi3Float64 activationTime) {
     CALL_ARGS(ActivateModelPartition,
         "clockReference=%u, activationTime=%.16g",

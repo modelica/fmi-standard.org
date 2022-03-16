@@ -174,7 +174,7 @@ do { \
 #define MASK_fmi3FreeFMUState             MASK_AnyState
 #define MASK_fmi3SerializedFMUStateSize   MASK_AnyState
 #define MASK_fmi3SerializeFMUState        MASK_AnyState
-#define MASK_fmi3DeSerializeFMUState      MASK_AnyState
+#define MASK_fmi3DeserializeFMUState      MASK_AnyState
 
 /* Getting partial derivatives */
 #define MASK_fmi3GetDirectionalDerivative (InitializationMode | EventMode | ContinuousTimeMode | Terminated)
@@ -460,18 +460,18 @@ fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
 
 #if NZ > 0
     // initialize event indicators
-    getEventIndicators(S, S->prez, NZ);
+    getEventIndicators(S, S->z, NZ);
 #endif
 
     return status;
 }
 
 fmi3Status fmi3EnterEventMode(fmi3Instance instance,
-                              fmi3Boolean stepEvent,
-                              fmi3Boolean stateEvent,
+                              fmi3EventQualifier stepEvent,
+                              fmi3EventQualifier stateEvent,
                               const fmi3Int32 rootsFound[],
                               size_t nEventIndicators,
-                              fmi3Boolean timeEvent) {
+                              fmi3EventQualifier timeEvent) {
 
     UNUSED(stepEvent);
     UNUSED(stateEvent);
@@ -499,9 +499,7 @@ fmi3Status fmi3Reset(fmi3Instance instance) {
 
     ASSERT_STATE(Reset);
 
-    S->state = Instantiated;
-    setStartValues(S);
-    S->isDirtyValues = true;
+    reset(S);
 
     return fmi3OK;
 }
@@ -912,9 +910,7 @@ fmi3Status fmi3GetFMUState(fmi3Instance instance, fmi3FMUState* FMUState) {
 
     ASSERT_STATE(GetFMUState);
 
-    ModelData *modelData = (ModelData *)calloc(1, sizeof(ModelData));
-    memcpy(modelData, S->modelData, sizeof(ModelData));
-    *FMUState = modelData;
+    *FMUState = getFMUState(S);
 
     return fmi3OK;
 }
@@ -923,8 +919,11 @@ fmi3Status fmi3SetFMUState(fmi3Instance instance, fmi3FMUState FMUState) {
 
     ASSERT_STATE(SetFMUState);
 
-    ModelData *modelData = FMUState;
-    memcpy(S->modelData, modelData, sizeof(ModelData));
+    if (nullPointer(S, "fmi3SetFMUState", "FMUState", FMUState)) {
+        return fmi3Error;
+    }
+
+    setFMUState(S, FMUState);
 
     return fmi3OK;
 }
@@ -933,8 +932,8 @@ fmi3Status fmi3FreeFMUState(fmi3Instance instance, fmi3FMUState* FMUState) {
 
     ASSERT_STATE(FreeFMUState);
 
-    ModelData *modelData = *FMUState;
-    free(modelData);
+    free(*FMUState);
+
     *FMUState = NULL;
 
     return fmi3OK;
@@ -946,9 +945,10 @@ fmi3Status fmi3SerializedFMUStateSize(fmi3Instance instance,
 
     UNUSED(instance);
     UNUSED(FMUState);
+
     ASSERT_STATE(SerializedFMUStateSize);
 
-    *size = sizeof(ModelData);
+    *size = sizeof(ModelInstance);
 
     return fmi3OK;
 }
@@ -964,30 +964,31 @@ fmi3Status fmi3SerializeFMUState(fmi3Instance instance,
         return fmi3Error;
     }
 
-    if (invalidNumber(S, "fmi3SerializeFMUState", "size", size, sizeof(ModelData))) {
+    if (invalidNumber(S, "fmi3SerializeFMUState", "size", size, sizeof(ModelInstance))) {
         return fmi3Error;
     }
 
-    memcpy(serializedState, FMUState, sizeof(ModelData));
+    memcpy(serializedState, FMUState, sizeof(ModelInstance));
 
     return fmi3OK;
 }
 
-fmi3Status fmi3DeSerializeFMUState(fmi3Instance instance,
+fmi3Status fmi3DeserializeFMUState(fmi3Instance instance,
     const fmi3Byte serializedState[],
     size_t size,
     fmi3FMUState* FMUState) {
 
-    ASSERT_STATE(DeSerializeFMUState);
+    ASSERT_STATE(DeserializeFMUState);
 
-    if (*FMUState == NULL) {
-        *FMUState = (fmi3FMUState *)calloc(1, sizeof(ModelData));
+    if (invalidNumber(S, "fmi3DeserializeFMUState", "size", size, sizeof(ModelInstance))) {
+        return fmi3Error;
     }
 
-    if (invalidNumber(S, "fmi3DeSerializeFMUState", "size", size, sizeof(ModelData)))
-        return fmi3Error;
+    if (*FMUState == NULL) {
+        *FMUState = calloc(1, sizeof(ModelInstance));
+    }
 
-    memcpy(*FMUState, serializedState, sizeof(ModelData));
+    memcpy(*FMUState, serializedState, sizeof(ModelInstance));
 
     return fmi3OK;
 }
@@ -1175,6 +1176,32 @@ fmi3Status fmi3SetIntervalFraction(fmi3Instance instance,
     UNUSED(valueReferences);
     UNUSED(nValueReferences);
     UNUSED(intervalCounters);
+    UNUSED(resolutions);
+
+    NOT_IMPLEMENTED;
+}
+
+fmi3Status fmi3SetShiftDecimal(fmi3Instance instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    const fmi3Float64 shifts[]) {
+
+    UNUSED(valueReferences);
+    UNUSED(nValueReferences);
+    UNUSED(shifts);
+
+    NOT_IMPLEMENTED;
+}
+
+fmi3Status fmi3SetShiftFraction(fmi3Instance instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    const fmi3UInt64 shiftCounters[],
+    const fmi3UInt64 resolutions[]) {
+
+    UNUSED(valueReferences);
+    UNUSED(nValueReferences);
+    UNUSED(shiftCounters);
     UNUSED(resolutions);
 
     NOT_IMPLEMENTED;
@@ -1437,7 +1464,7 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
         return fmi3Error;
     }
 
-    const fmi3Float64 nextCommunicationPoint = currentCommunicationPoint + communicationStepSize + epsilon(S->time);
+    const fmi3Float64 nextCommunicationPoint = currentCommunicationPoint + communicationStepSize + EPSILON;
 
     fmi3Boolean nextCommunicationPointReached;
 

@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 9511cff,</span>
-<span id="revdate">2022-03-15</span>
+<span id="revnumber">version 2abd0a3,</span>
+<span id="revdate">2022-03-16</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -11091,16 +11091,16 @@ stopTime = 10;
 h = 0.01;
 
 // set all variable start values (of "ScalarVariable / &lt;type&gt; / start")
-// s1_fmi3SetReal/Integer/Boolean/String(s1, ...);
-// s2_fmi3SetReal/Integer/Boolean/String(s2, ...);
+// s1_fmi3Set{VariableType}(s1, ...);
+// s2_fmi3Set{VariableType}(s2, ...);
 
 // initialize the FMUs
 s1_fmi3EnterInitializationMode(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
 s2_fmi3EnterInitializationMode(s2, fmi3False, 0.0, startTime, fmi3True, stopTime);
 
 // set the input values at time = startTime
-// fmi3SetReal/Integer/Boolean/String(s1, ...);
-// fmi3SetReal/Integer/Boolean/String(s2, ...);
+// fmi3Set{VariableType}(s1, ...);
+// fmi3Set{VariableType}(s2, ...);
 
 s1_fmi3ExitInitializationMode(s1);
 s2_fmi3ExitInitializationMode(s2);
@@ -11112,12 +11112,12 @@ tc = startTime; // current time
 while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
 
     // retrieve outputs
-    // fmi3GetReal(s1, ..., 1, &amp;y1);
-    // fmi3GetReal(s2, ..., 1, &amp;y2);
+    // fmi3Get{VariableType}(s1, ..., 1, &amp;y1);
+    // fmi3Get{VariableType}(s2, ..., 1, &amp;y2);
 
     // set inputs
-    // fmi3SetReal(s1, ..., 1, &amp;y2);
-    // fmi3SetReal(s2, ..., 1, &amp;y1);
+    // fmi3Set{VariableType}(s1, ..., 1, &amp;y2);
+    // fmi3Set{VariableType}(s2, ..., 1, &amp;y1);
 
     // call instance s1 and check status
     fmi3Boolean eventEncountered, terminateSimulation, earlyReturn;
