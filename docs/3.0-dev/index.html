@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 460b2ec,</span>
+<span id="revnumber">version add5ea8,</span>
 <span id="revdate">2022-03-24</span>
 </div>
 <div id="toc" class="toc2">
@@ -2939,7 +2939,7 @@ t_i &amp;:= t_{\mathit{event}} + T_{\mathit{interval, i}} \qquad i = 1,2,3,{...}
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, 0}} \geq 0\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from \(t_{\mathit{event}}\) to the first Clock tick.
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from \(t_{\mathit{start}}\) to the first Clock tick.
 Must be retrieved using <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p></td>
 </tr>
 <tr>
@@ -2981,7 +2981,7 @@ Such a system, also called the <a href="#model-partition">model partition</a> of
 </div>
 <div class="paragraph">
 <p>\(\begin{align*}
-(\mathbf{x}_k) &amp;:= \mathbf{f}_{\mathit{event}}(^\bullet{\mathbf{x}_k}, \mathbf{u}, t) \\
+(\mathbf{x}_k) &amp;:= \mathbf{f}_{\mathit{disc}}(^\bullet{\mathbf{x}_k}, \mathbf{u}, t) \\
 (\mathbf{y}_k) &amp;:= \mathbf{f}_{\mathit{event}}(\mathbf{x}_k, \mathbf{u}, t)
 \end{align*}\)</p>
 </div>
@@ -2991,7 +2991,7 @@ Such a system, also called the <a href="#model-partition">model partition</a> of
 <div class="ulist">
 <ul>
 <li>
-<p>\(\mathbf{f}_{\mathit{event}}\) denotes the state transition function and</p>
+<p>\(\mathbf{f}_{\mathit{disc}}\) denotes the state transition function and</p>
 </li>
 <li>
 <p>\(\mathbf{f}_{\mathit{event}}\) denotes the output function of the <a href="#model-partition">model partition</a> of \(k\).</p>
@@ -3000,11 +3000,11 @@ Such a system, also called the <a href="#model-partition">model partition</a> of
 </div>
 <div class="paragraph">
 <p>When \(k\) is active (i.e., ticking) invoking the FMI functions <code>fmi3Get{VariableType}</code> on variables in the output vector \(\mathbf{y}_k\) will trigger the execution of the output function \(\mathbf{f}_{\mathit{event}}\) to compute such variables.
-If <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>false</code>, then \(\mathbf{f}_{\mathit{event}}\) cannot be called explicitly using <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>, but will be implicitly executed during \(\mathbf{f}_{\mathit{event}}\).
-When <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> is called, the state vector \(\mathbf{x}_k\) is updated according to state transition function \(\mathbf{f}_{\mathit{event}}\).</p>
+If <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>false</code>, then \(\mathbf{f}_{\mathit{disc}}\) cannot be called explicitly using <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>, but will be implicitly executed during \(\mathbf{f}_{\mathit{event}}\).
+When <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> is called, the state vector \(\mathbf{x}_k\) is updated according to state transition function \(\mathbf{f}_{\mathit{disc}}\).</p>
 </div>
 <div class="paragraph">
-<p><em>[Separating</em> \(\mathbf{f}_{\mathit{event}}\) <em>from</em> \(\mathbf{f}_{\mathit{event}}\) <em>allows manipulation of the current (discrete) state and compute the corresponding outputs, for instance for model-based control applications.]</em></p>
+<p><em>[Separating</em> \(\mathbf{f}_{\mathit{disc}}\) <em>from</em> \(\mathbf{f}_{\mathit{event}}\) <em>allows manipulation of the current (discrete) state and compute the corresponding outputs, for instance for model-based control applications.]</em></p>
 </div>
 <div class="paragraph">
 <p>The discrete-time variables \(\mathbf{x}_k\) and \(\mathbf{y}_k\) are called clocked variables.
@@ -3403,7 +3403,7 @@ This enables computation on demand with subsequent calls returning the same valu
 <p>Because specific set functions exist (<a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>), caching algorithms can be applied to reuse already computed values.</p>
 </div>
 <div class="paragraph">
-<p>In all tables describing the mathematical model of a state (e.g. <a href="#table-math-model-exchange">ContinuousTimeMode</a>), for notational convenience one function (e.g. \(\mathbf{f}_{\mathit{event}}\)) is defined to compute all outputs from all input arguments.
+<p>In all tables describing the mathematical model of a state (e.g. <a href="#table-math-model-exchange">ContinuousTimeMode</a>), for notational convenience one function (e.g. \(\mathbf{f}_{\mathit{cont}}\)) is defined to compute all outputs from all input arguments.
 However, in an efficiently implemented FMU, computation of each output may be triggered by its specific get function.
 Additionally, the outputs may be a function of a subset of the input arguments, as defined in the <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.</p>
 </div>
@@ -4897,7 +4897,7 @@ The exact event localization is hidden from the importer.</p>
 <p>Deactivate event equations \(\mathbf{f}_{\mathit{event}}\).</p>
 </li>
 <li>
-<p>Model Exchange: Activate continuous-time equations \(\mathbf{f}_{\mathit{start}}\).</p>
+<p>Model Exchange: Activate continuous-time equations \(\mathbf{f}_{\mathit{cont}}\).</p>
 </li>
 </ul>
 </div></div></td>
