@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version f868f19,</span>
-<span id="revdate">2022-03-30</span>
+<span id="revnumber">version 2924712,</span>
+<span id="revdate">2022-03-31</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -2770,7 +2770,7 @@ In Scheduled Execution the FMU must inform the importer by calling <a href="#fmi
 <td class="tableblock halign-left valign-top"><p class="tableblock">time-delayed actions after an event, for example, ignition signal some time after specific crank shaft angle</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" colspan="2" rowspan="2"><p class="tableblock"><a id="triggered"></a><a href="#triggered-clock">triggered</a></p></td>
+<td class="tableblock halign-left valign-top" colspan="2" rowspan="3"><p class="tableblock"><a id="triggered"></a><a href="#triggered-clock">triggered</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#input"><code>input</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>triggered</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
@@ -2782,6 +2782,12 @@ In Scheduled Execution the FMU must inform the importer by calling <a href="#fmi
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>triggered</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetClock"><code>fmi3GetClock</code></a> in both <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">crankshaft angle sensor ticking several times per revolution</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#local"><code>local</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>triggered</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fmi3GetClock"><code>fmi3GetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">e.g. a clock inside a composed FMU that can be used only for debugging</p></td>
 </tr>
 </tbody>
 </table>
@@ -2963,6 +2969,13 @@ Must be retrieved using <a href="#fmi3GetInterval"><code>fmi3GetInterval</code><
 <dt class="hdlist1">Triggered output Clock</dt>
 <dd>
 <p>is activated within the FMU and the importer must call <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a> or in <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.</p>
+</dd>
+<dt class="hdlist1">Triggered local Clock</dt>
+<dd>
+<p>is activated within the FMU and the importer must call <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>.
+Only local variables can be clocked variables of local Clocks.
+Like all local variables, local Clocks must not be used as inputs to other FMUs and must not be listed in the <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.
+This clock type is not allowed in Scheduled Execution.</p>
 </dd>
 </dl>
 </div>
