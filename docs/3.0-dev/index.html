@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 2924712,</span>
-<span id="revdate">2022-03-31</span>
+<span id="revnumber">version d785901,</span>
+<span id="revdate">2022-04-01</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3699,35 +3699,7 @@ The functions may only be called if their availability is indicated by the attri
 </div>
 <div class="paragraph">
 <p><em>[Note that array variables will be serialized, so <code>nSeed</code> is only equal to <code>nKnowns</code> in the case of directional derivatives (resp., equal to <code>nUnknowns</code> in the case of adjoint derivatives) if all value references of <code>knowns</code> (resp., <code>unknowns</code>) point to scalar variables.</em>
-<em>Likewise <code>nSensitivity</code> is only equal to <code>nUnknowns</code> (resp., <code>nKnowns</code>) if all value references of <code>unknowns</code> (resp., <code>knowns</code>) point to scalar variables.</em></p>
-</div>
-<div class="paragraph">
-<p><em>Note that it is the partial derivative and not the total derivative that is considered here.</em>
-<em>When computing the partial derivative with respect to the independent variable</em> \(t\) <em>of the function</em></p>
-</div>
-<div class="stemblock">
-<div class="content">
-\[\mathbf{f}(\mathbf{x}, \mathbf{\dot{x}}, t)\]
-</div>
-</div>
-<div class="paragraph">
-<p><em>its partial derivative with respect to</em> \(t\) <em>will be</em></p>
-</div>
-<div class="stemblock">
-<div class="content">
-\[\frac{\partial \mathbf{f}}{\partial t}\]
-</div>
-</div>
-<div class="paragraph">
-<p><em>and not</em></p>
-</div>
-<div class="stemblock">
-<div class="content">
-\[\frac{\partial \mathbf{f}}{\partial t} + \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \mathbf{\dot{x}}+\frac{\partial \mathbf{f}}{\partial \mathbf{\dot{x}}} \mathbf{\ddot{x}}\]
-</div>
-</div>
-<div class="paragraph">
-<p><em>]</em></p>
+<em>Likewise <code>nSensitivity</code> is only equal to <code>nUnknowns</code> (resp., <code>nKnowns</code>) if all value references of <code>unknowns</code> (resp., <code>knowns</code>) point to scalar variables.]</em></p>
 </div>
 <div class="sect4">
 <h5 id="directionDerivatives">2.2.12.1. Directional Derivatives</h5>
@@ -7544,10 +7516,10 @@ Only <a href="#continuous"><code>continuous</code></a> variables of type <code>F
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dependencies</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="dependencies" class="paragraph">
-<p>Optional attribute defining the dependencies as list of value references of the unknown \({\mathbf{v}_{\mathit{unknown}}}\) directly with respect to \({\mathbf{v}_{\mathit{known}}}\).
-For continuous variables this corresponds to that there exist values for the knowns where the partial derivative of the unknown with respect to a known is non-zero.
-If not present, it must be assumed that the unknown depends on all knowns.
-If present as empty list, the unknown depends on none of the knowns.
+<p>Optional attribute defining the algebraic dependencies as list of value references of the unknown \({\mathbf{v}_{\mathit{unknown}}}\) directly with respect to \({\mathbf{v}_{\mathit{known}}}\).
+For a real valued unknown and a real valued known, if the known is not listed among the dependencies then the partial derivative of the unknown with respect to that known is identically zero.
+If dependencies is not present, it must be assumed that the unknown depends on all knowns.
+If dependencies is present as empty list, the unknown depends on none of the knowns.
 Otherwise the unknown depends on the knowns defined by the given value references.<br>
 <em>[This means that all dependencies must be listed, also the dependencies of clocked variables on their clocks.]</em><br>
 Knowns \({\mathbf{v}_{\mathit{known}}}\) in <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> (ME) and at communication points (CS and SE) for <a href="#Output"><code>&lt;Output&gt;</code></a> and <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> elements are:<br></p>
@@ -7585,9 +7557,10 @@ Knowns \({\mathbf{v}_{\mathit{known}}}\) in <a href="#EventMode"><strong>Event M
 </ul>
 </div>
 <div class="paragraph">
-<p><em>[For a dynamic system most of the unknowns would have an implict dependency on the independent variable.
-When the independent variable is listed among the dependencies this implicit dependency is not what is meant, but rather that the unknown&#8217;s partial derivative with respect to the independent variable can be non-zero.
-For a mechanical system this is called a rheonomous system, while if the independent variable is not listed in the dependencies, it is a scleronomous system.]</em></p>
+<p><em>[The <a href="#independent"><code>independent</code></a> variable should be treated as any other variable when it comes to dependencies.</em>
+<em>As only explicit dependencies are listed it is required that unknowns that depend on the <a href="#independent"><code>independent</code></a> variable have a partial derivative w.r.t this variable that is different from identically zero.</em>
+<em>If the FMU supports <a href="#directionDerivatives">directional derivatives</a> or <a href="#adjointDerivatives">adjoined derivatives</a> the <a href="#independent"><code>independent</code></a> variable is a valid input to those functions if it is listed, just as any other listed variable.</em>
+<em>For example, for a mechanical system, if it has the <a href="#independent"><code>independent</code></a> variable listed among the dependencies it is called a rheonomous system, otherwise it is called a scleronomous system.]</em></p>
 </div></div></td>
 </tr>
 <tr>
