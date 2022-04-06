@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 6ccdf21,</span>
-<span id="revdate">2022-04-04</span>
+<span id="revnumber">version 9906dad,</span>
+<span id="revdate">2022-04-06</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -4183,7 +4183,7 @@ If <a href="#loggingOn"><code>loggingOn = fmi3False</code></a>, debug logging is
 </li>
 <li>
 <p><code>nCategories</code> defines the length of the array of argument <code>categories</code>.
-If <code>nCategories = 0</code>, <a href="#loggingOn"><code>loggingOn</code></a> applies to all log categories and the value of <code>categories</code> is undefined.</p>
+If <code>nCategories = 0</code>, <a href="#loggingOn"><code>loggingOn</code></a> applies to all log categories and the value of <code>categories</code> must be NULL.</p>
 </li>
 <li>
 <p><code>categories</code> is an array of <code>nCategories</code> elements.
@@ -9241,9 +9241,9 @@ For <a href="#state-event">state events</a> event indicators are used.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p><a id="state-event"></a>An <a href="#fmi3GetEventIndicators">event indicator</a> signals a <a href="#state-event">state event</a> with the change from \(\mathbf{z}_j &gt; 0\) to \(\mathbf{z}_j \leq 0\) or vice versa.<br>
+<p><a id="state-event"></a>An <a href="#fmi3GetEventIndicators">event indicator</a>, and only an event indicator, signals a <a href="#state-event">state event</a> with the domain change from \(\mathbf{z}_j &gt; 0\) to \(\mathbf{z}_j \leq 0\) or from \(\mathbf{z}_j \leq 0\) to \(\mathbf{z}_j &gt; 0\).<br>
 <em>[This definition is slightly different from the usual standard definition of state events:</em> \(\mathbf{z}(t) \cdot \mathbf{z}(t_{i-1}) \leq 0\) <em>which has the severe drawback that the value of the event indicator at the previous event instant,</em> \(\mathbf{z}(t_{i-1}) \neq 0\), <em>must be non-zero and this condition cannot be guaranteed.</em>
-<em>The often used term "zero-crossing function" for \(\mathbf{z}\) is misleading (and is therefore not used in this document), since a state event is defined by a change of a domain and not by a zero-crossing of a variable.]</em></p>
+<em>The often used term "zero-crossing function" for \(\mathbf{z}\) is misleading (and is therefore not used in this document), since a state event is defined by a domain change and not by a zero-crossing of a variable.]</em></p>
 </div>
 <div class="paragraph">
 <p>The FMU must guarantee that after leaving <a href="#EventMode"><strong>Event Mode</strong></a> \(\mathbf{z}_j \neq 0\), for example, by shifting \(\mathbf{z}_j\) with a small value.<br>
@@ -9629,7 +9629,7 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
                                           fmi3EventQualifier stepEvent,
                                           fmi3EventQualifier stateEvent,
-                                          const fmi3Int32 rootsFound[],
+                                          const fmi3Int32 eventIndicatorDomainChanges[],
                                           size_t nEventIndicators,
                                           fmi3EventQualifier timeEvent);</code></pre>
 </div>
@@ -9638,8 +9638,7 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 <p>This function changes the state to <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
 </div>
 <div class="paragraph">
-<p>The arguments <code>stepEvent</code>, <code>stateEvent</code>, and <code>timeEvent</code> enable efficient and robust event handling.
-They are of enumeration type <code>fmi3EventQualifier</code>:</p>
+<p><a id="fmi3EventQualitfier"></a>The arguments <code>stepEvent</code>, <code>stateEvent</code>, and <code>timeEvent</code> are of the enumeration type <code>fmi3EventQualifier</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9680,46 +9679,50 @@ In this case, the FMU must determine itself if this event type happens.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The arguments of the function have the following meaning:</p>
+<p>For Model Exchange, the arguments of the function have the following meaning <em>[For Co-Simulation, the semantics of the arguments are <a href="#fmi3EnterEventModeCS">different</a>.]</em>:</p>
 </div>
 <div class="openblock">
 <div class="content">
 <div class="ulist">
 <ul>
 <li>
-<p>Model Exchange only: <code>stepEvent</code> signals a <a href="#step-event">step event</a>.
+<p><code>stepEvent</code> signals a <a href="#step-event">step event</a>.
 <code>stepEvent</code> must be <code>fmi3EventTrue</code> if <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> returned with <code>enterEventMode = fmi3True</code>.</p>
 </li>
 <li>
-<p>Model Exchange only: <code>stateEvent</code> signals a <a href="#state-event">state event</a>, triggered by a zero-crossing of an event indicator.</p>
+<p><a id="timeEvent"></a><code>timeEvent</code> signals a <a href="#time-event">time event</a> triggered by <a href="#nextEventTime"><code>nextEventTime</code></a> of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
 </li>
 <li>
-<p>Model Exchange only: <code>rootsFound</code> is an array of length <code>nEventIndicators</code> that informs the FMU which event indicator has a root.<br>
-For <code>i = 0, &#8230;&#8203; nEventIndicators-1, rootsFound[i]</code> informs about event indicator \({\mathbf{z}_{\mathit{i}}}\):</p>
+<p><code>stateEvent</code> signals a <a href="#state-event">state event</a>, <code>stateEvent</code> is triggered by a domain change of an event indicator.</p>
+</li>
+<li>
+<p><code>nEventIndicators</code> is only defined if <code>stateEvent == fmi3EventTrue</code>.
+It contains the current number of event indicators (see <a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a>) or <code>0</code>.
+If <code>nEventIndicators = 0</code> the importer is unable to provide this information and the FMU must determine itself which event indicator has a domain change.</p>
+</li>
+<li>
+<p><code>eventIndicatorDomainChanges</code> is defined only if <code>stateEvent == fmi3EventTrue</code> and <code>nEventIndicators &gt; 0</code>.
+<code>eventIndicatorDomainChanges</code> is an array of length <code>nEventIndicators</code> that informs the FMU which event indicator has a domain change.
+It is given in the order defined by the ordered list of XML elements <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a>, which is the same as in the argument <a href="#eventIndicators"><code>eventIndicators</code></a> of <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.<br>
+For <code>i = 0, &#8230;&#8203; nEventIndicators-1, eventIndicatorDomainChanges[i]</code> informs about event indicator \({\mathbf{z}_{\mathit{i}}}\):</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>rootsFound[i] = 0</code> no root,</p>
+<p><code>eventIndicatorDomainChanges[i] = 0</code> no root,</p>
 </li>
 <li>
-<p><code>rootsFound[i] = +1</code> indicates the direction of the zero-crossing from negative to positive,</p>
+<p><code>eventIndicatorDomainChanges[i] = +1</code> indicates the direction of the domain change from negative to positive,</p>
 </li>
 <li>
-<p><code>rootsFound[i] = -1</code> indicates the direction of the zero-crossing from positive to negative.</p>
+<p><code>eventIndicatorDomainChanges[i] = -1</code> indicates the direction of the domain change from positive to negative.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>If <code>nEventIndicators = 0</code> the value of <code>rootsFound</code> is not defined.
-The order in the <code>rootsFound</code> array is the same as in <a href="#eventIndicators"><code>eventIndicators</code></a> of <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.</p>
+<p>The importer must call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> at a time when the signs of the event indicators signal an event according to <a href="#localizationStateEvents">Section 3.1.1</a>.
+If given, the importer must ensure that <code>eventIndicatorDomainChanges</code> is consistent with the values of the event indicators.<br>
+If <code>nEventIndicators = 0</code> the value of <code>eventIndicatorDomainChanges</code> must be NULL.</p>
 </div>
-</li>
-<li>
-<p>Model Exchange only: <code>nEventIndicators</code> contains the current number of event indicators (see <a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a>) or <code>0</code>.
-If <code>nEventIndicators = 0</code> and <code>stateEvent != fmi3EventFalse</code> the importer is unable to provide this information and the FMU must determine itself which event indicator has a zero-crossing.</p>
-</li>
-<li>
-<p><a id="timeEvent"></a><code>timeEvent</code> signals a <a href="#time-event">time event</a> triggered by <a href="#nextEventTime"><code>nextEventTime</code></a> of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -10467,8 +10470,50 @@ Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> w
 <dl>
 <dt class="hdlist1">Function <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a></dt>
 <dd>
-<p>Changes state to <a href="#EventMode"><strong>Event Mode</strong></a>.
-This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signaled <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>, which can be forced by the FMU with <a href="#hasEventMode"><code>hasEventMode = false</code></a>.<br></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
+                                          fmi3EventQualifier stepEvent,
+                                          fmi3EventQualifier stateEvent,
+                                          const fmi3Int32 eventIndicatorDomainChanges[],
+                                          size_t nEventIndicators,
+                                          fmi3EventQualifier timeEvent);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This function changes the state to <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
+</div>
+<div class="paragraph">
+<p>This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signaled <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>, which can be forced by the FMU with <a href="#hasEventMode"><code>hasEventMode = false</code></a>.<br></p>
+</div>
+<div class="paragraph">
+<p>The arguments <code>stepEvent</code>, <code>stateEvent</code>, and <code>timeEvent</code> are of the enumeration type <a href="#fmi3EventQualitfier"><code>fmi3EventQualifier</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>For Co-Simulation, the arguments of the function have the following meaning <em>[For Model Exchange, the semantics of the arguments are <a href="#fmi3EnterEventMode">different</a>.]</em>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The value of argument <code>stepEvent</code> must be <a href="#fmi3EventFalse"><code>fmi3EventFalse</code></a>.</p>
+</li>
+<li>
+<p><code>timeEvent</code> signals a <a href="#time-event">time event</a> triggered by <a href="#nextEventTime"><code>nextEventTime</code></a> of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
+</li>
+<li>
+<p><code>stateEvent</code> signals a <a href="#state-event">state event</a>, triggered in Co-Simulation by <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returning  with <a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a>.</p>
+</li>
+<li>
+<p>The value of <code>nEventIndicators</code> must always be 0.</p>
+</li>
+<li>
+<p>The value of <code>eventIndicatorDomainChanges</code> must be NULL.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>[An <a href="#input-event">input event</a> can be detected by the FMU by keeping track of the calls of <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>.]</em></p>
+</div>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
 <dd>
@@ -12061,6 +12106,12 @@ Synonyms: dynamic mutual-exchange, simulator coupling, and coupled simulation.</
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>direct feedthrough</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Direct feedthrough describes that values of output variables depend directly on values of input variables.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>domain change</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used instead of zero-crossing.
+Indicates the change of an event indicator from the domain \(\mathbf{z}_j &gt; 0\) to the domain \(\mathbf{z}_j \leq 0\) or from \(\mathbf{z}_j \leq 0\) to \(\mathbf{z}_j &gt; 0\).
+See <a href="#localizationStateEvents">Section 3.1.1</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="dynamic-state-selection"></a><em>dynamic state selection</em></p></td>
