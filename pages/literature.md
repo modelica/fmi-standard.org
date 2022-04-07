@@ -23,7 +23,7 @@ FMI User meeting ([Agenda](https://raw.githubusercontent.com/modelica/ModelicaCo
 
 FMI related conference papers:
 * [The Functional Mock-up Interface 3.0 - New Features Enabling New Applications](https://doi.org/10.3384/ecp2118117)  ([Video](https://www.youtube.com/watch?v=sNsWVfmZC5s))
-* [The FMI 3.0 Standard Interface for Clocked and Scheduled Simulations](https://doi.org/10.3384/ecp2118127  ([Video](https://www.youtube.com/watch?v=ZT918VcYVlA
+* [The FMI 3.0 Standard Interface for Clocked and Scheduled Simulations](https://doi.org/10.3384/ecp2118127)  ([Video](https://www.youtube.com/watch?v=ZT918VcYVlA
 * [Engineering Domain Interoperability Using the System Structu))re and Parameterization (SSP) Standard](https://doi.org/10.3384/ecp2118137) ([Video](https://www.youtube.com/watch?v=bATNdy9_5W0))
 * [Modelica, FMI and SSP for LOTAR of Analytical mBSE models: First Implementation and Feedback](https://doi.org/10.3384/ecp2118149) ([Video](https://www.youtube.com/watch?v=9tirKCN9YOs))
 * [eFMI: An open standard for physical models in embedded software](https://doi.org/10.3384/ecp2118157) ([Video](https://www.youtube.com/watch?v=Y1HrlUz1zDA))
