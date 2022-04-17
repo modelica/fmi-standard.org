@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 986bb8b,</span>
+<span id="revnumber">version 0a13bde,</span>
 <span id="revdate">2022-04-17</span>
 </div>
 <div id="toc" class="toc2">
@@ -636,7 +636,7 @@ document.addEventListener('keydown', (event) => {
 </ul>
 </li>
 <li><a href="#model-dependencies">2.2.9. Dependencies of Variables</a></li>
-<li><a href="#selectiv-computation">2.2.10. Selective Computation of Variables</a></li>
+<li><a href="#selective-computation">2.2.10. Selective Computation of Variables</a></li>
 <li><a href="#algebraic-loops">2.2.11. Algebraic Loops</a></li>
 <li><a href="#partial-derivatives">2.2.12. Getting Partial Derivatives</a>
 <ul class="sectlevel4">
@@ -3404,7 +3404,7 @@ The retrieved dependency information of one variable becomes invalid as soon as 
 </div>
 </div>
 <div class="sect3">
-<h4 id="selectiv-computation">2.2.10. Selective Computation of Variables</h4>
+<h4 id="selective-computation">2.2.10. Selective Computation of Variables</h4>
 <div class="paragraph">
 <p>Depending on the phase of the solver algorithm, different FMU variables need to be computed.
 FMI allows selective retrieval of FMU variables with specific get functions (e.g. <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>, <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>).
@@ -3570,7 +3570,7 @@ In every state, the general form of the FMU equations is:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>\(\mathbf{v}_{\mathit{unknonwn}}\) is the vector of unknown variables computed in the current state:</p>
+<p>\(\mathbf{v}_{\mathit{unknown}}\) is the vector of unknown variables computed in the current state:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -3597,7 +3597,7 @@ Details about which variables are in \(\mathbf{v}_{\mathit{known}}\) are given i
 <p>\({\mathbf{v}_{\mathit{rest}}}\) is the set of <a href="#input"><code>input</code></a> variables and discrete-time states of function \(\mathbf{f}\) which cannot be set by the importer in the current state, but in other states <em>[for example, discrete-time <a href="#input"><code>inputs</code></a> in <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>]</em>.</p>
 </li>
 <li>
-<p><a href="#EventIndicator"><code>EventIndicators</code></a> must not be included among \(\mathbf{v}_{\mathit{unknonwn}}\).<br>
+<p><a href="#EventIndicator"><code>EventIndicators</code></a> must not be included among \(\mathbf{v}_{\mathit{unknown}}\).<br>
 <em>[This is intentional as their dependencies listed in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> are intended for debugging purposes and not for partial derivatives.]</em></p>
 </li>
 </ul>
@@ -4518,7 +4518,7 @@ activate doStep equations \(\mathbf{f}_{\mathit{doStep}}\)</p>
 </dd>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
-<p>Getting variables might trigger <a href="#selectiv-computation">computations</a>.<br>
+<p>Getting variables might trigger <a href="#selective-computation">computations</a>.<br>
 <em>[For variables not computed by</em> \(\mathbf{f}_{\mathit{init}}\) <em>their <a href="#start"><code>start</code></a> values will be returned.]</em></p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a></dt>
@@ -4903,7 +4903,7 @@ The exact event localization is hidden from the importer.</p>
 </dd>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
-<p>Getting variables might trigger <a href="#selectiv-computation">computations</a>.</p>
+<p>Getting variables might trigger <a href="#selective-computation">computations</a>.</p>
 </dd>
 </dl>
 </div>
@@ -5222,7 +5222,7 @@ This state must not be entered, if the FMU contains no <a href="#tunable"><code>
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
-<p>Getting variables might trigger <a href="#selectiv-computation">computations</a>.
+<p>Getting variables might trigger <a href="#selective-computation">computations</a>.
 <em>[If <a href="#Terminated"><strong>Terminated</strong></a> is entered because of an <code>fmi3Error</code> return value, retrieved values should only be used for debugging purposes.]</em></p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a></dt>
@@ -9206,7 +9206,7 @@ A Model Exchange FMU might consist of discrete-time equations only, for example,
 <p>solution of algebraic loops involving input and output variables of this FMU (see <a href="#algebraic-loops">algebraic loops</a>),</p>
 </li>
 <li>
-<p>selective computation of FMU variables required by the solver algorithm, e.g. outputs, event indicators, derivatives (see <a href="#selectiv-computation">Section 2.2.10</a>),</p>
+<p>selective computation of FMU variables required by the solver algorithm, e.g. outputs, event indicators, derivatives (see <a href="#selective-computation">Section 2.2.10</a>),</p>
 </li>
 <li>
 <p>the ability of the FMU to provide <a href="#directionDerivatives">directional</a> and <a href="#adjointDerivatives">adjoint</a> partial derivatives.</p>
@@ -9440,7 +9440,7 @@ It refers to the unit of the <a href="#independent"><code>independent</code></a>
 </dd>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
-<p>Getting variables might trigger <a href="#selectiv-computation">computations</a>.</p>
+<p>Getting variables might trigger <a href="#selective-computation">computations</a>.</p>
 </dd>
 </dl>
 </div>
@@ -9477,7 +9477,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 </dd>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
-<p>Getting variables might trigger <a href="#selectiv-computation">computations</a>.</p>
+<p>Getting variables might trigger <a href="#selective-computation">computations</a>.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a></dt>
 <dd>
@@ -12045,7 +12045,7 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 <p><a id="PW13"></a>[PW13] Preston-Werner, T. (2013): <strong>Semantic Versioning 2.0.0</strong>.  <a href="https://semver.org/spec/v2.0.0.html" class="bare">https://semver.org/spec/v2.0.0.html</a></p>
 </li>
 <li>
-<p><a id="FBH18"></a>[FBH18] Fritzson D., Braun R. and Hartford J. (2018): <strong>Composite modelling in 3-D mechanics utilizing Transmission Line Modelling (TLM) and Functional Mock-up Interface (FMI)</strong>. Modeling, Idenfitication and Control, vol. 39, no. 3, pp. 179-190.</p>
+<p><a id="FBH18"></a>[FBH18] Fritzson D., Braun R. and Hartford J. (2018): <strong>Composite modelling in 3-D mechanics utilizing Transmission Line Modelling (TLM) and Functional Mock-up Interface (FMI)</strong>. Modeling, Identification and Control, vol. 39, no. 3, pp. 179-190.</p>
 </li>
 </ul>
 </div>
