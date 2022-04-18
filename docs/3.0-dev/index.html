@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 0a13bde,</span>
-<span id="revdate">2022-04-17</span>
+<span id="revnumber">version 67d8c83,</span>
+<span id="revdate">2022-04-18</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -11457,45 +11457,15 @@ typedef void (*fmi3UnlockPreemptionCallback) ();</code></pre>
 <p>In general this means that the FMU&#8217;s code has to secure access to its global states and variables wherever data inconsistencies due to potential preemptions are anticipated.</p>
 </div>
 <div class="paragraph">
-<p><em>[Note that</em></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><em>in order to avoid data inconsistencies and safeguard predictable behavior with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended.</em>
-<em>If every variable is assigned uniquely to a model partition it is not necessary to use <a href="#preemption-support"><code>preemption locks</code></a> in the context of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.</em>
-<em>See <a href="#textExample">example</a> at the end of this section.</em></p>
-</li>
-<li>
-<p><em>for <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> the FMU has to ensure that the active state of an <a href="#outputClock">output Clock</a> is securely reset and cannot be observed twice for the same Clock tick in case this call is preempted.</em>
-<em>An example is given in <a href="#example-scheduled-execution">Section 5.3</a>.</em></p>
-</li>
-<li>
-<p><em>for <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> the FMU has to ensure that the <a href="#countdown-aperiodic-clock">countdown Clock&#8217;s</a> interval qualifier is reset to <a href="#fmi3GetIntervalDecimal"><code>fmi3IntervalUnchanged</code></a> and cannot be observed twice for the same Clock tick in case this call is preempted.</em>
-<em>An example is given in <a href="#example-scheduled-execution">Section 5.3</a>.</em></p>
-</li>
-<li>
-<p><em>depending on their implementation <a href="#preemption-support"><code>fmi3CallbackLockPreemption</code></a> and <a href="#preemption-support"><code>fmi3CallbackUnlockPreemption</code></a> have a strong impact on the scheduler and therefore the use should be as rare and short as possible.</em>
+<p><em>[Note that depending on their implementation, <a href="#preemption-support"><code>fmi3CallbackLockPreemption</code></a> and <a href="#preemption-support"><code>fmi3CallbackUnlockPreemption</code></a> have a non-negligible overhead, as well as a strong impact on the scheduler and therefore their use should be as rare and short as possible.</em>
 <em>In general it is recommended to reduce dependencies between different model partitions of one FMU by design.</em>
-<em>One may also consider if the code can be preempted by other parts of the same FMU: E.g. a model partition cannot be interrupted if it is the only model partition of the FMU or if it holds the highest priority.</em>
-<em>In such cases no locks are necessary.]</em></p>
-</li>
-</ul>
+<em>In particular a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended.</em></p>
 </div>
-<div id="textExample" class="paragraph">
-<p><em>[The following example illustrates why every variable should be assigned uniquely to one model partition via its associated <a href="#Clock">Clock</a>:</em></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><em>An output variable is changed by two different model partitions:</em><br>
-<em>The values returned by <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> that is placed after <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> may return the values computed by the other model partition if that model partition has higher priority and preempted the execution meanwhile.</em></p>
-</li>
-<li>
-<p><em>An input variable is used by two different model partitions:</em><br>
-<em>The variable values of a model partitions of lower priority may have been overwritten by a call to <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> for a model partition of higher priority.]</em></p>
-</li>
-</ul>
+<div class="paragraph">
+<p><em>One may also consider if the code can be preempted by other parts of the same FMU:</em>
+<em>E.g. a model partition cannot be interrupted if it is the only model partition or if it holds the highest priority.</em>
+<em>Similarly, a model partition, while it might be interrupted, might not need to guard data accesses if it is the only model partition of the FMU, or the one with the highest priority.</em>
+<em>In such cases no locks may be necessary.]</em></p>
 </div>
 </div>
 </div>
@@ -11615,7 +11585,7 @@ The importer can assume that <a href="#get-and-set-variable-values"><code>fmi3Ge
 <div class="paragraph">
 <p><em>[It is recommended, to call <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> in a sequence.</em><br>
 <em>The reason is to avoid different interpretations of the caching, since contrary to <a href="#fmi-for-model-exchange"><code>FMI for Model Exchange</code></a>, <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> will perform the actual calculation instead of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a>, and therefore, algebraic loops at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableTypeExclClock}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableTypeExclClock}</code></a> calls as for Model Exchange.</em><br>
-<em>To avoid data inconsistencies and safeguard predictable behavior with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended, see <a href="#textExample">example</a>.]</em></p>
+<em>To avoid data inconsistencies and safeguard predictable behavior with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> a unique assignment of the respective variables to model partitions via its associated <a href="#Clock">Clock</a> is strongly recommended.]</em></p>
 </div>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
