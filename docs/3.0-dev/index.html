@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 87f451f,</span>
-<span id="revdate">2022-04-18</span>
+<span id="revnumber">version a34a150,</span>
+<span id="revdate">2022-04-22</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3501,8 +3501,8 @@ If this data is not provided, the worst case must be assumed: all <a href="#outp
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    FMU *M1, *M2;  // structures that hold the functions and instances of the FMUs
 
-    M1-&gt;fmi3EnterEventMode(M1-&gt;instance, v1, v2, v3, v4, v5);
-    M2-&gt;fmi3EnterEventMode(M2-&gt;instance, v1, v2, v3, v4, v5);
+    M1-&gt;fmi3EnterEventMode(M1-&gt;instance);
+    M2-&gt;fmi3EnterEventMode(M2-&gt;instance);
 
     // start event iteration
     do {
@@ -4711,7 +4711,7 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 </div>
 <div class="paragraph">
 <p><a href="#EventMode"><strong>Event Mode</strong></a> is not available in Scheduled Execution.
-While the reasons for entering <a href="#EventMode"><strong>Event Mode</strong></a> are different for Model Exchange and Co-Simulation (see arguments to <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>), the event handling itself works the same.</p>
+While the reasons for entering <a href="#EventMode"><strong>Event Mode</strong></a> are different for Model Exchange and Co-Simulation (see <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> (ME) and <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a> (CS)), the event handling itself works the same.</p>
 </div>
 <div class="paragraph">
 <p>There are multiple kinds of events that require a transition to <a href="#EventMode"><strong>Event Mode</strong></a>:</p>
@@ -5048,8 +5048,8 @@ This argument is only valid in Model Exchange.</p>
 <ul>
 <li>
 <p>The return argument <a href="#nextEventTime"><code>nextEventTime</code></a> contains the absolute time of the next time event \(T_{\mathit{next}}\) if <a href="#nextEventTimeDefined"><code>nextEventTimeDefined = fmi3True</code></a>.
-The importer must compute up to <a href="#nextEventTime"><code>nextEventTime</code></a> (or if needed slightly further) and then enter <a href="#EventMode"><strong>Event Mode</strong></a> using <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> with argument <a href="#timeEvent"><code>timeEvent = fmi3True</code></a>.
-The FMU must handle this time event at the first call to <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> with <a href="#timeEvent"><code>timeEvent = fmi3True</code></a> at or after <a href="#nextEventTime"><code>nextEventTime</code></a>.<br>
+The importer must compute up to <a href="#nextEventTime"><code>nextEventTime</code></a> (or if needed slightly further) and then enter <a href="#EventMode"><strong>Event Mode</strong></a> using <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
+The FMU must handle this time event at the first call to <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> at or after <a href="#nextEventTime"><code>nextEventTime</code></a>.<br>
 <em>[This might be needed if, for example, the time resolution of the importer does not allow hitting the precise <a href="#nextEventTime"><code>nextEventTime</code></a>.</em>
 <em>If the time offset proves to be too large, the FMU could issue a log message and return fmi3Error.</em>
 <em>The user can improve time settings of the importer to alleviate the issues.]</em><br>
@@ -9626,111 +9626,33 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 <dd>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
-                                          fmi3EventQualifier stepEvent,
-                                          fmi3EventQualifier stateEvent,
-                                          const fmi3Int32 eventIndicatorDomainChanges[],
-                                          size_t nEventIndicators,
-                                          fmi3EventQualifier timeEvent);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>This function changes the state to <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
 </div>
 <div class="paragraph">
-<p><a id="fmi3EventQualitfier"></a>The arguments <code>stepEvent</code>, <code>stateEvent</code>, and <code>timeEvent</code> are of the enumeration type <code>fmi3EventQualifier</code>:</p>
+<p>The importer must call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> when any of the following conditions are met:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef enum {
-    fmi3EventFalse,
-    fmi3EventTrue,
-    fmi3EventUnknown
-} fmi3EventQualifier;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>with the following meanings:</p>
-</div>
-<div class="openblock">
-<div class="content">
-<div id="fmi3EventTrue" class="ulist">
-<ul>
-<li>
-<p><code>fmi3EventTrue</code> indicates that the given event type happens.</p>
-</li>
-</ul>
-</div>
-<div id="fmi3EventFalse" class="ulist">
-<ul>
-<li>
-<p><code>fmi3EventFalse</code> indicates that the given event type does not happen.</p>
-</li>
-</ul>
-</div>
-<div id="fmi3EventUnknown" class="ulist">
-<ul>
-<li>
-<p><code>fmi3EventUnknown</code> indicates that the importer is unable to provide this information about this event type.
-In this case, the FMU must determine itself if this event type happens.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>For Model Exchange, the arguments of the function have the following meaning <em>[For Co-Simulation, the semantics of the arguments are <a href="#fmi3EnterEventModeCS">different</a>.]</em>:</p>
-</div>
-<div class="openblock">
-<div class="content">
 <div class="ulist">
 <ul>
 <li>
-<p><code>stepEvent</code> signals a <a href="#step-event">step event</a>.
-<code>stepEvent</code> must be <code>fmi3EventTrue</code> if <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> returned with <code>enterEventMode = fmi3True</code>.</p>
+<p>time has reached <a href="#nextEventTime"><code>nextEventTime</code></a> as returned by <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, or</p>
 </li>
 <li>
-<p><a id="timeEvent"></a><code>timeEvent</code> signals a <a href="#time-event">time event</a> triggered by <a href="#nextEventTime"><code>nextEventTime</code></a> of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
+<p>the signs of the event indicators signal an event according to <a href="#localizationStateEvents">Section 3.1.1</a>, or</p>
 </li>
 <li>
-<p><code>stateEvent</code> signals a <a href="#state-event">state event</a>, <code>stateEvent</code> is triggered by a domain change of an event indicator.</p>
+<p>the FMU returned with <a href="#enterEventMode"><code>enterEventMode = fmi3True</code></a> from <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> , or</p>
 </li>
 <li>
-<p><code>nEventIndicators</code> is only defined if <code>stateEvent == fmi3EventTrue</code>.
-It contains the current number of event indicators (see <a href="#fmi3GetNumberOfEventIndicators"><code>fmi3GetNumberOfEventIndicators</code></a>) or <code>0</code>.
-If <code>nEventIndicators = 0</code> the importer is unable to provide this information and the FMU must determine itself which event indicator has a domain change.</p>
+<p>the importer plans discrete changes to inputs, or</p>
 </li>
 <li>
-<p><code>eventIndicatorDomainChanges</code> is defined only if <code>stateEvent == fmi3EventTrue</code> and <code>nEventIndicators &gt; 0</code>.
-<code>eventIndicatorDomainChanges</code> is an array of length <code>nEventIndicators</code> that informs the FMU which event indicator has a domain change.
-It is given in the order defined by the ordered list of XML elements <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a>, which is the same as in the argument <a href="#eventIndicators"><code>eventIndicators</code></a> of <a href="#fmi3GetEventIndicators"><code>fmi3GetEventIndicators</code></a>.<br>
-For <code>i = 0, &#8230;&#8203; nEventIndicators-1, eventIndicatorDomainChanges[i]</code> informs about event indicator \({\mathbf{z}_{\mathit{i}}}\):</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>eventIndicatorDomainChanges[i] = 0</code> no root,</p>
-</li>
-<li>
-<p><code>eventIndicatorDomainChanges[i] = +1</code> indicates the direction of the domain change from negative to positive,</p>
-</li>
-<li>
-<p><code>eventIndicatorDomainChanges[i] = -1</code> indicates the direction of the domain change from positive to negative.</p>
+<p>an <a href="#inputClock">input Clock</a> needs to be set.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>The importer must call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> at a time when the signs of the event indicators signal an event according to <a href="#localizationStateEvents">Section 3.1.1</a>.
-If given, the importer must ensure that <code>eventIndicatorDomainChanges</code> is consistent with the values of the event indicators.<br>
-If <code>nEventIndicators = 0</code> the value of <code>eventIndicatorDomainChanges</code> must be NULL.</p>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>[An <a href="#input-event">input event</a> can be detected by the FMU by keeping track of the calls of <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>.</em><br>
-<em>Please note: if all event types are given as <code>fmi3EventUnknown</code> then the functionality is the same as in FMI 2.0.]</em></p>
 </div>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a></dt>
@@ -10472,47 +10394,37 @@ Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> w
 <dd>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance,
-                                          fmi3EventQualifier stepEvent,
-                                          fmi3EventQualifier stateEvent,
-                                          const fmi3Int32 eventIndicatorDomainChanges[],
-                                          size_t nEventIndicators,
-                                          fmi3EventQualifier timeEvent);</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EnterEventModeTYPE(fmi3Instance instance);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>This function changes the state to <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
 </div>
 <div class="paragraph">
-<p>This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signaled <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>, which can be forced by the FMU with <a href="#hasEventMode"><code>hasEventMode = false</code></a>.<br></p>
+<p>The importer must call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> when any of the following conditions are met:</p>
 </div>
-<div class="paragraph">
-<p>The arguments <code>stepEvent</code>, <code>stateEvent</code>, and <code>timeEvent</code> are of the enumeration type <a href="#fmi3EventQualitfier"><code>fmi3EventQualifier</code></a>.</p>
-</div>
-<div class="paragraph">
-<p>For Co-Simulation, the arguments of the function have the following meaning <em>[For Model Exchange, the semantics of the arguments are <a href="#fmi3EnterEventMode">different</a>.]</em>:</p>
-</div>
+<div class="openblock">
+<div class="content">
 <div class="ulist">
 <ul>
 <li>
-<p>The value of argument <code>stepEvent</code> must be <a href="#fmi3EventFalse"><code>fmi3EventFalse</code></a>.</p>
+<p>time has reached <a href="#nextEventTime"><code>nextEventTime</code></a> as returned by <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, or</p>
 </li>
 <li>
-<p><code>timeEvent</code> signals a <a href="#time-event">time event</a> triggered by <a href="#nextEventTime"><code>nextEventTime</code></a> of <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
+<p>the FMU returned with <a href="#eventHandlingNeeded">eventHandlingNeeded = fmi3True</a> from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>, or</p>
 </li>
 <li>
-<p><code>stateEvent</code> signals a <a href="#state-event">state event</a>, triggered in Co-Simulation by <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> returning  with <a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a>.</p>
+<p>the importer plans discrete changes to inputs, or</p>
 </li>
 <li>
-<p>The value of <code>nEventIndicators</code> must always be 0.</p>
-</li>
-<li>
-<p>The value of <code>eventIndicatorDomainChanges</code> must be NULL.</p>
+<p>an <a href="#inputClock">input Clock</a> needs to be set.</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
 <div class="paragraph">
-<p><em>[An <a href="#input-event">input event</a> can be detected by the FMU by keeping track of the calls of <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>.]</em></p>
+<p>This function must not be called, if <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> signaled <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>, which can be forced by the FMU with <a href="#hasEventMode"><code>hasEventMode = false</code></a>.</p>
 </div>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
