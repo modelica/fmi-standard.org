@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version dbe1701,</span>
+<span id="revnumber">version 7f2ecc4,</span>
 <span id="revdate">2022-04-22</span>
 </div>
 <div id="toc" class="toc2">
@@ -5050,9 +5050,9 @@ This argument is only valid in Model Exchange.</p>
 <li>
 <p>The return argument <a href="#nextEventTime"><code>nextEventTime</code></a> contains the absolute time of the next time event \(T_{\mathit{next}}\) if <a href="#nextEventTimeDefined"><code>nextEventTimeDefined = fmi3True</code></a>.
 The importer must compute up to <a href="#nextEventTime"><code>nextEventTime</code></a> (or if needed slightly further) and then enter <a href="#EventMode"><strong>Event Mode</strong></a> using <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>.
-The FMU must handle this time event at the first call to <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> at or after <a href="#nextEventTime"><code>nextEventTime</code></a>.<br>
+The FMU must handle this time event during the <a href="#EventMode"><strong>Event Mode</strong></a> that is entered by the first call to <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a>, at or after <a href="#nextEventTime"><code>nextEventTime</code></a>.<br>
 <em>[This might be needed if, for example, the time resolution of the importer does not allow hitting the precise <a href="#nextEventTime"><code>nextEventTime</code></a>.</em>
-<em>If the time offset proves to be too large, the FMU could issue a log message and return fmi3Error.</em>
+<em>If the time offset proves to be too large, the FMU could issue a log message and return <a href="#fmi3Error"><code>fmi3Error</code></a>.</em>
 <em>The user can improve time settings of the importer to alleviate the issues.]</em><br>
 If another (e.g. <a href="#state-event">state event</a>) event happens before that <a href="#nextEventTime"><code>nextEventTime</code></a>, the previous definition of <a href="#nextEventTime"><code>nextEventTime</code></a> becomes obsolete.</p>
 </li>
