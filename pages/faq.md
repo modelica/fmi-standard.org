@@ -25,7 +25,7 @@ toc: true
   Allow access to intermediate input and output values between communication time points from the FMU to disclose relevant subsystem behavior for analysis or advanced co-simulation master algorithms for enhanced numerical stability.
 
 - Source code FMUs:  
- provide a build description file to improve automatic import of source code FMUs.
+ Provide a build description file to improve automatic import of source code FMUs.
 
 - Numeric Variable Types:
 Adds 8, 16, 32 and 64-bit signed and unsigned integer and single precision floating point variable types to improve efficiency and type safety when importing / exporting models from the embedded, control and automotive domains.
