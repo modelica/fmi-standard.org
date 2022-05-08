@@ -16,7 +16,7 @@ toc: true
   Allow FMUs to communicate multi-dimensional variables and change their sizes using structural parameters.
 
 - Clocks and Co-Simulation with events
-  Introduces clocks for synchronization of variables changes across FMUs and event mode in co-simulation
+  Introduce clocks for synchronization of variable changes across FMUs and event mode in co-simulation.
 
 - Binary Data Type:  
   Adds an opaque binary data type to FMU variables to allow, for instance, efficiently exchanging of complex sensor data.
@@ -25,13 +25,13 @@ toc: true
   Allow access to intermediate input and output values between communication time points from the FMU to disclose relevant subsystem behavior for analysis or advanced co-simulation master algorithms for enhanced numerical stability.
 
 - Source code FMUs:  
- provide a build description file to improve automatic import of source code FMUs.
+  Provide a build description file to improve automatic import of source code FMUs.
 
 - Numeric Variable Types:
-Adds 8, 16, 32 and 64-bit signed and unsigned integer and single precision floating point variable types to improve efficiency and type safety when importing / exporting models from the embedded, control and automotive domains.
+  Adds 8, 16, 32 and 64-bit signed and unsigned integer and single precision floating point variable types to improve efficiency and type safety when importing / exporting models from the embedded, control and automotive domains.
 
 - Extra directory:
-Adding a new folder in the ZIP Archive representing an FMU, providing addtional data to travel with the FMU which can be modified by different tools, allowing for layered standards
+  Adding a new folder in the ZIP Archive representing an FMU, providing addtional data to travel with the FMU which can be modified by different tools, allowing for layered standards.
 
 ## What are the license and usage conditions for the FMI standard?
 
