@@ -22,8 +22,8 @@ FMI User meeting ([Agenda](https://raw.githubusercontent.com/modelica/ModelicaCo
 * [Status and Outlook eFMI Standard](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/10_eFMI-status-and-outlook.pdf) ([Video](https://www.youtube.com/watch?v=lg7677ivh0Y))
 
 FMI related conference papers:
-* [The Functional Mock-up Interface 3.0 - New Features Enabling New Applications](https://doi.org/10.3384/ecp2118117)  ([Video](https://www.youtube.com/watch?v=sNsWVfmZC5s))
-* [The FMI 3.0 Standard Interface for Clocked and Scheduled Simulations](https://doi.org/10.3384/ecp2118127)  ([Video](https://www.youtube.com/watch?v=ZT918VcYVlA)) ([Slides](/assets/literature/Modelica_Conference_2021/FMI3Paper_Slides.pdf))
+* [The Functional Mock-up Interface 3.0 - New Features Enabling New Applications](https://doi.org/10.3384/ecp2118117)  ([Video](https://www.youtube.com/watch?v=sNsWVfmZC5s)) ([Slides](/assets/literature/Modelica_Conference_2021/FMI3Paper_Slides.pdf))
+* [The FMI 3.0 Standard Interface for Clocked and Scheduled Simulations](https://doi.org/10.3384/ecp2118127)  ([Video](https://www.youtube.com/watch?v=ZT918VcYVlA)) 
 * [Engineering Domain Interoperability Using the System Structure and Parameterization (SSP) Standard](https://doi.org/10.3384/ecp2118137) ([Video](https://www.youtube.com/watch?v=bATNdy9_5W0))
 * [Modelica, FMI and SSP for LOTAR of Analytical mBSE models: First Implementation and Feedback](https://doi.org/10.3384/ecp2118149) ([Video](https://www.youtube.com/watch?v=9tirKCN9YOs))
 * [eFMI: An open standard for physical models in embedded software](https://doi.org/10.3384/ecp2118157) ([Video](https://www.youtube.com/watch?v=Y1HrlUz1zDA))
