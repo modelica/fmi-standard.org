@@ -11,7 +11,7 @@ layout: post
 ## Summary
 **The Functional Mockup Interface (FMI, see https://fmi-standard.org) has proven itself as the most widely adopted format for system simulation model exchange and the de facto industry standard for model exchange and co-simulation.  FMI version 3.0, now released by the Modelica Association (https://modelica.org), is a major milestone for the standard with new features that enable the use of FMI in important new use cases: advanced co-simulation, virtual Electronic Control Units (vECUs), the next generation of Digital Twins, and artificial intelligence applications.**
 
-FMI 2.0 has established itself as the most widely adopted format for model exchange and co-simulation since its creation as the result from the publicly funded MODELISAR project.  The royalty-free nature of Modelica Association standards and availability of open-source and commercial solutions right from the first publication have contributed to its rapid and wide adoption across many industries: automotive, aerospace, industrial equipment, buildings, energy, manufacturing, and others.  More than 170 tools officially support FMI, and many more in-house solutions are built on top of FMI. Its adoption is still increasing at a healthy pace. 
+FMI 2.0 has established itself as the most widely adopted format for model exchange and co-simulation since its creation as the result from the publicly funded MODELISAR project.  The royalty-free nature of Modelica Association standards and availability of open-source and commercial solutions right from the first publication have contributed to its rapid and wide adoption across many industries: automotive, aerospace, industrial equipment, buildings, energy, manufacturing, and others.   More than 170 tools officially support FMI, and many more in-house solutions are built on top of FMI.  Its adoption is still increasing at a healthy pace. 
 
 The development of FMI 3.0 has been guided by the needs of new use cases, and the experience from current end users and developers.  The rapid digitalization of the engineering development process, and the growing needs for collaboration between suppliers and OEMs require technical advances to FMI in order to continue the success story over the next decades.  The major advances are the following:
 
@@ -23,7 +23,7 @@ The development of FMI 3.0 has been guided by the needs of new use cases, and th
  
 "FMI 3.0 is a major step forward to enable new use cases arising in system simulation and we hope to have addressed most of the major challenges we simulation engineers face today to improve simulation capabilities of our tool ecosystem: across tools, across teams, across companies, across industries." Andreas Junghanns, the FMI Project Leader, Senior Manager R&D, Synopsys.
 
-"All contributors invested a lot in the development of FMI 3.0. This manifests their commitment to the interoperability of simulation tools. Especially the introduction of ports that allow physical and bus-like connectors, the support of new data types, or the introduction of clocks to handle and distribute events in an efficient way will improve the usability of FMI and allow new use-cases. That was worth all the effort!” Torsten Blochwitz, FMI Deputy Project Leader, Manager Research & Innovation, ESI Group.
+"All contributors invested a lot in the development of FMI 3.0.  This manifests their commitment to the interoperability of simulation tools.  Especially the introduction of ports that allow physical and bus-like connectors, the support of new data types, or the introduction of clocks to handle and distribute events in an efficient way will improve the usability of FMI and allow new use-cases.  That was worth all the effort!” Torsten Blochwitz, FMI Deputy Project Leader, Manager Research & Innovation, ESI Group.
 
 "Within Bosch, FMI is the preferred solution for model exchange and co-simulation on the system level.  It is heavily used for collaborative model-based systems engineering both internally and with external partners.  We at Bosch Research have actively contributed to the development of FMI 3.0, which will bring important improvements for existing use cases such as the creation of virtual ECUs, and enable new use cases such as the efficient training of AI models encapsulated as FMUs." Christian Bertsch, Senior Project Manager, Bosch Research.
 
@@ -43,7 +43,7 @@ Email: board@modelica.org
 
 ### Modelica Assocation Project FMI (https://fmi-standard.org/)
 Email: contact@fmi-standard.org
-FMI Project Leader: Andreas Junghnanns, Synopsys
+FMI Project Leader: Andreas Junghanns, Synopsys
 
 FMI Steering Committee Members:  AVL List GmbH, Austria; Robert Bosch GmbH, Germany; Dassault Systèmes, France, Germany, and Sweden; dSPACE GmbH, Germany; ESI ITI GmbH, Germany; Maplesoft Inc., Canada; Modelon AB, Sweden; PMSF, Germany; Siemens PLM Software, France; Synopsys, USA, Germany and Romania
 
