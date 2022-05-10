@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 526166d,</span>
+<span id="revnumber">version 7ece698,</span>
 <span id="revdate">2022-05-10</span>
 </div>
 <div id="toc" class="toc2">
@@ -3781,7 +3781,7 @@ g_2(x, u_1)
     // if required at this step, compute the Jacobian as a dense matrix
     for (i = 0; i &lt; nx; i++) {
         // construct the Jacobian matrix column wise
-        CALL(FMI3GetDirectionalDerivative(S, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, c, nx))
+        CALL(FMI3GetDirectionalDerivative(S, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, c, nx));
         for (j = 0; j &lt; nx; j++) {
             J[j][i] = c[j];
         }
@@ -9583,7 +9583,7 @@ If the FMU would be used inside another model, additional code is needed, especi
         // handle events
         if (eventOccurred) {
 
-            CALL(FMI3EnterEventMode(S, stepEvent, stateEvent, rootsFound, NZ, timeEvent));
+            CALL(FMI3EnterEventMode(S));
 
             if (inputEvent) {
                 CALL(applyContinuousInputs(S, true));
@@ -9673,7 +9673,7 @@ If the FMU would be used inside another model, additional code is needed, especi
             for (size_t i = 0; i &lt; NZ; i++) {
 
                 // check for zero crossings
-                if (previous_z[i] &lt; 0 &amp;&amp; z[i] &gt;= 0) {
+                if (previous_z[i] &lt;= 0 &amp;&amp; z[i] &gt; 0) {
                     rootsFound[i] = 1;   // -\+
                 } else  if (previous_z[i] &gt; 0 &amp;&amp; z[i] &lt;= 0) {
                     rootsFound[i] = -1;  // +/-
@@ -9704,7 +9704,7 @@ TERMINATE:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#define CALL(f) status = f; if (status &gt; FMIOK) goto TERMINATE;</code></pre>
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#define CALL(f) do { status = f; if (status &gt; FMIOK) goto TERMINATE; } while (0)</code></pre>
 </div>
 </div>
 </div>
@@ -10594,7 +10594,7 @@ Note that the points where the ball hits the floor are available, but only the o
         fmi3False,           // visible
         fmi3False,           // loggingOn
         fmi3True,            // eventModeUsed
-        fmi3False,           // earlyReturnAllowed
+        fmi3True,            // earlyReturnAllowed
         NULL,                // requiredIntermediateVariables
         0,                   // nRequiredIntermediateVariables
         NULL                 // intermediateUpdate
@@ -10659,7 +10659,7 @@ Note that the points where the ball hits the floor are available, but only the o
             CALL(recordVariables(S, outputFile));
 
             // enter Event Mode
-            CALL(FMI3EnterEventMode(S, fmi3False, fmi3False, NULL, 0, fmi3False));
+            CALL(FMI3EnterEventMode(S));
 
             // apply continuous and discrete inputs
             CALL(applyContinuousInputs(S, true));
@@ -10723,8 +10723,6 @@ Note that the points where the ball hits the floor are available and the outputs
 
     *earlyReturnRequested = fmi3False;
     *earlyReturnTime = 0;
-
-    fmi3Status status = fmi3OK;
 
     // if getting intermediate output variables is allowed
     if (intermediateVariableGetAllowed) {

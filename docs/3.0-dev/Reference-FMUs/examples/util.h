@@ -58,7 +58,7 @@
 #endif
 
 // tag::CheckStatus[]
-#define CALL(f) status = f; if (status > FMIOK) goto TERMINATE;
+#define CALL(f) do { status = f; if (status > FMIOK) goto TERMINATE; } while (0)
 // end::CheckStatus[]
 
 FILE *createOutputFile(const char *filename);
@@ -112,7 +112,8 @@ static const char* resourcePath() {
 #ifdef _WIN32
     _fullpath(path, xstr(MODEL_IDENTIFIER) "\\resources\\", 4096);
 #else
-    realpath(xstr(MODEL_IDENTIFIER) "/resources/", path);
+    realpath(xstr(MODEL_IDENTIFIER) "/resources", path);
+    strcat(path, "/");
 #endif
 
 #endif
@@ -164,6 +165,9 @@ static void logMessage(FMIInstance *instance, FMIStatus status, const char *cate
             break;
         case FMIFatal:
             printf("[Fatal] ");
+            break;
+        case FMIPending:
+            printf("[Pending] ");
             break;
     }
 
@@ -244,16 +248,16 @@ static FMIStatus tearDown() {
 
         if (status < FMIError) {
             FMIStatus terminateStatus =
-#if FMI_VERSION == 1 && defined(SIMULATE_CO_SIMULATION)
-                FMI1TerminateSlave(S);
-#elif FMI_VERSION == 1 && defined(SIMULATE_MODEL_EXCHANGE)
-                FMI1Terminate(S);
+#if FMI_VERSION == 1
+                S->interfaceType == FMICoSimulation ? FMI1TerminateSlave(S) : FMI1Terminate(S);
 #elif FMI_VERSION == 2
                 FMI2Terminate(S);
 #elif FMI_VERSION == 3
                 FMI3Terminate(S);
 #endif
-            status = max(status, terminateStatus);
+            if (terminateStatus > status) {
+                status = terminateStatus;
+            }
         }
 
         if (status < FMIFatal) {
