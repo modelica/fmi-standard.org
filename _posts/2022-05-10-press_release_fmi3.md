@@ -6,6 +6,8 @@ layout: post
 
 ### Press Release
 
+<img src="{{ "/assets/images/FMI.png " | relative_url }}" class="img-fluid" alt="Functional Mock-up Interface">
+
 # FMI 3.0 released - a Major Milestone for Interoperability in System Modeling and Simulation
 
 ## Summary
