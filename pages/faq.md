@@ -31,7 +31,7 @@ toc: true
   Help the user to build consistent systems from FMUs and render the systems more intuitively with better representation of structured terminals (for instance busses and physical connectors) in a special XML file.
 
 - Extra directory:
-  Adding a new folder in the ZIP Archive representing an FMU, providing addtional data to travel with the FMU which can be modified by different tools, allowing for layered standards.
+  Adding a new folder in the ZIP Archive representing an FMU, providing additional data to travel with the FMU which can be modified by different tools, allowing for layered standards.
 
 ## What are the license and usage conditions for the FMI standard?
 
