@@ -9,8 +9,8 @@ toc: true
 
 ## What are the new features of FMI 3.0?
 
-- Ports and Icons:  
-  Help the user to build consistent systems from FMUs and render the systems more intuitively with better representation of structured ports (for instance busses and physical connectors) in the modelDescription.xml.
+- Terminals and Icons:  
+  Help the user to build consistent systems from FMUs and render the systems more intuitively with better representation of structured terminals (for instance busses and physical connectors) in a special XML file.
 
 - Array variables:  
   Allow FMUs to communicate multi-dimensional variables and change their sizes using structural parameters.
@@ -18,13 +18,10 @@ toc: true
 - Clocks and Co-Simulation with events
   Introduce clocks for synchronization of variable changes across FMUs and event mode in co-simulation.
 
-- Binary Data Type:  
-  Adds an opaque binary data type to FMU variables to allow, for instance, efficiently exchanging of complex sensor data.
-
 - Intermediate Variable Access:  
   Allow access to intermediate input and output values between communication time points from the FMU to disclose relevant subsystem behavior for analysis or advanced co-simulation master algorithms for enhanced numerical stability.
 
-- Source code FMUs:  
+- Source Code FMUs:  
   Provide a build description file to improve automatic import of source code FMUs.
 
 - Numeric Variable Types:
