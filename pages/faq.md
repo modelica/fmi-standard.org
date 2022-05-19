@@ -9,8 +9,14 @@ toc: true
 
 ## What are the new features of FMI 3.0?
 
-- Clocks and Co-Simulation with events
-  Introduce clocks for synchronization of variable changes across FMUs and event mode in co-simulation.
+- New FMU kind "Scheduled Execution":  
+  Allows coupling several FMUs with one, external scheduler.
+
+- Clocks:  
+  Introduce clocks for synchronization of variable changes across FMUs. 
+
+- Co-Simulation with events:  
+  Introduces early return and event mode in co-simulation.
 
 - Array variables:  
   Allow FMUs to communicate multi-dimensional variables and change their sizes using structural parameters.
