@@ -1,0 +1,31 @@
+name: Generate and check HTML
+
+on:
+
+  push:
+    branches: [ master ]
+
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Build the site with Jekyll
+      run: |
+        chmod o+rw ${{ github.workspace }}
+        docker run -v ${{ github.workspace }}:/srv/jekyll jekyll/jekyll:3 jekyll build
+
+    - name: Check the generated HTML
+      uses: chabad360/htmlproofer@master
+      with:
+        directory: _site
+        arguments: --only-4xx --http-status-ignore 403 --file-ignore "/docs/" --url-ignore "#"
