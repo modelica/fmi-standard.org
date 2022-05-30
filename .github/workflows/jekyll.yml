@@ -1,8 +1,10 @@
-name: Jekyll site CI
+name: Generate and check HTML
 
 on:
+
   push:
     branches: [ master ]
+
   pull_request:
     branches: [ master ]
 
@@ -13,16 +15,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
+
     - name: Checkout
       uses: actions/checkout@v3
-    
-    - name: Build the site in the jekyll/builder container
+
+    - name: Build the site with Jekyll
       run: |
         chmod o+rw ${{ github.workspace }}
         docker run -v ${{ github.workspace }}:/srv/jekyll jekyll/jekyll:3 jekyll build
 
-    - name: Check HTML
+    - name: Check the generated HTML
       uses: chabad360/htmlproofer@master
       with:
         directory: _site
