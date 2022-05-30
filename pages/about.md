@@ -17,7 +17,7 @@ Source code, such as C-header and XML-schema files, that accompany the specifica
 Today, the core development of the FMI standard is organised as [Modelica Association Project](https://modelica.org/projects) _Functional Mock-up Interface_ under the roof of the [Modelica Association](https://www.modelica.org/). (History below)
 
 Current Project Leader and Deputy:
-Andreas Junghanns (Synopsys) and Torsten Blochwitz (ESI ITI) [projectleader@fmi-standard.org](mailto:projectleader@fmi-standard.org)
+Christian Bertsch (BOSCH) and Torsten Sommer (Dassault Systèmes) [projectleader@fmi-standard.org](mailto:projectleader@fmi-standard.org)
 
 Current Members of the Steering Committee:
 AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, PMSF, Siemens PLM, Synopsys
