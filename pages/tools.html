@@ -4,276 +4,229 @@ permalink: /tools/
 layout: default
 ---
 
-<style>
-.legend .btn {
-  line-height: 1;
-}
+{% raw %}
+<div id="app">
 
-.table-tools thead {
-  background-color: #ffffff;
-}
-
-.table-tools th {
-  font-weight: normal;
-}
-
-.table-tools .btn {
-  line-height: 1;
-}
-
-.table-tools td.first {
-    max-width: 177px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.table-tools td.first a {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    max-width: 100%;
-}
-
-.short-text { display: none; }
-
-@media(max-width:992px) {
-
-  .full-text { display: none; }
-
-  .short-text { display: inline-block; }
-
-  .table-tools th {
-    font-size: 1rem;
-  }
-
-  th, td {
-    font-size: 1rem;
-  }
-
-  .table-tools td.first {
-      max-width: 100px;
-  }
-
-  .table-tools .btn-sm, .table-tools .btn-group-sm > .btn {
-      padding: 0.2rem;
-  }
-
-}
-</style>
-
-<form id="filters">
-
-<div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <div class="btn-group" role="group">
-      <button id="btn-ccode" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="C-code"><i class="fas fa-copyright"></i></button>
-      <button id="btn-macos" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="macOS"><i class="fab fa-apple"></i></button>
-      <button id="btn-linux" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Linux"><i class="fab fa-linux"></i></button>
-      <button id="btn-windows" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Windows"><i class="fab fa-windows"></i></button>
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <div class="row">
+        <label for="fmi-version-button-group" class="form-label text-center">FMI Version</label>
+      </div>
+      <div class="btn-group" role="group" id="fmi-version-button-group">
+        <button type="button" @click="showFMI1 = !showFMI1" class="btn btn-secondary" v-bind:class="{ 'active': showFMI1}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI 1.0">1.0</button>
+        <button type="button" @click="showFMI2 = !showFMI2" class="btn btn-secondary" v-bind:class="{ 'active': showFMI2}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI 2.0">2.0</button>
+        <button type="button" @click="showFMI3 = !showFMI3" class="btn btn-secondary" v-bind:class="{ 'active': showFMI3}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI 3.0">3.0</button>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="row">
+        <label for="fmi-version-button-group" class="form-label text-center">Import</label>
+      </div>
+      <div class="btn-group ml-3" role="group">
+        <button type="button" @click="showCSImport = !showCSImport" class="btn btn-secondary" v-bind:class="{ 'active': showCSImport}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Co-Simulation import">CS</button>
+        <button type="button" @click="showMEImport = !showMEImport" class="btn btn-secondary" v-bind:class="{ 'active': showMEImport}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Model Exchange import">ME</button>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="row">
+        <label for="fmi-version-button-group" class="form-label text-center">Export</label>
+      </div>
+      <div class="btn-group ml-3" role="group">
+        <button id="btn-commercial" type="button" @click="showCSExport = !showCSExport" class="btn btn-secondary" v-bind:class="{ 'active': showCSExport}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Co-Simulation export">CS</button>
+        <button id="btn-opensource" type="button" @click="showMEExport = !showMEExport" class="btn btn-secondary" v-bind:class="{ 'active': showMEExport}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Model Exchange export">ME</button>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="row">
+        <label for="fmi-version-button-group" class="form-label text-center">Platform</label>
+      </div>
+      <div class="btn-group" role="group">
+        <button id="btn-windows" type="button" @click="showWindows = !showWindows" class="btn btn-secondary" v-bind:class="{ 'active': showWindows}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Windows"><i class="fab fa-windows"></i></button>
+        <button id="btn-linux" type="button" @click="showLinux = !showLinux" class="btn btn-secondary" v-bind:class="{ 'active': showLinux}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Linux"><i class="fab fa-linux"></i></button>
+        <button id="btn-macos" type="button" @click="showMac = !showMac" class="btn btn-secondary" v-bind:class="{ 'active': showMac}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="macOS"><i class="fab fa-apple"></i></button>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="row">
+        <label for="fmi-version-button-group" class="form-label text-center">License</label>
+      </div>
+      <div class="btn-group ml-3" role="group">
+        <button id="btn-commercial" type="button" @click="toggleShowCommercial()" class="btn btn-secondary" v-bind:class="{ 'active': showCommercial}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Commercial"><i class="fas fa-dollar-sign"></i></button>
+        <button id="btn-opensource" type="button" @click="toggleShowOpenSource()" class="btn btn-secondary" v-bind:class="{ 'active': showOpenSource}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Open Source"><i class="fab fa-osi"></i></button>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="row">
+        <label for="fmi-version-button-group" class="form-label text-center">Interface</label>
+      </div>
+      <div class="btn-group ml-3" role="group">
+        <button id="btn-commercial" type="button" @click="showGUI = !showGUI" class="btn btn-secondary" v-bind:class="{ 'active': showGUI}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Graphical User Interface"><i class="fa-solid fa-window-maximize"></i></button>
+        <button id="btn-opensource" type="button" @click="showCLI = !showCLI" class="btn btn-secondary" v-bind:class="{ 'active': showCLI}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Command Line Interface / scriptable"><i class="fa-solid fa-terminal"></i></button>
+        <button id="btn-opensource" type="button" @click="showLibrary = !showLibrary" class="btn btn-secondary" v-bind:class="{ 'active': showLibrary}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Library / Plug-in"><i class="fa-solid fa-file-code"></i></button>
+      </div>
+    </div>
+    <!-- <div class="col-auto">
+      <div class="row">
+        <label for="fmi-version-button-group" class="form-label text-center">Feature Profiles</label>
+      </div>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          Feature Profiles
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li><a class="dropdown-item" href="#">Basic Co-Simuliation</a></li>
+          <li><a class="dropdown-item" href="#">Sensor</a></li>
+          <li><a class="dropdown-item" href="#">Basic HiL & Sensor HiL</a></li>
+          <li><a class="dropdown-item" href="#">SIL ECU</a></li>
+          <li><a class="dropdown-item" href="#">Dynamics</a></li>
+          <li><a class="dropdown-item" href="#">Dynamics Controller</a></li>
+          <li><a class="dropdown-item" href="#">Optimization</a></li>
+        </ul>
+      </div>
+    </div> -->
+    <div class="col-auto">
+      <div class="row">
+        <label for="fmi-version-button-group" class="form-label text-center">Search</label>
+      </div>
+      <input v-model="search" type="text" class="form-control" placeholder="Type to search">
     </div>
   </div>
-  <div class="col-auto">
-    <div class="btn-group ml-3" role="group">
-      <button id="btn-commercial" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Commercial"><i class="fas fa-dollar-sign"></i></button>
-      <button id="btn-opensource" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Open Source"><i class="fab fa-osi"></i></button>
+
+  <div class="container mt-5">
+    <div v-for="tool in filteredTools" class="row justify-content-center mt-4">
+      <div class="col-2 text-end">
+        <img v-if="tool.hasOwnProperty('logo')" :src="imageURL(tool.logo)" style="margin-top: 7px; max-height: 46px; max-width: 140px;"/>
+      </div>
+      <div class="col-6">
+        <div><a :href="tool.url" style="font-size: 20px; font-weight: 500;">{{ tool.name }}</a></div>
+        <div><small>by <a :href="tool.vendorURL">{{ tool.vendor }}</a><span v-if="tool.hasOwnProperty('version')"> | Ver {{ tool.version }}</span></small></div>
+        <div>
+          <small>
+            <span v-if="hasFeature(tool.fmiVersions, '1.0')" class="badge bg-secondary me-1">1.0</span>
+            <span v-if="hasFeature(tool.fmiVersions, '2.0')" class="badge bg-secondary me-1">2.0</span>
+            <span v-if="hasFeature(tool.fmiVersions, '3.0')" class="badge bg-secondary me-1">3.0</span>
+            <span v-if="hasFeature(tool.fmuImport, 'CS')" class="badge bg-secondary me-1"><i class="fas fa-sign-in-alt"></i> CS</span>
+            <span v-if="hasFeature(tool.fmuImport, 'ME')" class="badge bg-secondary me-1"><i class="fas fa-sign-in-alt"></i> ME</span>
+            <span v-if="hasFeature(tool.fmuExport, 'CS')" class="badge bg-secondary me-1"><i class="fas fa-sign-out-alt"></i> CS</span>
+            <span v-if="hasFeature(tool.fmuExport, 'ME')" class="badge bg-secondary me-1"><i class="fas fa-sign-out-alt"></i> ME</span>
+            <span v-if="hasFeature(tool.platforms, 'Linux')" class="badge bg-secondary me-1"><i class="fab fa-linux"></i></span>
+            <span v-if="hasFeature(tool.platforms, 'Windows')" class="badge bg-secondary me-1"><i class="fab fa-windows"></i></span>
+            <span v-if="hasFeature(tool.platforms, 'macOS')" class="badge bg-secondary me-1"><i class="fab fa-apple"></i></span>
+            <span v-if="tool.license == 'commercial'" class="badge bg-secondary me-1"><i class="fas fa-dollar-sign"></i></span>
+            <span v-if="tool.license == 'osi'" class="badge bg-secondary me-1"><i class="fab fa-osi"></i></span>
+            <span v-if="hasFeature(tool.interfaces, 'GUI')" class="badge bg-secondary me-1"><i class="fa-solid fa-window-maximize"></i></span>
+            <span v-if="hasFeature(tool.interfaces, 'CLI')" class="badge bg-secondary me-1"><i class="fa-solid fa-terminal"></i></span>
+            <span v-if="hasFeature(tool.interfaces, 'library')" class="badge bg-secondary me-1"><i class="fa-solid fa-file-code"></i></span>
+          </small>
+        </div>
+        <p class="mt-1">{{ tool.description }}</p>
+      </div>
     </div>
   </div>
-  <div class="col-auto">
-    <button id="btn-crosscheck" type="button"class="btn btn-secondary ml-3" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Cross-Check passed"><i class="fas fa-exchange-alt"></i></button>
-  </div>
-  <div class="col-auto">
-    <input id="inp-filter" type="text" class="form-control ml-3 my-2" value="" placeholder="Filter">
-  </div>
-</div>
-
-</form>
-
-<!-- <div class="row g-3 align-items-center">
-    <form id="filters">
-      <div class="col-auto">
-        <div class="btn-group" role="group">
-          <button id="btn-ccode" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="C-code"><i class="fas fa-copyright"></i></button>
-          <button id="btn-macos" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="macOS"><i class="fab fa-apple"></i></button>
-          <button id="btn-linux" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Linux"><i class="fab fa-linux"></i></button>
-          <button id="btn-windows" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Windows"><i class="fab fa-windows"></i></button>
-        </div>
-      </div>
-      <div class="col-auto">
-        <div class="btn-group ml-3" role="group">
-          <button id="btn-commercial" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Commercial"><i class="fas fa-dollar-sign"></i></button>
-          <button id="btn-opensource" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Open Source"><i class="fab fa-osi"></i></button>
-        </div>
-      </div>
-      <div class="col-auto">
-        <button id="btn-crosscheck" type="button"class="btn btn-secondary ml-3" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Cross-Check passed"><i class="fas fa-exchange-alt"></i></button>
-      </div>
-      <div class="col-auto">
-        <input id="inp-filter" type="text" class="form-control ml-3 my-2" value="" placeholder="Filter">
-      </div>
-    </form>
-</div> -->
-<div class="row">
-
-  <div class="col-lg legend text-right">
-      <span class="text-muted ml-4">Legend:</span>
-      <button type="button" class="btn btn-sm btn-outline-primary mx-1 my-3" disabled>planned</button>
-      <button type="button" class="btn btn-sm btn-primary mx-1 my-3" disabled>supported</button>
-      <button type="button" class="btn btn-sm btn-success mx-1 my-3" disabled>cross-check passed</button>
-  </div>
-</div>
-
-<div class="text-right mb-2">
-<small><a href="https://github.com/modelica/fmi-standard.org/blob/master/CONTRIBUTING.md#updating-the-tools-list">How do I add or update my tool?</a></small>
-</div>
-
-<table class="table table-sm table-tools" id="tbl-results">
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th colspan="2" class="text-center">FMU Export</th>
-      <th colspan="2" class="text-center">FMU Import</th>
-    </tr>
-    <tr>
-      <th>Name</th>
-      <th class="text-center"><span class="full-text">License</span></th>
-      <th class="text-center">Platforms</th>
-      <th class="text-center"><span class="full-text">Co-Simulation</span><span class="short-text">CS</span></th>
-      <th class="text-center"><span class="full-text">Model Exchange</span><span class="short-text">ME</span></th>
-      <th class="text-center"><span class="full-text">Co-Simulation</span><span class="short-text">CS</span></th>
-      <th class="text-center"><span class="full-text">Model Exchange</span><span class="short-text">ME</span></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for tool in site.data.tools %}
-    <tr>
-      <td class="first" data-platforms="{{ tool.platforms | join: ',' }}"><a href="{{ tool.homepage }}" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="{{ tool.description }}">{{ tool.name }}</a></td>
-      <td class="text-center">{% if tool.license == "osi" %}<i class="fab fa-osi"></i>{% else %}<i class="fas fa-dollar-sign"></i>{% endif %}</td>
-      <td class="text-center">
-        <i class="fas fa-copyright{% unless tool.platforms contains "c-code" %} fa-blank{% endunless %}"></i>
-        <i class="fab fa-apple{% unless tool.platforms contains "darwin64" %} fa-blank{% endunless %}"></i>
-        <i class="fab fa-linux{% unless tool.platforms contains "linux32" or tool.platforms contains "linux64" %} fa-blank{% endunless %}"></i>
-        <i class="fab fa-windows{% unless tool.platforms contains "win32" or tool.platforms contains "win64" %} fa-blank{% endunless %}"></i>
-      </td>
-      <td class="text-center">
-        <div class="btn-group" role="group">
-          <a class="btn btn-sm {% if site.data.cross-check.result[0][tool.id] == "passed" %}btn-success{% else %}{% if tool.export_cs_fmi1 == "available" %}btn-primary{% elsif tool.export_cs_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi1-cs-win64/" | relative_url }}" role="button">1.0</a>
-          <a class="btn btn-sm {% if site.data.cross-check.result[1][tool.id] == "passed" %}btn-success{% else %}{% if tool.export_cs_fmi2 == "available" %}btn-primary{% elsif tool.export_cs_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi2-cs-win64/" | relative_url }}" role="button">2.0</a>
-        </div>
-      </td>
-      <td class="text-center">
-        <div class="btn-group" role="group">
-          <a class="btn btn-sm {% if site.data.cross-check.result[2][tool.id] == "passed" %}btn-success{% else %}{% if tool.export_me_fmi1 == "available" %}btn-primary{% elsif tool.export_me_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi1-me-win64/" | relative_url }}" role="button">1.0</a>
-          <a class="btn btn-sm {% if site.data.cross-check.result[3][tool.id] == "passed" %}btn-success{% else %}{% if tool.export_me_fmi2 == "available" %}btn-primary{% elsif tool.export_me_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi2-me-win64/" | relative_url }}" role="button">2.0</a>
-        </div>
-      </td>
-      <td class="text-center">
-        <div class="btn-group" role="group">
-          <a class="btn btn-sm {% if site.data.cross-check.result[4][tool.id] == "passed" %}btn-success{% else %}{% if tool.import_cs_fmi1 == "available" %}btn-primary{% elsif tool.import_cs_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi1-cs-win64/" | relative_url }}" role="button">1.0</a>
-          <a class="btn btn-sm {% if site.data.cross-check.result[5][tool.id] == "passed" %}btn-success{% else %}{% if tool.import_cs_fmi2 == "available" %}btn-primary{% elsif tool.import_cs_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi2-cs-win64/" | relative_url }}" role="button">2.0</a>
-        </div>
-      </td>
-      <td class="text-center">
-        <div class="btn-group" role="group">
-          <a class="btn btn-sm {% if site.data.cross-check.result[6][tool.id] == "passed" %}btn-success{% else %}{% if tool.import_me_fmi1 == "available" %}btn-primary{% elsif tool.import_me_fmi1 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi1-me-win64/" | relative_url }}" role="button">1.0</a>
-          <a class="btn btn-sm {% if site.data.cross-check.result[7][tool.id] == "passed" %}btn-success{% else %}{% if tool.import_me_fmi2 == "available" %}btn-primary{% elsif tool.import_me_fmi2 == "planned" %}btn-outline-primary{% else %}btn-outline-light{% endif %}{% endif %}" href="{{ "/cross-check/fmi2-me-win64/" | relative_url }}" role="button">2.0</a>
-        </div>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
 </div>
 
-<!-- tools table filter -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/vue@3"></script>
 <script>
-// see https://github.com/twbs/bootstrap/issues/2380
-$('body').on('click','#filters button', function() {
 
-    var button = $(this);
+  const { createApp } = Vue
 
-    // commercial & open source are mutually exclusive
-    if (button.attr('id') === 'btn-commercial') {
-      $('#btn-opensource').removeClass('active');
-    } else if (button.attr('id') === 'btn-opensource') {
-      $('#btn-commercial').removeClass('active');
-    }
-
-    button.toggleClass('active');
-
-    filterRows();
-});
-
-$("#inp-filter").keyup(function() {
-  filterRows();
-});
-
-function filterRows() {
-
-  var table = document.getElementById("tbl-results");
-  var tr = table.getElementsByTagName("tr");
-
-  var showCCode   = $("#btn-ccode").hasClass('active');
-  var showMacOS   = $("#btn-macos").hasClass('active');
-  var showLinux   = $("#btn-linux").hasClass('active');
-  var showWindows = $("#btn-windows").hasClass('active');
-  var showPassed  = $("#btn-crosscheck").hasClass('active');
-
-  var showCommercial = $("#btn-commercial").hasClass('active');
-  var showOpenSource = $("#btn-opensource").hasClass('active');
-
-  var filter = $("#inp-filter").val().trim().toLowerCase();
-
-  for (var i = 0; i < tr.length; i++) {
-
-    var td0 = tr[i].getElementsByTagName("td")[0];
-    var td1 = tr[i].getElementsByTagName("td")[1];
-
-    var commercial = $(td1).find("i").hasClass("fa-dollar-sign");
-    var passed = $(tr[i]).find('.btn-primary, .btn-outline-primary').length == 0;
-
-    if (td0) {
-
-      var tool = $(td0).find("a").text().toLowerCase();
-      var vendor = $(td1).text().toLowerCase();
-      var platforms = $(td0).attr("data-platforms");
-
-      if (
-        (showCCode   && !platforms.includes("c-code"))   ||
-        (showMacOS   && !platforms.includes("darwin64")) ||
-        (showLinux   && !platforms.includes("linux32") && !platforms.includes("linux64")) ||
-        (showWindows && !platforms.includes("win32")   && !platforms.includes("win64"))   ||
-        (showCommercial && !commercial) ||
-        (showOpenSource && commercial)  ||
-        (showPassed && !passed)  ||
-        (filter != "" && !tool.includes(filter) && !vendor.includes(filter))
-      ) {
-        tr[i].style.display = "none";
-        continue;
+  createApp({
+    data() {
+      return {
+        showFMI1: false,
+        showFMI2: false,
+        showFMI3: false,
+        showCSImport: false,
+        showMEImport: false,
+        showCSExport: false,
+        showMEExport: false,
+        showWindows: false,
+        showLinux: false,
+        showMac: false,
+        showCommercial: false,
+        showOpenSource: false,
+        showGUI: false,
+        showCLI: false,
+        showLibrary: false,
+        search: "",
+        tools: []
       }
+    },
+    created() {
+      axios.get('/assets/tools.json')
+        .then(response => {
+          this.tools = response.data
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    methods: {
+      imageURL: function (filename) {
+        return "/assets/images/logos/" + filename;
+      },
+      hasFeature: function (features, feature) {
+        try {
+          return features.indexOf(feature) >= 0;
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      toggleShowCommercial: function () {
+        if (!this.showCommercial) this.showOpenSource = false;
+        this.showCommercial = !this.showCommercial;
+      },
+      toggleShowOpenSource: function () {
+        if (!this.showOpenSource) this.showCommercial = false;
+        this.showOpenSource = !this.showOpenSource;
+      }
+    },
+    computed: {
+      filteredTools() {
 
-      tr[i].style.display = "";
+        self = this;
+
+        return this.tools.filter(tool => {
+
+          if (self.showFMI1 && !tool.fmiVersions.includes('1.0')) return false;
+          if (self.showFMI2 && !tool.fmiVersions.includes('2.0')) return false;
+          if (self.showFMI3 && !tool.fmiVersions.includes('3.0')) return false;
+
+          if (self.showCSImport && !tool.fmuImport.includes('CS')) return false;
+          if (self.showMEImport && !tool.fmuImport.includes('ME')) return false;
+
+          if (self.showCSExport && !tool.fmuExport.includes('CS')) return false;
+          if (self.showMEExport && !tool.fmuExport.includes('ME')) return false;
+
+          if (self.showWindows && !tool.platforms.includes('Windows')) return false;
+          if (self.showLinux   && !tool.platforms.includes('Linux'))   return false;
+          if (self.showMac     && !tool.platforms.includes('macOS'))   return false;
+
+          if (self.showCommercial && tool.license != 'commercial')      return false;
+          if (self.showOpenSource && tool.license != 'osi')             return false;
+
+          if (self.showGUI     && !tool.interfaces.includes('GUI'))     return false;
+          if (self.showCLI     && !tool.interfaces.includes('CLI'))     return false;
+          if (self.showLibrary && !tool.interfaces.includes('library')) return false;
+
+          if (self.showOpenSource && tool.license != 'osi')             return false;
+          if (self.showOpenSource && tool.license != 'osi')             return false;
+
+          return tool.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            || tool.vendor.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            || tool.description.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+        })
+      }
     }
-
-  }
-}
-
-filterRows();
+  }).mount('#app')
 </script>
-
-<!-- sticky table header -->
-<script src="https://unpkg.com/sticky-table-headers"></script>
-<script>
-$("#tbl-results").stickyTableHeaders({fixedOffset: 60});
-</script>
+{% endraw %}
 
 <script>
-/* enable popovers and tooltips */
-$(document).ready(function() {
-  $('[data-toggle="popover"]').popover();
-  $('[data-toggle="tooltip"]').tooltip()
-});
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  return new bootstrap.Popover(popoverTriggerEl)
+})
 </script>

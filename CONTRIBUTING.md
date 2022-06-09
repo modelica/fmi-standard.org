@@ -70,40 +70,64 @@ See also: #456, #789
 ## Updating the tools list
 
 The [tools page](https://fmi-standard.org/tools/) is the central location to find and get information about tools that support FMI.
-The page is generated from [tools.csv](_data/tools.csv).
-To add, edit or remove a tool from the list, update the respective line and make a [pull request](#pull-requests).
+The page is generated from [tools.json](assets/tools.json).
+To add, edit or remove a tool from the list, update the respective entry and make a [pull request](#pull-requests).
 Please respect the rules below when editing the file.
-
-~To get green buttons the tool has to pass the [FMI Cross-Check](https://github.com/modelica/fmi-cross-check).~
-
-:construction: We're currently reworking the FMI Cross-Check process.
 
 ### Format
 
-Optional fields may be empty.
+| Column         | Description                                                             | Example / valid values
+|----------------|-------------------------------------------------------------------------|-----------------------
+| name           | The tool name that appears in the tools list                            | `"Example Sim"`
+| license        | License (commercial or [OSI approved](https://opensource.org/licenses)) | `"commercial"`, `"osi"`
+| url            | Link to the tool's homepage                                             | `"https://example.com/example-sim/"`
+| logo           | filename of the tool's logo                                             | `"example-sim.svg"`
+| vendor         | Name of the tool vendor                                                 | `"Example Company"`
+| vendorUrl      | Link to the vendor's homepage                                           | `"https://example.com/"`
+| description    | A [description](#tool-description) of the tool                          | `"Run simulations in the cloud in real time"`
+| features       | Reserved for future use                                                 | `[]`
+| platforms      | Supported platforms                                                     | `["macOS", "Linux", "Windows"]`
+| interfaces     | Supported interfaces                                                    | `["GUI", "CLI", "library"]`
+| fmiVersions    | Supported FMI versions                                                  | `["1.0", "2.0", "3.0"]`
+| fmuExport      | Supported interface types for FMU export                                | `["CS", "ME", "SE"]`
+| fmuImport      | Supported interface types for FMU import                                | `["CS", "ME", "SE"]`
 
-| Column         | Description                                     | Example / valid values
-|----------------|-------------------------------------------------|-----------------------
-| name           | The tool name that appears in the tools list    | `Example Sim`
-| id             | Unique tool ID (must be a valid directory name) | `Example-Sim`
-| homepage       | Link to the tool's homepage (optional)          | https://example.com/example-sim/
-| description    | A [description](#tool-description) of the tool  | Run simulations in the cloud in real time
-| license        | License (commercial or [OSI approved](https://opensource.org/licenses)) | `commercial`, `osi`
-| platforms      | List of supported platforms, space separated    | 'c-code win32 win64 linux64'
-| export_cs_fmi1 | FMI 1.0 Co-Simulation export (optional)         | `planned`, `available`
-| export_cs_fmi2 | FMI 2.0 Co-Simulation export (optional)         | `planned`, `available`
-| export_me_fmi1 | FMI 1.0 Model Exchange export (optional)        | `planned`, `available`
-| export_me_fmi2 | FMI 2.0 Model Exchange export (optional)        | `planned`, `available`
-| import_cs_fmi1 | FMI 1.0 Co-Simulation import (optional)         | `planned`, `available`
-| import_cs_fmi2 | FMI 2.0 Co-Simulation import (optional)         | `planned`, `available`
-| import_me_fmi1 | FMI 1.0 Model Exchange import (optional)        | `planned`, `available`
-| import_me_fmi2 | FMI 2.0 Model Exchange import (optional)        | `planned`, `available`
+Example:
 
+```json
+{
+    "name": "Example Sim",
+    "license": "commercial",
+    "url": "https://example.com/example-sim/",
+    "logo": "example-sim.svg",
+    "vendor": "Example Company",
+    "vendorURL": ""https://example.com/",
+    "description": "Run simulations in the cloud in real time",
+    "features": [],
+    "platforms": [
+        "macOS",
+        "Linux",
+        "Windows"
+    ],
+    "interfaces": [
+        "GUI",
+        "CLI"
+    ],
+    "fmiVersions": [
+        "2.0",
+        "3.0"
+    ],
+    "fmuExport": [
+        "CS"
+    ],
+    "fmuImport": [
+        "CS"
+    ]
+}
+```
 
-### Position in the table
-
-The alphabetical order based on the tool name (case insensitive).
-Take a look at [the ASCII table](https://www.rapidtables.com/code/text/ascii-table.html) if in doubt.
+The optional logo must be added to `/assets/images` as a PNG or SVG.
+By submitting a logo the committer agrees that the logo is dispayed on the tools page.
 
 ### Tool Description
 
@@ -166,6 +190,38 @@ Linking to a PDF for readers to download:
 ... you can [get the PDF](/assets/mydoc.pdf) directly.
 ```
 
-## Building the website
+## Building the website locally
 
-To build and preview the website [create a fork](https://github.com/modelica/fmi-standard.org/fork) and open it on `https://gitpod.io/#https://github.com/<GITHUB_USERNAME>/fmi-standard.org` where `<GITHUB_USERNAME>` is your GitHub user name.
+1. Clone the repository, change into the directory and pull the changes
+   ```
+   git clone https://github.com/modelica/fmi-standard.org.git
+   cd fmi-standard.org
+   git pull
+   ```
+
+2. Install [Docker](https://www.docker.com/get-started)
+
+3. Build the site and make it available on a local server
+
+   Linux, Mac:
+   ```
+   docker run --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll:4.2.0 jekyll serve --incremental
+   ```
+   
+   Windows:
+   ```
+   docker run --volume="%cd%:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll:4.2.0 jekyll serve --incremental
+   ```
+
+   Now browse to [http://localhost:4000](http://localhost:4000)
+
+4. Before you push your changes, build and check your commit for syntax errors and broken links:
+
+   Linux, Mac:
+   ```
+   docker run -v $PWD/_site:/site 18fgsa/html-proofer /site --only-4xx
+   ```
+   Windows:
+   ```
+   docker run -v %cd%/_site:/site 18fgsa/html-proofer /site --only-4xx
+   ```
