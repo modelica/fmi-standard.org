@@ -166,38 +166,8 @@ Linking to a PDF for readers to download:
 ... you can [get the PDF](/assets/mydoc.pdf) directly.
 ```
 
-## Building the website locally
+## Building the website
 
-1. Clone the repository, change into the directory and pull the changes
-   ```
-   git clone https://github.com/modelica/fmi-standard.org.git
-   cd fmi-standard.org
-   git pull
-   ```
-
-2. Install [Docker](https://www.docker.com/get-started)
-
-3. Build the site and make it available on a local server
-
-   Linux, Mac:
-   ```
-   docker run --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll:4.2.0 jekyll serve
-   ```
-   
-   Windows:
-   ```
-   docker run --volume="%cd%:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll:4.2.0 jekyll serve
-   ```
-
-   Now browse to [http://localhost:4000](http://localhost:4000)
-
-4. Before you push your changes, build and check your commit for syntax errors and broken links:
-
-   Linux, Mac:
-   ```
-   docker run -v $PWD/_site:/site 18fgsa/html-proofer /site --only-4xx
-   ```
-   Windows:
-   ```
-   docker run -v %cd%/_site:/site 18fgsa/html-proofer /site --only-4xx
-   ```
+- open the repository on [Gitpod](https://gitpod.io/#https://github.com/modelica/fmi-standard.org)
+- select the `Remote Explorer` on the [Activity Bar](https://code.visualstudio.com/docs/getstarted/userinterface)
+- on `Gitpod Workspace > Ports > 4000` select `Make Public`, `Open Preview`, or `Open Browser` to view the website
