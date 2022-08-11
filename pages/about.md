@@ -76,11 +76,11 @@ The FMI development was partially funded within the ITEA2 project MODELISAR by
   </tr>
   <tr>
     <td><img src="/assets/images/dgcis.png" alt="DGCIS"/></td>
-    <td><a href="http://www.industrie.gouv.fr/portail/une/dgcis.html">DGCIS</a> for Dassault Systèmes, IFPEN, LMS Imagine, Trialog</td>
+    <td><a href="https://www.industrie.gouv.fr/portail/une/dgcis.html">DGCIS</a> for Dassault Systèmes, IFPEN, LMS Imagine, Trialog</td>
   </tr>
   <tr>
     <td><img src="/assets/images/vinnova.png" alt="VINNOVA"/></td>
-    <td><a href="http://www.vinnova.se/en/">VINNOVA</a> for Dynasim AB, Volvo (funding number: 2008-02291)</td>
+    <td><a href="https://www.vinnova.se/en/">VINNOVA</a> for Dynasim AB, Volvo (funding number: 2008-02291)</td>
   </tr>
 </table>
 
@@ -155,4 +155,4 @@ One of the topics of the Smart Systems Engineering project is to find solutions 
 the cross-disciplinary and cross-enterprise exchange of behavioral models.
 The Functional Mockup Interface (FMI) is viewed as the basic technology for the exchange.
 
-Link to [project page](http://www.prostep.org/en/projects/smart-systems-engineering.html).
+Link to [project page](https://www.prostep.org/en/projects/smart-systems-engineering.html).

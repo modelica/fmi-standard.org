@@ -5,4 +5,4 @@ layout: post
 ---
 
 The FMI Steering Committee decided to rename FMI 2.1 to FMI 3.0 to simplify the upcoming FCPs and make the next standard easier to implement.
-Read more [here](http://fmi-standard.org/faq/).
+Read more [here](https://fmi-standard.org/faq/).

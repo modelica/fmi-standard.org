@@ -4,4 +4,4 @@ categories: [news]
 layout: post
 ---
 
-You can get the FMI related papers published at the Modelica Conference 2017 [here](http://fmi-standard.org/literature).
+You can get the FMI related papers published at the Modelica Conference 2017 [here](https://fmi-standard.org/literature).
