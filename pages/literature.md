@@ -48,7 +48,7 @@ Keynotes
 
 
 ### [Asian Modelica Conference 2020](https://doi.org/10.3384/ecp202017413)
-* [Introducing the Virtual Systems Interface for Dynamic Coupling of Continuous Time Systems with Discontinuities](http://www.ep.liu.se/ecp/174/001/ecp2020174001.pdf)
+* [Introducing the Virtual Systems Interface for Dynamic Coupling of Continuous Time Systems with Discontinuities](https://www.ep.liu.se/ecp/174/001/ecp2020174001.pdf)
 * [Collaborative Development and Simulation of an Aircraft Hydraulic Actuator Model](https://doi.org/10.3384/ecp202017467)
 * [A Protocol-Based Verification Approach for Standard-Compliant Distributed Co-Simulation](https://doi.org/10.3384/ecp2020174133)
 
@@ -174,7 +174,7 @@ Other FMI related conference papers:
 * [Initiatives for Acausal Model Connection using FMI in JSAE (Society of Automotive Engineers of Japan)](https://www.modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118795_HiranoShimadaTeraokaSeyaOhsumiMurakamiHironoSekisue.pdf)
 * [Using FMI in a Cloud-based Web Application for System Simulation](https://www.modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118845_BittnerOelsnerNeidhold.pdf)
 * [Test of Basic Co-Simulation Algorithms Using FMI](https://www.modelica.org/events/modelica2015/proceedings/html/submissions/ecp15118865_PetridisClau.pdf)
-* [Tools Coupling Model Exchange FMUs for Aggregated Simulation by Open Source Tools](http://dx.doi.org/10.3384/ecp15118903)
+* [Tools Coupling Model Exchange FMUs for Aggregated Simulation by Open Source Tools](https://dx.doi.org/10.3384/ecp15118903)
 
 ### [10th International Modelica Conference 2014](https://www.modelica.org/events/modelica2014)
 
@@ -207,10 +207,10 @@ Other FMI related conference papers:
 * [Generating Functional Mock-up Units from Software Specifications](https://ep.liu.se/ecp/076/078/ecp12076078.pdf)
 * [Functional Mock-up Interface in Mechatronic Gearshift Simulation for Commercial Vehicles](https://ep.liu.se/ecp/076/079/ecp12076079.pdf)
 * [Using Functional Mock-up Units for Nonlinear Model Predictive Control](https://ep.liu.se/ecp/076/080/ecp12076080.pdf)
-* [Integration of Modelica models into an existing simulation software using FMI for Co-Simulation](http://dx.doi.org/10.3384/ecp12076949)
+* [Integration of Modelica models into an existing simulation software using FMI for Co-Simulation](https://dx.doi.org/10.3384/ecp12076949)
 * [FMI Add-on for NI VeriStand for HiL Simulation](https://ep.liu.se/ecp/076/101/ecp12076101.pdf)
 
-### [EOOLT 2011](http://www.eoolt.org/)
+### [EOOLT 2011](https://www.eoolt.org/)
 
 * [A Generic FMU Interface for Modelica](https://ep.liu.se/ecp/056/003/ecp1105603.pdf)
 
