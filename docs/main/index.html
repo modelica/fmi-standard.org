@@ -588,7 +588,7 @@ document.addEventListener('keydown', (event) => {
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
 <span id="revnumber">version ,</span>
-<span id="revdate">2022-07-04</span>
+<span id="revdate">2022-08-11</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1855,7 +1855,7 @@ names (only letters, digits and/or underscores are allowed).
 Since <a href="#modelIdentifier"><code>modelIdentifier</code></a> is also used as name in a file system, it must also fulfill the restrictions of the targeted operating system.
 Basically, this means that it should be short.
 These restrictions apply to all interface types and for binary and source-code FMUs.
-<em>[For example, the Windows API only supports full path-names of a file up to 260 characters (see: <a href="http://msdn.microsoft.com/en-us/library/aa365247%28VS.85%29.aspx" class="bare">http://msdn.microsoft.com/en-us/library/aa365247%28VS.85%29.aspx</a>).]</em></p>
+<em>[For example, the Windows API only supports full path-names of a file up to 260 characters (see: <a href="https://msdn.microsoft.com/en-us/library/aa365247%28VS.85%29.aspx" class="bare">https://msdn.microsoft.com/en-us/library/aa365247%28VS.85%29.aspx</a>).]</em></p>
 </div>
 </div>
 <div class="sect3">
@@ -3454,7 +3454,7 @@ If this data is not provided, the worst case must be assumed: all <a href="#outp
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    FMU *M1, *M2;
-    fmi3ValueReference vr_M1_u, vr_M1_y, vr_M2_u1, vr_M2_u2, vr_M2_y1, vr_M2_y2;
+    fmi3ValueReference vr_M1_u, vr_M1_y, vr_M2_u1, vr_M2_u2, vr_M2_y1;
     fmi3Float64 s = 0.1, M2_y1, M1_y, M2_y2;
     // ...
     M2-&gt;fmi3SetFloat64(M2-&gt;instance, &amp;vr_M2_u1, 1, &amp;s, 1);
@@ -5292,7 +5292,7 @@ The types used in the FMI schema files are:</p>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">XML</th>
-<th class="tableblock halign-left valign-top">Description (<a href="http://www.w3.org/TR/xmlschema-2/" class="bare">http://www.w3.org/TR/xmlschema-2/</a>)</th>
+<th class="tableblock halign-left valign-top">Description (<a href="https://www.w3.org/TR/xmlschema-2/" class="bare">https://www.w3.org/TR/xmlschema-2/</a>)</th>
 <th class="tableblock halign-left valign-top">Mapping to C</th>
 <th class="tableblock halign-left valign-top">Mapping to FMI</th>
 </tr>
@@ -5414,7 +5414,7 @@ It is required that the encoding scheme is always UTF-8:</p>
 Additional restrictions for these <code>name</code> attributes are listed in their respective sections.</p>
 </div>
 <div class="paragraph">
-<p><em>[Note that child information items, such as elements in a sequence are ordered lists according to document order, whereas attribute information items are unordered sets (see <a href="http://www.w3.org/TR/XML-infoset/#infoitem.element" class="bare">http://www.w3.org/TR/XML-infoset/#infoitem.element</a>).</em>
+<p><em>[Note that child information items, such as elements in a sequence are ordered lists according to document order, whereas attribute information items are unordered sets (see <a href="https://www.w3.org/TR/XML-infoset/#infoitem.element" class="bare">https://www.w3.org/TR/XML-infoset/#infoitem.element</a>).</em>
 <em>The FMI schema is based on ordered lists in a sequence and therefore parsing must preserve this order.</em>
 <em>For example, the order of the <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> elements define the order to be used in <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, and <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>.]</em></p>
 </div>
@@ -7251,7 +7251,7 @@ approx</p></td>
 The importer may use this information to represent the names in a better way (for example, as a tree and not as a linear list).</p>
 </div>
 <div class="paragraph">
-<p>In the following definitions, the <a href="http://en.wikipedia.org/wiki/Extended_BNF">Extended Backus-Naur Form (EBNF)</a> is used:</p>
+<p>In the following definitions, the <a href="https://en.wikipedia.org/wiki/Extended_BNF">Extended Backus-Naur Form (EBNF)</a> is used:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10815,119 +10815,106 @@ The code demonstrates the simplest importer as shown in <a href="#state-machine-
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">////////////////////////////
-// Initialization sub-phase
-typedef fmi3Instance fmi3InstantiateCoSimulationTYPE(
-    fmi3String                     instanceName,
-    fmi3String                     instantiationToken,
-    fmi3String                     resourceLocation,
-    fmi3Boolean                    visible,
-    fmi3Boolean                    loggingOn,
-    fmi3Boolean                    eventModeUsed,
-    fmi3Boolean                    earlyReturnAllowed,
-    const fmi3ValueReference       requiredIntermediateVariables[],
-    size_t                         nRequiredIntermediateVariables,
-    fmi3InstanceEnvironment        instanceEnvironment,
-    fmi3CallbackLogMessage         logMessage,
-    fmi3CallbackIntermediateUpdate intermediateUpdate);
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    ////////////////////////////
+    // Initialization sub-phase
 
-// instantiate both FMUs
-s1 = s1_fmi3InstantiateCoSimulation("s1",          // instanceName
-                                    guid,          // instantiationToken
-                                    NULL,          // resourceLocation
-                                    fmi3False,     // visible
-                                    fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeUsed
-                                    fmi3False,     // earlyReturnAllowed
-                                    NULL,          // requiredIntermediateVariables
-                                    0,             // nRequiredIntermediateVariables
-                                    NULL,          // instanceEnvironment
-                                    cb_logMessage, // logMessage
-                                    NULL);         // intermediateUpdate
+    // instantiate both FMUs
+    s1 = M1-&gt;fmi3InstantiateCoSimulation("s1",          // instanceName
+                                         guid,          // instantiationToken
+                                         NULL,          // resourceLocation
+                                         fmi3False,     // visible
+                                         fmi3False,     // loggingOn
+                                         fmi3False,     // eventModeUsed
+                                         fmi3False,     // earlyReturnAllowed
+                                         NULL,          // requiredIntermediateVariables
+                                         0,             // nRequiredIntermediateVariables
+                                         NULL,          // instanceEnvironment
+                                         cb_logMessage, // logMessage
+                                         NULL);         // intermediateUpdate
 
-s2 = s2_fmi3InstantiateCoSimulation("s2",          // instanceName
-                                    guid,          // instantiationToken
-                                    NULL,          // resourceLocation
-                                    fmi3False,     // visible
-                                    fmi3False,     // loggingOn
-                                    fmi3False,     // eventModeUsed
-                                    fmi3False,     // earlyReturnAllowed
-                                    NULL,          // requiredIntermediateVariables
-                                    0,             // nRequiredIntermediateVariables
-                                    NULL,          // instanceEnvironment
-                                    cb_logMessage, // logMessage
-                                    NULL);         // intermediateUpdate
+    s2 = M2-&gt;fmi3InstantiateCoSimulation("s2",          // instanceName
+                                         guid,          // instantiationToken
+                                         NULL,          // resourceLocation
+                                         fmi3False,     // visible
+                                         fmi3False,     // loggingOn
+                                         fmi3False,     // eventModeUsed
+                                         fmi3False,     // earlyReturnAllowed
+                                         NULL,          // requiredIntermediateVariables
+                                         0,             // nRequiredIntermediateVariables
+                                         NULL,          // instanceEnvironment
+                                         cb_logMessage, // logMessage
+                                         NULL);         // intermediateUpdate
 
-if (s1 == NULL || s2 == NULL)
-    return EXIT_FAILURE;
+    if (s1 == NULL || s2 == NULL)
+        return EXIT_FAILURE;
 
-// start and stop time
-startTime = 0;
-stopTime = 10;
+    // start and stop time
+    startTime = 0;
+    stopTime = 10;
 
-// communication step size
-h = 0.01;
+    // communication step size
+    h = 0.01;
 
-// set all variable start values (of "ScalarVariable / &lt;type&gt; / start")
-// s1_fmi3Set{VariableType}(s1, ...);
-// s2_fmi3Set{VariableType}(s2, ...);
+    // set all variable start values (of "ScalarVariable / &lt;type&gt; / start")
+    // s1_fmi3Set{VariableType}(s1, ...);
+    // s2_fmi3Set{VariableType}(s2, ...);
 
-// initialize the FMUs
-s1_fmi3EnterInitializationMode(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
-s2_fmi3EnterInitializationMode(s2, fmi3False, 0.0, startTime, fmi3True, stopTime);
+    // initialize the FMUs
+    M1-&gt;fmi3EnterInitializationMode(s1, fmi3False, 0.0, startTime, fmi3True, stopTime);
+    M2-&gt;fmi3EnterInitializationMode(s2, fmi3False, 0.0, startTime, fmi3True, stopTime);
 
-// set the input values at time = startTime
-// fmi3Set{VariableType}(s1, ...);
-// fmi3Set{VariableType}(s2, ...);
+    // set the input values at time = startTime
+    // fmi3Set{VariableType}(s1, ...);
+    // fmi3Set{VariableType}(s2, ...);
 
-s1_fmi3ExitInitializationMode(s1);
-s2_fmi3ExitInitializationMode(s2);
+    M1-&gt;fmi3ExitInitializationMode(s1);
+    M2-&gt;fmi3ExitInitializationMode(s2);
 
-////////////////////////
-// Simulation sub-phase
-tc = startTime; // current time
+    ////////////////////////
+    // Simulation sub-phase
+    time = startTime; // current time
 
-while ((tc &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
+    nSteps = 0;
 
-    // retrieve outputs
-    // fmi3Get{VariableType}(s1, ..., 1, &amp;y1);
-    // fmi3Get{VariableType}(s2, ..., 1, &amp;y2);
+    while ((time &lt; stopTime) &amp;&amp; (status == fmi3OK)) {
 
-    // set inputs
-    // fmi3Set{VariableType}(s1, ..., 1, &amp;y2);
-    // fmi3Set{VariableType}(s2, ..., 1, &amp;y1);
+        // retrieve outputs
+        // fmi3Get{VariableType}(s1, ..., 1, &amp;y1);
+        // fmi3Get{VariableType}(s2, ..., 1, &amp;y2);
 
-    // call instance s1 and check status
-    fmi3Boolean eventEncountered, terminateSimulation, earlyReturn;
-    fmi3Float64 lastSuccessfulTime;
+        // set inputs
+        // fmi3Set{VariableType}(s1, ..., 1, &amp;y2);
+        // fmi3Set{VariableType}(s2, ..., 1, &amp;y1);
 
-    status = s1_fmi3DoStep(s1, tc, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
+        // call instance s1 and check status
+        status = M1-&gt;fmi3DoStep(s1, time, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
 
-    if (terminateSimulation) {
-        printf("Instance s1 requested to terminate simulation.");
-        break;
+        if (terminateSimulation) {
+            break;  // Instance s1 requested to terminate simulation.
+        }
+
+        // call instance s2 and check status as above
+        status = M2-&gt;fmi3DoStep(s2, time, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
+
+        // ...
+
+        // increment current time
+        time = (++nSteps) * h;
+     }
+
+    //////////////////////////
+    // Shutdown sub-phase
+    if (status != fmi3Error &amp;&amp; status != fmi3Fatal) {
+        M1-&gt;fmi3Terminate(s1);
+        M2-&gt;fmi3Terminate(s2);
     }
 
-    // call instance s2 and check status as above
-    status = s2_fmi3DoStep(s2, tc, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime);
+    if (status != fmi3Fatal) {
+        M1-&gt;fmi3FreeInstance(s1);
+        M2-&gt;fmi3FreeInstance(s2);
+    }
 
-    // ...
-
-    // increment current time
-    tc += h;
- }
-
-//////////////////////////
-// Shutdown sub-phase
-if (status != fmi3Error &amp;&amp; status != fmi3Fatal) {
-    s1_fmi3Terminate(s1);
-    s2_fmi3Terminate(s2);
-}
-
-if (status != fmi3Fatal) {
-    s1_fmi3FreeInstance(s1);
-    s2_fmi3FreeInstance(s2);
-}</code></pre>
+    return EXIT_SUCCESS;</code></pre>
 </div>
 </div>
 </div>
@@ -11723,22 +11710,22 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 <div class="ulist bibliography">
 <ul class="bibliography">
 <li>
-<p><a id="ABL12"></a>[ABL12] &#197;kesson J., Braun W., Lindholm P., and Bachmann B. (2012): <strong>Generation of Sparse Jacobians for the Functional Mockup Interface 2.0</strong>. 9th International Modelica Conference, Munich, 2012. <a href="http://www.ep.liu.se/ecp/076/018/ecp12076018.pdf" class="bare">http://www.ep.liu.se/ecp/076/018/ecp12076018.pdf</a></p>
+<p><a id="ABL12"></a>[ABL12] &#197;kesson J., Braun W., Lindholm P., and Bachmann B. (2012): <strong>Generation of Sparse Jacobians for the Functional Mockup Interface 2.0</strong>. 9th International Modelica Conference, Munich, 2012. <a href="https://www.ep.liu.se/ecp/076/018/ecp12076018.pdf" class="bare">https://www.ep.liu.se/ecp/076/018/ecp12076018.pdf</a></p>
 </li>
 <li>
 <p><a id="BPRS15"></a>[BPRS15] Atilim Gunes Baydin, Barak A. Pearlmutter, Alexey Andreyevich Radul, Jeffrey Mark Siskind (2015): <strong>Automatic differentiation in machine learning: a survey</strong>. <a href="https://www.jmlr.org/papers/volume18/17-468/17-468.pdf" class="bare">https://www.jmlr.org/papers/volume18/17-468/17-468.pdf</a></p>
 </li>
 <li>
-<p><a id="BCP10"></a>[BCP10] Benveniste A., Caillaud B., Pouzet M. (2010): <strong>The Fundamentals of Hybrid Systems Modelers</strong>. In 49th IEEE International Conference on Decision and Control (CDC), Atlanta, Georgia, USA, December 15-17. <a href="http://www.di.ens.fr/~pouzet/bib/cdc10.pdf" class="bare">http://www.di.ens.fr/~pouzet/bib/cdc10.pdf</a></p>
+<p><a id="BCP10"></a>[BCP10] Benveniste A., Caillaud B., Pouzet M. (2010): <strong>The Fundamentals of Hybrid Systems Modelers</strong>. In 49th IEEE International Conference on Decision and Control (CDC), Atlanta, Georgia, USA, December 15-17. <a href="https://www.di.ens.fr/~pouzet/bib/cdc10.pdf" class="bare">https://www.di.ens.fr/~pouzet/bib/cdc10.pdf</a></p>
 </li>
 <li>
-<p><a id="BOA11"></a>[BOA11] Blochwitz T., Otter M., Arnold M., Bausch C., Clau&#223; C., Elmqvist H., Junghanns A., Mauss J., Monteiro M., Neidhold T., Neumerkel D., Olsson H., Peetz J.-V., Wolf S. (2011): <strong>The Functional Mockup Interface for Tool independent Exchange of Simulation Models</strong>. 8th International Modelica Conference, Dresden 2011. <a href="http://www.ep.liu.se/ecp/063/013/ecp11063013.pdf" class="bare">http://www.ep.liu.se/ecp/063/013/ecp11063013.pdf</a></p>
+<p><a id="BOA11"></a>[BOA11] Blochwitz T., Otter M., Arnold M., Bausch C., Clau&#223; C., Elmqvist H., Junghanns A., Mauss J., Monteiro M., Neidhold T., Neumerkel D., Olsson H., Peetz J.-V., Wolf S. (2011): <strong>The Functional Mockup Interface for Tool independent Exchange of Simulation Models</strong>. 8th International Modelica Conference, Dresden 2011. <a href="https://www.ep.liu.se/ecp/063/013/ecp11063013.pdf" class="bare">https://www.ep.liu.se/ecp/063/013/ecp11063013.pdf</a></p>
 </li>
 <li>
 <p><a id="BKF17"></a>[BKF17] Braun W., Kulshreshtha K., Franke R., Walther A., Bachmann B., Towards Adjoint and Directional Derivatives in FMI utilizing ADOL-C within OpenModelica, 12th International Modelica Conference, Prague, 2017. <a href="https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132363_BraunKulshreshthaFrankeBachmannWalther.pdf" class="bare">https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132363_BraunKulshreshthaFrankeBachmannWalther.pdf</a></p>
 </li>
 <li>
-<p><a id="BOA12"></a>[BOA12] Blochwitz T., Otter M., &#197;kesson J., Arnold M., Clau&#223; C., Elmqvist H., Friedrich M., Junghanns A., Mauss J., Neumerkel D., Olsson H., Viel A. (2012): <strong>Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models</strong>. 9th International Modelica Conference, Munich, 2012. <a href="http://www.ep.liu.se/ecp/076/017/ecp12076017.pdf" class="bare">http://www.ep.liu.se/ecp/076/017/ecp12076017.pdf</a></p>
+<p><a id="BOA12"></a>[BOA12] Blochwitz T., Otter M., &#197;kesson J., Arnold M., Clau&#223; C., Elmqvist H., Friedrich M., Junghanns A., Mauss J., Neumerkel D., Olsson H., Viel A. (2012): <strong>Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models</strong>. 9th International Modelica Conference, Munich, 2012. <a href="https://www.ep.liu.se/ecp/076/017/ecp12076017.pdf" class="bare">https://www.ep.liu.se/ecp/076/017/ecp12076017.pdf</a></p>
 </li>
 <li>
 <p><a id="KS00"></a>[KS00] K&#252;bler R., Schiehlen W. (2000): <strong>Two methods of simulator coupling</strong>. Mathematical and Computer Modeling of Dynamical Systems 6 pp. 93-113.</p>
@@ -11753,7 +11740,7 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 <p><a id="MLS12"></a>[MLS12] Modelica (2012): <strong>Modelica, A Unified Object-Oriented Language for Systems Modeling</strong>. Language Specification, Version 3.3, May 9, 2012. <a href="https://www.modelica.org/documents/ModelicaSpec33.pdf" class="bare">https://www.modelica.org/documents/ModelicaSpec33.pdf</a></p>
 </li>
 <li>
-<p><a id="PZ06"></a>[PZ06] Pouzet M. (2006): <strong>Lucid Synchrone</strong>. Version 3.0, Tutorial and Reference Manual. <a href="http://www.di.ens.fr/~pouzet/lucid-synchrone/" class="bare">http://www.di.ens.fr/~pouzet/lucid-synchrone/</a></p>
+<p><a id="PZ06"></a>[PZ06] Pouzet M. (2006): <strong>Lucid Synchrone</strong>. Version 3.0, Tutorial and Reference Manual. <a href="https://www.di.ens.fr/~pouzet/lucid-synchrone/" class="bare">https://www.di.ens.fr/~pouzet/lucid-synchrone/</a></p>
 </li>
 <li>
 <p><a id="CGM84"></a>[CGM84] Coleman, Garbow, Mor&#233; (1984): <strong>Software for estimating sparse Jacobian matrices, ACM Transactions on Mathematical Software</strong>. TOMS , vol. 10, no. 3, pp. 346-347</p>
@@ -12086,7 +12073,7 @@ Also known as the <em>bi-lateral delay line</em> method. For more details see <a
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>XML</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">eXtensible Markup Language (<a href="http://www.w3.org/XML/">www.w3.org/XML</a>, <a href="http://en.wikipedia.org/wiki/Xml">en.wikipedia.org/wiki/XML</a>) - An open standard to store information in text files in a structured form.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eXtensible Markup Language (<a href="https://www.w3.org/XML/">www.w3.org/XML</a>, <a href="https://en.wikipedia.org/wiki/Xml">en.wikipedia.org/wiki/XML</a>) - An open standard to store information in text files in a structured form.</p></td>
 </tr>
 </tbody>
 </table>
