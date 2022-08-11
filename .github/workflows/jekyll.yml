@@ -25,7 +25,7 @@ jobs:
         docker run -v ${{ github.workspace }}:/srv/jekyll jekyll/jekyll:3 jekyll build
 
     - name: Check the generated HTML
-      uses: chabad360/htmlproofer@master
+      uses: chabad360/htmlproofer@v1.1
       with:
         directory: _site
-        arguments: --only-4xx --http-status-ignore 403 --file-ignore "/docs/" --url-ignore "#"
+        arguments: --only-4xx --ignore-status-codes 403 --ignore-files "/docs/" --ignore-urls "#"
