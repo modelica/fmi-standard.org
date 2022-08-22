@@ -6,15 +6,26 @@ layout: base
 
 <main>
 
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-body">
-          <iframe style="width: 100%; aspect-ratio: 560 / 315" src="https://www.youtube.com/embed/A-3iIot0fO8?start=14" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="modal-body" id="player">
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    var playerModal = document.getElementById('playerModal');
+    
+    playerModal.addEventListener('show.bs.modal', function (event) {
+      $('#player').html('<iframe style="width: 100%; aspect-ratio: 560 / 315" src="https://www.youtube.com/embed/A-3iIot0fO8?start=14&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+    });
+    
+    playerModal.addEventListener('hidden.bs.modal', function (event) {
+      $('#player').html('');
+    });
+  </script>
 
   <div class="px-4 py-5 my-5 text-center">
     <img class="d-block mx-auto mb-5" src="/assets/images/FMI.svg" alt="FMI logo" width="500">
