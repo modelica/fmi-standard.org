@@ -1,8 +1,10 @@
+<a href="https://fmi-standard.org/">
+  <img src="https://raw.githubusercontent.com/modelica/fmi-standard.org/main/static/assets/images/FMI.svg" alt="FMI logo" width="400">
+</a>
+
 # FMI Standard website
 
 This repository contains the sources of the [fmi-standard.org website](https://fmi-standard.org/) and is the central location for feature requests, suggestions and bug reports.
-
-![assets/images/fmi-illustration-1920.png](assets/images/fmi-illustration-1920.png)
 
 ## Contributing
 
