@@ -101,7 +101,7 @@ Example:
     "url": "https://example.com/example-sim/",
     "logo": "example-sim.svg",
     "vendor": "Example Company",
-    "vendorURL": ""https://example.com/",
+    "vendorURL": "https://example.com/",
     "description": "Run simulations in the cloud in real time",
     "features": [],
     "platforms": [
@@ -141,7 +141,7 @@ The description field should
 
 ## Adding a news post
 
-To create a post, add a file to the `_posts` directory with the following format:
+To create a post, add a file to `/content/news/` with the following format:
 
 ```
 YEAR-MONTH-DAY-title.MARKUP
@@ -149,7 +149,8 @@ YEAR-MONTH-DAY-title.MARKUP
 
 Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. The date determines the placement in the news chronology and must not be in the future in order to be listed. `title` should not be longer than 50 characters and only contain lower case characters (`a-z`), digits (`0-9`) and hyphens (`-`).
 
-The file name determines the [permalink](https://en.wikipedia.org/wiki/Permalink) to the post and must not be changed after it has been merged into `master`. E.g. the post
+The file name determines the [permalink](https://en.wikipedia.org/wiki/Permalink) to the post and must not be changed after it has been merged into `main`.
+E.g. the post
 
 ```
 2018-09-04-modelica-conference-2019-regensburg-germany.md
@@ -158,18 +159,17 @@ The file name determines the [permalink](https://en.wikipedia.org/wiki/Permalink
 can be accessed as
 
 ```
-https://fmi-standard.org/news/2018/09/04/modelica-conference-2019-regensburg-germany.html
+https://fmi-standard.org/news/2018-09-04-modelica-conference-2019-regensburg-germany.html
 ```
 
 You typically write posts in [Markdown](https://daringfireball.net/projects/markdown/) (`.md`), however HTML (`.html`) is also supported.
 
-All blog post files must begin with a front matter that sets the title, category and layout:
+All blog post files must begin with a front matter that sets the title and date:
 
 ```markdown
 ---
 title: FMI at the 13th Modelica Conference 2019 in Regensburg, Germany
-categories: [news]
-layout: post
+date: 2014-07-25
 ---
 
 The [13th International Modelica Conference](https://modelica.org/events/modelica2019) will be held at [OTH Regensburg](https://www.oth-regensburg.de/en.html), Germany, March 4–6, 2019.
@@ -192,36 +192,13 @@ Linking to a PDF for readers to download:
 
 ## Building the website locally
 
-1. Clone the repository, change into the directory and pull the changes
+1. [Install Hugo extended version](https://gohugo.io/getting-started/installing/)
+
+2. Clone the repository, change into the directory and pull the changes
    ```
    git clone https://github.com/modelica/fmi-standard.org.git
    cd fmi-standard.org
    git pull
    ```
 
-2. Install [Docker](https://www.docker.com/get-started)
-
-3. Build the site and make it available on a local server
-
-   Linux, Mac:
-   ```
-   docker run --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll:4.2.0 jekyll serve --incremental
-   ```
-   
-   Windows:
-   ```
-   docker run --volume="%cd%:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll:4.2.0 jekyll serve --incremental
-   ```
-
-   Now browse to [http://localhost:4000](http://localhost:4000)
-
-4. Before you push your changes, build and check your commit for syntax errors and broken links:
-
-   Linux, Mac:
-   ```
-   docker run -v $PWD/_site:/site 18fgsa/html-proofer /site --only-4xx
-   ```
-   Windows:
-   ```
-   docker run -v %cd%/_site:/site 18fgsa/html-proofer /site --only-4xx
-   ```
+3. Run `hugo server` and browse to [http://localhost:1313](http://localhost:1313/)
