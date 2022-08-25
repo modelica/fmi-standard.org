@@ -70,7 +70,7 @@ See also: #456, #789
 ## Updating the tools list
 
 The [tools page](https://fmi-standard.org/tools/) is the central location to find and get information about tools that support FMI.
-The page is generated from [tools.json](assets/tools.json).
+The page is generated from [tools.json](static/assets/tools.json).
 To add, edit or remove a tool from the list, update the respective entry and make a [pull request](#pull-requests).
 Please respect the rules below when editing the file.
 
