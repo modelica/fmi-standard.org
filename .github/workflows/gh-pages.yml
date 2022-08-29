@@ -21,6 +21,10 @@ jobs:
       - uses: actions/upload-pages-artifact@v1
         with:
           path: public
+      - uses: chabad360/htmlproofer@v1.1
+        with:
+          directory: public
+          arguments: --only-4xx --ignore-status-codes 403 --ignore-files "/docs/,/tools/" --ignore-urls "#" --allow-missing-href=true
 
   deploy:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
