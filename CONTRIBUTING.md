@@ -81,7 +81,7 @@ Please respect the rules below when editing the file.
 | name           | The tool name that appears in the tools list                            | `"Example Sim"`
 | license        | License (commercial or [OSI approved](https://opensource.org/licenses)) | `"commercial"`, `"osi"`
 | url            | Link to the tool's homepage                                             | `"https://example.com/example-sim/"`
-| logo           | filename of the tool's logo                                             | `"example-sim.svg"`
+| logo           | filename of the tool's logo (or company's logo)                         | `"example-sim.svg"`
 | vendor         | Name of the tool vendor                                                 | `"Example Company"`
 | vendorUrl      | Link to the vendor's homepage                                           | `"https://example.com/"`
 | description    | A [description](#tool-description) of the tool                          | `"Run simulations in the cloud in real time"`
