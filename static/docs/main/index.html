@@ -588,7 +588,7 @@ document.addEventListener('keydown', (event) => {
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
 <span id="revnumber">version ,</span>
-<span id="revdate">2022-10-06</span>
+<span id="revdate">2022-10-13</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -5587,7 +5587,7 @@ For this purpose the importer must pass the <a href="#instantiationToken"><code>
 The format is a subset of <code>dateTime</code> and should be: <code>YYYY-MM-DDThh:mm:ssZ</code> (with one <code>T</code> between date and time; <code>Z</code> characterizes the Zulu time zone, in other words, Greenwich meantime) <em>[for example <code>2009-12-08T14:33:22Z</code>, according to ISO 8601]</em>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="variableNamingConvention"></a><a href="#variableNamingConvention"><code>variableNamingConvention</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="variableNamingConvention"></a><a href="#variableNamingConvention"><code>Convention</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether the variable names in <a href="#ModelVariables"><code>&lt;ModelVariables&gt;</code></a> and in <code>&lt;TypeDefinitions&gt;</code> follow the <code>flat</code> or <code>structured</code> convention as defined in <a href="#namingSection">Section 2.4.7.5.1</a>.</p></td>
 </tr>
 </tbody>
@@ -7247,7 +7247,7 @@ approx</p></td>
 <div class="sect5">
 <h6 id="namingSection">2.4.7.5.1. Variable Naming Conventions</h6>
 <div class="paragraph">
-<p>With attribute <a href="#variableNamingConvention"><code>variableNamingConvention</code></a> in <code>&lt;fmiModelDescription&gt;</code>, the convention is defined how the variable names have been constructed.
+<p>With attribute <a href="#variableNamingConvention"><code>Convention</code></a> in <code>&lt;fmiModelDescription&gt;</code>, the convention is defined how the variable names have been constructed.
 The importer may use this information to represent the names in a better way (for example, as a tree and not as a linear list).</p>
 </div>
 <div class="paragraph">
@@ -7350,7 +7350,7 @@ vehicle.engine.temperature</pre>
 <p>It might be that not all elements of an array are present.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#variableNamingConvention"><code>variableNamingConvention</code></a> <code>structured</code> does not define if arrays are 0-based or 1-based.</p>
+<p>The <a href="#variableNamingConvention"><code>Convention</code></a> <code>structured</code> does not define if arrays are 0-based or 1-based.</p>
 </div>
 </div>
 </div>
@@ -7865,7 +7865,17 @@ It is intended that the <code>terminalKind</code> is used to define domain speci
 <p><em>The structured naming convention of the <a href="#ModelVariables"><code>&lt;ModelVariables&gt;</code></a> is independent from the terminal names and member variable names.</em></p>
 </div>
 <div class="paragraph">
-<p><em>A tool may choose to connect terminals with a different or unknown <code>terminalKind</code>, if the <code>matchingRule</code> matches.]</em></p>
+<p><em>A tool may choose to connect terminals with a different or unknown <code>terminalKind</code>, if the <code>matchingRule</code> matches.</em></p>
+</div>
+<div class="paragraph">
+<p><em>A tool may choose to take the structured naming convention of variable names into account when matching terminals.</em>
+<em>This can for example be used to allow matching between terminals employing arrays mapped to scalar variables using structured naming convention ("naming convention arrays"), and those using native FMI 3.0 arrays, as in the following example:</em></p>
+</div>
+<div class="paragraph">
+<p><em>Assume that an (FMI 3.0) FMU has a one-dimensional array variable <code>x</code> of length 3 as member variable of a terminal and is connected to another (FMI 2.0 or FMI 3.0) FMU supporting structured naming convention, which has scalar variables <code>x[1]</code>, <code>x[2]</code>, <code>x[3]</code> as member variables of a terminal.</em>
+<em>Then <code>x[1]</code>, <code>x[2]</code>, <code>x[3]</code> are interpreted as a "naming convention array" with name <code>x</code>, which "matches" the array variable <code>x</code> of the first FMU, in name-based matching.</em>
+<em>Similarly the notional "naming convention array" <code>x</code> would participate in sequence-based matching as a single notional variable in the place of the underlying scalar variables.</em>
+<em>]</em></p>
 </div>
 </div>
 <div class="sect5">
@@ -11710,7 +11720,7 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 <div class="ulist bibliography">
 <ul class="bibliography">
 <li>
-<p><a id="ABL12"></a>[ABL12] &#197;kesson J., Braun W., Lindholm P., and Bachmann B. (2012): <strong>Generation of Sparse Jacobians for the Functional Mockup Interface 2.0</strong>. 9th International Modelica Conference, Munich, 2012. <a href="https://www.ep.liu.se/ecp/076/018/ecp12076018.pdf" class="bare">https://www.ep.liu.se/ecp/076/018/ecp12076018.pdf</a></p>
+<p><a id="ABL12"></a>[ABL12] &#197;kesson J., Braun W., Lindholm P., and Bachmann B. (2012): <strong>Generation of Sparse Jacobians for the Functional Mockup Interface 2.0</strong>. 9th International Modelica Conference, Munich, 2012. <a href="https://ep.liu.se/ecp/076/018/ecp12076018.pdf" class="bare">https://ep.liu.se/ecp/076/018/ecp12076018.pdf</a></p>
 </li>
 <li>
 <p><a id="BPRS15"></a>[BPRS15] Atilim Gunes Baydin, Barak A. Pearlmutter, Alexey Andreyevich Radul, Jeffrey Mark Siskind (2015): <strong>Automatic differentiation in machine learning: a survey</strong>. <a href="https://www.jmlr.org/papers/volume18/17-468/17-468.pdf" class="bare">https://www.jmlr.org/papers/volume18/17-468/17-468.pdf</a></p>
@@ -11719,13 +11729,13 @@ The simulation algorithm can read from the <a href="#modelDescription.xml"><code
 <p><a id="BCP10"></a>[BCP10] Benveniste A., Caillaud B., Pouzet M. (2010): <strong>The Fundamentals of Hybrid Systems Modelers</strong>. In 49th IEEE International Conference on Decision and Control (CDC), Atlanta, Georgia, USA, December 15-17. <a href="https://www.di.ens.fr/~pouzet/bib/cdc10.pdf" class="bare">https://www.di.ens.fr/~pouzet/bib/cdc10.pdf</a></p>
 </li>
 <li>
-<p><a id="BOA11"></a>[BOA11] Blochwitz T., Otter M., Arnold M., Bausch C., Clau&#223; C., Elmqvist H., Junghanns A., Mauss J., Monteiro M., Neidhold T., Neumerkel D., Olsson H., Peetz J.-V., Wolf S. (2011): <strong>The Functional Mockup Interface for Tool independent Exchange of Simulation Models</strong>. 8th International Modelica Conference, Dresden 2011. <a href="https://www.ep.liu.se/ecp/063/013/ecp11063013.pdf" class="bare">https://www.ep.liu.se/ecp/063/013/ecp11063013.pdf</a></p>
+<p><a id="BOA11"></a>[BOA11] Blochwitz T., Otter M., Arnold M., Bausch C., Clau&#223; C., Elmqvist H., Junghanns A., Mauss J., Monteiro M., Neidhold T., Neumerkel D., Olsson H., Peetz J.-V., Wolf S. (2011): <strong>The Functional Mockup Interface for Tool independent Exchange of Simulation Models</strong>. 8th International Modelica Conference, Dresden 2011. <a href="https://ep.liu.se/ecp/063/013/ecp11063013.pdf" class="bare">https://ep.liu.se/ecp/063/013/ecp11063013.pdf</a></p>
 </li>
 <li>
 <p><a id="BKF17"></a>[BKF17] Braun W., Kulshreshtha K., Franke R., Walther A., Bachmann B., Towards Adjoint and Directional Derivatives in FMI utilizing ADOL-C within OpenModelica, 12th International Modelica Conference, Prague, 2017. <a href="https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132363_BraunKulshreshthaFrankeBachmannWalther.pdf" class="bare">https://2017.international.conference.modelica.org/proceedings/html/submissions/ecp17132363_BraunKulshreshthaFrankeBachmannWalther.pdf</a></p>
 </li>
 <li>
-<p><a id="BOA12"></a>[BOA12] Blochwitz T., Otter M., &#197;kesson J., Arnold M., Clau&#223; C., Elmqvist H., Friedrich M., Junghanns A., Mauss J., Neumerkel D., Olsson H., Viel A. (2012): <strong>Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models</strong>. 9th International Modelica Conference, Munich, 2012. <a href="https://www.ep.liu.se/ecp/076/017/ecp12076017.pdf" class="bare">https://www.ep.liu.se/ecp/076/017/ecp12076017.pdf</a></p>
+<p><a id="BOA12"></a>[BOA12] Blochwitz T., Otter M., &#197;kesson J., Arnold M., Clau&#223; C., Elmqvist H., Friedrich M., Junghanns A., Mauss J., Neumerkel D., Olsson H., Viel A. (2012): <strong>Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models</strong>. 9th International Modelica Conference, Munich, 2012. <a href="https://ep.liu.se/ecp/076/017/ecp12076017.pdf" class="bare">https://ep.liu.se/ecp/076/017/ecp12076017.pdf</a></p>
 </li>
 <li>
 <p><a id="KS00"></a>[KS00] K&#252;bler R., Schiehlen W. (2000): <strong>Two methods of simulator coupling</strong>. Mathematical and Computer Modeling of Dynamical Systems 6 pp. 93-113.</p>
