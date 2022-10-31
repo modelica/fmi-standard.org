@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.17">
+<meta name="generator" content="Asciidoctor 2.0.18">
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 <title>Functional Mock-up Interface Specification</title>
 <style>
@@ -588,7 +588,7 @@ document.addEventListener('keydown', (event) => {
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
 <span id="revnumber">version ,</span>
-<span id="revdate">2022-10-13</span>
+<span id="revdate">2022-10-31</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -8142,6 +8142,12 @@ If only a single <a href="#SourceFile"><code>&lt;SourceFile&gt;</code></a> is pr
 This source file may include other source files that are not listed in the <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a>.
 It is also recommended to use a descriptive name (e.g. <code>&lt;model_identifier&gt;.c</code>) for this single <a href="#SourceFile"><code>&lt;SourceFile&gt;</code></a> instead of generic names (like <code>all.c</code>, or <code>model.c</code>) in order to aid readability and reduce integration effort.</p>
 </div>
+<div id="figure-fmiBuildDescription" class="imageblock">
+<div class="content">
+<img src="images/schema/fmiBuildDescription.png" alt="fmiBuildDescription" width="90%">
+</div>
+<div class="title">Figure 39. <code>fmiBuildDescription</code> element.</div>
+</div>
 <table id="table-BuildConfiguration-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 27. BuildConfiguration attribute details.</caption>
 <colgroup>
@@ -8187,6 +8193,12 @@ If a <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> w
 Every build configuration must contain at least one <code>&lt;SourceFileSet&gt;</code>.
 An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> of the matching <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a>.</p>
 </div>
+<div id="figure-SourceFileSet" class="imageblock">
+<div class="content">
+<img src="images/schema/SourceFileSet.png" alt="SourceFileSet" width="60%">
+</div>
+<div class="title">Figure 40. <code>SourceFileSet</code> element.</div>
+</div>
 <table id="table-SourceFileSet-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 28. SourceFileSet attribute details.</caption>
 <colgroup>
@@ -8229,6 +8241,12 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 </div>
 <div class="sect4">
 <h5 id="SourceFile">2.4.10.2. SourceFile</h5>
+<div id="figure-SourceFile" class="imageblock">
+<div class="content">
+<img src="images/schema/SourceFile.png" alt="SourceFile" width="50%">
+</div>
+<div class="title">Figure 41. <code>SourceFileSet</code> element.</div>
+</div>
 <table id="table-SourceFile-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 29. SourceFile attribute details.</caption>
 <colgroup>
@@ -8255,6 +8273,12 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 <h5 id="_preprocessordefinition">2.4.10.3. PreprocessorDefinition</h5>
 <div class="paragraph">
 <p>The <code>&lt;PreprocessorDefinition&gt;</code> element defines a preprocessor definition that needs to be passed to the compiler when compiling the source files in the <code>&lt;SourceFileSet&gt;</code>.</p>
+</div>
+<div id="figure-PreprocessorDefinition" class="imageblock">
+<div class="content">
+<img src="images/schema/PreprocessorDefinition.png" alt="PreprocessorDefinition" width="60%">
+</div>
+<div class="title">Figure 42. <code>PreprocessorDefinition</code> element.</div>
 </div>
 <table id="table-ProcessorDefinition-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 30. ProcessorDefintition attribute details.</caption>
@@ -8335,6 +8359,12 @@ If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</
 <div class="paragraph">
 <p>The <code>&lt;IncludeDirectory&gt;</code> element defines the include directories that need to be passed to the compiler when compiling the source files in the <code>&lt;SourceFileSet&gt;</code>.</p>
 </div>
+<div id="figure-IncludeDirectory" class="imageblock">
+<div class="content">
+<img src="images/schema/IncludeDirectory.png" alt="IncludeDirectory" width="60%">
+</div>
+<div class="title">Figure 43. <code>IncludeDirectory</code> element.</div>
+</div>
 <table id="table-IncludeDirectory-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 32. IncludeDirectory attribute details.</caption>
 <colgroup>
@@ -8376,6 +8406,12 @@ If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</
 <div class="paragraph">
 <p>The <code>&lt;Library&gt;</code> element defines a static library required to link the model binary.
 An importer of the FMU has to link every library of the matching <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a>.</p>
+</div>
+<div id="figure-Library" class="imageblock">
+<div class="content">
+<img src="images/schema/Library.png" alt="Library" width="50%">
+</div>
+<div class="title">Figure 44. <code>Library</code> element.</div>
 </div>
 <table id="table-Library-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 33. Library attribute details.</caption>
@@ -9101,7 +9137,7 @@ For <a href="#state-event">state events</a> event indicators are used.</p>
 <div class="content">
 <img src="images/Event.svg" alt="Event" width="60%">
 </div>
-<div class="title">Figure 39. An event occurs when the event indicator changes its domain from \(\mathbf{z}&gt;0\) to \(\mathbf{z} \leq 0\) or vice versa.</div>
+<div class="title">Figure 45. An event occurs when the event indicator changes its domain from \(\mathbf{z}&gt;0\) to \(\mathbf{z} \leq 0\) or vice versa.</div>
 </div>
 <div id="frozen-relations" class="paragraph">
 <p>During event localization the FMU might be evaluated after the switch of an event indicator.
@@ -9148,13 +9184,13 @@ y = (r1 || r2) ? +1 : -1;</pre>
 <div class="sect2">
 <h3 id="state-machine-model-exchange">3.2. State Machine for Model Exchange</h3>
 <div class="paragraph">
-<p>The state machine in <a href="#figure-model-exchange-state-machine">Figure 40</a> defines the allowed calling sequences for FMI for Model Exchange.</p>
+<p>The state machine in <a href="#figure-model-exchange-state-machine">Figure 46</a> defines the allowed calling sequences for FMI for Model Exchange.</p>
 </div>
 <div id="figure-model-exchange-state-machine" class="imageblock text-center">
 <div class="content">
 <img src="images/state-machine-model-exchange.svg" alt="state machine model exchange" width="80%">
 </div>
-<div class="title">Figure 40. Calling sequence of Model Exchange C functions.</div>
+<div class="title">Figure 46. Calling sequence of Model Exchange C functions.</div>
 </div>
 <div class="paragraph">
 <p>Common states are defined in <a href="#common-state-machine">Section 2.3</a>, such as super states <a href="#FMUStateSettable"><strong>FMU State Settable</strong></a> and  <a href="#Initialized"><strong>Initialized</strong></a>, states <a href="#Instantiated"><strong>Instantiated</strong></a>, <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a>, <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>, <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#Terminated"><strong>Terminated</strong></a>.</p>
@@ -9730,7 +9766,7 @@ It is defined as:</p>
 <div class="content">
 <img src="images/schema/ModelExchange.png" alt="ModelExchange" width="80%">
 </div>
-<div class="title">Figure 41. ModelExchange element.</div>
+<div class="title">Figure 47. ModelExchange element.</div>
 </div>
 <div class="paragraph">
 <p>The attribute in the following table is defined in addition to the <a href="#common-capability-flags">common attributes</a> and has the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
@@ -10020,13 +10056,13 @@ This mechanism is called <a href="#early-return">"early return"</a>.</p>
 <div class="sect2">
 <h3 id="state-machine-co-simulation">4.2. State Machine for Co-Simulation</h3>
 <div class="paragraph">
-<p>The state machine in <a href="#figure-co-simulation-state-machine">Figure 42</a> defines the allowed calling sequences for FMI for Co-Simulation.</p>
+<p>The state machine in <a href="#figure-co-simulation-state-machine">Figure 48</a> defines the allowed calling sequences for FMI for Co-Simulation.</p>
 </div>
 <div id="figure-co-simulation-state-machine" class="imageblock text-center">
 <div class="content">
 <img src="images/state-machine-co-simulation.svg" alt="state machine co simulation" width="80%">
 </div>
-<div class="title">Figure 42. Calling sequence of Co-Simulation C functions.</div>
+<div class="title">Figure 48. Calling sequence of Co-Simulation C functions.</div>
 </div>
 <div class="paragraph">
 <p>Common states are defined in <a href="#common-state-machine">Section 2.3</a>, such as super states <a href="#FMUStateSettable"><strong>FMU State Settable</strong></a> and  <a href="#Initialized"><strong>Initialized</strong></a>, states <a href="#Instantiated"><strong>Instantiated</strong></a>, <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a>, <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>, <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, and <a href="#Terminated"><strong>Terminated</strong></a>.</p>
@@ -10322,7 +10358,7 @@ FMUs can signal with the optional attribute <a href="#recommendedIntermediateInp
 If an FMU internal integration step has been completed successfully, the importer can forward intermediate outputs to other FMUs, where they can be used to approximate inputs.</p>
 </div>
 <div class="paragraph">
-<p><a href="#figure-IntermediateUpdateMode">Figure 43</a> summarizes the above description.
+<p><a href="#figure-IntermediateUpdateMode">Figure 49</a> summarizes the above description.
 It illustrates multiple intermediate internal solver steps, distinguishing between the final ones (with black-filled circles) and tentative ones (with white-filled circles).
 It distinguishes the level of trust that can be placed in the tentative outputs (with dashed arrows) and in final outputs (with solid arrows).</p>
 </div>
@@ -10330,7 +10366,7 @@ It distinguishes the level of trust that can be placed in the tentative outputs 
 <div class="content">
 <img src="images/intermediateupdate.svg" alt="intermediateupdate" width="65%">
 </div>
-<div class="title">Figure 43. Overview of solver states and intermediate update during a communication step</div>
+<div class="title">Figure 49. Overview of solver states and intermediate update during a communication step</div>
 </div>
 <div class="paragraph">
 <p>The FMU enters <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a> by calling <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> within <a href="#StepMode"><strong>Step Mode</strong></a> and leaves the state towards <a href="#StepMode"><strong>Step Mode</strong></a> when the function returns.</p>
@@ -10804,7 +10840,7 @@ We consider two FMUs, where both have one <a href="#continuous"><code>continuous
 <div class="content">
 <img src="images/co-simulation-connection-of-FMUs.svg" alt="co simulation connection of FMUs" width="30%">
 </div>
-<div class="title">Figure 44. Connection graph of FMUs.</div>
+<div class="title">Figure 50. Connection graph of FMUs.</div>
 </div>
 <div class="paragraph">
 <p>We assume no algebraic dependency between input and <a href="#output"><code>output</code></a> of each FMU.
@@ -10941,7 +10977,7 @@ It is defined as:</p>
 <div class="content">
 <img src="images/schema/CoSimulation.png" alt="CoSimulation" width="80%">
 </div>
-<div class="title">Figure 45. CoSimulation element.</div>
+<div class="title">Figure 51. CoSimulation element.</div>
 </div>
 <div class="paragraph">
 <p>The attributes in the following table are defined in addition to the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with the exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
@@ -11216,13 +11252,13 @@ typedef void (*fmi3UnlockPreemptionCallback) ();</code></pre>
 <div class="sect2">
 <h3 id="state-machine-scheduled-execution">5.2. State Machine for Scheduled Execution</h3>
 <div class="paragraph">
-<p>The state machine in <a href="#figure-scheduled-execution-state-machine">Figure 46</a> defines the allowed calling sequences for FMI for Scheduled Execution.</p>
+<p>The state machine in <a href="#figure-scheduled-execution-state-machine">Figure 52</a> defines the allowed calling sequences for FMI for Scheduled Execution.</p>
 </div>
 <div id="figure-scheduled-execution-state-machine" class="imageblock text-center">
 <div class="content">
 <img src="images/state-machine-scheduled-execution.svg" alt="state machine scheduled execution" width="80%">
 </div>
-<div class="title">Figure 46. Calling sequence of Scheduled Execution C functions.</div>
+<div class="title">Figure 52. Calling sequence of Scheduled Execution C functions.</div>
 </div>
 <div class="paragraph">
 <p>Common states are defined in <a href="#common-state-machine">Section 2.3</a>, such as super states <a href="#FMUStateSettable"><strong>FMU State Settable</strong></a> and  <a href="#Initialized"><strong>Initialized</strong></a>, states <a href="#Instantiated"><strong>Instantiated</strong></a>, <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a>, <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>, <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, and <a href="#Terminated"><strong>Terminated</strong></a>.</p>
@@ -11457,7 +11493,7 @@ Note that the point in time when the task was scheduled is the <a href="#activat
 <div class="content">
 <img src="images/se_example.svg" alt="se example" width="90%">
 </div>
-<div class="title">Figure 47. Scheduled Execution Example <code>ThreeInputClocks</code></div>
+<div class="title">Figure 53. Scheduled Execution Example <code>ThreeInputClocks</code></div>
 </div>
 <div class="sect3">
 <h4 id="_simulation_algorithm_implementation">5.3.1. Simulation Algorithm Implementation</h4>
@@ -11653,7 +11689,7 @@ It is defined as:</p>
 <div class="content">
 <img src="images/schema/ScheduledExecution.png" alt="ScheduledExecution" width="80%">
 </div>
-<div class="title">Figure 48. ScheduledExecution element.</div>
+<div class="title">Figure 54. ScheduledExecution element.</div>
 </div>
 <div class="paragraph">
 <p>The element <code>&lt;ScheduledExecution&gt;</code> does not have any attributes other than defined as <a href="#common-capability-flags">common attributes</a>.</p>
@@ -12323,7 +12359,7 @@ The FMI 3.0 standard text is based on FMI 2.0 and FMI 1.0 and we wish to acknowl
 <script>
 if (!hljs.initHighlighting.called) {
   hljs.initHighlighting.called = true
-  ;[].slice.call(document.querySelectorAll('pre.highlight > code')).forEach(function (el) { hljs.highlightBlock(el) })
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
 }
 </script>
 <script type="text/x-mathjax-config">
