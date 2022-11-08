@@ -588,7 +588,7 @@ document.addEventListener('keydown', (event) => {
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
 <span id="revnumber">version ,</span>
-<span id="revdate">2022-11-01</span>
+<span id="revdate">2022-11-08</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -8131,7 +8131,37 @@ The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</co
 <div class="sect3">
 <h4 id="BuildConfiguration">2.4.10. Build Configurations</h4>
 <div class="paragraph">
-<p>Each <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> provides the necessary information to compile and link the sources of the model into a dynamic library or as part of an executable.
+<p>Build configurations are defined in an optional XML file called <code>sources/buildDescription.xml</code>.
+This file declares a root element &lt;fmiBuildDescription&gt; that has the following attributes and elements:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 27. fmiBuildDescription element and attributes details.</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute or Element</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmiVersion</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This mandatory attribute declares the FMI version defining the XSD of the <code>sources/buildDescription.xml</code> file.
+Starting with FMI 3.0, this <code>fmiVersion</code> attribute must match the <code>fmiVersion</code> attribute of element <a href="#fmiModelDescription"><code>&lt;fmiModelDescription&gt;</code></a> of the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file.
+If used in previous FMI versions, this attribute points to the FMI version defining this <code>sources/buildDescription.xml</code> file (e.g. XSD, file location).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This element defines all the needed information for compiling and linking the binary part of the FMU for a specified target.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The &lt;fmiBuildDescription&gt; element must contain at least one <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> element.
+Each <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> provides the necessary information to compile and link the sources of the model into a dynamic library or as part of an executable.
 An FMU importer may not regard more than one <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> when building the FMU for a specific <a href="#platform"><code>platform</code></a>.
 The importer chooses the matching <a href="#BuildConfiguration"><code>&lt;BuildConfiguration&gt;</code></a> based on the <a href="#platform"><code>platform</code></a> and <a href="#modelIdentifier"><code>modelIdentifier</code></a> attributes.
 <em>[On platforms that support shared libraries, executables should not be linked statically against or be compiled directly from the sources of an FMU in order to avoid name conflicts.]</em></p>
@@ -8149,7 +8179,7 @@ It is also recommended to use a descriptive name (e.g. <code>&lt;model_identifie
 <div class="title">Figure 39. <code>fmiBuildDescription</code> element.</div>
 </div>
 <table id="table-BuildConfiguration-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 27. BuildConfiguration attribute details.</caption>
+<caption class="title">Table 28. BuildConfiguration attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8200,7 +8230,7 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 <div class="title">Figure 40. <code>SourceFileSet</code> element.</div>
 </div>
 <table id="table-SourceFileSet-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 28. SourceFileSet attribute details.</caption>
+<caption class="title">Table 29. SourceFileSet attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8248,7 +8278,7 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 <div class="title">Figure 41. <code>SourceFileSet</code> element.</div>
 </div>
 <table id="table-SourceFile-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 29. SourceFile attribute details.</caption>
+<caption class="title">Table 30. SourceFile attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8281,7 +8311,7 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 <div class="title">Figure 42. <code>PreprocessorDefinition</code> element.</div>
 </div>
 <table id="table-ProcessorDefinition-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 30. ProcessorDefintition attribute details.</caption>
+<caption class="title">Table 31. ProcessorDefintition attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8327,7 +8357,7 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</code> elements, its default value must be contained in the options.</p>
 </div>
 <table id="table-PreprocessorDefinition-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 31. PreprocessorDefinition attribute details.</caption>
+<caption class="title">Table 32. PreprocessorDefinition attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8366,7 +8396,7 @@ If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</
 <div class="title">Figure 43. <code>IncludeDirectory</code> element.</div>
 </div>
 <table id="table-IncludeDirectory-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 32. IncludeDirectory attribute details.</caption>
+<caption class="title">Table 33. IncludeDirectory attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8414,7 +8444,7 @@ An importer of the FMU has to link every library of the matching <a href="#Build
 <div class="title">Figure 44. <code>Library</code> element.</div>
 </div>
 <table id="table-Library-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 33. Library attribute details.</caption>
+<caption class="title">Table 34. Library attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -9772,7 +9802,7 @@ It is defined as:</p>
 <p>The attribute in the following table is defined in addition to the <a href="#common-capability-flags">common attributes</a> and has the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-ModelExchange-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 34. ModelExchange attribute details.</caption>
+<caption class="title">Table 35. ModelExchange attribute details.</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -10444,7 +10474,7 @@ If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater th
 </ul>
 </div>
 <table id="table-math-intermediateUpdateMode" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 35. Mathematical description of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</caption>
+<caption class="title">Table 36. Mathematical description of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</caption>
 <colgroup>
 <col style="width: 66.6666%;">
 <col style="width: 33.3334%;">
@@ -10983,7 +11013,7 @@ It is defined as:</p>
 <p>The attributes in the following table are defined in addition to the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with the exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-CoSimulation-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 36. CoSimulation attribute details.</caption>
+<caption class="title">Table 37. CoSimulation attribute details.</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
