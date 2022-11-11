@@ -1,0 +1,45 @@
+<div id="app">
+  <h2 class="title title-highlighted">Events</h2>
+  <div v-for="item in items" class="d-flex">
+    <div class="flex-shrink">
+      <span class="badge bg-light text-dark" v-if="item.start.dateTime">{{`{{ item.start.dateTime.substring(0,10) }}`}}</span>
+      <span class="badge bg-light text-dark" v-if="item.start.date">{{`{{ item.start.date }}`}}</span>
+    </div>
+    <div>
+      <a v-bind:href="item.htmlLink">{{`{{ item.summary }}`}}</a> <a href="#" data-toggle="tooltip" data-original-title="Teleconference"><i v-if="!item.location" class="fas fa-phone ml-1"></i></a>
+      <a v-if="item.location" v-bind:href="'https://maps.google.com/?q=' + encodeURIComponent(item.location)"><i data-toggle="tooltip" title="" v-bind:data-original-title="item.location" class="fas fa-map-marker-alt ml-1"></i></a>
+    </div>
+  </div>
+  <div class="mt-3">
+    <a class="btn btn-outline-primary btn-sm me-2" href="https://calendar.google.com/calendar/ical/obe72dhd3apjmipcpmr2asehjs%40group.calendar.google.com/public/basic.ics"><i class="far fa-calendar-alt me-2"></i>iCal Calendar</a>
+    <a class="btn btn-outline-primary btn-sm me-2" href="https://calendar.google.com/calendar/embed?src=obe72dhd3apjmipcpmr2asehjs%40group.calendar.google.com&ctz=Europe%2FBerlin"><i class="fab fa-google me-2"></i>Google Calendar</a>
+  </div>
+</div>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data () {
+      return {
+        items: null
+      }
+    },
+    mounted () {
+      var minDate = new Date();
+      minDate.setDate(minDate.getDate() - 7);  // today minus one week
+      axios
+        .get('https://www.googleapis.com/calendar/v3/calendars/obe72dhd3apjmipcpmr2asehjs@group.calendar.google.com/events?key=AIzaSyDo78g40_od26-CDjAs6qM21f34deK-GyU&timeMin=' + minDate.toISOString() + '&singleEvents=true&orderBy=startTime')
+        .then(response => (this.items = response.data.items.reverse()))
+        .finally(() => (
+            /* enable popovers and tooltips */
+            $(document).ready(function() {
+              $('[data-toggle="popover"]').popover();
+              $('[data-toggle="tooltip"]').tooltip();
+            })
+          )
+        )
+    }
+  })
+</script>
