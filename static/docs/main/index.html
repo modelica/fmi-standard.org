@@ -588,7 +588,7 @@ document.addEventListener('keydown', (event) => {
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
 <span id="revnumber">version ,</span>
-<span id="revdate">2022-11-29</span>
+<span id="revdate">2022-12-07</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -6571,7 +6571,8 @@ The causality of variables of type <a href="#Clock">Clock</a> must be either <a 
 <p><code>= constant</code>: The value of the variable never changes.</p>
 </div>
 <div id="fixed" class="paragraph">
-<p><code>= fixed</code>: The value of the variable is fixed in super state <a href="#Initialized"><strong>Initialized</strong></a>, in other words, after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called the variable value does not change anymore.</p>
+<p><code>= fixed</code>: The value of the variable is fixed in super state <a href="#Initialized"><strong>Initialized</strong></a>, in other words, after <a href="#fmi3ExitInitializationMode"><code>fmi3ExitInitializationMode</code></a> was called the variable value does not change anymore.
+The default for variables of causality <code>parameter</code>, <code>structural parameter</code> or <code>calculated parameter</code> is <code>fixed</code>.</p>
 </div>
 <div id="tunable" class="paragraph">
 <p><code>= tunable</code>: The value of the variable is constant between events (ME and CS if <a href="#EventMode"><strong>Event Mode</strong></a> is supported) and between communication points (CS and SE).
@@ -6597,11 +6598,12 @@ During <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</stron
 </div>
 <div class="paragraph">
 <p>The <a href="#variability"><code>variability</code></a> of <a href="#Clock">Clocks</a> must be <a href="#discrete"><code>discrete</code></a>.
-The <a href="#variability"><code>variability</code></a> of <a href="#clocked-variable"><code>clocked variables</code></a> must be <a href="#discrete"><code>discrete</code></a> or <a href="#tunable"><code>tunable</code></a>.</p>
+The <a href="#variability"><code>variability</code></a> of <a href="#clocked-variable"><code>clocked variables</code></a> must be <a href="#discrete"><code>discrete</code></a> or <a href="#tunable"><code>tunable</code></a>.
+The default for variables of causility <code>input</code>, <code>output</code> or <code>local</code> of type other than <code>&lt;Float32&gt;</code> or <code>&lt;Float64&gt;</code> is <a href="#discrete"><code>discrete</code></a>.</p>
 </div>
 <div id="continuous" class="paragraph">
 <p><code>= continuous</code>: Only variables of type <code>&lt;Float32&gt;</code> or <code>&lt;Float64&gt;</code> may be <a href="#continuous"><code>continuous</code></a>.
-The default for variables of type <code>&lt;Float32&gt;</code> and <code>&lt;Float64&gt;</code> is <a href="#continuous"><code>continuous</code></a>.
+The default for variables of type <code>&lt;Float32&gt;</code> and <code>&lt;Float64&gt;</code> and causality other than <code>parameter</code>, <code>structural parameter</code> or <code>calculated parameter</code> is <a href="#continuous"><code>continuous</code></a>.
 Variables with <a href="#variability"><code>variability</code></a> <code>continuous</code> may change in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> and in super state <a href="#Initialized"><strong>Initialized</strong></a>.</p>
 </div>
 <div class="paragraph">
