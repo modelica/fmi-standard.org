@@ -199,6 +199,7 @@ Linking to a PDF for readers to download:
    git clone https://github.com/modelica/fmi-standard.org.git
    cd fmi-standard.org
    git pull
+   git submodule update --init --recursive
    ```
 
 3. Run `hugo server` and browse to [http://localhost:1313](http://localhost:1313/)
