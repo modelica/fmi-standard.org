@@ -588,7 +588,7 @@ document.addEventListener('keydown', (event) => {
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
 <span id="revnumber">version ,</span>
-<span id="revdate">2022-12-08</span>
+<span id="revdate">2023-01-17</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -10253,7 +10253,7 @@ See <a href="#canHandleVariableCommunicationStepSize"><code>canHandleVariableCom
 </li>
 <li>
 <p><a id="eventHandlingNeeded"></a> <a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a> indicates that an event was encountered by the FMU at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> and the importer has to enter <a href="#EventMode"><strong>Event Mode</strong></a> by calling <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.
-<a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a> must not be signaled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>.
+<a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a> must not be signalled, if the importer indicates to not support <a href="#EventMode"><strong>Event Mode</strong></a> by <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a>.
 <em>[This is different from <a href="#earlyReturn"><code>earlyReturn</code></a> which only indicates that the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> did not complete the intended step up until <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a> and does not require event handling.]</em></p>
 </li>
 <li>
@@ -10274,6 +10274,11 @@ Reasons for <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> are</
 </li>
 <li>
 <p>the FMU&#8217;s request for a communication point at <a href="#lastSuccessfulTime"><code>lastSuccessfulTime</code></a> for any other reason.</p>
+<div class="paragraph">
+<p><a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a> must not be used to signal that the requested step was not completed due to an error <em>[(e.g. integrator encountered division by zero)]</em>.
+Instead, the function must return with an error code (<a href="#fmi3Error"><code>fmi3Error</code></a> or <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>).
+Alternatively, the function can return with <a href="#fmi3Discard"><code>fmi3Discard</code></a>, if the FMU is in the same state as before the call, i.e. the output argument values are undefined, but the computation may continue.</p>
+</div>
 </li>
 </ul>
 </div>
