@@ -141,7 +141,7 @@ title: Tools
     created() {
       axios.get('/assets/tools.json')
         .then(response => {
-          this.tools = response.data
+          this.tools = response.data.sort(function (a, b) { return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1; })
         })
         .catch(error => {
           console.log(error)
