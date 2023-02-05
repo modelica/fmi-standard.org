@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 7b76a85,</span>
-<span id="revdate">2023-01-31</span>
+<span id="revnumber">version abf1581,</span>
+<span id="revdate">2023-02-05</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -8604,7 +8604,8 @@ sources                             // directory containing the C sources (optio
 binaries                            // directory containing the binaries (optional)
    x86_64-windows                   // binaries for Windows on Intel 64-bit
       &lt;modelIdentifier&gt;.dll         // shared library of the FMI implementation
-      &lt;other DLLs&gt;                  // the DLL can include other DLLs
+      &lt;other files&gt;                 // other platform dependend files
+                                    // needed at linking or loading time
    x86-linux                        // binaries for Linux on Intel 32-bit
       &lt;modelIdentifier&gt;.so          // shared library of the FMI implementation
    aarch32-linux                    // binaries for Linux on ARM 32-bit
@@ -8649,7 +8650,7 @@ The header files <code>fmi3PlatformTypes.h</code>, <code>fmi3FunctionTypes.h</co
 <div class="sect4">
 <h5 id="binaries-directory">2.5.1.4. Directory <code>binaries</code></h5>
 <div class="paragraph">
-<p>A binary FMU must contain the binary files for all supported platforms in this folder.
+<p>A binary FMU must contain the binary files - that are needed at linking or loading time - of the FMU for all supported platforms in this folder.
 To use the binaries of a specific platform, all items in that platform-specific binary folder must be unpacked at the same location as the binary <code>&lt;modelIdentifier&gt;.{dll|dylib|so}</code>.</p>
 </div>
 <div class="sect5">
@@ -8812,9 +8813,14 @@ The requirements and the expected processing must be documented in the <code>doc
 <div class="paragraph">
 <p>In the optional directory <code>resources</code>, additional data can be provided in FMU specific formats, typically for tables and maps used in the FMU.
 More folders can be added under <code>resources</code> (tool/model specific).
-For the FMU to access these resource files, the resources directory shall be available in extracted form and the absolute path to this directory is provided via argument <a href="#resourcePath"><code>resourcePath</code></a> of <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
+For the FMU to access these resource files - during runtime, after instantiation - the resources directory shall be available in extracted form and the absolute path to this directory is provided via argument <a href="#resourcePath"><code>resourcePath</code></a> of <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
 The resources directory must be available for the lifetime of the FMU instance.
 The FMU instance must not write to or delete the directory or parts of it.</p>
+</div>
+<div class="paragraph">
+<p><em>[The files contained in the resources folder may be platform dependent files.
+In contrast to files in the binaries folder, they can be accessed during runtime by the FMU.
+For more information, please consult the <a href="https://modelica.github.io/fmi-guides/main/fmi-guide/">FMI Implementer&#8217;s Guide</a>.]</em></p>
 </div>
 </div>
 <div class="sect4">
