@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 846b694,</span>
+<span id="revnumber">version cae415a,</span>
 <span id="revdate">2023-02-14</span>
 </div>
 <div id="toc" class="toc2">
@@ -9065,6 +9065,82 @@ int main(int argc, char* argv[]) {
 <div class="paragraph">
 <p>Layered standards that have achieved enough adoption or importance to be included into the base standard could be incorporated into a new minor or major release version of the base standard, making support for this layered standard optional or required for conformance with the newly published release of the FMI standard.</p>
 </div>
+<div class="paragraph">
+<p>To enable implementations to uniformly detect the presence of a layered standard in an FMU, even if they are not aware of the particular layered standard, adherence by layered standards to the following conventions is recommended:</p>
+</div>
+<div class="paragraph">
+<p>A layered standard should require the presence of an XML file named <code>fmi-ls-manifest.xml</code> in the sub-directory of <code>extra</code> mandated by the layered standard.
+The root element of this XML file shall have the following attributes in the XML namespace <code><a href="http://fmi-standard.org/fmi-ls-manifest" class="bare">http://fmi-standard.org/fmi-ls-manifest</a></code>:</p>
+</div>
+<table id="table-schema-fmi-ls-manifest-root-attributes" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 35. <code>fmi-ls-manifest.xml</code> root attribute details.</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi-ls-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name, in reverse domain name notation, of the layered standard.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi-ls-version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version of the layered standard.
+The use of semantic versioning is highly recommended.
+In case of semantic versioning it is up to the layered standard to define whether only major and minor version are included in the version attribute, or the full version is to be included.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi-ls-description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String with a brief description of the layered standard that is suitable for display to users.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Otherwise the content of this XML file can be arbitrary, i.e. the layered standard is free to mandate any root element and other content, as well as any XML namespaces.
+This allows the use of the file for layered standard content, if the layered standard so wishes.</p>
+</div>
+<div class="paragraph">
+<p>A simple example of a manifest file is shown below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;MyRootElement 
+  xmlns:fmi-ls="http://fmi-standard.org/fmi-ls-manifest"
+  fmi-ls:fmi-ls-name="org.fmi-standard.demo-ls-name"
+  fmi-ls:fmi-ls-version="1.0"
+  fmi-ls:fmi-ls-description="Demonstration FMI Layered Standard"
+  normal-attribute="foo"&gt;
+
+  &lt;DemoElement modelIdentifier="PIDContoller"&gt;
+    &lt;InfoSet&gt;
+      &lt;InfoFile name="PIDContoller.inf"/&gt;
+    &lt;/InfoSet&gt;
+  &lt;/DemoElement&gt;
+
+&lt;/MyRootElement&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A minimal example of a manifest file, for layered standards that have no need for additional content in that file is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;FMILSManifest 
+  xmlns:fmi-ls="http://fmi-standard.org/fmi-ls-manifest"
+  fmi-ls:fmi-ls-name="org.fmi-standard.demo-ls-name"
+  fmi-ls:fmi-ls-version="1.0"
+  fmi-ls:fmi-ls-description="Demonstration FMI Layered Standard"&gt;
+&lt;/FMILSManifest&gt;</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -9811,7 +9887,7 @@ It is defined as:</p>
 <p>The attribute in the following table is defined in addition to the <a href="#common-capability-flags">common attributes</a> and has the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-ModelExchange-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 35. ModelExchange attribute details.</caption>
+<caption class="title">Table 36. ModelExchange attribute details.</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -10488,7 +10564,7 @@ If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater th
 </ul>
 </div>
 <table id="table-math-intermediateUpdateMode" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 36. Mathematical description of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</caption>
+<caption class="title">Table 37. Mathematical description of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</caption>
 <colgroup>
 <col style="width: 66.6666%;">
 <col style="width: 33.3334%;">
@@ -11027,7 +11103,7 @@ It is defined as:</p>
 <p>The attributes in the following table are defined in addition to the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with the exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-CoSimulation-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 37. CoSimulation attribute details.</caption>
+<caption class="title">Table 38. CoSimulation attribute details.</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
