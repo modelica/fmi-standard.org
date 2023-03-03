@@ -9,6 +9,7 @@ aliases: [/news/2023/03/03/fmi-3-IG-released.html]
 
 The [FMI 3.0 Implementers' Guide](https://modelica.github.io/fmi-guides/main/fmi-guide/) is a free resource intended to give non-normative recommendations and guidance to implementers of the Functional Mock-up Interface (FMI) standard version 3.0.
 It has been developed jointly by prostep ivip and the Modelica Association Project FMI.
+FMI has established itself as a widely adopted format for exchanging simulation artefacts and co-simulation. More than 170 tools officially support FMI, and many more in-house solutions are built on top of FMI. 
 The FMI 3.0 implementer’s guide provides best practice recommendations to implementers of FMI, focusing on FMI 3.0, derived from the industrial experience of the prostep Smart Systems Engineering project members and the FMI community in employing FMI.
 
 The overarching goal of the recommendations is to aid interoperability of FMI implementations and ensure good ease-of-use for end users in employing FMI. 
@@ -19,6 +20,16 @@ It shall be a living document and will be maintained and expanded over time as n
 All of the content is to be considered non-normative and shall not be considered to supplant any normative statement in the FMI 3.0 standard.
 
 Releases and issues can be found on [github.com/modelica/fmi-guides](https://github.com/modelica/fmi-guides/tree/main/fmi-guide).
+
+_“The FMI 3.0 implementer’s guide provides the condensed practical experience of the FMI community and FMI users to everybody interested in implementing the FMI standard. Together with the Reference FMUs (https://github.com/modelica/Reference-FMUs/), it can help FMI newbies to kick-start the adoption of FMI, and even the experienced FMI implementer will encounter helpful tips and tricks.”_
+
+Christian Bertsch (Bosch Research), FMI Project Leader
+
+#### About the Modelica Association and the MAP FMI
+
+The Modelica Association (MA) is a non-profit organization incorporated in Sweden with the mission to develop open-access, royalty-free, coordinated standards for the development and verification of cyber-physical systems. The open and royalty-free nature of the standards supports a rich eco-system of open-source and commercial solutions. The MA projects provide open-source assets, compliance checkers, and infrastructure to simplify the process of standards adoption, all publicly available at https://github.com/modelica, and organizes regular open-access conferences, with all papers available at https://modelica.org.
+
+Modelica Assocation Project FMI (https://fmi-standard.org/ )+ Email: contact@fmi-standard.org
 
 #### About prostep ivip and the Smart Systems Engineering project
 
