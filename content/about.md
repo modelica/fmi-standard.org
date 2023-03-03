@@ -153,4 +153,7 @@ One of the topics of the Smart Systems Engineering project is to find solutions 
 the cross-disciplinary and cross-enterprise exchange of behavioral models.
 The Functional Mockup Interface (FMI) is viewed as the basic technology for the exchange.
 
+The [FMI 3.0 Implementers' Guide](https://modelica.github.io/fmi-guides/main/fmi-guide/)  is a free resource intended to give non-normative recommendations and guidance to implementers of the Functional Mock-up Interface (FMI) standard version 3.0.
+It has been developed jointly by prostep ivip and the Modelica Association Project FMI.
+
 Link to [project page](https://www.prostep.org/en/projects/smart-systems-engineering.html).
