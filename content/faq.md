@@ -1,8 +1,7 @@
 ---
 title: FAQ
+type: faq
 ---
-
-# General questions about FMI
 
 ## What are the new features of FMI 3.0?
 
@@ -69,9 +68,6 @@ Please see the FMI [tools page](/tools/) for a list of tools for that tool vendo
 
 - Typically an exporting and an importing tool are involved in FMI-based simulation. So if problems occur and if it is not obvious which tool causes the problem, you should communicate the problem to the support team of both involved tools
 - As a general discussion forum about FMI, you may use the FMI forum on Stack Overflow
-
-
-# I'm a developer and want to support FMI with my tool
 
 ## What and in which order should I read/do to get started with FMI technology?
 
