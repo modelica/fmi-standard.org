@@ -12,7 +12,7 @@ More than 170 tools officially support FMI, and many more in-house solutions are
 The FMI 3.0 Implementers' Guide provides best practice recommendations to implementers of FMI, focusing on FMI 3.0, derived from the industrial experience of the prostep ivip [Smart Systems Engineering](https://www.prostep.org/projekte/smart-systems-engineering/) project members and the FMI community in employing FMI.
 
 The overarching goal of the recommendations is to aid interoperability of FMI implementations and ensure ease-of-use for end users in employing FMI. 
-The FMI 3.0 Implementer's Guide is intended for tool vendors planning to support FMI in their products, for importing and exporting of FMUs.
+The FMI 3.0 Implementers' Guide is intended for tool vendors planning to support FMI in their products, for importing and exporting of FMUs.
 It assumes a technical audience familiar with the specification documents and tries to give further information and hints in areas where either the relevant specification documents have been found less clear than expected or where user expectations are relevant to implementation choices.
 It also considers errors and bugs encountered in the practical use of existing FMI implementations and guides to avoid common pitfalls.
 It is intended as a living document and will be maintained and expanded over time as new issues or needs for clarification appear.
