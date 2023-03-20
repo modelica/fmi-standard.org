@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version cae415a,</span>
-<span id="revdate">2023-02-14</span>
+<span id="revnumber">version e4f2422,</span>
+<span id="revdate">2023-03-16</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -9111,7 +9111,9 @@ This allows the use of the file for layered standard content, if the layered sta
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;MyRootElement 
+&lt;MyRootElement
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="fmi_ls_manifest_example_schema.xsd"
   xmlns:fmi-ls="http://fmi-standard.org/fmi-ls-manifest"
   fmi-ls:fmi-ls-name="org.fmi-standard.demo-ls-name"
   fmi-ls:fmi-ls-version="1.0"
@@ -9133,12 +9135,57 @@ This allows the use of the file for layered standard content, if the layered sta
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;FMILSManifest 
+&lt;fmiLayeredStandardManifest
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://fmi-standard.org/fmi-ls-manifest ../../schema/fmi3LayeredStandardManifest.xsd"
+  xmlns="http://fmi-standard.org/fmi-ls-manifest"
   xmlns:fmi-ls="http://fmi-standard.org/fmi-ls-manifest"
   fmi-ls:fmi-ls-name="org.fmi-standard.demo-ls-name"
   fmi-ls:fmi-ls-version="1.0"
-  fmi-ls:fmi-ls-description="Demonstration FMI Layered Standard"&gt;
-&lt;/FMILSManifest&gt;</code></pre>
+  fmi-ls:fmi-ls-description="Demonstration FMI Layered Standard"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The standard includes a schema for the attribute definitions and the minimal example element <code>fmiLayeredStandardManifest</code> shown above as <code>fmi3LayeredStandardManifest.xsd</code>.
+An example schema that describes the simple example of a manifest above is shown below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xsd hljs" data-lang="xsd">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns:fmi-ls="http://fmi-standard.org/fmi-ls-manifest"&gt;
+
+    &lt;xs:import namespace="http://fmi-standard.org/fmi-ls-manifest" schemaLocation="../../schema/fmi3LayeredStandardManifest.xsd"/&gt;
+
+    &lt;xs:element name="MyRootElement"&gt;
+        &lt;xs:complexType&gt;
+            &lt;xs:sequence&gt;
+                &lt;xs:element name="DemoElement"&gt;
+                    &lt;xs:complexType&gt;
+                        &lt;xs:sequence&gt;
+                            &lt;xs:element name="InfoSet"&gt;
+                                &lt;xs:complexType&gt;
+                                    &lt;xs:sequence&gt;
+                                        &lt;xs:element name="InfoFile" maxOccurs="unbounded"&gt;
+                                            &lt;xs:complexType&gt;
+                                                &lt;xs:attribute name="name" type="xs:normalizedString"/&gt;
+                                            &lt;/xs:complexType&gt;
+                                        &lt;/xs:element&gt;
+                                    &lt;/xs:sequence&gt;
+                                &lt;/xs:complexType&gt;
+                            &lt;/xs:element&gt;
+                        &lt;/xs:sequence&gt;
+                        &lt;xs:attribute name="modelIdentifier" type="xs:NMTOKEN"/&gt;
+                    &lt;/xs:complexType&gt;
+                &lt;/xs:element&gt;
+            &lt;/xs:sequence&gt;
+            &lt;xs:attribute ref="fmi-ls:fmi-ls-name" use="required" fixed="org.fmi-standard.demo-ls-name"/&gt;
+            &lt;xs:attribute ref="fmi-ls:fmi-ls-version" use="required" fixed="1.0"/&gt;
+            &lt;xs:attribute ref="fmi-ls:fmi-ls-description" use="required" fixed="Demonstration FMI Layered Standard"/&gt;
+            &lt;xs:attribute name="normal-attribute" type="xs:normalizedString"/&gt;
+        &lt;/xs:complexType&gt;
+    &lt;/xs:element&gt;    
+&lt;/xs:schema&gt;</code></pre>
 </div>
 </div>
 </div>
