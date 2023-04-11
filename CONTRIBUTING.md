@@ -84,6 +84,7 @@ Please respect the rules below when editing the file.
 | logo           | filename of the tool's logo (or company's logo)                         | `"example-sim.svg"`
 | vendor         | Name of the tool vendor                                                 | `"Example Company"`
 | vendorUrl      | Link to the vendor's homepage                                           | `"https://example.com/"`
+| examplesUrl    | Link to the tool's example FMUs and compatibility information           | `"https://github.com/example/example-sim/"`
 | description    | A [description](#tool-description) of the tool                          | `"Run simulations in the cloud in real time"`
 | features       | Reserved for future use                                                 | `[]`
 | platforms      | Supported platforms                                                     | `["macOS", "Linux", "Windows"]`

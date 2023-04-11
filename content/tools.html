@@ -83,7 +83,9 @@ title: Tools
       </div>
       <div class="col-6">
         <div><a :href="tool.url" style="font-size: 20px; font-weight: 500;">{{ tool.name }}</a></div>
-        <div><small>by <a :href="tool.vendorURL">{{ tool.vendor }}</a><span v-if="tool.hasOwnProperty('version')"> | Ver {{ tool.version }}</span></small></div>
+        <div>
+          <small>by <a :href="tool.vendorURL">{{ tool.vendor }}</a><span v-if="tool.hasOwnProperty('version')"> | Ver {{ tool.version }}</span></small>            
+        </div>
         <div>
           <small>
             <span v-if="hasFeature(tool.fmiVersions, '1.0')" class="badge bg-secondary me-1">1.0</span>
@@ -103,6 +105,7 @@ title: Tools
             <span v-if="hasFeature(tool.interfaces, 'library')" class="badge bg-secondary me-1"><i class="fa-solid fa-file-code"></i></span>
           </small>
         </div>
+        <div class="mt-1"><small><a v-if="tool.hasOwnProperty('examplesURL')" href="https://github.com/altairengineering/fmus"><i style="color: #ffe62c" class="fa-solid fa-star me-1"></i>Examples & Compatibitlity</a></small></div>
         <p class="mt-1">{{ tool.description }}</p>
       </div>
     </div>
@@ -141,7 +144,13 @@ title: Tools
     created() {
       axios.get('/assets/tools.json')
         .then(response => {
-          this.tools = response.data.sort(function (a, b) { return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1; })
+          this.tools = response.data.sort(function (a, b) {
+            if (a.hasOwnProperty('examplesURL') == b.hasOwnProperty('examplesURL')) {
+              return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;               
+            } else {
+              return a.hasOwnProperty('examplesURL') ? -1 : 1;               
+            }
+          })
         })
         .catch(error => {
           console.log(error)
