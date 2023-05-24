@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 <title>Functional Mock-up Interface Specification</title>
 <style>
@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 88ce8cd,</span>
-<span id="revdate">2023-04-20</span>
+<span id="revnumber">version da7646a,</span>
+<span id="revdate">2023-05-22</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -5002,9 +5002,6 @@ The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3E
                                                 fmi3Float64* nextEventTime);</code></pre>
 </div>
 </div>
-</dd>
-</dl>
-</div>
 <div id="discreteStatesNeedUpdate" class="ulist">
 <ul>
 <li>
@@ -5031,12 +5028,12 @@ This argument is only valid in Model Exchange.</p>
 <ul>
 <li>
 <p>If argument <code>valuesOfContinuousStatesChanged = fmi3True</code>, then at least one continuous state has changed its value because it was re-initialized (see <a href="#reinit"><code>reinit</code></a>).<br></p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>The new values of the <a href="#state">states</a> can be inquired with <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a> or individually for each state for which <a href="#reinit"><code>reinit = true</code></a> by calling <code>fmi3GetFloat64</code>.<br>
 This argument is only valid in Model Exchange.</p>
-</div>
-</li>
-</ul>
 </div>
 <div id="nextEventTimeDefined" class="ulist">
 <ul>
@@ -5057,6 +5054,9 @@ The FMU must handle this time event during the <a href="#EventMode"><strong>Even
 If another (e.g. <a href="#state-event">state event</a>) event happens before that <a href="#nextEventTime"><code>nextEventTime</code></a>, the previous definition of <a href="#nextEventTime"><code>nextEventTime</code></a> becomes obsolete.</p>
 </li>
 </ul>
+</div>
+</dd>
+</dl>
 </div>
 <div id="dummy1" class="dlist">
 <dl>
@@ -5587,7 +5587,7 @@ For this purpose the importer must pass the <a href="#instantiationToken"><code>
 The format is a subset of <code>dateTime</code> and should be: <code>YYYY-MM-DDThh:mm:ssZ</code> (with one <code>T</code> between date and time; <code>Z</code> characterizes the Zulu time zone, in other words, Greenwich meantime) <em>[for example <code>2009-12-08T14:33:22Z</code>, according to ISO 8601]</em>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="variableNamingConvention"></a><a href="#variableNamingConvention"><code>Convention</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="variableNamingConvention"></a><code>variableNamingConvention</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether the variable names in <a href="#ModelVariables"><code>&lt;ModelVariables&gt;</code></a> and in <code>&lt;TypeDefinitions&gt;</code> follow the <code>flat</code> or <code>structured</code> convention as defined in <a href="#namingSection">Section 2.4.7.5.1</a>.</p></td>
 </tr>
 </tbody>
@@ -7250,7 +7250,7 @@ approx</p></td>
 <div class="sect5">
 <h6 id="namingSection"><a class="link" href="#namingSection">2.4.7.5.1. Variable Naming Conventions</a></h6>
 <div class="paragraph">
-<p>With attribute <a href="#variableNamingConvention"><code>Convention</code></a> in <code>&lt;fmiModelDescription&gt;</code>, the convention is defined how the variable names have been constructed.
+<p>With attribute <a href="#variableNamingConvention"><code>variableNamingConvention</code></a> in <code>&lt;fmiModelDescription&gt;</code>, the convention is defined how the variable names have been constructed.
 The importer may use this information to represent the names in a better way (for example, as a tree and not as a linear list).</p>
 </div>
 <div class="paragraph">
@@ -7353,7 +7353,7 @@ vehicle.engine.temperature</pre>
 <p>It might be that not all elements of an array are present.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#variableNamingConvention"><code>Convention</code></a> <code>structured</code> does not define if arrays are 0-based or 1-based.</p>
+<p>The <a href="#variableNamingConvention"><code>variableNamingConvention</code></a> <code>structured</code> does not define if arrays are 0-based or 1-based.</p>
 </div>
 </div>
 </div>
@@ -8556,9 +8556,10 @@ The default is <code>false</code>.</p>
 The implementation of the FMI C-API may be distributed in source code and/or in binary format.
 The FMU must be distributed with at least one implementation, in other words, either sources or one of the binaries for a particular machine.
 It is also possible to provide the sources and binaries for different target machines together in one ZIP file.
-The FMU must implement all common API functions according to <a href="#general-mechanisms">Section 2.2</a> and the functions for at least one of the interface types.
-Especially it is required that all functions that are part of the specified interface type are present, even if they are only needed for optional capabilities that the FMU does not support.
-The behavior of those functions is unspecified, so while calling environments can rely on the functions being present, they cannot rely on any particular behavior for functions only needed for capabilities the FMU does not support.
+The FMU must implement all API functions declared in <code>fmi3Functions.h</code>, even if they are only needed for interface types or optional capabilities that the FMU does not support.
+The behavior of those functions is unspecified, so while calling environments can rely on the functions being present, they cannot rely on any particular behavior for functions only needed for capabilities or interface types the FMU does not support.
+<em>[The recommended implementation for such stub functions is to return <code>fmi3Error</code> after logging the error reason, as specified in <a href="#status-returned-by-functions">Section 2.2.4</a>.
+Calling environments should not rely on the presence of functions that are not required and avoid calling them.]</em>
 Additional functions may be present in the FMU, as for example required by the OS ABI, for layered standards, or future FMI versions.
 All symbols starting with the prefix <code>fmi3</code> are reserved for use in future minor releases of FMI 3.0.
 The extension of the ZIP file must be <code>.fmu</code> <em>[, for example, <code>HybridVehicle.fmu</code>]</em>.
