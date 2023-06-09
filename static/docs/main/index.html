@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 9e5532e,</span>
-<span id="revdate">2023-06-05</span>
+<span id="revnumber">version d1188c4,</span>
+<span id="revdate">2023-06-09</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -4097,8 +4097,7 @@ Only in this case, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may return 
 <p><a id="requiredIntermediateVariables"></a> <code>requiredIntermediateVariables</code> is an array of the value references of all <a href="#input"><code>input</code></a> variables that the simulation algorithm intends to set and all <a href="#output"><code>output</code></a> variables it intends to get during intermediate updates.
 This set may be empty (<a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables</code></a> = 0) when the simulation algorithm does not intend to use intermediate update.
 Only the variables in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> may be accessed by the simulation algorithm using <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> during <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
-All variables referenced in this set must be marked with the attribute <a href="#intermediateUpdate"><code>intermediateUpdate = "true"</code></a> in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
-For Co-Simulation, these intermediate variables must be continuous-time variables.</p>
+All variables referenced in this set must be marked with the attribute <a href="#intermediateUpdate"><code>intermediateUpdate = "true"</code></a> in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
 </li>
 <li>
 <p><a id="nRequiredIntermediateVariables"></a> <code>nRequiredIntermediateVariables</code> gives the number of entries in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a>.
@@ -6639,12 +6638,14 @@ If <code>canHandleMultipleSetPerTimeInstant = false</code>, then only one <a hre
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>intermediateUpdate</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="intermediateUpdate" class="paragraph">
 <p>If this boolean attribute is <code>true</code>, the variable can be accessed in <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
-Variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> must not be marked with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.</p>
+Only continuous-time variables can have <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.
+The default value of this attribute is <code>false</code>.</p>
 </div>
 <div class="paragraph">
-<p>This attribute is ignored in Model Exchange and Scheduled Execution.
-Variables of type <a href="#Clock">Clock</a> must not have the <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> attribute.
-The default value of this attribute is <code>false</code>.</p>
+<p>Variables of type <a href="#Clock">Clock</a> must not have the <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> attribute.</p>
+</div>
+<div class="paragraph">
+<p>This attribute is ignored in Model Exchange and Scheduled Execution.</p>
 </div></div></td>
 </tr>
 <tr>
