@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 <title>Functional Mock-up Interface Specification</title>
 <style>
@@ -587,15 +587,19 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 5b8ad45,</span>
-<span id="revdate">2023-04-27</span>
+<span id="revnumber">version d1188c4,</span>
+<span id="revdate">2023-06-09</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_introduction">1. Introduction</a>
 <ul class="sectlevel2">
-<li><a href="#fmi-whats-new">1.1. What is new in FMI 3.0</a></li>
+<li><a href="#fmi-whats-new">1.1. What is new in FMI 3.0</a>
+<ul class="sectlevel3">
+<li><a href="#fmi-301">1.1.1. Changes in FMI 3.0.1</a></li>
+</ul>
+</li>
 <li><a href="#_overview">1.2. Overview</a>
 <ul class="sectlevel3">
 <li><a href="#_fmi_for_model_exchange_me">1.2.1. FMI for Model Exchange (ME)</a></li>
@@ -967,6 +971,12 @@ Concrete features to support vECU export are:</p>
 <p>integrating within the FMI Standard only validated C-code, XML and XSD snippets to reduce redundancy and ensure correctness.</p>
 </li>
 </ul>
+</div>
+<div class="sect3">
+<h4 id="fmi-301"><a class="link" href="#fmi-301">1.1.1. Changes in FMI 3.0.1</a></h4>
+<div class="paragraph">
+<p>Clarifications and fixes in FMI 3.0.1 are listed in the <a href="https://github.com/modelica/fmi-standard/releases">Release notes on Github.</a></p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -2317,7 +2327,7 @@ typedef fmi3Status fmi3GetClockTYPE  (fmi3Instance instance,
 <p><code>valueReferences</code> is a vector of <code>nValueReferences</code> handles that reference the variables that shall be inquired.</p>
 </li>
 <li>
-<p><code>values</code> is a vector with the actual values of these variables.</p>
+<p><code>values</code> is a vector consisting of the concatenation of the (serialized in the case of arrays) values of these variables.</p>
 </li>
 <li>
 <p><code>valueSizes</code> is a vector with the actual sizes of the values for binary variables.</p>
@@ -2429,7 +2439,7 @@ typedef fmi3Status fmi3SetClockTYPE  (fmi3Instance instance,
 <p><code>valueReferences</code> is a vector of <code>nValueReferences</code> handles that reference the variables that shall be set.</p>
 </li>
 <li>
-<p><code>values</code> is a vector with the actual values of these variables.</p>
+<p><code>values</code> is a vector consisting of the concatenation of the (serialized in the case of arrays) values of these variables.</p>
 </li>
 <li>
 <p><code>valueSizes</code> is a vector with the actual sizes of the values of binary variables.</p>
@@ -4087,8 +4097,7 @@ Only in this case, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may return 
 <p><a id="requiredIntermediateVariables"></a> <code>requiredIntermediateVariables</code> is an array of the value references of all <a href="#input"><code>input</code></a> variables that the simulation algorithm intends to set and all <a href="#output"><code>output</code></a> variables it intends to get during intermediate updates.
 This set may be empty (<a href="#nRequiredIntermediateVariables"><code>nRequiredIntermediateVariables</code></a> = 0) when the simulation algorithm does not intend to use intermediate update.
 Only the variables in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a> may be accessed by the simulation algorithm using <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> during <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
-All variables referenced in this set must be marked with the attribute <a href="#intermediateUpdate"><code>intermediateUpdate = "true"</code></a> in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
-For Co-Simulation, these intermediate variables must be continuous-time variables.</p>
+All variables referenced in this set must be marked with the attribute <a href="#intermediateUpdate"><code>intermediateUpdate = "true"</code></a> in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
 </li>
 <li>
 <p><a id="nRequiredIntermediateVariables"></a> <code>nRequiredIntermediateVariables</code> gives the number of entries in <a href="#requiredIntermediateVariables"><code>requiredIntermediateVariables</code></a>.
@@ -5002,9 +5011,6 @@ The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3E
                                                 fmi3Float64* nextEventTime);</code></pre>
 </div>
 </div>
-</dd>
-</dl>
-</div>
 <div id="discreteStatesNeedUpdate" class="ulist">
 <ul>
 <li>
@@ -5031,12 +5037,12 @@ This argument is only valid in Model Exchange.</p>
 <ul>
 <li>
 <p>If argument <code>valuesOfContinuousStatesChanged = fmi3True</code>, then at least one continuous state has changed its value because it was re-initialized (see <a href="#reinit"><code>reinit</code></a>).<br></p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>The new values of the <a href="#state">states</a> can be inquired with <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a> or individually for each state for which <a href="#reinit"><code>reinit = true</code></a> by calling <code>fmi3GetFloat64</code>.<br>
 This argument is only valid in Model Exchange.</p>
-</div>
-</li>
-</ul>
 </div>
 <div id="nextEventTimeDefined" class="ulist">
 <ul>
@@ -5057,6 +5063,9 @@ The FMU must handle this time event during the <a href="#EventMode"><strong>Even
 If another (e.g. <a href="#state-event">state event</a>) event happens before that <a href="#nextEventTime"><code>nextEventTime</code></a>, the previous definition of <a href="#nextEventTime"><code>nextEventTime</code></a> becomes obsolete.</p>
 </li>
 </ul>
+</div>
+</dd>
+</dl>
 </div>
 <div id="dummy1" class="dlist">
 <dl>
@@ -5587,7 +5596,7 @@ For this purpose the importer must pass the <a href="#instantiationToken"><code>
 The format is a subset of <code>dateTime</code> and should be: <code>YYYY-MM-DDThh:mm:ssZ</code> (with one <code>T</code> between date and time; <code>Z</code> characterizes the Zulu time zone, in other words, Greenwich meantime) <em>[for example <code>2009-12-08T14:33:22Z</code>, according to ISO 8601]</em>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="variableNamingConvention"></a><a href="#variableNamingConvention"><code>Convention</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="variableNamingConvention"></a><code>variableNamingConvention</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether the variable names in <a href="#ModelVariables"><code>&lt;ModelVariables&gt;</code></a> and in <code>&lt;TypeDefinitions&gt;</code> follow the <code>flat</code> or <code>structured</code> convention as defined in <a href="#namingSection">Section 2.4.7.5.1</a>.</p></td>
 </tr>
 </tbody>
@@ -6629,12 +6638,14 @@ If <code>canHandleMultipleSetPerTimeInstant = false</code>, then only one <a hre
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>intermediateUpdate</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="intermediateUpdate" class="paragraph">
 <p>If this boolean attribute is <code>true</code>, the variable can be accessed in <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.
-Variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> must not be marked with <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.</p>
+Only continuous-time variables can have <a href="#intermediateUpdate"><code>intermediateUpdate = true</code></a>.
+The default value of this attribute is <code>false</code>.</p>
 </div>
 <div class="paragraph">
-<p>This attribute is ignored in Model Exchange and Scheduled Execution.
-Variables of type <a href="#Clock">Clock</a> must not have the <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> attribute.
-The default value of this attribute is <code>false</code>.</p>
+<p>Variables of type <a href="#Clock">Clock</a> must not have the <a href="#intermediateUpdate"><code>intermediateUpdate</code></a> attribute.</p>
+</div>
+<div class="paragraph">
+<p>This attribute is ignored in Model Exchange and Scheduled Execution.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -7250,7 +7261,7 @@ approx</p></td>
 <div class="sect5">
 <h6 id="namingSection"><a class="link" href="#namingSection">2.4.7.5.1. Variable Naming Conventions</a></h6>
 <div class="paragraph">
-<p>With attribute <a href="#variableNamingConvention"><code>Convention</code></a> in <code>&lt;fmiModelDescription&gt;</code>, the convention is defined how the variable names have been constructed.
+<p>With attribute <a href="#variableNamingConvention"><code>variableNamingConvention</code></a> in <code>&lt;fmiModelDescription&gt;</code>, the convention is defined how the variable names have been constructed.
 The importer may use this information to represent the names in a better way (for example, as a tree and not as a linear list).</p>
 </div>
 <div class="paragraph">
@@ -7353,7 +7364,7 @@ vehicle.engine.temperature</pre>
 <p>It might be that not all elements of an array are present.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#variableNamingConvention"><code>Convention</code></a> <code>structured</code> does not define if arrays are 0-based or 1-based.</p>
+<p>The <a href="#variableNamingConvention"><code>variableNamingConvention</code></a> <code>structured</code> does not define if arrays are 0-based or 1-based.</p>
 </div>
 </div>
 </div>
@@ -7905,10 +7916,10 @@ The <code>memberName</code> is not required for <code>matchingRule</code> <code>
 This information defines how the connection of this variable has to be implemented (e.g. Kirchhoff&#8217;s current law or common signal flow).</p>
 </div>
 <div class="paragraph">
-<p>The predefined <code>variableKind</code> are:
-.Predefined kinds of variables.</p>
+<p>The predefined <code>variableKind</code> are:</p>
 </div>
 <table id="table-variable-kinds" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 27. Predefined kinds of variables.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8138,7 +8149,7 @@ The stroke color is given in RGB values from 0 to 255. E.g.: <code>255 255 0</co
 This file declares a root element &lt;fmiBuildDescription&gt; that has the following attributes and elements:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 27. fmiBuildDescription element and attributes details.</caption>
+<caption class="title">Table 28. fmiBuildDescription element and attributes details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8182,7 +8193,7 @@ It is also recommended to use a descriptive name (e.g. <code>&lt;model_identifie
 <div class="title">Figure 39. <code>fmiBuildDescription</code> element.</div>
 </div>
 <table id="table-BuildConfiguration-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 28. BuildConfiguration attribute details.</caption>
+<caption class="title">Table 29. BuildConfiguration attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8233,7 +8244,7 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 <div class="title">Figure 40. <code>SourceFileSet</code> element.</div>
 </div>
 <table id="table-SourceFileSet-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 29. SourceFileSet attribute details.</caption>
+<caption class="title">Table 30. SourceFileSet attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8271,6 +8282,9 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p><em>[Please refer to the <a href="https://modelica.github.io/fmi-guides/main/fmi-guide/">FMI Implementer&#8217;s Guide</a> for lists of commonly agreed upon language and compiler names.]</em></p>
+</div>
 </div>
 <div class="sect4">
 <h5 id="SourceFile"><a class="link" href="#SourceFile">2.4.10.2. SourceFile</a></h5>
@@ -8281,7 +8295,7 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 <div class="title">Figure 41. <code>SourceFileSet</code> element.</div>
 </div>
 <table id="table-SourceFile-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 30. SourceFile attribute details.</caption>
+<caption class="title">Table 31. SourceFile attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8314,7 +8328,7 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 <div class="title">Figure 42. <code>PreprocessorDefinition</code> element.</div>
 </div>
 <table id="table-ProcessorDefinition-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 31. ProcessorDefintition attribute details.</caption>
+<caption class="title">Table 32. ProcessorDefintition attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8360,7 +8374,7 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</code> elements, its default value must be contained in the options.</p>
 </div>
 <table id="table-PreprocessorDefinition-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 32. PreprocessorDefinition attribute details.</caption>
+<caption class="title">Table 33. PreprocessorDefinition attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8399,7 +8413,7 @@ If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</
 <div class="title">Figure 43. <code>IncludeDirectory</code> element.</div>
 </div>
 <table id="table-IncludeDirectory-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 33. IncludeDirectory attribute details.</caption>
+<caption class="title">Table 34. IncludeDirectory attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8447,7 +8461,7 @@ An importer of the FMU has to link every library of the matching <a href="#Build
 <div class="title">Figure 44. <code>Library</code> element.</div>
 </div>
 <table id="table-Library-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 34. Library attribute details.</caption>
+<caption class="title">Table 35. Library attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -8556,9 +8570,10 @@ The default is <code>false</code>.</p>
 The implementation of the FMI C-API may be distributed in source code and/or in binary format.
 The FMU must be distributed with at least one implementation, in other words, either sources or one of the binaries for a particular machine.
 It is also possible to provide the sources and binaries for different target machines together in one ZIP file.
-The FMU must implement all common API functions according to <a href="#general-mechanisms">Section 2.2</a> and the functions for at least one of the interface types.
-Especially it is required that all functions that are part of the specified interface type are present, even if they are only needed for optional capabilities that the FMU does not support.
-The behavior of those functions is unspecified, so while calling environments can rely on the functions being present, they cannot rely on any particular behavior for functions only needed for capabilities the FMU does not support.
+The FMU must implement all API functions declared in <code>fmi3Functions.h</code>, even if they are only needed for interface types or optional capabilities that the FMU does not support.
+The behavior of those functions is unspecified, so while calling environments can rely on the functions being present, they cannot rely on any particular behavior for functions only needed for capabilities or interface types the FMU does not support.
+<em>[The recommended implementation for such stub functions is to return <code>fmi3Error</code> after logging the error reason, as specified in <a href="#status-returned-by-functions">Section 2.2.4</a>.
+Calling environments should not rely on the presence of functions that are not required and avoid calling them.]</em>
 Additional functions may be present in the FMU, as for example required by the OS ABI, for layered standards, or future FMI versions.
 All symbols starting with the prefix <code>fmi3</code> are reserved for use in future minor releases of FMI 3.0.
 The extension of the ZIP file must be <code>.fmu</code> <em>[, for example, <code>HybridVehicle.fmu</code>]</em>.
@@ -9073,7 +9088,7 @@ int main(int argc, char* argv[]) {
 The root element of this XML file shall have the following attributes in the XML namespace <code><a href="http://fmi-standard.org/fmi-ls-manifest" class="bare">http://fmi-standard.org/fmi-ls-manifest</a></code>:</p>
 </div>
 <table id="table-schema-fmi-ls-manifest-root-attributes" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 35. <code>fmi-ls-manifest.xml</code> root attribute details.</caption>
+<caption class="title">Table 36. <code>fmi-ls-manifest.xml</code> root attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -9934,7 +9949,7 @@ It is defined as:</p>
 <p>The attribute in the following table is defined in addition to the <a href="#common-capability-flags">common attributes</a> and has the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-ModelExchange-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 36. ModelExchange attribute details.</caption>
+<caption class="title">Table 37. ModelExchange attribute details.</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -10611,7 +10626,7 @@ If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater th
 </ul>
 </div>
 <table id="table-math-intermediateUpdateMode" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 37. Mathematical description of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</caption>
+<caption class="title">Table 38. Mathematical description of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</caption>
 <colgroup>
 <col style="width: 66.6666%;">
 <col style="width: 33.3334%;">
@@ -11150,7 +11165,7 @@ It is defined as:</p>
 <p>The attributes in the following table are defined in addition to the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with the exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-CoSimulation-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 38. CoSimulation attribute details.</caption>
+<caption class="title">Table 39. CoSimulation attribute details.</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -12337,7 +12352,7 @@ Also known as the <em>bi-lateral delay line</em> method. For more details see <a
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Modelica Association Project FMI was headed by Andreas Junghanns (Synopsys) and Torsten Blochwitz (ESI Group).
-The FMI 3.0 standard text is based on FMI 2.0 and FMI 1.0 and we wish to acknowledge their contributors.</p>
+The FMI 3.0.x standard text is based on FMI 2.0 and FMI 1.0 and we wish to acknowledge their contributors as listed on <a href="https://github.com/modelica/fmi-standard/graphs/contributors">Github</a>.</p>
 </div>
 <div class="paragraph">
 <p>Special thanks to</p>
