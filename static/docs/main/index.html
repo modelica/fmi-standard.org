@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version d1188c4,</span>
-<span id="revdate">2023-06-09</span>
+<span id="revnumber">version b86e034,</span>
+<span id="revdate">2023-06-23</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -625,7 +625,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#advancing-time">2.2.6. Advancing Time</a></li>
 <li><a href="#fmu-variables">2.2.7. Variables</a>
 <ul class="sectlevel4">
-<li><a href="#serialization-of_variables">2.2.7.1. Serialization of Array Variables</a></li>
+<li><a href="#serialization-of-variables">2.2.7.1. Serialization of Array Variables</a></li>
 <li><a href="#get-and-set-variable-values">2.2.7.2. Getting and Setting Variable Values</a></li>
 <li><a href="#min-max-violations">2.2.7.3. Handling min/max Range Violations</a></li>
 <li><a href="#get-set-fmu-state">2.2.7.4. Getting and Setting the Complete FMU State</a></li>
@@ -2121,7 +2121,7 @@ All variables are listed in <a href="#modelDescription.xml"><code>modelDescripti
 Clocks must always be scalar.</p>
 </div>
 <div class="sect4">
-<h5 id="serialization-of_variables"><a class="link" href="#serialization-of_variables">2.2.7.1. Serialization of Array Variables</a></h5>
+<h5 id="serialization-of-variables"><a class="link" href="#serialization-of-variables">2.2.7.1. Serialization of Array Variables</a></h5>
 <div class="paragraph">
 <p>Array variables in C-API and <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> (i.e. <a href="#start"><code>start</code></a> attribute) are serialized as row major.
 The order of dimensions is defined as follows:</p>
@@ -2216,7 +2216,8 @@ The order of dimensions is defined as follows:</p>
 </div>
 <div class="paragraph">
 <p>For this serialization of array variables the sparsity pattern of the array is not taken into account.
-All elements of the array, including structural zeros, are serialized.</p>
+All elements of the array, including structural zeros, are serialized.
+If an API function takes multiple value references, the serialized variables are concatenated.</p>
 </div>
 </div>
 <div class="sect4">
@@ -2327,7 +2328,7 @@ typedef fmi3Status fmi3GetClockTYPE  (fmi3Instance instance,
 <p><code>valueReferences</code> is a vector of <code>nValueReferences</code> handles that reference the variables that shall be inquired.</p>
 </li>
 <li>
-<p><code>values</code> is a vector consisting of the concatenation of the (serialized in the case of arrays) values of these variables.</p>
+<p><code>values</code> is a vector consisting of the <a href="#serialization-of-variables">serialized</a> values of these variables.</p>
 </li>
 <li>
 <p><code>valueSizes</code> is a vector with the actual sizes of the values for binary variables.</p>
@@ -2439,7 +2440,7 @@ typedef fmi3Status fmi3SetClockTYPE  (fmi3Instance instance,
 <p><code>valueReferences</code> is a vector of <code>nValueReferences</code> handles that reference the variables that shall be set.</p>
 </li>
 <li>
-<p><code>values</code> is a vector consisting of the concatenation of the (serialized in the case of arrays) values of these variables.</p>
+<p><code>values</code> is a vector consisting of the <a href="#serialization-of-variables">serialized</a> values of these variables.</p>
 </li>
 <li>
 <p><code>valueSizes</code> is a vector with the actual sizes of the values of binary variables.</p>
@@ -3389,7 +3390,7 @@ typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Instance instance,
 <p><code>elementIndicesOfDependent</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the element index of the dependent variable that dependency information is provided for.
 The element indices start with 1. Using the element index 0 means all elements of the variable.
-(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.7.1</a>.)</p>
+(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of-variables">Section 2.2.7.1</a>.)</p>
 </li>
 <li>
 <p><code>independents</code> must point to a buffer of <a href="#fmi3ValueReference"><code>fmi3ValueReference</code></a> values of size <code>nDependencies</code> allocated by the calling environment.
@@ -3400,7 +3401,7 @@ It is filled in by this function with the value reference of the <a href="#indep
 It is filled in by this function with the element index of the <a href="#independent"><code>independent</code></a> variable that this dependency entry is dependent upon.
 The element indices start with 1.
 Using the element index 0 means all elements of the variable.
-(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of_variables">Section 2.2.7.1</a>.)</p>
+(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of-variables">Section 2.2.7.1</a>.)</p>
 </li>
 <li>
 <p><code>dependencyKinds</code> must point to a buffer of <a href="#dependenciesKind"><code>dependenciesKind</code></a> values of size <code>nDependencies</code> allocated by the calling environment.
@@ -3695,13 +3696,13 @@ The functions may only be called if their availability is indicated by the attri
 <p><code>nKnowns</code> contains the length of argument <code>knowns</code>.</p>
 </li>
 <li>
-<p><code>seed</code> contains the components of the seed vector.</p>
+<p><code>seed</code> contains the <a href="#serialization-of-variables">serialized</a> components of the seed vector.</p>
 </li>
 <li>
 <p><code>nSeed</code> contains the length of <code>seed</code>.</p>
 </li>
 <li>
-<p><code>sensitivity</code> contains the components of the sensitivity vector.</p>
+<p><code>sensitivity</code> contains the <a href="#serialization-of-variables">serialized</a> components of the sensitivity vector.</p>
 </li>
 <li>
 <p><code>nSensitivity</code> contains the length of <code>sensitivity</code>.</p>
@@ -7098,7 +7099,7 @@ During instantiation, the FMU initializes its variables with their <a href="#sta
 </div>
 <div class="paragraph">
 <p>The <a href="#start"><code>start</code></a> attribute is either a single value or a list of values.
-The serialization of a multi-dimensional array variable is described in <a href="#serialization-of_variables">Section 2.2.7.1</a>.
+The serialization of a multi-dimensional array variable is described in <a href="#serialization-of-variables">Section 2.2.7.1</a>.
 If only a single value is given for a multi-dimensional array, all values of the multi-dimensional array are equal to this value.</p>
 </div>
 <div class="paragraph">
@@ -9523,7 +9524,7 @@ It refers to the unit of the <a href="#independent"><code>independent</code></a>
 <li>
 <p>Argument <code>continuousStates</code> contains the new values for each <a href="#state">continuous state</a>.
 The order of the <code>continuousStates</code> vector must be the same as the ordered list of elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.
-Array variables are serialized as defined in <a href="#serialization-of_variables">Section 2.2.7.1</a>.
+Array variables are serialized as defined in <a href="#serialization-of-variables">Section 2.2.7.1</a>.
 This order is also used in the arguments of the following functions: <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, and <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>.</p>
 </li>
 <li>
@@ -10178,8 +10179,8 @@ If multiple derivatives of a variable shall be retrieved, list the value referen
 If multiple derivatives of a variable shall be retrieved, its value reference must occur multiple times in <code>valueReferences</code> aligned with the corresponding <code>orders</code> array.</p>
 </li>
 <li>
-<p><code>values</code> is a vector with the values of the <a href="#derivative"><code>derivatives</code></a>.
-The order of the <code>values</code> elements is derived from a twofold serialization: the outer level corresponds to the combination of a value reference (e.g., <code>valueReferences[k]</code>) and order (e.g., <code>orders[k]</code>), and the inner level to the serialization of variables as defined in <a href="#serialization-of_variables">Section 2.2.7.1</a>.
+<p><code>values</code> is a vector consisting of the <a href="#serialization-of-variables">serialized</a> values of these <a href="#derivative"><code>derivatives</code>&gt;:
+The order of the <code>values</code> elements is derived from a twofold serialization: the outer level corresponds to the combination of a value reference (e.g., <code>valueReferences[k]</code>) and order (e.g., <code>orders[k]</code>), and the inner level to the serialization of variables as defined in &lt;&lt;serialization-of-variables</a>.
 The inner level does not exist for scalar variables.</p>
 </li>
 <li>
