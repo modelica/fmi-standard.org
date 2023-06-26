@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version b86e034,</span>
-<span id="revdate">2023-06-23</span>
+<span id="revnumber">version 6d7f08c,</span>
+<span id="revdate">2023-06-26</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -7614,9 +7614,9 @@ Otherwise, the corresponding known \({\mathbf{v}_{\mathit{known},i}}\) enters th
 <div class="sect3">
 <h4 id="fmiTerminalsAndIcons"><a class="link" href="#fmiTerminalsAndIcons">2.4.9. Terminals and Icons</a></h4>
 <div class="paragraph">
-<p>Terminals define semantic groups of variables to ease connecting compatible signals on the system level.
+<p>Terminals define semantic groups of variables.
 This definition adds an additional layer to the interface description of the FMUs.
-It does not change the <a href="#causality"><code>causality</code></a> of the variables (i.e. inputs and outputs), but enables the definition of physical and bus-like  connectors that require special handling on the system level by the importer (e.g. flow variables and bus frames).
+It does not change the <a href="#causality"><code>causality</code></a> of the variables (e.g. inputs will remain inputs, outputs will remain outputs, and parameters will remain parameters) but enables the definition of physical and bus-like connectors and variable groups that require special handling on the system level by the importer (e.g. flow variables and bus frames).
 Icons define a graphical representation of an FMU and its terminals.</p>
 </div>
 <div class="paragraph">
@@ -7657,7 +7657,7 @@ If used in previous FMI versions, this attribute points to the FMI version defin
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;Terminals&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining variables (e.g. inputs, outputs and parameters) into logical groups to ease connections on a system level and add semantic information required for system-level connections.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If present, this allows combining variables (e.g. inputs, outputs and parameters) into logical groups, e.g.,  to ease connections on a system level and add semantic information required for system-level connections.</p></td>
 </tr>
 </tbody>
 </table>
@@ -7786,17 +7786,17 @@ The first element in the <code>&lt;TerminalGraphicalRepresentation&gt;</code> is
 <p>a structured interface for connections to other models,</p>
 </li>
 <li>
-<p>intended to be used for signal flow between models, parameter propagation, and compatibility checks of the model configuration, and</p>
+<p>intended to be used for signal flow between models, parameter grouping and propagation, and compatibility checks of the model configuration, and</p>
 </li>
 <li>
-<p>a sequence of references to variables with connection meta data.</p>
+<p>a sequence of references to variables with connection and other meta data.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>Predefined rules for variable matching in a connection are given in <a href="#table-predefined-matching-rules">Table 26</a>.
 Predefined variable kinds are used to describe how the terminal member variables have to be handled.
-Domain specific connection rules, terminals and their member variables can be provided by other standards.</p>
+Domain specific connection rules, terminals and their member variables can be provided by other standards, including layered standards.</p>
 </div>
 <div class="paragraph">
 <p><em>[Algebraic loops in systems of connected FMUs are not addressed or resolved by the terminals.</em>
