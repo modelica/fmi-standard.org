@@ -128,7 +128,6 @@ Example:
 ```
 
 The optional logo must be added to `/assets/images` as a PNG or SVG.
-It is recommended to use a rectangular and not a square image format.
 By submitting a logo the committer agrees that the logo is dispayed on the tools page.
 
 ### Tool Description
