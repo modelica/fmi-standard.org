@@ -140,6 +140,94 @@ The description field should
 - be neutral and not use biased additions like ~~leading~~, ~~innovative~~, ~~flexible~~ or buzzwords (~~performance~~, ~~next generation~~)
 - not contain hyperlinks or markup
 
+### Compatibility information
+
+FMU exporting and importing tools provide information to their users on how they have validated their FMI support.
+Providing and maintaining this information is in the responsibility of the tool vendors. 
+On the tools page of the FMI Webpage, a link to a repository or webpage of the tool vendor is provided as defined in `examplesUrl`.
+Tool vendors are encouraged to clearly mark this webpage as provided by them and not by the Modelica Association or the FMI Project, e.g., by prominently placing their logo on this page.
+
+#### Exporting tools
+
+* List the importing tools (including version information), with which the FMUs from this exporter have been imported and simulated successfully.
+This could be (free or commercial) tools available to the tool vendor of the exporting tool. Or the tests could be performed by third parties (users, tool vendors of importing tools). 
+* optionally proivde additional information needed to reproduce the results of the importers (e.g., compiler flags)
+* Encouragement to provide example FMUs and any information needed to run this FMU and check expected results
+  * Check the FMUs with at least one of the available checkers before uploading (see https://fmi-standard.org/validation/) and document this.
+  * The folder structure can be chosen by the vendor to match the capabilities of the tool, e.g. by tool version. Each FMU and and files corresponding to it should be provided in a separate subfolder.
+ _[It is possible to structure your repository according to FMI versions, FMI interface types (ME, CS, SE), platforms (consider to provide source code FMUs), but this not mandatory as this information is contained in the modelDescription.xml of each FMU]_
+
+**Files to submit*** per exported FMU stored on the repository:
+
+- `{Model_Name}.fmu`: The FMU.
+
+- `{Model_Name}_ref.csv`: Reference solution as computed by the exporting tool.
+It is recommended to limit the file to at most 10 of the important variables.
+The solution must contain StartTime and EndTime as specified in {Model_Name}_ref.opt.
+
+- `{Model_Name}_in.csv`: optional input signals in case the FMU has inputs.
+The variables in this file must match the input variables defined in the modelDescription.xml.
+If intermediate values are required for continuous signals, linear interpolation is to be applied.
+
+- `{Model_Name}_ref.opt`: Options used to create reference output and to guide comparing against, CSV format: 
+
+```
+// required elements:
+StartTime, 0.0              // in seconds
+StopTime, 1.0               // in seconds
+StepSize, 0.01              // in seconds, 0.0 for variable step solver
+RelTol, 0.0001
+// optional elements:
+AbsTol, 0.001
+SolverType, FixedStep       // predefined: FixedStep, VariableStep
+OutputIntervalLength, 0.1   // reference data provided with this time spacing in seconds
+```
+
+- Readme.txt: provide information on what the FMU represents and which features of FMI can be tested with it.
+ 
+Observe the naming conventions given here, including case.
+We recommend keeping {Model_Name} short to avoid path length restriction problems on Windows.
+
+
+#### Importing tools
+
+* List exporting tools (including version information), from which FMUs have been successfully imported and simulated.
+It is recommended to
+  * list these FMUs and/or provide links to the repository of the exporting tool where they can be downloaded.
+  * provide additional information needed to reproduce the results of the importers (e.g., compiler flags).
+
+#### CSV Rules for inout and result files for compatibility information
+
+CSV as input, output and reference file format is convenient as many tools support CSV import and export.
+However, CSV is not restrictive enough to allow easy exchange of time-based signals.
+Here we will declare a number of additional restrictions on top of the CSV format to ease handling:
+
+- Separator: comma (`,`): separators may only be used between elements, not the end of a line
+
+- Numbers must be unquoted and specified in the format used for floating point literals as in the C programming language (without the type suffix).
+
+- All numeric cell entries contain numbers, labels for enumerations are not allowed (it would require readers to have access to the FMU information).
+Boolean values should be expressed as `0` and `1`.
+Binary values and strings are represented as for start values in the modeldescription.xml.
+Arrays are serialized as for start values in the modelDescription.xml with space (` `) as separator.
+
+- The first column contains the time.
+The values in time must be monotonically increasing.
+
+- The first line contains the variable names quoted with double quotes (`"`)
+
+- All variable names are exactly the same as defined in the modelDescription.xml (no additional variables are allowed)
+
+- Starting with line 2, data is supplied (no units in line 2, no comments allowed)
+
+- A CSV file should not be larger than 1 Megabyte.
+
+**Example:**
+```
+"time","xnum,"bin","arrayof3x2","s"
+0.0,0,AA22BB33,1 2 3 4 5 6,"string1"
+1.0,1,BB11FF4433,2 3 4 5 6 7,"string2"
+```
 ## Adding a news post
 
 To create a post, add a file to `/content/news/` with the following format:
