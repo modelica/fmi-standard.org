@@ -1,5 +1,5 @@
 ---
-title: Join as at the 15th Modelica Conference 2023 in Aachen!
+title: Join us at the 15th Modelica Conference 2023 in Aachen!
 date: 2023-10-08
 aliases: [/news/2023/10/08/2023-10-08-FMI-at-Modelica-Conference-2023.html]
 ---
