@@ -1,7 +1,6 @@
 ---
 title: Join us at the 15th Modelica Conference 2023 in Aachen!
-date: 2023-10-08
-aliases: [/news/2023/10/08/2023-10-08-FMI-at-Modelica-Conference-2023.html]
+date: 2023-07-26
 ---
 
 The [Modelica Conference 2023](https://2023.international.conference.modelica.org/) will take place from Oct 8-10 2023 at Aachen. 
