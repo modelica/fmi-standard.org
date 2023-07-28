@@ -14,7 +14,7 @@ This is the main conference on FMI related topics!
 * The FMI user meeting will take place on Oct 10. There the representatives from the FMI Project and the other related Modelica Association Projects (SSP, DCP, eFMI) will present their status and outlook, and there will be "industrial user presentations" and the possibility for questions.
 
 * If you are interested in a deeper exchange with the FMI project, you are welcomce to join an "extra" 
-FMI design meeting on Oct 12th (day after the conference, planned for 8:30-12:30, optionally continued discussions after lunch until 15:00c) as a guest. There you can meet members of the FMI project and it provides an opportunity to get in contact with the FMI Project, discuss ideas, feedback, requirements and new use cases for FMI.
+FMI design meeting on Oct 12th (day after the conference, planned for 8:30-12:30, optionally continued discussions after lunch until 15:00) as a guest. There you can meet members of the FMI project and it provides an opportunity to get in contact with the FMI Project, discuss ideas, feedback, requirements and new use cases for FMI.
 If you plan to participate please write to contact@fmi-standard.org.
 
 Looking forward to see you in Aachen!
