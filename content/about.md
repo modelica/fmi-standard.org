@@ -45,6 +45,10 @@ The next level of involvement is membership in the FMI Steering Committee which 
 You have to formally apply, explaining your past, current and future involvement and plans regarding the FMI Standard.
 The FMI Steering Committee will vote on your applications.
 
+## Meetings
+
+Currently we have biweekly FMI Design Webmeetings, about 2-3 in-person FMI Design Meetings per year, monthly FMI Steering Committee meetings, and other working group meetings on demand ([Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=obe72dhd3apjmipcpmr2asehjs@group.calendar.google.com&ctz=Europe/Berlin)).
+
 ## Development Process
 
 Today, we largely use github issues and pull requests to technically coordinate our design work.
