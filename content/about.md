@@ -47,7 +47,7 @@ The FMI Steering Committee will vote on your applications.
 
 ## Meetings
 
-Currently we have bi-weekly FMI Design Webmeetings, about 2-3 in-person FMI Design Meetings per year, monthly FMI Steering Committee meetings and other working group meetings on demand. ([Meetings Calendar](https://calendar.google.com/calendar/u/0/embed?src=obe72dhd3apjmipcpmr2asehjs@group.calendar.google.com&ctz=Europe/Berlin))
+Currently we have biweekly FMI Design Webmeetings, about 2-3 in-person FMI Design Meetings per year, monthly FMI Steering Committee meetings, and other working group meetings on demand ([Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=obe72dhd3apjmipcpmr2asehjs@group.calendar.google.com&ctz=Europe/Berlin)).
 
 ## Development Process
 
