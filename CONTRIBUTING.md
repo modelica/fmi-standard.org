@@ -279,16 +279,10 @@ Linking to a PDF for readers to download:
 ... you can [get the PDF](/assets/mydoc.pdf) directly.
 ```
 
-## Building the website locally
+## Serve the website locally
 
 1. [Install Hugo extended version](https://gohugo.io/getting-started/installing/)
-
-2. Clone the repository, change into the directory and pull the changes
-   ```
-   git clone https://github.com/modelica/fmi-standard.org.git
-   cd fmi-standard.org
-   git pull
-   git submodule update --init --recursive
-   ```
-
-3. Run `hugo server` and browse to [http://localhost:1313](http://localhost:1313/)
+2. [Add a SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+3. Clone the repo `git clone --recurse-submodules git@github.com:modelica/fmi-standard.org.git`
+4. Change into the repository folder `cd fmi-standard.org`
+5. Run `hugo serve` and browse to [http://localhost:1313](http://localhost:1313/)
