@@ -6,6 +6,13 @@ date: 2023-11-06
 FMI developers from Akkodis, AVL, Bosch, Dassault Systems, ETAS, dSPACE, EKS-INTEC, PMSF, Synopsys, and Wolfram MathCore participated in a webmeeting.
 Thanks to the Akkodis for the great hospitality! 
 
-We focussed on layered standards to FMI 3.0 and efficiency topics that could be addressed in FMI 3.1.
+We focussed on layered standards to FMI 3.0 
 
-![Participants of the FMI Design Meeting in Sindelfingen](/assets/images/fmi-design-meeting-23-Sindelfingen.jpg)  
+* [LS-XCP](https://github.com/modelica/fmi-ls-xcp)  for XCP support (v1.0RC2 in preparation)
+* [LS-BUS](https://github.com/modelica/fmi-ls-bus) for network communication (v1.0alpha in preparation)
+* [LS-STRUCT](https://github.com/modelica/fmi-ls-struct) for maps and strucuturing of variables (concept work)
+* and new ideas for layered standards reference source models, reference soluations, paramters sets.
+  
+Additionlly we discucced possible efficiency optiimizations for data transfer that can be addressed in FMI 3.1.
+
+![Participants of the FMI Design Meeting in Sindelfingen](/assets/images/news-fmi-design-sindelfingen.jpg)  
