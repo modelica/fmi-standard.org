@@ -3,7 +3,7 @@ title: FMI Design Meeting in Sindelfingen, Germany
 date: 2023-11-06
 ---
 
-FMI developers from Akkodis, AVL, Bosch, Dassault Systems, ETAS, dSPACE, EKS-INTEC, PMSF, Synopsys and Wolfram MathCore participated. Thanks to Akkodis for the great hospitality!     
+FMI developers from Akkodis, AVL, Bosch, Dassault Systems, ESI, ETAS, dSPACE, EKS-INTEC, PMSF, Synopsys and Wolfram MathCore participated. Thanks to Akkodis for the great hospitality!     
 
 We focused on layered standards to FMI 3.0: 
 
