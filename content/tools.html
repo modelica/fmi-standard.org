@@ -43,6 +43,7 @@ title: Tools
         <button id="btn-windows" type="button" @click="showWindows = !showWindows" class="btn btn-secondary" v-bind:class="{ 'active': showWindows}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Windows"><i class="fab fa-windows"></i></button>
         <button id="btn-linux" type="button" @click="showLinux = !showLinux" class="btn btn-secondary" v-bind:class="{ 'active': showLinux}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Linux"><i class="fab fa-linux"></i></button>
         <button id="btn-macos" type="button" @click="showMac = !showMac" class="btn btn-secondary" v-bind:class="{ 'active': showMac}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="macOS"><i class="fab fa-apple"></i></button>
+        <button id="btn-source-code" type="button" @click="showSourceCode = !showSourceCode" class="btn btn-secondary" v-bind:class="{ 'active': showSourceCode}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Source Code"><i class="fa-solid fa-c"></i></button>
       </div>
     </div>
     <div class="col-auto">
@@ -102,6 +103,7 @@ title: Tools
             <span v-if="hasFeature(tool.platforms, 'Linux')" class="badge bg-secondary me-1"><i class="fab fa-linux"></i></span>
             <span v-if="hasFeature(tool.platforms, 'Windows')" class="badge bg-secondary me-1"><i class="fab fa-windows"></i></span>
             <span v-if="hasFeature(tool.platforms, 'macOS')" class="badge bg-secondary me-1"><i class="fab fa-apple"></i></span>
+            <span v-if="hasFeature(tool.platforms, 'Source Code')" class="badge bg-secondary me-1"><i class="fa-solid fa-c"></i></span>
             <span v-if="tool.license == 'commercial'" class="badge bg-secondary me-1"><i class="fas fa-dollar-sign"></i></span>
             <span v-if="tool.license == 'osi'" class="badge bg-secondary me-1"><i class="fab fa-osi"></i></span>
             <span v-if="hasFeature(tool.interfaces, 'GUI')" class="badge bg-secondary me-1"><i class="fa-solid fa-window-maximize"></i></span>
@@ -138,6 +140,7 @@ title: Tools
         showWindows: false,
         showLinux: false,
         showMac: false,
+        showSourceCode: false,
         showCommercial: false,
         showOpenSource: false,
         showGUI: false,
@@ -201,9 +204,10 @@ title: Tools
           if (self.showMEExport && !tool.fmuExport.includes('ME')) return false;
           if (self.showSEExport && !tool.fmuExport.includes('SE')) return false;
 
-          if (self.showWindows && !tool.platforms.includes('Windows')) return false;
-          if (self.showLinux   && !tool.platforms.includes('Linux'))   return false;
-          if (self.showMac     && !tool.platforms.includes('macOS'))   return false;
+          if (self.showWindows    && !tool.platforms.includes('Windows'))     return false;
+          if (self.showLinux      && !tool.platforms.includes('Linux'))       return false;
+          if (self.showMac        && !tool.platforms.includes('macOS'))       return false;
+          if (self.showSourceCode && !tool.platforms.includes('Source Code')) return false;
 
           if (self.showCommercial && tool.license != 'commercial')      return false;
           if (self.showOpenSource && tool.license != 'osi')             return false;
