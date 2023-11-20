@@ -99,7 +99,7 @@ FMI related conference papers ([link to proceedings](https://www.modelica.org/ev
 * The OpenModelica Integrated Modeling, Simulation and Optimization Environment
 
 
-### [Japanese Modelica Conference 2018](https://modelica.org/events/modelica2018japan.html)
+### [Japanese Modelica Conference 2018](https://modelica.org/events/modelica2018japan/)
 
 Keynote: [10 Years of FMI: Where are we now, where do we go?](https://www.modelica.org/events/modelica2018japan/presentation/10_Years_of_FMI.pdf)
 
