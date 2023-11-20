@@ -103,7 +103,7 @@ FMI related conference papers ([link to proceedings](https://www.modelica.org/ev
 
 Keynote: [10 Years of FMI: Where are we now, where do we go?](https://www.modelica.org/events/modelica2018japan/presentation/10_Years_of_FMI.pdf)
 
-FMI related conference papers ([link to proceedings](https://www.modelica.org/events/modelica2018japan/conference-proceedings/modelica-final-proceedings-2018-Japan.pdf)):
+FMI related conference papers ([link to proceedings](https://doi.org/10.3384/ecp18148)):
 
 * Combustion Engine Mechanism Analyses Using Simulation
 * Hyundai framework for vehicle dynamics engineering based on Modelica and FMI
