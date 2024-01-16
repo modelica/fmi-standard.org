@@ -8,6 +8,9 @@ title: Literature
 
 Tutorials: 
 
+* FMI Beginners Tutorial ([Material](https://github.com/modelica/fmi-beginners-tutorial-2023))
+* CasADi Tutorial ([Material](https://drive.google.com/file/d/1e49HQOuSzoGlrMPX_xqzH4JatfNsjQhR/view?usp=drive_link))
+
 FMI User meeting ([Agenda](https://www.conftool.com/modelica2023/index.php?page=browseSessions&form_session=22))
 
 
