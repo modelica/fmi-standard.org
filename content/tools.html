@@ -120,10 +120,20 @@ title: Tools
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
 
   const { createApp } = Vue
+
+  function containsLowerCase(a, b) {
+    if (a == undefined) return false;
+    return a.toLowerCase().indexOf(b.toLowerCase()) > -1;
+  }
+
+  function listContains(l, a) {
+    if (l == undefined) return false;
+    return l.includes(a);
+  }
 
   createApp({
     data() {
@@ -192,36 +202,31 @@ title: Tools
 
         return this.tools.filter(tool => {
 
-          if (self.showFMI1 && !tool.fmiVersions.includes('1.0')) return false;
-          if (self.showFMI2 && !tool.fmiVersions.includes('2.0')) return false;
-          if (self.showFMI3 && !tool.fmiVersions.includes('3.0')) return false;
+          if (self.showFMI1 && !listContains(tool.fmiVersions, '1.0')) return false;
+          if (self.showFMI2 && !listContains(tool.fmiVersions, '2.0')) return false;
+          if (self.showFMI3 && !listContains(tool.fmiVersions, '3.0')) return false;
 
-          if (self.showCSImport && !tool.fmuImport.includes('CS')) return false;
-          if (self.showMEImport && !tool.fmuImport.includes('ME')) return false;
-          if (self.showSEImport && !tool.fmuImport.includes('SE')) return false;
+          if (self.showCSImport && !listContains(tool.fmuImport, 'CS')) return false;
+          if (self.showMEImport && !listContains(tool.fmuImport, 'ME')) return false;
+          if (self.showSEImport && !listContains(tool.fmuImport, 'SE')) return false;
 
-          if (self.showCSExport && !tool.fmuExport.includes('CS')) return false;
-          if (self.showMEExport && !tool.fmuExport.includes('ME')) return false;
-          if (self.showSEExport && !tool.fmuExport.includes('SE')) return false;
+          if (self.showCSExport && !listContains(tool.fmuExport, 'CS')) return false;
+          if (self.showMEExport && !listContains(tool.fmuExport, 'ME')) return false;
+          if (self.showSEExport && !listContains(tool.fmuExport, 'SE')) return false;
 
-          if (self.showWindows    && !tool.platforms.includes('Windows'))     return false;
-          if (self.showLinux      && !tool.platforms.includes('Linux'))       return false;
-          if (self.showMac        && !tool.platforms.includes('macOS'))       return false;
-          if (self.showSourceCode && !tool.platforms.includes('Source Code')) return false;
+          if (self.showWindows    && !listContains(tool.platforms,'Windows'))     return false;
+          if (self.showLinux      && !listContains(tool.platforms,'Linux'))       return false;
+          if (self.showMac        && !listContains(tool.platforms,'macOS'))       return false;
+          if (self.showSourceCode && !listContains(tool.platforms,'Source Code')) return false;
 
-          if (self.showCommercial && tool.license != 'commercial')      return false;
-          if (self.showOpenSource && tool.license != 'osi')             return false;
+          if (self.showCommercial && tool.license != 'commercial') return false;
+          if (self.showOpenSource && tool.license != 'osi')        return false;
 
-          if (self.showGUI     && !tool.interfaces.includes('GUI'))     return false;
-          if (self.showCLI     && !tool.interfaces.includes('CLI'))     return false;
-          if (self.showLibrary && !tool.interfaces.includes('library')) return false;
+          if (self.showGUI     && !listContains(tool.interfaces, 'GUI'))     return false;
+          if (self.showCLI     && !listContains(tool.interfaces, 'CLI'))     return false;
+          if (self.showLibrary && !listContains(tool.interfaces, 'library')) return false;
 
-          if (self.showOpenSource && tool.license != 'osi')             return false;
-          if (self.showOpenSource && tool.license != 'osi')             return false;
-
-          return tool.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1
-            || tool.vendor.toLowerCase().indexOf(this.search.toLowerCase()) > -1
-            || tool.description.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+          return containsLowerCase(tool.name, this.search) || containsLowerCase(tool.vendor, this.search) || containsLowerCase(tool.description, this.search);
         })
       }
     }
