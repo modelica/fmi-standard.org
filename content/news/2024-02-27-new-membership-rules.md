@@ -13,4 +13,4 @@ The membership is now possible after approval by the FMI Steering Committee with
 
 If you are interested in joining the FMI Project as a contributing member or become part of Advisory Committee, please write to contact@fmi-standard.org.
 
-See the [FMI Project Rules](/project-rules/) for more details.
+See the [FMI Project Rules](/about/#project-rules) for more details.
