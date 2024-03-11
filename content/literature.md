@@ -4,6 +4,30 @@ title: Literature
 
 ## FMI Related Publications
 
+### [15th International Modelica Conference 2023](https://2023.international.conference.modelica.org/)
+
+Tutorials: 
+
+* FMI Beginners Tutorial ([Material](https://github.com/modelica/fmi-beginners-tutorial-2023))
+* Simulation-based optimization with CasADi and FMI ([Material](https://drive.google.com/file/d/1e49HQOuSzoGlrMPX_xqzH4JatfNsjQhR/view?usp=drive_link))
+
+FMI User meeting ([Agenda](https://www.conftool.com/modelica2023/index.php?page=browseSessions&form_session=22))
+
+
+FMI related conference papers: ([Proceedings](https://ecp.ep.liu.se/index.php/modelica/issue/view/83))
+
+* Modelica Association Standards and Surrogate Modeling to Enable Multi-Fidelity Simulations ([Abstract](https://www.conftool.com/modelica2023/index.php/Lindqvist-Modelica_Association_Standards_and_Surrogate_Modeling-170_a.pdf?page=downloadPaper&filename=Lindqvist-Modelica_Association_Standards_and_Surrogate_Modeling-170_a.pdf&form_id=170&form_version=final))
+* Paving the way for Hybrid Twins using Neural Functional Mock-Up Units ([Abstract](https://www.conftool.com/modelica2023/index.php/Thummerer-Paving_the_way_for_Hybrid_Twins_using_Neural_Functional_Mock-Up_Units-122_a.pdf?page=downloadPaper&filename=Thummerer-Paving_the_way_for_Hybrid_Twins_using_Neural_Functional_Mock-Up_Units-122_a.pdf&form_id=122&form_version=final))
+* ThermalSystemsControlLibrary: A Modelica Library for Developing Control Strategies of Industrial Energy Systems ([Abstract](https://www.conftool.com/modelica2023/index.php/Borst-ThermalSystemsControlLibrary-106_a.pdf?page=downloadPaper&filename=Borst-ThermalSystemsControlLibrary-106_a.pdf&form_id=106&form_version=final))
+* Import and Export of Functional Mockup Units in CasADi ([Abstract](https://www.conftool.com/modelica2023/index.php/Andersson-Import_and_Export_of_Functional_Mockup_Units_in_CasADi-191_a.pdf?page=downloadPaper&filename=Andersson-Import_and_Export_of_Functional_Mockup_Units_in_CasADi-191_a.pdf&form_id=191&form_version=final))
+* Beyond FMI - Towards New Applications with Layered Standards  ([Abstract](https://www.conftool.com/modelica2023/index.php/Bertsch-Beyond_FMI_-_Towards_New_Applications_with_Layered_Standards-132_a.pdf?page=downloadPaper&filename=Bertsch-Beyond_FMI_-_Towards_New_Applications_with_Layered_Standards-132_a.pdf&form_id=132&form_version=final))
+* The Common Requirement Modeling Language ([Abstract]())
+* ([Abstract](https://www.conftool.com/modelica2023/index.php/Bouskela-The_Common_Requirement_Modeling_Language-128_a.pdf?page=downloadPaper&filename=Bouskela-The_Common_Requirement_Modeling_Language-128_a.pdf&form_id=128&form_version=final))
+* Bodylight.js 2.0 - Web components for FMU simulation, visualisation and animation in standard web browser ([Abstract](https://www.conftool.com/modelica2023/index.php/Kulhanek-Bodylightjs_20_-_Web_components_for_FMU_simulation%2C_visualisation_and_animation-137_a.pdf?page=downloadPaper&filename=Kulhanek-Bodylightjs_20_-_Web_components_for_FMU_simulation%2C_visualisation_and_animation-137_a.pdf&form_id=137&form_version=final))
+* A preCICE-FMI Runner to Couple FMUs to PDE-Based Simulations ([Abstract](https://www.conftool.com/modelica2023/index.php/Willeke-A_preCICE-FMI_Runner_to_Couple_FMUs_to_PDE-Based_Simulations-175_a.pdf?page=downloadPaper&filename=Willeke-A_preCICE-FMI_Runner_to_Couple_FMUs_to_PDE-Based_Simulations-175_a.pdf&form_id=175&form_version=final)
+* Secure Exchange of Black-Box Simulation Models using FMI in the Industrial Context ([Abstract](https://www.conftool.com/modelica2023/index.php/Wolf-Secure_Exchange_of_Black-Box_Simulation_Models_using_FMI-184_a.pdf?page=downloadPaper&filename=Wolf-Secure_Exchange_of_Black-Box_Simulation_Models_using_FMI-184_a.pdf&form_id=184&form_version=final))
+* 5th Generation District Heating and Cooling Modelica Models for Prosumer Interaction Analysis ([Abstract](https://www.conftool.com/modelica2023/index.php/Angelidis-5th_Generation_District_Heating_and_Cooling_Modelica_Models-204_a.pdf?page=downloadPaper&filename=Angelidis-5th_Generation_District_Heating_and_Cooling_Modelica_Models-204_a.pdf&form_id=204&form_version=final))
+
 ### [14th International Modelica Conference 2021](https://2021.international.conference.modelica.org/)
 
 FMI User meeting ([Agenda](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/00_Modelica21_FMI_User_Meeting_Overview.pdf)):
