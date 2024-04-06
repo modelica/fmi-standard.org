@@ -9,22 +9,21 @@ Development and promotion of the Functional Mock-up Interface (FMI) standard. Th
 The FMI specifications are published under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode) (Creative Common Attribution-ShareAlike 4.0 International) license.
 Source code, such as C-header and XML-schema files, that accompany the specification documents, are provided under the [2-Clause BSD License](https://www.opensource.org/licenses/bsd-license.html).
 
-
 ## Modelica Association Project (MAP) FMI
 
 The development of the FMI Standard is organised as the [Modelica Association Project](https://modelica.org/projects) _Functional Mock-up Interface_ under the roof of the [Modelica Association](https://www.modelica.org/).
 It follows the [Project Rules](#project-rules) approved by the FMI Steering Committee.
 
-Project Leader and Deputy:
+**Project Leader and Deputy:**  
 Christian Bertsch (BOSCH) and Torsten Sommer (Dassault Systèmes) [projectleader@fmi-standard.org](mailto:projectleader@fmi-standard.org)
 
-Members of the Steering Committee:
+**Members of the Steering Committee:**  
 AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, PMSF, Siemens PLM, Synopsys
 
-Further Contributing Members: 
+**Further Contributing Members:**  
 DLR, ETAS, ITK Engineering, Wolfram MathCore AB, TLK Thermo
 
-Members of the Advisory Committee:
+**Members of the Advisory Committee:**  
 ABB, AIRBUS, COMSOL, Danfoss, Fraunhofer (IIS/EAS First, SCAI), iVH, Open Modelica Consortium, TWT, University of Halle
 
 ## How to contribute to the development of the FMI standard
