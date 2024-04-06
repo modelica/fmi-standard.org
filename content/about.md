@@ -13,7 +13,7 @@ Source code, such as C-header and XML-schema files, that accompany the specifica
 ## Modelica Association Project (MAP) FMI
 
 The development of the FMI Standard is organised as the [Modelica Association Project](https://modelica.org/projects) _Functional Mock-up Interface_ under the roof of the [Modelica Association](https://www.modelica.org/).
-It follows the [Project Rules](/project-rules/) approved by the FMI Steering Committee.
+It follows the [Project Rules](#project-rules) approved by the FMI Steering Committee.
 
 Project Leader and Deputy:
 Christian Bertsch (BOSCH) and Torsten Sommer (Dassault Systèmes) [projectleader@fmi-standard.org](mailto:projectleader@fmi-standard.org)
