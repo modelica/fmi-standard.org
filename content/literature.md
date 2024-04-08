@@ -12,18 +12,18 @@ Tutorials:
 * Simulation-based optimization with CasADi and FMI ([Material](https://drive.google.com/file/d/1e49HQOuSzoGlrMPX_xqzH4JatfNsjQhR/view?usp=drive_link))
 * eFMI Tutorial ([Material and Video](https://www.efmi-standard.org/news/2023-09-11/))
 
-FMI User meeting ([Agenda](https://www.conftool.com/modelica2023/index.php?page=browseSessions&form_session=22))
+FMI User meeting ([Agenda](https://www.conftool.com/modelica2023/index.php?page=browseSessions&form_session=22)):
 
 * [Status and outlook FMI Standard](/assets/literature/FMI_User_Meeting_2023/01_FMI-user-meeting.pdf)
-* [Status and outlook SSP Standard](/assets/literature/FMI_User_Meeting_2023/02_PMSF_State_of_SSP 2023.pdf)
+* [Status and outlook SSP Standard](/assets/literature/FMI_User_Meeting_2023/02_PMSF_State_of_SSP_2023.pdf)
 * [Building Blocks for Simulation based Cooperation between Partners](/assets/literature/FMI_User_Meeting_2023/03_SmartSE_Modelica-2023-10_V5.pdf)
 * [Linking Design Requirements to FMUs to create LOTAR compliant mBSE models](/assets/literature/FMI_User_Meeting_2023/04_Coïc-Linking_Design_Requirements_to_FMUs_to_create_LOTAR_compliant_mBSE_models-168_a.pdf)
 * [Status and Outlook eFMI Standard](/assets/literature/FMI_User_Meeting_2023/05_eFMI_status_and_outook.pdf)
 
 
-FMI related conference papers: ([Proceedings](https://doi.org/10.3384/ecp204)
+FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp204)):
 
-* [Modelica Association Standards and Surrogate Modeling to Enable Multi-Fidelity Simulations](https://doi.org/10.3384/ecp20473 ) 
+* [Modelica Association Standards and Surrogate Modeling to Enable Multi-Fidelity Simulations](https://doi.org/10.3384/ecp20473)
 * [Paving the way for Hybrid Twins using Neural Functional Mock-Up Units](https://doi.org/10.3384/ecp204141)
 * [ThermalSystemsControlLibrary: A Modelica Library for Developing Control Strategies of Industrial Energy Systems](https://doi.org/10.3384/ecp204209)
 * [Import and Export of Functional Mockup Units in CasADi](https://doi.org/10.3384/ecp204321)
