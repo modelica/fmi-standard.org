@@ -21,10 +21,10 @@ Christian Bertsch (BOSCH) and Torsten Sommer (Dassault Systèmes) [projectleader
 AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, PMSF, Siemens PLM, Synopsys
 
 **Further Contributing Members:**  
-DLR, EKS INTEC, ETAS, ITK Engineering, Wolfram MathCore AB, TLK Thermo
+ABB, Aarhus University, DLR, EKS INTEC, ETAS, ITK Engineering, JuliaComputing, LTX, Wolfram MathCore AB, TLK Thermo
 
-**Members of the Advisory Committee:**  
-ABB, Aarhus University, AIRBUS, COMSOL, Danfoss, Fraunhofer (IIS/EAS First, SCAI), iVH, JuliaComputing, LTX, Open Modelica Consortium, TWT, University of Halle
+**Members of the Advisory Committee:** 
+AIRBUS, COMSOL, Danfoss, Fraunhofer (IIS/EAS First, SCAI), iVH, Open Modelica Consortium, TWT, University of Halle
 
 ## How to contribute to the development of the FMI standard
 
