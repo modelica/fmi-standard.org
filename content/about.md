@@ -24,7 +24,7 @@ AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, PMSF, S
 DLR, EKS INTEC, ETAS, ITK Engineering, Wolfram MathCore AB, TLK Thermo
 
 **Members of the Advisory Committee:**  
-ABB, AIRBUS, COMSOL, Danfoss, Fraunhofer (IIS/EAS First, SCAI), iVH, Open Modelica Consortium, TWT, University of Halle
+ABB, Aarhus University, AIRBUS, COMSOL, Danfoss, Fraunhofer (IIS/EAS First, SCAI), iVH, JuliaComputing, LTX, Open Modelica Consortium, TWT, University of Halle
 
 ## How to contribute to the development of the FMI standard
 
