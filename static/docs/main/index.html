@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 7b6711e,</span>
+<span id="revnumber">version b11c061,</span>
 <span id="revdate">2024-05-15</span>
 </div>
 <div id="toc" class="toc2">
@@ -2113,7 +2113,9 @@ All variables are listed in <a href="#modelDescription.xml"><code>modelDescripti
 <p>They are identified with a unique handle called <a href="#valueReference">value reference</a>.</p>
 </div>
 <div class="paragraph">
-<p>The attribute <a href="#causality"><code>causality</code></a> defines the direction of the information flow with respect to the FMU (e.g. <a href="#input"><code>input</code></a>, <a href="#output"><code>output</code></a>, <a href="#parameter"><code>parameter</code></a>).</p>
+<p>The attribute <a href="#causality"><code>causality</code></a> defines the direction of the information flow with respect to the FMU (e.g. <a href="#input"><code>input</code></a>, <a href="#output"><code>output</code></a>, <a href="#parameter"><code>parameter</code></a>).<br>
+For Clocks the <a href="#causality"><code>causality</code></a> indicates the information flow of the activation of the Clock.<br>
+Only for triggered Clocks, the <a href="#causality"><code>causality</code></a> also indicates the information flow of the timing.</p>
 </div>
 <div class="paragraph">
 <p>Variables, except Clocks, may be scalar or multi-dimensional arrays.
@@ -2680,8 +2682,13 @@ After <a href="#table-overview-clocks">Table 5</a> Clock types are explained in 
 <div id="inputClock" class="paragraph">
 <p>is a variable of type Clock with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>.
 In Model Exchange and Co-Simulation, when input Clocks tick, the importer will activate the input Clocks using <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>.
-In Scheduled Execution, when input Clocks tick, the importer will activate the associated model partitions (but not the input Clocks) using <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.
-While the importer is the source of the actual Clock activations, the timing of the Clocks is defined by the FMU, either through the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> or calling <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>, or by another Clock connected to a <a href="#triggered"><code>triggered</code></a> input Clock.</p>
+In Scheduled Execution, when input Clocks tick, the importer will activate the associated model partitions (but not the input Clocks) using <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>The importer is the source of the actual Clock activations of input Clocks.
+For time-based input Clocks, the timing is defined by the FMU, either through the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> or by the importer calling <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>.
+For <a href="#triggered"><code>triggered</code></a> input clocks, the timing is determined by the importer.
+<em>[The timing could be given by a triggered output Clock, or a time-based input Clock of a connected FMU, or any other source.]</em></p>
 </div>
 <div class="dlist">
 <dl>
@@ -6560,8 +6567,12 @@ The <code>min</code> attribute might still be 0.</p>
 </div>
 <div class="paragraph">
 <p>The default of <a href="#causality"><code>causality</code></a> is <a href="#local"><code>local</code></a>.<br>
-A continuous-time <a href="#state">state</a> or an event indicator must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.<br>
-The causality of variables of type <a href="#Clock">Clock</a> must be either <a href="#input"><code>input</code></a>, <a href="#output"><code>output</code></a> or <a href="#local"><code>local</code></a>.</p>
+A continuous-time <a href="#state">state</a> or an event indicator must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>The causality of variables of type <a href="#Clock">Clock</a> must be either <a href="#input"><code>input</code></a>, <a href="#output"><code>output</code></a> or <a href="#local"><code>local</code></a>.<br>
+For Clocks the <a href="#causality"><code>causality</code></a> indicates the information flow of the activation of the Clock.<br>
+Only for triggered Clocks, the <a href="#causality"><code>causality</code></a> also indicates the information flow of the timing.</p>
 </div></div></td>
 </tr>
 <tr>
