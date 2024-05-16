@@ -14,4 +14,4 @@ We focused on layered standards to FMI 3.0:
 
 Additionally we discussed possible efficiency optimizations for data transfer and access that can be addressed in FMI 3.1.     
 
-![Participants of the FMI Design Meeting in Sindelfingen](/assets/images/news-fmi-design-sindelfingen.jpg)  
+![Participants of the FMI Design Meeting in Sindelfingen](/assets/images/fmi-design-23-sindelfingen.jpg)  
