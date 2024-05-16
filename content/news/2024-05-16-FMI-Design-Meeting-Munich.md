@@ -3,7 +3,7 @@ title: FMI Design Meeting in Munich, Germany
 date: 2024-05-16
 ---
 
-FMI developers from Altair, AVL, Bosch, Dassault Systems, dSPACE, EKS-INTEC, Modelon, PMSF, Synopsys, and Wolfram MathCore participated a the 3-day FMI-Design Meeting in Munich.
+FMI developers from Altair, AVL, Bosch, Dassault Systems, dSPACE, EKS-INTEC, LTX, Modelon, PMSF, Synopsys, and Wolfram MathCore participated at the 3-day FMI-Design Meeting in Munich.
 
 Thanks to Dassault Systèmes for the great hospitality!
 
