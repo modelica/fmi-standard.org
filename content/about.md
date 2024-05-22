@@ -99,7 +99,6 @@ The purpose of this guideline is to make sure that any use of the FMI trademark 
 Further, the guidelines will try to make sure that no confusion or misinformation can arise from the use of the FMI trademark.
 At the same time, the Modelica Association wants to encourage as many commercial companies and open source software developers to support the FMI standard in a high quality of implementation and put as little administrative burden as possible.
 The MA encourages to mention the FMI standard with a proper reference. The main reference in any tool documentation should contain a pointer to the official FMI website https://fmi-standard.org.
-The Modelica Association expects all tool vendors that implement the FMI standard to participate in the cross-check protocol, especially those using `FMI` in their product name.
 
 ### Trademark Usage Guidelines
 
@@ -114,7 +113,7 @@ The use of the letters `FMI` in a product name, reference or other relevant cont
 - The use mocks or degrades the FMI standard
 
 The FMI Steering committee reserves the right to determine whether a use of `FMI` violates these guidelines and will ask any offender to cease and desist from using the FMI trademark in a non-approved way.
-The FMI steering committee also reserves the right to retract the permission of the use of the term FMI in a product name when the product owner does not submit to the duties of a responsible member of the FMI community by participating in the cross-checking protocol, or when the tool developer does over a longer period not fix known errors in their FMI support.
+The FMI steering committee also reserves the right to retract the permission of the use of the term FMI in a product name when the product owner when the tool developer does over a longer period not fix known errors in their FMI support.
 If you are in doubt about your intended usage of the FMI trademark, please contact contact@fmi-standard.org.
 
 # Standardization Projects and Groups Related to FMI
