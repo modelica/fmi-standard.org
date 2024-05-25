@@ -93,28 +93,28 @@ The FMI development was partially funded within the ITEA2 project MODELISAR by
 
 ### Preliminaries
 
-The FMI project and the Modelica Association (MA) are asking all members of the public and the FMI community to follow and respect the following usage guidelines for the use of the FMI trademark.
-The purpose of the trademark registration is to protect the use of the word-mark `FMI` in the protected application domains from any usage that is contrary to the mission and values of the trademark owner, the Modelica Association.  
-The purpose of this guideline is to make sure that any use of the FMI trademark agrees with these guidelines and strengthens the brand and value of the FMI standard.
-Further, the guidelines will try to make sure that no confusion or misinformation can arise from the use of the FMI trademark.
+The FMI project and the Modelica Association (MA) are asking all members of the public and the FMI community to follow and respect the following usage guidelines for the use of the FMI und FMU trademarks.
+The purpose of the trademark registration is to protect the use of the word-marks `FMI` and `FMU` in the protected application domains from any usage that is contrary to the mission and values of the trademark owner, the Modelica Association.  
+The purpose of this guideline is to make sure that any use of the FMI and FMU trademarks agrees with these guidelines and strengthens the brand and value of the FMI standard.
+Further, the guidelines will try to make sure that no confusion or misinformation can arise from the use of the FMI and FMU trademarks.
 At the same time, the Modelica Association wants to encourage as many commercial companies and open source software developers to support the FMI standard in a high quality of implementation and put as little administrative burden as possible.
 The MA encourages to mention the FMI standard with a proper reference. The main reference in any tool documentation should contain a pointer to the official FMI website https://fmi-standard.org.
 
 ### Trademark Usage Guidelines
 
-The use of the letters `FMI` in a product name or other relevant reference is allowed when
+The use of the letters `FMI` or `FMU` in a product name or other relevant reference is allowed when
 
 - The use is clearly a reference to adhering to the standard.
 
-The use of the letters `FMI` in a product name, reference or other relevant context is not allowed when:
+The use of the letters `FMI` or `FMU`in a product name, reference or other relevant context is not allowed when:
 - The use can cause confusion whether the FMI standard is followed (e.g. using `FMI` with a version number that is not released by the FMI project),
 - The use can be interpreted as a variant, subset or improvement of the original FMI standard (e.g. using a tool name, say `FMIplus`, that can be interpreted as supporting with extensions/improvements with respect to one of the FMI versions),
 - The use spreads wrong or misleading information about the FMI standard
 - The use mocks or degrades the FMI standard
 
-The FMI Steering committee reserves the right to determine whether a use of `FMI` violates these guidelines and will ask any offender to cease and desist from using the FMI trademark in a non-approved way.
+The FMI Steering committee reserves the right to determine whether a use of `FMI` or `FMU` violates these guidelines and will ask any offender to cease and desist from using the FMI trademark in a non-approved way.
 The FMI steering committee also reserves the right to retract the permission of the use of the term FMI in a product name when the product owner when the tool developer does over a longer period not fix known errors in their FMI support.
-If you are in doubt about your intended usage of the FMI trademark, please contact contact@fmi-standard.org.
+If you are in doubt about your intended usage of the `FMI` or `FMU`trademark, please contact contact@fmi-standard.org.
 
 # Standardization Projects and Groups Related to FMI
 
