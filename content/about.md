@@ -73,6 +73,7 @@ The core MODELISAR development partners agreed to continue FMI specification wor
 
 The FMI development was partially funded within the ITEA2 project MODELISAR by
 
+{{<rawhtml>}}
 <table class="table table-borderless">
   <tr>
     <td><img src="/assets/images/bmbf.png" alt="BMBF"/></td>
@@ -88,6 +89,7 @@ The FMI development was partially funded within the ITEA2 project MODELISAR by
     <td><a href="https://www.vinnova.se/en/">VINNOVA</a> for Dynasim AB, Volvo (funding number: 2008-02291)</td>
   </tr>
 </table>
+{{</rawhtml>}}
 
 ## Trademark Guidelines for the Use of the FMI Trademark
 
