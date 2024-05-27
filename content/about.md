@@ -18,7 +18,7 @@ It follows the [Project Rules](#project-rules) approved by the FMI Steering Comm
 Christian Bertsch (BOSCH) and Torsten Sommer (Dassault Systèmes) [projectleader@fmi-standard.org](mailto:projectleader@fmi-standard.org)
 
 **Members of the Steering Committee:**  
-AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, PMSF, Siemens PLM, Synopsys
+AVL List, BOSCH, Dassault Systemes, dSPACE, ESI Group, Maplesoft, Modelon, PMSF, Siemens PLM, Synopsys
 
 **Further Contributing Members:**  
 Aarhus University, ABB, Altair, Akkodis, Ansys, Augsburg University, Danfoss, DLR, EKS INTEC, ETAS, Fraunhofer IEM, ITK Engineering,  iVH, JuliaComputing, LTX, Wolfram MathCore AB, TLK Thermo, tracetronic, TU Dresden _and all Steering Committee Members_
