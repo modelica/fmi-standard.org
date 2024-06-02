@@ -4,6 +4,10 @@ title: Literature
 
 ## FMI Related Publications
 
+### Colloquium for Martin Otter June 28 2024 - 25 years chairing the Modelica Association
+
+* [FMI - Status and outlook](/assets/literature/2024-05-28_FMI_Status_Outlook_Colloquium_Martin_Otter.pdf)
+
 ### [15th International Modelica Conference 2023](https://2023.international.conference.modelica.org/)
 
 Tutorials: 
