@@ -21,7 +21,7 @@ Christian Bertsch (BOSCH) and Torsten Sommer (Dassault Systèmes) [projectleader
 AVL List, BOSCH, Dassault Systemes, dSPACE, ESI Group, Maplesoft, Modelon, PMSF, Siemens PLM, Synopsys
 
 **Further Contributing Members:**  
-Aarhus University, ABB, Altair, Akkodis, AMEPERE, Ansys, Augsburg University, Beckhoff, Boeing, Danfoss, DLR, EKS INTEC, ETAS, Fraunhofer IEM, ITK Engineering, iVH, JuliaComputing, LTX, Renault, Saab Group, Wolfram MathCore AB, TLK Thermo, tracetronic, TU Dresden _and all Steering Committee Members_
+Aarhus University, ABB, Altair, Akkodis, AMEPERE, Ansys, Augsburg University, Beckhoff, Boeing, Danfoss, DLR, EKS INTEC, ETAS, Fraunhofer IEM, ITK Engineering, iVH, JuliaComputing, LTX, Renault, Saab Group, Virtual Vehicle Research, Wolfram MathCore AB, TLK Thermo, tracetronic, TU Dresden _and all Steering Committee Members_
 
 **Members of the Advisory Committee:** 
 AIRBUS, COMSOL, Fraunhofer (IIS/EAS First, SCAI), Open Modelica Consortium, TWT, University of Halle _and all Contributing and Steering Committee Members_
