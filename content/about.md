@@ -21,7 +21,7 @@ Christian Bertsch (BOSCH) and Torsten Sommer (Dassault Systèmes) [projectleader
 AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, PMSF, Siemens PLM, Synopsys
 
 **Further Contributing Members:**  
-Aarhus University, ABB, Altair, Akkodis, AMEPERE, Ansys, Augsburg University, Beckhoff, Boeing, Danfoss, DLR, EKS INTEC, ETAS, Fraunhofer IEM, ITK Engineering, iVH, JuliaComputing, LTX, Renault, Saab Group, Wolfram MathCore AB, TLK Thermo, tracetronic, TU Dresden _and all Steering Committee Members_
+Aarhus University, ABB, Altair, Akkodis, Ansys, Augsburg University, Danfoss, DLR, EKS INTEC, ETAS, Fraunhofer IEM, ITK Engineering, JuliaComputing, LTX, Wolfram MathCore AB, TLK Thermo, TU Dresden
 
 **Members of the Advisory Committee:** 
 AIRBUS, Beckhoff, COMSOL, Danfoss, Fraunhofer (IIS/EAS First, SCAI), iVH, Open Modelica Consortium, Renualt, TWT, University of Halle
@@ -106,7 +106,7 @@ The use of the letters `FMI` or `FMU` in a product name or other relevant refere
 
 - The use is clearly a reference to adhering to the standard.
 
-The use of the letters `FMI` or `FMU`in a product name, reference or other relevant context is not allowed when:
+The use of the letters `FMI` or `FMU` in a product name, reference or other relevant context is not allowed when:
 - The use can cause confusion whether the FMI standard is followed (e.g. using `FMI` with a version number that is not released by the FMI project),
 - The use can be interpreted as a variant, subset or improvement of the original FMI standard (e.g. using a tool name, say `FMIplus`, that can be interpreted as supporting with extensions/improvements with respect to one of the FMI versions),
 - The use spreads wrong or misleading information about the FMI standard
@@ -114,7 +114,7 @@ The use of the letters `FMI` or `FMU`in a product name, reference or other relev
 
 The FMI Steering committee reserves the right to determine whether a use of `FMI` or `FMU` violates these guidelines and will ask any offender to cease and desist from using the FMI trademark in a non-approved way.
 The FMI steering committee also reserves the right to retract the permission of the use of the term FMI in a product name when the product owner when the tool developer does over a longer period not fix known errors in their FMI support.
-If you are in doubt about your intended usage of the `FMI` or `FMU`trademark, please contact contact@fmi-standard.org.
+If you are in doubt about your intended usage of the `FMI` or `FMU` trademark, please contact contact@fmi-standard.org.
 
 # Standardization Projects and Groups Related to FMI
 
