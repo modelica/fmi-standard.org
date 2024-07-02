@@ -24,7 +24,8 @@ AVL List, BOSCH, Dassault Systemes, dSPACE, ESI Group, Maplesoft, Modelon, PMSF,
 Aarhus University, ABB, Altair, Akkodis, AMEPERE, Ansys, Augsburg University, Beckhoff, Boeing, Danfoss, DLR, EKS INTEC, ETAS, Fraunhofer IEM, ITK Engineering, iVH, JuliaComputing, LTX, Renault, Saab Group, Virtual Vehicle Research, Wolfram MathCore AB, TLK Thermo, tracetronic, TU Dresden _and all Steering Committee Members_
 
 **Members of the Advisory Committee:** 
-AIRBUS, COMSOL, Fraunhofer (IIS/EAS First, SCAI), KEB Automation, Knorr-Bremse Rail Vehicle Systems, Open Modelica Consortium, Samares Engineering, TWT, University of Halle, Volkswagen _and all Contributing and Steering Committee Members_
+AIRBUS, blue automation, COMSOL, Fraunhofer (IIS/EAS First, SCAI), KEB Automation, NVIDIA, Knorr-Bremse Rail Vehicle Systems, Open Modelica Consortium, Samares Engineering, TWT, University of Halle, Volkswagen _and all Contributing and Steering Committee Members_
+
 ## How to contribute to the development of the FMI standard
 
 There are FMI tracks at other FMI related events like conferences and design meetings.
