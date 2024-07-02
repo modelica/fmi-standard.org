@@ -7,9 +7,9 @@ title: Tools
   <div class="row justify-content-center">
     <div class="col-auto">
       <div class="row">
-        <label for="fmi-version-button-group" class="form-label text-center">FMI Version</label>
+        <label class="form-label text-center">FMI Version</label>
       </div>
-      <div class="btn-group" role="group" id="fmi-version-button-group">
+      <div class="btn-group" role="group">
         <button type="button" @click="showFMI1 = !showFMI1" class="btn btn-secondary" v-bind:class="{ 'active': showFMI1}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI 1.0">1.0</button>
         <button type="button" @click="showFMI2 = !showFMI2" class="btn btn-secondary" v-bind:class="{ 'active': showFMI2}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI 2.0">2.0</button>
         <button type="button" @click="showFMI3 = !showFMI3" class="btn btn-secondary" v-bind:class="{ 'active': showFMI3}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI 3.0">3.0</button>
@@ -17,7 +17,7 @@ title: Tools
     </div>
     <div class="col-auto">
       <div class="row">
-        <label for="fmi-version-button-group" class="form-label text-center">Import</label>
+        <label class="form-label text-center">Import</label>
       </div>
       <div class="btn-group ml-3" role="group">
         <button type="button" @click="showCSImport = !showCSImport" class="btn btn-secondary" v-bind:class="{ 'active': showCSImport}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Co-Simulation import">CS</button>
@@ -27,7 +27,7 @@ title: Tools
     </div>
     <div class="col-auto">
       <div class="row">
-        <label for="fmi-version-button-group" class="form-label text-center">Export</label>
+        <label class="form-label text-center">Export</label>
       </div>
       <div class="btn-group ml-3" role="group">
         <button id="btn-commercial" type="button" @click="showCSExport = !showCSExport" class="btn btn-secondary" v-bind:class="{ 'active': showCSExport}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Co-Simulation export">CS</button>
@@ -37,17 +37,18 @@ title: Tools
     </div>
     <div class="col-auto">
       <div class="row">
-        <label for="fmi-version-button-group" class="form-label text-center">Platform</label>
+        <label class="form-label text-center">Platform</label>
       </div>
       <div class="btn-group" role="group">
         <button id="btn-windows" type="button" @click="showWindows = !showWindows" class="btn btn-secondary" v-bind:class="{ 'active': showWindows}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Windows"><i class="fab fa-windows"></i></button>
         <button id="btn-linux" type="button" @click="showLinux = !showLinux" class="btn btn-secondary" v-bind:class="{ 'active': showLinux}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Linux"><i class="fab fa-linux"></i></button>
         <button id="btn-macos" type="button" @click="showMac = !showMac" class="btn btn-secondary" v-bind:class="{ 'active': showMac}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="macOS"><i class="fab fa-apple"></i></button>
+        <button id="btn-source-code" type="button" @click="showSourceCode = !showSourceCode" class="btn btn-secondary" v-bind:class="{ 'active': showSourceCode}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Source Code"><i class="fa-solid fa-c"></i></button>
       </div>
     </div>
     <div class="col-auto">
       <div class="row">
-        <label for="fmi-version-button-group" class="form-label text-center">License</label>
+        <label class="form-label text-center">License</label>
       </div>
       <div class="btn-group ml-3" role="group">
         <button id="btn-commercial" type="button" @click="toggleShowCommercial()" class="btn btn-secondary" v-bind:class="{ 'active': showCommercial}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Commercial"><i class="fas fa-dollar-sign"></i></button>
@@ -56,7 +57,7 @@ title: Tools
     </div>
     <div class="col-auto">
       <div class="row">
-        <label for="fmi-version-button-group" class="form-label text-center">Interface</label>
+        <label class="form-label text-center">Interface</label>
       </div>
       <div class="btn-group ml-3" role="group">
         <button id="btn-commercial" type="button" @click="showGUI = !showGUI" class="btn btn-secondary" v-bind:class="{ 'active': showGUI}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Graphical User Interface"><i class="fa-solid fa-window-maximize"></i></button>
@@ -66,24 +67,25 @@ title: Tools
     </div>
     <div class="col-auto">
       <div class="row">
-        <label for="fmi-version-button-group" class="form-label text-center">Search</label>
+        <label class="form-label text-center">Search</label>
       </div>
       <input v-model="search" type="text" class="form-control" placeholder="Type to search">
     </div>
   </div>
-  
-  <div class="container row justify-content-end mt-3">
-    <div class="col-auto">
-      <small><a href="https://github.com/modelica/fmi-standard.org/blob/master/CONTRIBUTING.md#updating-the-tools-list">How do I add or update my tool?</a></small>
+
+  <div class="row justify-content-center my-3">
+    <div class="col-lg-8 text-muted text-center my-1">{{ filteredTools.length }} tools matching filter criteria</div>
+    <div class="col-lg-3 text-center my-1">
+      <small><a href="https://github.com/modelica/fmi-standard.org/blob/master/CONTRIBUTING.md#updating-the-tools-list"><i class="fa-solid fa-plus"></i> How do I add or update my tool?</a></small>
     </div>
   </div>
 
-  <div class="container mt-5">
+  <div class="container mt-4">
     <div v-for="tool in filteredTools" class="row justify-content-center mt-4">
-      <div class="col-2 text-end">
+      <div class="col-sm-4 col-lg-3 text-end">
         <img v-if="tool.hasOwnProperty('logo')" :src="imageURL(tool.logo)" style="margin-top: 7px; max-height: 46px; max-width: 140px;"/>
       </div>
-      <div class="col-6">
+      <div class="col-sm-8 col-lg-6">
         <div><a :href="tool.url" style="font-size: 20px; font-weight: 500;">{{ tool.name }}</a></div>
         <div>
           <small>by <a :href="tool.vendorURL">{{ tool.vendor }}</a><span v-if="tool.hasOwnProperty('version')"> | Ver {{ tool.version }}</span></small>            
@@ -102,6 +104,7 @@ title: Tools
             <span v-if="hasFeature(tool.platforms, 'Linux')" class="badge bg-secondary me-1"><i class="fab fa-linux"></i></span>
             <span v-if="hasFeature(tool.platforms, 'Windows')" class="badge bg-secondary me-1"><i class="fab fa-windows"></i></span>
             <span v-if="hasFeature(tool.platforms, 'macOS')" class="badge bg-secondary me-1"><i class="fab fa-apple"></i></span>
+            <span v-if="hasFeature(tool.platforms, 'Source Code')" class="badge bg-secondary me-1"><i class="fa-solid fa-c"></i></span>
             <span v-if="tool.license == 'commercial'" class="badge bg-secondary me-1"><i class="fas fa-dollar-sign"></i></span>
             <span v-if="tool.license == 'osi'" class="badge bg-secondary me-1"><i class="fab fa-osi"></i></span>
             <span v-if="hasFeature(tool.interfaces, 'GUI')" class="badge bg-secondary me-1"><i class="fa-solid fa-window-maximize"></i></span>
@@ -118,10 +121,20 @@ title: Tools
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
 
   const { createApp } = Vue
+
+  function containsLowerCase(a, b) {
+    if (a == undefined) return false;
+    return a.toLowerCase().indexOf(b.toLowerCase()) > -1;
+  }
+
+  function listContains(l, a) {
+    if (l == undefined) return false;
+    return l.includes(a);
+  }
 
   createApp({
     data() {
@@ -138,6 +151,7 @@ title: Tools
         showWindows: false,
         showLinux: false,
         showMac: false,
+        showSourceCode: false,
         showCommercial: false,
         showOpenSource: false,
         showGUI: false,
@@ -189,35 +203,31 @@ title: Tools
 
         return this.tools.filter(tool => {
 
-          if (self.showFMI1 && !tool.fmiVersions.includes('1.0')) return false;
-          if (self.showFMI2 && !tool.fmiVersions.includes('2.0')) return false;
-          if (self.showFMI3 && !tool.fmiVersions.includes('3.0')) return false;
+          if (self.showFMI1 && !listContains(tool.fmiVersions, '1.0')) return false;
+          if (self.showFMI2 && !listContains(tool.fmiVersions, '2.0')) return false;
+          if (self.showFMI3 && !listContains(tool.fmiVersions, '3.0')) return false;
 
-          if (self.showCSImport && !tool.fmuImport.includes('CS')) return false;
-          if (self.showMEImport && !tool.fmuImport.includes('ME')) return false;
-          if (self.showSEImport && !tool.fmuImport.includes('SE')) return false;
+          if (self.showCSImport && !listContains(tool.fmuImport, 'CS')) return false;
+          if (self.showMEImport && !listContains(tool.fmuImport, 'ME')) return false;
+          if (self.showSEImport && !listContains(tool.fmuImport, 'SE')) return false;
 
-          if (self.showCSExport && !tool.fmuExport.includes('CS')) return false;
-          if (self.showMEExport && !tool.fmuExport.includes('ME')) return false;
-          if (self.showSEExport && !tool.fmuExport.includes('SE')) return false;
+          if (self.showCSExport && !listContains(tool.fmuExport, 'CS')) return false;
+          if (self.showMEExport && !listContains(tool.fmuExport, 'ME')) return false;
+          if (self.showSEExport && !listContains(tool.fmuExport, 'SE')) return false;
 
-          if (self.showWindows && !tool.platforms.includes('Windows')) return false;
-          if (self.showLinux   && !tool.platforms.includes('Linux'))   return false;
-          if (self.showMac     && !tool.platforms.includes('macOS'))   return false;
+          if (self.showWindows    && !listContains(tool.platforms,'Windows'))     return false;
+          if (self.showLinux      && !listContains(tool.platforms,'Linux'))       return false;
+          if (self.showMac        && !listContains(tool.platforms,'macOS'))       return false;
+          if (self.showSourceCode && !listContains(tool.platforms,'Source Code')) return false;
 
-          if (self.showCommercial && tool.license != 'commercial')      return false;
-          if (self.showOpenSource && tool.license != 'osi')             return false;
+          if (self.showCommercial && tool.license != 'commercial') return false;
+          if (self.showOpenSource && tool.license != 'osi')        return false;
 
-          if (self.showGUI     && !tool.interfaces.includes('GUI'))     return false;
-          if (self.showCLI     && !tool.interfaces.includes('CLI'))     return false;
-          if (self.showLibrary && !tool.interfaces.includes('library')) return false;
+          if (self.showGUI     && !listContains(tool.interfaces, 'GUI'))     return false;
+          if (self.showCLI     && !listContains(tool.interfaces, 'CLI'))     return false;
+          if (self.showLibrary && !listContains(tool.interfaces, 'library')) return false;
 
-          if (self.showOpenSource && tool.license != 'osi')             return false;
-          if (self.showOpenSource && tool.license != 'osi')             return false;
-
-          return tool.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1
-            || tool.vendor.toLowerCase().indexOf(this.search.toLowerCase()) > -1
-            || tool.description.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+          return containsLowerCase(tool.name, this.search) || containsLowerCase(tool.vendor, this.search) || containsLowerCase(tool.description, this.search);
         })
       }
     }
