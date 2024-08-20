@@ -4,6 +4,40 @@ title: Literature
 
 ## FMI Related Publications
 
+### Colloquium for Martin Otter June 28 2024 - 25 years chairing the Modelica Association
+
+* [FMI - Status and outlook](/assets/literature/2024-05-28_FMI_Status_Outlook_Colloquium_Martin_Otter.pdf)
+
+### [15th International Modelica Conference 2023](https://2023.international.conference.modelica.org/)
+
+Tutorials: 
+
+* FMI Beginners Tutorial ([Material](https://github.com/modelica/fmi-beginners-tutorial-2023))
+* Simulation-based optimization with CasADi and FMI ([Material](https://drive.google.com/file/d/1e49HQOuSzoGlrMPX_xqzH4JatfNsjQhR/view?usp=drive_link))
+* eFMI Tutorial ([Material and Video](https://www.efmi-standard.org/news/2023-09-11/))
+
+FMI User meeting ([Agenda](https://www.conftool.com/modelica2023/index.php?page=browseSessions&form_session=22)):
+
+* [Status and outlook FMI Standard](/assets/literature/FMI_User_Meeting_2023/01_FMI-user-meeting.pdf)
+* [Status and outlook SSP Standard](/assets/literature/FMI_User_Meeting_2023/02_PMSF_State_of_SSP_2023.pdf)
+* [Building Blocks for Simulation based Cooperation between Partners](/assets/literature/FMI_User_Meeting_2023/03_SmartSE_Modelica-2023-10_V5.pdf)
+* [Linking Design Requirements to FMUs to create LOTAR compliant mBSE models](/assets/literature/FMI_User_Meeting_2023/04_Coïc-Linking_Design_Requirements_to_FMUs_to_create_LOTAR_compliant_mBSE_models-168_a.pdf)
+* [Status and Outlook eFMI Standard](/assets/literature/FMI_User_Meeting_2023/05_eFMI_status_and_outook.pdf)
+
+
+FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp204)):
+
+* [Modelica Association Standards and Surrogate Modeling to Enable Multi-Fidelity Simulations](https://doi.org/10.3384/ecp20473)
+* [Paving the way for Hybrid Twins using Neural Functional Mock-Up Units](https://doi.org/10.3384/ecp204141)
+* [ThermalSystemsControlLibrary: A Modelica Library for Developing Control Strategies of Industrial Energy Systems](https://doi.org/10.3384/ecp204209)
+* [Import and Export of Functional Mockup Units in CasADi](https://doi.org/10.3384/ecp204321)
+* [Beyond FMI - Towards New Applications with Layered Standards](https://doi.org/10.3384/ecp204381)
+* [The Common Requirement Modeling Language](https://doi.org/10.3384/ecp204497)
+* [Bodylight.js 2.0 - Web components for FMU simulation, visualisation and animation in standard web browser](https://doi.org/10.3384/ecp204443)
+* [A preCICE-FMI Runner to Couple FMUs to PDE-Based Simulations](https://doi.org/10.3384/ecp204479) 
+* [Secure Exchange of Black-Box Simulation Models using FMI in the Industrial Context](https://doi.org/10.3384/ecp204487) 
+* [5th Generation District Heating and Cooling Modelica Models for Prosumer Interaction Analysis](https://doi.org/10.3384/ecp204607)
+
 ### [14th International Modelica Conference 2021](https://2021.international.conference.modelica.org/)
 
 FMI User meeting ([Agenda](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/00_Modelica21_FMI_User_Meeting_Overview.pdf)):
@@ -99,11 +133,11 @@ FMI related conference papers ([link to proceedings](https://www.modelica.org/ev
 * The OpenModelica Integrated Modeling, Simulation and Optimization Environment
 
 
-### [Japanese Modelica Conference 2018](https://modelica.org/events/modelica2018japan.html)
+### [Japanese Modelica Conference 2018](https://modelica.org/events/modelica2018japan/)
 
 Keynote: [10 Years of FMI: Where are we now, where do we go?](https://www.modelica.org/events/modelica2018japan/presentation/10_Years_of_FMI.pdf)
 
-FMI related conference papers ([link to proceedings](https://www.modelica.org/events/modelica2018japan/conference-proceedings/modelica-final-proceedings-2018-Japan.pdf)):
+FMI related conference papers ([link to proceedings](https://doi.org/10.3384/ecp18148)):
 
 * Combustion Engine Mechanism Analyses Using Simulation
 * Hyundai framework for vehicle dynamics engineering based on Modelica and FMI

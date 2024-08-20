@@ -1,8 +1,7 @@
 ---
 title: FAQ
+type: faq
 ---
-
-# General questions about FMI
 
 ## What are the new features of FMI 3.0?
 
@@ -45,8 +44,7 @@ Access and use of the FMI standard is free of charge. However, vendors may charg
 
 ## How can I join the FMI mailing lists?
 
-- The “FMI-Info-Mailing list” was discontinued (due to GDPR concerns).
-  Please [subscribe to the MA Newsletter](https://creativeconnections.us12.list-manage.com/subscribe?u=0be901f875b69817eddd7e71b&id=0cb2cf5b72&group[20249][2]=true).
+- [Subscribe to the MA Newsletter](https://creativeconnections.us12.list-manage.com/subscribe?u=0be901f875b69817eddd7e71b&id=0cb2cf5b72&group[20249][2]=true).
 - The “FMI design” Mailing list is used by active developers of FMI (typically members of the FMI Advisory or Steering Committee).
 - The “FMI Steering” Mailing list is used by members of the FMI Steering Committee. To join you need to be a member of the FMI Steering Committee.
 
@@ -62,26 +60,13 @@ Access and use of the FMI standard is free of charge. However, vendors may charg
 
 Please see the FMI [tools page](/tools/) for a list of tools for that tool vendors have announced their support of FMI.
 
-**While the FMI project defines cross check rules, the tool vendors carry sole responsibility for their stated FMI support and the provided compatibility results.**
+**Tool vendors carry sole responsibility for their stated FMI support and the provided compatibility results.**
 
 
 ## Where can I get help when I have problems related to FMI in my simulation tool?
 
 - Typically an exporting and an importing tool are involved in FMI-based simulation. So if problems occur and if it is not obvious which tool causes the problem, you should communicate the problem to the support team of both involved tools
-- As a general discussion forum about FMI, you may use the FMI forum on Stack Overflow
-
-
-# I'm a developer and want to support FMI with my tool
-
-## What and in which order should I read/do to get started with FMI technology?
-
-That depends mostly on your background knowledge. We assume here you already have fundamental knowledge of simulation technology (ODE vs. DAE, zero-crossing, state/time events, derivatives etc.):
-
-- First make a quick pass trough the [standard document](https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Specification-2.0.1.pdf).
-- Then browse and play with the available [3rd party development toolkits](/downloads/).
-- Read the implementation hints contained in [FMI_for_ModelExchange_v1.0.zip](https://svn.modelica.org/fmi/branches/public/specifications/v1.0/FMI_for_ModelExchange_v1.0.1.pdf) - not yet available for FMI 2.0.
-- Re-read the [standard document](https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Specification-2.0.1.pdf) in detail.
-
+- As a general discussion forum about FMI, you may use the [FMI forum on Stack Overflow](https://stackoverflow.com/questions/tagged/fmi)
 
 ## Does FMI 2.0 support Partial Differential Equations (PDEs)?
 
@@ -93,12 +78,3 @@ The second kind, Co-Simulation FMUs, can contain any kind of simulation componen
 
 But explicitly exposing a PDE to a solver using FMUs is currently not supported.
 
-
-## I added my test FMUs/Cross-Check results but the tools page does not show "green". Why?
-
-The Cross-Check Rules list a number of conditions before turning an entry “green”. In short:
-
-- Exporting tools must provide at least 3 FMUs and at least one importer must report successful import.
-- Importing tools must report (and prove) successful import of at least 3 FMUs of at least 3 exporting tools.
-
-Please refer to the [FMI Cross-Check Rules](https://github.com/modelica/fmi-cross-check/blob/master/FMI-CROSS-CHECK-RULES.md).

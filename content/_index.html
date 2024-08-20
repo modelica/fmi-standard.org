@@ -1,217 +1,245 @@
 ---
 aliases: [/downloads/]
+contactFooter: true
 ---
 
-<main>
+<style>
+  h2 {
+    font-size: 23px; 
+  }
+</style>
 
-  <div class="modal fade" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-body" id="player"></div>
+<div class="modal fade" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body" id="player"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var playerModal = document.getElementById('playerModal');
+  
+  playerModal.addEventListener('show.bs.modal', function (event) {
+    $('#player').html('<iframe style="width: 100%; aspect-ratio: 560 / 315" src="https://www.youtube.com/embed/A-3iIot0fO8?start=14&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');      
+  });
+  
+  playerModal.addEventListener('hidden.bs.modal', function (event) {
+    $('#player').html('');
+  });
+</script>
+
+<div class="ma-masthead mb-3">
+
+  <div class="container-xxl">
+  
+    <div class="col-lg-8 mx-auto text-center">
+
+      {{< latest-news >}}
+
+      <img src="/assets/images/FMI.svg" width="450" alt="Functional Mock-up Interface" class="d-block mx-auto mb-5" style="max-width: 80%;">
+  
+      <h1 class="mb-4">The leading standard to exchange dynamic simulation models</h1>
+  
+      <p class="lead mb-5">
+        The Functional Mock-up Interface is a free standard that defines a container and an interface to exchange dynamic simulation models using a combination of XML files, binaries and C code, distributed as a ZIP file.
+        It is supported by <a href="/tools/">200+ tools</a> and maintained as a Modelica Association Project. 
+      </p>
+  
+      <div class="d-grid gap-3 d-lg-flex justify-content-center">
+        
+        <button type="button" class="btn btn-lg btn-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#playerModal">
+          <i class="fa-solid fa-circle-play me-2"></i>Why FMI
+        </button>
+        
+        <div class="btn-group btn-group-lg">
+          <a class="btn btn-outline-primary text-nowrap" href="https://github.com/modelica/fmi-standard/releases/download/v3.0.1/FMI-Standard-3.0.1.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 3.0.1</a>
+          <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v3.0.1/FMI-Standard-3.0.1.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 3.0.1</a></li>
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v3.0/FMI-Standard-3.0.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 3.0</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.4/FMI-Standard-2.0.4.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 2.0.4</a></li>
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.3/FMI-Standard-2.0.3.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 2.0.3</a></li>
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.2/FMI-Standard-2.0.2.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 2.0.2</a></li>
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Standard-2.0.1.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 2.0.1</a></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_and_CoSimulation_v2.0.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 2.0</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_v1.0.1.zip"><i class="fa-solid fa-file-zipper me-2"></i>Model Exchange 1.0.1</a></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_v1.0.zip"><i class="fa-solid fa-file-zipper me-2"></i>Model Exchange 1.0</a></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_CoSimulation_v1.0.1.zip"><i class="fa-solid fa-file-zipper me-2"></i>Co-Simulation 1.0.1</a></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_CoSimulation_v1.0.zip"><i class="fa-solid fa-file-zipper me-2"></i>Co-Simulation 1.0</a></li>
+          </ul>
+        </div>
+        
+        <div class="btn-group btn-group-lg">
+          <a class="btn btn-outline-primary text-nowrap" href="/docs/3.0.1/"><i class="fa-solid fa-file-lines me-2"></i>Specification 3.0.1</a>
+          <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/3.0.1/"><i class="fa-solid fa-file-lines me-2"></i>Specification 3.0.1</a></li>
+            <li><a class="dropdown-item" href="/docs/3.0/"><i class="fa-solid fa-file-lines me-2"></i>Specification 3.0</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.4/FMI-Specification-2.0.4.pdf"><i class="fa-solid fa-file-lines me-2"></i>Specification 2.0.4</a></li>
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.3/FMI-Specification-2.0.3.pdf"><i class="fa-solid fa-file-lines me-2"></i>Specification 2.0.3</a></li>
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.2/FMI-Specification-2.0.2.pdf"><i class="fa-solid fa-file-lines me-2"></i>Specification 2.0.2</a></li>
+            <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Specification-2.0.1.pdf"><i class="fa-solid fa-file-lines me-2"></i>Specification 2.0.1</a></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_and_CoSimulation_v2.0.pdf"><i class="fa-solid fa-file-zipper me-2"></i>Specification 2.0</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_v1.0.1.pdf"><i class="fa-solid fa-file-lines me-2"></i>Model Exchange 1.0.1</a></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_v1.0.pdf"><i class="fa-solid fa-file-lines me-2"></i>Model Exchange 1.0</a></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_CoSimulation_v1.0.1.pdf"><i class="fa-solid fa-file-lines me-2"></i>Co-Simulation 1.0.1</a></li>
+            <li><a class="dropdown-item" href="/assets/releases/FMI_for_CoSimulation_v1.0.pdf"><i class="fa-solid fa-file-lines me-2"></i>Co-Simulation 1.0</a></li>
+          </ul>
+        </div>
+
+        <a class="btn btn-outline-primary btn-lg text-nowrap" href="https://modelica.github.io/fmi-guides/main/fmi-guide/"><i class="fa-solid fa-file-lines me-2"></i>Implementers' Guide</a>
+
       </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="container text-md-center mb-5">
+
+  <div class="col-lg-8 mx-auto mb-5 text-md-center">
+    <h2 class="display-5 mb-3 fw-semibold lh-sm">Getting started</h2>
+    <p class="lead fw-normal">
+      Jupyter notebooks are a great way to work with FMUs. Join us for an interactive tour of the FMI.
+    </p>
+    open on <a class="icon-link fs-5" href="https://colab.research.google.com/github/t-sommer/fmi-getting-started/blob/main/BouncingBall.ipynb"><u>Google Colab</u></a> or <a class="icon-link fs-5" href="https://mybinder.org/v2/gh/t-sommer/fmi-getting-started/HEAD?labpath=BouncingBall.ipynb"><u>Binder<i class="fa-solid fa-arrow-right ms-1"></i></u></a>
+  </div>
+
+  <div class="col-lg-8 mx-auto">
+    <img src="/assets/images/Jupyter_BouncingBall.png" class="p-3 rounded shadow img-fluid">
+  </div>
+
+</div>
+
+<div class="container text-md-center" style="margin-top: 100px; margin-bottom: 100px;">
+
+  <div class="col-lg-8 mx-auto mb-5 text-md-center">
+    <h2 class="display-5 mb-3 fw-semibold lh-sm">Implement the FMI</h2>
+    <p class="lead fw-normal">
+      The Reference FMUs are a free reference implementation of both FMI import and export and a starting point for development, testing and debugging.
+    </p>
+    <a class="icon-link fs-5" href="https://github.com/modelica/reference-fmus"><u>view project on GitHub <i class="fa-solid fa-arrow-right ms-1"></i></u></a>
+  </div>
+
+  <div class="col-lg-8 mx-auto">
+    <img src="/assets/images/vscode.png" class="rounded shadow img-fluid">
+  </div>
+
+</div>
+
+<div class="container my-5">
+
+  <p class="text-muted mt-4">What users say about FMI:</p>
+
+  <div class="row featurette justify-content-md-center p-4">
+    <div class="col-md-6 mt-4">
+        <blockquote class="blockquote lead">
+          <p>"FMI is the preferred model exchange and co-simulation format of Robert Bosch GmbH at system level enabling the exchange of models with internal and external partners using different modelling tools."</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          Robert Bosch GmbH on <a href="https://itea3.org/project/impact-stream/modelisar-impact-story.html">ITEA3 MODELISAR</a>
+        </figcaption>
+    </div>
+    <div class="col-md-6 text-center">
+      <div style="background-image: url(/assets/images/bosch-logo.png); background-position: center; /* Center the image */
+      background-repeat: no-repeat;
+      background-size: contain; height: 100%; min-height: 10em; max-width: 17em; margin: auto;"></div>
     </div>
   </div>
 
-  <script>
-    var playerModal = document.getElementById('playerModal');
-    
-    playerModal.addEventListener('show.bs.modal', function (event) {
-      $('#player').html('<iframe style="width: 100%; aspect-ratio: 560 / 315" src="https://www.youtube.com/embed/A-3iIot0fO8?start=14&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');      
-    });
-    
-    playerModal.addEventListener('hidden.bs.modal', function (event) {
-      $('#player').html('');
-    });
-  </script>
-
-  <div class="container px-4 py-4 my-5 text-center">
-    <img class="img-fluid mx-auto mb-5" src="/assets/images/FMI.svg" alt="FMI logo" width="500">
-    <p class="lead mb-4">The Functional Mock-up Interface is a free standard that defines a container and an interface to exchange dynamic models using a combination of XML files, binaries and C code zipped into a single file.
-      It is supported by <a href="/tools/" target="_blank">170+</a> tools and maintained as a <a href="https://modelica.org/projects">Modelica Association Project</a>.</p>
-    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-      <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#playerModal">
-        <i class="fa-solid fa-circle-play me-2"></i>Why FMI
-      </button>
-      <div class="btn-group">
-        <a class="btn btn-outline-primary btn-lg" href="https://github.com/modelica/fmi-standard/releases/download/v3.0/FMI-Standard-3.0.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 3.0</a>
-        <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="visually-hidden">Toggle Dropdown</span>
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.3/FMI-Standard-2.0.3.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 2.0.3</a></li>
-          <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.2/FMI-Standard-2.0.2.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 2.0.2</a></li>
-          <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Standard-2.0.1.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 2.0.1</a></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_and_CoSimulation_v2.0.zip"><i class="fa-solid fa-file-zipper me-2"></i>Complete Package 2.0</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_v1.0.1.zip"><i class="fa-solid fa-file-zipper me-2"></i>Model Exchange 1.0.1</a></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_v1.0.zip"><i class="fa-solid fa-file-zipper me-2"></i>Model Exchange 1.0</a></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_CoSimulation_v1.0.1.zip"><i class="fa-solid fa-file-zipper me-2"></i>Co-Simulation 1.0.1</a></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_CoSimulation_v1.0.zip"><i class="fa-solid fa-file-zipper me-2"></i>Co-Simulation 1.0</a></li>
-        </ul>
-      </div>
-      <div class="btn-group">
-        <a class="btn btn-outline-primary btn-lg" href="/docs/3.0"><i class="fa-solid fa-file-lines me-2"></i>Specification 3.0</a>
-        <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="visually-hidden">Toggle Dropdown</span>
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.3/FMI-Specification-2.0.3.pdf"><i class="fa-solid fa-file-zipper me-2"></i>Specification 2.0.3</a></li>
-          <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.2/FMI-Specification-2.0.2.pdf"><i class="fa-solid fa-file-zipper me-2"></i>Specification 2.0.2</a></li>
-          <li><a class="dropdown-item" href="https://github.com/modelica/fmi-standard/releases/download/v2.0.1/FMI-Specification-2.0.1.pdf"><i class="fa-solid fa-file-zipper me-2"></i>Specification 2.0.1</a></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_and_CoSimulation_v2.0.pdf"><i class="fa-solid fa-file-zipper me-2"></i>Specification 2.0</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_v1.0.1.pdf"><i class="fa-solid fa-file-zipper me-2"></i>Model Exchange 1.0.1</a></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_ModelExchange_v1.0.pdf"><i class="fa-solid fa-file-zipper me-2"></i>Model Exchange 1.0</a></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_CoSimulation_v1.0.1.pdf"><i class="fa-solid fa-file-zipper me-2"></i>Co-Simulation 1.0.1</a></li>
-          <li><a class="dropdown-item" href="/assets/releases/FMI_for_CoSimulation_v1.0.pdf"><i class="fa-solid fa-file-zipper me-2"></i>Co-Simulation 1.0</a></li>
-        </ul>
-      </div>
+  <div class="row featurette justify-content-md-center p-4">
+    <div class="col-md-6 text-center order-2 order-md-1">
+      <div style="background-image: url(/assets/images/haldex-logo.jpg); background-position: center; /* Center the image */
+      background-repeat: no-repeat;
+      background-size: contain; height: 100%; min-height: 10em; max-width: 12em; margin: auto;"></div>
+    </div>
+    <div class="col-md-6 mt-4 order-1 order-md-2">
+        <blockquote class="blockquote lead">
+          <p>"Driving our future is all about scalable solutions. The use of the FMI standard scales our capabilities to virtual integrate our scalable braking systems with customers’ and partners’ systems of systems."</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          Edo Drenth, VP Global Vehicle Dynamics, <a href="https://www.haldex.com">Haldex</a>
+        </figcaption>
     </div>
   </div>
 
-  <div class="container news">
+  <div class="row featurette justify-content-md-center p-4">
+    <div class="col-md-6 mt-4">
+        <blockquote class="blockquote lead">
+          <p>"Supported by Siemens from the beginning, FMI is becoming an important building block in the efficient creation of interdisciplinary, multi-level digital twins of our entire portfolio - from rail and gas turbine engineering to virtual commissioning in the process industry and operational support in manufacturing plants."</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          Virginie Maillard, Lead Technology Field Simulation & Digital Twin, <a href="https://siemens.com">Siemens</a>
+        </figcaption>
+    </div>
+    <div class="col-md-6 text-center">
+      <div style="background-image: url(/assets/images/siemens-logo.png); background-position: center; /* Center the image */
+      background-repeat: no-repeat;
+      background-size: contain; height: 100%; min-height: 10em; max-width: 14em; margin: auto;"></div>
+    </div>
+  </div>
+
+  <div class="row featurette justify-content-md-center p-4">
+    <div class="col-md-6 text-center order-2 order-md-1">
+      <div style="background-image: url(/assets/images/saab-logo.png); background-position: center; /* Center the image */
+      background-repeat: no-repeat;
+      background-size: contain; height: 100%; min-height: 10em; max-width: 14em; margin: auto;"></div>
+    </div>
+    <div class="col-md-6 mt-4 order-1 order-md-2">
+        <blockquote class="blockquote lead">
+          <p>"With the ever increasing use of models in aircraft system development, tool interoperability and model reuse are central challenges. At Saab we see the FMI standard as an enabler for scalable and tool neutral integration of simulation models from different technical disciplines, developed by different internal teams or by external partners."</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          Göran Ancker, Technical Fellow Aircraft System Simulation, <a href="https://saabgroup.com/">Saab AB</a>
+        </figcaption>
+    </div>
+  </div>
+
+  <div class="container mt-5">
+
+    <h2 class="text-center display-6 fw-normal">Merchandising</h2>
 
     <div class="row">
 
-      <div class="col-lg-6 my-4">
-        <h2 class="title title-highlighted">News</h2>
-        {{< news >}}
-        <a href="/news/" class="more-link">more...</a>
-        <div class="mt-3">
-          <a class="btn btn-outline-primary btn-sm" href="https://creativeconnections.us12.list-manage.com/subscribe?u=0be901f875b69817eddd7e71b&id=0cb2cf5b72&group[20249][2]=true"><i class="fas fa-envelope me-2"></i>Subscribe to Newsletter</a>
-        </div>
+      <div class="col-lg-2 col-4">
+        <img src="/assets/images/merch/fmi-hoodie.jpg">
       </div>
 
-      <div class="col-lg-6 my-4">
-        {{< events >}}
+      <div class="col-lg-2 col-4">
+        <img src="/assets/images/merch/m-hoodie.jpg">
       </div>
-        
+
+      <div class="col-lg-2 col-4">
+        <img src="/assets/images/merch/fmi-womens-t-shirt.jpg">
+      </div>
+
+      <div class="col-lg-2 col-4">
+        <img src="/assets/images/merch/modelica-t-shirt.jpg">
+      </div>
+
+      <div class="col-lg-2 col-4">
+        <img src="/assets/images/merch/fmi-mug.jpg">
+      </div>
+  
+      <div class="col-lg-2 col-4">
+        <img src="/assets/images/merch/fmi-sticker.jpg">
+      </div>
+
     </div>
 
+    <div class="ms-1">
+      <a href="https://ma-merch.myspreadshop.de/all">Modelica merchandising shop<i class="fa-solid fa-arrow-right ms-2"></i></a>
+    </div>
+  
   </div>
 
-  <div class="container my-5">
-
-    <p class="text-muted mt-4">What users say about FMI:</p>
-
-    <div class="row featurette justify-content-md-center p-4">
-      <div class="col-md-6 mt-4">
-          <blockquote class="blockquote lead">
-            <p>"FMI is the preferred model exchange and co-simulation format of Robert Bosch GmbH at system level enabling the exchange of models with internal and external partners using different modelling tools."</p>
-          </blockquote>
-          <figcaption class="blockquote-footer">
-            Robert Bosch GmbH on <a href="https://itea3.org/project/impact-stream/modelisar-impact-story.html">ITEA3 MODELISAR</a>
-          </figcaption>
-      </div>
-      <div class="col-md-6 text-center">
-        <div style="background-image: url(/assets/images/bosch-logo.png); background-position: center; /* Center the image */
-        background-repeat: no-repeat;
-        background-size: contain; height: 100%; min-height: 10em; max-width: 17em; margin: auto;"></div>
-      </div>
-    </div>
-
-    <div class="row featurette justify-content-md-center p-4">
-      <div class="col-md-6 text-center order-2 order-md-1">
-        <div style="background-image: url(/assets/images/haldex-logo.jpg); background-position: center; /* Center the image */
-        background-repeat: no-repeat;
-        background-size: contain; height: 100%; min-height: 10em; max-width: 12em; margin: auto;"></div>
-      </div>
-      <div class="col-md-6 mt-4 order-1 order-md-2">
-          <blockquote class="blockquote lead">
-            <p>"Driving our future is all about scalable solutions. The use of the FMI standard scales our capabilities to virtual integrate our scalable braking systems with customers’ and partners’ systems of systems."</p>
-          </blockquote>
-          <figcaption class="blockquote-footer">
-            Edo Drenth, VP Global Vehicle Dynamics, <a href="https://www.haldex.com">Haldex</a>
-          </figcaption>
-      </div>
-    </div>
-
-    <div class="row featurette justify-content-md-center p-4">
-      <div class="col-md-6 mt-4">
-          <blockquote class="blockquote lead">
-            <p>"Supported by Siemens from the beginning, FMI is becoming an important building block in the efficient creation of interdisciplinary, multi-level digital twins of our entire portfolio - from rail and gas turbine engineering to virtual commissioning in the process industry and operational support in manufacturing plants."</p>
-          </blockquote>
-          <figcaption class="blockquote-footer">
-            Virginie Maillard, Lead Technology Field Simulation & Digital Twin, <a href="https://siemens.com">Siemens</a>
-          </figcaption>
-      </div>
-      <div class="col-md-6 text-center">
-        <div style="background-image: url(/assets/images/siemens-logo.png); background-position: center; /* Center the image */
-        background-repeat: no-repeat;
-        background-size: contain; height: 100%; min-height: 10em; max-width: 14em; margin: auto;"></div>
-      </div>
-    </div>
-
-    <div class="row featurette justify-content-md-center p-4">
-      <div class="col-md-6 text-center order-2 order-md-1">
-        <div style="background-image: url(/assets/images/saab-logo.png); background-position: center; /* Center the image */
-        background-repeat: no-repeat;
-        background-size: contain; height: 100%; min-height: 10em; max-width: 14em; margin: auto;"></div>
-      </div>
-      <div class="col-md-6 mt-4 order-1 order-md-2">
-          <blockquote class="blockquote lead">
-            <p>"With the ever increasing use of models in aircraft system development, tool interoperability and model reuse are central challenges. At Saab we see the FMI standard as an enabler for scalable and tool neutral integration of simulation models from different technical disciplines, developed by different internal teams or by external partners."</p>
-          </blockquote>
-          <figcaption class="blockquote-footer">
-            Göran Ancker, Technical Fellow Aircraft System Simulation, <a href="https://saabgroup.com/">Saab AB</a>
-          </figcaption>
-      </div>
-    </div>
-
-  </div>
-
-  <div style="background-color: #f5f5f5; width: 100%; border-color: #cbcbcb; border-style: solid; border-width: 1px 0 1px 0;">
-
-    <div class="container">
-      <div class="row justify-content-evenly">
-
-        <div class="col-lg-5 col-sm-10 my-4">
-          <h2>Open source</h2>
-          <p class="py-4">FMI is open source. Be part of the FMI community and help improve our code, documentation and website.</p>
-          <a class="btn btn-primary" href="https://github.com/modelica/fmi-standard"><i class="fa-brands fa-github me-2"></i>Fork on GitHub</a>
-        </div>
-
-        <div class="col-lg-5 col-sm-10 my-4">
-          <h2>Keep in touch</h2>
-          <table class="table table-borderless contact-table">
-            <tbody>
-              <tr>
-                <td><span class="text-muted">Code</span></td>
-                <td><a href="https://github.com/modelica/fmi-standard">github.com/modelica/fmi-standard</a></td>
-              </tr>
-              <tr>
-                <td><span class="text-muted">Twitter</span></td>
-                <td><a href="https://twitter.com/fmistandard">@fmistandard</a></td>
-              </tr>
-              <tr>
-                <td><span class="text-muted">E-Mail</span></td>
-                <td><a href="mailto:contact@fmi-standard.org">contact@fmi-standard.org</a></td>
-              </tr>
-              <tr>
-                <td><span class="text-muted">Newsletter</span></td>
-                <td><a href="https://creativeconnections.us12.list-manage.com/subscribe?u=0be901f875b69817eddd7e71b&id=0cb2cf5b72&group[20249][2]=true">Modelica Association Info Service</a></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</main>
-
-<footer class="footer">
-  <div class="container navbar justify-content-center">
-    <ul class="nav">
-      <li class="nav-item">
-        <a class="nav-link" href="/privacy/">Privacy</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="changePreferences" href="#">Cookie Preferences</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/imprint/">Imprint</a>
-      </li>
-    </ul>
-  </div>
-</footer>
+</div>

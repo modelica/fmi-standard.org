@@ -9,26 +9,29 @@ Development and promotion of the Functional Mock-up Interface (FMI) standard. Th
 The FMI specifications are published under the [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode) (Creative Common Attribution-ShareAlike 4.0 International) license.
 Source code, such as C-header and XML-schema files, that accompany the specification documents, are provided under the [2-Clause BSD License](https://www.opensource.org/licenses/bsd-license.html).
 
-
 ## Modelica Association Project (MAP) FMI
 
-Today, the core development of the FMI standard is organised as [Modelica Association Project](https://modelica.org/projects) _Functional Mock-up Interface_ under the roof of the [Modelica Association](https://www.modelica.org/). (History below)
+The development of the FMI Standard is organised as the [Modelica Association Project](https://modelica.org/projects) _Functional Mock-up Interface_ under the roof of the [Modelica Association](https://www.modelica.org/).
+It follows the [Project Rules](#project-rules) approved by the FMI Steering Committee.
 
-Current Project Leader and Deputy:
+**Project Leader and Deputy:**  
 Christian Bertsch (BOSCH) and Torsten Sommer (Dassault Systèmes) [projectleader@fmi-standard.org](mailto:projectleader@fmi-standard.org)
 
-Current Members of the Steering Committee:
-AVL List, BOSCH, Dassault Systemes, dSPACE, ESI ITI, Maplesoft, Modelon, PMSF, Siemens PLM, Synopsys
+**Members of the Steering Committee:**  
+AVL List, BOSCH, Dassault Systemes, dSPACE, ESI Group, Maplesoft, Modelon, PMSF, Siemens PLM, Synopsys
 
-Current Members of the Advisory Committee:
-ABB, DLR, ETAS, Fraunhofer (IIS/EAS First, SCAI), ITK Engineering, Open Modelica Consortium, TLK Thermo, TWT, University of Halle, Wolfram MathCore AB
+**Further Contributing Members:**  
+Aarhus University, ABB, Altair, Akkodis, AMEPERE, Ansys, Augsburg University, Beckhoff, Boeing, Danfoss, DLR, EKS INTEC, ETAS, Fraunhofer IEM, ITK Engineering, iVH, JuliaComputing, LTX, MachineWare, Renault, Saab Group, Virtual Vehicle Research, Wolfram MathCore AB, TLK Thermo, tracetronic, TU Dresden _and all Steering Committee Members_
+
+**Members of the Advisory Committee:** 
+AIRBUS, blue automation, COMSOL, Fraunhofer (IIS/EAS First, SCAI), KEB Automation, NVIDIA, Knorr-Bremse Rail Vehicle Systems, Open Modelica Consortium, Samares Engineering, TWT, University of Halle, Volkswagen _and all Contributing and Steering Committee Members_
 
 ## How to contribute to the development of the FMI standard
 
 There are FMI tracks at other FMI related events like conferences and design meetings.
 If you believe you could benefit from the standard or if you would like to contribute to the improvement or distribution of it, please contact us at: [contact@fmi-standard.org](mailto:contact@fmi-standard.org).
 
-All individual contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://github.com/modelica/fmi-standard.org/tree/main/static/assets/FMI_CCLA_v1.0_2016_06_21.pdf) or must be corporate contributors that have signed the [CLA of the Modelica Association](https://modelica.org/licenses/ModelicaAssociationCLA_1.1.1.html).
+All individual contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://github.com/modelica/fmi-standard.org/tree/main/static/assets/FMI_CCLA_v1.0_2016_06_21.pdf) or must be corporate contributors that have signed the [CLA of the Modelica Association](https://github.com/modelica/ModelicaAssociationCLA/releases).
 Therefore, the first step is to get your company to sign the CCLA/CLA.
 This ensures that all intellectual property (IP) contributed to the FMI Standard will be licensed to the Modelica Association (MA) which will sublicense the FMI Standard to tool vendors implementing it and end users using it.
 
@@ -44,6 +47,10 @@ This membership is mostly ceremonial and its most important function is to recog
 The next level of involvement is membership in the FMI Steering Committee which is the governing body of the Modelica Association Project FMI.
 You have to formally apply, explaining your past, current and future involvement and plans regarding the FMI Standard.
 The FMI Steering Committee will vote on your applications.
+
+## Meetings
+
+Currently we have biweekly FMI Design Webmeetings, about 2-3 in-person FMI Design Meetings per year, monthly FMI Steering Committee meetings, and other working group meetings on demand ([Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=obe72dhd3apjmipcpmr2asehjs@group.calendar.google.com&ctz=Europe/Berlin)).
 
 ## Development Process
 
@@ -66,6 +73,7 @@ The core MODELISAR development partners agreed to continue FMI specification wor
 
 The FMI development was partially funded within the ITEA2 project MODELISAR by
 
+{{<rawhtml>}}
 <table class="table table-borderless">
   <tr>
     <td><img src="/assets/images/bmbf.png" alt="BMBF"/></td>
@@ -81,34 +89,34 @@ The FMI development was partially funded within the ITEA2 project MODELISAR by
     <td><a href="https://www.vinnova.se/en/">VINNOVA</a> for Dynasim AB, Volvo (funding number: 2008-02291)</td>
   </tr>
 </table>
+{{</rawhtml>}}
 
 ## Trademark Guidelines for the Use of the FMI Trademark
 
 ### Preliminaries
 
-The FMI project and the Modelica Association (MA) are asking all members of the public and the FMI community to follow and respect the following usage guidelines for the use of the FMI trademark.
-The purpose of the trademark registration is to protect the use of the word-mark `FMI` in the protected application domains from any usage that is contrary to the mission and values of the trademark owner, the Modelica Association.  
-The purpose of this guideline is to make sure that any use of the FMI trademark agrees with these guidelines and strengthens the brand and value of the FMI standard.
-Further, the guidelines will try to make sure that no confusion or misinformation can arise from the use of the FMI trademark.
+The FMI project and the Modelica Association (MA) are asking all members of the public and the FMI community to follow and respect the following usage guidelines for the use of the FMI und FMU trademarks.
+The purpose of the trademark registration is to protect the use of the word-marks `FMI` and `FMU` in the protected application domains from any usage that is contrary to the mission and values of the trademark owner, the Modelica Association.  
+The purpose of this guideline is to make sure that any use of the FMI and FMU trademarks agrees with these guidelines and strengthens the brand and value of the FMI standard.
+Further, the guidelines will try to make sure that no confusion or misinformation can arise from the use of the FMI and FMU trademarks.
 At the same time, the Modelica Association wants to encourage as many commercial companies and open source software developers to support the FMI standard in a high quality of implementation and put as little administrative burden as possible.
 The MA encourages to mention the FMI standard with a proper reference. The main reference in any tool documentation should contain a pointer to the official FMI website https://fmi-standard.org.
-The Modelica Association expects all tool vendors that implement the FMI standard to participate in the cross-check protocol, especially those using `FMI` in their product name.
 
 ### Trademark Usage Guidelines
 
-The use of the letters `FMI` in a product name or other relevant reference is allowed when
+The use of the letters `FMI` or `FMU` in a product name or other relevant reference is allowed when
 
 - The use is clearly a reference to adhering to the standard.
 
-The use of the letters `FMI` in a product name, reference or other relevant context is not allowed when:
+The use of the letters `FMI` or `FMU` in a product name, reference or other relevant context is not allowed when:
 - The use can cause confusion whether the FMI standard is followed (e.g. using `FMI` with a version number that is not released by the FMI project),
 - The use can be interpreted as a variant, subset or improvement of the original FMI standard (e.g. using a tool name, say `FMIplus`, that can be interpreted as supporting with extensions/improvements with respect to one of the FMI versions),
 - The use spreads wrong or misleading information about the FMI standard
 - The use mocks or degrades the FMI standard
 
-The FMI Steering committee reserves the right to determine whether a use of `FMI` violates these guidelines and will ask any offender to cease and desist from using the FMI trademark in a non-approved way.
-The FMI steering committee also reserves the right to retract the permission of the use of the term FMI in a product name when the product owner does not submit to the duties of a responsible member of the FMI community by participating in the cross-checking protocol, or when the tool developer does over a longer period not fix known errors in their FMI support.
-If you are in doubt about your intended usage of the FMI trademark, please contact contact@fmi-standard.org.
+The FMI Steering committee reserves the right to determine whether a use of `FMI` or `FMU` violates these guidelines and will ask any offender to cease and desist from using the FMI trademark in a non-approved way.
+The FMI steering committee also reserves the right to retract the permission of the use of the term FMI in a product name when the product owner when the tool developer does over a longer period not fix known errors in their FMI support.
+If you are in doubt about your intended usage of the `FMI` or `FMU` trademark, please contact contact@fmi-standard.org.
 
 # Standardization Projects and Groups Related to FMI
 
@@ -153,4 +161,92 @@ One of the topics of the Smart Systems Engineering project is to find solutions 
 the cross-disciplinary and cross-enterprise exchange of behavioral models.
 The Functional Mockup Interface (FMI) is viewed as the basic technology for the exchange.
 
+The [FMI 3.0 Implementers' Guide](https://modelica.github.io/fmi-guides/main/fmi-guide/)  is a free resource intended to give non-normative recommendations and guidance to implementers of the Functional Mock-up Interface (FMI) standard version 3.0.
+It has been published jointly by prostep ivip and the Modelica Association Project FMI.
+
 Link to [project page](https://www.prostep.org/en/projects/smart-systems-engineering.html).
+
+## Project rules
+
+The project rules are according to the rules of the Modelica Association Bylaws.
+
+### Project members
+
+Membership in this project is open to companies, institutes, universities and other organizations, which agree to support the purpose of this project and follow the project rules. 
+There is no individual membership for this project. 
+An organizational member has to appoint an individual person affiliated to the organization to represent the organization in all matters related to this project. 
+This person is the organization’s liaison member. The liason member can nominate deputies with voting rights for individual meetings.
+
+Project members are divided into three groups with a hierarchy of duties and rights: "Steering Committee Members" are a subset of "Contributing Members" which are a subset of
+"Advisory Commitee Members":
+
+**Group 1: Steering Committee**
+
+1. The members define FMI policy, strategy, feature roadmap, and future FMI Standard releases and other publications such as Layered standards.
+2. Members are organizations that actively support FMI. For the matter of clarity: A member need not to be a member of the Modelica Association.
+3. Members have voting rights (one vote for one organization, details see below).
+4. Members elect a project leader and a deputy project leader for 2 years with qualified majority (see below). 
+The project leader must be an individual member of the Modelica Association, or must be the liaison member of an organizational member of the Modelica Association. 
+Both have to be affiliated with an FMI Steering Committee member. 
+The deputy supports the project leader and takes over the project leader's duties temporarily when the project leader is not available for a longer period.
+5. The members decide on the release of new versions of the FMI Standard (published by MA, for major and minor release after confirmation by MA memebers) and the release of Layered Standards.
+6. The Steering Committee is open for additional members that proved to actively support FMI.  
+Requirements:
+   * Must have participated at least at two FMI meetings (face to face or via electronic media) in the last 24 months, 
+   * must either provided the FMI standard or part of it in a commercial or open source tool, and/or must actively use FMI in industrial projects, 
+   * must have signed the Corporate Contributor License Agreement (CCLA, see below), (d) the members of the Steering Committee agree with qualified majority (see below).
+
+**Group 2: Contributing Members**
+
+1. Consists of organizational members that have no voting rights and the FMI Steering Committee members.
+2. Contribute to the design of FMI by participation in working groups and by creating and editing Pull Request for the FMI standard on https://github.com/modelica/fmi-standard (and for layered standards).
+3. Have access to the internal infrastructure of the FMI design (Github repos, mailing lists, meeting minutes, etc.).
+4. The Group of Contributing Members is open for additional members that proved to actively support FMI. Requirement:
+Must have signed the Corporate Contributor License Agreement or Modelica Assocation CLA. No voting is necessary for becoming a Contributing Member.
+
+**Group 3: Advisory Committee**
+
+1. Consists of organizational members that have no voting right and the Steering Committee Members and Contributing Members.
+2. Contribute to the design of FMI by providing requirements and feedback. This can also be in the form of separate Advisory Board Meetings.
+3. Have access to the internal infrastructure of the FMI design (Github repos, mailing lists, meeting minutes, etc.).
+4. The Advisory Committee is open for additional members that proved to actively support FMI. 
+Requirement:
+Participation in at least two meetings as visitor. The FMI Steering Committee votes on acceptance to the Advisory Committee.
+
+Project members that have not participated in meetings and have not contributed to the project for more than two years and did not react on a four weeks prior notice lose their membership after a vote with qualified majority. 
+These organizations are excluded from the quorum for this decision.
+
+*Visitors*
+Organizations that contribute to the FMI Project and are neither in Group 1 or 2 are called “Visitors”. 
+Visitors have no right to access to the internal infrastructure of the FMI project (svn, trac, mailing lists, etc.).
+
+### Organizations
+
+An entity and all other entities that control, are controlled by, or are under common control with that entity are considered to be a single organization. 
+For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
+
+### Voting
+
+Voting is performed by the Steering Committee Members according to § 14 of the MA Bylaws but with a quorum of 66 % of the members. If explicitly decided by the Steering Committee Members, every voting can be performed electronically according to § 14 of the MA Bylaws.
+New releases of the FMI specification and accompanying source code (like C-header or xml schema files) shall be approved by the Steering Committee Members with a qualified majority of the number of votes submitted. 
+
+### Meetings
+
+FMI meetings are announced in the respective mailing lists:
+
+* Steering Committee meetings via steering@fmi-standard.org, the announcement must be at least 3 weeks in advance
+* all other meetings via the other mailing lists (design@fmi-standard.org, and/or info@fmi-standard.org)
+
+The Steering Committee decides whether a Steering Committee meeting is public or not, the default is private to ensure an efficient procedure. 
+All other meetings are open to the public. 
+The meeting material (minutes, documents, presentations) is available on the FMI-repository. A publication of this material needs approval of all participants.
+
+### Development
+
+The development of FMI specifications is organized according to the FMI Development Rules (https://github.com/modelica/fmi-design/tree/master/FMI_DevelopmentProcess).
+All organizations that contribute to an FMI specification and related works have to sign the Corporate Contributor License Agreement (https://svn.fmi-standard.org/fmi/branches/public/docs/CCLA) by a responsible representative of the company they are affiliated with.
+
+### Publications
+
+The FMI Standard is published by the Modelica Association after confirmation by the MA members (vote with simple majority for major and minor releases). 
+Other Publications such as bugfix releases of the FMI standard and Layered Standards can be published by the FMI project.
