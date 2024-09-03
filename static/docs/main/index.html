@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 7c23da8,</span>
-<span id="revdate">2024-06-10</span>
+<span id="revnumber">version ade7497,</span>
+<span id="revdate">2024-08-27</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3429,9 +3429,17 @@ FMI allows selective retrieval of FMU variables with specific get functions (e.g
 This enables computation on demand with subsequent calls returning the same value until some set operation requires re-computation.</p>
 </div>
 <div class="paragraph">
-<p>For example:
-* during the iteration of an integrator step, only the state derivatives need to be computed, provided the <a href="#output"><code>output</code></a> of an FMU is not connected, or
-* when localizing <a href="#state-event">state events</a>, only the computation of event indicators may be required.</p>
+<p>For example,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>during the iteration of an integrator step, only the state derivatives need to be computed, provided the <a href="#output"><code>output</code></a> of an FMU is not connected, or</p>
+</li>
+<li>
+<p>when localizing <a href="#state-event">state events</a>, only the computation of event indicators may be required.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Because specific set functions exist (<a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>, <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>), caching algorithms can be applied to reuse already computed values.</p>
@@ -7171,9 +7179,9 @@ All variables listed in these elements must have attribute <code>derivative</cod
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>reinit</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="reinit" class="paragraph">
 <p>Only used in Model Exchange, ignored for the other interface types.
-May only be present for a continuous-time <a href="#state">state</a>.<br>
-If <code>true</code>, <a href="#state">state</a> may be reinitialized by the FMU in <a href="#EventMode"><strong>Event Mode</strong></a>.<br>
-If <code>false</code>, <a href="#state">state</a> will not be reinitialized.</p>
+May only be present for a <a href="#state">continuous-time state</a>.<br>
+If <code>true</code>, the <a href="#state">state</a> may be <a href="#reinitialization">reinitialized</a> by the FMU in <a href="#EventMode"><strong>Event Mode</strong></a>.<br>
+If <code>false</code>, the <a href="#state">state</a> will not be <a href="#reinitialization">reinitialized</a>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -9509,7 +9517,7 @@ It refers to the unit of the <a href="#independent"><code>independent</code></a>
 </dd>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
-<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>.</p>
+<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>, and <a href="#state">continuous-time states</a>.</p>
 </dd>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
@@ -12219,6 +12227,10 @@ The execution of a model partition is triggered by the activation of its Clock.<
 <td class="tableblock halign-left valign-top"><p class="tableblock">A quantity within a <em>model</em>, which remains constant during <em>simulation (<a href="#fixed"><code>fixed</code></a> <a href="#parameter"><code>parameter</code></a>) or may change at event instances (<a href="#tunable"><code>tunable</code></a> <a href="#parameter"><code>parameter</code></a>)</em>.
 Examples are a mass, stiffness, etc.
 These parameters are different from <a href="#calculatedParameter">calculated parameters</a>, because they can be changed independently (according to their <a href="#variability"><code>variability</code></a>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="reinitialization"></a><em>reinitialization</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Recalculation of <a href="#state">continuous-time states</a> by the model.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>runtime environment</em></p></td>
