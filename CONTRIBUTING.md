@@ -144,7 +144,7 @@ The description field should
 
 FMU exporting and importing tools provide information to their users on how they have validated their FMI support.
 Providing and maintaining this information is in the responsibility of the tool vendors. 
-On the tools page of the FMI Webpage, a link to a repository or webpage of the tool vendor is provided as defined in `examplesUrl`.
+On the tools page of the FMI Webpage, a link to a repository or webpage of the tool vendor is provided as defined in `examplesURL`.
 Tool vendors are encouraged to clearly mark this webpage as provided by them and not by the Modelica Association or the FMI Project, e.g., by prominently placing their logo on this page.
 
 #### Exporting tools
