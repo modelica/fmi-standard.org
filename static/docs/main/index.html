@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 7fdad47,</span>
-<span id="revdate">2024-09-27</span>
+<span id="revnumber">version 0315e4c,</span>
+<span id="revdate">2024-10-02</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3800,14 +3800,14 @@ g_2(x, u_1)
 
     // set time, states and inputs
     CALL(FMI3SetTime(S, time));
-    CALL(FMI3SetContinuousStates(S, x, nx));
+    CALL(FMI3SetContinuousStates(S, x, NX));
     // fmi3Set{VariableType}(s, ...)
 
     // if required at this step, compute the Jacobian as a dense matrix
-    for (i = 0; i &lt; nx; i++) {
+    for (i = 0; i &lt; NX; i++) {
         // construct the Jacobian matrix column wise
-        CALL(FMI3GetDirectionalDerivative(S, vr_dx, nx, &amp;vr_x[i], 1, &amp;dk, 1, c, nx));
-        for (j = 0; j &lt; nx; j++) {
+        CALL(FMI3GetDirectionalDerivative(S, vr_dx, NX, &amp;vr_x[i], 1, &amp;dk, 1, c, NX));
+        for (j = 0; j &lt; NX; j++) {
             J[j][i] = c[j];
         }
     }</code></pre>
@@ -3936,9 +3936,9 @@ g_2(u_1, u_2)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    for (i = 0; i &lt; nx; i++) {
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    for (i = 0; i &lt; NX; i++) {
         // construct the Jacobian matrix column wise
-        CALL(FMI3GetAdjointDerivative(S, &amp;vr_dx[i], 1, vr_x, nx, &amp;dk, 1, &amp;J[i][0], nx));
+        CALL(FMI3GetAdjointDerivative(S, &amp;vr_dx[i], 1, vr_x, NX, &amp;dk, 1, &amp;J[i][0], NX));
     }</code></pre>
 </div>
 </div>
@@ -8916,6 +8916,9 @@ These tool dependencies must be <a href="#documentation-directory">documented</a
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">/* This example demonstrates how to import an FMU implemented as a shared library */
 
 #ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include &lt;Windows.h&gt;
 #else
 #include &lt;dlfcn.h&gt;
@@ -8926,7 +8929,7 @@ These tool dependencies must be <a href="#documentation-directory">documented</a
 // FMI function types
 #include "fmi3FunctionTypes.h"
 
-#define INSTANTIATION_TOKEN "{8c4e810f-3da3-4a00-8276-176fa3c9f000}"
+#define INSTANTIATION_TOKEN "{BD403596-3166-4232-ABC2-132BDF73E644}"
 
 
 static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3Status status, fmi3String category, fmi3String message) {
@@ -9008,7 +9011,7 @@ int main(int argc, char* argv[]) {
 #include "fmi3Functions.h"
 #undef FMI3_FUNCTION_PREFIX
 
-#define INSTANTIATION_TOKEN "{8c4e810f-3da3-4a00-8276-176fa3c9f000}"
+#define INSTANTIATION_TOKEN "{BD403596-3166-4232-ABC2-132BDF73E644}"
 
 
 static void cb_logMessage(fmi3InstanceEnvironment instanceEnvironment, fmi3Status status, fmi3String category, fmi3String message) {
@@ -9771,12 +9774,12 @@ If the FMU would be used inside another model, additional code is needed, especi
     // determine continuous and discrete states
     CALL(FMI3EnterInitializationMode(S, fmi3False, 0.0, time, fmi3True, stopTime));
 
-    CALL(applyContinuousInputs(S, false));
-    CALL(applyDiscreteInputs(S));
+    CALL(applyContinuousInputs(S, time, false));
+    CALL(applyDiscreteInputs(S, time));
 
     CALL(FMI3ExitInitializationMode(S));
 
-    // intial event iteration
+    // initial event iteration
     while (discreteStatesNeedUpdate) {
 
         CALL(FMI3UpdateDiscreteStates(S,
@@ -9806,12 +9809,10 @@ If the FMU would be used inside another model, additional code is needed, especi
     CALL(FMI3GetNominalsOfContinuousStates(S, x_nominal, NX));
 #endif
 
-    // retrieve solution at t=Tstart, for example, for outputs
-    // S-&gt;fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
+    // retrieve solution at time=start, for example, for outputs
+    CALL(recordVariables(S, time, outputFile));
 
-    CALL(recordVariables(S, outputFile));
-
-    int steps = 0;
+    uint64_t step = 0;
 
     while (!terminateSimulation) {
 
@@ -9827,8 +9828,8 @@ If the FMU would be used inside another model, additional code is needed, especi
             CALL(FMI3EnterEventMode(S));
 
             if (inputEvent) {
-                CALL(applyContinuousInputs(S, true));
-                CALL(applyDiscreteInputs(S));
+                CALL(applyContinuousInputs(S, time, true));
+                CALL(applyDiscreteInputs(S, time));
             }
 
             nominalsOfContinuousStatesChanged = fmi3False;
@@ -9836,8 +9837,8 @@ If the FMU would be used inside another model, additional code is needed, especi
 
             // event iteration
             do {
-                // set inputs at super dense time point
-                // S-&gt;fmi3SetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
+
+                // set inputs at super dense time point with fmi3Set{VariableType}()
 
                 fmi3Boolean nominalsChanged = fmi3False;
                 fmi3Boolean statesChanged   = fmi3False;
@@ -9845,8 +9846,7 @@ If the FMU would be used inside another model, additional code is needed, especi
                 // update discrete states
                 CALL(FMI3UpdateDiscreteStates(S, &amp;discreteStatesNeedUpdate, &amp;terminateSimulation, &amp;nominalsChanged, &amp;statesChanged, &amp;nextEventTimeDefined, &amp;nextEventTime));
 
-                // get output at super dense time point
-                // S-&gt;fmi3GetFloat*/Int*/UInt*/Boolean/String/Binary(m, ...)
+                // get output at super dense time point with fmi3Get{VariableType}()
 
                 nominalsOfContinuousStatesChanged |= nominalsChanged;
                 valuesOfContinuousStatesChanged   |= statesChanged;
@@ -9861,7 +9861,7 @@ If the FMU would be used inside another model, additional code is needed, especi
             CALL(FMI3EnterContinuousTimeMode(S));
 
             // retrieve solution at simulation (re)start
-            CALL(recordVariables(S, outputFile));
+            CALL(recordVariables(S, time, outputFile));
 
 #if NX &gt; 0
             if (valuesOfContinuousStatesChanged) {
@@ -9881,16 +9881,16 @@ If the FMU would be used inside another model, additional code is needed, especi
         }
 
 #if NX &gt; 0
-        // compute continous state derivatives
+        // compute continuous state derivatives
         CALL(FMI3GetContinuousStateDerivatives(S, der_x, NX));
 #endif
         // advance time
-        time = ++steps * fixedStep;
+        time = ++step * fixedStep;
 
         CALL(FMI3SetTime(S, time));
 
         // apply continuous inputs
-        CALL(applyContinuousInputs(S, false));
+        CALL(applyContinuousInputs(S, time, false));
 
 #if NX &gt; 0
         // set states at t = time and perform one step
@@ -9933,7 +9933,7 @@ If the FMU would be used inside another model, additional code is needed, especi
         CALL(FMI3CompletedIntegratorStep(S, fmi3True, &amp;stepEvent, &amp;terminateSimulation));
 
         // get continuous output
-        CALL(recordVariables(S, outputFile));
+        CALL(recordVariables(S, time, outputFile));
     }
 
 TERMINATE:
@@ -10717,29 +10717,25 @@ Intermediate input variables are input variables that are marked with attribute 
         NULL                 // intermediateUpdate
     ));
 
-    // set start values
     CALL(applyStartValues(S));
 
-    // initialize the FMU
     CALL(FMI3EnterInitializationMode(S, fmi3False, 0.0, startTime, fmi3True, stopTime));
 
     CALL(FMI3ExitInitializationMode(S));
 
-    for (int step = 0;; step++) {
+    for (uint64_t step = 0;; step++) {
 
-        CALL(recordVariables(S, outputFile));
-
-        // calculate the current time
         const fmi3Float64 time = step * h;
 
-        CALL(applyContinuousInputs(S, false));
-        CALL(applyDiscreteInputs(S));
+        CALL(recordVariables(S, time, outputFile));
+
+        CALL(applyContinuousInputs(S, time, false));
+        CALL(applyDiscreteInputs(S, time));
 
         if (time &gt;= stopTime) {
             break;
         }
 
-        // call instance s1 and check status
         CALL(FMI3DoStep(S, time, h, fmi3True, &amp;eventEncountered, &amp;terminateSimulation, &amp;earlyReturn, &amp;lastSuccessfulTime));
 
         if (terminateSimulation) {
@@ -10794,13 +10790,13 @@ Note that the points where the ball hits the floor are missed.</p>
     while (true) {
 
         // apply continuous and discrete inputs
-        CALL(applyContinuousInputs(S, true));
-        CALL(applyDiscreteInputs(S));
+        CALL(applyContinuousInputs(S, time, true));
+        CALL(applyDiscreteInputs(S, time));
 
         // record variables
-        CALL(recordVariables(S, outputFile));
+        CALL(recordVariables(S, time, outputFile));
 
-        if (terminateSimulation || time &gt;= stopTime) {
+        if (terminateSimulation || time + stepSize &gt; stopTime) {
             break;
         }
 
@@ -10855,8 +10851,8 @@ Note that the points where the ball hits the floor are available, but only the o
     CALL(FMI3EnterInitializationMode(S, fmi3False, 0.0, time, fmi3True, stopTime));
 
     // apply continuous and discrete inputs
-    CALL(applyContinuousInputs(S, true));
-    CALL(applyDiscreteInputs(S));
+    CALL(applyContinuousInputs(S, time, true));
+    CALL(applyDiscreteInputs(S, time));
 
     CALL(FMI3ExitInitializationMode(S));
 
@@ -10883,9 +10879,9 @@ Note that the points where the ball hits the floor are available, but only the o
 
     while (true) {
 
-        CALL(recordVariables(S, outputFile));
+        CALL(recordVariables(S, time, outputFile));
 
-        if (terminateSimulation || time &gt;= stopTime) {
+        if (terminateSimulation || time + stepSize &gt; stopTime) {
             break;
         }
 
@@ -10902,14 +10898,14 @@ Note that the points where the ball hits the floor are available, but only the o
         if (eventEncountered) {
 
             // record variables before event update
-            CALL(recordVariables(S, outputFile));
+            CALL(recordVariables(S, time, outputFile));
 
             // enter Event Mode
             CALL(FMI3EnterEventMode(S));
 
             // apply continuous and discrete inputs
-            CALL(applyContinuousInputs(S, true));
-            CALL(applyDiscreteInputs(S));
+            CALL(applyContinuousInputs(S, time, true));
+            CALL(applyDiscreteInputs(S, time));
 
             // update discrete states
             do {
@@ -10965,8 +10961,6 @@ Note that the points where the ball hits the floor are available and the outputs
 
     FMIInstance *S = (FMIInstance *)instanceEnvironment;
 
-    S-&gt;time = intermediateUpdateTime;
-
     *earlyReturnRequested = fmi3False;
     *earlyReturnTime = 0;
 
@@ -10975,7 +10969,7 @@ Note that the points where the ball hits the floor are available and the outputs
 
         // Get the output variables at time == intermediateUpdateTime
         // fmi3Get{VariableType}();
-        status = recordVariables(S, outputFile);
+        status = recordVariables(S, intermediateUpdateTime, outputFile);
 
         // If integration step in FMU solver is finished
         if (intermediateStepFinished) {
