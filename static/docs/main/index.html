@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 612fbcb,</span>
-<span id="revdate">2024-10-02</span>
+<span id="revnumber">version 223a784,</span>
+<span id="revdate">2024-10-08</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -7847,7 +7847,7 @@ The terminal name must be unique on each level.</p>
 </div>
 <div id="matchingRule" class="paragraph">
 <p>The normalized string attribute <code>matchingRule</code> describes the rules for variable matching in a connection of terminals.
-As detailed in <a href="#table-predefined-matching-rules">Table 26</a>, there are three predefined matching rules: <code>plug</code>, <code>bus</code>, and <code>sequence</code>.
+As detailed in <a href="#table-predefined-matching-rules">Table 26</a>, there are four predefined matching rules: <code>plug</code>, <code>bus</code>, <code>sequence</code>, and <code>none</code>.
 Other standards may define new matching rules.
 In order to avoid ambiguities and conflicts, rule names must follow the reverse domain notation of a domain that is controlled by the entity defining the semantics and content of the additional entries.
 The rule names beginning with <code>org.modelica</code> and <code>org.fmi-standard</code> are explicitly reserved for use by layered standards defined by Modelica Association or its own projects (<a href="#MAP">MAPs</a>).</p>
@@ -7882,7 +7882,13 @@ An importer may connect terminals if some or no terminal member variables are pr
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sequence</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Matching of the variables is based on the order of the terminal member variables.
-An importer should connect terminals only if the number of member variables matches.</p></td>
+An importer should connect terminals only if the number of member variables matches.</p>
+<p class="tableblock"><a id="none"></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Matching of the variables is not intended by the creator of the FMU.
+However, an importer may still connect terminals based on additional information.</p></td>
 </tr>
 </tbody>
 </table>
