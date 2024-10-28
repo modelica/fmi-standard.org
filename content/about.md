@@ -207,7 +207,7 @@ Must have signed the Corporate Contributor License Agreement or Modelica Assocat
 **Group 3: Advisory Committee**
 
 1. Consists of organizational members that have no voting right and the Steering Committee Members and Contributing Members.
-2. Contribute to the design of FMI by providing requirements and feedback. This can also be in the form of separate Advisory Board Meetings.
+2. Contribute to the design of FMI by providing requirements and feedback. This can also be in the form of separate Advisory Committee Meetings.
 3. Have access to the internal infrastructure of the FMI design (Github repos, mailing lists, meeting minutes, etc.).
 4. The Advisory Committee is open for additional members that proved to actively support FMI. 
 Requirement:
