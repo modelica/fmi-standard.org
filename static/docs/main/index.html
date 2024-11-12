@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version ff6aff0,</span>
-<span id="revdate">2024-11-07</span>
+<span id="revnumber">version aa3ab40,</span>
+<span id="revdate">2024-11-12</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3661,7 +3661,7 @@ Details about which variables are in \(\mathbf{v}_{\mathit{known}}\) are given i
 </div>
 </div>
 <div class="paragraph">
-<p>where \(\mathbf{v}_{\mathit{known}}\) are the \(n\) knowns, and \(\mathbf{g}\) are the \(m\) functions to calculate the \(m\) unknown variables \(\mathbf{v}_{\mathit{unknwon}}\)  from the knowns.</p>
+<p>where \(\mathbf{v}_{\mathit{known}}\) are the \(n\) knowns, and \(\mathbf{g}\) are the \(m\) functions to calculate the \(m\) unknown variables \(\mathbf{v}_{\mathit{unknown}}\)  from the knowns.</p>
 </div>
 <div class="paragraph">
 <p>Both functions can also be used to construct the partial derivative matrices.
@@ -3770,7 +3770,7 @@ g_2(x, u_1)
 <p>(b) <em>Initializes all seed-values to zero; so in the <a href="#example-directional-derivatives">above example</a>: \({\Delta x = \Delta u_1 = \Delta u_3 = \Delta u_4 = 0}\)</em></p>
 </div>
 <div class="paragraph">
-<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the <a href="#example-directional-derivatives">above example</a>: \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 0, \Delta u_4 = 0)}\)] and \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 0, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
+<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the <a href="#example-directional-derivatives">above example</a>: \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 0, \Delta u_4 = 0)}\) and \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 0, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
 </div>
 <div class="paragraph">
 <p><em>[Note, function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> can be utilized for the following purposes:</em></p>
@@ -3787,7 +3787,7 @@ g_2(x, u_1)
 <p><em>If the FMU shall be linearized, the same <a href="#derivative"><code>derivatives</code></a> as in the previous item are needed.</em></p>
 </li>
 <li>
-<p><em>If the FMU is used as the model for an extended Kalman filter, \({\frac{\partial \mathbf{f}}{\partial \mathbf{x}}}\) and \({\frac{\partial \mathbf{g}}{\partial \mathbf{x}}}\) are needed.</em></p>
+<p><em>If the FMU is used as the model for an extended Kalman filter, \({\frac{\partial \mathbf{f}}{\partial \mathbf{x}}}\) and \({\frac{\partial \mathbf{g}}{\partial \mathbf{x}}}\) are needed.</em>]</p>
 </li>
 </ul>
 </div>
@@ -8510,7 +8510,7 @@ An importer of the FMU has to link every library of the matching <a href="#Build
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Version specifier of the library as defined in <a href="https://www.python.org/dev/peps/pep-0440/#version-specifiers">PEP 440</a>.
-The characters <code>&gt;</code> (greater-than) and <code>&lt;</code> (less-than) must be escaped as <code>&gt;</code> and <code>&lt;</code>.
+The characters <code>&gt;</code> (greater-than) and <code>&lt;</code> (less-than) must be escaped as <code>&amp;gt;</code> and <code>&amp;lt;</code>.
  <em>[For example <code>2.5</code>, <code>&gt;=2.0,&lt;3.0</code> or <code>&gt;=1.0,!=1.2</code>]</em>.</p>
 </div></div></td>
 </tr>
@@ -8776,7 +8776,7 @@ All external dependencies must be documented (see <a href="#documentation-direct
 </div>
 <div class="paragraph">
 <p>When shipping the implementation as a static library an optional ABI (Application Binary Interface) directory <code>&lt;arch&gt;-&lt;sys&gt;{-&lt;abi&gt;}</code> may be added to separate binaries for different toolchains on the same platform and a description must be provided in <code>documentation/staticLinking.{txt|html}</code> that contains all necessary information to link against the provided library <em>[e.g. supported compilers]</em>.
-The ABI directory must only contain lowercase characters <code>a&#8230;&#8203;z</code>, digits <code>0&#8230;&#8203;9</code>, and underscores <code><em></code> and start with a lowercase character <code>a&#8230;&#8203;z</code> _[e.g. <code>x86_64-windows-msvc140mt</code> for a static library for 64-bit Windows generated with Visual Studio 2015 with <code>/MT</code> flag]</em>.</p>
+The ABI directory must only contain lowercase characters <code>a&#8230;&#8203;z</code>, digits <code>0&#8230;&#8203;9</code>, and underscores <code>_</code> and start with a lowercase character <code>a&#8230;&#8203;z</code> <em>[e.g. <code>x86_64-windows-msvc140mt</code> for a static library for 64-bit Windows generated with Visual Studio 2015 with <code>/MT</code> flag]</em>.</p>
 </div>
 </div>
 <div class="sect5">
@@ -11255,7 +11255,7 @@ The only differences are the replacement of the element <code>&lt;ModelExchange&
 <div id="xml-example-fmimodeldescription-cosimulation" class="listingblock">
 <div class="title">Example <code>&lt;fmiModelDescription&gt;</code></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;fmiModelDescription
   fmiVersion="3.0"
   modelName="MyLibrary.SpringMassDamper_Early_Return_example"
