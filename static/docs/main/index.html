@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version aa3ab40,</span>
+<span id="revnumber">version 906e06c,</span>
 <span id="revdate">2024-11-12</span>
 </div>
 <div id="toc" class="toc2">
@@ -5730,7 +5730,12 @@ If a variable is associated with a <code>Unit</code>, the value passed to <a hre
 </div>
 <div class="stemblock">
 <div class="content">
-\[v_{\mathit{base}} = \texttt{factor} * v_{\mathit{unit}} + \texttt{if relativeQuantity then 0 else offset}\]
+\[v_{\mathit{base}} = \texttt{factor} \cdot v_{\mathit{unit}} + \left\{
+\begin{array}{ll}
+0 &amp; \texttt{if relativeQuantity = true} \\
+\texttt{offset} &amp; \texttt{if relativeQuantity = false}
+\end{array}
+\right.\]
 </div>
 </div>
 <div class="paragraph">
@@ -5741,7 +5746,7 @@ If a variable is associated with a <code>Unit</code>, the value passed to <a hre
 </div>
 <div class="stemblock">
 <div class="content">
-\[{p_{\mathit{Pa}} = 10^5 p_{\mathit{bar}}}\]
+\[{p_{\mathit{Pa}} = 10^5 \cdot p_{\mathit{bar}}}\]
 </div>
 </div>
 <div class="paragraph">
@@ -5749,7 +5754,7 @@ If a variable is associated with a <code>Unit</code>, the value passed to <a hre
 </div>
 <div class="paragraph">
 <p><em>In the following table several unit examples are given.</em>
-<em>Note that if in column <code>exponents</code> the definition</em> \(\frac{kg \cdot m^2}{s^2}\) <em>is present, then the attributes of <code>&lt;BaseUnit&gt;</code> are  <code>kg=1, m=2, s=-2</code>.</em></p>
+<em>Note that if in column <code>exponents</code> the definition</em> \(\mathrm{kg} \cdot \mathrm{m}^2 \cdot \mathrm{s}^{-2}\) <em>is present, then the attributes of <code>&lt;BaseUnit&gt;</code> are  <code>kg=1, m=2, s=-2</code>.</em></p>
 </div>
 <table id="table-unit-examples" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 14. Unit examples.</caption>
@@ -5774,86 +5779,86 @@ If a variable is associated with a <code>Unit</code>, the value passed to <a hre
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Torque</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>N.m</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\({kg \cdot m^2 / s^2}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{kg} \cdot \mathrm{m}^2 \cdot \mathrm{s}^{-2}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(1.0\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Energy</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>J</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\({kg \cdot m^2 / s^2}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{kg} \cdot \mathrm{m}^2 \cdot \mathrm{s}^{-2}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(1.0\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Pressure</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>bar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\({\frac{kg}{m \cdot s^2}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0e5</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{kg} \cdot \mathrm{m}^{-1} \cdot \mathrm{s}^{-2}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(1.0 \cdot 10^5\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Angle</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>deg</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rad</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.01745329251994330 (= pi/180)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{rad}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.01745329251994330 \ \left(= \frac{\pi}{180}\right)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Angular velocity</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rad/s</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rad/s</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{rad} \cdot \mathrm{s}^{-1}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(1.0\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Angular velocity</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rpm</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rad/s</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.1047197551196598 (= 2*pi/60)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{rad} \cdot \mathrm{s}^{-1}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.1047197551196598 \ \left(= 2 \cdot \frac{\pi}{60}\right)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Frequency</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Hz</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rad/s</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.283185307179586 (= 2*pi)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{rad} \cdot \mathrm{s}^{-1}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(6.283185307179586 \ \left(= 2 \cdot \pi\right)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Temperature</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&#176;F</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>K</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.5555555555555556 (= 5/9)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>255.3722222222222 (= 273.15-32*5/9)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{K}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.5555555555555556 \ \left(= \frac{5}{9}\right)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(255.3722222222222 \ \left(= 273.15 - 32 \cdot \frac{5}{9}\right)\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Percent by length</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>%/m</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1/m</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.01</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{m}^{-1}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.01\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Parts per million</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ppm</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0e-6</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(1\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(1.0 \cdot 10^{-6}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Length</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>km</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{m}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(1000\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Length</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>yd</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.9144</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathrm{m}\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.9144\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(0.0\)</p></td>
 </tr>
 </tbody>
 </table>
@@ -5875,22 +5880,44 @@ If a variable is associated with a <code>Unit</code>, the value passed to <a hre
 <em>If <code>factor</code> and <code>offset</code> are also identical, again the connection equation <code>v2 = v1</code> holds.</em>
 <em>If <code>factor</code> and <code>offset</code> are not identical, the tool may either trigger an error or, if supported, perform a conversion; in other words, use the connection equation (in this case the <code>relativeQuantity</code> of the <code>&lt;TypeDefinition&gt;</code>, see below, has to be taken into account in order to determine whether <code>offset</code> shall or shall not be utilized):</em></p>
 </div>
+</dd>
+</dl>
+</div>
+<div class="stemblock">
+<div class="content">
+\[\texttt{factor(v1)} \cdot \texttt{v1} + \left\{
+\begin{array}{ll}
+0 &amp; \texttt{if relativeQuantity(v1) = true} \\
+\texttt{offset(v1)} &amp; \texttt{if relativeQuantity(v1) = false}
+\end{array}
+\right.
+=
+\texttt{factor(v2)} \cdot \texttt{v2} + \left\{
+\begin{array}{ll}
+0 &amp; \texttt{if relativeQuantity(v2) = true} \\
+\texttt{offset(v2)} &amp; \texttt{if relativeQuantity(v2) = false}
+\end{array}
+\right.\]
+</div>
+</div>
 <div class="paragraph">
-<p><code>factor(v1) * v1 + (if relativeQuantity(v1) then 0 else offset(v1)) = factor(v2) * v2 + (if relativeQuantity(v2) then 0 else offset(v2))</code><br>
-<em>where</em> <code>relativeQuantity(v1) = relativeQuantity(v2)</code> <em>is required</em>.</p>
+<p><em>where</em> <code>relativeQuantity(v1) = relativeQuantity(v2)</code> <em>is required</em>.</p>
 </div>
 <div class="paragraph">
 <p><em>As a result, wrong connections can be detected (for example, connecting a force with an angle-based variable would trigger an error) and conversions between, say, US and SI units can be either automatically performed or, if not supported, an error is triggered as well.</em></p>
 </div>
 <div class="paragraph">
-<p><em>This approach is not satisfactory for variables belonging to different quantities that have, however, the same <code>&lt;BaseUnit&gt;</code>, such as quantities <code>Energy</code> and <code>Torque</code>, or <code>AngularVelocity</code> and <code>Frequency</code>.</em>
+<p>+
+<em>This approach is not satisfactory for variables belonging to different quantities that have, however, the same <code>&lt;BaseUnit&gt;</code>, such as quantities <code>Energy</code> and <code>Torque</code>, or <code>AngularVelocity</code> and <code>Frequency</code>.</em>
 <em>To handle such cases, quantity definitions have to be taken into account (see <code>&lt;TypeDefinitions&gt;</code>) and quantity names need to be standardized.</em></p>
 </div>
 <div class="paragraph">
-<p><em>This approach allows a general treatment of units, without being forced to standardize the grammar and allowed values for units (for example, in FMI 1.0, a unit could be defined as <code>N.m</code> in one FMU and as <code>N*m</code> in another FMU, and a tool would have to reject a connection, since the units are not identical.</em>
+<p>+
+<em>This approach allows a general treatment of units, without being forced to standardize the grammar and allowed values for units (for example, in FMI 1.0, a unit could be defined as <code>N.m</code> in one FMU and as <code>N*m</code> in another FMU, and a tool would have to reject a connection, since the units are not identical.</em>
 <em>In FMI 2.0, the connection would be accepted, provided both elements have the same <code>&lt;BaseUnit&gt;</code> definition).</em></p>
 </div>
-</dd>
+<div class="dlist">
+<dl>
 <dt class="hdlist1">Dimensional analysis of equations</dt>
 <dd>
 <div class="paragraph">
@@ -5901,8 +5928,8 @@ If a variable is associated with a <code>Unit</code>, the value passed to <a hre
 <div class="stemblock">
 <div class="content">
 \[\begin{align*}
-J \cdot \alpha = \tau \rightarrow [kg.m^2]*[rad/s^2] = [kg.m^2/s^2] &amp; \quad \text{// o.k. ("rad" is treated as "1")} \\
-J \cdot \alpha = f \rightarrow [kg.m^2]*[rad/s^2] = [kg.m/s^2] &amp; \quad \text{// error, since dimensions do not agree}
+J \cdot \alpha = \tau \rightarrow [\mathrm{kg} \cdot \mathrm{m}^2] \cdot [\mathrm{rad} \cdot \mathrm{s}^{-2}] = [\mathrm{kg} \cdot \mathrm{m}^2 \cdot \mathrm{s}^{-2}] &amp; \quad \text{// o.k. ("rad" is treated as "1")} \\
+J \cdot \alpha = f \rightarrow [\mathrm{kg} \cdot \mathrm{m}^2] \cdot [\mathrm{rad} \cdot \mathrm{s}^{-2}] = [\mathrm{kg} \cdot \mathrm{m} \cdot \mathrm{s}^{-2}] &amp; \quad \text{// error, since dimensions do not agree}
 \end{align*}\]
 </div>
 </div>
@@ -5918,12 +5945,12 @@ J \cdot \alpha = f \rightarrow [kg.m^2]*[rad/s^2] = [kg.m/s^2] &amp; \quad \text
 <div class="ulist">
 <ul>
 <li>
-<p><em>a = b + c, and <code>Unit</code> of c is provided, but not <code>Unit</code> of a and b:</em><br>
+<p><em>\(a = b + c\), and <code>Unit</code> of c is provided, but not <code>Unit</code> of a and b:</em><br>
 <em>The Unit definition of <code>c</code> (in other words, <code>Unit.name</code>, <code>&lt;BaseUnit&gt;</code>, <code>&lt;DisplayUnit&gt;</code>) is also used for <code>a</code> and <code>b</code>.</em>
 <em>For example, if BaseUnit(c) = <code>rad/s</code>, then BaseUnit(a) = BaseUnit(b) = <code>rad/s</code>.</em></p>
 </li>
 <li>
-<p><em>a = b*c, and <code>Unit</code> of a and of c is provided, but not <code>Unit</code> of b:</em><br>
+<p><em>\(a = b \cdot c\), and <code>Unit</code> of a and of c is provided, but not <code>Unit</code> of b:</em><br>
 <em>If <code>rad</code> is either part of the <code>&lt;BaseUnit&gt;</code> of <code>a</code> and/or of <code>c</code>, then the <code>&lt;BaseUnit&gt;</code> of <code>b</code> cannot be deduced (otherwise it can be deduced).</em>
 <em>Example: If <code>BaseUnit(a) = kg.m/s2</code> and <code>BaseUnit(c) = m/s2</code>, then the <code>BaseUnit(b)</code> can be deduced to be <code>kg</code>.</em>
 <em>In such a case <code>Unit.name</code> of b cannot be deduced from the <code>Unit.name</code> of <code>a</code> and <code>c</code>, and a tool would typically construct the <code>Unit.name</code> of <code>b</code> from the deduced <code>&lt;BaseUnit&gt;</code>.]</em></p>
@@ -5956,8 +5983,8 @@ The attribute <code>name</code> must be unique with respect to all other names o
 <div class="content">
 \[v_{\mathit{display}} =
 \left\{\begin{array}{ll}
-\texttt{factor} *          v_{\mathit{unit}}  + \texttt{offset} &amp;\text{if} \; \texttt{inverse = false} \\
-\texttt{factor} * \frac{1}{v_{\mathit{unit}}}  &amp;\text{if} \; \texttt{inverse = true}
+\texttt{factor} \cdot          v_{\mathit{unit}}  + \texttt{offset} &amp;\text{if} \; \texttt{inverse = false} \\
+\texttt{factor} \cdot \frac{1}{v_{\mathit{unit}}}  &amp;\text{if} \; \texttt{inverse = true}
 \end{array}\right.\]
 </div>
 </div>
@@ -5969,11 +5996,11 @@ The attribute <code>name</code> must be unique with respect to all other names o
 </div>
 <div class="stemblock">
 <div class="content">
-\[T_F = (9/5) * (T_K - 273.15) + 32\]
+\[T_F = \frac{9}{5} \cdot (T_K - 273.15) + 32\]
 </div>
 </div>
 <div class="paragraph">
-<p><em>and therefore, <code>factor = 1.8 (=9/5)</code> and <code>offset = -459.67 (= 32 - 273.15*9/5)</code>.</em></p>
+<p><em>and therefore, \(\texttt{factor} = 1.8 \ \left(= \frac{9}{5}\right)\) and \(\texttt{offset} = -459.67 \ \left(= 32 - 273.15 \cdot \frac{9}{5}\right)\).</em></p>
 </div>
 <div class="paragraph">
 <p><em>Both the <code>DisplayUnit.name</code> definitions as well as the <code>Unit.name</code> definitions are used in the variable elements.</em></p>
@@ -6142,7 +6169,7 @@ The <code>max</code> defines the region in which the FMU is designed to operate 
 If not defined and no other information about the nominal value is available, then <code>nominal = 1</code> is assumed.
 For array variables, this nominal value applies to all elements of the array.<br>
 <em>[The nominal value of a variable can be, for example, used to determine the absolute tolerance for this variable as needed by numerical algorithms:</em><br>
-<code>absoluteTolerance = nominal * tolerance * 0.01</code><br>
+<code>absoluteTolerance = nominal \cdot tolerance \cdot 0.01</code><br>
 <em>where <code>tolerance</code> is, for example, the relative tolerance defined in <a href="#DefaultExperiment">Section 2.4.6</a>.]</em></p></td>
 </tr>
 <tr>
