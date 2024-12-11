@@ -127,7 +127,7 @@ Example:
 }
 ```
 
-The optional logo must be added to `/assets/images` as a PNG or SVG.
+The optional logo must be added to `/assets/images/logos` as a PNG or SVG.
 By submitting a logo the committer agrees that the logo is dispayed on the tools page.
 
 ### Tool Description
