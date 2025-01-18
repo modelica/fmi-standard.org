@@ -6,7 +6,7 @@ title: Literature
 
 ### ASAM International Conference 2024
 
-* The functional mock-up interface (FMI), layered standards and ASAM standards - Enabling seamless SiL simulation of V-ECUs [(Slides)](/assets/literature/FMI-LS-ASAM_2024.pdf)
+* The functional mock-up interface (FMI), layered standards and ASAM standards - Enabling seamless SiL simulation of V-ECUs [(Slides)](/assets/literature/FMI-LS-ASAM_2024.pdf)[(Video)](https://www.youtube.com/watch?v=KzzKRa3jORs)
 
 ### Colloquium for Martin Otter June 28 2024 - 25 years chairing the Modelica Association
 
