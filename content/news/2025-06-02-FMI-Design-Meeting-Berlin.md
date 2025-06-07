@@ -3,7 +3,7 @@ title: FMI Design Meeting in Berlin, Germany
 date: 2025-06-02
 ---
 
-FMI developers from Akkodis, AVL, Bosch Research, Dassault Systèmes, dSPACE, LTX Simulation, PMSF IT Consulting , Synopsys Inc and Wolfram System Modeler participated at the 3 day FMI Design Meeting in Berlin.
+FMI developers from Akkodis, AVL, Bosch Research, Dassault Systèmes, dSPACE, LTX Simulation, PMSF IT Consulting, Synopsys Inc and Wolfram System Modeler participated at the 3 day FMI Design Meeting in Berlin.
 Many thanks to Dassault Systèmes for hosting it!
 
 We made very good progress on the following topics:
