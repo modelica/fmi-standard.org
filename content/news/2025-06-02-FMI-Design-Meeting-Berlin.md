@@ -14,4 +14,4 @@ We made very good progress on the following topics:
 - Work on the Layered Standard for Reference FMI-LS-REF ([LS-Ref](https://github.com/PMSFIT/fmi-ls-ref)) to define how to provide additional related files inside an FMU with role information
 - Concept development for efficiency increase in communicating structured data between FMUs
 
-![Participants of the FMI Design Meeting in Munich](/assets/images/FMI-Design-Berlin-2025.jpg)  
+![Participants of the FMI Design Meeting in Berlin](/assets/images/FMI-Design-Berlin-2025.jpg)  
