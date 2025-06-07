@@ -10,7 +10,7 @@ We made very good progress on the following topics:
 - Preparing Release Candidate v1.0.0-rc2 for the FMI Layered Standard for Network Communication ([LS-Bus](https://github.com/modelica/fmi-ls-bus)) with the goal to release this soon
 - Continuing work on Flexray and Ethernet support in FMI-LS-BUS with the goal to tag the next alpha version
 - Alignment with the VDA SIL standardisation group and clarification of open questions in the scope and usage of FMI-LS-BUS
-- Improving the propsal of our Layered Standard for Structured Data (especially for regular grid maps) [LS-Struct](https://github.com/modelica/fmi-ls-struct
+- Improving the proposal of our Layered Standard for Structured Data (especially for regular grid maps) [LS-Struct](https://github.com/modelica/fmi-ls-struct)
 - Work on the Layered Standard for Reference FMI-LS-REF ([LS-Ref](https://github.com/PMSFIT/fmi-ls-ref)) to define how to provide additional related files inside an FMU with role information
 - Concept development for efficiency increase in communicating structured data between FMUs
 
