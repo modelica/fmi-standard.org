@@ -1,5 +1,5 @@
 ---
-title: FMI Design Meeting in  Berlin, Germany
+title: FMI Design Meeting in Berlin, Germany
 date: 2025-06-02
 ---
 
