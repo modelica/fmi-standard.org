@@ -10,19 +10,5 @@ permissions:
   id-token: write
 
 jobs:
-  build-hugo-website:
-    uses: https://github.com/modelica/ma-hugo-theme/.github/workflow-templates/build-hugo-website.yml@f68cd5ef0ea651e00e45d607f2284ac68be6679e
-  build:
-    runs-on: ubuntu-24.04
-    env:
-      HUGO_VERSION: 0.143.1
-    steps:
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
+  say-hello:
+    uses: https://github.com/modelica/ma-hugo-theme/.github/workflows/say-hello.yml@4dadbc424bb9e3322f67de0db4b0e876722f3715
