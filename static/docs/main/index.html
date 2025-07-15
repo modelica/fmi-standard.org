@@ -587,8 +587,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version db5e956,</span>
-<span id="revdate">2025-06-12</span>
+<span id="revnumber">version 7482f46,</span>
+<span id="revdate">2025-07-15</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3735,47 +3735,8 @@ The functions may only be called if their availability is indicated by the attri
 </div>
 <div class="sect4">
 <h5 id="directionDerivatives"><a class="link" href="#directionDerivatives">2.2.12.1. Directional Derivatives</a></h5>
-<div id="example-directional-derivatives" class="paragraph">
-<p><em>[Example:</em><br>
-<em>Assume an FMU has the output equations</em></p>
-</div>
-<div class="stemblock">
-<div class="content">
-\[\begin{bmatrix}
-y_1
-\\
-y_2
-\end{bmatrix}
-=
-\begin{bmatrix}
-g_1(x, u_1, u_3, u_4)
-\\
-g_2(x, u_1)
-\end{bmatrix}\]
-</div>
-</div>
 <div class="paragraph">
-<p><em>and this FMU is connected, so that \({y_1, u_1, u_3}\) appear in an algebraic loop.</em>
-<em>Then the nonlinear solver needs a Jacobian and this Jacobian can be computed (without numerical differentiation) provided the partial derivative of \({y_1}\) with respect to \({u_1}\) and \({u_3}\) is available.</em>
-<em>Depending on the environment where the FMUs are connected, these <a href="#derivative"><code>derivatives</code></a> can be provided:</em></p>
-</div>
-<div class="paragraph">
-<p>(a) <em>with one wrapper function around function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> to compute the directional derivatives with respect to these two variables (in other words, \({v_{\mathit{unknown}} = y_1}\), \({v_{\mathit{known}} = \left \{ u_1, u_3 \right \}}\)), and then the environment calls this wrapper function with \({v_{\mathit{seed}} = \left \{ 1, 0 \right \}}\) to compute the partial derivative with respect to \({u_1}\) and \({v_{\mathit{seed}} = \left \{ 0, 1 \right \}}\) to compute the partial derivative with respect to \({u_3}\), or</em></p>
-</div>
-<div class="paragraph">
-<p>(b) <em>with two direct function calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> (in other words, \({v_{\mathit{unknown}} = y_1, v_{\mathit{known}} = u_1, v_{\mathit{seed}} = 1}\); and \({v_{\mathit{unknown}} = y_1, v_{\mathit{known}} = u_3, v_{\mathit{seed}} = 1}\)).</em></p>
-</div>
-<div class="paragraph">
-<p><em>Note that a direct implementation of this function with analytic derivatives:</em></p>
-</div>
-<div class="paragraph">
-<p>(a) <em>Provides the directional derivative for all <a href="#input"><code>input</code></a> variables; so in the <a href="#example-directional-derivatives">above example</a>: \({\Delta y_1 = \frac{\partial g_1}{\partial x} \cdot \Delta x + \frac{\partial g_1}{\partial u_1} \cdot \Delta u_1 + \frac{\partial g_1}{\partial u_3} \cdot \Delta u_3 + \frac{\partial g_1}{\partial u_4} \cdot \Delta u_4}\)</em></p>
-</div>
-<div class="paragraph">
-<p>(b) <em>Initializes all seed-values to zero; so in the <a href="#example-directional-derivatives">above example</a>: \({\Delta x = \Delta u_1 = \Delta u_3 = \Delta u_4 = 0}\)</em></p>
-</div>
-<div class="paragraph">
-<p>(c) <em>Computes the directional derivative with the seed-values provided in the function arguments; so in the <a href="#example-directional-derivatives">above example</a>: \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 1, \Delta u_3 = 0, \Delta u_4 = 0)}\) and \({v_{\mathit{sensitivity}} = \Delta y_1 (\Delta x = 0, \Delta u_1 = 0, \Delta u_3 = 1, \Delta u_4 = 0)}\)]</em></p>
+<p><em>[For some examples on the usage of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>, please look at the <a href="https://modelica.github.io/fmi-guides/main/fmi-guide/#directionDerivatives">examples in the implementers' guide</a>.]</em></p>
 </div>
 <div class="paragraph">
 <p><em>[Note, function <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> can be utilized for the following purposes:</em></p>
@@ -3796,160 +3757,11 @@ g_2(x, u_1)
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><em>If a dense matrix shall be computed, the columns of the matrix can be easily constructed by successive calls of <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a>.</em>
-<em>For example, constructing the system Jacobian \({\mathbf{J} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}}}\) as dense matrix can be performed in the following way:</em></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    //   c[]      column vector
-
-    // set time, states and inputs
-    CALL(FMI3SetTime(S, time));
-    CALL(FMI3SetContinuousStates(S, x, NX));
-    // fmi3Set{VariableType}(s, ...)
-
-    // if required at this step, compute the Jacobian as a dense matrix
-    for (i = 0; i &lt; NX; i++) {
-        // construct the Jacobian matrix column wise
-        CALL(FMI3GetDirectionalDerivative(S, vr_dx, NX, &amp;vr_x[i], 1, &amp;dk, 1, c, NX));
-        for (j = 0; j &lt; NX; j++) {
-            J[j][i] = c[j];
-        }
-    }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><em>If the sparsity of a matrix shall be taken into account, then the matrix can be constructed in the following way:</em></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><em>The incidence information of the matrix (whether an element is zero or not zero) is extracted from the XML file from element <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.</em></p>
-</li>
-<li>
-<p><em>A so called graph coloring algorithm is employed to determine the columns of the matrix that can be computed by one call of <code>fmi3GetDirectionalDerivative</code>.</em></p>
-</li>
-<li>
-<p><em>For the columns determined in (2), one call to <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> is made.</em>
-<em>After each such call, the elements of the resulting directional derivative vector are copied into their correct locations of the partial derivative matrix.</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><em>More details and implementational notes are available from <a href="#ABL12">[ABL12]</a>.</em></p>
-</div>
-<div class="paragraph">
-<p><em>Example:</em></p>
-</div>
-<div class="paragraph">
-<p><em>Directional derivatives for higher dimension variables are almost treated in the same way.
-Consider, for example, an FMU which calculates its output \({Y}\) by multiplying its 2x2 input \({U}\) with a 3x2 constant gain \({K}\), with</em></p>
-</div>
-<div class="stemblock">
-<div class="content">
-\[K=
-\begin{bmatrix}
-a, b
-\\
-c, d
-\\
-e, f
-\end{bmatrix}\]
-</div>
-</div>
-<div class="paragraph">
-<p><em>The output \({Y=K U}\) is a matrix of size 3x2.</em>
-<em>The directional derivative of an output element \({Y(i,j)}\) with respect to the input \({U}\) and the seed \({\Delta U}\) is:</em></p>
-</div>
-<div class="stemblock">
-<div class="content">
-\[\Delta Y(i,j) =
-\frac{\partial Y(i,j)}{\partial U(1,1)} \cdot \Delta U(1,1) +
-\frac{\partial Y(i,j)}{\partial U(1,2)} \cdot \Delta U(1,2) +
-\frac{\partial Y(i,j)}{\partial U(2,1)} \cdot \Delta U(2,1) +
-\frac{\partial Y(i,j)}{\partial U(2,2)} \cdot \Delta U(2,2)\]
-</div>
-</div>
-<div class="stemblock">
-<div class="content">
-\[\Delta \mathbf{Y} =
-\begin{bmatrix}
-a \Delta U(1,1)+b \Delta U(2,1), a \Delta U(1,2)+ b \Delta U(2,2)
-\\
-c \Delta U(1,1)+d \Delta U(2,1), c \Delta U(1,2)+ d \Delta U(2,2)
-\\
-e \Delta U(1,1)+f \Delta U(2,1), e \Delta U(1,2)+ f \Delta U(2,2)
-\end{bmatrix}\]
-</div>
-</div>
-<div class="paragraph">
-<p><em>To get the directional derivative of \({Y}\) with respect to \({U(2,1)}\) the command <code>fmi3GetDirectionalDerivative(m, vr_Y, 1, vr_U, 1, {0.0, 0.0, 1.0, 0.0}, 4, dd, 6)</code> can be used where <code>vr_Y</code> and <code>vr_U</code> are references of the variable \({Y}\) and \({U}\), respectively.</em>
-<em>Note that in order to get the directional derivative of \({Y}\) with respect to \({U(2,1)}\), the seed value <code>{0, 0, 1.0, 0}</code> has been used.</em>
-<em>The retrieved directional derivative <code>dd</code> is stored in a matrix of size 3x2, so <code>nSensitivity</code> is 6.</em></p>
-</div>
 </div>
 <div class="sect4">
 <h5 id="adjointDerivatives"><a class="link" href="#adjointDerivatives">2.2.12.2. Adjoint Derivatives</a></h5>
 <div class="paragraph">
-<p><em>[Adjoint derivatives are beneficial in several contexts:</em></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><em>in artificial intelligence (AI) frameworks the adjoint derivatives are called "vector gradient products" (VJPs).</em>
-<em>There adjoint derivatives are used in the backpropagation process to perform gradient-based optimization of parameters using reverse mode automatic differentiation (AD), see, e.g., <a href="#BPRS15">[BPRS15]</a>.</em></p>
-</li>
-<li>
-<p><em>in parameter estimation (see <a href="#BKF17">[BKF17]</a>)</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><em>Typically, reverse mode automatic differentiation (AD) is more efficient for these use cases than forward mode AD, as explained in the cited references.</em></p>
-</div>
-<div class="paragraph">
-<p><em>If one would like to construct the full Jacobian matrix, one can use either <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> (to column-wise construct it) or <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (to row-wise construct it, possibly improved with coloring methods as mentioned above).</em>
-<em>However in the applications motivating the adjoint derivatives, one does not need the full Jacobian matrix \(\mathbf{J}\), but vector  \(\mathbf{v}^T\) multiplied from the left to the Jacobian, i.e. \(\mathbf{v}^T\mathbf{J}\).</em>
-<em>For computing the full Jacobian matrix, the column-wise construct is generally more efficient.]</em></p>
-</div>
-<div class="paragraph">
-<p><em>Example:</em><br>
-<em>Assume an FMU has the output equations</em></p>
-</div>
-<div class="stemblock">
-<div class="content">
-\[\begin{bmatrix}
-y_1
-\\
-y_2
-\end{bmatrix}
-=
-\begin{bmatrix}
-g_1(u_1, u_2)
-\\
-g_2(u_1, u_2)
-\end{bmatrix}\]
-</div>
-</div>
-<div class="paragraph">
-<p><em>and \(\left( w_1,  w_2 \right)^T \cdot \mathbf{ \frac{\partial g}{\partial u} }\) for some vector \(\left( w_1,  w_2 \right)^T\) is needed.</em>
-<em>Then one can get this with one function call of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a> (with arguments</em> \(\mathbf{v}_{\mathit{unknown}} = \text{valueReferences of} \left \{ y_1, y_2 \right \},  \mathbf{v}_{\mathit{known}} = \text{valueReferences of} \left \{ u_1, u_2 \right \},  \mathbf{v}_{\mathit{seed}} = \left( w_1, w_2 \right)^T\) <em>), while with <a href="#fmi3GetDirectionalDerivative"><code>fmi3GetDirectionalDerivative</code></a> at least two calls would be necessary to first construct the Jacobian column-wise and then multiplying from the right with</em> \(\left( w_1,  w_2 \right)^T\) <em>.</em></p>
-</div>
-<div class="paragraph">
-<p><em>If a dense matrix shall be computed, the rows of the matrix can be easily constructed by successive calls of <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a>.</em>
-<em>For example, constructing the system Jacobian \({\mathbf{J} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}}}\) as a dense matrix can be performed in the following way:</em></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    for (i = 0; i &lt; NX; i++) {
-        // construct the Jacobian matrix column wise
-        CALL(FMI3GetAdjointDerivative(S, &amp;vr_dx[i], 1, vr_x, NX, &amp;dk, 1, &amp;J[i][0], NX));
-    }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><em>]</em></p>
+<p><em>[For some hints on adjoint derivatives, their calculation and usage, and an example, see the corresponding <a href="https://modelica.github.io/fmi-guides/main/fmi-guide/#adjointDerivatives">section in the implementers' guide</a>.]</em></p>
 </div>
 </div>
 </div>
