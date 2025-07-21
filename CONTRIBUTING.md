@@ -76,22 +76,23 @@ Please respect the rules below when editing the file.
 
 ### Format
 
-| Column         | Description                                                             | Example / valid values
-|----------------|-------------------------------------------------------------------------|-----------------------
-| name           | The tool name that appears in the tools list                            | `"Example Sim"`
-| license        | License (commercial or [OSI approved](https://opensource.org/licenses)) | `"commercial"`, `"osi"`
-| url            | Link to the tool's homepage                                             | `"https://example.com/example-sim/"`
-| logo           | filename of the tool's logo (or company's logo)                         | `"example-sim.svg"`
-| vendor         | Name of the tool vendor                                                 | `"Example Company"`
-| vendorURL      | Link to the vendor's homepage                                           | `"https://example.com/"`
-| examplesURL    | Link to the tool's example FMUs and compatibility information           | `"https://github.com/example/example-sim/"`
-| description    | A [description](#tool-description) of the tool                          | `"Run simulations in the cloud in real time"`
-| features       | Reserved for future use                                                 | `[]`
-| platforms      | Supported platforms                                                     | `["macOS", "Linux", "Windows"]`
-| interfaces     | Supported interfaces                                                    | `["GUI", "CLI", "library"]`
-| fmiVersions    | Supported FMI versions                                                  | `["1.0", "2.0", "3.0"]`
-| fmuExport      | Supported interface types for FMU export                                | `["CS", "ME", "SE"]`
-| fmuImport      | Supported interface types for FMU import                                | `["CS", "ME", "SE"]`
+| Column           | Description                                                             | Example / valid values
+|------------------|-------------------------------------------------------------------------|-----------------------
+| name             | The tool name that appears in the tools list                            | `"Example Sim"`
+| license          | License (commercial or [OSI approved](https://opensource.org/licenses)) | `"commercial"`, `"osi"`
+| url              | Link to the tool's homepage                                             | `"https://example.com/example-sim/"`
+| logo             | filename of the tool's logo (or company's logo)                         | `"example-sim.svg"`
+| vendor           | Name of the tool vendor                                                 | `"Example Company"`
+| vendorURL        | Link to the vendor's homepage                                           | `"https://example.com/"`
+| examplesURL      | Link to the tool's example FMUs and compatibility information           | `"https://github.com/example/example-sim/"`
+| description      | A [description](#tool-description) of the tool                          | `"Run simulations in the cloud in real time"`
+| features         | Reserved for future use                                                 | `[]`
+| platforms        | Supported platforms                                                     | `["macOS", "Linux", "Windows"]`
+| interfaces       | Supported interfaces                                                    | `["GUI", "CLI", "library"]`
+| fmiVersions      | Supported FMI versions                                                  | `["1.0", "2.0", "3.0"]`
+| fmuExport        | Supported interface types for FMU export                                | `["CS", "ME", "SE"]`
+| fmuImport        | Supported interface types for FMU import                                | `["CS", "ME", "SE"]`
+| layeredStandards | Supported layered standards                                             | `["BUS", "XCP"]`
 
 Example:
 
@@ -123,6 +124,9 @@ Example:
     ],
     "fmuImport": [
         "CS"
+    ],
+    "layeredStandards": [
+        "BUS"
     ]
 }
 ```
