@@ -4,6 +4,12 @@ title: Literature
 
 ## FMI Related Publications
 
+### 16th Internationa Modelica and FMI Conference 2025, Lucerne, Switzerland
+
+ALl papers and many presentations are publicly available in the [Conferende App](https://pretalx.com/16thmodelicafmiconference/schedule/).
+
+A list of FMI related papers and slides will be published here later.
+
 ### ASAM International Conference 2024
 
 * The functional mock-up interface (FMI), layered standards and ASAM standards - Enabling seamless SiL simulation of V-ECUs [(Slides)](/assets/literature/FMI-LS-ASAM_2024.pdf)[(Video)](https://www.youtube.com/watch?v=KzzKRa3jORs)
