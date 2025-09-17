@@ -13,7 +13,7 @@ Some topics that were additionally discussed:
 - New computing platforms such as GPUs and Web assembly sandboxes gain importance, and it was discussed how FMI could make use of them.
 - FMI usage for (dynamical) optimization gains importance, and there are several proposals to improve this even more.
 
-We also saw that that besides of the FMI Standard itself it is very important to provide training material and usage guidelines. 
+We also saw that besides the FMI Standard itself it is very important to provide training material and usage guidelines. 
 
 Thanks to all participants for the engaged discussions, feedback, ideas!
 
