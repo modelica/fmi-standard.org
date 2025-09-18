@@ -17,4 +17,4 @@ We also saw that besides the FMI Standard itself it is very important to provide
 
 Thanks to all participants for the engaged discussions, feedback, ideas!
 
-![FMI-Advisory-Lucerne.jpg)  
+![Participants of the FMI Advisory Committee meeting in Lucerne](/assets/images/FMI-Advisory-Lucerne.jpg)  
