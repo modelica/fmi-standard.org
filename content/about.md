@@ -28,10 +28,9 @@ AIRBUS, blue automation, Caterpillar Energy Solutions, Claytex, COMSOL, DNV, EDA
 
 ## How to contribute to the development of the FMI standard
 
-There are FMI tracks at other FMI related events like conferences and design meetings.
-If you believe you could benefit from the standard or if you would like to contribute to the improvement or distribution of it, please contact us at: [contact@fmi-standard.org](mailto:contact@fmi-standard.org).
+If your that your organization or company would like to contribute to the improvement or distribution of the FMI Standard,  please contact us at: [contact@fmi-standard.org](mailto:contact@fmi-standard.org).
 
-All individual contributors have to sign the [Corporate Contributor License Agreement (CCLA)](https://github.com/modelica/fmi-standard.org/tree/main/static/assets/FMI_CCLA_v1.0_2016_06_21.pdf) or must be corporate contributors that have signed the [CLA of the Modelica Association](https://github.com/modelica/ModelicaAssociationCLA/releases).
+All contributing organizations have to sign the [Corporate Contributor License Agreement (CCLA)](https://github.com/modelica/fmi-standard.org/tree/main/static/assets/FMI_CCLA_v1.0_2016_06_21.pdf) or the the [CLA of the Modelica Association](https://github.com/modelica/ModelicaAssociationCLA/releases).
 Therefore, the first step is to get your company to sign the CCLA/CLA.
 This ensures that all intellectual property (IP) contributed to the FMI Standard will be licensed to the Modelica Association (MA) which will sublicense the FMI Standard to tool vendors implementing it and end users using it.
 
@@ -218,7 +217,7 @@ These organizations are excluded from the quorum for this decision.
 
 *Visitors*
 Organizations that contribute to the FMI Project and are neither in Group 1 or 2 are called “Visitors”. 
-Visitors have no right to access to the internal infrastructure of the FMI project (svn, trac, mailing lists, etc.).
+Visitors have no right to access to the internal infrastructure of the FMI project (GitHub Repositories, mailing lists, etc.).
 
 ### Organizations
 
@@ -243,8 +242,8 @@ The meeting material (minutes, documents, presentations) is available on the FMI
 
 ### Development
 
-The development of FMI specifications is organized according to the FMI Development Rules (https://github.com/modelica/fmi-design/tree/master/FMI_DevelopmentProcess).
-All organizations that contribute to an FMI specification and related works have to sign the Corporate Contributor License Agreement (https://svn.fmi-standard.org/fmi/branches/public/docs/CCLA) by a responsible representative of the company they are affiliated with.
+The development of FMI specifications is organized according to the FMI Development Rules (interrnal link: https://github.com/modelica/fmi-design/tree/master/FMI_DevelopmentProcess).
+All organizations that contribute to an FMI specification and related works have to sign the Corporate Contributor License Agreement by a responsible representative of the organization or company they are affiliated with.
 
 ### Publications
 
