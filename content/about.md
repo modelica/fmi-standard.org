@@ -28,9 +28,9 @@ AIRBUS, blue automation, Caterpillar Energy Solutions, Claytex, COMSOL, DNV, EDA
 
 ## How to contribute to the development of the FMI standard
 
-If your that your organization or company would like to contribute to the improvement or distribution of the FMI Standard,  please contact us at: [contact@fmi-standard.org](mailto:contact@fmi-standard.org).
+If your organization or company would like to contribute to the improvement or distribution of the FMI Standard,  please contact us at: [contact@fmi-standard.org](mailto:contact@fmi-standard.org).
 
-All contributing organizations have to sign the [Corporate Contributor License Agreement (CCLA)](https://github.com/modelica/fmi-standard.org/tree/main/static/assets/FMI_CCLA_v1.0_2016_06_21.pdf) or the the [CLA of the Modelica Association](https://github.com/modelica/ModelicaAssociationCLA/releases).
+All contributing organizations have to sign the [Corporate Contributor License Agreement (CCLA)](https://github.com/modelica/fmi-standard.org/tree/main/static/assets/FMI_CCLA_v1.0_2016_06_21.pdf) or the [CLA of the Modelica Association](https://github.com/modelica/ModelicaAssociationCLA/releases).
 Therefore, the first step is to get your company to sign the CCLA/CLA.
 This ensures that all intellectual property (IP) contributed to the FMI Standard will be licensed to the Modelica Association (MA) which will sublicense the FMI Standard to tool vendors implementing it and end users using it.
 
