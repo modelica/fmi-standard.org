@@ -6,9 +6,44 @@ title: Literature
 
 ### 16th Internationa Modelica and FMI Conference 2025, Lucerne, Switzerland
 
+Conference App: 
 ALl papers and many presentations are publicly available in the [Conferende App](https://pretalx.com/16thmodelicafmiconference/schedule/).
 
-A list of FMI related papers and slides will be published here later.
+Tutorials: 
+
+FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp218)):
+
+* [Prototypical Control for the Digital Twin of Aircraft Environmental Control System](https://doi.org/10.3384/ecp21881)
+* [Aspects and Ideas for the FMI-based Modeling of Railway Digital Twins](https://doi.org/10.3384/ecp21891)
+* [Collaborative Digital Twin Development for Railway Braking and Traction Applications](https://doi.org/10.3384/ecp218101)
+* [Validation of Dynamic Simulation Models using Metamorphic Testing and Given-When-Then Patterns](https://doi.org/10.3384/ecp218139)
+* [Integration of Physical and AI Models Using Open and Interoperable Standards: A Model-Based Methodology for Autonomous Robot Development](https://doi.org/10.3384/ecp218479)
+* [Modelica FMI based hybrid reinforcement learning enhanced trajectory planning for an ADR scenario for combined control of a satellite with a 7-axis robotic arm using Modelica/FMI](https://doi.org/10.3384/ecp218489)
+* [Yet Another Residential District Simulator: yards for Controller Development in the Residential Built Environment](https://doi.org/10.3384/ecp218525)
+* [Facilitating the use of Physics-Based Simulations on Embedded Devices by running FMUs from MicroPython](https://doi.org/10.3384/ecp218535)
+* [FMI Meets SystemC: A Framework for Cross-Tool Virtual Prototyping](https://doi.org/10.3384/ecp218545)
+* [Hybrid Simulation Models for Embedded Applications: A Modelica and eFMI approach](https://doi.org/10.3384/ecp218555)
+* [A Study on Vehicle Suspension Loads Prediction Method Based on Hybrid Road Simulation using Modelica Library and FMI](https://doi.org/10.3384/ecp218567)
+* [Br(e)aking the Boundaries of Physical Simulation Models: Neural Functional Mock-up Units for Modeling the Automotive Braking System](https://doi.org/10.3384/ecp218575)
+* [VDCWorkbench: A Vehicle Dynamics Control Test & Evaluation Library for Model and AI-based Control Approaches](https://doi.org/10.3384/ecp218585)
+* [Simulation of Embodied Cyber Physical System Based on Modelica/MWORKS: A Case Study of Intelligent Unmanned Surface Vessel](https://doi.org/10.3384/ecp218591)
+* [Master controller for offshore wind power and hybrid grids](https://doi.org/10.3384/ecp218611)
+* [Liaison: an open-source tool for distributed co-simulations](https://doi.org/10.3384/ecp218639)
+* [A Tool for the Implementation of Open Neural Network Exchange Models in Functional Mockup Units](https://doi.org/10.3384/ecp218645)
+* [Input Smoothing for Faster Co-Simulation using FMI](https://doi.org/10.3384/ecp218653)
+* [Comparing the Predictive Event Handling Algorithm LookAhead to Rollback and Early Return](https://doi.org/10.3384/ecp218663)
+* [Towards a Common Standard for Uncertainty Quantification](https://doi.org/10.3384/ecp218671)
+* [LS-SA: Developing an FMI layered standard for holistic & efficient sensitivity analysis of FMUs](https://doi.org/10.3384/ecp218681)
+* [FMI Layered Standard for Network Communication: Applications in Networked ECU Development](https://doi.org/10.3384/ecp218693)
+* [An innovative heterogeneous modeling approach to build a cooling system for battery thermal management with common fluid properties involving FMI terminals](https://doi.org/10.3384/ecp218703)
+* [Enhancing Large-Scale Power Systems Simulations through Functional Mockup Unit-based Grid-Forming Inverter Models](https://doi.org/10.3384/ecp218713)
+* [The Fundamental Modeling Practices and Specifications to support the Preservation and Reuse of Analytical Simulations](https://doi.org/10.3384/ecp218741)
+* [Integration of Geometric Tolerance Analysis in System Simulations via Functional Mock-up Units](https://doi.org/10.3384/ecp218765)
+* [Shared sea-environment definition and realization for maritime and offshore co-simulations](https://doi.org/10.3384/ecp218775)
+* [Decreasing Risk in the Design of Large Coupled Systems via Co-Simulation-Based Optimization and Adaptive Stress Testing](https://doi.org/10.3384/ecp218785)
+* [Modelica driven development of the thermal management control system for a zero emission yacht](https://doi.org/10.3384/ecp218801)
+* [Integrating a Seasonal Thermal Energy Storage FMU in a MATLAB/Simscape Thermal Source Network Model](https://doi.org/10.3384/ecp218851)
+* 
 
 ### ASAM International Conference 2024
 
