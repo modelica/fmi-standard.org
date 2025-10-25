@@ -11,8 +11,23 @@ ALl papers and many presentations are publicly available in the [Conferende App]
 
 Tutorials: 
 
-FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp218)):
+Industrial User Presentations: 
 
+* Airbus: [FMI Standard and Airbus Needs, Usages and Expectations](/assets/literature/Modelica_and_FMI_Conference_2025/IUP_Airbus.pdf)
+* Bosch, AVL, ProSTEP: [Integration of systems engineering and simulation based onstandards: The needs, challenges and solutions from anindustrial perspective](/assets/literature/Modelica_and_FMI_Conference_2025/Bosch_AVL_ProSTEP.pdf)
+* Bosch, DLR: [Optimization with FMI and CasADi: Analysis in IndustrialApplications](/assets/literature/Modelica_and_FMI_Conference_2025/Bosch_DLR.pdf)
+* Bosch, Dassault Systems, eXXcellent, ProSTEP: [Towards a Credible System Simulation Architectureapplicable to Heat Pump Systems using Modelica, FMI and SSP](/assets/literature/Modelica_and_FMI_Conference_2025/Bosch_Dassault-Systems_eXXcellent.pdf)
+* Bosch, Dassault Systems, eXXcellent, PMSF, ProSTEP: [Traceability and Support of Modeling & Simulation usingSSP-Traceability Layered Standard](/assets/literature/Modelica_and_FMI_Conference_2025/ProSTEP.pdf)
+* Dassault Aviation [Bridging the gap between System Engineering and Simulation,applied to collaborative design of Aircraft Systems](/assets/literature/Modelica_and_FMI_Conference_2025/IUP_Dassault_Aviation_Thomas_Eric.pdf)
+* DENSO, BMW: [MBSE using SSP and SysML for Collaborative Development: AnOpen-source ADAS Use Case](/assets/literature/Modelica_and_FMI_Conference_2025/DENSO_BMW.pdf)
+* DENSO, PMSF: [Transmission Control Unit Use Case for Virtual ECUs andSSP-based Collaborative Development](/assets/literature/Modelica_and_FMI_Conference_2025/DENSO_PMSF.pdf)
+* DNV: [Accuracy and assurance of co-simulations in marine lifting operations](/assets/literature/Modelica_and_FMI_Conference_2025/DNV.pdf)
+* Renault: [Optimizing Assemblies of FMUs](/assets/literature/Modelica_and_FMI_Conference_2025/Renault.pdf)
+* Saab Aeronatics: [OpenSCALING: A Saab Aeronautics Perspective](/assets/literature/Modelica_and_FMI_Conference_2025/IUP_Saab.pdf)
+* Toshiba, JAMBE, JSAE, 3V-SG: [Cross-Company Collaborative Model-Based Development usingFMI3.0 and SSP2.0](/assets/literature/Modelica_and_FMI_Conference_2025/Toshiba_JAMBE_JSAE_3V-SG.pdf)
+
+
+FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp218)):
 * [Prototypical Control for the Digital Twin of Aircraft Environmental Control System](https://doi.org/10.3384/ecp21881)
 * [Aspects and Ideas for the FMI-based Modeling of Railway Digital Twins](https://doi.org/10.3384/ecp21891)
 * [Collaborative Digital Twin Development for Railway Braking and Traction Applications](https://doi.org/10.3384/ecp218101)
