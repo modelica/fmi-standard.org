@@ -11,6 +11,12 @@ ALl papers and many presentations are publicly available in the [Conferende App]
 
 Tutorials: 
 
+* FMI Beginners Tutorial - Exporting, Simulating, and Co-Simulating FMUs  [(Material available on GitHub)](https://github.com/modelica/fmi-beginners-tutorial-2025)]
+* Exporting and importing an FMU using C code [(Material available on GitHub)](https://github.com/modelica/fmi-import-export-tutorial-2025/)
+* CasADi tutorial on dynamic optimization with FMI 3.0 Model Exchange [(Material available on GitHub)](CasADi tutorial on dynamic optimization with FMI 3.0 Model Exchange)
+* FMUGym: From Uncertainty-Aware Simulation to Learning-Based Control with FMI and Python [(Slides)](/assets/literature/Modelica_and_FMI_Conference_2025/FMUGymTutorial.pdf)
+* Tutorial on FMI3 co-simulation with UniFMU [(Slides)](/assets/literature/Modelica_and_FMI_Conference_2025/UniFMU-Tutorial.pdf)
+
 Industrial User Presentations: 
 
 * Airbus: [FMI Standard and Airbus Needs, Usages and Expectations](/assets/literature/Modelica_and_FMI_Conference_2025/IUP_Airbus.pdf)
@@ -58,7 +64,6 @@ FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp218)):
 * [Decreasing Risk in the Design of Large Coupled Systems via Co-Simulation-Based Optimization and Adaptive Stress Testing](https://doi.org/10.3384/ecp218785)
 * [Modelica driven development of the thermal management control system for a zero emission yacht](https://doi.org/10.3384/ecp218801)
 * [Integrating a Seasonal Thermal Energy Storage FMU in a MATLAB/Simscape Thermal Source Network Model](https://doi.org/10.3384/ecp218851)
-* 
 
 ### ASAM International Conference 2024
 
