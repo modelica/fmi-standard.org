@@ -1,6 +1,6 @@
 ---
 title: Proceedings of the 16th International Modelica and FMI Conference available
-date: 2025-01-07
+date: 2025-10-27
 ---
 ![16th International Modelica and FMI Conference](/assets/images/Modelica_and_FMI_Confernce_Logo.png)  
 
