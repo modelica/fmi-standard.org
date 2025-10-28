@@ -13,7 +13,7 @@ Tutorials:
 
 * FMI Beginners Tutorial - Exporting, Simulating, and Co-Simulating FMUs  [(Material available on GitHub)](https://github.com/modelica/fmi-beginners-tutorial-2025)]
 * Exporting and importing an FMU using C code [(Material available on GitHub)](https://github.com/modelica/fmi-import-export-tutorial-2025/)
-* CasADi tutorial on dynamic optimization with FMI 3.0 Model Exchange [(Material available on GitHub)](CasADi tutorial on dynamic optimization with FMI 3.0 Model Exchange)
+* CasADi tutorial on dynamic optimization with FMI 3.0 Model Exchange [(Material available on GitHub)](https://github.com/casadi/modelica2025)
 * FMUGym: From Uncertainty-Aware Simulation to Learning-Based Control with FMI and Python [(Slides)](/assets/literature/Modelica_and_FMI_Conference_2025/FMUGymTutorial.pdf)
 * Tutorial on FMI3 co-simulation with UniFMU [(Slides)](/assets/literature/Modelica_and_FMI_Conference_2025/UniFMU-Tutorial.pdf)
 
