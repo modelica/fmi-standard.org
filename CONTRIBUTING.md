@@ -134,6 +134,13 @@ Example:
 The optional logo must be added to `/assets/images/logos` as a PNG or SVG.
 By submitting a logo the committer agrees that the logo is dispayed on the tools page.
 
+Tool vendors who have a tool listed on the FMI website can get access to a private Github repository https://github.com/modelica/FMI-Tools-Forum/ for discussion with other tool vendors with a listed tool.
+It is intended to exchange and solve problems with FMI implementations in a more protected area.
+
+* Access is granted only members of the FMI Project and to tool vendors (https://fmi-standard.org/tools/) who have a tool listed on the FMI webpage. If you have not been invited automatically and want access, please send an email to contact@fmi-standard.org providing your Github user name. 
+* Usage: If you face a problem with FMI implementation of another importing or exporting tool and do not have a contact address from that tool vendor, you can create an issue. Please provide information, how to reproduce your problem, and optionally how to contact you.
+
+
 ### Tool Description
 
 The description field should
