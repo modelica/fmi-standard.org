@@ -232,6 +232,13 @@ The values in time must be monotonically increasing.
 0.0,0,AA22BB33,1 2 3 4 5 6,"string1"
 1.0,1,BB11FF4433,2 3 4 5 6 7,"string2"
 ```
+
+### FMI tools forum
+
+Tool vendors and other organizations that have a tool listed on the FMI website can get access to the GitHub Repository "FMI Tools Forum" (github.com/modelica/FMI-tools-forum).
+This is a private repositry for the exchange between tool vendors. It is intended to exchange and solve problems with FMI implementations in a more protected area.
+If you have a tool listed on the FMI Tools page and want to get access, please send an email to contact@fmi-standard.org providing your GitHub user name.
+
 ## Adding a news post
 
 To create a post, add a file to `/content/news/` with the following format:
