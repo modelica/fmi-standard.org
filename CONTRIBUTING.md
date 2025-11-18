@@ -236,7 +236,8 @@ The values in time must be monotonically increasing.
 ### FMI tools forum
 
 Tool vendors and other organizations that have a tool listed on the FMI website can get access to the GitHub Repository "FMI Tools Forum" (github.com/modelica/FMI-tools-forum).
-This is a private repositry for the exchange between tool vendors. It is intended to exchange and solve problems with FMI implementations in a more protected area.
+This is a private repositry for the exchange between tool vendors.
+It is intended to exchange and solve problems with FMI implementations in a more protected area.
 If you have a tool listed on the FMI Tools page and want to get access, please send an email to contact@fmi-standard.org providing your GitHub user name.
 
 ## Adding a news post
