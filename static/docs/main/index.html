@@ -587,7 +587,7 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 8d444b1,</span>
+<span id="revnumber">version 0bdd1b8,</span>
 <span id="revdate">2025-11-18</span>
 </div>
 <div id="toc" class="toc2">
@@ -7666,6 +7666,13 @@ Predefined variable kinds are used to describe how the terminal member variables
 Domain specific connection rules, terminals and their member variables can be provided by other standards, including layered standards.</p>
 </div>
 <div class="paragraph">
+<p><em>[Terminal definitions provide heuristics to help importers connect FMUs and check compatibility.
+The matching rules and terminal kinds serve as guidance and should not be interpreted as strict requirements that prevent reasonable connections.
+Importers have flexibility in how they interpret and apply terminal information, and may choose to allow connections that are not explicitly covered by the rules defined here.
+This flexibility is intentional, as terminals are designed to work best within specific user communities or tool ecosystems where additional conventions and constraints may apply.
+Specific domains may provide more precise connection rules and semantics for their use cases.]</em></p>
+</div>
+<div class="paragraph">
 <p><em>[Algebraic loops in systems of connected FMUs are not addressed or resolved by the terminals.</em>
 <em>The FMU standard does not require that the <a href="#causality"><code>causality</code></a> of the terminal member variables in connected terminals match.</em>
 <em>This must be handled by the importer.</em></p>
@@ -7737,6 +7744,20 @@ However, an importer may still connect terminals based on additional information
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p><em>[When connecting two terminals, each terminal&#8217;s <code>matchingRule</code> is evaluated independently for that terminal.
+For example, a terminal with <code>matchingRule="plug"</code> can be connected to a terminal with <code>matchingRule="bus"</code> as long as the requirements of each rule are satisfied from that terminal&#8217;s perspective:
+The plug terminal requires all its member variables to be present in the connection, while the bus terminal allows for partial matching.
+This asymmetric matching is intentional and supports flexible connection scenarios.</em></p>
+</div>
+<div class="paragraph">
+<p><em>For hierarchical (nested) terminals, matching is performed at each level according to the <code>matchingRule</code> of that level.
+Each terminal and sub-terminal is matched according to its own <code>matchingRule</code>, and the specific order of traversal or flattening is left to the importer&#8217;s discretion.</em></p>
+</div>
+<div class="paragraph">
+<p><em>A single variable from <a href="#ModelVariables"><code>&lt;ModelVariables&gt;</code></a> may be referenced by multiple terminals within the same FMU.
+This allows the same variable to participate in different connection contexts or to be grouped in multiple logical interfaces.]</em></p>
+</div>
 <div id="terminalKind" class="paragraph">
 <p>The normalized string <code>terminalKind</code> is an optional attribute.
 Other standards may define terminal kinds.
