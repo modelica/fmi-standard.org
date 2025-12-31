@@ -7,7 +7,7 @@ title: Literature
 ### 16th International Modelica and FMI Conference 2025, Lucerne, Switzerland
 
 Conference App: 
-ALl papers and many presentations are publicly available in the [Conferende App](https://pretalx.com/16thmodelicafmiconference/schedule/).
+ALl papers and many presentations are publicly available in the [Conference App](https://pretalx.com/16thmodelicafmiconference/schedule/).
 
 Tutorials: 
 
