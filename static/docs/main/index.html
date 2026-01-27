@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version c1ae8df,</span>
-<span id="revdate">2026-01-23</span>
+<span id="revnumber">version 3a4b5d0,</span>
+<span id="revdate">2026-01-27</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -511,7 +511,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#requirements-for-implementations-of-the-c-api">2.2.1. Requirements for Implementations of the C-API</a></li>
 <li><a href="#header-files-and-naming-of-functions">2.2.2. Header Files and Naming of Functions</a></li>
 <li><a href="#platform-dependent-definitions">2.2.3. Platform Dependent Definitions</a></li>
-<li><a href="#status-returned-by-functions">2.2.4. Status Returned by Functions</a></li>
+<li><a href="#status-returned-by-functions">2.2.4. Status Returned by Functions and Logging Mechanism</a></li>
 <li><a href="#inquire-version-number">2.2.5. Inquire Version Number of Header Files</a></li>
 <li><a href="#advancing-time">2.2.6. Advancing Time</a></li>
 <li><a href="#fmu-variables">2.2.7. Variables</a>
@@ -2072,9 +2072,45 @@ typedef            bool fmi3Clock;    /* Data type to be used with fmi3ClockActi
 </div>
 </div>
 <div class="sect3">
-<h4 id="status-returned-by-functions">2.2.4. Status Returned by Functions</h4>
+<h4 id="status-returned-by-functions">2.2.4. Status Returned by Functions and Logging Mechanism</h4>
 <div class="paragraph">
-<p>This section defines the return values the C-API functions indicating success or failure of the function call.
+<p>This section defines the return values the C-API functions indicating success or failure of the function call, as well as required logging behavior of the FMU.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Prior to FMI 3.0.3, the standard did not unambiguously define the logging behavior for functions returning <a href="#fmi3Error"><code>fmi3Error</code></a>, and <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>.
+This has been clarified in this version of the standard to clearly state that for <a href="#fmi3Error"><code>fmi3Error</code></a> and <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>, as well as equivalent <code>NULL</code> returns from the instantiation functions, logging must be performed regardless of the current logging settings, unless the <code>logMessage</code> callback function pointer was provided as a <code>NULL</code> pointer.
+To support backward compatibility, definitions have been clarified in a way that FMUs that choose to only log errors and fatal errors when logging is enabled are still considered conforming, but this behavior is not recommended.
+Going forward, unless the <code>logMessage</code> callback function pointer was provided as a <code>NULL</code> pointer, FMUs should strive to always log error and fatal error conditions with informative messages regardless of the current logging settings.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Required logging behavior for functions is determined based on the current logging settings.
+These settings are defined by the <code>loggingOn</code> argument provided during instantiation of the FMU (see <a href="#FMUStateSettable"><strong>FMU State Settable</strong></a>), and may be changed later using <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a>.
+The following rules apply:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If no <code>logMessage</code> callback function pointer was provided (i.e. it is <code>NULL</code>), the FMU must not attempt to call <a href="#logMessage"><code>logMessage</code></a>.</p>
+</li>
+<li>
+<p>If <code>loggingOn</code> is <code>false</code>, or debug logging has been disabled in a call to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a>, the FMU must not call <a href="#logMessage"><code>logMessage</code></a>, except for <a href="#fmi3Error"><code>fmi3Error</code></a> and <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> return statuses and equivalent error situations, where it should call <a href="#logMessage"><code>logMessage</code></a> to provide additional information about the error condition.</p>
+</li>
+<li>
+<p>If <code>loggingOn</code> is <code>true</code>, or debug logging has been enabled in a call to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a>, the FMU must call <a href="#logMessage"><code>logMessage</code></a> for <a href="#fmi3Error"><code>fmi3Error</code></a> and <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> return statuses and equivalent error situations, and should call <a href="#logMessage"><code>logMessage</code></a> for all other return statuses except <a href="#fmi3OK"><code>fmi3OK</code></a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The return type of almost all FMI functions is <a href="#fmi3Status"><code>fmi3Status</code></a>.
 It is defined in file <code>fmi3FunctionTypes.h</code> as an enumeration of type <code>fmi3Status</code>:</p>
 </div>
 <div class="listingblock">
@@ -2165,7 +2201,8 @@ Otherwise the simulation algorithm must treat this return code like <a href="#fm
 <dd>
 <p>The call failed.
 The output argument values are undefined and the simulation must not be continued.
-Function <a href="#logMessage"><code>logMessage</code></a> should be called by the FMU with further information before returning this status, respecting the current logging settings.
+Function <a href="#logMessage"><code>logMessage</code></a> must be called by the FMU with further information before returning this status, respecting the current logging settings,
+and it should be called regardless of the current logging settings, unless the <code>logMessage</code> callback function pointer was provided as a <code>NULL</code> pointer.
 If a function returns <a href="#fmi3Error"><code>fmi3Error</code></a>, it is possible to restore a previously retrieved FMU state by calling <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> or to reset the instance by calling <a href="#fmi3Reset"><code>fmi3Reset</code></a>.
 When detecting illegal arguments or a function call not allowed in the current state according to the respective state machine, the FMU must return <a href="#fmi3Error"><code>fmi3Error</code></a>.
 Other instances of this FMU are not affected by the error.</p>
@@ -2202,11 +2239,15 @@ For example, due to a runtime exception such as access violation or integer divi
 </table>
 </div>
 <div class="paragraph">
-<p>Function <a href="#logMessage"><code>logMessage</code></a> should be called by the FMU with further information before returning this status, respecting the current logging settings, if still possible.
+<p>Function <a href="#logMessage"><code>logMessage</code></a> should be called by the FMU with further information before returning this status, if still possible, regardless of the current logging settings, unless the <code>logMessage</code> callback function pointer was provided as a <code>NULL</code> pointer.
 The importer must not call any other function for any instance of the FMU.</p>
 </div>
 </dd>
 </dl>
+</div>
+<div class="paragraph">
+<p>For the instantiation functions (see <a href="#FMUStateSettable"><strong>FMU State Settable</strong></a>), a <code>NULL</code> pointer is returned to indicate that the instantiation failed.
+For the purposes of logging this is considered equivalent to returning <a href="#fmi3Error"><code>fmi3Error</code></a>, and the same logging requirements apply.</p>
 </div>
 </div>
 <div class="sect3">
@@ -4358,7 +4399,7 @@ typedef fmi3Instance fmi3InstantiateScheduledExecutionTYPE(
 <div class="paragraph">
 <p>These functions return a new instance of an FMU with the respective interface type.
 If a NULL pointer is returned, then instantiation failed.
-In that case, the FMU must call <a href="#logMessage"><code>logMessage</code></a> with detailed information about the reason.
+In that case, the FMU must call <a href="#logMessage"><code>logMessage</code></a>, if not <code>NULL</code>, with detailed information about the reason.
 An FMU can be instantiated many times (provided capability flag <code>canBeInstantiatedOnlyOncePerProcess = false</code>).</p>
 </div>
 <div class="paragraph">
@@ -4444,7 +4485,8 @@ In other words, the FMU is executed in batch mode.
 If <code>visible = fmi3True</code>, the FMU is executed in interactive mode, and the FMU might require to explicitly acknowledge start of simulation / instantiation / initialization (acknowledgment is non-blocking).</p>
 </li>
 <li>
-<p><a id="loggingOn"></a> If <code>loggingOn = fmi3False</code>, then any logging is disabled and the <a href="#logMessage"><code>logMessage</code></a> callback function must not be called by the FMU.
+<p><a id="loggingOn"></a> If <code>loggingOn = fmi3False</code>, then logging is disabled and the <a href="#logMessage"><code>logMessage</code></a> callback function must not be called by the FMU, except for error conditions (i.e., when returning <a href="#fmi3Error"><code>fmi3Error</code></a> or <a href="#fmi3Fatal"><code>fmi3Fatal</code></a>).
+For error conditions, the FMU must call <a href="#logMessage"><code>logMessage</code></a> if <code>loggingOn = fmi3True</code> and should call <a href="#logMessage"><code>logMessage</code></a> regardless of the <code>loggingOn</code> setting, unless the <code>logMessage</code> callback function pointer is <code>NULL</code>.
 If <code>loggingOn = fmi3True</code>, then all <code>&lt;LogCategories&gt;</code> are enabled.
 The function <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> gives more detailed control about enabling specific <code>&lt;LogCategories&gt;</code> (see <a href="#definition-of-log-categories">Section 2.4.5</a>).</p>
 </li>
@@ -4493,7 +4535,7 @@ If a function does not return <a href="#fmi3OK"><code>fmi3OK</code></a>, it must
 <li>
 <p><code>category</code> is the category of the message.
 The allowed values for <code>category</code> are defined in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> file via the element <a href="#definition-of-log-categories"><code>&lt;LogCategories&gt;</code></a>.
-<a href="#logMessage"><code>logMessage</code></a> must only be called for log categories that were enabled by calls to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> or via <a href="#loggingOn"><code>loggingOn = fmi3True</code></a> in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>.
+<a href="#logMessage"><code>logMessage</code></a> must only be called for log categories that were enabled by calls to <a href="#fmi3SetDebugLogging"><code>fmi3SetDebugLogging</code></a> or via <a href="#loggingOn"><code>loggingOn = fmi3True</code></a> in <a href="#fmi3Instantiate"><code>fmi3InstantiateXXX</code></a>, except when returning <a href="#fmi3Error"><code>fmi3Error</code></a> or <a href="#fmi3Fatal"><code>fmi3Fatal</code></a> status (error logging is always enabled unless the <code>logMessage</code> callback function pointer is <code>NULL</code>).
 If the FMU does not define any log categories, <code>category</code> must be <code>NULL</code>.</p>
 </li>
 <li>
