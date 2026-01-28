@@ -101,17 +101,18 @@ Further, the guidelines will try to make sure that no confusion or misinformatio
 At the same time, the Modelica Association wants to encourage as many commercial companies and open source software developers to support the FMI standard in a high quality of implementation and put as little administrative burden as possible.
 The MA encourages to mention the FMI standard with a proper reference. The main reference in any tool documentation should contain a pointer to the official FMI website https://fmi-standard.org.
 
-### Trademark Usage Guidelines (for word-marks and logo)
+### Trademark Usage Guidelines for Wordmarks and Logos
 
 The use of the letters `FMI` or `FMU` or the [FMI logo](https://github.com/modelica/MA-Logos) in a product name or other relevant reference is allowed when
 
-- The use is clearly a reference to adhering to the standard.
+- the use is clearly a reference to adhering to the standard.
 
-The use of the letters `FMI` or `FMU` or the FMI logo in a product name, reference or other relevant context is not allowed when:
-- The use can cause confusion whether the FMI standard is followed (e.g. using `FMI` with a version number that is not released by the FMI project),
-- The use can be interpreted as a variant, subset or improvement of the original FMI standard (e.g. using a tool name, say `FMIplus`, that can be interpreted as supporting with extensions/improvements with respect to one of the FMI versions),
-- The use spreads wrong or misleading information about the FMI standard
-- The use mocks or degrades the FMI standard
+The use of the letters `FMI` or `FMU` or the FMI logo in a product name, reference or other relevant context is not allowed when
+
+- the use can cause confusion whether the FMI standard is followed (e.g. using `FMI` with a version number that is not released by the FMI project),
+- the use can be interpreted as a variant, subset or improvement of the original FMI standard (e.g. using a tool name, say `FMIplus`, that can be interpreted as supporting with extensions/improvements with respect to one of the FMI versions),
+- the use spreads wrong or misleading information about the FMI standard, or
+- the use mocks or degrades the FMI standard.
 
 The FMI Steering committee reserves the right to determine whether a use of `FMI` or `FMU` violates these guidelines and will ask any offender to cease and desist from using the FMI trademark in a non-approved way.
 The FMI steering committee also reserves the right to retract the permission of the use of the term FMI in a product name when the product owner when the tool developer does over a longer period not fix known errors in their FMI support.
