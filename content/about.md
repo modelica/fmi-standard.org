@@ -101,13 +101,13 @@ Further, the guidelines will try to make sure that no confusion or misinformatio
 At the same time, the Modelica Association wants to encourage as many commercial companies and open source software developers to support the FMI standard in a high quality of implementation and put as little administrative burden as possible.
 The MA encourages to mention the FMI standard with a proper reference. The main reference in any tool documentation should contain a pointer to the official FMI website https://fmi-standard.org.
 
-### Trademark Usage Guidelines
+### Trademark Usage Guidelines (for word-marks and logo)
 
-The use of the letters `FMI` or `FMU` in a product name or other relevant reference is allowed when
+The use of the letters `FMI` or `FMU` or the [FMI logo](https://github.com/modelica/MA-Logos) in a product name or other relevant reference is allowed when
 
 - The use is clearly a reference to adhering to the standard.
 
-The use of the letters `FMI` or `FMU` in a product name, reference or other relevant context is not allowed when:
+The use of the letters `FMI` or `FMU` or the FMI logo in a product name, reference or other relevant context is not allowed when:
 - The use can cause confusion whether the FMI standard is followed (e.g. using `FMI` with a version number that is not released by the FMI project),
 - The use can be interpreted as a variant, subset or improvement of the original FMI standard (e.g. using a tool name, say `FMIplus`, that can be interpreted as supporting with extensions/improvements with respect to one of the FMI versions),
 - The use spreads wrong or misleading information about the FMI standard
