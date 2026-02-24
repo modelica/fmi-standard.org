@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 9c9ed67,</span>
-<span id="revdate">2026-02-10</span>
+<span id="revnumber">version 7c50170,</span>
+<span id="revdate">2026-02-24</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -4501,7 +4501,8 @@ For FMUs that have clocks, <code>eventModeUsed = fmi3True</code> is required.</p
 Only in this case, <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> may return with <a href="#earlyReturn"><code>earlyReturn = fmi3True</code></a>.</p>
 </li>
 <li>
-<p><code>instanceEnvironment</code> is a pointer that must be passed to <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a>, and <a href="#logMessage"><code>fmi3LogMessageCallback</code></a> to allow the importer an efficient way to identify the calling FMU.</p>
+<p><a id="instanceEnvironment"></a><code>instanceEnvironment</code> is a pointer that must be passed to <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>, <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a>, and <a href="#logMessage"><code>fmi3LogMessageCallback</code></a> to allow the importer to efficiently identify the calling FMU.
+This pointer may be <code>NULL</code>.</p>
 </li>
 <li>
 <p><a id="requiredIntermediateVariables"></a> <code>requiredIntermediateVariables</code> is an array of the value references of all <a href="#input"><code>input</code></a> variables that the simulation algorithm intends to set and all <a href="#output"><code>output</code></a> variables it intends to get during intermediate updates.
@@ -4619,7 +4620,7 @@ If <a href="#intermediateUpdate"><code>intermediateUpdate = NULL</code></a> and 
 </table>
 </div>
 <div class="paragraph">
-<p>Additionally, a pointer to the environment is provided (<code>instanceEnvironment</code>) that needs to be passed to the callback functions <a href="#logMessage"><code>logMessage</code></a>, <a href="#fmi3IntermediateUpdateCallback"><code>intermediateUpdate</code></a>, <a href="#fmi3ClockUpdateCallback"><code>clockUpdate</code></a>, in order that those functions can utilize data from the environment, such as mapping a <a href="#valueReference"><code>valueReference</code></a> to a string, or assigning memory to a certain FMU instance.</p>
+<p>Additionally, a pointer to the environment is provided (<a href="#instanceEnvironment"><code>instanceEnvironment</code></a>) that needs to be passed to the callback functions <a href="#logMessage"><code>logMessage</code></a>, <a href="#fmi3IntermediateUpdateCallback"><code>intermediateUpdate</code></a>, <a href="#fmi3ClockUpdateCallback"><code>clockUpdate</code></a>, in order that those functions can utilize data from the environment, such as mapping a <a href="#valueReference"><code>valueReference</code></a> to a string, or assigning memory to a certain FMU instance.</p>
 </div>
 <div class="dlist">
 <dl>
