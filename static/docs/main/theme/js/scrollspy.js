@@ -22,8 +22,11 @@ sections = [
 
 window.addEventListener('scroll', function () {
 
-    if (window.innerWidth < 768) {
-        return;
+    const element = document.getElementById('toc');
+    const computedStyle = window.getComputedStyle(element);
+
+    if (computedStyle.position === 'static') {
+        return;  // don't scroll if TOC is displayed on top of the page
     }
 
     const currentPos = window.scrollY + 80;
