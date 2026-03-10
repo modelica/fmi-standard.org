@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version e939617,</span>
-<span id="revdate">2026-02-25</span>
+<span id="revnumber">version 5f150f2,</span>
+<span id="revdate">2026-03-10</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -685,9 +685,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel3">
 <li><a href="#basic-co-simulation">4.3.1. Basic Co-Simulation</a></li>
 <li><a href="#early-return-2">4.3.2. Early Return</a></li>
-<li><a href="#event-mode">4.3.3. Event Mode</a></li>
-<li><a href="#intermediate-update">4.3.4. Intermediate Update</a></li>
-<li><a href="#connected-fmus">4.3.5. Connected FMUs</a></li>
+<li><a href="#event-mode-without-clocks">4.3.3. Event Mode without Clocks</a></li>
+<li><a href="#event-mode-with-clocks">4.3.4. Event Mode with Clocks</a></li>
+<li><a href="#intermediate-update">4.3.5. Intermediate Update</a></li>
+<li><a href="#connected-fmus">4.3.6. Connected FMUs</a></li>
 </ul>
 </li>
 <li><a href="#co-simulation-schema">4.4. Description Schema</a>
@@ -12940,7 +12941,10 @@ Note that the points where the ball hits the floor are available, but only the o
 </div>
 </div>
 <div class="sect3">
-<h4 id="event-mode">4.3.3. Event Mode</h4>
+<h4 id="event-mode-without-clocks">4.3.3. Event Mode without Clocks</h4>
+<div class="paragraph">
+<p>In the following example, the usage of the fmi3XXX functions is sketched for a co-simulation FMU that supports <a href="#EventMode"><strong>Event Mode</strong></a>, but does not have any <a href="#Clock">Clocks</a> or <a href="#clocked-variable">clocked variables</a>.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">    CALL(FMI3InstantiateCoSimulation(S,
@@ -13056,7 +13060,139 @@ Note that the points where the ball hits the floor are available and the outputs
 </div>
 </div>
 <div class="sect3">
-<h4 id="intermediate-update">4.3.4. Intermediate Update</h4>
+<h4 id="event-mode-with-clocks">4.3.4. Event Mode with Clocks</h4>
+<div class="paragraph">
+<p>In the following example, the usage of the fmi3XXX functions is sketched for a co-simulation FMU with <a href="#EventMode"><strong>Event Mode</strong></a> support. It does not include <a href="#early-return">Early Return</a> or <a href="#IntermediateUpdateMode">Intermediate Update</a> capabilities and considers only <a href="#discrete"><code>discrete</code></a> <a href="#clocked-variable">clocked variables</a> and their associated <a href="#triggered">triggered Clocks</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C"> CALL(FMI3InstantiateCoSimulation(S,
+        INSTANTIATION_TOKEN, // instantiationToken
+        NULL,                // resourcePath
+        fmi3False,           // visible
+        fmi3False,           // loggingOn
+        fmi3True,            // eventModeUsed
+        fmi3False,           // earlyReturnAllowed
+        NULL,                // requiredIntermediateVariables
+        0,                   // nRequiredIntermediateVariables
+        NULL                 // intermediateUpdate
+    ));
+
+    // set start values
+    CALL(applyStartValues(S));
+
+    // real part of the time tuple: the independent variable of the FMU
+    fmi3Float64 time = startTime;
+
+    // integer part of the time tuple, indexing the super-dense time instants
+    fmi3UInt64 timeInstant = 0;
+
+    // initialize the FMU
+    CALL(FMI3EnterInitializationMode(S, fmi3False, 0.0, time, fmi3True, stopTime));
+
+    CALL(FMI3ExitInitializationMode(S));
+
+    // record clocks and the clocked variables with active clocks
+    CALL(recordClocks(S, time, timeInstant, outputFile));
+    CALL(recordClockedVariables(S, time, timeInstant, outputFile));
+
+    do {
+        // activate input clocks and apply the inputs with active clocks
+        CALL(applyInputClocks(S, time, timeInstant));
+        CALL(applyClockedInputs(S, time, timeInstant));
+
+        CALL(FMI3UpdateDiscreteStates(S,
+            &amp;discreteStatesNeedUpdate,
+            &amp;terminateSimulation,
+            &amp;nominalsChanged,
+            &amp;statesChanged,
+            &amp;nextEventTimeDefined,
+            &amp;nextEventTime
+        ));
+
+        // new super-dense time instant began
+        timeInstant++;
+
+        // record clocks and the clocked variables with active clocks
+        CALL(recordClocks(S, time, timeInstant, outputFile));
+        CALL(recordClockedVariables(S, time, timeInstant, outputFile));
+
+        if (terminateSimulation) {
+            goto TERMINATE;
+        }
+    } while (discreteStatesNeedUpdate);
+
+    // integer part of the time tuple (super-dense time) stays zero in Step Mode
+    timeInstant = 0;
+
+    CALL(FMI3EnterStepMode(S));
+
+    // communication step size
+    const fmi3Float64 stepSize = 10 * FIXED_SOLVER_STEP;
+
+    while (true) {
+
+        if (terminateSimulation || time + stepSize &gt; stopTime) {
+            break;
+        }
+
+        CALL(FMI3DoStep(S,
+            time,                 // currentCommunicationPoint
+            stepSize,             // communicationStepSize
+            fmi3True,             // noSetFMUStatePriorToCurrentPoint
+            &amp;eventEncountered,    // eventEncountered
+            &amp;terminateSimulation, // terminate
+            &amp;earlyReturn,         // earlyReturn
+            &amp;time                 // lastSuccessfulTime
+        ));
+
+        if (eventEncountered) {
+
+            // enter Event Mode
+            CALL(FMI3EnterEventMode(S));
+
+            // record clocks and the clocked variables with active clocks
+            CALL(recordClocks(S, time, timeInstant, outputFile));
+            CALL(recordClockedVariables(S, time, timeInstant, outputFile));
+
+            do {
+                // activate input clocks and apply the inputs with active clocks
+                CALL(applyInputClocks(S, time, timeInstant));
+                CALL(applyClockedInputs(S, time, timeInstant));
+
+                CALL(FMI3UpdateDiscreteStates(S,
+                    &amp;discreteStatesNeedUpdate,
+                    &amp;terminateSimulation,
+                    &amp;nominalsChanged,
+                    &amp;statesChanged,
+                    &amp;nextEventTimeDefined,
+                    &amp;nextEventTime
+                ));
+
+                // for the new super-dense time instant: record clocks and
+                // the clocked variables with active clocks
+                CALL(recordClocks(S, time, timeInstant, outputFile));
+                CALL(recordClockedVariables(S, time, timeInstant, outputFile));
+
+                if (terminateSimulation) {
+                    break;
+                }
+            } while (discreteStatesNeedUpdate);
+
+            timeInstant = 0;
+
+            // return to Step Mode
+            CALL(FMI3EnterStepMode(S));
+        }
+    }
+
+TERMINATE:
+    return tearDown();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="intermediate-update">4.3.5. Intermediate Update</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">void intermediateUpdate(fmi3InstanceEnvironment instanceEnvironment,
@@ -13138,7 +13274,7 @@ Note that the outputs at all intermediate steps are recorded, too.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="connected-fmus">4.3.5. Connected FMUs</h4>
+<h4 id="connected-fmus">4.3.6. Connected FMUs</h4>
 <div class="paragraph">
 <p>In the following example, the usage of the FMI functions is sketched in order to clarify the typical calling sequence of the functions in an importer.
 We consider two FMUs, where both have one <a href="#continuous"><code>continuous</code></a> floating point <a href="#input"><code>input</code></a> and one <a href="#continuous"><code>continuous</code></a> floating point <a href="#output"><code>output</code></a> which are connected in the following way:</p>
