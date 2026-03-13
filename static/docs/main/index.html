@@ -478,7 +478,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version ff675aa,</span>
+<span id="revnumber">version 4184fc6,</span>
 <span id="revdate">2026-03-13</span>
 </div>
 <div id="toc" class="toc2">
@@ -948,7 +948,7 @@ That integration algorithm of the importer, usually a ODE/DAE solver, is respons
 <h4 id="fmi-for-scheduled-execution-se">1.2.3. FMI for Scheduled Execution (SE)</h4>
 <div class="paragraph">
 <p>The Scheduled Execution interface exposes individual <a href="#model-partition">model partitions</a>.
-A scheduler provided by the <a href="#importer">[importer]</a> can control the execution of each model partition separately.
+A scheduler provided by the importer can control the execution of each model partition separately.
 In some ways the Scheduled Execution interface has similarities to the Model Exchange interface: the first externalizes a scheduling algorithm usually found in a controller algorithm (see <a href="#fmi-for-scheduled-execution">Section 5</a>) and the second interface externalizes the ODE/DAE solver.
 <em>[See also <a href="https://modelica.github.io/fmi-guides/main/fmi-guide/#_use_cases_for_scheduled_execution">Use-cases for Scheduled Execution</a> in the FMI 3.0 Implementers' Guide.]</em></p>
 </div>
@@ -2277,7 +2277,7 @@ The FMI type defines which functions drive the time in the simulation.</p>
 <p>The initial value of the independent variable is the value of the argument <a href="#startTime"><code>startTime</code></a> of <a href="#fmi3EnterInitializationMode"><code>fmi3EnterInitializationMode</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>In Model Exchange, time is under the sole control of the <a href="#importer">[importer]</a> and its integration algorithm.
+<p>In Model Exchange, time is under the sole control of the importer and its integration algorithm.
 The model itself receives the current time to be used in its computation with <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>.
 Time is not necessarily always advancing as solvers might need to jump back and forth in time, for example, to localize events using <a href="#fmi3GetEventIndicators">event indicators</a>.</p>
 </div>
@@ -13589,7 +13589,7 @@ The only differences are the replacement of the element <code>&lt;ModelExchange&
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Scheduled Execution interface provides support for concurrent computation of <a href="#model-partition">model partitions</a> on a single computational resource (e.g. CPU-core).
-The FMU exposes model partitions defined by its associated Clocks while the <a href="#importer">[importer]</a> is enabled to explicitly schedule each model partition&#8217;s execution.
+The FMU exposes model partitions defined by its associated Clocks while the importer is enabled to explicitly schedule each model partition&#8217;s execution.
 As mentioned in <a href="#advancing-time">Section 2.2.6</a>, it is the importer respectively its scheduler that controls how time is progressing.</p>
 </div>
 <div class="paragraph">
@@ -13609,7 +13609,7 @@ It can execute model partitions periodically (either according to virtual time o
 </li>
 <li>
 <p>The Scheduled Execution interface allows the scheduler to preempt the execution of an FMU&#8217;s model partition.
-The <a href="#importer">[importer]</a> is providing lock/unlock functions to the FMU to secure sections that should not be interrupted (e.g. the exchange of data between two model partitions of the same FMU).</p>
+The importer is providing lock/unlock functions to the FMU to secure sections that should not be interrupted (e.g. the exchange of data between two model partitions of the same FMU).</p>
 </li>
 <li>
 <p>The Scheduled Execution interface allows the FMU to send an event to the scheduler while a model partition is executed.</p>
