@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version dca8ff7,</span>
-<span id="revdate">2026-03-10</span>
+<span id="revnumber">version 367a31f,</span>
+<span id="revdate">2026-03-13</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -1128,7 +1128,7 @@ Moreover, an FMU may contain nested FMUs.</p>
 </dd>
 <dt class="hdlist1">Numerical Robustness</dt>
 <dd>
-<p>The FMI standard allows problems which are numerically critical (for example, <a href="#time event">time event</a> and <a href="#state-event">state events</a>, multiple sample rates, stiff problems) to be treated in a robust way.</p>
+<p>The FMI standard allows problems which are numerically critical (for example, <a href="#time-event">time events</a> and <a href="#state-event">state events</a>, multiple sample rates, stiff problems) to be treated in a robust way.</p>
 </dd>
 <dt class="hdlist1">Hide cache</dt>
 <dd>
@@ -1414,7 +1414,7 @@ If no event iteration occurs, the time instant when the event occurs is defined 
 <p>The hybrid differential equations exposed by FMI for Model Exchange or wrapped by FMI for Co-Simulation are described as piecewise continuous-time systems.
 Discontinuities can occur at time instants \(t_0, t_1, \ldots, t_n\) where \(t_i &lt; t_{i+1}\).
 These time instants are called <code>events</code>.
-Events can be known beforehand (<a href="#time event">time events</a>), or are defined implicitly (<a href="#state-event">state event</a> and <a href="#step event">step events</a>), see below.
+Events can be known beforehand (<a href="#time-event">time events</a>), or are defined implicitly (<a href="#state-event">state events</a> and <a href="#step-event">step events</a>), see below.
 Between events, variables are either <a href="#continuous"><code>continuous</code></a> or do not change their value.
 A variable is called discrete-time, if it changes its value only at events.
 Otherwise the variable is called continuous-time.
@@ -5277,11 +5277,11 @@ While the reasons for entering <a href="#EventMode"><strong>Event Mode</strong><
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#input-event">Input events</a> indicate a non-continuous change of at least one input, in both Model Exchange and Co-Simulation.
+<p><a id="input-event"></a> Input events indicate a non-continuous change of at least one input, in both Model Exchange and Co-Simulation.
 Additionally, in Co-Simulation, the exact event time can be communicated to the FMU by the return argument <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a>.</p>
 </li>
 <li>
-<p><a href="#time-event">Time events</a> are announced to the importer in advance by the FMU through</p>
+<p><a id="time-event"></a> Time events are announced to the importer in advance by the FMU through</p>
 <div class="ulist">
 <ul>
 <li>
@@ -5294,12 +5294,12 @@ Additionally, in Co-Simulation, the exact event time can be communicated to the 
 </div>
 </li>
 <li>
-<p><a href="#state-event">State events</a> are signaled to the importer by <a href="#eventIndicators"><code>eventIndicators</code></a> in Model Exchange (see <a href="#localizationStateEvents">Section 3.1.1</a>).
+<p><a id="state-event"></a> State events are signaled to the importer by <a href="#eventIndicators"><code>eventIndicators</code></a> in Model Exchange (see <a href="#localizationStateEvents">Section 3.1.1</a>).
 In Co-Simulation, the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with <a href="#eventHandlingNeeded"><code>eventHandlingNeeded = fmi3True</code></a>.
 The exact event localization is hidden from the importer.</p>
 </li>
 <li>
-<p><a href="#step-event">Step events</a> are initiated by the FMU at the end of an integrator step (see argument <a href="#enterEventMode"><code>enterEventMode</code></a> of <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a>) in Model Exchange.</p>
+<p><a id="step-event"></a> Step events are initiated by the FMU at the end of an integrator step (see argument <a href="#enterEventMode"><code>enterEventMode</code></a> of <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a>) in Model Exchange.</p>
 </li>
 </ul>
 </div>
@@ -8195,7 +8195,7 @@ Instead, this is a short hand notation for:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Stop the simulation at an event instant (usually, a <a href="#step event">[step event]</a>, in other words, after a successful integration step).</p>
+<p>Stop the simulation at an event instant (usually, a <a href="#step-event">step event</a>, in other words, after a successful integration step).</p>
 </li>
 <li>
 <p>Change the values of the <a href="#tunable"><code>tunable</code></a> (structural) <a href="#parameter"><code>parameters</code></a>.
@@ -11634,7 +11634,7 @@ The importer must have set valid values for <a href="#time"><code>time</code></a
 <p>Argument <code>noSetFMUStatePriorToCurrentPoint = fmi3True</code> if <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> will no longer be called for time instants prior to current time in this simulation run.</p>
 </li>
 <li>
-<p><a id="enterEventMode"></a> The return argument <code>enterEventMode</code> signals that the importer must call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> to handle a <a href="#step-event">[step-event]</a>.</p>
+<p><a id="enterEventMode"></a> The return argument <code>enterEventMode</code> signals that the importer must call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> to handle a <a href="#step-event">step event</a>.</p>
 </li>
 <li>
 <p><a id="terminateSimulationCIS"></a> When <a href="#terminateSimulationUDS"><code>terminateSimulation = fmi3True</code></a>, the FMU requests to stop the simulation.</p>
