@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version a58aa7c,</span>
-<span id="revdate">2026-03-13</span>
+<span id="revnumber">version 3acb9d6,</span>
+<span id="revdate">2026-03-24</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -525,7 +525,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#Clock">2.2.8. Clocks</a>
 <ul class="sectlevel4">
 <li><a href="#motivation">2.2.8.1. Motivation</a></li>
-<li><a href="#fmi3Clock">2.2.8.2. Clock Types</a></li>
+<li><a href="#clock-types">2.2.8.2. Clock Types</a></li>
 <li><a href="#clocked-variable">2.2.8.3. Model Partitions and Clocked Variables</a></li>
 <li><a href="#clocks-specific-api">2.2.8.4. Clocks specific API</a></li>
 </ul>
@@ -2978,7 +2978,7 @@ This allows different use cases to be implemented with different Clock semantics
 </div>
 </div>
 <div class="sect4">
-<h5 id="fmi3Clock">2.2.8.2. Clock Types</h5>
+<h5 id="clock-types">2.2.8.2. Clock Types</h5>
 <div class="paragraph">
 <p>Clocks are <a href="#discrete"><code>discrete</code></a> <a href="#fmu-variables">variables</a> of type <code>fmi3Clock</code>.
 They are restricted to being scalar variables.</p>
@@ -2999,7 +2999,19 @@ In Scheduled Execution, when input Clocks tick, the importer will activate the a
 <div class="paragraph">
 <p>The importer is the source of the actual Clock activations of input Clocks.
 For time-based input Clocks, the timing is defined by the FMU, either through the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> or by the importer calling <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>.
-For <a href="#triggered"><code>triggered</code></a> input clocks, the timing is determined by the importer.</p>
+The importer may call <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> for any time-based Clock at any time in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> and <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.
+The allowed return values are described in <a href="#table-qualifiers-for-time-based-clocks">Table 10</a>.
+<a href="#table-overview-clocks">Table 5</a> shows when <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> is usually called for each Clock.
+Consult the descriptions for each Clock type following <a href="#table-overview-clocks">Table 5</a> to identify the specific conditions under which the call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> is mandatory for the respective Clock type.</p>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>For <a href="#triggered"><code>triggered</code></a> input clocks, the timing is determined by the importer.</p>
+</div>
+<div class="paragraph">
+<p>+</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3014,9 +3026,6 @@ For <a href="#triggered"><code>triggered</code></a> input clocks, the timing is 
 </td>
 </tr>
 </table>
-</div>
-</dd>
-</dl>
 </div>
 <div id="outputClock" class="dlist">
 <dl>
@@ -3103,7 +3112,7 @@ The importer calls <a href="#fmi3GetClock"><code>fmi3GetClock</code></a> to inqu
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="changing-aperiodic-clock"></a><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a>,
 <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>,
 <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>,
-<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in both <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if and only if this Clock ticked</p></td>
+<a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in both <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if this Clock ticked</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">simulation of the behavior of a control algorithm with variable execution time, generation of pulse sequences</p></td>
 </tr>
 <tr>
@@ -3163,12 +3172,29 @@ The importer must activate the Clock by calling <a href="#fmi3SetClock"><code>fm
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{shift}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The delay for the first Clock tick relative to \(t_{\mathit{start}}\). \(T_{\mathit{shift}}\) is defined differently for the different Clock types, and can be set with <a href="#fmi3SetShiftDecimal"><code>fmi3SetShiftDecimal</code></a> or retrieved from the FMU with <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetShiftFraction"><code>fmi3SetShiftFraction</code></a> or <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The delay for the first Clock tick relative to \(t_{\mathit{start}}\). \(T_{\mathit{shift}}\) is provided differently for the different Clock types, and can be set with <a href="#fmi3SetShiftDecimal"><code>fmi3SetShiftDecimal</code></a> or retrieved from the FMU with <a href="#fmi3GetShiftDecimal"><code>fmi3GetShiftDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetShiftFraction"><code>fmi3SetShiftFraction</code></a> or <a href="#fmi3GetShiftFraction"><code>fmi3GetShiftFraction</code></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, i}}\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval until the next Clock tick, defined differently for the different Clock types.
-\(T_{\mathit{interval, i}}\) can be set with <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or retrieved with <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> as floating point value, or as rational number using <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> or <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The time interval until the next Clock tick, provided differently for the different Clock types.
+\(T_{\mathit{interval, i}}\) can be retrieved either as a floating-point value using <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a>, or as a rational number using <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a>.
+For some Clock types, the interval is provided by the importer, either as a floating-point value using <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or as a rational number using <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Note that even though <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> may be called at any event time for every time-based Clock, a new interval is not necessarily provided.
+For instance, if <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> is called within a previously returned interval, an FMU returning <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a> signals that the previously provided interval is still valid.
+In Scheduled Execution, this means that the model partition must not be re-scheduled.
+</td>
+</tr>
+</table>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(t_{\mathit{event}}\)</p></td>
@@ -3179,7 +3205,7 @@ The importer must activate the Clock by calling <a href="#fmi3SetClock"><code>fm
 </dd>
 <dt class="hdlist1">Periodic Clock</dt>
 <dd>
-<p>is a time-based Clock with a constant interval, except when <a href="#intervalVariability"><code>intervalVariability</code></a> = <a href="#tunable"><code>tunable</code></a>, which indicates that the interval can change when tunable <a href="#parameter">parameters</a> change.
+<p>is a time-based Clock with a constant interval, except for Clocks with <a href="#intervalVariability"><code>intervalVariability</code></a> = <a href="#tunable"><code>tunable</code></a>, which indicates that the interval can change.
 The time instant of the first Clock tick is defined by a <a href="#shiftCounter"><code>shiftCounter</code></a> or <a href="#shiftDecimal"><code>shiftDecimal</code></a>.</p>
 <div class="paragraph">
 <p>The next Clock tick at time instant \(t_i\) is defined as:<br>
@@ -3197,18 +3223,21 @@ t_i &amp;:= t_{i-1} + T_{\mathit{interval, i}} \qquad i = 1,2,3,{...}
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, i}} &gt; 0\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from the previous Clock tick to the current Clock tick, specified differently for the different Clock types.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generally, the time interval from the previous Clock tick to the current Clock tick.
+ An exception applies to a tunable Clock whose interval has just changed in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>.
+ In this specific case, the new interval is relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>, not to the time of the previous Clock tick.</p></td>
 </tr>
 </tbody>
 </table>
 </dd>
 <dt class="hdlist1">Constant periodic Clock</dt>
 <dd>
-<p>is a time-based periodic clock that defines its <a href="#intervalDecimal"><code>intervalDecimal</code></a> and optionally <a href="#intervalCounter"><code>intervalCounter</code></a>, <a href="#shiftCounter"><code>shiftCounter</code></a> and <a href="#shiftDecimal"><code>shiftDecimal</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.</p>
+<p>is a time-based periodic clock that defines its <a href="#intervalDecimal"><code>intervalDecimal</code></a> and optionally <a href="#intervalCounter"><code>intervalCounter</code></a>, <a href="#shiftCounter"><code>shiftCounter</code></a> and <a href="#shiftDecimal"><code>shiftDecimal</code></a> in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>.
+The importer can also call <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> and <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> to retrieve the interval and shift.</p>
 </dd>
-<dt class="hdlist1">Fixed periodic Clock</dt>
+<dt class="hdlist1"><a id="fixed-periodic-clock"></a>Fixed periodic Clock</dt>
 <dd>
-<p>is a time-based periodic Clock which ticks with an arbitrary, but fixed interval \(T_{\mathit{interval}}\) starting after an arbitrary \(T_{\mathit{shift}}\), both interval and shift can be changed by the importer.</p>
+<p>is a time-based periodic Clock which ticks with an arbitrary, but fixed interval \(T_{\mathit{interval}}\) starting after an arbitrary \(T_{\mathit{shift}}\).</p>
 <div class="paragraph">
 <p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is specified, the importer sets the Clock&#8217;s <code>fixed</code> interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 If the function is not called the value given in <a href="#intervalDecimal"><code>intervalDecimal</code></a> and <a href="#intervalCounter"><code>intervalCounter</code></a> is used.</p>
@@ -3231,9 +3260,9 @@ If the function is not called the value given in <a href="#intervalDecimal"><cod
 <p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is not specified, then the importer must use <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> and <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> to retrieve the Clock interval and shift in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> because they depend on <a href="#fixed"><code>fixed</code></a> <a href="#parameter">parameters</a>.</p>
 </div>
 </dd>
-<dt class="hdlist1">Tunable periodic Clock</dt>
+<dt class="hdlist1"><a id="tunable-periodic-clock"></a>Tunable periodic Clock</dt>
 <dd>
-<p>is a time-based periodic Clock which ticks with an arbitrary and changeable interval \(T_{\mathit{interval}}\) starting after an arbitrary \(T_{\mathit{shift}}\), both interval and shift can be changed by the importer.</p>
+<p>is a time-based periodic Clock which ticks with an arbitrary and changeable interval \(T_{\mathit{interval}}\) starting after an arbitrary \(T_{\mathit{shift}}\).</p>
 <div class="paragraph">
 <p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is specified, the importer sets the Clock&#8217;s <code>tunable</code> interval using <a href="#fmi3SetInterval"><code>fmi3SetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 It can later change this interval in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>.
@@ -3257,6 +3286,9 @@ If the function is not called, the value given in <a href="#intervalDecimal"><co
 <p>If <a href="#intervalDecimal"><code>intervalDecimal</code></a> is not specified, then the importer must use <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> to retrieve the Clock interval in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, and later in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>, if any of the <a href="#tunable"><code>tunable</code></a> <a href="#parameter">parameters</a> the Clock&#8217;s interval depends on was changed.
 The shift may only depend on <a href="#fixed"><code>fixed</code></a> <a href="#parameter">parameters</a>.
 The importer must use <a href="#fmi3GetShift"><code>fmi3GetShift</code></a> to retrieve the Clock shift in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
+</div>
+<div class="paragraph">
+<p>In both cases, when an interval changes, the new interval is relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>, not to the time of the previous Clock tick.</p>
 </div>
 </dd>
 <dt class="hdlist1">Aperiodic Clock</dt>
@@ -3283,21 +3315,21 @@ t_i &amp;:= t_{i-1} + T_{\mathit{interval, i}} \qquad i = 1,2,3,{...}
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval}, 0} \geq 0\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from \(t_{\mathit{start}}\) to first Clock tick.
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from \(t_{\mathit{start}}\) to the first Clock tick.
 Must be retrieved using <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(T_{\mathit{interval, i}} \geq 0, \qquad i = 1,2,3,{...}\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The time interval from the current Clock tick to the next Clock tick.
-Must be retrieved using <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if and only if the corresponding Clock ticked.</p></td>
+Must be retrieved using <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if the corresponding Clock ticked.</p></td>
 </tr>
 </tbody>
 </table>
 </dd>
 <dt class="hdlist1">Countdown aperiodic Clock</dt>
 <dd>
-<p>is a time-based Clock whose next interval is not yet known right after the Clock just ticked, forcing the importer to call <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, in every <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.
-The return argument <a href="#qualifiers"><code>qualifiers</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> is used to indicate if the next interval is already known.</p>
+<p>is a time-based Clock whose next interval is not yet known to the FMU right after the Clock just ticked, forcing the importer to call <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> and in every <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.
+The return argument <a href="#qualifiers"><code>qualifiers</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> is used to indicate if the next interval is already known to the FMU.</p>
 <div class="paragraph">
 <p>The next Clock tick at time instant \(t_i\) is defined as:<br>
 \(\begin{align*}
@@ -3483,7 +3515,7 @@ This also holds for <a href="#clocked-variable">clocked variables</a> of type <a
 <h5 id="clocks-specific-api">2.2.8.4. Clocks specific API</h5>
 <div id="fmi3GetClock" class="paragraph">
 <p><a id="fmi3SetClock"></a>Clocks are get and set just like any other variable (see also <a href="#get-and-set-variable-values">Section 2.2.7.2</a>).
-For restrictions on when to call which of the following functions for <a href="#table-overview-clocks">each Clock type</a>, see <a href="#table-overview-clocks">Table 5</a>.</p>
+For restrictions on when to call which of the following functions for each Clock type, see <a href="#clock-types">Section 2.2.8.2</a>.</p>
 </div>
 <div class="paragraph">
 <p><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> must not be called in Scheduled Execution, instead <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> must be called.</p>
@@ -3496,9 +3528,9 @@ For restrictions on when to call which of the following functions for <a href="#
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The Clocks API function argument names <a href="#intervals"><code>intervals</code></a>, <a href="#shifts"><code>shifts</code></a>, <a href="#counters"><code>counters</code></a> and <a href="#resolutions"><code>resolutions</code></a> are chosen to match the naming used in <a href="https://specification.modelica.org/maint/3.6/synchronous-language-elements.html#clock-constructors">Modelica Clock Constructors</a>.
+<p>The Clocks API function argument names <a href="#intervals-set"><code>intervals</code></a>, <a href="#shifts"><code>shifts</code></a>, <a href="#counters"><code>counters</code></a> and <a href="#resolutions"><code>resolutions</code></a> are chosen to match the naming used in <a href="https://specification.modelica.org/maint/3.6/synchronous-language-elements.html#clock-constructors">Modelica Clock Constructors</a>.
 This commonality of naming does not imply any normative reference to the semantics of Modelica.
-Mathematically speaking, the arguments <a href="#counters"><code>counters</code></a> and <a href="#resolutions"><code>resolutions</code></a> in the fraction variant of these functions serve as numerators and denominators of fractional representations of the corresponding floating-point number arguments of the decimal variant.</p>
+Mathematically speaking, the arguments <a href="#counters"><code>counters</code></a> and <a href="#resolutions"><code>resolutions</code></a> in the fraction variant of these functions serve as numerators and denominators of fractional representations of the corresponding floating-point number arguments of the decimal variant.]</p>
 </div>
 </td>
 </tr>
@@ -3506,7 +3538,7 @@ Mathematically speaking, the arguments <a href="#counters"><code>counters</code>
 </div>
 <div id="fmi3SetInterval" class="paragraph">
 <p>For <a href="#table-overview-clocks">some Clock types</a>, the interval must be set by the environment for the current time instant by the function <a href="#fmi3SetIntervalDecimal"><code>fmi3SetIntervalDecimal</code></a> or <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a>.
-The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a href="#shifts"><code>shifts</code></a>, and <a href="#counters"><code>counters</code></a> / <a href="#resolutions"><code>resolutions</code></a> refer to the unit of the <a href="#independent"><code>independent</code></a> variable.</p>
+The values of the arguments <a href="#intervals-set"><code>intervals</code></a>, <a href="#shifts"><code>shifts</code></a>, and <a href="#counters"><code>counters</code></a> / <a href="#resolutions"><code>resolutions</code></a> refer to the unit of the <a href="#independent"><code>independent</code></a> variable.</p>
 </div>
 <div class="paragraph">
 <p>The attribute <a href="#supportsFraction"><code>supportsFraction</code></a> of a Clock declares if the <a href="#fmi3SetIntervalFraction"><code>fmi3SetIntervalFraction</code></a> and/or <code>fmi3GetXXXFraction</code> functions may be called.</p>
@@ -3526,10 +3558,10 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 </li>
 </ul>
 </div>
-<div id="intervals" class="ulist">
+<div id="intervals-set" class="ulist">
 <ul>
 <li>
-<p><a href="#intervals"><code>intervals</code></a> is an array of size <code>nValueReferences</code> holding the Clock intervals to be set.</p>
+<p><code>intervals</code> is an array of size <code>nValueReferences</code> holding the Clock intervals to be set.</p>
 </li>
 </ul>
 </div>
@@ -3597,16 +3629,20 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <li>
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the Clock variables.</p>
 </li>
+</ul>
+</div>
+<div id="intervals-get" class="ulist">
+<ul>
 <li>
-<p><a href="#intervals"><code>intervals</code></a> is an array of size <code>nValueReferences</code> to retrieve the Clock intervals.</p>
+<p><code>intervals</code> is an array of size <code>nValueReferences</code> to retrieve the Clock intervals.</p>
 </li>
 </ul>
 </div>
 <div id="qualifiers" class="ulist">
 <ul>
 <li>
-<p><a href="#qualifiers"><code>qualifiers</code></a> is an array of size <code>nValueReferences</code> to retrieve the Clocks <a href="#qualifiers"><code>qualifiers</code></a>.
-<a href="#qualifiers"><code>qualifiers</code></a> describes how to treat the <a href="#intervals"><code>intervals</code></a> and <a href="#counters"><code>counters</code></a> arguments and is defined as:</p>
+<p><a href="#qualifiers"><code>qualifiers</code></a> is an array of size <code>nValueReferences</code> to retrieve the Clocks <code>qualifiers</code>.
+The value in the <a href="#qualifiers"><code>qualifiers</code></a> array determines how the corresponding values in the <a href="#intervals-get"><code>intervals</code></a> and <a href="#counters"><code>counters</code></a> are to be interpreted, and is defined as:</p>
 </li>
 </ul>
 </div>
@@ -3625,17 +3661,19 @@ The values of the arguments <a href="#intervals"><code>intervals</code></a>, <a 
 <div id="fmi3IntervalChanged" class="ulist">
 <ul>
 <li>
-<p><code>fmi3IntervalChanged</code> is returned to indicate that the value for the interval has changed for this <a href="#Clock">Clock</a>.
-Any previously returned intervals (if any) are overwritten with the current value.
-The new <a href="#Clock">Clock</a> interval is relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a> in contrast to the interval of a periodic <a href="#Clock">Clock</a>, where the interval is defined as the time between consecutive <a href="#Clock">Clock</a> ticks.
-In Scheduled Execution this means that the corresponding model partition must be scheduled or re-scheduled (if a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> returned <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a>).</p>
+<p><code>fmi3IntervalChanged</code> is returned to indicate that the value for the interval has changed for this Clock.
+The new interval is returned in <a href="#intervals-get"><code>intervals</code></a> and any previously returned interval (if any) is overwritten with the current value.
+In <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, the new Clock interval is relative to the Clock shift \(T_{\mathit{shift}}\) (periodic Clocks) or to \(t_{\mathit{start}}\) (aperiodic Clocks).
+In <a href="#EventMode"><strong>Event Mode</strong></a>, <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> and <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>, the new Clock interval is always relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a>, <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.
+In Scheduled Execution <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> means that the corresponding model partition must be scheduled or re-scheduled (if a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> returned <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a>).</p>
 </li>
 </ul>
 </div>
 <div id="fmi3IntervalUnchanged" class="ulist">
 <ul>
 <li>
-<p><code>fmi3IntervalUnchanged</code> is returned if a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> already returned a value qualified with <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> which has not changed since.
+<p><code>fmi3IntervalUnchanged</code> is returned if a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> already returned a value qualified with <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> which has not changed since, or if the FMU is not allowed to change the interval because it is meant to be set by the importer or already fixed for the simulation (e.g., the interval of a constant Clock).
+In this case, <a href="#intervals-get"><code>intervals</code></a> returns the unchanged interval value provided in a previous call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>.
 In Scheduled Execution this means the corresponding model partition has already been scheduled.</p>
 </li>
 </ul>
@@ -3643,11 +3681,189 @@ In Scheduled Execution this means the corresponding model partition has already 
 <div id="fmi3IntervalNotYetKnown" class="ulist">
 <ul>
 <li>
-<p><code>fmi3IntervalNotYetKnown</code> is returned for a <a href="#countdown-aperiodic-clock"><code>countdown</code></a> Clock for which the next interval is not yet known.
-This qualifier value can only be returned directly after the Clock was active and previous calls to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> never returned <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> (nor <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a>).
+<p><code>fmi3IntervalNotYetKnown</code> is returned for a <a href="#countdown-aperiodic-clock"><code>countdown</code></a> Clock whose next interval is not yet known to the FMU.
+This qualifier value can only be returned if, since the most recent Clock activation, no call to <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> has returned <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> or <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a>.
+If <code>fmi3IntervalNotYetKnown</code> is returned, the corresponding value in <a href="#intervals-get"><code>intervals</code></a> is not defined.
 In Scheduled Execution this return value means that the corresponding model partition cannot be scheduled yet.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p><a href="#table-qualifiers-for-time-based-clocks">Table 10</a> shows the allowed qualifiers for different time-based Clock types.
+For some combinations the FMU state is relevant.
+If a cell has two values, the left value refers to <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, whereas the right value refers to <a href="#EventMode"><strong>Event Mode</strong></a>, <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a>, or <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.</p>
+</div>
+<div class="paragraph">
+<p>The categorization of fixed and tunable Clocks as "<em>intervalDecimal specified</em>" and "<em>intervalDecimal not specified</em>" refers to the presence or absence of the <a href="#intervalDecimal"><code>intervalDecimal</code></a> attribute on the Clock element in the model description.
+For a detailed explanation, refer to the definitions of <a href="#fixed-periodic-clock">fixed Clocks</a> and <a href="#tunable-periodic-clock">tunable Clocks</a>.</p>
+</div>
+<table id="table-qualifiers-for-time-based-clocks" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Allowed qualifiers for time-based Clocks.</caption>
+<colgroup>
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6666%;">
+<col style="width: 6.6676%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top" rowspan="2"><p class="tableblock">Qualifier</p></th>
+<th class="tableblock halign-center valign-top" colspan="14"><p class="tableblock">Clock type</p></th>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><a href="#constant-clock"><code>constant</code></a></p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><a href="#fixed-clock"><code>fixed</code></a> <em>(intervalDecimal not specified)</em></p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><a href="#fixed-clock"><code>fixed</code></a> <em>(intervalDecimal specified)</em></p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><a href="#tunable-clock"><code>tunable</code></a> <em>(intervalDecimal not specified)</em></p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><a href="#tunable-clock"><code>tunable</code></a> <em>(intervalDecimal specified)</em></p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><a href="#changing-aperiodic-clock"><code>changing</code></a></p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><a href="#countdown-aperiodic-clock"><code>countdown</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a></p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">&#8201;&#8212;&#8201;(a)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(1)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(d)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(1)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(6)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">&#8201;&#8212;&#8201;(b)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(1)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(7)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(1)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(8)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a></p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">(2)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(3)</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(2)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">(4)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">(3)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">(4)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">(3)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">(3)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="#fmi3IntervalNotYetKnown"><code>fmi3IntervalNotYetKnown</code></a></p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">&#8201;&#8212;&#8201;(c)</p></td>
+<td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">(5)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Discussion of the combinations that are not allowed:</p>
+</div>
+<table id="table-not-allowed-qualifiers-for-time-based-clocks" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Combinations of time-based Clocks and qualifiers that are not allowed and why.</caption>
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 90.9091%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">Explanation why this combination is not allowed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(a)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The combination constant Clock and <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> is not valid, since the importer knows the interval and it cannot be changed by the FMU nor by the importer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(b)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The combination fixed/tunable Clock with <a href="#intervalDecimal"><code>intervalDecimal</code></a> specified and <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> does not make sense, since the interval is set by the importer and cannot be changed by the FMU.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(c)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fmi3IntervalNotYetKnown is only defined for countdown Clocks.
+For all other Clocks an interval must be known or be retrievable by the importer at any time.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(d)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The combination fixed Clock and <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> is not valid in states other than <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, since intervals of fixed Clocks cannot change in super state <a href="#Initialized"><strong>Initialized</strong></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Discussion of the combinations that are allowed:</p>
+</div>
+<table id="table-allowed-qualifiers-for-time-based-clocks" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. Combinations of time-based Clocks and qualifiers that are allowed and why.</caption>
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 90.9091%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">Explanation of the allowed combinations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(1)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> signals that a new interval is provided that has not been known by the importer in advance, or that the interval of a previous call of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> is overwritten.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(2)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For constant Clocks and for fixed Clocks in super state <a href="#Initialized"><strong>Initialized</strong></a>, <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a> is the only qualifier that can be returned, since the interval is already known by the importer and cannot be changed by the FMU nor by the importer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(3)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For fixed/tunable Clocks with <a href="#intervalDecimal"><code>intervalDecimal</code></a> not specified and for aperiodic Clocks, <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a> is returned when a previous call of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> already returned an interval, which is still valid.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(4)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For fixed/tunable Clocks with <a href="#intervalDecimal"><code>intervalDecimal</code></a> specified, <a href="#fmi3IntervalUnchanged"><code>fmi3IntervalUnchanged</code></a> is the only qualifier that can be returned, since the interval is set by the importer and cannot be changed by the FMU.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(5)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#fmi3IntervalNotYetKnown"><code>fmi3IntervalNotYetKnown</code></a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(6)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For tunable Clocks with <a href="#intervalDecimal"><code>intervalDecimal</code></a> not specified, <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> is returned when the last interval known by the importer is no longer valid, because the interval has changed due to the change of tunable parameters.
+In this case, the new interval until the next Clock tick is relative to the time of the current <a href="#EventMode"><strong>Event Mode</strong></a> or <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> in contrast to the general definition for a periodic Clock, where the interval specifies the time between consecutive ticks.
+Subsequent Clock ticks follow the general interval definition for periodic Clocks until the tunable interval changes again.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(7)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In super state <a href="#Initialized"><strong>Initialized</strong></a>, for a changing Clock, <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> is returned if and only if the Clock has just ticked.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">(8)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>, for a countdown Clock, <a href="#fmi3IntervalChanged"><code>fmi3IntervalChanged</code></a> is returned if the last interval given to the importer is no longer valid (i.e., the Clock needs to be re-scheduled), or if the interval was not yet known to the FMU.</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</table>
 </div>
 <div id="fmi3GetIntervalFraction" class="listingblock">
 <div class="content">
@@ -3665,7 +3881,8 @@ In Scheduled Execution this return value means that the corresponding model part
 <p><code>valueReferences</code> is an array of size <code>nValueReferences</code> holding the value references of the <code>Clock</code> variables.</p>
 </li>
 <li>
-<p><a href="#counters"><code>counters</code></a> and <a href="#resolutions"><code>resolutions</code></a> are arrays of size <code>nValueReferences</code> to retrieve the Clock intervals as a fraction <code>counters / resolutions</code>.</p>
+<p><a href="#counters"><code>counters</code></a> and <a href="#resolutions"><code>resolutions</code></a> are arrays of size <code>nValueReferences</code> to retrieve the Clock intervals as a fraction <code>counters / resolutions</code>.
+The value in the <a href="#qualifiers"><code>qualifiers</code></a> array determines how the corresponding values in the <a href="#counters"><code>counters</code></a> and <a href="#resolutions"><code>resolutions</code></a> arrays are to be interpreted.</p>
 </li>
 <li>
 <p><a href="#qualifiers"><code>qualifiers</code></a> is an array of size <code>nValueReferences</code> to retrieve the Clock <a href="#qualifiers"><code>qualifiers</code></a>.</p>
@@ -5943,7 +6160,7 @@ The required data types (like: <code>xs:normalizedString</code>) are defined in 
 The types used in the FMI schema files are:</p>
 </div>
 <table id="table-types-in-schema" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Types used in the FMI 3.0 schema files.</caption>
+<caption class="title">Table 13. Types used in the FMI 3.0 schema files.</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 50%;">
@@ -6174,7 +6391,7 @@ If an optional element is present and defines a list (such as <code>&lt;UnitDefi
 </table>
 </div>
 <table id="table-schema-fmiModelDescription" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. <code>fmiModelDescription</code> element details.</caption>
+<caption class="title">Table 14. <code>fmiModelDescription</code> element details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -6256,7 +6473,7 @@ How to support multiple interface types within one FMU, see <a href="#multipleIn
 <p>The XML attributes of <code>&lt;fmiModelDescription&gt;</code> are:</p>
 </div>
 <table id="table-schema-fmiModelDescription-attributes" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. <code>fmiModelDescription</code> attribute details.</caption>
+<caption class="title">Table 15. <code>fmiModelDescription</code> attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -6440,7 +6657,7 @@ Exporters must not generate capability flags without an XML namespace, unless sp
 For all Boolean attributes the default is <code>false</code>.</p>
 </div>
 <table id="table-common-capability-flags" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Common attributes and capability flags.</caption>
+<caption class="title">Table 16. Common attributes and capability flags.</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -6634,7 +6851,7 @@ The additional <code>rad</code> base unit helps to handle the often occurring qu
 Note that if in column <code>exponents</code> the definition \(\mathrm{kg} \cdot \mathrm{m}^2 \cdot \mathrm{s}^{-2}\) is present, then the attributes of <code>&lt;BaseUnit&gt;</code> are  <code>kg=1, m=2, s=-2</code>.</p>
 </div>
 <table id="table-unit-examples" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Unit examples.</caption>
+<caption class="title">Table 17. Unit examples.</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -7023,7 +7240,7 @@ However, this would lead to a situation where, e.g., the definition of a <code>T
 <p>The attributes and elements have the following meaning:</p>
 </div>
 <table id="table-type-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 15. Type element and attribute details.</caption>
+<caption class="title">Table 18. Type element and attribute details.</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 83.3334%;">
@@ -7325,13 +7542,13 @@ The importer may use the function <a href="#fmi3SetDebugLogging"><code>fmi3SetDe
 The <code>name</code> attribute of <code>&lt;Category&gt;</code> must be <a href="#uniqueNameAttribute">unique</a> with respect to all other elements of the <code>&lt;LogCategories&gt;</code> list.</p>
 </div>
 <div class="paragraph">
-<p><a href="#table-standard-categories">Table 16</a> shows the standardized values for <code>name</code> of <code>&lt;Category&gt;</code>.
+<p><a href="#table-standard-categories">Table 19</a> shows the standardized values for <code>name</code> of <code>&lt;Category&gt;</code>.
 These names should be used if a tool supports the corresponding log category.
 If an FMU supports one of these log categories, then an element <code>&lt;Category&gt;</code> with this <code>name</code> must be added to <code>&lt;LogCategories&gt;</code>.
 Any other FMU specific <code>&lt;LogCategories&gt;</code> may be defined.</p>
 </div>
 <table id="table-standard-categories" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 16. Standard <code>name</code> definitions for <code>&lt;Category&gt;</code>.</caption>
+<caption class="title">Table 19. Standard <code>name</code> definitions for <code>&lt;Category&gt;</code>.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -7605,7 +7822,7 @@ Variable aliases of floating point variables may additionally have a <a href="#d
 <div class="title">Figure 23. fmi3ArrayableVariable element.</div>
 </div>
 <table id="table-variableBase-attributes" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 17. fmi3ArrayableVariable attribute details.</caption>
+<caption class="title">Table 20. fmi3ArrayableVariable attribute details.</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 83.3334%;">
@@ -7641,7 +7858,7 @@ The <code>valueReference</code> must be unique for all variables of an FMU.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>causality</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="causality" class="paragraph">
 <p>Enumeration that defines the causality of the variable.
-Allowed combinations of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and their semantics are defined in <a href="#table-allowed-variability-causality-combinations">Table 18</a>.</p>
+Allowed combinations of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and their semantics are defined in <a href="#table-allowed-variability-causality-combinations">Table 21</a>.</p>
 </div>
 <div class="paragraph">
 <p>Values of this enumeration are:</p>
@@ -7783,7 +8000,7 @@ For example, <a href="#discrete"><code>discrete</code></a> variables change thei
 </table>
 </div>
 <div class="paragraph">
-<p>Allowed combinations of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and their semantics are defined in <a href="#table-allowed-variability-causality-combinations">Table 18</a>.</p>
+<p>Allowed combinations of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and their semantics are defined in <a href="#table-allowed-variability-causality-combinations">Table 21</a>.</p>
 </div>
 <div class="paragraph">
 <p>Values of this enumeration are:</p>
@@ -7937,10 +8154,10 @@ For example, an <a href="#input"><code>input</code></a> Clock could be a clocked
 </tbody>
 </table>
 <div class="paragraph">
-<p><a href="#table-allowed-variability-causality-combinations">Table 18</a> shows the combinations of <a href="#variability"><code>variability</code></a>/<a href="#causality"><code>causality</code></a> settings that are allowed.</p>
+<p><a href="#table-allowed-variability-causality-combinations">Table 21</a> shows the combinations of <a href="#variability"><code>variability</code></a>/<a href="#causality"><code>causality</code></a> settings that are allowed.</p>
 </div>
 <table id="table-allowed-variability-causality-combinations" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 18. Allowed combinations of <a href="#variability"><code>variability</code></a>/<a href="#causality"><code>causality</code></a>.</caption>
+<caption class="title">Table 21. Allowed combinations of <a href="#variability"><code>variability</code></a>/<a href="#causality"><code>causality</code></a>.</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 12.5%;">
@@ -8028,7 +8245,7 @@ For example, an <a href="#input"><code>input</code></a> Clock could be a clocked
 <p>Discussion of the combinations that are not allowed:</p>
 </div>
 <table id="table-Combinations-not-allowed" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 19. Combinations of variability and causality that are not allowed and why.</caption>
+<caption class="title">Table 22. Combinations of variability and causality that are not allowed and why.</caption>
 <colgroup>
 <col style="width: 9.0909%;">
 <col style="width: 90.9091%;">
@@ -8068,7 +8285,7 @@ For simplicity, only <a href="#fixed"><code>fixed</code></a> and <a href="#tunab
 <p>Discussion of the combinations that are allowed:</p>
 </div>
 <table id="table-Combinations-allowed" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 20. Combinations of variability and causality that are allowed and why.</caption>
+<caption class="title">Table 23. Combinations of variability and causality that are allowed and why.</caption>
 <colgroup>
 <col style="width: 8.3333%;">
 <col style="width: 25%;">
@@ -8269,11 +8486,11 @@ Changing of <a href="#tunable"><code>tunable</code></a> <a href="#parameter"><co
 <div class="title">Figure 29. Clock element.</div>
 </div>
 <div class="paragraph">
-<p>The attributes common to all variable types are defined in <a href="#table-type-details">Table 15</a> and <a href="#table-variableBase-attributes">Table 17</a>.
+<p>The attributes common to all variable types are defined in <a href="#table-type-details">Table 18</a> and <a href="#table-variableBase-attributes">Table 20</a>.
 Type specific attributes are listed in the following table.</p>
 </div>
 <table id="table-type-attributes" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 21. Type specific attributes.</caption>
+<caption class="title">Table 24. Type specific attributes.</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 87.5%;">
@@ -8359,7 +8576,7 @@ The importer may call <a href="#get-and-set-variable-values"><code>fmi3Set{Varia
 For <code>calculated</code> variables a <a href="#start"><code>start</code></a> attribute must not be provided.</p>
 </div>
 <div class="paragraph">
-<p><a href="#table-definition-initial">Table 22</a> defines the allowed values for <a href="#initial"><code>initial</code></a> as combination of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and the default value if <a href="#initial"><code>initial</code></a> is not present.</p>
+<p><a href="#table-definition-initial">Table 25</a> defines the allowed values for <a href="#initial"><code>initial</code></a> as combination of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> and the default value if <a href="#initial"><code>initial</code></a> is not present.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -8473,10 +8690,10 @@ If <code>false</code>, the <a href="#state">state</a> will not be reinitialized.
 </tbody>
 </table>
 <div class="paragraph">
-<p>If <a href="#initial"><code>initial</code></a> is not present in a type that can have that attribute, its value is defined by <a href="#table-definition-initial">Table 22</a> based on the values of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> (default <span class="underline">underlined</span>):</p>
+<p>If <a href="#initial"><code>initial</code></a> is not present in a type that can have that attribute, its value is defined by <a href="#table-definition-initial">Table 25</a> based on the values of <a href="#causality"><code>causality</code></a> and <a href="#variability"><code>variability</code></a> (default <span class="underline">underlined</span>):</p>
 </div>
 <table id="table-definition-initial" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 22. Definition of <a href="#initial"><code>initial</code></a>.</caption>
+<caption class="title">Table 25. Definition of <a href="#initial"><code>initial</code></a>.</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 12.5%;">
@@ -8732,13 +8949,13 @@ Dependencies of individual array elements can be retrieved during runtime using 
 <div class="title">Figure 30. ModelStructure element.</div>
 </div>
 <div class="paragraph">
-<p>Note that attribute <a href="#dependenciesKind"><code>dependenciesKind</code></a> for element <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> has less enumeration values as <a href="#dependenciesKind"><code>dependenciesKind</code></a> in the other lists, as detailed in <a href="#table-output-der-initialUnknown-details">Table 24</a>.</p>
+<p>Note that attribute <a href="#dependenciesKind"><code>dependenciesKind</code></a> for element <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> has less enumeration values as <a href="#dependenciesKind"><code>dependenciesKind</code></a> in the other lists, as detailed in <a href="#table-output-der-initialUnknown-details">Table 27</a>.</p>
 </div>
 <div class="paragraph">
-<p><a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> consists of the elements detailed in <a href="#table-model-structure-elements">Table 23</a> (see also <a href="#figure-schema-ModelStructure">Figure 30</a>; the symbols of the mathematical equations describing the dependencies are defined in <a href="#concepts-model-exchange">Section 3.1</a>):</p>
+<p><a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> consists of the elements detailed in <a href="#table-model-structure-elements">Table 26</a> (see also <a href="#figure-schema-ModelStructure">Figure 30</a>; the symbols of the mathematical equations describing the dependencies are defined in <a href="#concepts-model-exchange">Section 3.1</a>):</p>
 </div>
 <table id="table-model-structure-elements" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 23. ModelStructure elements.</caption>
+<caption class="title">Table 26. ModelStructure elements.</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 83.3334%;">
@@ -8807,7 +9024,7 @@ The functional dependency is defined as:<br>
 <p>A <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> is part of the discrete state of a model partition and represented by a clocked variable.
 To which Clock or Clocks it belongs is described by the attribute <a href="#clocks"><code>clocks</code></a> of that variable.
 Each <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> must have the attribute <a href="#previous"><code>previous</code></a> to represent the previous value of this <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>.
-All clocked states must have <a href="#variability"><code>variability = discrete</code></a>, must have the attribute <a href="#clocks"><code>clocks</code></a>, and must not be of type <a href="#fmi3Clock"><code>fmi3Clock</code></a>.</p>
+All clocked states must have <a href="#variability"><code>variability = discrete</code></a>, must have the attribute <a href="#clocks"><code>clocks</code></a>, and must not be of type <code>fmi3Clock</code>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -8902,7 +9119,7 @@ If an event indicator shall not be exposed, or if event indicators are not stati
 <p>Elements <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> have (partially) the following attributes:</p>
 </div>
 <table id="table-output-der-initialUnknown-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 24. <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> attribute details.</caption>
+<caption class="title">Table 27. <a href="#Output"><code>&lt;Output&gt;</code></a>, <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>, <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>, <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>, and <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a> attribute details.</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 83.3334%;">
@@ -9083,7 +9300,7 @@ The usage of a separate file enables backporting of this feature to previous FMI
 <p>On the top level, the schema consists of the following elements (see <a href="#terminals_and_icons_overview">Figure 31</a>).</p>
 </div>
 <table id="table-terminal-and-icon-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 25. fmiTerminalAndIcons element details.</caption>
+<caption class="title">Table 28. fmiTerminalAndIcons element details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -9291,7 +9508,7 @@ So the FMU icon should be placed first in the XML file, terminal below.
 </ul>
 </div>
 <div class="paragraph">
-<p>Predefined rules for variable matching in a connection are given in <a href="#table-predefined-matching-rules">Table 26</a>.
+<p>Predefined rules for variable matching in a connection are given in <a href="#table-predefined-matching-rules">Table 29</a>.
 Predefined variable kinds are used to describe how the terminal member variables have to be handled.
 Domain specific connection rules, terminals and their member variables can be provided by other standards, including layered standards.</p>
 </div>
@@ -9351,13 +9568,13 @@ The terminal name must be unique on each level.</p>
 </div>
 <div id="matchingRule" class="paragraph">
 <p>The normalized string attribute <code>matchingRule</code> describes the rules for variable matching in a connection of terminals.
-As detailed in <a href="#table-predefined-matching-rules">Table 26</a>, there are four predefined matching rules: <code>plug</code>, <code>bus</code>, <code>sequence</code>, and <code>none</code>.
+As detailed in <a href="#table-predefined-matching-rules">Table 29</a>, there are four predefined matching rules: <code>plug</code>, <code>bus</code>, <code>sequence</code>, and <code>none</code>.
 Other standards may define new matching rules.
 In order to avoid ambiguities and conflicts, rule names must follow the <a href="#reverse-DNS">reverse domain name notation</a> of a domain that is controlled by the entity defining the semantics and content of the additional entries.
 Such rule definitions can be part of a <a href="#LS-reverse-DNS">layered standard</a>, for example.</p>
 </div>
 <table id="table-predefined-matching-rules" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 26. Predefined matching rules.</caption>
+<caption class="title">Table 29. Predefined matching rules.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -9489,7 +9706,7 @@ This information defines how the connection of this variable has to be implement
 <p>The predefined <code>variableKind</code> are:</p>
 </div>
 <table id="table-variable-kinds" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 27. Predefined kinds of variables.</caption>
+<caption class="title">Table 30. Predefined kinds of variables.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -9857,7 +10074,7 @@ Other definitions are beyond the scope of this terminal specification and need c
 This file declares a root element &lt;fmiBuildDescription&gt; that has the following attributes and elements:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 28. fmiBuildDescription element and attributes details.</caption>
+<caption class="title">Table 31. fmiBuildDescription element and attributes details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -9912,7 +10129,7 @@ It is also recommended to use a descriptive name (e.g. <code>&lt;model_identifie
 <div class="title">Figure 39. <code>fmiBuildDescription</code> element.</div>
 </div>
 <table id="table-BuildConfiguration-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 29. BuildConfiguration attribute details.</caption>
+<caption class="title">Table 32. BuildConfiguration attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -9974,7 +10191,7 @@ An importer of the FMU has to process every <code>&lt;SourceFileSet&gt;</code> o
 <div class="title">Figure 40. <code>SourceFileSet</code> element.</div>
 </div>
 <table id="table-SourceFileSet-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 30. SourceFileSet attribute details.</caption>
+<caption class="title">Table 33. SourceFileSet attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -10034,7 +10251,7 @@ Please refer to the <a href="https://modelica.github.io/fmi-guides/main/fmi-guid
 <div class="title">Figure 41. <code>SourceFile</code> element.</div>
 </div>
 <table id="table-SourceFile-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 31. SourceFile attribute details.</caption>
+<caption class="title">Table 34. SourceFile attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -10067,7 +10284,7 @@ Please refer to the <a href="https://modelica.github.io/fmi-guides/main/fmi-guid
 <div class="title">Figure 42. <code>PreprocessorDefinition</code> element.</div>
 </div>
 <table id="table-ProcessorDefinition-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 32. ProcessorDefintition attribute details.</caption>
+<caption class="title">Table 35. ProcessorDefintition attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -10113,7 +10330,7 @@ Please refer to the <a href="https://modelica.github.io/fmi-guides/main/fmi-guid
 If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</code> elements, its default value must be contained in the options.</p>
 </div>
 <table id="table-PreprocessorDefinition-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 33. PreprocessorDefinition attribute details.</caption>
+<caption class="title">Table 36. PreprocessorDefinition attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -10152,7 +10369,7 @@ If a <code>&lt;PreprocessorDefinition&gt;</code> contains <code>&lt;Option&gt;</
 <div class="title">Figure 43. <code>IncludeDirectory</code> element.</div>
 </div>
 <table id="table-IncludeDirectory-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 34. IncludeDirectory attribute details.</caption>
+<caption class="title">Table 37. IncludeDirectory attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -10211,7 +10428,7 @@ An importer of the FMU has to link every library of the matching <a href="#Build
 <div class="title">Figure 44. <code>Library</code> element.</div>
 </div>
 <table id="table-Library-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 35. Library attribute details.</caption>
+<caption class="title">Table 38. Library attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -11010,7 +11227,7 @@ int main(int argc, char* argv[]) {
 The root element of this XML file shall have the following attributes in the XML namespace http://fmi-standard.org/fmi-ls-manifest:</p>
 </div>
 <table id="table-schema-fmi-ls-manifest-root-attributes" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 36. <code>fmi-ls-manifest.xml</code> root attribute details.</caption>
+<caption class="title">Table 39. <code>fmi-ls-manifest.xml</code> root attribute details.</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -11962,7 +12179,7 @@ It is defined as:</p>
 <p>The attribute in the following table is defined in addition to the <a href="#common-capability-flags">common attributes</a> and has the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-ModelExchange-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 37. ModelExchange attribute details.</caption>
+<caption class="title">Table 40. ModelExchange attribute details.</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -12746,7 +12963,7 @@ If the <a href="#earlyReturnTime"><code>earlyReturnTime</code></a> is greater th
 </ul>
 </div>
 <table id="table-math-intermediateUpdateMode" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 38. Mathematical description of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</caption>
+<caption class="title">Table 41. Mathematical description of <a href="#IntermediateUpdateMode"><strong>Intermediate Update Mode</strong></a>.</caption>
 <colgroup>
 <col style="width: 66.6666%;">
 <col style="width: 33.3334%;">
@@ -13425,7 +13642,7 @@ It is defined as:</p>
 <p>The attributes in the following table are defined in addition to the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with the exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-CoSimulation-details" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 39. CoSimulation attribute details.</caption>
+<caption class="title">Table 42. CoSimulation attribute details.</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -13960,7 +14177,8 @@ Note, that other than <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> for Co-S
 </dd>
 <dt class="hdlist1">Functions <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> and <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
 <dd>
-<p>These function calls are allowed for <a href="#tunable-clock"><code>tunable</code></a> and <a href="#changing-aperiodic-clock"><code>changing</code></a> aperiodic Clocks.</p>
+<p>See <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>.
+For <a href="#changing-aperiodic-clock"><code>changing</code> aperiodic Clocks</a>, these functions must be called in <a href="#ClockActivationMode"><strong>Clock Activation Mode</strong></a> if the Clock was activated.</p>
 </dd>
 </dl>
 </div>
@@ -14017,7 +14235,8 @@ The FMU sets the reported activation state immediately back to <code>fmi3ClockIn
 </dd>
 <dt class="hdlist1">Functions <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> &amp; <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
 <dd>
-<p>These function calls are allowed for <a href="#countdown-aperiodic-clock"><code>countdown</code></a> Clocks.</p>
+<p>See <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>.
+For <a href="#countdown-aperiodic-clock"><code>countdown</code> aperiodic Clocks</a>, these functions must be called in every <a href="#ClockUpdateMode"><strong>Clock Update Mode</strong></a>.<br></p>
 </dd>
 </dl>
 </div>
@@ -14085,7 +14304,7 @@ The <a href="#activationTime"><code>activationTime</code></a> is provided by the
 <div class="paragraph">
 <p>The FMU requests to schedule the model partition of <code>AperiodicClock</code>.
 It calls <a href="#fmi3ClockUpdateCallback"><code>fmi3ClockUpdateCallback</code></a> to enable the importer to check whether the FMU has defined a new interval for <code>AperiodicClock</code>.
-By evaluating the returned values <a href="#qualifiers"><code>qualifiers</code></a> and <a href="#intervals"><code>intervals</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a> the simulation algorithms determines if the respective task has to be scheduled and which delay has to be applied.</p>
+By evaluating the returned values <a href="#qualifiers"><code>qualifiers</code></a> and <a href="#intervals-get"><code>intervals</code></a> of <a href="#fmi3GetInterval"><code>fmi3GetInterval</code></a>, the simulation algorithm determines if the respective task has to be scheduled and which delay has to be applied.</p>
 </div>
 <div class="listingblock">
 <div class="content">
