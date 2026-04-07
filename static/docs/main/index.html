@@ -478,7 +478,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version ef1e34b,</span>
+<span id="revnumber">version e9e0c7f,</span>
 <span id="revdate">2026-04-07</span>
 </div>
 <div id="toc" class="toc2">
@@ -8688,10 +8688,34 @@ For example, if <code>derivative = 3</code> for variable 8, then variable 8 is t
 </table>
 </div>
 <div class="paragraph">
-<p>This information may be used to signal that an <a href="#input"><code>input</code></a> or an <a href="#output"><code>output</code></a> is the derivative of another <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a>, respectively.
-Furthermore, this attribute defines the continuous <a href="#state">states</a> of the FMU.
-The derivatives of continuous <a href="#state">states</a> of an FMU are listed as elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.
-All variables listed in these elements must have attribute <code>derivative</code>.</p>
+<p>Multiple variables may reference the same variable via <code>derivative</code>.</p>
+</div>
+<div class="paragraph">
+<p>A variable with attribute <code>derivative</code> that is not listed as a <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> is not used for integration.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Variables with attribute <code>derivative</code> that are not listed as <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> include, for example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a> that is the derivative of another <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a>, respectively, where the <code>derivative</code> attribute signals this relationship to the importer.</p>
+</li>
+<li>
+<p>When mapping a second-order system to first-order <a href="#state">states</a>, a velocity <a href="#state">state</a> that has <code>derivative</code> referencing the position <a href="#state">state</a> to preserve the higher-order structure.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
 </div></div></td>
 </tr>
 <tr>
@@ -8997,6 +9021,7 @@ The functional dependency is defined as:<br>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ContinuousStateDerivative</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="ContinuousStateDerivative" class="paragraph">
 <p>Ordered list of value references of all derivatives of continuous <a href="#state">states</a>.
+The referred variables must have the <code>derivative</code> attribute.
 The order defined by this list defines the order of the elements for <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, and <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>.</p>
 </div>
 <div class="admonitionblock note">
