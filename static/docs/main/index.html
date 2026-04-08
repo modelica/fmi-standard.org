@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version e9e0c7f,</span>
-<span id="revdate">2026-04-07</span>
+<span id="revnumber">version b6706ab,</span>
+<span id="revdate">2026-04-08</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -5746,9 +5746,13 @@ This restriction does not apply to <a href="#triggered">triggered Clocks</a>, no
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The event iteration for handling discontinuities of the continuous part of the FMU should precede handling of time-based Clocks.
-No further constraints on activations of <a href="#time-based-clock">time-based Clocks</a> are defined, e.g. activating at the first instant of super-dense time.
-If the semantics of some Clocks require any specific treatment, e.g. activation at the same super-dense time instant, only the importer will know and must therefore enforce proper activation of the respective Clocks.
+The event mode may consist of several super-dense time instants.
+Each super-dense time instant represents a distinct event occurring at the same simulation time.
+If any event originating from the continuous time mode (for a ME FMU) resp. step mode (for a CS FMU) is present, its event iteration must be performed during the first super-dense time instant.
+Each super-dense time instant must conclude with a call to <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.
+Super-dense time instants that handle <a href="#time-based-clock">time-based Clocks</a> are initiated by setting the corresponding Clocks using <a href="#fmi3SetClock"><code>fmi3SetClock</code></a>.
+No further constraints are imposed on the activation of <a href="#time-based-clock">time-based Clocks</a> (for example, activation during the first instant of a super-dense time, the order of handling multiple clocks, or handling multiple Clocks within the same super-dense time instant).
+If the semantics of certain Clocks require specific handling—such as simultaneous activation within the same super-dense time instant—this must be ensured by the importer.
 </td>
 </tr>
 </table>
