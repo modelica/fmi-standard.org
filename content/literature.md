@@ -2,6 +2,12 @@
 title: Literature
 ---
 
+## Newsletter
+
+{{< figure src="https://dr-clementcoic.github.io/LearnModelicaFMI/assets/images/000/Newsletter_LearnModelica&FMI.jpeg" link="https://dr-clementcoic.github.io/LearnModelicaFMI/" alt="Learn Modelica and FMI over your break" width="15%" >}}
+
+[**Learn Modelica and FMI over your break**](https://dr-clementcoic.github.io/LearnModelicaFMI/) by Clément Coïc [![LinkedIn](/font-awesome/svgs/brands/linkedin.svg)](https://www.linkedin.com/newsletters/7373084674463719424/)
+
 ## FMI Related Publications
 
 ### 16th International Modelica and FMI Conference 2025, Lucerne, Switzerland
