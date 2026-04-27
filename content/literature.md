@@ -4,16 +4,15 @@ title: Literature
 
 ## Newsletter
 
-{{< figure src="https://dr-clementcoic.github.io/LearnModelicaFMI/assets/images/000/Newsletter_LearnModelica&FMI.jpeg" link="https://dr-clementcoic.github.io/LearnModelicaFMI/" alt="Learn Modelica and FMI over your break" width="15%" >}}
-
-[**Learn Modelica and FMI over your break**](https://dr-clementcoic.github.io/LearnModelicaFMI/) by Clément Coïc [![LinkedIn](/font-awesome/svgs/brands/linkedin.svg)](https://www.linkedin.com/newsletters/7373084674463719424/)
+* [Learn Modelica and FMI over your break](https://dr-clementcoic.github.io/LearnModelicaFMI/) by Clément Coïc [![LinkedIn](/font-awesome/svgs/brands/linkedin.svg)](https://www.linkedin.com/newsletters/7373084674463719424/)
 
 ## FMI Related Publications
 
 ### 16th International Modelica and FMI Conference 2025, Lucerne, Switzerland
 
 Conference App: 
-ALl papers and many presentations are publicly available in the [Conference App](https://pretalx.com/16thmodelicafmiconference/schedule/).
+
+All papers and many presentations are publicly available in the [Conference App](https://pretalx.com/16thmodelicafmiconference/schedule/).
 
 Tutorials: 
 
@@ -40,6 +39,7 @@ Industrial User Presentations:
 
 
 FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp218)):
+
 * [Prototypical Control for the Digital Twin of Aircraft Environmental Control System](https://doi.org/10.3384/ecp21881), [Recording](https://www.youtube.com/watch?v=1ZAWgVyHwWU)
 * [Aspects and Ideas for the FMI-based Modeling of Railway Digital Twins](https://doi.org/10.3384/ecp21891), [Recording](https://www.youtube.com/watch?v=hGKtIBYMLbA)
 * [Collaborative Digital Twin Development for Railway Braking and Traction Applications](https://doi.org/10.3384/ecp218101)
@@ -95,7 +95,6 @@ FMI User meeting ([Agenda](https://www.conftool.com/modelica2023/index.php?page=
 * [Linking Design Requirements to FMUs to create LOTAR compliant mBSE models](/assets/literature/FMI_User_Meeting_2023/04_Coïc-Linking_Design_Requirements_to_FMUs_to_create_LOTAR_compliant_mBSE_models-168_a.pdf)
 * [Status and Outlook eFMI Standard](/assets/literature/FMI_User_Meeting_2023/05_eFMI_status_and_outook.pdf)
 
-
 FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp204)):
 
 * [Modelica Association Standards and Surrogate Modeling to Enable Multi-Fidelity Simulations](https://doi.org/10.3384/ecp20473)
@@ -124,6 +123,7 @@ FMI User meeting ([Agenda](https://raw.githubusercontent.com/modelica/ModelicaCo
 * [Status and Outlook eFMI Standard](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/10_eFMI-status-and-outlook.pdf) ([Video](https://www.youtube.com/watch?v=lg7677ivh0Y))
 
 FMI related conference papers:
+
 * [The Functional Mock-up Interface 3.0 - New Features Enabling New Applications](https://doi.org/10.3384/ecp2118117)  ([Video](https://www.youtube.com/watch?v=sNsWVfmZC5s)) ([Slides](/assets/literature/Modelica_Conference_2021/FMI3Paper_Slides.pdf))
 * [The FMI 3.0 Standard Interface for Clocked and Scheduled Simulations](https://doi.org/10.3384/ecp2118127)  ([Video](https://www.youtube.com/watch?v=ZT918VcYVlA)) 
 * [Engineering Domain Interoperability Using the System Structure and Parameterization (SSP) Standard](https://doi.org/10.3384/ecp2118137) ([Video](https://www.youtube.com/watch?v=bATNdy9_5W0))
@@ -143,13 +143,15 @@ FMI related conference papers:
 * [Optimizing life-cycle costs for pumps and powertrains using FMI co-simulation](https://doi.org/10.3384/ecp21181681)  ([Video](https://www.youtube.com/watch?v=sqs_7hubXEc))
 
 Tutorial:
+
 * [FMI in the Cloud](https://github.com/t-sommer/fmi-cloud-tutorial)
 
 Keynotes
+
 * Composing Modeling and Simulation with Machine Learning in Julia  ([Video](https://www.youtube.com/watch?v=loqORy9tATY))
 
-
 ### [Asian Modelica Conference 2020](https://doi.org/10.3384/ecp202017413)
+
 * [Introducing the Virtual Systems Interface for Dynamic Coupling of Continuous Time Systems with Discontinuities](https://www.ep.liu.se/ecp/174/001/ecp2020174001.pdf)
 * [Collaborative Development and Simulation of an Aircraft Hydraulic Actuator Model](https://doi.org/10.3384/ecp202017467)
 * [A Protocol-Based Verification Approach for Standard-Compliant Distributed Co-Simulation](https://doi.org/10.3384/ecp2020174133)
@@ -202,7 +204,6 @@ FMI related conference papers ([link to proceedings](https://www.modelica.org/ev
 * Functional Mockup Interface: An Empirical Survey  Identifies Research Challenges and Current Barriers
 * A Method to Import FMU to Hardware Description Language
 * The OpenModelica Integrated Modeling, Simulation and Optimization Environment
-
 
 ### [Japanese Modelica Conference 2018](https://modelica.org/events/modelica2018japan/)
 
