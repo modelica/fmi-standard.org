@@ -4,7 +4,7 @@ title: Literature
 
 ## Newsletter
 
-* [Learn Modelica and FMI over your break](https://dr-clementcoic.github.io/LearnModelicaFMI/) by Clément Coïc [![LinkedIn](/assets/imageslearn-modelig-and-fmi-newsletter.png)](https://www.linkedin.com/newsletters/7373084674463719424/)
+* [Learn Modelica and FMI over your break](https://dr-clementcoic.github.io/LearnModelicaFMI/) by Clément Coïc [![LinkedIn](/assets/images/learn-modelig-and-fmi-newsletter.png)](https://www.linkedin.com/newsletters/7373084674463719424/)
 
 ## FMI Related Publications
 
