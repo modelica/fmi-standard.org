@@ -29,16 +29,31 @@
     list-style: none;
 }
 
-.ma-content li {
+.ma-content ul > li {
     line-height: 1.5rem;
     text-indent: -1rem;
 }
 
-.ma-content li:before {
+.ma-content ul > li:before {
     content: "»";
     padding-right: 0.5rem;
     font-size: 1.5rem;
     color: #BD0023
+}
+
+.ma-content ol {
+    padding-left: 1.5rem;
+}
+
+.ma-content ol > li {
+    line-height: 1.5rem;
+}
+
+.ma-content pre {
+    background-color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    overflow-x: auto;
 }
 
 </style>
@@ -59,8 +74,26 @@
 
     <div class="row justify-content-center mb-5">
       <div class="col-xl-9">
+        <div class="alert alert-info" role="alert">
+          <i class="fa-solid fa-circle-info me-2"></i>
+          <strong>We recommend using multiple validation tools</strong> since each tool checks different aspects of FMU compliance.
+          For example, FMU Check performs static checks only, FMPy can also simulate FMUs, fmusim validates the modelDescription.xml against the XML schema, and VDMCheck validates against a formal model of the FMI specification.
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+      <div class="col-xl-9">
         <h2>FMU Check</h2>
-        <p>A free web app to validate FMUs online. It's based on <a href="https://github.com/CATIA-Systems/FMPy">FMPy</a>, hosted by the Modelica Association, and performs static checks only (i.e. no simulation of the FMUs).</p>
+        <p>A free web app to validate FMUs online. It's powered by <a href="https://github.com/CATIA-Systems/FMPy">FMPy</a> (currently v0.3.21), hosted by the Modelica Association, and performs static checks only (i.e. no simulation of the FMUs).</p>
+        <h5>How to use</h5>
+        <ol>
+          <li>Go to <a href="https://fmu-check.herokuapp.com/">fmu-check.herokuapp.com</a></li>
+          <li>Upload your FMU file</li>
+          <li>Review the validation results</li>
+        </ol>
+        <p>You can also deploy FMU Check locally using FMPy's built-in web app:</p>
+        <pre><code>python -m fmpy.webapp my_model.fmu</code></pre>
         <p class="d-flex justify-content-start lead fw-normal">
           <a href="https://fmu-check.herokuapp.com/" class="icon-link icon-link-hover fw-semibold">
             Validate your FMU <i class="fa-solid fa-arrow-right ms-1"></i>
@@ -78,7 +111,14 @@
             <li>supports Co-Simulation and Model Exchange</li>
             <li>runs on Windows, Linux and macOS</li>
             <li>compiles C code FMUs and generates CMake projects for debugging</li>
-        </ul>  
+        </ul>
+        <h5>How to use</h5>
+        <ol>
+          <li>Install FMPy: <code>python -m pip install fmpy[complete]</code></li>
+          <li>Get info about an FMU: <code>fmpy info my_model.fmu</code></li>
+          <li>Simulate an FMU: <code>fmpy simulate my_model.fmu</code></li>
+          <li>Open the graphical user interface: <code>python -m fmpy.gui</code></li>
+        </ol>
         <p class="d-flex justify-content-start lead fw-normal">
           <a href="https://github.com/CATIA-Systems/FMPy" class="icon-link icon-link-hover fw-semibold">
             FMPy on GitHub <i class="fa-solid fa-arrow-right ms-1"></i>
@@ -90,15 +130,21 @@
     <div class="row justify-content-center mb-5">
       <div class="col-xl-9">
         <h2>Reference FMUs and fmusim</h2>
-        <p>The Reference FMUs are a set of test models and the `fmusim` application to simulate FMUs. It supports</p>
+        <p>The Reference FMUs are a set of test models and the <code>fmusim</code> application to simulate FMUs. It supports</p>
         <ul>
           <li>validation of the modelDescription.xml against the XML schema</li>
           <li>FMI versions 1.0, 2.0, and 3.0</li>
           <li>Co-Simulation and Model Exchange</li>
           <li>Windows, Linux, and Mac</li>
         </ul>
+        <h5>How to use</h5>
+        <ol>
+          <li>Download the pre-built executables from the <a href="https://github.com/modelica/Reference-FMUs/releases">latest release</a></li>
+          <li>Simulate an FMU: <code>fmusim my_model.fmu</code></li>
+          <li>Show all options: <code>fmusim --help</code></li>
+        </ol>
         <p class="d-flex justify-content-start lead fw-normal">
-          <a href="https://github.com/modelica/reference-fmus" class="icon-link icon-link-hover fw-semibold">
+          <a href="https://github.com/modelica/Reference-FMUs" class="icon-link icon-link-hover fw-semibold">
             Reference FMUs on GitHub <i class="fa-solid fa-arrow-right ms-1"></i>
           </a>
         </p>
@@ -111,6 +157,17 @@
         <p>
             A Java library that validates FMUs against a formal model of the FMI specification. It supports FMI versions 2.0 and 3.0, and all interface types.
         </p>
+        <h5>How to use</h5>
+        <ol>
+          <li>Download the latest release from <a href="https://github.com/INTO-CPS-Association/FMI-VDM-Model/releases">GitHub</a> and unzip it</li>
+          <li>Add the extracted folder to your PATH</li>
+          <li>Validate an FMU:
+            <ul>
+              <li>Linux / macOS: <code>VDMCheck2.sh my_model.fmu</code> or <code>VDMCheck3.sh my_model.fmu</code></li>
+              <li>Windows: <code>java -jar vdmcheck2.jar my_model.fmu</code> or <code>java -jar vdmcheck3.jar my_model.fmu</code></li>
+            </ul>
+          </li>
+        </ol>
         <p class="d-flex justify-content-start lead fw-normal">
           <a href="https://github.com/INTO-CPS-Association/FMI-VDM-Model" class="icon-link icon-link-hover fw-semibold">
             FMI-VDM-Model on GitHub <i class="fa-solid fa-arrow-right ms-1"></i>
