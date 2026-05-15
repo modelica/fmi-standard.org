@@ -2,9 +2,11 @@
 title: Literature
 ---
 
-## Newsletter
+## Learn Modelica and FMI Newsletter and FMI 3.0 Cheat Sheet
 
-* [Learn Modelica and FMI over your break](https://dr-clementcoic.github.io/LearnModelicaFMI/) by Clément Coïc [![LinkedIn](/assets/images/learn-modelig-and-fmi-newsletter.png)](https://www.linkedin.com/newsletters/7373084674463719424/)
+[Learn Modelica and FMI over your break](https://dr-clementcoic.github.io/LearnModelicaFMI/) and [FMI 3.0 and FMPy Cheat Sheet](https://dr-clementcoic.github.io/fmi-cheat-sheet/) by Clément Coïc
+
+[![Preview of the Learn Modelica and FMI newsletter on LinkedIn](/assets/images/learn-modelig-and-fmi-newsletter.png)](https://www.linkedin.com/newsletters/7373084674463719424/)
 
 ## FMI Related Publications
 
