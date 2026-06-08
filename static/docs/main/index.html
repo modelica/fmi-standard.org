@@ -478,7 +478,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 96e6aea,</span>
+<span id="revnumber">version 3f9716a,</span>
 <span id="revdate">2026-06-08</span>
 </div>
 <div id="toc" class="toc2">
@@ -949,8 +949,19 @@ That integration algorithm of the importer, usually a ODE/DAE solver, is respons
 <div class="paragraph">
 <p>The Scheduled Execution interface exposes individual <a href="#model-partition">model partitions</a>.
 A scheduler provided by the importer can control the execution of each model partition separately.
-In some ways the Scheduled Execution interface has similarities to the Model Exchange interface: the first externalizes a scheduling algorithm usually found in a controller algorithm (see <a href="#fmi-for-scheduled-execution">Section 5</a>) and the second interface externalizes the ODE/DAE solver.
-<em>[See also <a href="https://modelica.github.io/fmi-guides/main/fmi-guide/#_use_cases_for_scheduled_execution">Use-cases for Scheduled Execution</a> in the FMI 3.0 Implementers' Guide.]</em></p>
+In some ways the Scheduled Execution interface has similarities to the Model Exchange interface: the first externalizes a scheduling algorithm usually found in a controller algorithm (see <a href="#fmi-for-scheduled-execution">Section 5</a>) and the second interface externalizes the ODE/DAE solver.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+See also <a href="https://modelica.github.io/fmi-guides/main/fmi-guide/#_use_cases_for_scheduled_execution">Use-cases for Scheduled Execution</a> in the FMI 3.0 Implementers' Guide.
+</td>
+</tr>
+</table>
 </div>
 <div id="figure-scheduled-execution-data-flow" class="imageblock">
 <div class="content">
@@ -1322,8 +1333,22 @@ The properties and semantics of variables are described in the <a href="#modelDe
 Access to variable values is possible via appropriate API functions.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#independent"><code>independent</code></a> variable \(t \in \mathbb{T}\) <em>[typically: time]</em> is a tuple \(t = (t_R,t_I)\), where \(t_R \in \mathbb{R},\ t_{I} \in \mathbb{N} = \{0, 1, 2, \ldots\}\).
-The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
+<p>The <a href="#independent"><code>independent</code></a> variable \(t \in \mathbb{T}\) is a tuple \(t = (t_R,t_I)\), where \(t_R \in \mathbb{R},\ t_{I} \in \mathbb{N} = \{0, 1, 2, \ldots\}\).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The independent variable is typically time.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The real part \(t_R\) of this tuple is the <a href="#independent"><code>independent</code></a> variable of the FMU for describing the continuous-time behavior of the model between events.
 During continuous-time integration the integer part of time \(t_I = 0\).
 \(t_I\) is a counter to enumerate (and therefore distinguish) the events at the same continuous-time instant \(t_R\).
 This time definition is also called "super-dense time" in literature, see, for example, <a href="#LZ07">[LZ07]</a>.
@@ -4056,8 +4081,10 @@ typedef fmi3Status fmi3GetVariableDependenciesTYPE(fmi3Instance instance,
 <li>
 <p><code>elementIndicesOfDependent</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the element index of the dependent variable that dependency information is provided for.
-The element indices start with 1. Using the element index 0 means all elements of the variable.
-(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of-variables">Section 2.2.7.1</a>.)</p>
+The element indices start with 1. Using the element index 0 means all elements of the variable.</p>
+<div class="paragraph">
+<p>If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of-variables">Section 2.2.7.1</a>.</p>
+</div>
 </li>
 <li>
 <p><code>independents</code> must point to a buffer of <a href="#fmi3ValueReference"><code>fmi3ValueReference</code></a> values of size <code>nDependencies</code> allocated by the calling environment.
@@ -4067,8 +4094,10 @@ It is filled in by this function with the value reference of the <a href="#indep
 <p><code>elementIndicesOfIndependents</code> must point to a buffer of <code>size_t</code> values of size <code>nDependencies</code> allocated by the calling environment.
 It is filled in by this function with the element index of the <a href="#independent"><code>independent</code></a> variable that this dependency entry is dependent upon.
 The element indices start with 1.
-Using the element index 0 means all elements of the variable.
-(Note: If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of-variables">Section 2.2.7.1</a>.)</p>
+Using the element index 0 means all elements of the variable.</p>
+<div class="paragraph">
+<p>If an array has more than one dimension the indices are serialized in the same order as defined for values in <a href="#serialization-of-variables">Section 2.2.7.1</a>.</p>
+</div>
 </li>
 <li>
 <p><code>dependencyKinds</code> must point to a buffer of <a href="#dependenciesKind"><code>dependenciesKind</code></a> values of size <code>nDependencies</code> allocated by the calling environment.
@@ -7463,8 +7492,14 @@ This information can, for example, be used to increase numerical stability and a
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>priority</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="priority" class="paragraph">
 <p>This attribute is mandatory for input <a href="#Clock"><code>Clocks</code></a> in Scheduled Execution.
-For Co-Simulation and Model Exchange, this attribute must be ignored <em>[i.e. if present in <a href="#multipleInterfaceTypes">mixed interface FMUs</a>]</em>.
-Output <a href="#Clock"><code>Clocks</code></a> must not have this attribute.
+For Co-Simulation and Model Exchange, this attribute must be ignored.</p>
+</div>
+<div class="paragraph">
+<p>+
+NOTE: This applies when the attribute is present in <a href="#multipleInterfaceTypes">mixed interface FMUs</a>.</p>
+</div>
+<div class="paragraph">
+<p>Output <a href="#Clock"><code>Clocks</code></a> must not have this attribute.
 Smaller values signal higher priorities.
 <a href="#Clock"><code>Clocks</code></a> that have to be activated at the same time instant are ordered according to this attribute.
 For multiple <a href="#Clock"><code>Clocks</code></a> with the same priority the order is undefined.</p>
@@ -10652,7 +10687,7 @@ These restrictions ensure broad compatibility of the archive with common ZIP pro
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Note: especially section 4.4.17 of <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">the ZIP format specification</a> states that backslashes (<code>\</code>) are forbidden as path separator, only forward slashes (<code>/</code>) are allowed.
+Especially section 4.4.17 of <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">the ZIP format specification</a> states that backslashes (<code>\</code>) are forbidden as path separator, only forward slashes (<code>/</code>) are allowed.
 Non-ASCII directory names are not explicitly forbidden, but might pose a problem on different operating systems and are thus discouraged.
 </td>
 </tr>
@@ -10705,7 +10740,19 @@ extra                               // Additional (meta-)data of the FMU (option
 <h5 id="documentation-directory">2.5.1.1. Directory <code>documentation</code></h5>
 <div class="paragraph">
 <p>Figure <a href="#figure-zip-structure">Structure of the ZIP file of an FMU</a> defines the files expected in the <code>documentation</code> directory.
-If the FMU depends on external resources <em>[e.g. shared libraries, files, or servers]</em> to be loaded or simulated <code>documentation/externalDependencies.{txt|html}</code> must be present to document these dependencies and how to provide them.</p>
+If the FMU depends on external resources to be loaded or simulated, <code>documentation/externalDependencies.{txt|html}</code> must be present to document these dependencies and how to provide them.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+External resources include, for example, shared libraries, files, or servers.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect5">
 <h6 id="license-information">2.5.1.1.1. Directory <code>licenses</code></h6>
@@ -12656,8 +12703,22 @@ If the FMU is connected in <a href="#algebraic-loops">algebraic loops</a> with o
 <dd>
 <p>returns values for all variables at \(t\).
 <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> does not trigger an evaluation of \(\mathbf{f}_{\mathit{doStep}}\).
-Therefore, <a href="#algebraic-loops">algebraic loops</a> at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls <em>[contrary to <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a> and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>]</em>.
-Repeating a communication step requires to reset the FMU state to the previous communication point with <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> and repeating the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with new input values.</p>
+Therefore, <a href="#algebraic-loops">algebraic loops</a> at communication points cannot be handled by an appropriate sequence of <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> and <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> calls.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, <a href="#EventMode"><strong>Event Mode</strong></a>, and <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a>, algebraic loops can be handled through such call sequences.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Repeating a communication step requires to reset the FMU state to the previous communication point with <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> and repeating the <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> with new input values.</p>
+</div>
 <div class="paragraph">
 <p>Calling <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> is not allowed after <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> without calling <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> in between.</p>
 </div>
@@ -12951,7 +13012,7 @@ It distinguishes the level of trust that can be placed in the tentative outputs 
 <div id="intermediateUpdateTime" class="ulist">
 <ul>
 <li>
-<p><a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the internal value of the <a href="#independent"><code>independent</code></a> variable <em>[typically simulation time]</em> of the FMU at which the callback has been called.
+<p><a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is the internal value of the <a href="#independent"><code>independent</code></a> variable of the FMU at which the callback has been called.
 <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> is restricted by the arguments of <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> as follows:<br>
 <a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> \(\leq\) <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> \(\leq\) (<a href="#currentCommunicationPoint"><code>currentCommunicationPoint</code></a> + <a href="#communicationStepSize"><code>communicationStepSize</code></a>).<br>
 The FMU must not call the callback function <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with an <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> that is smaller than the <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> given in a previous call of <a href="#fmi3IntermediateUpdateCallback"><code>fmi3IntermediateUpdateCallback</code></a> with <code>intermediateStepFinished = fmi3True</code>.<br></p>
@@ -12978,8 +13039,22 @@ The set of variables for which the importer may get values is defined by the <a 
 <div id="intermediateStepFinished" class="ulist">
 <ul>
 <li>
-<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3False</code></a>, the intermediate output values of the FMU that the importer inquires with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> resulting from tentative internal solver states and may still change for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a> <em>[e.g., if the solver deems the tentative state to cause an unacceptable approximation error, it may go back in time and try to re-estimate the state using smaller internal time steps]</em>.<br>
-If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3True</code></a>, intermediate output values inquired by the importer with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> correspond to accepted internal solver steps.</p>
+<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3False</code></a>, the intermediate output values of the FMU that the importer inquires with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> resulting from tentative internal solver states and may still change for the same <a href="#intermediateUpdateTime"><code>intermediateUpdateTime</code></a>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+E.g., if the solver deems the tentative state to cause an unacceptable approximation error, it may go back in time and try to re-estimate the state using smaller internal time steps.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If <a href="#intermediateStepFinished"><code>intermediateStepFinished = fmi3True</code></a>, intermediate output values inquired by the importer with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> correspond to accepted internal solver steps.</p>
+</div>
 </li>
 </ul>
 </div>
@@ -14195,7 +14270,7 @@ To avoid data inconsistencies and safeguard predictable behavior with <a href="#
 <p><a id="clockReference"></a> <code>clockReference</code>: <a href="#valueReference"><code>valueReference</code></a> of the <a href="#inputClock"><code>input Clock</code></a> associated with the model partition which shall be activated.</p>
 </li>
 <li>
-<p><a id="activationTime"></a> <code>activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the assigned <a href="#Clock">Clock</a> tick time \(t_i\) <em>[typically: simulation (i.e. virtual) time]</em> (which is known to the simulation algorithm).</p>
+<p><a id="activationTime"></a> <code>activationTime</code>: value of the <a href="#independent"><code>independent</code></a> variable of the assigned <a href="#Clock">Clock</a> tick time \(t_i\) (which is known to the simulation algorithm).</p>
 </li>
 </ul>
 </div>
