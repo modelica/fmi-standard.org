@@ -478,7 +478,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 3f9716a,</span>
+<span id="revnumber">version 1a331d1,</span>
 <span id="revdate">2026-06-08</span>
 </div>
 <div id="toc" class="toc2">
@@ -5060,6 +5060,10 @@ If a NULL pointer is provided for argument <code>instance</code>, the function c
 <p>The intention is to set <a href="#start"><code>start</code></a> and guess values for these variables.</p>
 </div>
 </dd>
+<dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
+<dd>
+<p>Returns the current <a href="#start"><code>start</code></a> values as defined in <a href="#modelDescription.xml"><code>modelDescription.xml</code></a> or as set by <code>fmi3Set{VariableType}</code>.</p>
+</dd>
 </dl>
 </div>
 <div id="fmi3EnterConfigurationMode" class="dlist">
@@ -5204,6 +5208,14 @@ If <a href="#stopTimeDefined"><code>stopTimeDefined = fmi3False</code></a>, then
 </li>
 </ul>
 </div>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
 </dd>
 </dl>
 </div>
@@ -5471,6 +5483,14 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 </li>
 </ul>
 </div>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
 </dd>
 </dl>
 </div>
@@ -5958,6 +5978,14 @@ The user can improve time settings of the importer to alleviate the issues.</p>
 <p>This function must be called to change from <a href="#EventMode"><strong>Event Mode</strong></a> into <a href="#StepMode"><strong>Step Mode</strong></a> in Co-Simulation.</p>
 </div>
 </dd>
+<dt class="hdlist1">Function <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -6169,6 +6197,14 @@ This state must not be entered, if the FMU contains no <a href="#tunable"><code>
 <dt class="hdlist1">Function <a href="#fmi3GetOutputDerivatives"><code>fmi3GetOutputDerivatives</code></a></dt>
 <dd>
 <p>Not allowed in Model Exchange and Scheduled Execution.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
 </dd>
 </dl>
 </div>
@@ -12048,6 +12084,14 @@ If not, the function returns with <code>enterEventMode = fmi3True</code>, the im
 <dd>
 <p>See <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a>.</p>
 </dd>
+<dt class="hdlist1">Function <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -12929,6 +12973,14 @@ Even if the FMU returns from <a href="#fmi3DoStep"><code>fmi3DoStep</code></a> w
 <p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> changes state to <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>.
 <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> must not be called if the FMU contains no <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> (i.e. with <a href="#causality"><code>causality</code></a>= <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>).</p>
 </dd>
+<dt class="hdlist1">Function <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -13146,6 +13198,18 @@ This is analogous to the calling sequence of <a href="#get-and-set-variable-valu
 </td>
 </tr>
 </table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Function <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -14243,6 +14307,11 @@ To avoid data inconsistencies and safeguard predictable behavior with <a href="#
 <dd>
 <p>See <a href="#fmi3GetAdjointDerivative"><code>fmi3GetAdjointDerivative</code></a>.</p>
 </dd>
+<dt class="hdlist1">Function <a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a></dt>
+<dd>
+<p><a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> changes state to <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>.
+<a href="#fmi3EnterConfigurationMode"><code>fmi3EnterConfigurationMode</code></a> must not be called if the FMU contains no <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a> (i.e. with <a href="#causality"><code>causality</code></a>= <a href="#structuralParameter"><code>structuralParameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>).</p>
+</dd>
 </dl>
 </div>
 <div id="fmi3ActivateModelPartition" class="dlist">
@@ -14333,6 +14402,14 @@ This is because these functions apply to the whole FMU and not only to a specifi
 </table>
 </div>
 </dd>
+<dt class="hdlist1">Function <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -14372,6 +14449,18 @@ Since all information about which model partition to activate is coded into its 
 </td>
 </tr>
 </table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Function <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a>.</p>
+</dd>
+<dt class="hdlist1">Function <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a></dt>
+<dd>
+<p>See <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
