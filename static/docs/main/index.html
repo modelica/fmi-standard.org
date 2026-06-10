@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 43d9a6c,</span>
-<span id="revdate">2026-06-09</span>
+<span id="revnumber">version 9a6c585,</span>
+<span id="revdate">2026-06-10</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -3407,8 +3407,9 @@ This clock type is not allowed in Scheduled Execution.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p><a href="#outputClock">Output Clocks</a> enable an FMU to provide a trigger to the outside world, e.g. to a <a href="#triggered">triggered input Clock</a> of another FMU.<br>
-If an FMU wants to actively trigger a model partition (Clock) of itself, it should use a <a href="#countdown-aperiodic-clock">countdown Clock</a>.
+<p><a href="#outputClock">Output Clocks</a> enable an FMU to provide a trigger to the outside world, e.g. to a <a href="#triggered">triggered input Clock</a> of another FMU.
+It is also allowed to assign variables to a triggered output clock.<br>
+If an FMU only wants to actively trigger a model partition (Clock) of itself, it might be more efficient to use a <a href="#countdown-aperiodic-clock">countdown Clock</a>.
 An example is provided in <a href="#example-scheduled-execution">Section 5.3</a>.</p>
 </div>
 </td>
@@ -3535,12 +3536,28 @@ This also holds for <a href="#clocked-variable">clocked variables</a> of type <a
 </div>
 <div class="sect4">
 <h5 id="clocks-specific-api">2.2.8.4. Clocks specific API</h5>
-<div id="fmi3GetClock" class="paragraph">
-<p><a id="fmi3SetClock"></a>Clocks are get and set just like any other variable (see also <a href="#get-and-set-variable-values">Section 2.2.7.2</a>).
+<div class="paragraph">
+<p>Clocks are get and set just like any other variable (see also <a href="#get-and-set-variable-values">Section 2.2.7.2</a>).
 For restrictions on when to call which of the following functions for each Clock type, see <a href="#clock-types">Section 2.2.8.2</a>.</p>
+</div>
+<div id="fmi3SetClock" class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3SetClockTYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[],
+                                      size_t nValueReferences,
+                                      const fmi3Clock values[]);</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p><a href="#fmi3SetClock"><code>fmi3SetClock</code></a> must not be called in Scheduled Execution, instead <a href="#fmi3ActivateModelPartition"><code>fmi3ActivateModelPartition</code></a> must be called.</p>
+</div>
+<div id="fmi3GetClock" class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3GetClockTYPE  (fmi3Instance instance,
+                                      const fmi3ValueReference valueReferences[],
+                                      size_t nValueReferences,
+                                      fmi3Clock values[]);</code></pre>
+</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -5765,20 +5782,6 @@ When a Clock \(k\) is deactivated, the FMU must</p>
 </li>
 </ul>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Rationale: a triggered <a href="#outputClock">output Clock</a> \(c\) may depend on some variable \(v\) that is involved in an algebraic loop.
-As part of the iterations to solve the algebraic loop, \(v\) acquires a value that activates the Clock.
-If the final (or some intermediate) value of \(v\) no longer activates the Clock, then this Clock must be deactivated by the Importer during the same super-dense time instant.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>The importer can set a Clock to <code>fmi3ClockInactive</code> only if the Clock has the attribute <a href="#canBeDeactivated"><code>canBeDeactivated = true</code></a>.
 Any Clock active during <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> must be deactivated by the FMU itself.<br>
@@ -5810,6 +5813,23 @@ If the semantics of certain Clocks require specific handling—such as simultane
 <dd>
 <p>is used to inquire the status of <a href="#Clock">Clocks</a>.</p>
 </dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The importer calls this function for triggered output Clocks.
+For connected FMUs, these might depend on an algebraic loop and might change their value during event iteration, so it might be necessary to call this function several times.
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1">Functions <a href="#fmi3GetIntervalDecimal"><code>fmi3GetIntervalDecimal</code></a> &amp; <a href="#fmi3GetIntervalFraction"><code>fmi3GetIntervalFraction</code></a></dt>
 <dd>
 <p>For <a href="#inputClock"><code>input Clocks</code></a> it is allowed to call these functions to query the next activation interval.<br>
