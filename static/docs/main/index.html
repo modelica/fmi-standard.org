@@ -478,7 +478,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 9a6c585,</span>
+<span id="revnumber">version d183052,</span>
 <span id="revdate">2026-06-10</span>
 </div>
 <div id="toc" class="toc2">
@@ -5646,11 +5646,10 @@ The exact event localization is hidden from the importer.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>If <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>, then execute state transition function of the model partitions<br>
+<p><a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> may only be called if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>, and the FMU cannot rely on it being called.
+If not called, \(\mathbf{f}_{\mathit{disc}}\) is evaluated implicitly during <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.
+If called, it evaluates the state transition function of the model partitions<br>
 \((\mathbf{x}_{d}) := \mathbf{f}_{\mathit{disc}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, t)\)</p>
-</li>
-<li>
-<p>else function is ignored.</p>
 </li>
 <li>
 <p>For all active Clocks \(\mathbf{k}\), the <a href="#clocked-variable">clocked variables</a> \(\mathbf{v}_{\mathbf{k}}\) are part of the set of discrete variables \(\mathbf{v}_d\) computed by \(\mathbf{f}_{\mathit{disc}}\).</p>
@@ -5868,8 +5867,10 @@ Not allowed in Co-Simulation and Scheduled Execution.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a></dt>
 <dd>
-<p>This function is called to trigger the evaluation of \(\mathbf{f}_{\mathit{disc}}\) to compute the current values of discrete states from previous values.
-The FMU signals the support of <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> via the capability flag <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a>.</p>
+<p>This function may only be called if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>.
+It evaluates \(\mathbf{f}_{\mathit{disc}}\), computing the current discrete states.
+Calling this function is optional and the FMU must not rely on it being called.
+If this call is omitted in a super dense time instant, \(\mathbf{f}_{\mathit{disc}}\) is evaluated implicitly by <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
 <div id="fmi3EvaluateDiscreteStates" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">typedef fmi3Status fmi3EvaluateDiscreteStatesTYPE(fmi3Instance instance);</code></pre>
