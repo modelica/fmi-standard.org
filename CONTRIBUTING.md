@@ -134,6 +134,13 @@ Example:
 The optional logo must be added to `/assets/images/logos` as a PNG or SVG.
 By submitting a logo the committer agrees that the logo is dispayed on the tools page.
 
+Tool vendors who have a tool listed on the FMI website can get access to a private Github repository https://github.com/modelica/FMI-Tools-Forum/ for discussion with other tool vendors with a listed tool.
+It is intended to exchange and solve problems with FMI implementations in a more protected area.
+
+* Access is granted only members of the FMI Project and to tool vendors (https://fmi-standard.org/tools/) who have a tool listed on the FMI webpage. If you have not been invited automatically and want access, please send an email to contact@fmi-standard.org providing your Github user name. 
+* Usage: If you face a problem with FMI implementation of another importing or exporting tool and do not have a contact address from that tool vendor, you can create an issue. Please provide information, how to reproduce your problem, and optionally how to contact you.
+
+
 ### Tool Description
 
 The description field should
@@ -232,6 +239,14 @@ The values in time must be monotonically increasing.
 0.0,0,AA22BB33,1 2 3 4 5 6,"string1"
 1.0,1,BB11FF4433,2 3 4 5 6 7,"string2"
 ```
+
+### FMI tools forum
+
+Tool vendors and other organizations that have a tool listed on the FMI website can get access to the GitHub Repository "FMI Tools Forum" (github.com/modelica/FMI-tools-forum).
+This is a private repositry for the exchange between tool vendors.
+It is intended to exchange and solve problems with FMI implementations in a more protected area.
+If you have a tool listed on the FMI Tools page and want to get access, please send an email to contact@fmi-standard.org providing your GitHub user name.
+
 ## Adding a news post
 
 To create a post, add a file to `/content/news/` with the following format:
