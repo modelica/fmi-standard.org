@@ -87,12 +87,12 @@ Please respect the rules below when editing the file.
 | examplesURL      | Link to the tool's example FMUs and compatibility information           | `"https://github.com/example/example-sim/"`
 | description      | A [description](#tool-description) of the tool                          | `"Run simulations in the cloud in real time"`
 | features         | Reserved for future use                                                 | `[]`
-| platforms        | Supported platforms                                                     | `["macOS", "Linux", "Windows"]`
+| platforms        | Supported platforms                                                     | `["macOS", "Linux", "Windows", "Source Code"]`
 | interfaces       | Supported interfaces                                                    | `["GUI", "CLI", "library"]`
 | fmiVersions      | Supported FMI versions                                                  | `["1.0", "2.0", "3.0"]`
 | fmuExport        | Supported interface types for FMU export                                | `["CS", "ME", "SE"]`
 | fmuImport        | Supported interface types for FMU import                                | `["CS", "ME", "SE"]`
-| layeredStandards | Supported layered standards                                             | `["BUS", "XCP"]`
+| layeredStandards | Supported layered standards                                             | `["BUS", "DAE", "REF", "STRUCT", "WASM", "XCP"]`
 
 Example:
 

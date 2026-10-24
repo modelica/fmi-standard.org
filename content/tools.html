@@ -73,7 +73,8 @@ title: Tools
         <button id="btn-bus" type="button" @click="showBUS = !showBUS" class="btn btn-secondary" v-bind:class="{'active': showBUS}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI-LS-BUS">BUS</button>
         <button id="btn-dae" type="button" @click="showDAE = !showDAE" class="btn btn-secondary" v-bind:class="{'active': showDAE}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI-LS-DAE">DAE</button>
         <button id="btn-ref" type="button" @click="showREF = !showREF" class="btn btn-secondary" v-bind:class="{'active': showREF}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI-LS-REF">REF</button>
-        <button id="btn-struct" type="button" @click="showStruct = !showStruct" class="btn btn-secondary" v-bind:class="{'active': showStruct}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI-LS-Struct">Struct</button>
+        <button id="btn-struct" type="button" @click="showSTRUCT = !showSTRUCT" class="btn btn-secondary" v-bind:class="{'active': showSTRUCT}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI-LS-STRUCT">STRUCT</button>
+        <button id="btn-wasm" type="button" @click="showWASM = !showWASM" class="btn btn-secondary" v-bind:class="{'active': showWASM}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI-LS-WASM">WASM</button>
         <button id="btn-xcp" type="button" @click="showXCP = !showXCP" class="btn btn-secondary" v-bind:class="{'active': showXCP}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="FMI-LS-XCP">XCP</button>
       </div>
     </div>
@@ -172,7 +173,8 @@ title: Tools
         showBUS: false,
         showDAE: false,
         showREF: false,
-        showStruct: false,
+        showSTRUCT: false,
+        showWASM: false,
         showXCP: false,
         search: "",
         tools: []
@@ -247,7 +249,8 @@ title: Tools
           if (self.showBUS    && !listContains(tool.layeredStandards, 'BUS'))    return false;
           if (self.showDAE    && !listContains(tool.layeredStandards, 'DAE'))    return false;
           if (self.showREF    && !listContains(tool.layeredStandards, 'REF'))    return false;
-          if (self.showStruct && !listContains(tool.layeredStandards, 'Struct')) return false;
+          if (self.showSTRUCT && !listContains(tool.layeredStandards, 'STRUCT')) return false;
+          if (self.showWASM   && !listContains(tool.layeredStandards, 'WASM'))   return false;
           if (self.showXCP    && !listContains(tool.layeredStandards, 'XCP'))    return false;
 
           return containsLowerCase(tool.name, this.search) || containsLowerCase(tool.vendor, this.search) || containsLowerCase(tool.description, this.search);
