@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 5365a49,</span>
-<span id="revdate">2026-09-08</span>
+<span id="revnumber">version a423e4d,</span>
+<span id="revdate">2026-10-20</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -751,7 +751,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>This document is licensed under the Attribution-ShareAlike 4.0 International license.
 The code is released under the 2-Clause BSD License.
-The licenses text can be found in the <a href="https://raw.githubusercontent.com/modelica/fmi-standard/master/LICENSE.txt">LICENSE.txt</a> file that accompanies this distribution.</p>
+The licenses text can be found in the <a href="https://raw.githubusercontent.com/modelica/fmi-standard/main/LICENSE.txt">LICENSE.txt</a> file that accompanies this distribution.</p>
 </div>
 <div class="paragraph">
 <p>Attention is drawn to the possibility that some of the elements of this document may be the subject of patent rights.
@@ -3473,7 +3473,7 @@ Its state advances at each activation of \(k\).
 </div>
 <div class="paragraph">
 <p>When \(k\) is active invoking the FMI functions <code>fmi3Get{VariableType}</code> on variables in the output vector \(\mathbf{y}_k\) will trigger the execution of the output function \(\mathbf{f}_{\mathit{event}}\) to compute such variables.
-If <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>false</code>, then \(\mathbf{f}_{\mathit{disc}}\) cannot be called explicitly using <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>, but will be implicitly executed during \(\mathbf{f}_{\mathit{event}}\).
+If <code>providesEvaluateDiscreteStates</code> (<a href="#providesEvaluateDiscreteStatesME">ME</a>/<a href="#providesEvaluateDiscreteStatesCS">CS</a>) is <code>false</code>, then \(\mathbf{f}_{\mathit{disc}}\) cannot be called explicitly using <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>, but will be implicitly executed during \(\mathbf{f}_{\mathit{event}}\).
 When <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> is called, the state vector \(\mathbf{x}_k\) is updated according to state transition function \(\mathbf{f}_{\mathit{disc}}\).</p>
 </div>
 <div class="admonitionblock note">
@@ -5627,6 +5627,18 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 <p><a href="#EventMode"><strong>Event Mode</strong></a> is not available in Scheduled Execution.
 While the reasons for entering <a href="#EventMode"><strong>Event Mode</strong></a> are different for Model Exchange and Co-Simulation (see <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> (ME) and <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a> (CS)), the event handling itself works the same.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For an example and history regarding event handling, especially with regards to the function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, please look at the <a href="https://modelica.github.io/fmi-guides/main/fmi-guide/#event-handling/">example in the implementers' guide</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>There are multiple kinds of events that require a transition to <a href="#EventMode"><strong>Event Mode</strong></a>:</p>
 </div>
@@ -5706,7 +5718,7 @@ The exact event localization is hidden from the importer.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p><a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> may only be called if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>, and the FMU cannot rely on it being called.
+<p><a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a> may only be called if <code>providesEvaluateDiscreteStates</code> (<a href="#providesEvaluateDiscreteStatesME">ME</a>/<a href="#providesEvaluateDiscreteStatesCS">CS</a>) is <code>true</code>, and the FMU cannot rely on it being called.
 If not called, \(\mathbf{f}_{\mathit{disc}}\) is evaluated implicitly during <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.
 If called, it evaluates the state transition function of the model partitions<br>
 \((\mathbf{x}_{d}) := \mathbf{f}_{\mathit{disc}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, t)\)</p>
@@ -5726,7 +5738,7 @@ If called, it evaluates the state transition function of the model partitions<br
 <div class="ulist">
 <ul>
 <li>
-<p>if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>, then<br>
+<p>if <code>providesEvaluateDiscreteStates</code> (<a href="#providesEvaluateDiscreteStatesME">ME</a>/<a href="#providesEvaluateDiscreteStatesCS">CS</a>) is <code>true</code>, then<br>
 \((\mathbf{y}_{c+d}, \mathbf{\dot{x}}_c, \mathbf{x}_{c}, \mathbf{z}, \mathbf{r}, \mathbf{w}_{c+d}, \mathbf{b}, \mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{event}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{x}_{d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, t)\)</p>
 </li>
 <li>
@@ -5758,10 +5770,10 @@ If called, it evaluates the state transition function of the model partitions<br
 <div class="ulist">
 <ul>
 <li>
-<p>\(\mathbf{f}_{\mathit{disc}}\) if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code> and \(\mathbf{f}_{\mathit{disc}}\) (<a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>) was not called within this super-dense time, or</p>
+<p>\(\mathbf{f}_{\mathit{disc}}\) if <code>providesEvaluateDiscreteStates</code> (<a href="#providesEvaluateDiscreteStatesME">ME</a>/<a href="#providesEvaluateDiscreteStatesCS">CS</a>) is <code>true</code> and \(\mathbf{f}_{\mathit{disc}}\) (<a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>) was not called within this super-dense time, or</p>
 </li>
 <li>
-<p>\(\mathbf{f}_{\mathit{event}}\) if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>false</code> and \(\mathbf{f}_{\mathit{event}}\) was not called within this super-dense time.</p>
+<p>\(\mathbf{f}_{\mathit{event}}\) if <code>providesEvaluateDiscreteStates</code> (<a href="#providesEvaluateDiscreteStatesME">ME</a>/<a href="#providesEvaluateDiscreteStatesCS">CS</a>) is <code>false</code> and \(\mathbf{f}_{\mathit{event}}\) was not called within this super-dense time.</p>
 </li>
 </ul>
 </div>
@@ -5926,7 +5938,7 @@ Not allowed in Co-Simulation and Scheduled Execution.</p>
 </dd>
 <dt class="hdlist1">Function <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a></dt>
 <dd>
-<p>This function may only be called if <a href="#providesEvaluateDiscreteStates"><code>providesEvaluateDiscreteStates</code></a> is <code>true</code>.
+<p>This function may only be called if <code>providesEvaluateDiscreteStates</code> (<a href="#providesEvaluateDiscreteStatesME">ME</a>/<a href="#providesEvaluateDiscreteStatesCS">CS</a>) is <code>true</code>.
 It evaluates \(\mathbf{f}_{\mathit{disc}}\), computing the current discrete states.
 Calling this function is optional and the FMU must not rely on it being called.
 If this call is omitted in a super dense time instant, \(\mathbf{f}_{\mathit{disc}}\) is evaluated implicitly by <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
@@ -6912,15 +6924,6 @@ If <code>true</code>, the flag <a href="#canGetAndSetFMUState"><code>canGetAndSe
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>If <code>true</code>, the FMU is able to provide detailed dependency information at runtime using <a href="#fmi3GetNumberOfVariableDependencies"><code>fmi3GetNumberOfVariableDependencies</code></a> and <a href="#fmi3GetVariableDependencies"><code>fmi3GetVariableDependencies</code></a>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>providesEvaluateDiscreteStates</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="providesEvaluateDiscreteStates"></a>If <code>true</code>, the FMU supports <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>.
-This flag is ignored in Scheduled Execution.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -10982,6 +10985,14 @@ All external dependencies must be documented (see <a href="#documentation-direct
 <td class="tableblock halign-left valign-top"><p class="tableblock">ppc64</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PowerPC 64-bit</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">loongarch32</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LoongArch 32-bit Architecture</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">loongarch64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LoongArch 64-bit Architecture</p></td>
+</tr>
 </tbody>
 </table>
 </dd>
@@ -11010,6 +11021,10 @@ All external dependencies must be documented (see <a href="#documentation-direct
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">windows</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Microsoft Windows</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ohos</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenHarmony / HarmonyOS</p></td>
 </tr>
 </tbody>
 </table>
@@ -12389,7 +12404,7 @@ It is defined as:</p>
 <div class="title">Figure 47. ModelExchange element.</div>
 </div>
 <div class="paragraph">
-<p>The attribute in the following table is defined in addition to the <a href="#common-capability-flags">common attributes</a> and has the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
+<p>The attributes in the following table are defined in addition to the <a href="#common-capability-flags">common attributes</a> and have the following meaning (all attributes are optional with exception of <a href="#modelIdentifier"><code>modelIdentifier</code></a>):</p>
 </div>
 <table id="table-ModelExchange-details" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 40. ModelExchange attribute details.</caption>
@@ -12408,6 +12423,10 @@ It is defined as:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>needsCompletedIntegratorStep</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after every completed integrator step.
 If <code>false</code> and the function is called anyway, it has no effect.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesEvaluateDiscreteStates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="providesEvaluateDiscreteStatesME"></a>If <code>true</code>, the FMU supports <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -13646,6 +13665,9 @@ Note that the points where the ball hits the floor are available and the outputs
                     &amp;nextEventTime
                 ));
 
+                // new super-dense time instant began
+                timeInstant++;
+
                 // for the new super-dense time instant: record clocks and
                 // the clocked variables with active clocks
                 CALL(recordClocks(S, time, timeInstant, outputFile));
@@ -13981,6 +14003,12 @@ If this flag is <code>false</code>, the importer can assume that the FMU compute
 If the importer does not support <a href="#EventMode"><strong>Event Mode</strong></a>, then it must call <a href="#fmi3InstantiateCoSimulation"><code>fmi3InstantiateCoSimulation</code></a> with <a href="#eventModeUsed"><code>eventModeUsed = fmi3False</code></a> to force the FMU to detect and handle events internally.<br>
 If <code>eventModeUsed = fmi3True</code>, the importer must actively trigger event handling at communication points in the FMU using <a href="#fmi3EnterEventModeCS"><code>fmi3EnterEventMode</code></a>.<br>
 If the FMU has clocks, then <a href="#hasEventMode"><code>hasEventMode</code></a> must be <code>true</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>providesEvaluateDiscreteStates</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="providesEvaluateDiscreteStatesCS"></a>If <code>true</code>, the FMU supports <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a>.</p>
 </div></div></td>
 </tr>
 </tbody>
