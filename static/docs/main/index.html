@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version e22b14e,</span>
-<span id="revdate">2026-11-03</span>
+<span id="revnumber">version e100c74,</span>
+<span id="revdate">2026-11-04</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -921,7 +921,7 @@ The ZIP file contains the FMI <a href="#modelDescription.xml"><code>modelDescrip
 <div class="paragraph">
 <p>The Model Exchange interface exposes an ODE to an external solver of an importer.
 Models are described by differential, algebraic and discrete equations with time-, state- and step-events.
-That integration algorithm of the importer, usually a ODE/DAE solver, is responsible for advancing time, setting states, handling events, etc.
+That integration algorithm of the importer, usually a ODE/DAE solver, is responsible for advancing time, setting continuous states, handling events, etc.
 (See <a href="#fmi-for-model-exchange">Section 3</a>.)</p>
 </div>
 <div id="figure-model-exchange-data-flow" class="imageblock">
@@ -1150,13 +1150,13 @@ To simplify usage and to reduce likelihood of programming errors by the importer
 Second, this helps to keep the FMI simple.
 To help implement this cache, the FMI provides explicit methods called by the importer for setting properties that invalidate cached data.
 An FMU that chooses to implement a cache may maintain a set of "dirty" flags, hidden from the importer.
-A get method, for example to a state, will then either trigger a computation, or return cached data, depending on the value of these flags.</p>
+A get method, for example to a continuous state, will then either trigger a computation, or return cached data, depending on the value of these flags.</p>
 </div>
 </dd>
 <dt class="hdlist1">Support numerical solvers</dt>
 <dd>
 <p>A typical importer for Model Exchange FMUs uses numerical solvers.
-These solvers require vectors for <a href="#state">states</a>, <a href="#derivative"><code>derivatives</code></a> and zero-crossing functions.
+These solvers require vectors for <a href="#continuous-state">continuous states</a>, <a href="#derivative"><code>derivatives</code></a> and zero-crossing functions.
 The FMU directly fills the values of such vectors provided by the solvers.</p>
 <div class="paragraph">
 <p>Reason: minimize execution time.
@@ -1647,10 +1647,10 @@ A subset of local variables is selected via a <a href="#table-subscripts">subscr
 <td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the <a href="#state-event">event indicators</a> used to locate <a href="#state-event">state events</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="state"></a>\(\mathbf{x}_c\)<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="continuous-state"></a>\(\mathbf{x}_c\)<br>
 \(\mathbf{\dot{x}}_c\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the continuous-time <a href="#state">states</a>.<br>
-A vector of floating point continuous-time variables representing the first derivatives of the continuous-time <a href="#state">states</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A vector of floating point continuous-time variables representing the <a href="#continuous-state">continuous states</a>.<br>
+A vector of floating point continuous-time variables representing the first derivatives of the <a href="#continuous-state">continuous states</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d\)<br>
@@ -4180,7 +4180,7 @@ This enables computation on demand with subsequent calls returning the same valu
 <div class="ulist">
 <ul>
 <li>
-<p>during the iteration of an integrator step, only the state derivatives need to be computed, provided the <a href="#output"><code>output</code></a> of an FMU is not connected, or</p>
+<p>during the iteration of an integrator step, only the continuous state derivatives need to be computed, provided the <a href="#output"><code>output</code></a> of an FMU is not connected, or</p>
 </li>
 <li>
 <p>when localizing <a href="#state-event">state events</a>, only the computation of event indicators may be required.</p>
@@ -4386,7 +4386,7 @@ In every state, the general form of the FMU equations is:</p>
 <p><a href="#InitializationMode"><strong>Initialization Mode</strong></a>: The exposed unknowns listed as elements <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a> in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> that have a floating point type.</p>
 </li>
 <li>
-<p><a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> (Model Exchange): The continuous-time outputs and state derivatives (= the variables listed as elements <a href="#Output"><code>&lt;Output&gt;</code></a> of <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> with a floating point type and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a> and the variables listed as elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>).</p>
+<p><a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> (Model Exchange): The continuous-time outputs and continuous state derivatives (= the variables listed as elements <a href="#Output"><code>&lt;Output&gt;</code></a> of <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> with a floating point type and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a> and the variables listed as elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>).</p>
 </li>
 <li>
 <p><a href="#EventMode"><strong>Event Mode</strong></a> (Model Exchange): The same variables as in the <a href="#ContinuousTimeMode"><strong>Continuous-Time Mode</strong></a> and additionally variables listed as elements <a href="#Output"><code>&lt;Output&gt;</code></a> of <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> with a floating point type and <a href="#variability"><code>variability</code></a> = <a href="#discrete"><code>discrete</code></a>.</p>
@@ -4588,7 +4588,7 @@ For some examples on the usage of <a href="#fmi3GetDirectionalDerivative"><code>
 <p>Numerical integrators of stiff methods need matrix \({\frac{\partial \mathbf{f}}{\partial \mathbf{x}}}\).</p>
 </li>
 <li>
-<p>If the FMU is connected with other FMUs, the partial derivatives of the state derivatives and outputs with respect to the continuous states and the <a href="#input"><code>inputs</code></a> are needed in order to compute the Jacobian for the system of the connected FMUs.</p>
+<p>If the FMU is connected with other FMUs, the partial derivatives of the continuous state derivatives and outputs with respect to the continuous states and the <a href="#input"><code>inputs</code></a> are needed in order to compute the Jacobian for the system of the connected FMUs.</p>
 </li>
 <li>
 <p>If the FMU shall be linearized, the same <a href="#derivative"><code>derivatives</code></a> as in the previous item are needed.</p>
@@ -5124,7 +5124,7 @@ If a NULL pointer is provided for argument <code>instance</code>, the function c
 </td>
 <td class="content">
 <div class="paragraph">
-<p><a href="#input">Inputs</a> \(\mathbf{u}\), <a href="#parameter">parameters</a> \(\mathbf{p}\) and continuous-time <a href="#state">states</a> \(\mathbf{x}_{c,\mathit{initial=exact}}\) are included here.</p>
+<p><a href="#input">Inputs</a> \(\mathbf{u}\), <a href="#parameter">parameters</a> \(\mathbf{p}\) and <a href="#continuous-state">continuous states</a> \(\mathbf{x}_{c,\mathit{initial=exact}}\) are included here.</p>
 </div>
 </td>
 </tr>
@@ -5166,21 +5166,21 @@ If a NULL pointer is provided for argument <code>instance</code>, the function c
 </div>
 </div>
 <div class="paragraph">
-<p>This function returns the number of <a href="#state">continuous states</a>.<br>
+<p>This function returns the number of <a href="#continuous-state">continuous states</a>.<br>
 This function can only be called in Model Exchange.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>nContinuousStates</code> points to the <code>size_t</code> variable that will receive the number of <a href="#state">states</a>.</p>
+<p>Argument <code>nContinuousStates</code> points to the <code>size_t</code> variable that will receive the number of <a href="#continuous-state">continuous states</a>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>The initial value of <code>nContinuousStates</code> is the sum of the sizes of the variables referenced by the <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> elements.
-The number of <a href="#state">continuous states</a> might change if a variable representing a state has a <a href="#Dimension"><code>&lt;Dimension&gt;</code></a> element that references a <a href="#structuralParameter"><code>structural parameter</code></a> (see <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> and <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>).
+The number of <a href="#continuous-state">continuous states</a> might change if a variable representing a continuous state has a <a href="#Dimension"><code>&lt;Dimension&gt;</code></a> element that references a <a href="#structuralParameter"><code>structural parameter</code></a> (see <a href="#ConfigurationMode"><strong>Configuration Mode</strong></a> and <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a>).
 <a href="#fmi3GetNumberOfContinuousStates"><code>fmi3GetNumberOfContinuousStates</code></a> must be called after such <a href="#structuralParameter"><code>structural parameters</code></a> changed.
-As long as no <a href="#structuralParameter"><code>structural parameters</code></a> changed, the number of states is given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>, alleviating the need to call this function.</p>
+As long as no <a href="#structuralParameter"><code>structural parameters</code></a> changed, the number of continuous states is given in the <a href="#modelDescription.xml"><code>modelDescription.xml</code></a>, alleviating the need to call this function.</p>
 </div>
 </dd>
 </dl>
@@ -5302,7 +5302,7 @@ Equations are active to determine the initial FMU state, as well as all <a href=
 Artificial or real algebraic loops over connected FMUs in <a href="#InitializationMode"><strong>Initialization Mode</strong></a> may be handled by using appropriate numerical algorithms.</p>
 </div>
 <div class="paragraph">
-<p>In <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, the FMU computes initial values at the start time \(t_{\mathit{start}}\) using function \(\mathbf{f}_{\mathit{start}}\), not present in the other modes, for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#state">state</a> or for the derivative of a <a href="#state">state</a>.</p>
+<p>In <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, the FMU computes initial values at the start time \(t_{\mathit{start}}\) using function \(\mathbf{f}_{\mathit{start}}\), not present in the other modes, for example, equations to define the <a href="#start"><code>start</code></a> value for a <a href="#continuous-state">continuous state</a> or for the derivative of a <a href="#continuous-state">continuous state</a>.</p>
 </div>
 <table id="table-math-initializationMode" class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -5388,7 +5388,7 @@ activate doStep equations \(\mathbf{f}_{\mathit{doStep}}\)</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p><a href="#input">Inputs</a> \(\mathbf{u}\), <a href="#parameter">parameters</a> \(\mathbf{p}\) and continuous-time <a href="#state">states</a> \(\mathbf{x}_{c,\mathit{initial=exact}}\) are included here.</p>
+<p><a href="#input">Inputs</a> \(\mathbf{u}\), <a href="#parameter">parameters</a> \(\mathbf{p}\) and <a href="#continuous-state">continuous states</a> \(\mathbf{x}_{c,\mathit{initial=exact}}\) are included here.</p>
 </div>
 </td>
 </tr>
@@ -5437,7 +5437,7 @@ activate doStep equations \(\mathbf{f}_{\mathit{doStep}}\)</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Return argument <code>continuousStates</code> contains the values for each <a href="#state">continuous state</a> with the same convention for the order as defined for <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.</p>
+<p>Return argument <code>continuousStates</code> contains the values for each <a href="#continuous-state">continuous state</a> with the same convention for the order as defined for <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.</p>
 </li>
 <li>
 <p>Argument <code>nContinuousStates</code> is the size of the <code>continuousStates</code> vector.</p>
@@ -5459,20 +5459,20 @@ activate doStep equations \(\mathbf{f}_{\mathit{doStep}}\)</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Return the nominal values of the continuous <a href="#state">states</a>.
+<p>Return the nominal values of the <a href="#continuous-state">continuous states</a>.
 This function can only be called in Model Exchange.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Return argument <code>nominals</code> contains the nominal values for each <a href="#state">continuous state</a> with the same convention for the order as defined for <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.
-If the FMU does not have information about the nominal value of a continuous <a href="#state">state</a> <code>i</code>, a nominal value <code>nominals[i] = 1.0</code> should be returned.
+<p>Return argument <code>nominals</code> contains the nominal values for each <a href="#continuous-state">continuous state</a> with the same convention for the order as defined for <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.
+If the FMU does not have information about the nominal value of a <a href="#continuous-state">continuous state</a> <code>i</code>, a nominal value <code>nominals[i] = 1.0</code> should be returned.
 It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 </li>
 <li>
 <p>Argument <code>nContinuousStates</code> is the size of the <code>nominals</code> vector.</p>
 <div class="paragraph">
-<p>This function should always be called after calling function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged = fmi3True</code>, since then the nominal values of the continuous <a href="#state">states</a> have changed</p>
+<p>This function should always be called after calling function <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>, if <code>nominalsOfContinuousStatesChanged = fmi3True</code>, since then the nominal values of the <a href="#continuous-state">continuous states</a> have changed</p>
 </div>
 </li>
 </ul>
@@ -5485,7 +5485,7 @@ It is required that <code>nominals[i] &gt; 0.0</code>.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>for example, because the mapping of the continuous <a href="#state">states</a> to variables has changed because of internal <a href="#dynamic-state-selection">dynamic state selection</a>.</p>
+<p>for example, because the mapping of the <a href="#continuous-state">continuous states</a> to variables has changed because of internal <a href="#dynamic-state-selection">dynamic state selection</a>.</p>
 </div>
 </td>
 </tr>
@@ -5824,7 +5824,7 @@ If called, it evaluates the state transition function of the model partitions<br
 <dt class="hdlist1">Allowed Function Calls</dt>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
-<p>This function can be called for variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>, and&#8201;&#8212;&#8201;in Model Exchange only&#8201;&#8212;&#8201;<a href="#state">continuous-time states</a> with <a href="#reinit"><code>reinit</code></a> = <code>false</code>.</p>
+<p>This function can be called for variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>, <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#tunable"><code>tunable</code></a>, and&#8201;&#8212;&#8201;in Model Exchange only&#8201;&#8212;&#8201;<a href="#continuous-state">continuous states</a> with <a href="#reinit"><code>reinit</code></a> = <code>false</code>.</p>
 </dd>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
@@ -5980,7 +5980,7 @@ If this call is omitted in a super dense time instant, \(\mathbf{f}_{\mathit{dis
 <div id="nominalsOfContinuousStatesChanged" class="ulist">
 <ul>
 <li>
-<p>If argument <code>nominalsOfContinuousStatesChanged = fmi3True</code>, then at least one nominal value of the <a href="#state">states</a> has changed and can be inquired with <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a>.<br>
+<p>If argument <code>nominalsOfContinuousStatesChanged = fmi3True</code>, then at least one nominal value of the <a href="#continuous-state">continuous states</a> has changed and can be inquired with <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a>.<br>
 This argument is only valid in Model Exchange.</p>
 </li>
 </ul>
@@ -5993,7 +5993,7 @@ This argument is only valid in Model Exchange.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The new values of the <a href="#state">states</a> can be inquired with <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a> or individually for each state for which <a href="#reinit"><code>reinit = true</code></a> by calling <code>fmi3GetFloat64</code>.<br>
+<p>The new values of the <a href="#continuous-state">continuous states</a> can be inquired with <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a> or individually for each continuous state for which <a href="#reinit"><code>reinit = true</code></a> by calling <code>fmi3GetFloat64</code>.<br>
 This argument is only valid in Model Exchange.</p>
 </div>
 <div id="nextEventTimeDefined" class="ulist">
@@ -6629,8 +6629,8 @@ for example, used to convert display units into the units used in the model equa
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines the structure of the model.
-Especially, the ordered lists of <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state">states</a>, clocked states, initial unknowns (the unknowns during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>), and the event indicators are defined here.
-Furthermore, the dependency of the unknowns from the knowns (as described in <a href="#model-dependencies">Section 2.2.9</a>) can be optionally defined for <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state">states</a> and initial unknowns.</p></td>
+Especially, the ordered lists of <a href="#output"><code>outputs</code></a>, <a href="#continuous-state">continuous states</a>, clocked states, initial unknowns (the unknowns during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>), and the event indicators are defined here.
+Furthermore, the dependency of the unknowns from the knowns (as described in <a href="#model-dependencies">Section 2.2.9</a>) can be optionally defined for <a href="#output"><code>outputs</code></a>, <a href="#continuous-state">continuous states</a> and initial unknowns.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#Annotations"><code>&lt;Annotations&gt;</code></a></p></td>
@@ -7582,7 +7582,7 @@ where <code>tolerance</code> is, for example, the relative tolerance defined in 
 </td>
 <td class="content">
 Typical examples are the monotonically increasing rotation angles of crank shafts and the longitudinal position of a vehicle along the track in long distance simulations.
-This information can, for example, be used to increase numerical stability and accuracy by setting the corresponding bound for the relative error to zero (relative tolerance = 0.0), if the corresponding variable is a continuous <a href="#state">state</a> variable.
+This information can, for example, be used to increase numerical stability and accuracy by setting the corresponding bound for the relative error to zero (relative tolerance = 0.0), if the corresponding variable is a <a href="#continuous-state">continuous state</a> variable.
 </td>
 </tr>
 </table>
@@ -7744,7 +7744,7 @@ Any other FMU specific <code>&lt;LogCategories&gt;</code> may be defined.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>logDynamicStateSelection</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log the dynamic selection of <a href="#state">states</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Log the dynamic selection of <a href="#continuous-state">continuous states</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>logStatusWarning</code></p></td>
@@ -8080,7 +8080,7 @@ For example, this value can be forwarded to an input of another FMU.
 <div class="ulist">
 <ul>
 <li>
-<p>continuous <a href="#state">states</a>.
+<p><a href="#continuous-state">continuous states</a>.
 These variables are referenced by the <a href="#derivative"><code>derivative</code></a> attribute of a <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>.</p>
 </li>
 <li>
@@ -8102,7 +8102,7 @@ These variables are listed in the <a href="#ModelStructure"><code>&lt;ModelStruc
 </li>
 <li>
 <p>In super state <a href="#Initialized"><strong>Initialized</strong></a>, <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a> must not be called on any of the local variables.
-Only in Model Exchange, continuous <a href="#state">states</a> can be set with <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.</p>
+Only in Model Exchange, <a href="#continuous-state">continuous states</a> can be set with <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -8144,7 +8144,7 @@ The <code>min</code> attribute might still be 0.</p>
 </div>
 <div class="paragraph">
 <p>The default of <a href="#causality"><code>causality</code></a> is <a href="#local"><code>local</code></a>.<br>
-A continuous-time <a href="#state">state</a> or an event indicator must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.</p>
+A continuous-time <a href="#continuous-state">continuous state</a> or an event indicator must have <a href="#causality"><code>causality</code></a> = <a href="#local"><code>local</code></a> or <a href="#output"><code>output</code></a>, see also <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>The causality of variables of type <a href="#Clock">Clock</a> must be either <a href="#input"><code>input</code></a>, <a href="#output"><code>output</code></a> or <a href="#local"><code>local</code></a>.<br>
@@ -8589,7 +8589,7 @@ Instead, this is a short hand notation for:</p>
 For <a href="#tunable"><code>tunable</code></a> <a href="#structuralParameter"><code>structural parameters</code></a>, the <a href="#ReconfigurationMode"><strong>Reconfiguration Mode</strong></a> must be entered before and left afterwards.</p>
 </li>
 <li>
-<p>Compute all <a href="#parameter"><code>parameters</code></a> (and sizes of variables, <a href="#state">states</a>, <a href="#derivative"><code>derivatives</code></a>, event indicators, &#8230;&#8203;) that depend on the <a href="#tunable"><code>tunable</code></a> (structural) <a href="#parameter"><code>parameters</code></a>.</p>
+<p>Compute all <a href="#parameter"><code>parameters</code></a> (and sizes of variables, <a href="#continuous-state">continuous states</a>, <a href="#derivative"><code>derivatives</code></a>, event indicators, &#8230;&#8203;) that depend on the <a href="#tunable"><code>tunable</code></a> (structural) <a href="#parameter"><code>parameters</code></a>.</p>
 </li>
 <li>
 <p>Newly start the simulation using as initial values previously stored values and the new values of the <a href="#parameter"><code>parameters</code></a>.</p>
@@ -8863,7 +8863,7 @@ For example, if <code>derivative = 3</code> for variable 8, then variable 8 is t
 <p>An <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a> that is the derivative of another <a href="#input"><code>input</code></a> or <a href="#output"><code>output</code></a>, respectively, where the <code>derivative</code> attribute signals this relationship to the importer.</p>
 </li>
 <li>
-<p>When mapping a second-order system to first-order <a href="#state">states</a>, a velocity <a href="#state">state</a> that has <code>derivative</code> referencing the position <a href="#state">state</a> to preserve the higher-order structure.</p>
+<p>When mapping a second-order system to first-order <a href="#continuous-state">continuous states</a>, a velocity <a href="#continuous-state">continuous state</a> that has <code>derivative</code> referencing the position <a href="#continuous-state">continuous state</a> to preserve the higher-order structure.</p>
 </li>
 </ul>
 </div>
@@ -8876,9 +8876,9 @@ For example, if <code>derivative = 3</code> for variable 8, then variable 8 is t
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>reinit</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="reinit" class="paragraph">
 <p>Only used in Model Exchange, ignored for the other interface types.
-May only be present for a <a href="#state">continuous-time state</a>.<br>
-If <code>true</code>, the <a href="#state">state</a> may be reinitialized by the FMU in <a href="#EventMode"><strong>Event Mode</strong></a>.<br>
-If <code>false</code>, the <a href="#state">state</a> will not be reinitialized.</p>
+May only be present for a <a href="#continuous-state">continuous state</a>.<br>
+If <code>true</code>, the <a href="#continuous-state">continuous state</a> may be reinitialized by the FMU in <a href="#EventMode"><strong>Event Mode</strong></a>.<br>
+If <code>false</code>, the <a href="#continuous-state">continuous state</a> will not be reinitialized.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -9118,7 +9118,7 @@ It defines the <a href="#model-dependencies">dependencies</a> between variables.
 A Model Exchange FMU must also expose all derivatives of continuous states in <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> and all event indicators in <a href="#EventIndicator"><code>&lt;EventIndicator&gt;</code></a>.</p>
 </div>
 <div class="paragraph">
-<p>The optional part of the model structure defines in which way <a href="#derivative"><code>derivatives</code></a>, <a href="#output"><code>outputs</code></a>, and initial unknowns depend on <a href="#input"><code>inputs</code></a> and/or <a href="#parameter"><code>parameters</code></a>, and continuous-time <a href="#state">states</a>.
+<p>The optional part of the model structure defines in which way <a href="#derivative"><code>derivatives</code></a>, <a href="#output"><code>outputs</code></a>, and initial unknowns depend on <a href="#input"><code>inputs</code></a> and/or <a href="#parameter"><code>parameters</code></a>, and <a href="#continuous-state">continuous states</a>.
 The listed <a href="#dependencies"><code>dependencies</code></a> declare the dependencies between whole (multi-dimensional-)variables and not individual elements of the variables.</p>
 </div>
 <div class="admonitionblock note">
@@ -9174,7 +9174,7 @@ The functional dependency is defined as:<br>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ContinuousStateDerivative</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="ContinuousStateDerivative" class="paragraph">
-<p>Ordered list of value references of all derivatives of continuous <a href="#state">states</a>.
+<p>Ordered list of value references of all derivatives of <a href="#continuous-state">continuous states</a>.
 The referred variables must have the <code>derivative</code> attribute.
 The order defined by this list defines the order of the elements for <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>, and <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>.</p>
 </div>
@@ -9186,13 +9186,13 @@ The order defined by this list defines the order of the elements for <a href="#f
 </td>
 <td class="content">
 Note that only <a href="#continuous"><code>continuous</code></a> floating point variables are listed here.
-If a <a href="#state">state</a> or a <a href="#derivative"><code>derivative</code></a> of a <a href="#state">state</a> shall not be exposed from the FMU, or if states are not statically associated with a variable (due to <a href="#dynamic-state-selection">dynamic state selection</a>), then dummy variables have to be introduced, for example, <code>x[4]</code>, or <code>xDynamicStateSet2[5]</code>.
+If a <a href="#continuous-state">continuous state</a> or a <a href="#derivative"><code>derivative</code></a> of a <a href="#continuous-state">continuous state</a> shall not be exposed from the FMU, or if continuous states are not statically associated with a variable (due to <a href="#dynamic-state-selection">dynamic state selection</a>), then dummy variables have to be introduced, for example, <code>x[4]</code>, or <code>xDynamicStateSet2[5]</code>.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>The corresponding continuous-time <a href="#state">states</a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding variable state-derivative element.</p>
+<p>The corresponding <a href="#continuous-state">continuous states</a> are defined by attribute <a href="#derivative"><code>derivative</code></a> of the corresponding variable state-derivative element.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -9202,7 +9202,7 @@ If a <a href="#state">state</a> or a <a href="#derivative"><code>derivative</cod
 </td>
 <td class="content">
 Note that higher order derivatives must be mapped to first order derivatives but the mapping definition can be preserved due to attribute <a href="#derivative"><code>derivative</code></a>.
-Example: if \({\frac{\textsf{ds}}{\textsf{dt}} = v,\ \frac{\textsf{dv}}{\textsf{dt}} =f(..)}\),then \({\left\{ v,\ \frac{\textsf{dv}}{\textsf{dt}} \right\}}\) is the vector of state derivatives and attribute <a href="#derivative"><code>derivative</code></a> of \({v}\) references \({s}\), and attribute <a href="#derivative"><code>derivative</code></a> of \({\frac{\textsf{dv}}{\textsf{dt}}}\) references \({v}\).
+Example: if \({\frac{\textsf{ds}}{\textsf{dt}} = v,\ \frac{\textsf{dv}}{\textsf{dt}} =f(..)}\),then \({\left\{ v,\ \frac{\textsf{dv}}{\textsf{dt}} \right\}}\) is the vector of continuous state derivatives and attribute <a href="#derivative"><code>derivative</code></a> of \({v}\) references \({s}\), and attribute <a href="#derivative"><code>derivative</code></a> of \({\frac{\textsf{dv}}{\textsf{dt}}}\) references \({v}\).
 </td>
 </tr>
 </table>
@@ -9237,7 +9237,7 @@ This list consists of all variables which:</p>
 <p>have <a href="#causality"><code>causality</code></a> = <a href="#calculatedParameter"><code>calculatedParameter</code></a>, or</p>
 </li>
 <li>
-<p>are continuous-time <a href="#state">states</a> or state derivatives (defined with elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>, or</p>
+<p>are <a href="#continuous-state">continuous states</a> or continuous state derivatives (defined with elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a>) with <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>, or</p>
 </li>
 <li>
 <p>are <a href="#clocked-variable">clocked variables</a> that the FMU wishes to initialize in initialization mode.</p>
@@ -9245,7 +9245,7 @@ This list consists of all variables which:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The resulting list is not allowed to have duplicates (for example, if a <a href="#state">state</a> is also an <a href="#output"><code>output</code></a>, it is included only once in the list).<br>
+<p>The resulting list is not allowed to have duplicates (for example, if a <a href="#continuous-state">continuous state</a> is also an <a href="#output"><code>output</code></a>, it is included only once in the list).<br>
 Attribute <a href="#dependencies"><code>dependencies</code></a> defines the dependencies of the unknowns from the knowns in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.
 The functional dependency is defined as:</p>
 </div>
@@ -9253,7 +9253,7 @@ The functional dependency is defined as:</p>
 <p>\({\mathbf{v}_{\mathit{initialUnknowns}} := \mathbf{f}_{\mathit{init}}(\mathbf{u}_c, \mathbf{u}_d, t_{\mathit{start}}, \mathbf{v}_{\mathit{initial=exact}})}\)</p>
 </div>
 <div class="paragraph">
-<p>Since, <a href="#output"><code>outputs</code></a>, continuous-time <a href="#state">states</a> and state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
+<p>Since, <a href="#output"><code>outputs</code></a>, <a href="#continuous-state">continuous states</a> and continuous state derivatives are either present as knowns (if <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a>) or as unknowns (if <a href="#initial"><code>initial</code></a> = <a href="#approx"><code>approx</code></a> or <a href="#calculated"><code>calculated</code></a>), they can be inquired with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a> in <a href="#InitializationMode"><strong>Initialization Mode</strong></a>.</p>
 </div>
 <div class="paragraph">
 <p><a href="#EventIndicator"><code>EventIndicators</code></a> are available during <a href="#InitializationMode"><strong>Initialization Mode</strong></a>, however their dependencies are intended for debugging purposes only (and not for connection with other FMU&#8217;s), and therefore they must not be listed as <a href="#InitialUnknown"><code>&lt;InitialUnknown&gt;</code></a>.</p>
@@ -9275,7 +9275,7 @@ The functional dependency is defined as:</p>
 <p>\({(\mathbf{y}_{c+d}, \dot{\mathbf{x}}_c) := \mathbf{f}_{\mathit{sim}}(\mathbf{x}_c, \mathbf{u}_{c+d}, t_i, \mathbf{p})}\)<br></p>
 </div>
 <div class="paragraph">
-<p>Therefore, the initial state \({\mathbf{x}_c(t_{\mathit{start}})}\) has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and the initial state derivative \({\dot{\mathbf{x}}_c(t_{\mathit{start}})}\) has <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>.
+<p>Therefore, the initial continuous state \({\mathbf{x}_c(t_{\mathit{start}})}\) has <a href="#initial"><code>initial</code></a> = <a href="#exact"><code>exact</code></a> and the initial continuous state derivative \({\dot{\mathbf{x}}_c(t_{\mathit{start}})}\) has <a href="#initial"><code>initial</code></a> = <a href="#calculated"><code>calculated</code></a>.
 The importer can still initialize this FMU in steady-state, by using \({\mathbf{x}_c(t_{\mathit{start}})}\) as iteration variables and adding the equations \({\dot{\mathbf{x}}_c(t_{\mathit{start}}) = \mathbf{0}}\) in the importer.</p>
 </div>
 </td>
@@ -9403,7 +9403,7 @@ The association of a clocked variable with its Clocks must not be listed here as
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-for example, <a href="#parameter"><code>parameters</code></a> or initial <a href="#state">states</a>
+for example, <a href="#parameter"><code>parameters</code></a> or initial <a href="#continuous-state">continuous states</a>
 </td>
 </tr>
 </table>
@@ -11810,7 +11810,7 @@ All discrete-time variables are fixed during this phase and the corresponding di
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set continuous-time <a href="#state">states</a> \(\mathbf{x}_{c}(t)\)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <a href="#continuous-state">continuous states</a> \(\mathbf{x}_{c}(t)\)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi3SetFloat64</code>, <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a></p></td>
 </tr>
 <tr>
@@ -11915,7 +11915,7 @@ As soon as an event occurs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMo
 </dd>
 <dt class="hdlist1">Function <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a></dt>
 <dd>
-<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>, and <a href="#state">continuous-time states</a>.</p>
+<p>Only for variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a> and <a href="#variability"><code>variability</code></a> = <a href="#continuous"><code>continuous</code></a>, and <a href="#continuous-state">continuous states</a>.</p>
 </dd>
 <dt class="hdlist1">Functions <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a></dt>
 <dd>
@@ -11940,7 +11940,7 @@ As soon as an event occurs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMo
 <div class="ulist">
 <ul>
 <li>
-<p>Argument <code>continuousStates</code> contains the new values for each <a href="#state">continuous state</a>.
+<p>Argument <code>continuousStates</code> contains the new values for each <a href="#continuous-state">continuous state</a>.
 The order of the <code>continuousStates</code> vector must be the same as the ordered list of elements <a href="#ContinuousStateDerivative"><code>&lt;ContinuousStateDerivative&gt;</code></a> in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a>.
 Array variables are serialized as defined in <a href="#serialization-of-variables">Section 2.2.7.1</a>.
 This order is also used in the arguments of the following functions: <a href="#fmi3GetNominalsOfContinuousStates"><code>fmi3GetNominalsOfContinuousStates</code></a>, <a href="#fmi3GetContinuousStates"><code>fmi3GetContinuousStates</code></a>, and <a href="#fmi3GetContinuousStateDerivatives"><code>fmi3GetContinuousStateDerivatives</code></a>.</p>
@@ -11954,7 +11954,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<a href="#fmi3Discard"><code>fmi3Status = fmi3Discard</code></a> should be returned if the FMU rejects any of the state values because they, for example, violate min/max value restrictions.
+<a href="#fmi3Discard"><code>fmi3Status = fmi3Discard</code></a> should be returned if the FMU rejects any of the continuous state values because they, for example, violate min/max value restrictions.
 </td>
 </tr>
 </table>
@@ -11986,7 +11986,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 <div class="ulist">
 <ul>
 <li>
-<p>Return argument <code>derivatives</code> contains the derivatives for each <a href="#state">continuous state</a> with the same convention for the order as defined for <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.</p>
+<p>Return argument <code>derivatives</code> contains the derivatives for each <a href="#continuous-state">continuous state</a> with the same convention for the order as defined for <a href="#fmi3SetContinuousStates"><code>fmi3SetContinuousStates</code></a>.</p>
 </li>
 <li>
 <p>Argument <code>nContinuousStates</code> is the size of the <code>derivatives</code> vector.</p>
@@ -12063,7 +12063,7 @@ This order is also used in the arguments of the following functions: <a href="#f
 </div>
 <div class="paragraph">
 <p>This function is called after every completed step of the integrator provided the capability flag <code>needsCompletedIntegratorStep = true</code>.
-The importer must have set valid values for <a href="#time"><code>time</code></a>, <a href="#continuous"><code>continuous</code></a> <a href="#input"><code>inputs</code></a> and <a href="#continuous"><code>continuous</code></a> <a href="#state">states</a> prior to calling this function to evaluate \(\mathbf{f}_{\mathit{comp}}\) with valid right-hand side data.</p>
+The importer must have set valid values for <a href="#time"><code>time</code></a>, <a href="#continuous"><code>continuous</code></a> <a href="#input"><code>inputs</code></a> and <a href="#continuous-state">continuous states</a> prior to calling this function to evaluate \(\mathbf{f}_{\mathit{comp}}\) with valid right-hand side data.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -12080,9 +12080,9 @@ The importer must have set valid values for <a href="#time"><code>time</code></a
 </div>
 <div class="paragraph">
 <p>When the importer has reached valid values for the current integration step and one or more event indicators change sign (with respect to the previously completed integrator step), then the importer has to determine the time instant of the sign change that is closest to the previously completed integrator step.
-This is usually performed by an iteration where time is varied and <a href="#state">state</a> variables are determined by interpolation.
+This is usually performed by an iteration where time is varied and <a href="#continuous-state">continuous state</a> variables are determined by interpolation.
 Function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> must be called after this <a href="#state-event">state event</a> location procedure.
-The intended purpose of the function call is to indicate to the FMU that at this stage all <a href="#input"><code>inputs</code></a> and <a href="#state">state</a> variables have valid (accepted) values.
+The intended purpose of the function call is to indicate to the FMU that at this stage all <a href="#input"><code>inputs</code></a> and <a href="#continuous-state">continuous state</a> variables have valid (accepted) values.
 After <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> is called, it is still allowed to go back in time (calling <a href="#fmi3SetTime"><code>fmi3SetTime</code></a>) and inquire values of variables at previous time instants with <a href="#get-and-set-variable-values"><code>fmi3Get{VariableType}</code></a>.
 However, it is not allowed to go back in time over the previous <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> or the last <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> call.</p>
 </div>
@@ -12110,7 +12110,7 @@ However, it is not allowed to go back in time over the previous <a href="#fmi3Co
 If not, the function returns with <code>enterEventMode = fmi3True</code>, the importer will call <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> and in <a href="#EventMode"><strong>Event Mode</strong></a> the new mapping is computed by the FMU.</p>
 </li>
 <li>
-<p>For projection FMUs that represent a DAE can project their continuous-time states onto the constraint manifold in <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
+<p>For projection FMUs that represent a DAE can project their continuous states onto the constraint manifold in <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
 </li>
 </ul>
 </div>
@@ -12118,7 +12118,7 @@ If not, the function returns with <code>enterEventMode = fmi3True</code>, the im
 </ul>
 </div>
 <div class="paragraph">
-<p>The new mapping or projection values might require a reinitialization of continuous-time states, which must be signaled to the importer by returning from <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> with <a href="#valuesOfContinuousStatesChanged"><code>valuesOfContinuousStatesChanged = fmi3True</code></a>.</p>
+<p>The new mapping or projection values might require a reinitialization of continuous states, which must be signaled to the importer by returning from <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> with <a href="#valuesOfContinuousStatesChanged"><code>valuesOfContinuousStatesChanged = fmi3True</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>The function <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a> is not used to detect <a href="#time-event">time events</a> or <a href="#state-event">state events</a>, for example, by comparing event indicators of the previous with the current call of <a href="#fmi3CompletedIntegratorStep"><code>fmi3CompletedIntegratorStep</code></a>.
@@ -14019,7 +14019,7 @@ If the FMU has clocks, then <a href="#hasEventMode"><code>hasEventMode</code></a
 <h5 id="xml-example-co-simulation">4.4.1.1. Example Model Description File with Early Return</h5>
 <div class="paragraph">
 <p>The <a href="#xml-example-fmimodeldescription-cosimulation">Example <code>&lt;fmiModelDescription&gt;</code></a> below is the same as shown in <a href="#xml-example-model-exchange">Section 3.4.1</a> for a Model Exchange FMU.
-The only differences are the replacement of the element <code>&lt;ModelExchange&gt;</code> with the element <code>&lt;CoSimulation&gt;</code> with additional Co-Simulation-specific attributes, and the removal of <a href="#local"><code>local</code></a> variables, which are associated with continuous <a href="#state">states</a> and their <a href="#derivative"><code>derivatives</code></a>.</p>
+The only differences are the replacement of the element <code>&lt;ModelExchange&gt;</code> with the element <code>&lt;CoSimulation&gt;</code> with additional Co-Simulation-specific attributes, and the removal of <a href="#local"><code>local</code></a> variables, which are associated with <a href="#continuous-state">continuous states</a> and their <a href="#derivative"><code>derivatives</code></a>.</p>
 </div>
 <div id="xml-example-fmimodeldescription-cosimulation" class="listingblock">
 <div class="title">Example <code>&lt;fmiModelDescription&gt;</code></div>
@@ -15254,10 +15254,15 @@ Examples are a mass, stiffness, etc.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">continuous state</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The continuous states of a model are all variables that appear differentiated in the model and are independent from each other.
-The discrete-time states of a model are time-discrete variables that have two values in a model: The value of the variable from the previous event instant, and the value of the variable at the actual event instant.</p>
+<p>The continuous states of a model are all variables that appear differentiated in the model and are independent from each other.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">discrete-time state</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The discrete-time states of a model are time-discrete variables that have two values in a model: The value of the variable from the previous event instant, and the value of the variable at the actual event instant.</p>
 </div></div></td>
 </tr>
 <tr>
