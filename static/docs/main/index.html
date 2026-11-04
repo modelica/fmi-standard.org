@@ -478,7 +478,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version 7c87531,</span>
+<span id="revnumber">version 1add081,</span>
 <span id="revdate">2026-11-04</span>
 </div>
 <div id="toc" class="toc2">
@@ -2042,7 +2042,7 @@ Using this pointer, data may be transferred between the importer and callback fu
 </div>
 </div>
 <div class="paragraph">
-<p>This is a pointer to a data structure in the FMU that stores the internal FMU state of the current or a previously stored time instant.
+<p>This is a pointer to a data structure in the FMU that stores the FMU state of the current or a previously stored time instant.
 This allows to restart a simulation from a previously stored FMU state (see <a href="#get-set-fmu-state">Section 2.2.7.4</a>).</p>
 </div>
 <div class="listingblock">
@@ -2798,10 +2798,10 @@ For example, dividing by an <a href="#input"><code>input</code></a> or taking th
 <div class="sect4">
 <h5 id="get-set-fmu-state">2.2.7.4. Getting and Setting the Complete FMU State</h5>
 <div class="paragraph">
-<p>The FMU has internal data representing its state.
-This internal state consists especially of the values of the continuous states, iteration variables, <a href="#parameter"><code>parameter</code></a> values, <a href="#input"><code>input</code></a> values, delay buffers, file identifiers, and FMU internal status information.
+<p>The FMU has internal data representing the FMU state.
+The FMU state consists especially of the values of the continuous states, iteration variables, <a href="#parameter"><code>parameter</code></a> values, <a href="#input"><code>input</code></a> values, delay buffers, file identifiers, and FMU internal status information.
 Depending on the FMI type, only a subset of this data is directly accessible via the FMI C-API.
-With the functions of this section, the entire internal FMU state can be stored and reapplied to continue the simulation from this state.</p>
+With the functions of this section, the entire FMU state can be stored and reapplied to continue the simulation from this FMU state.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2823,7 +2823,7 @@ With the functions of this section, the entire internal FMU state can be stored 
 </li>
 <li>
 <p>For nonlinear model predictive control: get the FMU state just before initialization; in every sample period, set new continuous states from an observer, initialize and get the FMU state after initialization.
-From this state, perform many simulations that are restarted after the initialization with new input variables proposed by the optimizer.</p>
+From this FMU state, perform many simulations that are restarted after the initialization with new input variables proposed by the optimizer.</p>
 </li>
 </ul>
 </div>
@@ -2859,7 +2859,7 @@ Whenever needed, the byte vector can be loaded from file and deserialized, and t
 </div>
 </div>
 <div class="paragraph">
-<p><a id="FMUState"></a>This function copies the internal FMU state and returns a pointer to this copy in <a href="#FMUState"><code>FMUState</code></a>.
+<p><a id="FMUState"></a>This function copies the FMU state and returns a pointer to this copy in <a href="#FMUState"><code>FMUState</code></a>.
 <a href="#FMUState"><code>FMUState</code></a> must contain all information required to allow continuing the simulation from the current FMU state without additional FMI C-API calls.
 If on entry <code>*FMUState = NULL</code>, a new allocation is required.
 If <code>*FMUState != NULL</code>, then <code>*FMUState</code> points to a previously returned <a href="#FMUState"><code>FMUState</code></a> that is no longer needed and can be overwritten.
@@ -2892,7 +2892,7 @@ In particular, <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a> had
 </div>
 </div>
 <div class="paragraph">
-<p>This function restores the state provided by <a href="#FMUState"><code>FMUState</code></a>.
+<p>This function restores the FMU state provided by <a href="#FMUState"><code>FMUState</code></a>.
 The FMU must not change the content of the provided <a href="#FMUState"><code>FMUState</code></a> to allow multiple calls of <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a> with this <a href="#FMUState"><code>FMUState</code></a>.</p>
 </div>
 </dd>
@@ -2974,7 +2974,7 @@ With this information, the environment must allocate an <code>fmi3Byte</code> ve
 </div>
 <div class="paragraph">
 <p>These serialization and deserialization functions may be called, only if the capability flags <a href="#canGetAndSetFMUState"><code>canGetAndSetFMUState</code></a> and <a href="#canSerializeFMUState"><code>canSerializeFMUState</code></a> are set to <code>true</code>.
-Any serialized state must be deserializable into a valid state for the same FMU and the same execution platform.</p>
+Any serialized FMU state must be deserializable into a valid FMU state for the same FMU and the same execution platform.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2984,7 +2984,7 @@ Any serialized state must be deserializable into a valid state for the same FMU 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Whether the state can also be deserialized on another platform of the same FMU, or even across different versions of the same FMU is implementation dependent, so that in general an importer or a user cannot expect this to work, or to even be detected as an error.
+<p>Whether the FMU state can also be deserialized on another platform of the same FMU, or even across different versions of the same FMU is implementation dependent, so that in general an importer or a user cannot expect this to work, or to even be detected as an error.
 FMUs can of course document their serialization format, and make broader guarantees, but that is beyond the scope of this standard.</p>
 </div>
 </td>
@@ -6889,7 +6889,7 @@ For example, when loading an FMU with <code>needsExecutionTool = true</code>, th
 <p><code>canGetAndSetFMUState</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="canGetAndSetFMUState"></a>If <code>true</code>, the environment may inquire the internal FMU state and may restore it.
+<p><a id="canGetAndSetFMUState"></a>If <code>true</code>, the environment may inquire the FMU state and may restore it.
 That is, functions <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>, and <a href="#fmi3FreeFMUState"><code>fmi3FreeFMUState</code></a> are supported by the FMU.</p>
 </div></div></td>
 </tr>
@@ -6898,7 +6898,7 @@ That is, functions <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a>, 
 <p><code>canSerializeFMUState</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="canSerializeFMUState"></a>If <code>true</code>, the environment may serialize the internal FMU state, in other words, functions <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeserializeFMUState"><code>fmi3DeserializeFMUState</code></a> are supported by the FMU.
+<p><a id="canSerializeFMUState"></a>If <code>true</code>, the environment may serialize the FMU state, in other words, functions <a href="#fmi3SerializedFMUStateSize"><code>fmi3SerializedFMUStateSize</code></a>, <a href="#fmi3SerializeFMUState"><code>fmi3SerializeFMUState</code></a>, <a href="#fmi3DeserializeFMUState"><code>fmi3DeserializeFMUState</code></a> are supported by the FMU.
 If <code>true</code>, the flag <a href="#canGetAndSetFMUState"><code>canGetAndSetFMUState</code></a> must be <code>true</code> as well.</p>
 </div></div></td>
 </tr>
@@ -12757,7 +12757,7 @@ E.g. the FMU wants to communicate extrema of outputs or prevent model inconsiste
 <h4 id="StepMode">4.2.1. Mode: Step Mode</h4>
 <div class="paragraph">
 <p>The mode <a href="#StepMode"><strong>Step Mode</strong></a> is used to compute the values of all variables between communication points and events and to advance time in the FMU.
-If the FMU is connected in <a href="#algebraic-loops">algebraic loops</a> with other models, iterations over the FMU equations requires <a href="#get-set-fmu-state">setting the FMU to a state previously stored</a> (using <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a> and <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>) and repeating <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
+If the FMU is connected in <a href="#algebraic-loops">algebraic loops</a> with other models, iterations over the FMU equations require <a href="#get-set-fmu-state">restoring a previously stored FMU state</a> (using <a href="#fmi3GetFMUState"><code>fmi3GetFMUState</code></a> and <a href="#fmi3SetFMUState"><code>fmi3SetFMUState</code></a>) and repeating <a href="#fmi3DoStep"><code>fmi3DoStep</code></a>.</p>
 </div>
 <div class="paragraph">
 <p>During <a href="#StepMode"><strong>Step Mode</strong></a>, <a href="#clocked-variable">clocked variables</a> can not be set or get because <a href="#Clock">Clocks</a> are only active during <a href="#EventMode"><strong>Event Mode</strong></a>.</p>
