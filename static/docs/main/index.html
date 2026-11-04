@@ -478,7 +478,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Functional Mock-up Interface Specification</h1>
 <div class="details">
-<span id="revnumber">version e100c74,</span>
+<span id="revnumber">version 00360f3,</span>
 <span id="revdate">2026-11-04</span>
 </div>
 <div id="toc" class="toc2">
@@ -1653,9 +1653,9 @@ A subset of local variables is selected via a <a href="#table-subscripts">subscr
 A vector of floating point continuous-time variables representing the first derivatives of the <a href="#continuous-state">continuous states</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d\)<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="discrete-state"></a>\(\mathbf{x}_d\)<br>
 \(^{\bullet}\mathbf{x}_d\)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d\) is a vector of (internal) discrete-time variables (of any type) representing the discrete-time states.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\(\mathbf{x}_d\) is a vector of (internal) discrete-time variables (of any type) representing the <a href="#discrete-state">discrete states</a>.<br>
 \({}^{\bullet}\mathbf{x}_d\) is the value of \(\mathbf{x}_d\) at the previous super-dense time instant.<br></p></td>
 </tr>
 <tr>
@@ -3484,7 +3484,7 @@ When <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</cod
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Separating \(\mathbf{f}_{\mathit{disc}}\) from \(\mathbf{f}_{\mathit{event}}\) allows manipulation of the current (discrete) state and compute the corresponding outputs, for instance for model-based control applications.</p>
+<p>Separating \(\mathbf{f}_{\mathit{disc}}\) from \(\mathbf{f}_{\mathit{event}}\) allows manipulation of the current <a href="#discrete-state">discrete states</a> and compute the corresponding outputs, for instance for model-based control applications.</p>
 </div>
 </td>
 </tr>
@@ -4402,7 +4402,7 @@ Each continuous state derivative variable listed as elements <a href="#Continuou
 <p>\(\mathbf{v}_{\mathit{known}}\) is the vector of arguments of function \(\mathbf{f}\) that could appear in <a href="#dependencies"><code>dependencies</code></a> (see the description there) in <a href="#ModelStructure"><code>&lt;ModelStructure&gt;</code></a> of the unknown variables \(\mathbf{v}_{\mathit{unknown}}\).</p>
 </li>
 <li>
-<p>\({\mathbf{v}_{\mathit{rest}}}\) is the set of <a href="#input"><code>input</code></a> variables and discrete-time states of function \(\mathbf{f}\) which cannot be set by the importer in the current state, but in other states</p>
+<p>\({\mathbf{v}_{\mathit{rest}}}\) is the set of <a href="#input"><code>input</code></a> variables and <a href="#discrete-state">discrete states</a> of function \(\mathbf{f}\) which cannot be set by the importer in the current state, but in other states</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -5785,7 +5785,7 @@ If called, it evaluates the state transition function of the model partitions<br
 <p>\((\mathbf{T}_{\mathit{next}}) := \mathbf{f}_{\mathit{update}}({}^\bullet\mathbf{x}_{c+d}, \mathbf{u}_{c+d}, \mathbf{p}, {}^\bullet\mathbf{b}, t)\)</p>
 </li>
 <li>
-<p>Update previous values of discrete states: \({}^\bullet\mathbf{x}_d := \mathbf{x}_d\).</p>
+<p>Update previous values of <a href="#discrete-state">discrete states</a>: \({}^\bullet\mathbf{x}_d := \mathbf{x}_d\).</p>
 </li>
 <li>
 <p>Update previous values of <a href="#buffers">buffers</a>: \({}^\bullet\mathbf{b} := \mathbf{b}\).</p>
@@ -5939,7 +5939,7 @@ Not allowed in Co-Simulation and Scheduled Execution.</p>
 <dt class="hdlist1">Function <a href="#fmi3EvaluateDiscreteStates"><code>fmi3EvaluateDiscreteStates</code></a></dt>
 <dd>
 <p>This function may only be called if <code>providesEvaluateDiscreteStates</code> (<a href="#providesEvaluateDiscreteStatesME">ME</a>/<a href="#providesEvaluateDiscreteStatesCS">CS</a>) is <code>true</code>.
-It evaluates \(\mathbf{f}_{\mathit{disc}}\), computing the current discrete states.
+It evaluates \(\mathbf{f}_{\mathit{disc}}\), computing the current <a href="#discrete-state">discrete states</a>.
 Calling this function is optional and the FMU must not rely on it being called.
 If this call is omitted in a super dense time instant, \(\mathbf{f}_{\mathit{disc}}\) is evaluated implicitly by <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a>.</p>
 <div id="fmi3EvaluateDiscreteStates" class="listingblock">
@@ -8232,8 +8232,8 @@ If <code>canHandleMultipleSetPerTimeInstant = false</code>, then only one <a hre
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This flag can be set to <code>false</code> for variables where discrete-time states are directly updated when assigned (\(\mathbf{x}_{d} := f(\mathbf{x}_{d},\mathbf{u}_{c+d})\) instead of \(\mathbf{x}_{d} := f({}^\bullet\mathbf{x}_{d},\mathbf{u}_{c+d})\)).
-If an <a href="#output"><code>output</code></a> depends on this <a href="#input"><code>input</code></a> and on discrete-time states, then an algebraic loop could be formed with such an <a href="#input"><code>input</code></a>.
+This flag can be set to <code>false</code> for variables where <a href="#discrete-state">discrete states</a> are directly updated when assigned (\(\mathbf{x}_{d} := f(\mathbf{x}_{d},\mathbf{u}_{c+d})\) instead of \(\mathbf{x}_{d} := f({}^\bullet\mathbf{x}_{d},\mathbf{u}_{c+d})\)).
+If an <a href="#output"><code>output</code></a> depends on this <a href="#input"><code>input</code></a> and on <a href="#discrete-state">discrete states</a>, then an algebraic loop could be formed with such an <a href="#input"><code>input</code></a>.
 Such loops cannot be solved iteratively because of the limitation on <a href="#get-and-set-variable-values"><code>fmi3Set{VariableType}</code></a>.
 Therefore, such an <a href="#input"><code>input</code></a> should not appear in an algebraic loop.
 </td>
@@ -9216,7 +9216,7 @@ The functional dependency is defined as:<br>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClockedState</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div id="ClockedState" class="paragraph">
-<p>A <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> is part of the discrete state of a model partition and represented by a clocked variable.
+<p>A <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> is part of the <a href="#discrete-state">discrete states</a> of a model partition and represented by a clocked variable.
 To which Clock or Clocks it belongs is described by the attribute <a href="#clocks"><code>clocks</code></a> of that variable.
 Each <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a> must have the attribute <a href="#previous"><code>previous</code></a> to represent the previous value of this <a href="#ClockedState"><code>&lt;ClockedState&gt;</code></a>.
 All clocked states must have <a href="#variability"><code>variability = discrete</code></a>, must have the attribute <a href="#clocks"><code>clocks</code></a>, and must not be of type <code>fmi3Clock</code>.</p>
@@ -9376,7 +9376,7 @@ The association of a clocked variable with its Clocks must not be listed here as
 <p>inputs (variables with <a href="#causality"><code>causality</code></a> = <a href="#input"><code>input</code></a>),</p>
 </li>
 <li>
-<p>continuous states and discrete-time states,</p>
+<p>continuous states and <a href="#discrete-state">discrete states</a>,</p>
 </li>
 <li>
 <p>parameters (variables with <a href="#causality"><code>causality</code></a> = <a href="#parameter"><code>parameter</code></a>),</p>
@@ -11906,7 +11906,7 @@ It refers to the unit of the <a href="#independent"><code>independent</code></a>
 <td class="content">
 <div class="paragraph">
 <p>This allows limited simulation backward in time.
-As soon as an event occurs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is impossible, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> can only compute the next discrete state, not the previous one.</p>
+As soon as an event occurs (<a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> was called), going back in time is impossible, because <a href="#fmi3EnterEventMode"><code>fmi3EnterEventMode</code></a> / <a href="#fmi3UpdateDiscreteStates"><code>fmi3UpdateDiscreteStates</code></a> can only compute the next <a href="#discrete-state">discrete state</a>, not the previous one.</p>
 </div>
 </td>
 </tr>
@@ -12797,7 +12797,7 @@ If the FMU is connected in <a href="#algebraic-loops">algebraic loops</a> with o
 <p>\((\mathbf{y}_{c+d-k}, \mathbf{y}_c^{(j)}, \mathbf{x}_{d-k}, \mathbf{w}_{c+d-k}, \mathbf{b}, t_{i+1}) := \mathbf{f}_{\mathit{doStep}}({}^{\bullet}\mathbf{x}_d, \mathbf{u}_{c+d}, {}^{\bullet}\mathbf{u}_{\mathit{c,u}}, \mathbf{p}, {}^{\bullet}\mathbf{b}, t_i, h_i)\)<br></p>
 </li>
 <li>
-<p>Update previous values of non-clocked, discrete states: \({}^\bullet\mathbf{x}_{d-k} := \mathbf{x}_{d-k}\).</p>
+<p>Update previous values of non-clocked, <a href="#discrete-state">discrete states</a>: \({}^\bullet\mathbf{x}_{d-k} := \mathbf{x}_{d-k}\).</p>
 </li>
 <li>
 <p>Update previous values of buffers: \({}^\bullet\mathbf{b} := \mathbf{b}\).</p>
@@ -14350,7 +14350,7 @@ The importer may then activate potential sinks (e.g. a model partition of anothe
 <p>\((\mathbf{y}_{d,k_i}, \mathbf{x}_{d,k_i}, \mathbf{w}_{d,k_i}) := \mathbf{f}_{\mathit{activate}}({}^{\bullet}\mathbf{x}_{d}, \mathbf{w}_d, \mathbf{u}_{d}, \mathbf{p},k_i)\)<br></p>
 </li>
 <li>
-<p>Update previous values of discrete states of the corresponding model partition: \({}^\bullet\mathbf{x}_{d,k_i} := \mathbf{x}_{d,k_i}\).</p>
+<p>Update previous values of <a href="#discrete-state">discrete states</a> of the corresponding model partition: \({}^\bullet\mathbf{x}_{d,k_i} := \mathbf{x}_{d,k_i}\).</p>
 </li>
 </ul>
 </div></div></td>
@@ -15132,6 +15132,12 @@ DAEs are more general than ODEs and are used to describe systems with constraint
 </div></div></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">discrete state</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The discrete states of a model are time-discrete variables that have two values in a model: The value of the variable from the previous event instant, and the value of the variable at the actual event instant.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">electronic control unit</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>A microprocessor that is used to control a technical system. Commonly abbreviated as ECU.
@@ -15141,7 +15147,7 @@ ECUs are widely used in automotive and other engineering applications for real-t
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>An instantaneous occurrence at a specific time or when a condition is met, potentially causing discrete state changes.</p>
+<p>An instantaneous occurrence at a specific time or when a condition is met, potentially causing <a href="#discrete-state">discrete state</a> changes.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -15257,12 +15263,6 @@ Examples are a mass, stiffness, etc.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">continuous state</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>The continuous states of a model are all variables that appear differentiated in the model and are independent from each other.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">discrete-time state</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The discrete-time states of a model are time-discrete variables that have two values in a model: The value of the variable from the previous event instant, and the value of the variable at the actual event instant.</p>
 </div></div></td>
 </tr>
 <tr>
