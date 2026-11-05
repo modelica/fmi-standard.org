@@ -10,6 +10,37 @@ title: Literature
 
 ## FMI Related Publications
 
+### Asian Modelica & FMI Conference 2026, Hangzhou, China
+
+Conference App:
+
+All papers and available presentations are publicly available in the [Conference App](https://modelica.simtek.cc/amfc2026/schedule/).
+
+Tutorials:
+
+* FMI Beginners Tutorial [(Material available on GitHub)](https://github.com/modelica/fmi-beginners-tutorial-2026)
+
+Keynote:
+
+* Christian Bertsch: [15 Years Functional Mock-up Interface - a Journey from FMI 1.0 to 3.0 and the Road Ahead](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/FMI_Keynote.pdf)
+
+Industrial User Presentations:
+
+* Xuelian Lei: [An AI-Enhanced FMI-Based Model Predictive Control Framework with IoT-Driven Digital Twin Updating for Energy-Efficient HVAC Systems](https://modelica.simtek.cc/amfc2026/talk/F8Z33G/)
+* JAMBE: [OEM/Supplier Model Exchange Case Studies at JAMBE](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/JAMBE_Model_Exchange.pdf)
+* tracetronic: [Accelerating Virtual Validation using FMI-based Test Automation: From Component Testing to Digital Twins](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/FMI_Test_Automation.pdf)
+
+FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp223)):
+
+* [Agentic Model-Based Design with FMI: A Two-Axis Interoperability Architecture](https://doi.org/10.3384/ecp22375), [(slides)](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/ecp22375_slides.pdf)
+* [FMU-based Training of Physics-Informed Neural Nets for Control](https://doi.org/10.3384/ecp223137)
+* [An FMI-Based Multiscale Workflow for Multi-Scenario Local Accident Assessment in LBE Reactor Rod Bundles](https://doi.org/10.3384/ecp223157)
+* [An FMI Co-Simulation Framework for Day-ahead Optimization of District Cooling Systems Based on Modelica](https://doi.org/10.3384/ecp223175), [(slides)](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/ecp223175_slides.pdf)
+* [An FMI-Based Fast Thermal Prediction FMU for Real-Time Digital Twins of Data Center Server Rooms](https://doi.org/10.3384/ecp223211), [(slides)](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/ecp223211_slides.pdf)
+* [A Modelica-FMI digital twin for reinforcement learning-based NOx emission control of boilers under deep peak shaving](https://doi.org/10.3384/ecp223217)
+* [Development of an FMI-Oriented One-Dimensional Transient Heat Transfer Model for Separated Heat Pipes](https://doi.org/10.3384/ecp223295)
+* [Calibration workflow development using FMI-based reduced-order models for NEVs thermal management](https://doi.org/10.3384/ecp223399)
+
 ### 16th International Modelica and FMI Conference 2025, Lucerne, Switzerland
 
 Conference App: 
