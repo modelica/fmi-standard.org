@@ -76,22 +76,23 @@ Please respect the rules below when editing the file.
 
 ### Format
 
-| Column         | Description                                                             | Example / valid values
-|----------------|-------------------------------------------------------------------------|-----------------------
-| name           | The tool name that appears in the tools list                            | `"Example Sim"`
-| license        | License (commercial or [OSI approved](https://opensource.org/licenses)) | `"commercial"`, `"osi"`
-| url            | Link to the tool's homepage                                             | `"https://example.com/example-sim/"`
-| logo           | filename of the tool's logo (or company's logo)                         | `"example-sim.svg"`
-| vendor         | Name of the tool vendor                                                 | `"Example Company"`
-| vendorURL      | Link to the vendor's homepage                                           | `"https://example.com/"`
-| examplesURL    | Link to the tool's example FMUs and compatibility information           | `"https://github.com/example/example-sim/"`
-| description    | A [description](#tool-description) of the tool                          | `"Run simulations in the cloud in real time"`
-| features       | Reserved for future use                                                 | `[]`
-| platforms      | Supported platforms                                                     | `["macOS", "Linux", "Windows"]`
-| interfaces     | Supported interfaces                                                    | `["GUI", "CLI", "library"]`
-| fmiVersions    | Supported FMI versions                                                  | `["1.0", "2.0", "3.0"]`
-| fmuExport      | Supported interface types for FMU export                                | `["CS", "ME", "SE"]`
-| fmuImport      | Supported interface types for FMU import                                | `["CS", "ME", "SE"]`
+| Column           | Description                                                             | Example / valid values
+|------------------|-------------------------------------------------------------------------|-----------------------
+| name             | The tool name that appears in the tools list                            | `"Example Sim"`
+| license          | License (commercial or [OSI approved](https://opensource.org/licenses)) | `"commercial"`, `"osi"`
+| url              | Link to the tool's homepage                                             | `"https://example.com/example-sim/"`
+| logo             | filename of the tool's logo (or company's logo)                         | `"example-sim.svg"`
+| vendor           | Name of the tool vendor                                                 | `"Example Company"`
+| vendorURL        | Link to the vendor's homepage                                           | `"https://example.com/"`
+| examplesURL      | Link to the tool's example FMUs and compatibility information           | `"https://github.com/example/example-sim/"`
+| description      | A [description](#tool-description) of the tool                          | `"Run simulations in the cloud in real time"`
+| features         | Reserved for future use                                                 | `[]`
+| platforms        | Supported platforms                                                     | `["macOS", "Linux", "Windows", "Source Code"]`
+| interfaces       | Supported interfaces                                                    | `["GUI", "CLI", "library"]`
+| fmiVersions      | Supported FMI versions                                                  | `["1.0", "2.0", "3.0"]`
+| fmuExport        | Supported interface types for FMU export                                | `["CS", "ME", "SE"]`
+| fmuImport        | Supported interface types for FMU import                                | `["CS", "ME", "SE"]`
+| layeredStandards | Supported layered standards                                             | `["BUS", "DAE", "REF", "STRUCT", "WASM", "XCP"]`
 
 Example:
 
@@ -123,12 +124,22 @@ Example:
     ],
     "fmuImport": [
         "CS"
+    ],
+    "layeredStandards": [
+        "BUS"
     ]
 }
 ```
 
-The optional logo must be added to `/assets/images` as a PNG or SVG.
+The optional logo must be added to `/assets/images/logos` as a PNG or SVG.
 By submitting a logo the committer agrees that the logo is dispayed on the tools page.
+
+Tool vendors who have a tool listed on the FMI website can get access to a private Github repository https://github.com/modelica/FMI-Tools-Forum/ for discussion with other tool vendors with a listed tool.
+It is intended to exchange and solve problems with FMI implementations in a more protected area.
+
+* Access is granted only members of the FMI Project and to tool vendors (https://fmi-standard.org/tools/) who have a tool listed on the FMI webpage. If you have not been invited automatically and want access, please send an email to contact@fmi-standard.org providing your Github user name. 
+* Usage: If you face a problem with FMI implementation of another importing or exporting tool and do not have a contact address from that tool vendor, you can create an issue. Please provide information, how to reproduce your problem, and optionally how to contact you.
+
 
 ### Tool Description
 
@@ -144,7 +155,7 @@ The description field should
 
 FMU exporting and importing tools provide information to their users on how they have validated their FMI support.
 Providing and maintaining this information is in the responsibility of the tool vendors. 
-On the tools page of the FMI Webpage, a link to a repository or webpage of the tool vendor is provided as defined in `examplesUrl`.
+On the tools page of the FMI Webpage, a link to a repository or webpage of the tool vendor is provided as defined in `examplesURL`.
 Tool vendors are encouraged to clearly mark this webpage as provided by them and not by the Modelica Association or the FMI Project, e.g., by prominently placing their logo on this page.
 
 #### Exporting tools
@@ -228,6 +239,14 @@ The values in time must be monotonically increasing.
 0.0,0,AA22BB33,1 2 3 4 5 6,"string1"
 1.0,1,BB11FF4433,2 3 4 5 6 7,"string2"
 ```
+
+### FMI tools forum
+
+Tool vendors and other organizations that have a tool listed on the FMI website can get access to the GitHub Repository "FMI Tools Forum" (github.com/modelica/FMI-tools-forum).
+This is a private repositry for the exchange between tool vendors.
+It is intended to exchange and solve problems with FMI implementations in a more protected area.
+If you have a tool listed on the FMI Tools page and want to get access, please send an email to contact@fmi-standard.org providing your GitHub user name.
+
 ## Adding a news post
 
 To create a post, add a file to `/content/news/` with the following format:

@@ -2,7 +2,111 @@
 title: Literature
 ---
 
+## Learn Modelica and FMI Newsletter and FMI 3.0 Cheat Sheet
+
+[Learn Modelica and FMI over your break](https://dr-clementcoic.github.io/LearnModelicaFMI/) and [FMI 3.0 and FMPy Cheat Sheet](https://dr-clementcoic.github.io/fmi-cheat-sheet/) by Clément Coïc
+
+[![Preview of the Learn Modelica and FMI newsletter on LinkedIn](/assets/images/learn-modelig-and-fmi-newsletter.png)](https://www.linkedin.com/newsletters/7373084674463719424/)
+
 ## FMI Related Publications
+
+### Asian Modelica & FMI Conference 2026, Hangzhou, China
+
+Conference App:
+
+All papers and available presentations are publicly available in the [Conference App](https://modelica.simtek.cc/amfc2026/schedule/).
+
+Tutorials:
+
+* FMI Beginners Tutorial [(Material available on GitHub)](https://github.com/modelica/fmi-beginners-tutorial-2026)
+
+Keynote:
+
+* Christian Bertsch: [15 Years Functional Mock-up Interface - a Journey from FMI 1.0 to 3.0 and the Road Ahead](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/FMI_Keynote.pdf)
+
+Industrial User Presentations:
+
+* Xuelian Lei: [An AI-Enhanced FMI-Based Model Predictive Control Framework with IoT-Driven Digital Twin Updating for Energy-Efficient HVAC Systems](https://modelica.simtek.cc/amfc2026/talk/F8Z33G/)
+* JAMBE: [OEM/Supplier Model Exchange Case Studies at JAMBE](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/JAMBE_Model_Exchange.pdf)
+* tracetronic: [Accelerating Virtual Validation using FMI-based Test Automation: From Component Testing to Digital Twins](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/FMI_Test_Automation.pdf)
+
+FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp223)):
+
+* [Agentic Model-Based Design with FMI: A Two-Axis Interoperability Architecture](https://doi.org/10.3384/ecp22375), [(slides)](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/ecp22375_slides.pdf)
+* [FMU-based Training of Physics-Informed Neural Nets for Control](https://doi.org/10.3384/ecp223137)
+* [An FMI-Based Multiscale Workflow for Multi-Scenario Local Accident Assessment in LBE Reactor Rod Bundles](https://doi.org/10.3384/ecp223157)
+* [An FMI Co-Simulation Framework for Day-ahead Optimization of District Cooling Systems Based on Modelica](https://doi.org/10.3384/ecp223175), [(slides)](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/ecp223175_slides.pdf)
+* [An FMI-Based Fast Thermal Prediction FMU for Real-Time Digital Twins of Data Center Server Rooms](https://doi.org/10.3384/ecp223211), [(slides)](/assets/literature/Asian_Modelica_and_FMI_Conference_2026/ecp223211_slides.pdf)
+* [A Modelica-FMI digital twin for reinforcement learning-based NOx emission control of boilers under deep peak shaving](https://doi.org/10.3384/ecp223217)
+* [Development of an FMI-Oriented One-Dimensional Transient Heat Transfer Model for Separated Heat Pipes](https://doi.org/10.3384/ecp223295)
+* [Calibration workflow development using FMI-based reduced-order models for NEVs thermal management](https://doi.org/10.3384/ecp223399)
+
+### 16th International Modelica and FMI Conference 2025, Lucerne, Switzerland
+
+Conference App: 
+
+All papers and many presentations are publicly available in the [Conference App](https://pretalx.com/16thmodelicafmiconference/schedule/).
+
+Tutorials: 
+
+* FMI Beginners Tutorial - Exporting, Simulating, and Co-Simulating FMUs  [(Material available on GitHub)](https://github.com/modelica/fmi-beginners-tutorial-2025), [Recording](https://www.youtube.com/watch?v=iOHmxC1iLRM)
+* Exporting and importing an FMU using C code [(Material available on GitHub)](https://github.com/modelica/fmi-import-export-tutorial-2025/)
+* CasADi tutorial on dynamic optimization with FMI 3.0 Model Exchange [(Material available on GitHub)](https://github.com/casadi/modelica2025)
+* FMUGym: From Uncertainty-Aware Simulation to Learning-Based Control with FMI and Python [(Slides)](/assets/literature/Modelica_and_FMI_Conference_2025/FMUGymTutorial.pdf)
+* Tutorial on FMI3 co-simulation with UniFMU [(Slides)](/assets/literature/Modelica_and_FMI_Conference_2025/UniFMU-Tutorial.pdf)
+
+Industrial User Presentations: 
+
+* Airbus: [FMI Standard and Airbus Needs, Usages and Expectations](/assets/literature/Modelica_and_FMI_Conference_2025/IUP_Airbus.pdf), [Recording](https://www.youtube.com/watch?v=D3GezYYHySg)
+* Bosch, AVL, ProSTEP: [Integration of systems engineering and simulation based onstandards: The needs, challenges and solutions from anindustrial perspective](/assets/literature/Modelica_and_FMI_Conference_2025/Bosch_AVL_ProSTEP.pdf)
+* Bosch, DLR: [Optimization with FMI and CasADi: Analysis in IndustrialApplications](/assets/literature/Modelica_and_FMI_Conference_2025/Bosch_DLR.pdf)
+* Bosch, Dassault Systems, eXXcellent, ProSTEP: [Towards a Credible System Simulation Architecture applicable to Heat Pump Systems using Modelica, FMI and SSP](/assets/literature/Modelica_and_FMI_Conference_2025/Bosch_Dassault-Systems_eXXcellent.pdf)
+* Bosch, Dassault Systems, eXXcellent, PMSF, ProSTEP: [Traceability and Support of Modeling & Simulation usingSSP-Traceability Layered Standard](/assets/literature/Modelica_and_FMI_Conference_2025/ProSTEP.pdf)
+* Dassault Aviation [Bridging the gap between System Engineering and Simulation,applied to collaborative design of Aircraft Systems](/assets/literature/Modelica_and_FMI_Conference_2025/IUP_Dassault_Aviation_Thomas_Eric.pdf)
+* DENSO, BMW: [MBSE using SSP and SysML for Collaborative Development: AnOpen-source ADAS Use Case](/assets/literature/Modelica_and_FMI_Conference_2025/DENSO_BMW.pdf)
+* DENSO, PMSF: [Transmission Control Unit Use Case for Virtual ECUs andSSP-based Collaborative Development](/assets/literature/Modelica_and_FMI_Conference_2025/DENSO_PMSF.pdf)
+* DNV: [Accuracy and assurance of co-simulations in marine lifting operations](/assets/literature/Modelica_and_FMI_Conference_2025/DNV.pdf)
+* Renault: [Optimizing Assemblies of FMUs](/assets/literature/Modelica_and_FMI_Conference_2025/Renault.pdf)
+* Saab Aeronatics: [OpenSCALING: A Saab Aeronautics Perspective](/assets/literature/Modelica_and_FMI_Conference_2025/IUP_Saab.pdf)
+* Toshiba, JAMBE, JSAE, 3V-SG: [Cross-Company Collaborative Model-Based Development usingFMI3.0 and SSP2.0](/assets/literature/Modelica_and_FMI_Conference_2025/Toshiba_JAMBE_JSAE_3V-SG.pdf)
+
+
+FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp218)):
+
+* [Prototypical Control for the Digital Twin of Aircraft Environmental Control System](https://doi.org/10.3384/ecp21881), [Recording](https://www.youtube.com/watch?v=1ZAWgVyHwWU)
+* [Aspects and Ideas for the FMI-based Modeling of Railway Digital Twins](https://doi.org/10.3384/ecp21891), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp21891_slides.pdf), [Recording](https://www.youtube.com/watch?v=hGKtIBYMLbA)
+* [Collaborative Digital Twin Development for Railway Braking and Traction Applications](https://doi.org/10.3384/ecp218101), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218101_slides.pdf)
+* [Validation of Dynamic Simulation Models using Metamorphic Testing and Given-When-Then Patterns](https://doi.org/10.3384/ecp218139), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218139_slides.pdf)
+* [Integration of Physical and AI Models Using Open and Interoperable Standards: A Model-Based Methodology for Autonomous Robot Development](https://doi.org/10.3384/ecp218479)
+* [Modelica FMI based hybrid reinforcement learning enhanced trajectory planning for an ADR scenario for combined control of a satellite with a 7-axis robotic arm using Modelica/FMI](https://doi.org/10.3384/ecp218489)
+* [Yet Another Residential District Simulator: yards for Controller Development in the Residential Built Environment](https://doi.org/10.3384/ecp218525), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218525_slides.pdf)
+* [Facilitating the use of Physics-Based Simulations on Embedded Devices by running FMUs from MicroPython](https://doi.org/10.3384/ecp218535)
+* [FMI Meets SystemC: A Framework for Cross-Tool Virtual Prototyping](https://doi.org/10.3384/ecp218545), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218545_slides.pdf)
+* [Hybrid Simulation Models for Embedded Applications: A Modelica and eFMI approach](https://doi.org/10.3384/ecp218555), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218555_slides.pdf)
+* [A Study on Vehicle Suspension Loads Prediction Method Based on Hybrid Road Simulation using Modelica Library and FMI](https://doi.org/10.3384/ecp218567)
+* [Br(e)aking the Boundaries of Physical Simulation Models: Neural Functional Mock-up Units for Modeling the Automotive Braking System](https://doi.org/10.3384/ecp218575), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218575_slides.pdf)
+* [VDCWorkbench: A Vehicle Dynamics Control Test & Evaluation Library for Model and AI-based Control Approaches](https://doi.org/10.3384/ecp218585)
+* [Simulation of Embodied Cyber Physical System Based on Modelica/MWORKS: A Case Study of Intelligent Unmanned Surface Vessel](https://doi.org/10.3384/ecp218591)
+* [Master controller for offshore wind power and hybrid grids](https://doi.org/10.3384/ecp218611)
+* [Liaison: an open-source tool for distributed co-simulations](https://doi.org/10.3384/ecp218639), [Recording](https://www.youtube.com/watch?v=UEqPBMTieCo&pp=0gcJCSkKAYcqIYzv)
+* [A Tool for the Implementation of Open Neural Network Exchange Models in Functional Mockup Units](https://doi.org/10.3384/ecp218645), [Recording](https://www.youtube.com/watch?v=5hLQt4EtgFk)
+* [Input Smoothing for Faster Co-Simulation using FMI](https://doi.org/10.3384/ecp218653), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218653_slides.pdf), [Recording](https://www.youtube.com/watch?v=_7zgGyjCQME)
+* [Comparing the Predictive Event Handling Algorithm LookAhead to Rollback and Early Return](https://doi.org/10.3384/ecp218663), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218663_slides.pdf), [Recording](https://www.youtube.com/watch?v=ArByt6jZfcs)
+* [Towards a Common Standard for Uncertainty Quantification](https://doi.org/10.3384/ecp218671)
+* [LS-SA: Developing an FMI layered standard for holistic & efficient sensitivity analysis of FMUs](https://doi.org/10.3384/ecp218681), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218681_slides.pdf)
+* [FMI Layered Standard for Network Communication: Applications in Networked ECU Development](https://doi.org/10.3384/ecp218693), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218693_slides.pdf)
+* [An innovative heterogeneous modeling approach to build a cooling system for battery thermal management with common fluid properties involving FMI terminals](https://doi.org/10.3384/ecp218703), [Recording](https://www.youtube.com/watch?v=DamMcijGpPw)
+* [Enhancing Large-Scale Power Systems Simulations through Functional Mockup Unit-based Grid-Forming Inverter Models](https://doi.org/10.3384/ecp218713), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218713_slides.pdf), [Recording](https://www.youtube.com/watch?v=WG3ryO39_RM)
+* [The Fundamental Modeling Practices and Specifications to support the Preservation and Reuse of Analytical Simulations](https://doi.org/10.3384/ecp218741), [(slides)](/assets/literature/Modelica_and_FMI_Conference_2025/ecp218741_slides.pdf)
+* [Integration of Geometric Tolerance Analysis in System Simulations via Functional Mock-up Units](https://doi.org/10.3384/ecp218765)
+* [Shared sea-environment definition and realization for maritime and offshore co-simulations](https://doi.org/10.3384/ecp218775), [Recording](https://www.youtube.com/watch?v=9SnjWUv2_Ps)
+* [Decreasing Risk in the Design of Large Coupled Systems via Co-Simulation-Based Optimization and Adaptive Stress Testing](https://doi.org/10.3384/ecp218785), [Recording](https://www.youtube.com/watch?v=AR5_0xNaXFk)
+* [Modelica driven development of the thermal management control system for a zero emission yacht](https://doi.org/10.3384/ecp218801)
+* [Integrating a Seasonal Thermal Energy Storage FMU in a MATLAB/Simscape Thermal Source Network Model](https://doi.org/10.3384/ecp218851)
+
+### ASAM International Conference 2024
+
+* The functional mock-up interface (FMI), layered standards and ASAM standards - Enabling seamless SiL simulation of V-ECUs [(Slides)](/assets/literature/FMI-LS-ASAM_2024.pdf)[(Video)](https://www.youtube.com/watch?v=KzzKRa3jORs)
 
 ### Colloquium for Martin Otter June 28 2024 - 25 years chairing the Modelica Association
 
@@ -23,7 +127,6 @@ FMI User meeting ([Agenda](https://www.conftool.com/modelica2023/index.php?page=
 * [Building Blocks for Simulation based Cooperation between Partners](/assets/literature/FMI_User_Meeting_2023/03_SmartSE_Modelica-2023-10_V5.pdf)
 * [Linking Design Requirements to FMUs to create LOTAR compliant mBSE models](/assets/literature/FMI_User_Meeting_2023/04_Coïc-Linking_Design_Requirements_to_FMUs_to_create_LOTAR_compliant_mBSE_models-168_a.pdf)
 * [Status and Outlook eFMI Standard](/assets/literature/FMI_User_Meeting_2023/05_eFMI_status_and_outook.pdf)
-
 
 FMI related conference papers ([Proceedings](https://doi.org/10.3384/ecp204)):
 
@@ -53,6 +156,7 @@ FMI User meeting ([Agenda](https://raw.githubusercontent.com/modelica/ModelicaCo
 * [Status and Outlook eFMI Standard](https://raw.githubusercontent.com/modelica/ModelicaConference2021/master/presentations/FMI-User-Meeting/10_eFMI-status-and-outlook.pdf) ([Video](https://www.youtube.com/watch?v=lg7677ivh0Y))
 
 FMI related conference papers:
+
 * [The Functional Mock-up Interface 3.0 - New Features Enabling New Applications](https://doi.org/10.3384/ecp2118117)  ([Video](https://www.youtube.com/watch?v=sNsWVfmZC5s)) ([Slides](/assets/literature/Modelica_Conference_2021/FMI3Paper_Slides.pdf))
 * [The FMI 3.0 Standard Interface for Clocked and Scheduled Simulations](https://doi.org/10.3384/ecp2118127)  ([Video](https://www.youtube.com/watch?v=ZT918VcYVlA)) 
 * [Engineering Domain Interoperability Using the System Structure and Parameterization (SSP) Standard](https://doi.org/10.3384/ecp2118137) ([Video](https://www.youtube.com/watch?v=bATNdy9_5W0))
@@ -72,13 +176,15 @@ FMI related conference papers:
 * [Optimizing life-cycle costs for pumps and powertrains using FMI co-simulation](https://doi.org/10.3384/ecp21181681)  ([Video](https://www.youtube.com/watch?v=sqs_7hubXEc))
 
 Tutorial:
+
 * [FMI in the Cloud](https://github.com/t-sommer/fmi-cloud-tutorial)
 
 Keynotes
+
 * Composing Modeling and Simulation with Machine Learning in Julia  ([Video](https://www.youtube.com/watch?v=loqORy9tATY))
 
-
 ### [Asian Modelica Conference 2020](https://doi.org/10.3384/ecp202017413)
+
 * [Introducing the Virtual Systems Interface for Dynamic Coupling of Continuous Time Systems with Discontinuities](https://www.ep.liu.se/ecp/174/001/ecp2020174001.pdf)
 * [Collaborative Development and Simulation of an Aircraft Hydraulic Actuator Model](https://doi.org/10.3384/ecp202017467)
 * [A Protocol-Based Verification Approach for Standard-Compliant Distributed Co-Simulation](https://doi.org/10.3384/ecp2020174133)
@@ -131,7 +237,6 @@ FMI related conference papers ([link to proceedings](https://www.modelica.org/ev
 * Functional Mockup Interface: An Empirical Survey  Identifies Research Challenges and Current Barriers
 * A Method to Import FMU to Hardware Description Language
 * The OpenModelica Integrated Modeling, Simulation and Optimization Environment
-
 
 ### [Japanese Modelica Conference 2018](https://modelica.org/events/modelica2018japan/)
 

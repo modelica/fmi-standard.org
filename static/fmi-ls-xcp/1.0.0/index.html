@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.23">
+<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+<title>FMI Layered Standard for XCP (FMI-LS-XCP)</title>
+<style>
+/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
+/* Uncomment @import statement below to use as custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
+audio,canvas,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+script{display:none!important}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+a{background:transparent}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:none}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #ddddd8;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite::before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+*:not(pre)>code.nobreak{word-wrap:normal}
+*:not(pre)>code.nowrap{white-space:nowrap}
+pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #ddddd8}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #ddddd8;padding-bottom:8px}
+#header .details{border-bottom:1px solid #ddddd8;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #ddddd8;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #efefed;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #efefed;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:30em;padding-right:0}
+#toc.toc2{width:30em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #efefed}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
+.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
+.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;padding:1em;font-size:.8125em}
+.literalblock pre.nowrap,.literalblock pre[class].nowrap,.listingblock pre.nowrap,.listingblock pre[class].nowrap{overflow-x:auto;white-space:pre;word-wrap:normal}
+@media screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
+.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:#999}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
+table.pyhltable td.code{padding-left:.75em;padding-right:0}
+pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #ddddd8}
+pre.pygments .lineno{display:inline-block;margin-right:.25em}
+table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock blockquote p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.5em;margin-right:.5ex;text-align:right}
+.quoteblock .quoteblock{margin-left:0;margin-right:0;padding:.5em 0;border-left:3px solid rgba(0,0,0,.6)}
+.quoteblock .quoteblock blockquote{padding:0 0 0 .75em}
+.quoteblock .quoteblock blockquote::before{display:none}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.abstract blockquote,.quoteblock.abstract blockquote p{word-spacing:0;line-height:1.6}
+.quoteblock.abstract blockquote::before,.quoteblock.abstract p::before{display:none}
+table.tableblock{max-width:100%;border-collapse:separate}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd){background:#f8f8f7}
+table.stripes-none tr,table.stripes-odd tr:nth-of-type(even){background:none}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+td>div.verse{white-space:pre}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
+.imageblock.right,.imageblock[style*="float: right"]{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background-color:#00fafa}
+.black{color:#000}
+.black-background{background-color:#000}
+.blue{color:#0000bf}
+.blue-background{background-color:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background-color:#fa00fa}
+.gray{color:#606060}
+.gray-background{background-color:#7d7d7d}
+.green{color:#006000}
+.green-background{background-color:#007d00}
+.lime{color:#00bf00}
+.lime-background{background-color:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background-color:#7d0000}
+.navy{color:#000060}
+.navy-background{background-color:#00007d}
+.olive{color:#606000}
+.olive-background{background-color:#7d7d00}
+.purple{color:#600060}
+.purple-background{background-color:#7d007d}
+.red{color:#bf0000}
+.red-background{background-color:#fa0000}
+.silver{color:#909090}
+.silver-background{background-color:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background-color:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background-color:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background-color:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #ddddd8!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+
+/* customizations */
+
+body{
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+.toc-hidden {
+  padding-left: 0 !important;
+}
+
+.imageblock {
+  text-align: center;
+}
+
+.imageblock img {
+  display: block;
+  margin: auto;
+}
+
+.imageblock .title {
+  display: inline-block;
+  margin: auto;
+}
+
+.vertical-text {
+	transform: rotate(-90deg) translate(-11em, 0);
+	transform-origin: left top 0;
+  float: left;
+  display: inline-block;
+  white-space: nowrap;
+  width: 1em;
+  height: 11em;
+}
+
+/* no alternating row colors */
+table tr.even,table tr.alt,table tr:nth-of-type(even) {
+  background:none
+}
+
+/* use parent text color for captions */
+.subheader, .admonitionblock td.content>.title, .audioblock>.title, .exampleblock>.title, .imageblock>.title, .listingblock>.title, .literalblock>.title, .stemblock>.title, .openblock>.title, .paragraph>.title, .quoteblock>.title, table.tableblock>.title, .verseblock>.title, .videoblock>.title, .dlist>.title, .olist>.title, .ulist>.title, .qlist>.title, .hdlist>.title {
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/github.min.css">
+<script>
+// hide / show the Table of Contents (TOC)
+function toggleTOC() {
+  var toc = document.getElementById("toc");
+  var body = document.getElementsByTagName("body")[0];
+
+  if (toc.style.display === "none") {
+      toc.style.display = "block";
+      body.classList.remove("toc-hidden");
+  } else {
+      toc.style.display = "none";
+      body.classList.add("toc-hidden");
+  }
+}
+
+// toggle the TOC when "t" key is pressed
+document.addEventListener('keydown', (event) => {
+  if (event.key == 't') {
+    toggleTOC();
+  }
+});
+</script>
+
+<!-- Generate a nice TOC -->
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tocify/1.9.0/javascripts/jquery.tocify.min.js"></script>
+<!-- We do not need the tocify CSS because the asciidoc CSS already provides most of what we neeed -->
+
+<style>
+.tocify-header {
+    font-style: italic;
+}
+
+.tocify-subheader {
+    font-style: normal;
+    font-size: 90%;
+}
+
+.tocify ul {
+    margin: 0;
+ }
+
+.tocify-focus {
+    color: #7a2518;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tocify-focus > a {
+    color: #7a2518;
+}
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        // Add a new container for the tocify toc into the existing toc so we can re-use its
+        // styling
+        $("#toc").append("<div id='generated-toc'></div>");
+        $("#generated-toc").tocify({
+            extendPage: true,
+            context: "#content",
+            highlightOnScroll: true,
+            // don't hide the sections in the TOC
+            showAndHide: false,
+            hideEffect: "slideUp",
+            // Use the IDs that asciidoc already provides so that TOC links and intra-document
+            // links are the same. Anything else might confuse users when they create bookmarks.
+            hashGenerator: function(text, element) {
+                return $(element).attr("id");
+            },
+            // Smooth scrolling doesn't work properly if we use the asciidoc IDs
+            smoothScroll: false,
+            // Set to 'none' to use the tocify classes
+            theme: "none",
+            // Handle book (may contain h1) and article (only h2 deeper)
+            selectors: $( "#content" ).has( "h1" ).size() > 0 ? "h1,h2,h3,h4,h5" : "h2,h3,h4,h5,h6",
+            ignoreSelector: ".discrete"
+        });
+
+        // Switch between static asciidoc toc and dynamic tocify toc based on browser size
+        // This is set to match the media selectors in the asciidoc CSS
+        // Without this, we keep the dynamic toc even if it is moved from the side to preamble
+        // position which will cause odd scrolling behavior
+        var handleTocOnResize = function() {
+            if ($(document).width() < 768) {
+                $("#generated-toc").hide();
+                $(".sectlevel0").show();
+                $(".sectlevel1").show();
+            }
+            else {
+                $("#generated-toc").show();
+                $(".sectlevel0").hide();
+                $(".sectlevel1").hide();
+            }
+        }
+
+        $(window).resize(handleTocOnResize);
+        handleTocOnResize();
+    });
+</script>
+
+<img style="display: block; margin: 2em auto; width: 30em;" src="images/FMI_logo_horizontal.svg" alt="FMI logo">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>FMI Layered Standard for XCP (FMI-LS-XCP)</h1>
+<div class="details">
+<span id="revnumber">version 1.0.0,</span>
+<span id="revdate">2024-12-03</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="#_intent_of_this_document">1.1. Intent of this Document</a></li>
+<li><a href="#_how_to_read_this_document">1.2. How to Read this Document</a></li>
+<li><a href="#_outline_of_the_approach">1.3. Outline of the Approach</a></li>
+</ul>
+</li>
+<li><a href="#common-concepts">2. Layered Standard Manifest File</a></li>
+<li><a href="#_common_concepts">3. Common Concepts</a>
+<ul class="sectlevel2">
+<li><a href="#_structure_of_the_fmu_archive">3.1. Structure of the FMU Archive</a></li>
+<li><a href="#_documentation">3.2. Documentation</a></li>
+<li><a href="#_a2l_description_files">3.3. A2L Description Files</a></li>
+<li><a href="#_xcp_protocol_settings">3.4. XCP Protocol Settings</a></li>
+<li><a href="#_source_code_fmus">3.5. Source Code FMUs</a></li>
+<li><a href="#_variable_visibility">3.6. Variable Visibility</a></li>
+<li><a href="#_numeric_effects_of_xcp_access">3.7. Numeric Effects of XCP Access</a></li>
+</ul>
+</li>
+<li><a href="#_fmu_with_integrated_xcp_service">4. FMU with Integrated XCP Service</a>
+<ul class="sectlevel2">
+<li><a href="#configure-internal-xcp-service-settings">4.1. Configuring the XCP Protocol Settings</a></li>
+<li><a href="#starting-internal-xcp-service">4.2. Starting and Stopping the XCP Service</a></li>
+<li><a href="#address-resolution-internal">4.3. Memory Address Resolution</a></li>
+</ul>
+</li>
+<li><a href="#_external_xcp_service">5. External XCP Service</a>
+<ul class="sectlevel2">
+<li><a href="#configure-external-xcp-service-settings">5.1. Configuring the XCP Protocol Settings</a></li>
+<li><a href="#starting-external-xcp-service">5.2. Starting and Stopping the XCP Service</a></li>
+<li><a href="#address-resolution-external">5.3. Memory Address Resolution</a></li>
+</ul>
+</li>
+<li><a href="#_known_limitations_of_this_standard">6. Known Limitations of this Standard</a></li>
+<li><a href="#_contributions">7. Contributions</a></li>
+<li><a href="#_references">References</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Based on FMI 2.0 and FMI 3.0, this layered standard defines how to describe and implement XCP support for FMUs, which can either provide an XCP service or allow direct memory access via A2L files.</p>
+</div>
+<div class="paragraph">
+<p><em>[Note: Although the document refers to versions 2.0 and 3.0 of the FMI standard, everything described in this document also applies to all subsequent minor versions.</em>
+<em>For further information on compatibility, see section <a href="https://fmi-standard.org/docs/3.0/#VersioningLayered">Versioning and Layered Standards</a> in the FMI 3.0 specification.]</em></p>
+</div>
+<div class="paragraph">
+<p><br>
+</p>
+</div>
+<div class="paragraph">
+<p>Copyright &#169; 2023-2024 The Modelica Association Project FMI.</p>
+</div>
+<div class="paragraph">
+<p>This document is licensed under the Attribution-ShareAlike 4.0 International license.
+The code is released under the 2-Clause BSD License.
+The licenses text can be found in the <a href="https://raw.githubusercontent.com/modelica/fmi-ls-xcp/main/LICENSE.txt">LICENSE.txt</a> file that accompanies this distribution.</p>
+</div>
+<div class="paragraph">
+<p></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_intent_of_this_document">1.1. Intent of this Document</h3>
+<div class="paragraph">
+<p>FMI 3.0 was extended also with virtual Electronic Control Units (virtual ECUs) in mind.
+Engineers can measure into ECUs using the XCP protocol <a href="#XCP15">[XCP15]</a> and A2L variable descriptions <a href="#ASAP2">[ASAP2]</a>:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>The ASAM MCD-1 XCP (Universal Measurement and Calibration Protocol) standard defines a bus-independent, master-slave communication protocol to connect ECUs with calibration systems.
+XCP is short for Universal Measurement and Calibration Protocol.
+The primary purpose of XCP is to adjust internal parameters and acquire the current values of internal variables of an ECU.
+The first letter X in XCP expresses the fact that the protocol is designed for a variety of bus systems.
+The standard consists of a base standard, which describes memory-oriented protocol services without direct dependencies on specific bus systems.
+Several associate standards contain the transport layer definitions for CAN, FlexRay, Ethernet (UDP/IP and TCP/IP), serial links (SPI and SCI) and USB.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; ASAM e.V.<br>
+<cite>https://www.asam.net/standards/detail/mcd-1-xcp</cite>
+</div>
+</div>
+<div class="paragraph">
+<p>This layered standard describes how an FMU advertises its XCP capabilities to importers and MCD (<strong>M</strong>easurement - <strong>C</strong>alibration - <strong>D</strong>iagnostics) tools using the XCP protocol.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_how_to_read_this_document">1.2. How to Read this Document</h3>
+<div class="paragraph">
+<p>This document is about how to describe and implement XCP support for FMUs, either by an FMU with integrated XCP service or how to use an external XCP service to access data inside the FMU.
+To keep the descriptions brief and redundancy low, <a href="#common-concepts">common concepts</a>, which are used by both implementation types, are described once.</p>
+</div>
+<div class="paragraph">
+<p>The standard document is in HTML allowing use of in-document links.
+By pressing "t", the table of contents can be displayed on the left side or hidden.</p>
+</div>
+<div class="paragraph">
+<p>In key parts of this document, non-normative examples are used to help understand the standard.</p>
+</div>
+<div class="paragraph">
+<p>Conventions used in this document:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Non-normative text is given in square brackets in italic font: <em>[Especially examples are defined in this style.]</em></p>
+</li>
+<li>
+<p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="https://tools.ietf.org/html/rfc2119">RFC 2119</a> (regardless of formatting and capitalization).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_outline_of_the_approach">1.3. Outline of the Approach</h3>
+<div class="paragraph">
+<p>There are alternative implementations depending on the use case and data availability:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The FMU implements one or more XCP slaves which provide access to measurement and calibration variables of the virtual ECU and handles the communication protocol with the XCP master in the MCD tool.
+The necessary information for an MCD tool is given in one or more variable description files which follow the <a href="https://www.asam.net/standards/detail/mcd-2-mc/">ASAM MCD-2 MC</a> standard (aka A2L, also <a href="#ASAP2">[ASAP2]</a>) and customarily carry the file extension <code>.a2l</code>.
+For further details see <a href="#_fmu_with_integrated_xcp_service">Section 4</a>.</p>
+</li>
+<li>
+<p>An external XCP slave implementation accesses the memory of the virtual ECU to expose the XCP protocol to the MCD tool.
+In this case, the importer needs to provide such an XCP slave implementation using the A2L variable description file(s) provided by the FMU.
+<code>fmi3IntermediateUpdateCallback</code> calls or the clocks mechanism could be used to synchronize DAQ lists.
+For further details see <a href="#_external_xcp_service">Section 5</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It is also possible for an FMU to have integrated XCP services and to allow memory access for an external XCP service.</p>
+</div>
+<div class="paragraph">
+<p>The importer might also use the A2L address, type, layout and scaling information to use direct memory access into the virtual ECU.
+As this approach does not use the standardized XCP protocol it is not further described in this layered standard.</p>
+</div>
+<div class="paragraph">
+<p>This layered standard will have no effect on the FMU interface, nor the C-API behavior.
+If an XCP slave is implemented inside the FMU, it is recommended that it runs in its own thread and leaves the rest of the operation of the FMU unaffected.</p>
+</div>
+<div class="paragraph">
+<p>The A2L/XCP standards allow to measure and calibrate variables synchronously to different types of events.
+These so called event channels are either time-based, angular-based, or non-deterministic, and are identified by a unique event channel number (also referred to as "measurement raster" in the XCP standard <a href="#XCP15">[XCP15]</a>).
+The XCP service must be invoked with the defined event channel number in the thread which is executed for an event.
+Calibration and communication with the XCP master is typically performed in a background thread.
+The background thread must always be responsive to the XCP master within the defined communication timeout.
+Refer to the A2L/XCP standards for more information.</p>
+</div>
+<div class="paragraph">
+<p>The XCP/A2L approach can not only be used for virtual ECUs, but also for plant models, if the FMU exporter generates appropriate A2L files.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="common-concepts">2. Layered Standard Manifest File</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This layered standard defines additional elements that carry relevant interface definitions and capability flags in the layered standard manifest file.
+<a href="#table-schema-fmi-ls-xcp-attributes">Table 1</a> shows the attributes of the root element of <code>fmi-ls-manifest.xml</code>.</p>
+</div>
+<table id="table-schema-fmi-ls-xcp-attributes" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Root Element Attribute Details.</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Namespace</th>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi-ls-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http://fmi-standard.org/fmi-ls-manifest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.fmi-standard.fmi-ls-xcp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the layered standard in reverse domain name notation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi-ls-version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http://fmi-standard.org/fmi-ls-manifest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version of the layered standard. This layered standard uses semantic versioning, as defined in <a href="#PW13">[PW13]</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fmi-ls-description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http://fmi-standard.org/fmi-ls-manifest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Layered standard based on FMI 2.0 and FMI 3.0 for describing and implementing XCP support for FMUs, which can either provide an XCP service or allow direct memory access via A2L files.</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String with a brief description of the layered standard that is suitable for display to users.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The root element must contain at least one, and can contain more than one <code>Interface</code> elements.
+Each such element specifies one set of interface information for calibration using one underlying variable description file (A2L).
+Multiple elements might be provided if there are different XCP slaves embedded in the FMU, or there are other reasons why multiple A2L variable description files that apply in parallel have to be provided.</p>
+</div>
+<div class="paragraph">
+<p>Each <code>Interface</code> element has the <a href="#table-schema-fmi-ls-xcp-interface-attributes">following attributes</a>:</p>
+</div>
+<table id="table-schema-fmi-ls-xcp-interface-attributes" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Interface Element Attribute Details.</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Namespace</th>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>definition</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Relative URI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This attribute must be a relative reference to a URI (formerly called a relative URI) to the A2L variable description file for this interface.
+It may not contain any dot segments, that is, complete path segments consisting only of <code>.</code> or <code>..</code>.
+It is resolved to an absolute URI using a base URI that depends on the relevant FMU target, as defined in <a href="#_structure_of_the_fmu_archive">Section 3.1</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>types</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of <code>CoSimulation</code>, <code>ModelExchange</code>, <code>ScheduledExecution</code>, separated by a whitespace character</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional attribute to restrict the applicability of the interface being defined to certain FMU interface types.
+The value is provided as a list of interface type names to which this interface applies.
+If the attribute is not provided, the interface applies to all available FMU interface types.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional human-readable description of the interface being defined.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>containsXCPService</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> or <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU provides its own XCP slave implementation.
+See <a href="#_fmu_with_integrated_xcp_service">Section 4</a>.
+Defaults to <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>supportsDirectMemoryAccess</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> or <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, the FMU allows direct memory access from the outside via the information provided in its variable description file.
+In most cases this mechanism will be used by an external XCP service provided by the importer.
+See <a href="#_external_xcp_service">Section 5</a>.
+Defaults to <code>false</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The attribute <code>definition</code> is required, all other attributes of <code>Interface</code> are optional.
+The FMU must provide a valid <code>definition</code> attribute and must set at least one of the attributes <code>containsXCPService</code> or <code>supportsDirectMemoryAccess</code> to <code>true</code> to comply with this layered standard.</p>
+</div>
+<div class="paragraph">
+<p>Additionally the <code>Interface</code> element can contain one or more <code>Variable</code> elements, which assign relevant roles to existing FMU variables.</p>
+</div>
+<div class="paragraph">
+<p>Each <code>Variable</code> element has the <a href="#table-schema-fmi-ls-xcp-variable-attributes">following attributes</a>:</p>
+</div>
+<table id="table-schema-fmi-ls-xcp-variable-attributes" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Variable Element Attribute Details.</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Namespace</th>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Valid variable name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a variable defined in the <code>modelDescription.xml</code> of the FMU.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>role</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Valid role enum value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Role of the variable. Must be a valid role as defined in <a href="#configure-internal-xcp-service-settings">Section 4.1</a>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each <code>Variable</code> entry assigns a role to an existing variable.
+No variable shall occur in more than one <code>Variable</code> entry.
+No role shall occur in more than one <code>Variable</code> entry of one <code>Interface</code>, but can occur again in <code>Variable</code> entries of a different <code>Interface</code>.
+The set of allowed roles and their meaning is defined in <a href="#configure-internal-xcp-service-settings">Section 4.1</a>.</p>
+</div>
+<div class="paragraph">
+<p>An example of a manifest file for this layered standard is shown below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;fmiLayeredStandardManifest
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../schema/fmi3LayeredStandardXcpManifest.xsd"
+    xmlns:fmi-ls="http://fmi-standard.org/fmi-ls-manifest"
+    fmi-ls:fmi-ls-name="org.fmi-standard.fmi-ls-xcp"
+    fmi-ls:fmi-ls-version="1.0.0"
+    fmi-ls:fmi-ls-description="Layered standard based on FMI 2.0 and FMI 3.0 for describing and implementing XCP support for FMUs, which can either provide an XCP service or allow direct memory access via A2L files."&gt;
+    &lt;Interface definition="vECU1.a2l" description="First embedded XCP service for internal vECU 1, supports both TCP/UDP with full control"
+        containsXCPService="true"&gt;
+        &lt;Variable name="XCP.vECU1.TCP.Enable" role="XCPServiceTCPEnable"/&gt;
+        &lt;Variable name="XCP.vECU1.TCP.Port" role="XCPServiceTCPPort"/&gt;
+        &lt;Variable name="XCP.vECU1.TCP.ListenAddress" role="XCPServiceTCPListenAddress"/&gt;
+        &lt;Variable name="XCP.vECU1.UDP.Enable" role="XCPServiceUDPEnable"/&gt;
+        &lt;Variable name="XCP.vECU1.UDP.Port" role="XCPServiceUDPPort"/&gt;
+        &lt;Variable name="XCP.vECU1.UDP.ListenAddress" role="XCPServiceUDPListenAddress"/&gt;
+    &lt;/Interface&gt;
+    &lt;Interface definition="vECU2.a2l" description="Second embedded XCP service for internal vECU 2, TCP only, limited control"
+        containsXCPService="true"&gt;
+        &lt;Variable name="XCP.vECU2.TCP.Enable" role="XCPServiceTCPEnable"/&gt;
+    &lt;/Interface&gt;
+    &lt;Interface definition="vECU3Mem.a2l" description="Internal vECU 3 only via direct memory access"
+        supportsDirectMemoryAccess="true"/&gt;
+    &lt;Interface definition="vECU4Both.a2l" description="Internal vECU 4 with dual XCP and direct memory access, no control over XCP"
+        containsXCPService="true"
+        supportsDirectMemoryAccess="true"/&gt;
+    &lt;Interface definition="vME.a2l" types="ModelExchange" description="Applicable definition solely for ModelExchange"
+        supportsDirectMemoryAccess="true"/&gt;
+    &lt;Interface definition="vCSSE.a2l" types="CoSimulation ScheduledExecution" description="Applicable definition for CS and SE"
+        supportsDirectMemoryAccess="true"/&gt;
+&lt;/fmiLayeredStandardManifest&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_common_concepts">3. Common Concepts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Independent of the selected implementation approach (see <a href="#_outline_of_the_approach">Section 1.3</a>), the XCP behavior as seen by an external MCD tool (XCP master) shall be the same.
+The concepts defined in this chapter are common to both of the implementation approaches.
+The definitions that are specific to the particular implementation types are defined in <a href="#_fmu_with_integrated_xcp_service">Section 4</a> and <a href="#_external_xcp_service">Section 5</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_structure_of_the_fmu_archive">3.1. Structure of the FMU Archive</h3>
+<div class="paragraph">
+<p>The manifest file, any A2L variable description files and other files needed for XCP support are placed in <code>/extra/org.fmi-standard.fmi-ls-xcp</code>.
+<em>[This allows these files to be added and modified after the FMU has been created without affecting any checksums.]</em>
+The directory structure is analogous to the <code>binaries</code> directory structure, specific to the FMI version.
+The structure for an FMI 3.0 FMU is shown below.
+Details are described in the following sections.</p>
+</div>
+<div id="figure-fmi-layered-XCP-directory-structure" class="listingblock">
+<div class="content">
+<pre>documentation
+   fmi-ls-xcp.{txt|html}           // Informal description how to use XCP/A2L for this FMU (optional).
+extra/org.fmi-standard.fmi-ls-xcp  // Contains files related to XCP/A2L
+   fmi-ls-manifest.xml             // The layered standard manifest file
+   &lt;definition1.a2l&gt;               // Variable description of a source code FMU (optional)
+   &lt;definition2.a2l&gt;               // Variable description of a source code FMU (optional)
+   ...
+   x86_64-windows
+      &lt;definition1.a2l&gt;            // Variable description for Windows on Intel 64-bit (optional)
+      &lt;definition2.a2l&gt;            // Variable description for Windows on Intel 64-bit (optional)
+      ...
+   x86-linux
+      &lt;definition1.a2l&gt;            // Variable description for Linux on Intel 32-bit (optional)
+      ...
+   aarch32-linux
+      &lt;definition1.a2l&gt;            // Variable description for Linux on ARM 32-bit (optional)
+      ...
+   x86_64-darwin
+      &lt;definition1.a2l&gt;            // Variable description for macOS (optional)
+      ...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>&lt;definition1.a2l&gt;</code> and <code>&lt;definition2.a2l&gt;</code> above are the relative URI references of the corresponding <code>definition</code> attributes of <code>Interface</code> elements.
+The resultant absolute URI to the variable description file results from resolving the relative URI against the following base URI:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For a source code FMU target the base URI is the URI of the manifest file.</p>
+</li>
+<li>
+<p>For a binary FMU target the base URI is the URI that results by replacing the file name part of the URI of the manifest file with a directory path component with the given target name of the relevant FMI version.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If multiple <code>Interface</code> elements are present in the manifest, then multiple A2L variable description files will be present at each level of the directory structure, as defined by their <code>definition</code> attribute values.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_documentation">3.2. Documentation</h3>
+<div class="paragraph">
+<p>When shipping an FMU with XCP/A2L support, it is recommended to provide the necessary information to the importer in the file <code>documentation/fmi-ls-xcp.{txt|html}</code>.
+For example, this might concern additional information on how to build the final A2L file, if the FMU is delivered as source code.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_a2l_description_files">3.3. A2L Description Files</h3>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>ASAM MCD-2 MC (aka ASAP2) defines the description format of the internal ECU variables used in measurement and calibration.
+Measurement &amp; calibration systems (MC-systems) require this description for both the parameterization of scalar constants, curves and maps of the ECU software and for recording the system&#8217;s response via measurement variables during real-time testing.
+The description contains information about data types, dimensions, record layouts and memory locations of ECU variables.
+The standard also describes how the variable values are converted into human-readable quantities and displayed in an MC-system.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; ASAM e.V.<br>
+<cite>https://www.asam.net/standards/detail/mcd-2-mc</cite>
+</div>
+</div>
+<div class="paragraph">
+<p>The A2L description depends on the FMU binary, for example, regarding memory addresses, and byte order.
+If an FMU archive contains multiple binaries for different platforms, the associated A2L files are placed into separate subdirectories below <code>/extra/org.fmi-standard.fmi-ls-xcp</code> following the same scheme as in the <code>binaries</code> directory, see <a href="#_structure_of_the_fmu_archive">Section 3.1</a>.</p>
+</div>
+<div class="paragraph">
+<p>All A2L files in the FMU should use the same XCP configuration, including the same protocol (TCP/UDP), ports, etc.</p>
+</div>
+<div class="paragraph">
+<p>Note that the A2L files placed under the <code>extra</code> directory are not accessible to the FMU at runtime.
+Any files that shall be accessible to the FMU at runtime must (also) be placed into the <code>resources</code> directory as defined by the FMI standard.</p>
+</div>
+<div class="paragraph">
+<p>A2L files may have a considerable size.
+If size is a concern, it may be decided to supply just a single platform and A2L file with an FMU.</p>
+</div>
+<div class="paragraph">
+<p>All format versions of the A2L standard are allowed and it is the responsibility of the MCD tool to handle each format version correctly.</p>
+</div>
+<div class="paragraph">
+<p>This layered standard forbids the use of the <code>including mechanism</code> of additional A2L files to simplify complete extraction and copying of the A2L file to a location where it is accessible by the MCD tool.</p>
+</div>
+<div class="paragraph">
+<p>The handling of address information in the A2L file depends on the selected implementation approach for the XCP slave (FMU-internal or external, see <a href="#_outline_of_the_approach">Section 1.3</a>) and on the FMU format (binary or source code FMU).
+See <a href="#address-resolution-internal">Section 4.3</a> and <a href="#address-resolution-external">Section 5.3</a>, respectively, for detailed information about address resolution.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_xcp_protocol_settings">3.4. XCP Protocol Settings</h3>
+<div class="paragraph">
+<p>The A2L description shall include <code>IF_DATA XCP</code> elements to help MCD tools to connect and interact with the XCP service of the FMU more reliably and without user interaction.
+Parts of the <code>IF_DATA XCP</code> description depend on the machine where the FMU binary is executed, for example, the IP address and port.</p>
+</div>
+<div class="paragraph">
+<p>The default IP address assigned by the FMU exporter should be a <code>localhost</code> IP address, that is one of the loopback interface IP addresses (<code>127.0.0.1</code> for IPv4 or <code>::1</code> for IPv6), as this is the most fitting choice in many cases.</p>
+</div>
+<div class="paragraph">
+<p>The requirement for the port number is, that it must be unique on the machine where the FMU binary is executed.
+Typically, a certain range of ports is reserved for this purpose.
+The FMU importer is responsible for checking if any conflicts of the defined IP addresses and port numbers occur in the context of the simulated system.</p>
+</div>
+<div class="paragraph">
+<p>In the case of an internal XCP service, it is sometimes necessary for the FMU importer to override the default IP address and/or port number which was assigned by the FMU exporter.
+For more information about how to configure and handle the XCP service, see <a href="#configure-internal-xcp-service-settings">Section 4.1</a>.
+In the case of an external XCP service the connection settings are under the control of the importer.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_source_code_fmus">3.5. Source Code FMUs</h3>
+<div class="paragraph">
+<p>An FMU may be delivered as source code together with a <code>buildDescription.xml</code> file.
+This case requires a common understanding of the A2L workflow between the FMU exporter and importer.
+In practice there are different flavors of the workflow depending on the specific use case.</p>
+</div>
+<div class="paragraph">
+<p>The FMU exporter shall describe the measurement variables (<code>MEASUREMENT</code>), calibration parameters (<code>CHARACTERISTIC</code>) and related A2L elements of its application in the A2L file.
+The A2L file is necessarily incomplete as the details of the A2L description depend on the binary for the target platform.
+For example, the real addresses and memory segments are not known until the FMU binary is built.
+For information on how to deal with memory addresses refer to <a href="#address-resolution-internal">Section 4.3</a> or <a href="#address-resolution-external">Section 5.3</a>, respectively.</p>
+</div>
+<div class="paragraph">
+<p>The A2L description is placed directly into the folder <code>/extra/org.fmi-standard.fmi-ls-xcp</code> if it is target-independent, or in target-specific subfolders otherwise (see <a href="#_structure_of_the_fmu_archive">Section 3.1</a>).</p>
+</div>
+<div class="paragraph">
+<p>The FMU importer is responsible for ensuring that the target-specific information in the A2L file is adapted to the target platform for which a source code FMU is built, before making the A2L file available to the MCD tool.</p>
+</div>
+<div class="paragraph">
+<p>If additional information for the build process and A2L creation is required, it should be provided by the FMU exporter in <code>/documentation/fmi-ls-xcp.{txt|html}</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_variable_visibility">3.6. Variable Visibility</h3>
+<div class="paragraph">
+<p>The <code>modelDescription.xml</code> file publishes a certain set of variables and parameters.
+The A2L file also publishes a set of FMU variables and parameters.
+This standard expressly does not restrict the relationship between both sets of variables.</p>
+</div>
+<div class="paragraph">
+<p><em>[As a matter of fact, it is quite likely that the variables published in <code>modelDescription.xml</code> is a minimal set required for connectivity reasons.</em>
+<em>The A2L file might publish a much larger set of variables and parameters that the user can selectively choose to measure or calibrate.</em></p>
+</div>
+<div class="paragraph">
+<p><em>The details of the variable access are transparent from the viewpoint of an MCD tool, as this information is encapsulated in the A2L file.]</em></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_numeric_effects_of_xcp_access">3.7. Numeric Effects of XCP Access</h3>
+<div class="paragraph">
+<p>While measurement of FMU internal variables does not have a numeric effect on the FMU, so called calibration does.
+Calibration is the tuning of FMU internal parameters.
+Such changes will affect the numeric behavior of the FMU.
+If the FMU contains controller code, numeric stability or energy preservation laws are of lesser concern.
+On the other hand, plant models offering XCP access for parameter calibration may introduce surprising numerical effects in solvers that might require proper handling, like resetting solvers with every XCP write action.</p>
+</div>
+<div class="paragraph">
+<p>It is therefore necessary to synchronize XCP variable access (read and write) with the state of the FMU.
+<em>[For instance, time is not necessarily increasing monotonically in Model Exchange, and variable values might change within an fmi3DoStep call due to Intermediate Variable Access in Co-Simulation.</em>
+<em>Appropriate care must be taken when to serve XCP master requests to ensure simulation and measurement integrity.]</em></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fmu_with_integrated_xcp_service">4. FMU with Integrated XCP Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the XCP slave is implemented in the FMU, the FMU is responsible for handling the communication protocol with the XCP master.
+The following sections describe how to configure and handle the internal XCP slave.</p>
+</div>
+<div class="paragraph">
+<p>The FMU states that it contains an internal XCP slave implementation with the <code>containsXCPService</code> attribute in the <code>fmi-ls-manifest.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p><em>[<a href="#XCP-Communication-via-IP-Stack">Figure 1</a> shows a typical design where the XCP slave (in the FMU) communicates with the XCP master (in the MCD tool) using a separate network channel, e.g., the IP stack of the host OS.</em>
+<em>Thus, the communication of the XCP service is not mixed with the simulated network communication of the ECU wrapped in the FMU.</em>
+<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p><em><a href="#XCP-Communication-via-Virtual-ECU-COM-Stack">Figure 2</a> shows an alternative design where the XCP slave communicates via the COM stack of the virtual ECU as in a real ECU.</em>
+<em>In this case, the simulator has to provide access to the simulated network communication for the MCD tool.</em>
+<em>This design may be chosen if the XCP slave implementation is already part of a level-3 ECU code to be tested.</em>
+<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup></p>
+</div>
+<div id="XCP-Communication-via-IP-Stack" class="imageblock text-center">
+<div class="content">
+<img src="images/XCP-Communication-via-IP-Stack.svg" alt="XCP Communication via IP Stack" width="80%">
+</div>
+<div class="title">Figure 1. Direct communication of XCP master and XCP slave via the IP stack of the host OS.</div>
+</div>
+<div id="XCP-Communication-via-Virtual-ECU-COM-Stack" class="imageblock text-center">
+<div class="content">
+<img src="images/XCP-Communication-via-Virtual-ECU-COM-Stack.svg" alt="XCP Communication via Virtual ECU COM Stack" width="80%">
+</div>
+<div class="title">Figure 2. Communication of XCP master and XCP slave via the COM stack of the virtual ECU.</div>
+</div>
+<div class="paragraph">
+<p><em>The implementation of the XCP slave inside the FMU shall only use calls of the host OS, which leave the behavior of the FMU unaffected.</em>
+<em>This concerns, for example, host OS calls</em>
+<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup>
+<em>needed for creation of an own background thread.</em>
+<em>Note that blocking OS calls should be avoided, because they may have an effect on other parts of the simulator outside the FMU.]</em></p>
+</div>
+<div class="sect2">
+<h3 id="configure-internal-xcp-service-settings">4.1. Configuring the XCP Protocol Settings</h3>
+<div class="paragraph">
+<p>To avoid collisions in a simulation system with several XCP services, it can be necessary for the FMU importer to override the default port number the FMU listens on, which was assigned by the FMU exporter in the XCP slave implementation and in the A2L file (see <a href="#_xcp_protocol_settings">Section 3.4</a>).</p>
+</div>
+<div class="paragraph">
+<p>Besides the listen port number, the user may also want to change or restrict the listen IP address, which is the IP address of the network interface to which the socket of the XCP service is bound and where it is listening for XCP client commands.
+In many cases, the listen IP address will be set to <code>INADDR_ANY</code> (<code>0.0.0.0</code> for IPv4, <code>::</code> for IPv6), allowing connections from any available network interface.
+However, it is possible to restrict the XCP service to listen only on a single interface.
+This is commonly done with the loopback addresses (<code>127.0.0.1</code> for IPv4 and <code>::1</code> for IPv6), to only allow local connections.</p>
+</div>
+<div class="paragraph">
+<p>Furthermore, it is likely valuable for the user to have the possibility to deactivate the internal XCP service to avoid certain problems with the environment, e.g., with anti-virus software or firewalls or when running the FMU in a container.
+The importer might also want to use an external XCP service even when an internal XCP service is available.</p>
+</div>
+<div class="paragraph">
+<p>Therefore, if the XCP slave is embedded in the virtual ECU, the FMU should expose the following configuration capabilities as variables in the <code>modelDescription.xml</code> file, which are used to configure the embedded XCP slave (see <a href="#starting-internal-xcp-service">Section 4.2</a>).
+The variable that is provided for a capability is identified by providing a <code>Variable</code> element in the relevant <code>Interface</code> element of the manifest file, with the name of the variable and its role as the corresponding attribute values.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Enable XCP over TCP</dt>
+<dd>
+<p>Determines whether the TCP instance of the XCP service provided by the FMU shall be started.</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Role</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XCPServiceTCPEnable</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Example Start Value</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Requirement Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should be supplied, if the FMU provides an XCP service using TCP.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">If not present</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defaults to <code>true</code>, so if the XCP slave supports TCP, it will be started.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt class="hdlist1">TCP listen port number</dt>
+<dd>
+<p>TCP port number where the XCP slave listens for XCP protocol commands.</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Role</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XCPServiceTCPPort</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UInt16</code> / <code>Integer</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Example Start Value</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In an agreed range of ports, e.g., <code>32768</code> to <code>39999</code>.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Requirement Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should be supplied, if the FMU provides an XCP service using TCP.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">If not present</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defaults to the protocol data values found in the relevant A2L file.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt class="hdlist1">TCP listen IP address</dt>
+<dd>
+<p>IP address where the XCP slave listens for XCP protocol commands over TCP.</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Role</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XCPServiceTCPListenAddress</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Example Start Value</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0.0.0</code> or <code>::0</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Requirement Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should be supplied, if the FMU provides an XCP service using TCP.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">If not present</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defaults to the protocol data values found in the relevant A2L file.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt class="hdlist1">Enable XCP over UDP</dt>
+<dd>
+<p>Determines whether the UDP instance of the XCP service provided by the FMU shall be started.</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Role</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XCPServiceUDPEnable</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Example Start Value</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Requirement Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should be supplied, if the FMU provides an XCP service using UDP.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">If not present</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defaults to <code>true</code>, so if the XCP slave supports UDP, it will be started.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt class="hdlist1">UDP listen port number</dt>
+<dd>
+<p>UDP port number where the XCP slave listens for XCP protocol commands.</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Role</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XCPServiceUDPPort</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UInt16</code> / <code>Integer</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Example Start Value</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In an agreed range of ports, e.g., <code>32768</code> to <code>39999</code>.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Requirement Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should be supplied, if the FMU provides an XCP service using UDP.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">If not present</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defaults to the protocol data values found in the relevant A2L file.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt class="hdlist1">UDP listen IP address</dt>
+<dd>
+<p>IP address where the XCP slave listens for XCP protocol commands over UDP.</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Role</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XCPServiceUDPListenAddress</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Example Start Value</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0.0.0</code> or <code>::0</code></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Requirement Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should be supplied, if the FMU provides an XCP service using UDP.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">If not present</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defaults to the protocol data values found in the relevant A2L file.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>All variables that are defined must be defined as scalars with one of the following <code>causality</code>/<code>variability</code> combinations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>fixed structuralParameter (FMI 3.0 only):</strong>
+If the FMU defines the variables as <code>structuralParameters</code>, the XCP configuration can be changed during <code>Configuration Mode</code>.
+When the XCP service is started in <code>fmi3ExitConfigurationMode</code>, it is configured and running before the simulation starts, specifically before <code>Initialization Mode</code> is entered.
+For FMI 3.0, this is the most flexible variant and should be preferred over the other variants.</p>
+</li>
+<li>
+<p><strong>fixed parameter:</strong>
+If the FMU defines the variables as <code>parameters</code>, the FMU signals that it does not support <code>Configuration Mode</code>.
+For FMI 3.0, this means, the XCP service is started at the latest when <code>Initialization Mode</code> is entered.
+In case of FMI 2.0, the FMU should preferably start the XCP service in the <code>fmi2SetupExperiment</code> function.
+This allows for configuring the XCP service with the configuration parameters and ensuring that the service is running before the simulation starts.
+This is the preferred variant for FMI 2.0.</p>
+</li>
+<li>
+<p><strong>constant output:</strong>
+If the FMU is restricted to a fixed XCP configuration, it shall at least announce its configuration to the outside.
+This could be done via <code>constant outputs</code> that can be used in another model.
+It allows the importer to read the configuration and, e.g., react to port collisions without having to read the A2L file.
+With this variant the importer will not be able to deactivate the XCP service or to change the port number, which can lead to collisions when several FMUs are imported.</p>
+</li>
+<li>
+<p><strong>fixed/tunable calculatedParameter:</strong>
+This variant is similar to <strong>constant output</strong>.
+The FMU does not allow its XCP configuration to be changed directly, but it announces its configuration via <code>calculatedParameters</code> that depend on other <code>parameters</code>.
+With this variant the importer has no direct influence on activating or deactivating the XCP service or changing the port number, which can lead to collisions when several FMUs are imported.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>[The variables above do not necessarily have to share the same <code>causality</code>/<code>variability</code> combination.</em>
+<em>However, e.g., a mixture of <code>structuralParameters</code> and <code>parameters</code> is not sensible.</em>
+<em>If <code>Configuration Mode</code> is supported, then <code>structuralParameters</code> should be used.</em>
+<em>On the other hand, an FMU could have parts of its XCP configuration fixed while leaving others configurable.</em>
+<em>In this case, a combination of, e.g., <code>structuralParameters</code> and <code>constant outputs</code> could make sense.]</em></p>
+</div>
+<div class="paragraph">
+<p>The configuration variables are duplicated for both transport layers, TCP and UDP, as it is technically possible to have an XCP slave that uses TCP and UDP channels in parallel.
+The FMU shall only provide the corresponding variables for the protocols it supports.</p>
+</div>
+<div class="paragraph">
+<p>Without knowing the concrete XCP slave implementation the importer cannot know if the different protocols can be used in parallel or only exclusively.
+In case the XCP service is not multi-session capable and both of the variables with role <code>XCPServiceTCPEnable</code> and <code>XCPServiceUDPEnable</code> are set to <code>true</code>, the FMU must return an error and provide a meaningful error message when exiting <code>Configuration Mode</code>.
+This information may also be provided in the <code>documentation</code> directory inside the FMU.</p>
+</div>
+<div class="paragraph">
+<p>The importer of an FMU is responsible for keeping all occurrences of the port number consistent, including both the FMU configuration and the A2L file that is presented to the MCD tool.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="starting-internal-xcp-service">4.2. Starting and Stopping the XCP Service</h3>
+<div class="paragraph">
+<p>Since an XCP slave is implemented inside the FMU, the FMU is responsible for starting and stopping the internal XCP service.</p>
+</div>
+<div class="paragraph">
+<p><strong>Using FMI 3.0</strong>, the FMU should preferably expose its XCP configuration variables (see <a href="#configure-external-xcp-service-settings">Section 5.1</a>) as <code>structuralParameters</code> and start the XCP service during the first invocation of <code>fmi3ExitConfigurationMode</code> and shut it down during <code>fmi3Terminate</code>, if the FMU has no explicit power-up signal to simplify user interactions between simulator and MCD tool.
+If the FMU contains a virtual ECU with power-up control (K15), all built-in OS and Basic Software services (including XCP) should follow the normal power-up protocol.</p>
+</div>
+<div class="paragraph">
+<p>If the simulator puts the FMU in <code>Configuration Mode</code> and sets the structural parameters with role <code>XCPService{TCP|UDP}ListenAddress</code> and <code>XCPService{TCP|UDP}Port</code>, the XCP slave shall use those parameters to set up the communication connection for the XCP protocol.</p>
+</div>
+<div class="paragraph">
+<p>If the value of structural parameter with role <code>XCPService{TCP|UDP}Enable</code> is <code>true</code>, the XCP slave must be responsive for XCP commands on the corresponding channel (TCP/UDP) after leaving <code>Configuration Mode</code>.
+Thus, it is possible for the XCP master to perform calibration during the <code>Instantiated</code> state, for example, to set parameters before entering <code>Initialization Mode</code>.
+Note that reading values of calculated variables, which depend on an initialization function, is only possible after entering the <code>Initialized</code> super state with <code>fmi3ExitInitializationMode</code>.</p>
+</div>
+<div class="paragraph">
+<p>If the variable with role <code>XCPService{TCP|UDP}Enable</code> is <code>false</code>, the internal XCP service must not be started with TCP/UDP, the network resources must not be used and no XCP service actions must be performed by the FMU on this channel during simulation.
+If both parameters are <code>false</code> the XCP service must not be started at all.</p>
+</div>
+<div class="paragraph">
+<p>If <code>Configuration Mode</code> was not entered and the value of variable with role <code>XCPService{TCP|UDP}Enable</code> is <code>true</code>, the FMU must start the XCP service in <code>fmi3EnterInitializationMode</code> at the latest.
+In this case, it is not possible to perform calibration before <code>Initialization Mode</code> is entered or to configure the XCP connection settings.</p>
+</div>
+<div class="paragraph">
+<p>If the importer re-enters <code>Configuration Mode</code> and reconfigures the parameters it is up to the FMU if it reacts to the parameter change or not.</p>
+</div>
+<div class="paragraph">
+<p><strong>Using FMI 2.0</strong>, the FMU should preferably expose its XCP configuration variables as <code>parameters</code> and start the XCP service during the first call of <code>fmi2SetupExperiment</code> and shut it down during <code>fmi2Terminate</code> if the FMU has no explicit power-up signal to simplify user interactions between simulator and MCD tool.
+The importer is responsible for calling <code>fmi2SetupExperiment</code> at least once and setting the parameters before <code>fmi2SetupExperiment</code> is called.</p>
+</div>
+<div class="paragraph">
+<p>If the FMU does not expose its XCP configuration variables as <code>structuralParameters</code> using FMI 3.0, or as <code>parameters</code> using FMI 2.0, the importer will not have control over whether the internal XCP service should be started.
+In this case, the default value of the <code>start</code> attribute of the variable with role <code>XCPService{TCP|UDP}Enable</code>, if it exists, determines if the XCP service is started.
+If no variable of this role exists, then the XCP service is always started.</p>
+</div>
+<div class="paragraph">
+<p><em>[Note that it is not possible to manually change the <code>start</code> value for any variable in the <code>modelDescription.xml</code> file to change the behavior of the internal XCP service.</em>
+<em>The <code>start</code> value merely reflects the default behavior coded into the FMU.]</em></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="address-resolution-internal">4.3. Memory Address Resolution</h3>
+<div class="paragraph">
+<p>Dependent on the FMU format and the XCP slave implementation inside the FMU, dealing with memory addresses of variables in the A2L file differs.</p>
+</div>
+<div class="paragraph">
+<p>If the FMU is in binary format, that is, it is shipped with a shared library, the FMU exporter must provide values for the ECU addresses inside the A2L file, and the XCP slave inside the FMU is responsible for resolving the physical addresses from the address field values.
+<em>[These address field values can be either real addresses or fixed target-independent indices that are used by the XCP slave implementation for getting variables during runtime.]</em></p>
+</div>
+<div class="paragraph">
+<p>If the FMU is only shipped with source code, the memory addresses cannot be determined before building the binary, so the exporter cannot provide real addresses in the A2L file.
+In this case the address field values in the A2L file must be either fixed target-independent indices, which allow the FMU to resolve the addresses at runtime, or the A2L file only contains linker symbol links (<code>SYMBOL_LINK</code>).
+In the latter case, the importer or an external A2L tool is responsible for determining the actual variable addresses from the symbol links.
+These addresses must be relative to the base address of the built FMU binary.
+Refer to the <a href="https://www.asam.net/standards/detail/mcd-2-mc/">ASAM MCD-2 MC</a> standard for more information on symbol links and automatic address update.</p>
+</div>
+<div class="paragraph">
+<p>If the FMU exporter does not use real (offset) addresses in the A2L file in the binary FMU case, or does not provide symbol links in the source code FMU case, attribute <code>supportsDirectMemoryAccess</code> in the <code>fmi-ls-manifest.xml</code> file must be set to <code>false</code> (see <a href="#address-resolution-external">Section 5.3</a>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_external_xcp_service">5. External XCP Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An FMU might support XCP but does not bring along its own XCP slave implementation (attribute <code>containsXCPService = false</code> in the corresponding <code>Interface</code> element of the <code>fmi-ls-manifest.xml</code> file).
+In this case the FMU importer must provide its own implementation of an XCP slave.</p>
+</div>
+<div class="paragraph">
+<p>It is also possible that the FMU does contain an internal XCP slave implementation but additionally allows the importer to access the memory of the virtual ECU with an external XCP service (attribute <code>supportsDirectMemoryAccess = true</code>).
+In this case it is the choice of the importer whether to use the FMU internal XCP slave or its own implementation.
+See <a href="#starting-internal-xcp-service">Section 4.2</a> on how to deactivate the internal XCP service.</p>
+</div>
+<div class="paragraph">
+<p>Although the XCP behavior for an internal and an external service is the same from the perspective of the MCD tool (XCP master), the operation of the external XCP service differs from the internal one in some points that are described in this chapter.</p>
+</div>
+<div class="paragraph">
+<p><em>[<a href="#XCP-Communication-external-Slave">Figure 3</a> shows a design where the XCP slave is implemented by the importer outside of the FMU.</em>
+<em>In this variant the XCP communication uses the IP stack of the host OS analogous to the design in <a href="#XCP-Communication-via-IP-Stack">Figure 1</a>.]</em></p>
+</div>
+<div id="XCP-Communication-external-Slave" class="imageblock text-center">
+<div class="content">
+<img src="images/XCP-Communication-external-Slave.svg" alt="XCP Communication external Slave" width="80%">
+</div>
+<div class="title">Figure 3. Communication of XCP master and external XCP slave via the IP stack of the host OS.</div>
+</div>
+<div class="sect2">
+<h3 id="configure-external-xcp-service-settings">5.1. Configuring the XCP Protocol Settings</h3>
+<div class="paragraph">
+<p>For an external XCP service no structural parameters for the XCP configuration are needed, because the importer has the entire control over the XCP service and is responsible for its configuration.
+<em>[The importer should allow the user to set IP address and port number analogous to the variant with an internal XCP service.]</em></p>
+</div>
+<div class="paragraph">
+<p>When an external XCP service is used, the importer has to make XCP service calls and is responsible for creating events for its XCP service.
+However, in contrast to the FMU with internal XCP support, the importer does not have the knowledge about the inner structure of the virtual ECU and therefore it is not able to create specific XCP events, e.g., one event for each task.</p>
+</div>
+<div class="paragraph">
+<p>This means, by default, the importer can only make XCP calls at certain points in time, e.g., at communication points in Co-Simulation, ignoring specific task-related XCP events.
+The importer is responsible for matching the <code>IF_DATA XCP</code> section in the A2L file to the implementation of the XCP service.
+If necessary, the <code>IF_DATA XCP</code> section must be added or replaced in the A2L file delivered with the FMU, before making it available to the MCD tool.
+For example, the importer can create an event channel for a basic measurement raster and write the corresponding event definition into the <code>IF_DATA XCP</code> section of the A2L file.</p>
+</div>
+<div class="paragraph">
+<p>If a Co-Simulation FMU announces that it makes use of the intermediate update callback function (attribute <code>providesIntermediateUpdate = true</code> of the Co-Simulation element), the importer may also create another event for the intermediate update raster and call the XCP service in each <code>fmi3IntermediateUpdateCallback</code> with the event channel number of this event.</p>
+</div>
+<div class="paragraph">
+<p>Furthermore, if the FMU contains clocks, the importer might also provide the user with the ability to create separate XCP events for each clock.
+In this case the simulator is responsible for handling the mapping between clock and XCP event and must call the XCP service with the corresponding event channel when the associated clock is active just before leaving <code>Event Mode</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="starting-external-xcp-service">5.2. Starting and Stopping the XCP Service</h3>
+<div class="paragraph">
+<p>Since the XCP slave is implemented outside the FMU, the importer is responsible for starting and stopping the external XCP service.
+<em>[Preferably, the start-up is performed sometime during the <code>Instantiated</code> state of the FMU to allow the XCP master to set parameters before entering <code>Initialization Mode</code>.]</em></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="address-resolution-external">5.3. Memory Address Resolution</h3>
+<div class="paragraph">
+<p>Depending on the FMU format, dealing with memory addresses of variables in the A2L file differs.</p>
+</div>
+<div class="paragraph">
+<p>In the binary FMU case, the A2L file must contain real addresses, which are relative to the base address of the FMU binary, allowing the external XCP slave to access the memory of the FMU correctly.</p>
+</div>
+<div class="paragraph">
+<p>Since the external XCP slave can only make use of real addresses and in the case of source code FMUs there are no real addresses available yet, the A2l file must contain linker symbol links (<code>SYMBOL_LINK</code>).
+In this case, analogous to the use of an internal XCP slave, the importer or an external A2L tool is responsible for determining the actual variable addresses from the symbol links.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_known_limitations_of_this_standard">6. Known Limitations of this Standard</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>General limitations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>This standard forbids the use of the <code>including mechanism</code> of additional A2L files to simplify complete extraction and copying of the A2L file to a location where it is accessible by the MCD tool.</p>
+</li>
+<li>
+<p>If the FMU contains target-specific binaries <em>and</em> target-specific source code for the same platform, the corresponding A2L files cannot be assigned uniquely.
+Therefore, this constellation is not applicable to this layered standard and the FMU exporter must decide between source code and binary files for this platform.</p>
+</li>
+<li>
+<p>If the manifest attribute <code>supportsDirectMemoryAccessViaA2L</code> is set to <code>true</code> and an external XCP service is used, the importer must not instantiate the FMU more than once because a variable in the A2L file has only one associated memory address.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Limitations for binary FMUs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Normally only variables in the memory segments owned by the main FMU binary <code>&lt;modelIdendifier&gt;.{dll|so}</code> are accessible by the XCP service.
+This usually encompasses variables defined in source code modules and in statically linked libraries.
+Accessing variables in the memory of indirectly loaded dynamic libraries requires a special implementation which is out-of-scope for this layered standard.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contributions">7. Contributions</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Christian Bertsch, Robert Bosch GmbH, Germany</p>
+</li>
+<li>
+<p>Matthias Blesken, dSPACE GmbH, Germany</p>
+</li>
+<li>
+<p>Cl&#225;udio Gomes, Aarhus University, Denmark</p>
+</li>
+<li>
+<p>Andreas Junghanns, Synopsys, Germany</p>
+</li>
+<li>
+<p>Ulrich Kiffmeier, dSPACE GmbH, Germany</p>
+</li>
+<li>
+<p>Pierre R. Mai, PMSF IT Consulting, Germany</p>
+</li>
+<li>
+<p>Benedikt Menne, dSPACE GmbH, Germany</p>
+</li>
+<li>
+<p>Torsten Sommer, Dassault Syst&#232;mes, Germany</p>
+</li>
+<li>
+<p>Markus S&#252;vern, dSPACE GmbH, Germany</p>
+</li>
+<li>
+<p>Patrick T&#228;uber, dSPACE GmbH, Germany</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Contributions to this layered standard to the FMI standard are covered by the <a href="https://github.com/modelica/fmi-standard.org/blob/main/static/assets/FMI_CCLA_v1.0_2016_06_21.pdf">Corporate Contributors License Agreement (CCLA)</a> of the Modelica Association Project FMI.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a id="ASAP2"></a>[ASAP2] ASAM MCD-2 MC: ECU Measurement and Calibration Data Exchange Format. Version 1.7.1. <a href="https://www.asam.net/standards/detail/mcd-2-mc/" class="bare">https://www.asam.net/standards/detail/mcd-2-mc/</a></p>
+</li>
+<li>
+<p><a id="PW13"></a>[PW13] Preston-Werner, T. (2013): <strong>Semantic Versioning 2.0.0</strong>.  <a href="https://semver.org/spec/v2.0.0.html" class="bare">https://semver.org/spec/v2.0.0.html</a></p>
+</li>
+<li>
+<p><a id="RFC2119"></a>[RFC2119] RFC 2119. <a href="https://tools.ietf.org/html/rfc2119" class="bare">https://tools.ietf.org/html/rfc2119</a></p>
+</li>
+<li>
+<p><a id="XCP15"></a>[XCP15] ASAM MCD-1 XCP: Universal Measurement and Calibration Protocol. Version 1.5.0. <a href="https://www.asam.net/standards/detail/mcd-1-xcp/" class="bare">https://www.asam.net/standards/detail/mcd-1-xcp/</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. The network communication of FMUs is described by another layered standard. The details of network communication are out of scope here.
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. The same design could be used to access a diagnostic service, if it is implemented by the ECU code inside the FMU.
+</div>
+<div class="footnote" id="_footnotedef_3">
+<a href="#_footnoteref_3">3</a>. The term 'host OS' means the OS where the FMU process is executed. This could even be the OS inside a virtual machine connected to the simulator.
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>
